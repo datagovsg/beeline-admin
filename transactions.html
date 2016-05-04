@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title></title>
+
+    <link href="css/ionic.app.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <!-- your app's js -->
+    <script src="lib/beeline-admin/bundle.js"></script>
+  </head>
+  <body ng-app="beeline-admin">
+
+    <admin-nav>
+    </admin-nav>
+
+    <div class="content has-tabs-top overflow-scroll" ng-controller="transactions">
+        <h1>Transactions</h1>
+
+        <uib-pagination
+          boundary-links="true"
+          ng-model="currentPage"
+          total-items="pageCount * perPage"
+          items-per-page="perPage"
+        ></uib-pagination>
+
+        <table class="table table-striped transactions-view">
+          <thead>
+            <tr>
+              <th class="id"></th>
+              <th class="item-type">Item type</th>
+              <th class="item-description">Item Description</th>
+              <th class="debit-credit">Debit</th>
+              <th class="debit-credit">Credit</th>
+            </tr>
+          </thead>
+
+          <tr ng-repeat-start="transaction in transactions track by $index">
+            <td rowspan="{{transaction.transactionItems.length + 1}}"
+            class="id">
+              <b>{{transaction.id}}</b>
+              <br/>
+                {{transaction.description}}
+              <br/>
+              {{transaction.createdAt | date:'dd MMM yyyy HH:mm:ss'}}
+            </td>
+
+            <td colspan="4">
+            </td>
+          </tr>
+
+          <tr ng-repeat-end ng-repeat="txnItem in transaction.transactionItems track by $index">
+            <td class="item-type">
+              {{txnItem.itemType}}
+            </td>
+            <td ng-switch="txnItem.itemType"
+              class="item-description">
+              <account-view ng-switch-when="account"
+                data="txnItem.account"
+              >
+              </account-view>
+              <ticket-view ng-switch-when="ticketSale"
+                data="txnItem.ticketSale">
+              </ticket-view>
+              <payment-view ng-switch-when="payment"
+                pv-data="txnItem.payment.data"
+                pv-title="txnItem.payment.paymentResource">
+              </payment-view>
+              <transfer-view ng-switch-when="transfer">
+                {{txnItem.transfer.transportCompanyId}}
+              </transfer-view>
+            </td>
+            <td class="debit-credit">
+              {{txnItem.debit >= 0 ? txnItem.debit : ''}}
+            </td>
+            <td class="debit-credit">
+              {{txnItem.credit >= 0 ? txnItem.credit : ''}}
+            </td>
+          </tr>
+
+        </table>
+    </div>
+  </body>
+</html>
