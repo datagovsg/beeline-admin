@@ -1,0 +1,21 @@
+table.transactions-view {
+  tr {
+    th.id, td.id {
+      width: 100px;
+      background-color: $light;
+    }
+    td.item-type {
+      width: 100px;
+    }
+    td.item-description {
+      width: 300px;
+    }
+    td.debit-credit {
+      text-align: right;
+      width: 50px;
+    }
+  }
+  th {
+    text-align: center;
+  }
+}

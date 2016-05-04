@@ -1,0 +1,20 @@
+
+
+dl.dl-compact dd {
+  float: left;
+  margin-left: 1em;
+}
+
+dl.dl-compact dt {
+  float: left;
+  clear: both;
+}
+
+dl.dl-compact dd:after {
+  content: ".";
+  visibility: hidden;
+}
+
+dl.dl-compact dl {
+  margin: 0;
+}

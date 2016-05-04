@@ -1,0 +1,16 @@
+<div>
+  <button class="btn btn-default"
+    ng-click="collapsed = !collapsed">
+    {{pvTitle}}
+  </button>
+  <dl class="dl-compact"
+      ng-repeat="(key, val) in pvData"
+      ng-hide="collapsed">
+    <dt>{{key}}</dt>
+    <dd ng-if="!isObject(val)">{{val}}</dd>
+    <dd ng-if="isObject(val)">
+      <payment-view ng-if="val != null" pv-data="val" pv-title=""></payment-view>
+      <span ng-if="val == null"><i>null</i></span>
+    </dd>
+  </dl>
+</div>

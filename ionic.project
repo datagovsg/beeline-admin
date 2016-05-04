@@ -1,0 +1,13 @@
+{
+  "name": "beeline-admin",
+  "app_id": "",
+  "gulpStartupTasks": [
+    "sass",
+    "webpack",
+    "watch"
+  ],
+  "watchPatterns": [
+    "www/**/*",
+    "!www/lib/**/*"
+  ]
+}
