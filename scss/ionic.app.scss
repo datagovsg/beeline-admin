@@ -29,6 +29,8 @@ $selected: #CCC;
 @import 'scss/pathEditor';
 @import 'scss/paymentView';
 @import 'scss/routes';
+@import 'scss/datePicker';
+@import 'scss/tripsEditor';
 
 @import 'www/lib/ionic/scss/ionicons/ionicons.scss';
 
@@ -62,4 +64,19 @@ ui-gmap-google-map {
 
 li.active {
   background-color: $selected;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+.flex-grow {
+  flex: 1 1 auto;
+}
+.flex-shrink {
+  flex: 0 0 auto;
+}
+.overflow-scroll {
+  overflow-y: auto;
+  overflow-x: auto;
 }

@@ -1,0 +1,14 @@
+
+trips-editor {
+  section.add-trips {
+    border: solid 1px black;
+    padding: 1em;
+    
+    .add-trips-components {
+      max-height: 300px;
+      .selected-dates {
+        overflow-y: scroll;
+      }
+    }
+  }
+}

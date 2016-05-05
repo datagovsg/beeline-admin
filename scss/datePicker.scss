@@ -1,0 +1,75 @@
+
+////////////////////////////////////////////////////////////////////////////////
+// Date Picker colours
+////////////////////////////////////////////////////////////////////////////////
+
+$royal: #00F;
+
+$datepicker-default-bg: #DDD;
+$datepicker-invalid-text: #BBB;
+$datepicker-valid-text: #000;
+$datepicker-previously-booked-text: #F00;
+$datepicker-selected-bg: #FFF;
+$datepicker-selected-bg-dragging: 0.5 * $royal + #888 * 0.5;
+$datepicker-default-bg-dragging: 0.5 * $royal + #FFF * 0.5;
+
+beeline-datepicker {
+  width: 300px;
+  display: block;
+  .month-selector {
+    display: flex;
+    flex-direction: row;
+
+    i.icon {
+      flex: 0 0 auto;
+      padding: 10px;
+      border: solid 1px black;
+    }
+    .mmyyyy-holder, .yyyy {
+      flex: 1 1 auto;
+      select {
+        width: 49%;
+      }
+    }
+  }
+
+  table.dates {
+    width: 100%;
+
+    td.invalid {
+      background-color: $datepicker-default-bg;
+      border-left: 1px solid $datepicker-default-bg;
+      color: $datepicker-invalid-text;
+
+      &.first-day-of-month {
+        border-left: 1px solid $datepicker-invalid-text;
+      }
+
+      &.previously-booked {
+        color: $datepicker-previously-booked-text;
+      }
+    }
+    td.valid {
+      background-color: $datepicker-default-bg;
+      border-left: 1px solid $datepicker-default-bg;
+      color: $datepicker-valid-text;
+
+      &.first-day-of-month {
+        border-left: 1px solid $datepicker-invalid-text;
+      }
+
+      /* when selecting */
+      &.selected {
+        background-color: $datepicker-selected-bg;
+        border-left: 1px solid $datepicker-selected-bg;
+
+        &.dragged {
+          background-color: $datepicker-selected-bg-dragging;
+        }
+      }
+      &.dragged:not(.selected) {
+        background-color: $datepicker-default-bg-dragging;
+      }
+    }
+  }
+}

@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import querystring from 'querystring'
 
 export default function (AdminService) {
 
@@ -21,6 +22,24 @@ export default function (AdminService) {
     return this.getRoutes()
     .then((response) => {
       return routesById[id]
+    })
+  }
+
+  /**
+    @param options
+      @prop routeId
+      @prop startDate
+    **/
+  this.getTrips = function(options) {
+    return AdminService.beeline({
+      method: 'GET',
+      url: `/routes/${options.routeId}?`+ querystring.stringify({
+        include_trips: true,
+        start_date: options.startDate.toISOString().substr(0,10)
+      })
+    })
+    .then((response) => {
+      return response.data.trips;
     })
   }
 

@@ -1,0 +1,134 @@
+
+<section class="filter">
+  <label>
+    Start Date:
+    <button class="icon ion-calendar"
+      ng-click="filter.$startDatePopupIsOpen = !filter.$startDatePopupIsOpen">
+    </button>
+    <input type="text" uib-datepicker-popup="dd-MMM-yyyy"
+      ng-model="filter.startDate"
+      is-open="filter.$startDatePopupIsOpen">
+  </label>
+  <label ng-if="false">
+    End Date:
+    <button class="icon ion-calendar"
+      ng-click="filter.$startDatePopupIsOpen = !filter.$startDatePopupIsOpen">
+    </button>
+    <input type="text" uib-datepicker-popup="dd-MMM-yyyy"
+      ng-model="filter.endDate">
+  </label>
+</section>
+
+<section class="add-trips">
+  <h2>Add Trips</h2>
+  <div class="add-trips-components flex-row">
+    <beeline-datepicker
+      ng-if="!disp.trip"
+      class="flex-shrink"
+      dates="disp.newDates"
+      booked-dates="disp.existingDates"
+      valid-dates="disp.validDates"
+      show-legend="false"
+      start-date="filter.startDate"
+    >
+    </beeline-datepicker>
+    <div class="flex-shrink overflow-scroll selected-dates"
+      ng-if="!disp.trip"
+    >
+      <h3>{{disp.newDates.length}} dates selected</h3>
+      <ul>
+        <li ng-repeat="date in disp.newDates | orderBy:date.getTime() track by $index">
+          {{date | date:'dd-MMM-yy (EEE)':'UTC'}}
+        </li>
+      </ul>
+    </div>
+
+    <div class="flex-grow overflow-scroll">
+      <h3 ng-if="!disp.trip">Stops</h3>
+      <h3 ng-if="disp.trip">Editing trip on {{disp.trip.date | date:'dd-MMM-yy':'UTC'}}</h3>
+
+      <table>
+        <tr>
+          <th>Time</th>
+          <th>Stop</th>
+        </tr>
+        <tr ng-repeat="tripStop in disp.tripStops">
+          <td>
+            <input type="text" uib-timepicker ng-model="tripStop.time"
+            show-spinners="false" show-meridian="false">
+          </td>
+          <td>
+            <input type="text" ng-model="tripStop.stopId">
+          </td>
+          <td>
+            <button class="btn btn-default icon ion-trash-a"
+              ng-click="disp.tripStops.splice($index, 1)"
+            ></button>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <button class="btn btn-default icon ion-plus"
+              ng-click="disp.tripStops.push({})"
+            ></button>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <span class="btn-group">
+    <button class="btn btn-primary" ng-click="saveTrips()"
+      >
+      Save
+    </button>
+    <button class="btn btn-default" ng-click="clearEdit()"
+      ng-if="disp.trip">
+      Clear
+    </button>
+  </span>
+</section>
+
+<div>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th></th>
+        <th></th>
+        <th colspan="{{disp.stopsList.length}}">Stops</th>
+      </tr>
+      <tr>
+        <th></th>
+        <th>Date</th>
+        <th ng-repeat="stop in disp.stopsList track by $index">
+          {{stop.stop.label}} /
+          {{stop.stop.postcode}}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="trip in trips | orderBy:trip.time.getTime()">
+        <td>
+          <button class="glyphicon glyphicon-copy"
+            ng-click='referenceTrip(trip)'
+          >
+          </button>
+          <button class="glyphicon glyphicon-remove"
+            ng-click='deleteTrip(trip)'
+          >
+          </button>
+          <button class="glyphicon glyphicon-pencil"
+            ng-click='editTrip(trip)'
+          >
+          </button>
+        </td>
+        <td>
+          {{trip.date | date:'dd/MM/yy EEE'}}
+        </td>
+        <td ng-repeat="stop in disp.stopsList">
+          {{ findStop(trip, stop.stop.id).time | date:'HH:mm'}}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -5,6 +5,7 @@ export default function(AdminService, RoutesService) {
       route: '=',
     },
     link(scope, elem, attr) {
+      scope.edit = 'route'
 
       scope.resetRoute = function() {
         if (scope.route && scope.route.id) {
