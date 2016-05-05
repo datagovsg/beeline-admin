@@ -1,0 +1,40 @@
+
+<h2>{{route.label}}</h2>
+
+<label>
+  Label:
+  <input type="text" ng-model="route.label">
+</label>
+
+<label>
+  Name:
+  <input type="text" ng-model="route.name">
+</label>
+
+<label>
+  From:
+  <input type="text" ng-model="route.from">
+</label>
+
+<label>
+  To:
+  <input type="text" ng-model="route.to">
+</label>
+
+<label>Path:</label>
+<path-editor path="route.path">
+</path-editor>
+
+<div class="btn-group">
+  <button class="btn btn-primary" ng-click="saveRoute()"
+    ng-disabled="!route">
+    Save
+  </button>
+  <button class="btn btn-default" ng-click="resetRoute()">
+    Reset
+  </button>
+</div>
+<button class="btn btn-danger" ng-click="deleteRoute()"
+  ng-disabled="!route || !route.id">
+  Delete
+</button>

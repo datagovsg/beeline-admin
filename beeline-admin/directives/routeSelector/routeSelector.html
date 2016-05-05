@@ -1,0 +1,21 @@
+<div>
+  <button class="icon ion-ios-copy-outline btn btn-default"
+    title="copy"
+    ng-click="copySelected()"
+    ng-disabled="!selectedRoute">
+  </button>
+  <ul>
+    <li ng-repeat="route in availableRoutes track by route.id"
+    ng-click="selectRoute(route)"
+    ng-class="{
+      active: selectedRoute == route
+    }"
+    >
+        {{route.label}}:
+        {{route.from}} to {{route.to}}
+    </li>
+    <li ng-click="selectRoute({})">
+      <em>New route!</em>
+    </li>
+  </ul>
+</div>

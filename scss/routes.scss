@@ -1,0 +1,14 @@
+
+.routes-page {
+  display: flex;
+  flex-direction: row;
+
+  route-selector {
+    flex: 0 0 auto;
+    width: 300px;
+  }
+
+  route-editor {
+    flex: 1 1 auto;
+  }
+}

@@ -16,15 +16,21 @@ $dark:                            #444 !default;
 */
 
 // The path for our ionicons font files, relative to the built CSS in www/css
-// $ionicons-font-path: "../lib/ionic/fonts" !default;
+$ionicons-font-path: "../lib/ionic/fonts" !default;
 
 // Include all of Ionic
 // @import "www/lib/ionic/scss/ionic";
 
 $light: #FFF;
+$selected: #CCC;
 
 @import 'scss/transactions';
+@import 'scss/routeEditor';
+@import 'scss/pathEditor';
 @import 'scss/paymentView';
+@import 'scss/routes';
+
+@import 'www/lib/ionic/scss/ionicons/ionicons.scss';
 
 html, body {
   height: 100%;
@@ -37,4 +43,23 @@ table th {
 
 th {
   font-weight: bold;
+}
+
+.angular-google-map {
+  width: 100%;
+  height: 100%;
+}
+
+.angular-google-map-container {
+  width: 100%;
+  height: 100%;
+}
+ui-gmap-google-map {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+li.active {
+  background-color: $selected;
 }

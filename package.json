@@ -3,8 +3,11 @@
   "version": "1.1.1",
   "description": "beeline-admin: An Ionic project",
   "dependencies": {
+    "angular-animate": "^1.5.5",
     "angular-google-maps": "^2.3.2",
     "angular-simple-logger": "^0.1.7",
+    "angular-touch": "^1.5.5",
+    "angular-ui-router": "^0.2.18",
     "babel-loader": "^6.2.4",
     "babel-plugin-transform-runtime": "^6.7.5",
     "babel-preset-es2015": "^6.6.0",
