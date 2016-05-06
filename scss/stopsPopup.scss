@@ -1,0 +1,13 @@
+
+
+.stops-popup {
+  ui-gmap-google-map {
+    width: 100%;
+    height: 400px;
+
+    .angular-google-map, .angular-google-map-container {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
