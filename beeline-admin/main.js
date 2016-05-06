@@ -26,6 +26,7 @@ angular.module('beeline-admin', [
 .service('AdminService', require('./services/adminService').default)
 .service('RoutesService', require('./services/routesService').default)
 .service('StopsPopup', require('./services/stopsPopup').default)
+.service('mapService', require('./services/mapService').default)
 .controller('transactions', require('./controllers/transactionsController.js').default)
 .controller('routes', require('./controllers/routesController.js').default)
 .filter('makeRoutePath', require('./shared/filters.js').makeRoutePath)

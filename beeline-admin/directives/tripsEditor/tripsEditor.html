@@ -133,18 +133,20 @@
     <tbody>
       <tr ng-repeat="trip in trips | orderBy:'date' track by trip.id">
         <td>
-          <button class="glyphicon glyphicon-copy"
-            ng-click='referenceTrip(trip)'
-          >
-          </button>
-          <button class="glyphicon glyphicon-remove"
-            ng-click='deleteTrip(trip)'
-          >
-          </button>
-          <button class="glyphicon glyphicon-pencil"
-            ng-click='editTrip(trip)'
-          >
-          </button>
+          <span class="btn-group">
+            <button class="btn btn-default glyphicon glyphicon-copy"
+              ng-click='referenceTrip(trip)'
+            >
+            </button>
+            <button class="btn btn-default glyphicon glyphicon-remove"
+              ng-click='deleteTrip(trip)'
+            >
+            </button>
+            <button class="btn btn-default glyphicon glyphicon-pencil"
+              ng-click='editTrip(trip)'
+            >
+            </button>
+          </span>
         </td>
         <td>
           {{trip.date | date:'dd/MM/yy EEE'}}

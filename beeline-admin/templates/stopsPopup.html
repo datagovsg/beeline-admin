@@ -1,0 +1,92 @@
+
+<div class="stops-popup">
+  <div class="modal-header">
+    <h3>{{title}}</h3>
+  </div>
+
+  <div class="modal-body">
+    <ui-gmap-google-map
+      center="map.center"
+      zoom="map.zoom"
+      control="map.control"
+      options="map.options"
+      events="map.events"
+    >
+      <ui-gmap-markers
+        models="allStops"
+        coords="'$latlng'"
+        idKey="'id'"
+        doCluster="true"
+        click="stopClicked"
+        dorebuildall="true"
+        modelsbyref="true"
+        control="map.markersControl"
+        >
+      </ui-gmap-markers>
+
+      <ui-gmap-marker
+        idkey="'newstop'"
+        coords="selectedStop.$latlng"
+        ng-if="!selectedStop.id"
+        options="map.newStopOptions"
+      >
+      </ui-gmap-marker>
+    </ui-gmap-google-map>
+  </div>
+
+  <div class="modal-footer">
+    <form name="stopForm">
+      <div ng-show="selectedStop">
+        <h3>
+          <i ng-if="!selectedStop.id">New Stop</i>
+          <span ng-if="selectedStop.id">{{selectedStop.description}}</span>
+        </h3>
+        <label>
+          Description:
+          <input type="text" ng-model="selectedStop.description"
+              ng-required
+              >
+        </label>
+        <label>
+          Road:
+          <input type="text" ng-model="selectedStop.road"
+              ng-required
+          >
+        </label>
+        <label>
+          Label:
+          <input type="text" ng-model="selectedStop.label"
+              ng-required
+          >
+        </label>
+      </div>
+
+      <span class="btn-group">
+        <button class="btn btn-primary"
+          ng-disabled="!selectedStop.id"
+          ng-click="done()">
+          OK
+        </button>
+        <button class="btn btn-default"
+          ng-click="cancel()">
+          Cancel
+        </button>
+      </span>
+
+      <span class="btn-group">
+        <button class="btn btn-primary"
+          ng-disabled="stopForm.$invalid || stopForm.$pristine"
+          ng-click="saveStop(selectedStop)"
+          >
+          Save Stop
+        </button>
+        <button class="btn btn-danger"
+          ng-show="selectedStop.id"
+          ng-click="deleteStop(selectedStop)"
+          >
+          Delete Stop
+        </button>
+      </span>
+    </form>
+  </div>
+</div>

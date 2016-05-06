@@ -128,7 +128,7 @@ export default function(RoutesService, AdminService, StopsPopup) {
       }
       scope.showPopupFor = function (ts) {
         StopsPopup.show({
-          title: 'Hello world!'
+          title: 'Select a Stop!'
         })
         .then((x) => {
           ts.stopId = x.id;

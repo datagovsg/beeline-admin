@@ -183,22 +183,48 @@ export default function (AdminService) {
     }
   }
 
-  var stopsPromise = null;
-  var stopsById = null;
-  this.getStops = function(useCache) {
-    if (useCache && stopsCache) {
-      return stopsPromise;
+  this.stopsById = null;
+  this.stopsPromise = null;
+  this.getStops = (refresh) => {
+    if (!refresh && this.stopsPromise) {
+      return this.stopsPromise;
     }
     else {
-      return stopsPromise = AdminService.beeline({
+      return this.stopsPromise = AdminService.beeline({
         method: 'GET',
         url: `/stops`,
       })
       .then((response) => {
-        stopsById = _.keyBy(response, x => x.id)
+        this.stopsById = _.keyBy(response.data, x => x.id)
         return response.data
       })
     }
+  }
+  this.createStop = function(stop) {
+    return AdminService.beeline({
+      method: 'POST',
+      url: `/stops`,
+      data: stop
+    })
+    .then((response) => {
+      return response.data
+    })
+  }
+  this.updateStop = function(stop) {
+    return AdminService.beeline({
+      method: 'PUT',
+      url: `/stops/${stop.id}`,
+      data: stop,
+    })
+    .then((response) => {
+      return response.data
+    })
+  }
+  this.deleteStop = function(stopId) {
+    return AdminService.beeline({
+      method: 'DELETE',
+      url: `/stops/${stopId}`,
+    })
   }
 
 }

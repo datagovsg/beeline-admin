@@ -29,9 +29,11 @@ export default function(RoutesService) {
       })
 
       RoutesService.getStops()
-      .then((stops) => {
 
-        return scope.stops = stops
+      scope.$watch(() => RoutesService.stopsPromise, () => {
+        RoutesService.stopsPromise.then((stops) => {
+          scope.stops = stops
+        })
       })
     },
   }
