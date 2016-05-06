@@ -16,7 +16,7 @@ export default function ($http) {
   this.session = JSON.parse(decodeToken(this.sessionToken))
 
   this.beeline = function(options) {
-    options.url = 'http://localhost:8080' + options.url
+    options.url = 'http://staging.beeline.sg' + options.url
 
     if (this.sessionToken) {
       options.headers = options.headers || {};
