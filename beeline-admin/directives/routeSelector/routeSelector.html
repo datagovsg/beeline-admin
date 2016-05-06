@@ -5,7 +5,7 @@
     ng-disabled="!selectedRoute">
   </button>
   <ul>
-    <li ng-repeat="route in availableRoutes track by route.id"
+    <li ng-repeat="route in availableRoutes | orderBy:'label' track by route.id"
     ng-click="selectRoute(route)"
     ng-class="{
       active: selectedRoute == route

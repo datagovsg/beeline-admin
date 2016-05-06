@@ -73,6 +73,8 @@ export default function(RoutesService, AdminService, StopsPopup) {
         scope.disp.tripStops = trip.tripStops.map(ts => ({
           stopId: ts.stopId,
           time: new Date(ts.time),
+          canBoard: ts.canBoard,
+          canAlight: ts.canAlight,
         }));
       }
       scope.deleteTrip = function(trip) {
