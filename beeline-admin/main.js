@@ -20,13 +20,15 @@ angular.module('beeline-admin', [
 .directive('routeEditor', require('./directives/routeEditor/routeEditor').default)
 .directive('pathEditor', require('./directives/pathEditor/pathEditor').default)
 .directive('tripsEditor', require('./directives/tripsEditor/tripsEditor').default)
+.directive('companySelector', require('./directives/companySelector/companySelector').default)
+.directive('stopSelector', require('./directives/stopSelector/stopSelector').default)
+.directive('superAdminCompanySelector', require('./directives/companySelector/superAdminCompanySelector').default)
 .service('AdminService', require('./services/adminService').default)
 .service('RoutesService', require('./services/routesService').default)
+.service('StopsPopup', require('./services/stopsPopup').default)
 .controller('transactions', require('./controllers/transactionsController.js').default)
 .controller('routes', require('./controllers/routesController.js').default)
 .filter('makeRoutePath', require('./shared/filters.js').makeRoutePath)
-.filter('makeRange', require('./shared/filters.js').makeRange)
-.filter('hasStop', require('./shared/filters.js').hasStop)
 
 
 function configureGoogleMaps(uiGmapGoogleMapApiProvider) {

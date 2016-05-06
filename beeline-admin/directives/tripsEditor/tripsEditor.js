@@ -1,10 +1,10 @@
 import _ from 'lodash'
 
-export default function(RoutesService) {
+export default function(RoutesService, AdminService, StopsPopup) {
 
   return {
     scope: {
-      routeId: '='
+      routeId: '=',
     },
     template: require('./tripsEditor.html'),
     link(scope, elem, attr) {
@@ -21,6 +21,17 @@ export default function(RoutesService) {
         validDates: [],
         tripStops: [],
         trip: null,
+
+        addTripStop() {
+          this.tripStops.push({
+            time: new Date(2015,1,1,8,30,0),
+            canBoard: true,
+            canAlight: false
+          })
+        },
+        deleteTripStop(index) {
+          this.tripStops.splice(index, 1)
+        }
       }
       scope.refreshTrips = function() {
         RoutesService.getTrips({
@@ -51,6 +62,10 @@ export default function(RoutesService) {
 
         });
       }
+      scope.resetTrips = function() {
+        scope.disp.newDates = [];
+        scope.disp.tripStops = [];
+      }
       scope.findStop = function(trip, stopId) {
         return trip.tripStops.find(ts => ts.stop.id == stopId)
       }
@@ -63,22 +78,61 @@ export default function(RoutesService) {
       scope.deleteTrip = function(trip) {
         if (confirm("Are you sure you want to delete?")) {
           RoutesService.deleteTrip(trip.id)
+          .then(scope.refreshTrips)
+          .catch((error) => {
+            console.error(error);
+          })
         }
       }
       scope.editTrip = function(trip) {
         scope.disp.trip = trip;
+        console.log(trip.tripStops)
         scope.disp.tripStops = trip.tripStops.map(ts => ({
-          tripStopId: ts.tripStopId,
+          id: ts.id,
           stopId: ts.stopId,
           time: new Date(ts.time),
+          canBoard: ts.canBoard,
+          canAlight: ts.canAlight,
         }));
+        console.log(scope.disp.tripStops)
       }
       scope.clearEdit = function() {
         scope.disp.trip = null;
         scope.disp.tripStops = [];
       }
       scope.saveTrips = function() {
-        RoutesService.saveTrips(scope.routeId, disp.newDates, disp.tripStops)
+        if (scope.disp.trip) {
+          RoutesService.updateTrip(
+            {
+              trip: scope.disp.trip,
+              tripStops: scope.disp.tripStops,
+            })
+        }
+        else {
+          RoutesService.createTrips({
+            routeId: scope.routeId,
+            dates: scope.disp.newDates,
+            tripStops: scope.disp.tripStops,
+            companyId: AdminService.getCompanyId(),
+          })
+          .then(scope.refreshTrips)
+          .then(scope.resetTrips)
+          .then(() => {
+            alert("Trips created")
+          })
+          .catch((error) => {
+            console.log(error)
+            alert(`${error.data.error} -- ${error.data.message}`)
+          })
+        }
+      }
+      scope.showPopupFor = function (ts) {
+        StopsPopup.show({
+          title: 'Hello world!'
+        })
+        .then((x) => {
+          ts.stopId = x.id;
+        })
       }
 
       scope.$watchGroup(['filter.startDate', 'filter.endDate'], scope.refreshTrips)

@@ -19,6 +19,7 @@
     "gulp-rename": "^1.2.0",
     "gulp-sass": "^2.0.4",
     "html-loader": "^0.4.3",
+    "jsonwebtoken": "^6.2.0",
     "lodash": "^4.11.1"
   },
   "devDependencies": {

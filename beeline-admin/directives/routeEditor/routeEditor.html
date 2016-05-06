@@ -35,6 +35,12 @@
     <input type="text" ng-model="route.to">
   </label>
 
+  <label>
+    Company:
+    <company-selector ng-model="route.transportCompanyId">
+    </company-selector>
+  </label>
+
   <label>Path:</label>
   <path-editor path="route.path">
   </path-editor>

@@ -48,31 +48,55 @@
       <h3 ng-if="disp.trip">Editing trip on {{disp.trip.date | date:'dd-MMM-yy':'UTC'}}</h3>
 
       <table>
-        <tr>
-          <th>Time</th>
-          <th>Stop</th>
-        </tr>
-        <tr ng-repeat="tripStop in disp.tripStops">
-          <td>
-            <input type="text" uib-timepicker ng-model="tripStop.time"
-            show-spinners="false" show-meridian="false">
-          </td>
-          <td>
-            <input type="text" ng-model="tripStop.stopId">
-          </td>
-          <td>
-            <button class="btn btn-default icon ion-trash-a"
-              ng-click="disp.tripStops.splice($index, 1)"
-            ></button>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <button class="btn btn-default icon ion-plus"
-              ng-click="disp.tripStops.push({})"
-            ></button>
-          </td>
-        </tr>
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Stop</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="tripStop in disp.tripStops">
+            <td>
+              <uib-timepicker ng-model="tripStop.time"
+              show-spinners="false" show-meridian="false">
+            </td>
+            <td>
+              <!-- <input type="text" ng-model="tripStop.stopId"> -->
+              <stop-selector
+                ng-model="tripStop.stopId"
+              ></stop-selector>
+              <button ng-click="showPopupFor(tripStop)">
+                ?
+              </button>
+            </td>
+            <td>
+              <label>
+                <input type="checkbox" ng-model="tripStop.canBoard" />
+                Boarding
+              </label>
+            </td>
+            <td>
+              <label>
+                <input type="checkbox" ng-model="tripStop.canAlight" />
+                Alighting
+              </label>
+            </td>
+            <td>
+              <button class="btn btn-default icon ion-trash-a"
+                ng-click="disp.deleteTripStop($index)"
+              ></button>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td>
+              <button class="btn btn-default icon ion-plus"
+                ng-click="disp.addTripStop()"
+              ></button>
+            </td>
+          </tr>
+        </tfoot>
       </table>
     </div>
   </div>
@@ -107,7 +131,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="trip in trips | orderBy:trip.time.getTime()">
+      <tr ng-repeat="trip in trips | orderBy:'date' track by trip.id">
         <td>
           <button class="glyphicon glyphicon-copy"
             ng-click='referenceTrip(trip)'
