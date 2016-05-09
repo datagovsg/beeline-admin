@@ -7,7 +7,6 @@ export default function($http, AdminService) {
     ng-options="company.name for company in companies | orderBy:company.name track by company.id"
     >
 </select>
-{{ngModel | json}}
     `,
     scope: {
       ngModel: '=',
@@ -42,7 +41,6 @@ export default function($http, AdminService) {
         url: '/companies',
       })
       .then((response) => {
-        console.log(response.data)
         return scope.companies = response.data
       })
     },

@@ -4,19 +4,47 @@ import assert from 'assert'
 
 export default function (AdminService) {
 
-  var routesCache = null
+  var routesPromise = null;
   var routesById = null;
+  var routesCache;
 
-  this.getRoutes = function() {
-    return AdminService.beeline({
-      method: 'GET',
-      url: `/routes`,
-    })
-    .then((response) => {
-      routesCache = response.data;
-      routesById = _.keyBy(routesCache, (r) => r.id)
-      return routesCache
-    })
+  /**
+    @param options -- options to pass in query string to /routes
+      @prop startDate : string | int
+      @prop endDate : string | int
+      @prop includeAvailability : boolean
+      @prop includeTrips : boolean
+  **/
+  this.getRoutes = function(options) {
+    if (!options && routesPromise) {
+      return routesPromise;
+    }
+    else {
+      var query = querystring.stringify({
+        start_date: options.startDate,
+        end_date: options.endDate,
+        include_trips: options.includeTrips,
+        include_availability: options.includeAvailability
+      })
+      var promise = AdminService.beeline({
+        method: 'GET',
+        url: `/routes?${query}`,
+      })
+      .then((response) => {
+        routesCache = response.data;
+        return routesCache
+      })
+
+      // Cache -- only if we use default options
+      if (!options) {
+        routesPromise = promise;
+        routesPromise.then(() => {
+          routesById = _.keyBy(routesCache, (r) => r.id)
+        })
+      }
+
+      return promise;
+    }
   }
 
   this.getRoute = function(id) {

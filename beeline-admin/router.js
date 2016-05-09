@@ -21,6 +21,12 @@ export default function($stateProvider, $urlRouterProvider) {
     controller: 'routes',
   })
 
+  .state('summary', {
+    url: '/summary',
+    templateUrl: 'templates/summary.html',
+    controller: 'summary',
+  })
+
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/transactions');
 

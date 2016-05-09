@@ -1,0 +1,16 @@
+
+
+.summary-page {
+  td.day, th.day {
+    text-align: center;
+    min-width: 1.5em;
+    padding: 0.5em;
+  }
+  td.day.has-trip, th.day.has-trip {
+    background-color: #FFF;
+  }
+  td.day:not(.has-trip), th.day:not(.has-trip) {
+    background-color: #CCC;
+    color: #DDD;
+  }
+}
