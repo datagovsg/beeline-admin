@@ -20,12 +20,17 @@ export default function (AdminService) {
       return routesPromise;
     }
     else {
-      var query = querystring.stringify({
+      var query = options ? {
         start_date: options.startDate,
         end_date: options.endDate,
         include_trips: options.includeTrips,
         include_availability: options.includeAvailability
-      })
+      } : {}
+      if (AdminService.session.role == 'admin') {
+        query.transportCompanyId = AdminService.session.transportCompanyId
+      }
+      query = querystring.stringify(query)
+
       var promise = AdminService.beeline({
         method: 'GET',
         url: `/routes?${query}`,

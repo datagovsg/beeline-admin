@@ -1,0 +1,18 @@
+
+.bookings-page {
+  nav {
+    .uib-datepicker {
+      float: left;
+      margin: 0 1em;
+    }
+    label {
+      display: block;
+    }
+
+    &:after {
+      content: ".";
+      visibility: hidden;
+      clear: both;
+    }
+  }
+}

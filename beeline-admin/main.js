@@ -30,6 +30,7 @@ angular.module('beeline-admin', [
 .controller('transactions', require('./controllers/transactionsController.js').default)
 .controller('routes', require('./controllers/routesController.js').default)
 .controller('summary', require('./controllers/summaryController.js').default)
+.controller('bookings', require('./controllers/bookingsController.js').default)
 .filter('makeRoutePath', require('./shared/filters.js').makeRoutePath)
 
 

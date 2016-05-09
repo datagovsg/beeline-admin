@@ -1,0 +1,104 @@
+<div class="bookings-page">
+    <h1>Bookings</h1>
+
+    <nav>
+      <uib-datepicker ng-model="filter.date"
+          datepicker-options="{minMode: 'month'}"></uib-datepicker>
+
+      <label>
+        Route:
+        <select ng-options="route.id as route.name for route in disp.availableRoutes"
+          ng-model="filter.routeId"
+          ng-required="false">
+          <option value="">(All)</option>
+        </select>
+      </label>
+
+      <label>
+        Route:
+        <select ng-model="filter.statuses"
+          multiple
+        >
+          <option value="refund">Transaction:Refund</option>
+          <option value="sale">Transaction:Sale</option>
+          <option value="expense">Transaction:Expense</option>
+
+          <option value="valid">Valid</option>
+          <option value="pending">Pending</option>
+          <option value="failed">Failed</option>
+          <option value="refunded">Refunded</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </label>
+
+      <label>
+        <input type="checkbox" ng-model="filter.showPartial">
+        Show partially completed transactions
+      </label>
+
+      <label>
+        Order:
+        <input type="text" disabled ng-model="filter.orderBy">
+        <input type="text" disabled ng-model="filter.orderDirection">
+      </label>
+    </nav>
+
+
+    <uib-pagination
+      boundary-links="true"
+      ng-model="currentPage"
+      total-items="pageCount * perPage"
+      items-per-page="perPage"
+    ></uib-pagination>
+
+    <table class="table table-striped transactions-view">
+      <thead>
+        <tr>
+          <th class="id"></th>
+          <th ng-click="filter.orderBy = 'trip-date'; filter.orderDirection = !filter.orderDirection">Trip date</th>
+          <th class="item-description">Route</th>
+          <th class="debit-credit">Boarding Stop</th>
+          <th class="debit-credit">Alighting Stop</th>
+          <th ng-click="filter.orderBy = 'transaction-date'; filter.orderDirection = !filter.orderDirection">Created</th>
+          <th class="debit-credit">User</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr ng-repeat="ticket in tickets">
+          <td>
+            {{ticket.id}}
+          </td>
+          <td>
+            {{ticket.trip.date | date:'dd MMM yy':'UTC' }}
+          </td>
+          <td>
+            {{ticket.trip.route.label}}:
+            {{ticket.trip.route.from}} --
+            {{ticket.trip.route.to}}
+          </td>
+          <td>
+            {{ticket.boardStop.stop.description}}
+            {{ticket.boardStop.time | date:'hh:MM'}}
+          </td>
+          <td>
+            {{ticket.alightStop.stop.description}}
+            {{ticket.alightStop.time | date:'hh:MM'}}
+          </td>
+          <td>
+            {{ticket.createdAt | date:'yyyy-MM-dd HH:mm:ss'}}
+          </td>
+          <td>
+            {{ticket.user.name}}: {{ticket.user.email}}, {{ticket.user.telephone}}
+          </td>
+          <td>
+            {{ticket.status}}
+            <span ng-repeat="tt in ticket.transactionType.itemTypes track by $index">
+              {{tt}}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+
+    </table>
+</div>
