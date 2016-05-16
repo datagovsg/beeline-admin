@@ -23,7 +23,7 @@
   <h2>Add Trips</h2>
   <div class="add-trips-components flex-row">
     <beeline-datepicker
-      ng-if="!disp.trip"
+      ng-if="!disp.trip.id"
       class="flex-shrink"
       dates="disp.newDates"
       booked-dates="disp.existingDates"
@@ -33,7 +33,7 @@
     >
     </beeline-datepicker>
     <div class="flex-shrink overflow-scroll selected-dates"
-      ng-if="!disp.trip"
+      ng-if="!disp.trip.id"
     >
       <h3>{{disp.newDates.length}} dates selected</h3>
       <ul>
@@ -44,8 +44,26 @@
     </div>
 
     <div class="flex-grow overflow-scroll">
-      <h3 ng-if="!disp.trip">Stops</h3>
-      <h3 ng-if="disp.trip">Editing trip on {{disp.trip.date | date:'dd-MMM-yy':'UTC'}}</h3>
+      <h3 ng-if="!disp.trip.id">Stops</h3>
+      <!-- <h3 ng-if="disp.trip">Editing trip on {{disp.trip.date | date:'dd-MMM-yy':'UTC'}}</h3> -->
+
+      <h3 ng-if="disp.trip.id">Editing trip on
+        <ng-repeat ng-repeat="(key, value) in selection.selected">
+          {{value.date | date:'dd MMM yy'}},
+        </ng-repeat>
+      </h3>
+
+      <label>
+        Telephone number of driver: +65 <input type="tel" ng-model="disp.trip.driverTelephone" />
+
+        <span ng-if="disp.trip.driverName">
+          ~{{disp.driver.name}}
+        </span>
+      </label>
+
+      <label>
+        Trip capacity: <input type="number" ng-model="disp.trip.capacity" />
+      </label>
 
       <table>
         <thead>
@@ -82,7 +100,7 @@
               </label>
             </td>
             <td>
-              <button class="btn btn-default icon ion-trash-a"
+              <button class="btn btn-default glyphicon glyphicon-trash"
                 ng-click="disp.deleteTripStop($index)"
               ></button>
             </td>
@@ -91,7 +109,7 @@
         <tfoot>
           <tr>
             <td>
-              <button class="btn btn-default icon ion-plus"
+              <button class="btn btn-default glyphicon glyphicon-plus"
                 ng-click="disp.addTripStop()"
               ></button>
             </td>
@@ -117,13 +135,19 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <th></th>
-        <th></th>
+        <th></th> <!-- selection button -->
+        <th></th> <!-- actions (delete, use) -->
+        <th></th> <!-- pax -->
+        <th></th> <!--date -->
+        <th></th> <!-- driver -->
         <th colspan="{{disp.stopsList.length}}">Stops</th>
       </tr>
       <tr>
         <th></th>
+        <th></th>
+        <th>Cap</th>
         <th>Date</th>
+        <th>Driver</th>
         <th ng-repeat="stop in disp.stopsList track by $index">
           {{stop.stop.label}} /
           {{stop.stop.postcode}}
@@ -131,25 +155,40 @@
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="trip in trips | orderBy:'date' track by trip.id">
+      <tr ng-repeat="trip in (sorted_trips = trips | orderBy:'date') track by trip.id"
+        class="{
+          active: selection.selected[trip.id]
+        }"
+      >
+        <td
+          ng-mousedown="selectTrips(sorted_trips, $index, $event)"
+          >
+          :)
+          <i ng-hide="!selection.selected[trip.id]"
+            class="glyphicon glyphicon-ok">
+          </i>
+        </td>
         <td>
           <span class="btn-group">
             <button class="btn btn-default glyphicon glyphicon-copy"
               ng-click='referenceTrip(trip)'
             >
             </button>
-            <button class="btn btn-default glyphicon glyphicon-remove"
+            <button class="btn btn-default glyphicon glyphicon-trash"
               ng-click='deleteTrip(trip)'
-            >
-            </button>
-            <button class="btn btn-default glyphicon glyphicon-pencil"
-              ng-click='editTrip(trip)'
             >
             </button>
           </span>
         </td>
         <td>
+          {{trip.capacity}}
+          <i class="glyphicon glyphicon-user"></i>
+        </td>
+        <td>
           {{trip.date | date:'dd/MM/yy EEE'}}
+        </td>
+        <td>
+          {{trip.driverTelephone }}
         </td>
         <td ng-repeat="stop in disp.stopsList">
           {{ findStop(trip, stop.stop.id).time | date:'HH:mm'}}

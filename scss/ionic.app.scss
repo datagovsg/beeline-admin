@@ -81,3 +81,41 @@ li.active {
   overflow-y: auto;
   overflow-x: auto;
 }
+
+.admin-nav {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 0 0 1em 0;
+  
+  ul {
+    flex: 0 0 auto;
+
+    display: flex;
+    flex-direction: row;
+
+    margin: 0;
+    padding: 0;
+
+    li {
+      list-style-type: none;
+      margin: 0;
+      padding: 1em 1em;
+
+      flex: 0 0 auto;
+      background-color: #ccc;
+      color: #000;
+      min-width: 1em;
+      a {
+        color: #000;
+
+        &:hover {
+          color: #00C;
+        }
+      }
+    }
+  }
+  super-admin-company-selector {
+    flex: 0 0 auto;
+  }
+}

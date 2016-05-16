@@ -2,7 +2,7 @@ import _ from 'lodash'
 import querystring from 'querystring'
 import assert from 'assert'
 
-export default function (AdminService) {
+export default function (AdminService, DriverService) {
 
   var routesPromise = null;
   var routesById = null;
@@ -82,8 +82,12 @@ export default function (AdminService) {
       url: `/trips/${trip}`,
     })
   }
-  this.createTrips = function(options) {
-    var {routeId, dates, tripStops, companyId} = options;
+  this.createTrips = async function(options) {
+    // get the driver id from his telephone
+    await DriverService.fetchDriverIds([options]);
+
+    // Get the create options
+    var {routeId, dates, tripStops, companyId, driverId} = options;
 
     var createOptions = dates.map((date) => {
       if (typeof date == 'string')
@@ -105,6 +109,7 @@ export default function (AdminService) {
           date: date,
           routeId: routeId,
           transportCompanyId: companyId,
+          driverId: driverId,
           tripStops: tripStops.map(ts => {
             // adjust the time to match...
             var tsTimeMidnight = new Date(
@@ -129,51 +134,63 @@ export default function (AdminService) {
 
     // FIXME this will be bloody slow
     var createRequests = createOptions.map((opts) => AdminService.beeline(opts))
-    var result = Promise.all(createRequests);
+    var result = await Promise.all(createRequests);
 
     return result;
   }
-  this.updateTrip = function (options) {
-    var {trip, tripStops} = options;
-    var date = trip.date;
 
-    if (typeof date == 'string')
-      date = new Date(date);
+  this.updateTrips = function (options) {
+    var {trips, tripStops, driverId, capacity} = options;
 
-    if (Date.prototype.isPrototypeOf(date))
-      date = date.getTime()
+    return Promise.all(trips.map((trip) => {
+      var date = trip.date;
+      if (typeof date == 'string')
+        date = new Date(date);
 
-    // must be round...
-    assert(date % (24 * 3600 * 1000) == 0)
+      if (Date.prototype.isPrototypeOf(date))
+        date = date.getTime()
 
-    // offset from Singapore time midnight
-    var tripStopOffsetTime = date - 8*3600*1000
+      // must be round...
+      assert(date % (24 * 3600 * 1000) == 0)
 
-    var updateData = tripStops.map((tripStop) => {
-      var tsTimeMidnight = new Date(
-        tripStop.time.getFullYear(),
-        tripStop.time.getMonth(),
-        tripStop.time.getDate()
-      ).getTime()
-      return {
-        id: tripStop.id,
-        stopId: tripStop.stopId,
-        canBoard: tripStop.canBoard,
-        canAlight: tripStop.canAlight,
-        time: new Date(tripStopOffsetTime // offset from trip date
-                      + tripStop.time.getTime()
-                      - tsTimeMidnight
-                    ),
-      }
-    });
+      // offset from Singapore time midnight
+      var tripStopOffsetTime = date - 8*3600*1000
 
-    return AdminService.beeline({
-      method: 'PUT',
-      url: `/trips/${trip.id}`,
-      data: {
-        tripStops: updateData,
-      },
-    })
+      var updateData = tripStops.map((tripStopReference) => {
+        // Set the trip stop ID correctly
+        // FIXME: Bug -- cannot have the same stop appear twice in the trip
+        var tripStop = _.assign({}, tripStopReference)
+        var modifyingTripStop = trip.tripStops.find(ts => ts.stopId == tripStopReference.stopId)
+        tripStop.id = modifyingTripStop ? modifyingTripStop.id : null;
+
+        // set time
+        var tsTimeMidnight = new Date(
+          tripStop.time.getFullYear(),
+          tripStop.time.getMonth(),
+          tripStop.time.getDate()
+        ).getTime()
+        return {
+          id: tripStop.id,
+          stopId: tripStop.stopId,
+          canBoard: tripStop.canBoard,
+          canAlight: tripStop.canAlight,
+          time: new Date(tripStopOffsetTime // offset from trip date
+                        + tripStop.time.getTime()
+                        - tsTimeMidnight
+                      ),
+        }
+      });
+
+      return AdminService.beeline({
+        method: 'PUT',
+        url: `/trips/${trip.id}`,
+        data: {
+          capacity: capacity,
+          driverId: driverId,
+          tripStops: updateData,
+        },
+      })
+    }))
   };
 
   this.deleteRoute = function (id) {

@@ -6,6 +6,7 @@ export default function(RoutesService) {
     template: require('./routeSelector.html'),
     scope: {
       selectedRoute: '=',
+      selectedRouteId: '=?',
     },
     link(scope, elem, attr) {
 
@@ -13,6 +14,7 @@ export default function(RoutesService) {
 
       scope.selectRoute = function(route) {
         scope.selectedRoute = route
+        if (route) scope.selectedRouteId = route.id;
       };
       scope.copySelected = function() {
         if (scope.selectedRoute) {
@@ -28,6 +30,12 @@ export default function(RoutesService) {
           scope.availableRoutes = routes;
         })
       }
+
+      scope.$watchGroup(['selectedRouteId', 'availableRoutes'], () => {
+        if (scope.selectedRouteId) {
+          scope.selectRoute(scope.availableRoutes.find(r => r.id == scope.selectedRouteId))
+        }
+      })
 
       scope.refreshList();
     },

@@ -16,7 +16,7 @@ export default function($stateProvider, $urlRouterProvider) {
 
   // setup an abstract state for the tabs directive
   .state('routes', {
-    url: '/routes',
+    url: '/routes/{routeId:int}/{action}',
     templateUrl: 'templates/routes.html',
     controller: 'routes',
   })

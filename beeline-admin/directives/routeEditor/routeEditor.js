@@ -3,9 +3,10 @@ export default function(AdminService, RoutesService) {
     template: require('./routeEditor.html'),
     scope: {
       route: '=',
+      edit: '=?',
     },
     link(scope, elem, attr) {
-      scope.edit = 'route'
+      scope.edit = scope.edit || 'route'
 
       scope.resetRoute = function() {
         if (scope.route && scope.route.id) {

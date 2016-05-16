@@ -1,6 +1,6 @@
 import _ from 'lodash'
 
-export default function(RoutesService, AdminService, StopsPopup) {
+export default function(RoutesService, AdminService, DriverService, StopsPopup) {
 
   return {
     scope: {
@@ -20,7 +20,7 @@ export default function(RoutesService, AdminService, StopsPopup) {
         existingDates: [],
         validDates: [],
         tripStops: [],
-        trip: null,
+        trip: {},
 
         addTripStop() {
           this.tripStops.push({
@@ -37,6 +37,10 @@ export default function(RoutesService, AdminService, StopsPopup) {
         RoutesService.getTrips({
           routeId: scope.routeId,
           startDate: new Date(scope.filter.startDate)
+        })
+        .then((trips) => {
+          // Add driver info to trips
+          return DriverService.fetchDriverInfo(trips)
         })
         .then((trips) => {
           scope.trips = trips;
@@ -70,6 +74,9 @@ export default function(RoutesService, AdminService, StopsPopup) {
         return trip.tripStops.find(ts => ts.stop.id == stopId)
       }
       scope.referenceTrip = function(trip) {
+        scope.disp.trip = _.assign({}, trip);
+        delete scope.disp.trip.id;
+
         scope.disp.tripStops = trip.tripStops.map(ts => ({
           stopId: ts.stopId,
           time: new Date(ts.time),
@@ -87,8 +94,7 @@ export default function(RoutesService, AdminService, StopsPopup) {
         }
       }
       scope.editTrip = function(trip) {
-        scope.disp.trip = trip;
-        console.log(trip.tripStops)
+        scope.disp.trip = _.assign({}, trip);
         scope.disp.tripStops = trip.tripStops.map(ts => ({
           id: ts.id,
           stopId: ts.stopId,
@@ -96,26 +102,48 @@ export default function(RoutesService, AdminService, StopsPopup) {
           canBoard: ts.canBoard,
           canAlight: ts.canAlight,
         }));
-        console.log(scope.disp.tripStops)
       }
       scope.clearEdit = function() {
-        scope.disp.trip = null;
+        scope.disp.trip = {};
         scope.disp.tripStops = [];
       }
-      scope.saveTrips = function() {
-        if (scope.disp.trip) {
-          RoutesService.updateTrip(
+      scope.saveTrips = async function() {
+        // get the driver id... and create the driver if non-existent
+        var driver = await DriverService.fetchDriverIds([scope.disp.trip])
+
+        if (scope.disp.trip.driverTelephone && !scope.disp.trip.driverId) {
+          driver = await DriverService.createDriver({
+            telephone: '+65' + scope.disp.trip.driverTelephone,
+            name: scope.disp.trip.driverTelephone,
+          })
+          scope.disp.trip.driverId = driver.id;
+        }
+        else if (!scope.disp.trip.driverTelephone) {
+          scope.disp.trip.driverId = null;
+        }
+
+        if (scope.disp.trip.id) {
+          // get a list of the trips to update
+          var trips = scope.trips.filter(tr => tr.id in scope.selection.selected)
+
+          // update the trips...
+          return RoutesService.updateTrips(
             {
-              trip: scope.disp.trip,
+              trips: trips,
+              driverId: scope.disp.trip.driverId,
+              capacity: scope.disp.trip.capacity,
               tripStops: scope.disp.tripStops,
             })
+            .then(scope.refreshTrips)
         }
         else {
-          RoutesService.createTrips({
+          return RoutesService.createTrips({
             routeId: scope.routeId,
             dates: scope.disp.newDates,
+            capacity: scope.disp.trip.capacity,
             tripStops: scope.disp.tripStops,
             companyId: AdminService.getCompanyId(),
+            driverId: scope.disp.trip.driverId,
           })
           .then(scope.refreshTrips)
           .then(scope.resetTrips)
@@ -136,6 +164,77 @@ export default function(RoutesService, AdminService, StopsPopup) {
           ts.stopId = x.id;
         })
       }
+
+      //// Logic to handle trip selection (using Ctrl, Shift etc)
+      scope.selection = {
+        selected: {},
+        lastSelected: null,
+        listStart: null
+      }
+      scope.selectTrips = function (list, index, event) {
+        var id = list[index].id;
+
+        function toggle(index) {
+          if (list[index].id in scope.selection.selected) {
+            delete scope.selection.selected[list[index].id]
+          }
+          else {
+            scope.selection.selected[list[index].id] = list[index];
+          }
+        }
+
+        if (event.ctrlKey) {
+          event.preventDefault();
+          toggle(index);
+          scope.selection.listStart = index;
+          scope.selection.lastSelected = index;
+        }
+        else if (event.shiftKey) {
+          // FIXME: This is still not entirely intuitive
+          event.preventDefault();
+
+          if (index < scope.selection.lastSelected) {
+            for (let i=scope.selection.lastSelected - (
+                    (scope.selection.lastSelected == scope.selection.listStart) ? 1
+                    : (scope.selection.lastSelected < scope.selection.listStart) ? 1
+                    : 0);
+                  i >= index;
+                  i--) {
+              toggle(i)
+            }
+          }
+          else if (index > scope.selection.lastSelected) {
+            for (let i = scope.selection.lastSelected + (
+                    (scope.selection.lastSelected == scope.selection.listStart) ? 1
+                    : (scope.selection.lastSelected > scope.selection.listStart) ? 1
+                    : 0);
+                  i <= index;
+                  i++) {
+              toggle(i)
+            }
+          }
+
+          scope.selection.lastSelected = index;
+        }
+        else {
+          event.preventDefault();
+          scope.selection.selected = {}
+          toggle(index)
+          scope.selection.listStart = index;
+          scope.selection.lastSelected = index;
+        }
+        if (scope.selection.selected[id]) {
+          scope.editTrip(list[index])
+        }
+        // if nothing is selected clear the trip
+        console.log(scope.selection.selected)
+        if (!_.every(_.values(scope.selection.selected))
+          || _.keys(scope.selection.selected).length == 0
+        ) {
+          scope.disp.trip = {};
+          scope.disp.tripStops = [];
+        }
+      }; /* selectTrips() */
 
       scope.$watchGroup(['filter.startDate', 'filter.endDate'], scope.refreshTrips)
       scope.$watch('routeId', scope.refreshTrips)
