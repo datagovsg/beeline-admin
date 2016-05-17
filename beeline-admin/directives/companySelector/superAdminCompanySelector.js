@@ -3,10 +3,9 @@ export default function($http, AdminService) {
   return {
     replace: true,
     template: `
-<label>
+<label ng-if="adminService.session().role == 'superadmin'">
   You are SuperAdmin! Choose the company you're acting on behalf of:
   <company-selector
-  ng-if="adminService.session.role == 'superadmin'"
   ng-model="adminService.actingCompany"></company-selector>
 </label>
     `,

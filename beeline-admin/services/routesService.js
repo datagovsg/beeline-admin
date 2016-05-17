@@ -26,8 +26,8 @@ export default function (AdminService, DriverService) {
         include_trips: options.includeTrips,
         include_availability: options.includeAvailability
       } : {}
-      if (AdminService.session.role == 'admin') {
-        query.transportCompanyId = AdminService.session.transportCompanyId
+      if (AdminService.session().role == 'admin') {
+        query.transportCompanyId = AdminService.session().transportCompanyId
       }
       query = querystring.stringify(query)
 

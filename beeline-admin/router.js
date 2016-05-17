@@ -7,32 +7,59 @@ export default function($stateProvider, $urlRouterProvider) {
   // Each state's controller can be found in controllers.js
   $stateProvider
 
-  // setup an abstract state for the tabs directive
+  .state('default', {
+    url: '/',
+    template: '',
+    data: {
+      requiresLogin: false,
+    }
+  })
+
+  .state('login', {
+    url: '/login',
+    templateUrl: 'templates/login.html',
+    data: {
+      requiresLogin: false,
+    },
+    controller: 'login',
+  })
+
   .state('transactions', {
     url: '/transactions',
     templateUrl: 'templates/transactions.html',
     controller: 'transactions',
+    data: {
+      requiresLogin: true,
+    }
   })
 
-  // setup an abstract state for the tabs directive
   .state('routes', {
     url: '/routes/{routeId:int}/{action}',
     templateUrl: 'templates/routes.html',
     controller: 'routes',
+    data: {
+      requiresLogin: true,
+    }
   })
 
   .state('summary', {
     url: '/summary',
     templateUrl: 'templates/summary.html',
     controller: 'summary',
+    data: {
+      requiresLogin: true,
+    }
   })
 
   .state('bookings', {
     url: '/bookings',
     templateUrl: 'templates/bookings.html',
     controller: 'bookings',
+    data: {
+      requiresLogin: true,
+    }
   })
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/transactions');
+  $urlRouterProvider.otherwise('/');
 
 }

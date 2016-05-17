@@ -19,6 +19,20 @@ module.exports = {
         exclude: /node_modules/,
         include: path.resolve('.'),
       },
+      /* The following are required by auth0-lock */
+      {
+        test: /node_modules[\\\/]auth0-lock[\\\/].*\.js$/,
+        loaders: [
+          'transform-loader/cacheable?brfs',
+          'transform-loader/cacheable?packageify'
+        ]
+      }, {
+        test: /node_modules[\\\/]auth0-lock[\\\/].*\.ejs$/,
+        loader: 'transform-loader/cacheable?ejsify'
+      }, {
+        test: /\.json$/,
+        loader: 'json-loader'
+      }
     ],
   },
   entry: [

@@ -10,27 +10,37 @@ function decodeToken(tk) {
   return b64_to_utf8(b);
 }
 
-export default function ($http) {
-  /* Superadmin session token */
-  this.sessionToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoic3VwZXJhZG1pbiIsImlhdCI6MTQ2MjI0MjE0Mn0.lPkEHqr2O_GNPQi_MCxa85IUkn9qx7uXB6HDi1b071I'
-  this.session = JSON.parse(decodeToken(this.sessionToken))
-
+export default function ($http, store, jwtHelper) {
   this.beeline = function(options) {
     options.url = 'http://localhost:8080' + options.url
 
-    if (this.sessionToken) {
+    if (store.get('sessionToken')) {
       options.headers = options.headers || {};
-      options.headers.authorization = 'Bearer ' + this.sessionToken;
+      options.headers.authorization = 'Bearer ' + store.get('sessionToken');
     }
 
     return $http(options);
   }
 
-  this.getCompanyId = function() {
-    if (this.session.role == 'admin') {
-      return this.session.transportCompanyId;
+  var lastSessionToken = null;
+  var lastSession;
+  this.session = function() {
+    if (lastSessionToken == store.get('sessionToken')) {
+      return lastSession;
     }
-    else if (this.session.role == 'superadmin') {
+    else {
+      lastSession = jwtHelper.decodeToken(store.get('sessionToken'))
+      return lastSession;
+    }
+  }
+
+  this.getCompanyId = function() {
+    var profile = store.get('profile')
+
+    if (profile.indexOf('admin') != -1) {
+      return profile.transportCompanyId;
+    }
+    else if (profile.role == 'superadmin') {
       return this.actingCompany;
     }
     else {
