@@ -65,6 +65,12 @@
         Trip capacity: <input type="number" ng-model="disp.trip.capacity" />
       </label>
 
+      <label ng-if="adminService.session().role == 'superadmin'">
+        Company:
+        <company-selector ng-model="disp.trip.transportCompanyId">
+        </company-selector>
+      </label>
+
       <table>
         <thead>
           <tr>
@@ -163,7 +169,7 @@
         <td
           ng-mousedown="selectTrips(sorted_trips, $index, $event)"
           >
-          :)
+          <small>{{trip.id}}</small>
           <i ng-hide="!selection.selected[trip.id]"
             class="glyphicon glyphicon-ok">
           </i>

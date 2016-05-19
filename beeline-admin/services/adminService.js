@@ -1,4 +1,5 @@
 import assert from 'assert'
+const env = require('../env.json')
 
 function b64_to_utf8(str) {
     return decodeURIComponent(unescape(window.atob(str)));
@@ -10,9 +11,9 @@ function decodeToken(tk) {
   return b64_to_utf8(b);
 }
 
-export default function ($http, store, jwtHelper) {
+export default function ($http, $location, store, jwtHelper, auth) {
   this.beeline = function(options) {
-    options.url = 'http://localhost:8080' + options.url
+    options.url = env.BACKEND_URL + options.url
 
     if (store.get('sessionToken')) {
       options.headers = options.headers || {};
@@ -20,6 +21,13 @@ export default function ($http, store, jwtHelper) {
     }
 
     return $http(options);
+  }
+
+  this.logout = function() {
+    auth.signout();
+    store.remove('sessionToken');
+    store.remove('profile');
+    $location.path('/login');
   }
 
   var lastSessionToken = null;

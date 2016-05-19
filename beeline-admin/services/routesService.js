@@ -181,14 +181,19 @@ export default function (AdminService, DriverService) {
         }
       });
 
+      var updatePayload = {
+        capacity: capacity,
+        driverId: driverId,
+        tripStops: updateData,
+      };
+      if (options.transportCompanyId) {
+        updatePayload.transportCompanyId = options.transportCompanyId;
+      }
+
       return AdminService.beeline({
         method: 'PUT',
         url: `/trips/${trip.id}`,
-        data: {
-          capacity: capacity,
-          driverId: driverId,
-          tripStops: updateData,
-        },
+        data: updatePayload,
       })
     }))
   };

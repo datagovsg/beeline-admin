@@ -8,6 +8,8 @@ export default function(RoutesService, AdminService, DriverService, StopsPopup) 
     },
     template: require('./tripsEditor.html'),
     link(scope, elem, attr) {
+      scope.adminService = AdminService;
+
       /* Date filters require UTC time */
       var now = new Date()
       now.setUTCHours(0, 0, 0, 0)
@@ -132,6 +134,7 @@ export default function(RoutesService, AdminService, DriverService, StopsPopup) 
               trips: trips,
               driverId: scope.disp.trip.driverId,
               capacity: scope.disp.trip.capacity,
+              companyId: scope.disp.trip.transportCompanyId,
               tripStops: scope.disp.tripStops,
             })
             .then(scope.refreshTrips)
@@ -142,7 +145,7 @@ export default function(RoutesService, AdminService, DriverService, StopsPopup) 
             dates: scope.disp.newDates,
             capacity: scope.disp.trip.capacity,
             tripStops: scope.disp.tripStops,
-            companyId: AdminService.getCompanyId(),
+            companyId: scope.disp.trip.transportCompanyId,
             driverId: scope.disp.trip.driverId,
           })
           .then(scope.refreshTrips)

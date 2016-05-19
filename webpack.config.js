@@ -1,4 +1,10 @@
 var path = require('path');
+var fs = require('fs')
+
+var env = {
+    BACKEND_URL: process.env.BACKEND_URL || 'http://staging.beeline.sg'
+}
+fs.writeFileSync(`${__dirname}/beeline-admin/env.json`, JSON.stringify(env))
 
 module.exports = {
   devtool: 'source-map',

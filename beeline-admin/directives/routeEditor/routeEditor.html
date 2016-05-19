@@ -36,7 +36,7 @@
       <input type="text" ng-model="route.to">
     </label>
 
-    <label>
+    <label ng-if="adminService.session().role == 'superadmin'">
       Company:
       <company-selector ng-model="route.transportCompanyId">
       </company-selector>

@@ -1,4 +1,4 @@
-export default function(AdminService, RoutesService) {
+export default function(AdminService, RoutesService, $rootScope) {
   return {
     template: require('./routeEditor.html'),
     scope: {
@@ -7,6 +7,7 @@ export default function(AdminService, RoutesService) {
     },
     link(scope, elem, attr) {
       scope.edit = scope.edit || 'route'
+      scope.adminService = AdminService;
 
       scope.resetRoute = function() {
         if (scope.route && scope.route.id) {

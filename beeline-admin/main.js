@@ -38,8 +38,22 @@ angular.module('beeline-admin', [
 .controller('bookings', require('./controllers/bookingsController.js').default)
 .controller('login', require('./controllers/loginController.js').default)
 .filter('makeRoutePath', require('./shared/filters.js').makeRoutePath)
-.run(function (auth) {
+.run(function (auth, $rootScope, store, jwtHelper) {
   auth.hookEvents();
+
+  // This events gets triggered on refresh or URL change
+  $rootScope.$on('$locationChangeStart', function() {
+    var token = store.get('token');
+    if (token) {
+      if (!jwtHelper.isTokenExpired(token)) {
+        if (!auth.isAuthenticated) {
+          auth.authenticate(store.get('profile'), token);
+        }
+      } else {
+        // Either show Login page or use the refresh token to get a new idToken
+      }
+    }
+  });
 })
 
 
@@ -47,6 +61,8 @@ function configureGoogleMaps(uiGmapGoogleMapApiProvider) {
   uiGmapGoogleMapApiProvider.configure({
     key: 'AIzaSyBkFH42PlbFrsfdAnjw37qMLAxjhkMT-54'
   })
+
+
 }
 
 function configureLoginPage(authProvider) {
@@ -56,8 +72,13 @@ function configureLoginPage(authProvider) {
     loginState: 'login',
   })
 
+  authProvider.on('authenticated', function($location) {
+    console.log('I am authenticated')
+  })
+
   authProvider.on('loginSuccess', function($location, profilePromise, idToken, store, AdminService, auth) {
     console.log("Login Success");
+    store.set('token', idToken)
     AdminService.beeline({
       method: 'POST',
       url: '/admins/auth/login',
