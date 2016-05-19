@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+<head>
+    <meta name="google-signin-scope" content="email">
+    <meta name="google-signin-client_id" content="737604451857-n2trjedfbv03jp3njid0bmnlr22ag3gp.apps.googleusercontent.com">
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <style>
+    * {
+        font-family: Lato;
+    }
+    main {
+        text-align: center;
+    }
+    .g-signin2 {
+        display: inline-block;
+    }
+    </style>
+    <link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css" />
+    <script src="jquery.js"></script>
+    <script src="vue.js"></script>
+</head>
+
+<body>
+<main>
+<h1>Bus Operator Tool</h1>
+
+    <div class="g-signin2" data-onsuccess="onSuccess"></div>
+
+    <div>
+        <button class="btn" onclick="disconnect()">Sign out</button>
+    </div>
+
+
+    <div id="profile">
+    <template v-if="name">
+        <h4>        You are signed in as {{name}} </h4>
+        <p>
+        <img src="{{image_url}}" style="width: 100px; height: 100px"/>
+        </p>
+        <b> Email address</b>: {{email}}
+
+        <p>
+            <a class="btn btn-primary" href="/static/index.html">Proceed</a>
+        </p>
+    </template>
+    </div>
+</main>
+    <script>
+      var ProfileElem = new Vue({
+        el: '#profile',
+        data: {
+            name: '',
+            email: '',
+            image_url: '',
+        },
+      });
+      function onSuccess(googleUser) {
+        // Useful data for your client-side scripts:
+        var profile = googleUser.getBasicProfile();
+        $.ajax('/verify_token', {
+            type: 'GET',
+            dataType: 'json',
+            data: {
+                id_token: googleUser.getAuthResponse().id_token,
+            },
+            success: function (response) {
+                ProfileElem.name = profile.getName();
+                ProfileElem.image_url = profile.getImageUrl();
+                ProfileElem.email = profile.getEmail();
+
+                console.log(response);
+
+                // save the data in local storage?
+                localStorage['session_token'] = response.session_token;
+            },
+            error: function (err) {
+                console.log(err);
+                alert('Log-in failed');
+            },
+        });
+      };
+
+    function renderButton() {
+//         gapi.signin2.render('google-signin', {
+// 'scope': 'profile',
+// 'width': 250,
+// 'height': 50,
+// 'longtitle': true,
+// 'theme': 'dark',
+// 'onsuccess': onSuccess,
+//         });
+    }
+
+    function disconnect() {
+        delete localStorage['session_token'];
+        gapi.auth2.getAuthInstance().signOut()
+        .then(function () {
+            ProfileElem.name = '';
+        });
+    }
+    </script>
+    <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
+</body>
+
+</html>
