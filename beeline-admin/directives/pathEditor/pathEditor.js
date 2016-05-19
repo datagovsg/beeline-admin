@@ -1,12 +1,13 @@
 
 
-export default function() {
+export default function($rootScope) {
   return {
     template: require('./pathEditor.html'),
     scope: {
       path: '=',
     },
     link(scope, elem, attr) {
+      scope.mapControl = {}
       scope.events = {
         click(map, eventName, args) {
           scope.$apply(() => {``
@@ -41,6 +42,11 @@ export default function() {
           longitude: latlng.lng,
         }))
       }, true)
+
+      $rootScope.$on('$routeUpdate', () => {
+        if (google && google.maps && scope.mapControl.getGMap)
+          google.maps.event.trigger(scope.mapControl.getGMap(), 'resize')
+      })
     }
   }
 }
