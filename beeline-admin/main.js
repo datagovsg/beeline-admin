@@ -4,6 +4,8 @@ require('angular-storage')
 require('angular-jwt')
 require('auth0-angular')
 
+const env = require('./env')
+
 
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
@@ -67,8 +69,8 @@ function configureGoogleMaps(uiGmapGoogleMapApiProvider) {
 
 function configureLoginPage(authProvider) {
   authProvider.init({
-    domain: 'daniel-sim.auth0.com',
-    clientId: 'TzhwfQaMFaeo350IL2NqygkNHb450fVp',
+    domain: env.AUTH0_DOMAIN,
+    clientId: env.AUTH0_CID,
     loginState: 'login',
   })
 
