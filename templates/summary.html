@@ -39,7 +39,7 @@
         <td ng-repeat='trip in route.tripsByDay track by $index'
             ng-class="{ day: true, 'has-trip': route.tripsByDay[$index] }"
         >
-          {{trip.availability.seatsBooked}}
+          {{trip.availability.seatsBooked || ''}}
         </td>
       </tr>
     </table>
