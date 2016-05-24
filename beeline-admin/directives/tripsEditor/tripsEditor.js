@@ -38,7 +38,9 @@ export default function(RoutesService, AdminService, DriverService, StopsPopup) 
       scope.refreshTrips = function() {
         RoutesService.getTrips({
           routeId: scope.routeId,
-          startDate: new Date(scope.filter.startDate)
+          startDate: new Date(scope.filter.startDate),
+          endDate: new Date(new Date(scope.filter.startDate).getTime() + 60 * 24 * 60 * 60 * 1000),
+          includeAvailability: true,
         })
         .then((trips) => {
           // Add driver info to trips

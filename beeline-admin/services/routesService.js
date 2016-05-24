@@ -69,7 +69,9 @@ export default function (AdminService, DriverService) {
       method: 'GET',
       url: `/routes/${options.routeId}?`+ querystring.stringify({
         include_trips: true,
-        start_date: options.startDate.toISOString().substr(0,10)
+        start_date: options.startDate.toISOString().substr(0,10),
+        end_date: options.endDate.toISOString().substr(0,10),
+        include_availability: options.includeAvailability ? true : false,
       })
     })
     .then((response) => {

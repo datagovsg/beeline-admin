@@ -144,6 +144,7 @@
         <th></th> <!-- selection button -->
         <th></th> <!-- actions (delete, use) -->
         <th></th> <!-- pax -->
+        <th></th> <!-- booked -->
         <th></th> <!--date -->
         <th></th> <!-- driver -->
         <th colspan="{{disp.stopsList.length}}">Stops</th>
@@ -152,6 +153,7 @@
         <th></th>
         <th></th>
         <th>Cap</th>
+        <th>Booked</th>
         <th>Date</th>
         <th>Driver</th>
         <th ng-repeat="stop in disp.stopsList track by $index">
@@ -188,6 +190,10 @@
         </td>
         <td>
           {{trip.capacity}}
+          <i class="glyphicon glyphicon-user"></i>
+        </td>
+        <td>
+          {{trip.availability.seatsBooked}}
           <i class="glyphicon glyphicon-user"></i>
         </td>
         <td>

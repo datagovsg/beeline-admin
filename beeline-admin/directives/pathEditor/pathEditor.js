@@ -1,6 +1,6 @@
 
 
-export default function($rootScope) {
+export default function($rootScope, $location) {
   return {
     template: require('./pathEditor.html'),
     scope: {
@@ -43,9 +43,10 @@ export default function($rootScope) {
         }))
       }, true)
 
-      $rootScope.$on('$routeUpdate', () => {
-        if (google && google.maps && scope.mapControl.getGMap)
-          google.maps.event.trigger(scope.mapControl.getGMap(), 'resize')
+      scope.$watch(() => $location.url(), () => {
+        if (window.google && google.maps && scope.mapControl.getGMap) {
+          setTimeout(() => google.maps.event.trigger(scope.mapControl.getGMap(), 'resize'), 0)
+        }
       })
     }
   }
