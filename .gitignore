@@ -5,3 +5,5 @@ node_modules/
 platforms/
 plugins/
 beeline-admin/env.json
+www/css
+www/lib
