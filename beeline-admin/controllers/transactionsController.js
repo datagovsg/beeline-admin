@@ -3,7 +3,7 @@ import querystring from 'querystring'
 export default function($scope, $http, AdminService) {
   $scope.transactions = [];
   $scope.currentPage = 1;
-  $scope.perPage = 5;
+  $scope.perPage = 20;
   $scope.pageCount=1;
 
   function query() {
