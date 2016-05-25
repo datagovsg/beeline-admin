@@ -27,6 +27,11 @@
             {{transaction.description}}
           <br/>
           {{transaction.createdAt | date:'dd MMM yyyy HH:mm:ss'}}
+
+          <br/>
+          <a href="https://api.beeline.sg/custom/wrs/email/{{transaction.id}}">
+            Send ticket to feedback@beeline.sg
+          </a>
         </td>
 
         <td colspan="4">
