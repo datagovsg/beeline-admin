@@ -52,11 +52,19 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner) {
     }
     var queryPromise = AdminService.beeline({
       method: 'GET',
-      url: `/tickets/full?` + querystring.stringify(queryOptions),
+      url: `/custom/wrs/report?` + querystring.stringify(queryOptions),
     })
     .then((result) => {
-      $scope.tickets = result.data.tickets;
-      $scope.pageCount = result.data.pageCount;
+      $scope.tickets = result.data.rows;
+      $scope.pageCount = Math.ceil(result.data.count / result.data.perPage);
+
+      for (let ticket of $scope.tickets) {
+        try {
+          ticket.user.json = JSON.parse(ticket.user.name)
+        }
+        catch (err) {
+        }
+      }
     })
     .catch((err) => {
       console.error(err.stack);

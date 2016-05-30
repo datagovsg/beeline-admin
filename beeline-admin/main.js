@@ -39,6 +39,7 @@ angular.module('beeline-admin', [
 .controller('routes', require('./controllers/routesController.js').default)
 .controller('summary', require('./controllers/summaryController.js').default)
 .controller('bookings', require('./controllers/bookingsController.js').default)
+.controller('bookingsWrs', require('./controllers/bookingsControllerWrs.js').default)
 .controller('login', require('./controllers/loginController.js').default)
 .filter('makeRoutePath', require('./shared/filters.js').makeRoutePath)
 .run(function (auth, $rootScope, store, jwtHelper) {

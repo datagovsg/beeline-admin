@@ -12,6 +12,9 @@ function decodeToken(tk) {
 }
 
 export default function ($http, $location, store, jwtHelper, auth) {
+
+  this.serverUrl = () => env.BACKEND_URL;
+
   this.beeline = function(options) {
     options.url = env.BACKEND_URL + options.url
 

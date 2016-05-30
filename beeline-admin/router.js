@@ -53,8 +53,19 @@ export default function($stateProvider, $urlRouterProvider) {
 
   .state('bookings', {
     url: '/bookings',
-    templateUrl: 'templates/bookings.html',
-    controller: 'bookings',
+    templateUrl: 'templates/bookings-wrs.html',
+    controller: 'bookingsWrs',
+    data: {
+      requiresLogin: true,
+    }
+  })
+
+
+  .state('test', {
+    url: '/test',
+    templateUrl: 'templates/test.html',
+    controller: function ($scope) {
+    },
     data: {
       requiresLogin: true,
     }
