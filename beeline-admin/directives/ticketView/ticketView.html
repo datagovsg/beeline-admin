@@ -1,5 +1,5 @@
 <div>
-<b>{{data.trips[0].route.label}}</b> 
+<b>{{data.trips[0].route.label}}</b>
 {{data.trips[0].date | date: 'EEE dd MMM yy':'UTC'}}
   <dl class="dl-compact">
     <dt>Board Stop</dt>
@@ -17,9 +17,17 @@
 
     <dt>User</dt>
     <dd>
+      <payment-view ng-if="data.user.json"
+        pv-data="data.user.json"
+        pv-title="data.user.json.name"
+        collapsed="false"
+        >
+      </payment-view>
+      <span ng-if="!data.user.json">
         {{data.user.name}} /
         {{data.user.email}} /
         {{data.user.telephone}}
+      </span>
     </dd>
 
     <dt>Id</dt>

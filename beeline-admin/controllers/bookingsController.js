@@ -1,6 +1,6 @@
 import querystring from 'querystring'
 
-export default function($scope, AdminService, RoutesService) {
+export default function($scope, AdminService, RoutesService, LoadingSpinner) {
   $scope.tickets = [];
   $scope.currentPage = 1;
 
@@ -50,7 +50,7 @@ export default function($scope, AdminService, RoutesService) {
     if ($scope.filter.statuses.length) {
       queryOptions.statuses = JSON.stringify($scope.filter.statuses)
     }
-    AdminService.beeline({
+    var queryPromise = AdminService.beeline({
       method: 'GET',
       url: `/tickets/full?` + querystring.stringify(queryOptions),
     })
@@ -61,6 +61,9 @@ export default function($scope, AdminService, RoutesService) {
     .catch((err) => {
       console.error(err.stack);
     });
+
+
+    LoadingSpinner.watchPromise(queryPromise)
   }
 
   function queryRoutes() {

@@ -1,6 +1,6 @@
 
 
-export default function($scope, RoutesService) {
+export default function($scope, RoutesService, LoadingSpinner) {
 
   $scope.selectedMonth = new Date();
   $scope.routes = [];
@@ -21,7 +21,7 @@ export default function($scope, RoutesService) {
       ).getTime(),
     }
 
-    RoutesService.getRoutes(options)
+    LoadingSpinner.watchPromise(RoutesService.getRoutes(options)
     .then((routes) => {
 
       // preprocess the routes to track all days...
@@ -40,7 +40,7 @@ export default function($scope, RoutesService) {
       }
 
       $scope.routes = routes;
-    })
+    }))
   }
 
   $scope.$watch('selectedMonth', refresh)

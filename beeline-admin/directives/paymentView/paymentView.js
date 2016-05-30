@@ -4,10 +4,11 @@ export default function () {
     scope: {
       pvData: '=',
       pvTitle: '=',
-      collapse: '='
+      collapsed: '<?'
     },
     link: function (scope, elem, attr) {
-      scope.collapsed = true;
+      if (scope.collapsed == undefined)
+        scope.collapsed = true;
       scope.isObject = (o) => typeof(o) == 'object'
     }
   }
