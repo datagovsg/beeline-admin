@@ -47,16 +47,16 @@
   \******************/
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(/*! /home/daniel/beeline-admin/node_modules/angular/angular */1);
-	__webpack_require__(/*! /home/daniel/beeline-admin/node_modules/angular-ui-router/release/angular-ui-router */2);
-	__webpack_require__(/*! /home/daniel/beeline-admin/node_modules/angular-ui-bootstrap/dist/ui-bootstrap */3);
-	__webpack_require__(/*! /home/daniel/beeline-admin/node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls */4);
-	__webpack_require__(/*! /home/daniel/beeline-admin/node_modules/angular-animate/angular-animate */5);
-	__webpack_require__(/*! /home/daniel/beeline-admin/node_modules/angular-touch/angular-touch */6);
-	__webpack_require__(/*! /home/daniel/beeline-admin/node_modules/angular-simple-logger/dist/angular-simple-logger */7);
-	__webpack_require__(/*! /home/daniel/beeline-admin/node_modules/lodash/lodash */8);
-	__webpack_require__(/*! /home/daniel/beeline-admin/node_modules/angular-google-maps/dist/angular-google-maps */10);
-	module.exports = __webpack_require__(/*! /home/daniel/beeline-admin/beeline-admin/main.js */11);
+	__webpack_require__(/*! /Users/xujing/Desktop/beeline-admin/node_modules/angular/angular */1);
+	__webpack_require__(/*! /Users/xujing/Desktop/beeline-admin/node_modules/angular-ui-router/release/angular-ui-router */2);
+	__webpack_require__(/*! /Users/xujing/Desktop/beeline-admin/node_modules/angular-ui-bootstrap/dist/ui-bootstrap */3);
+	__webpack_require__(/*! /Users/xujing/Desktop/beeline-admin/node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls */4);
+	__webpack_require__(/*! /Users/xujing/Desktop/beeline-admin/node_modules/angular-animate/angular-animate */5);
+	__webpack_require__(/*! /Users/xujing/Desktop/beeline-admin/node_modules/angular-touch/angular-touch */6);
+	__webpack_require__(/*! /Users/xujing/Desktop/beeline-admin/node_modules/angular-simple-logger/dist/angular-simple-logger */7);
+	__webpack_require__(/*! /Users/xujing/Desktop/beeline-admin/node_modules/lodash/lodash */8);
+	__webpack_require__(/*! /Users/xujing/Desktop/beeline-admin/node_modules/angular-google-maps/dist/angular-google-maps */10);
+	module.exports = __webpack_require__(/*! /Users/xujing/Desktop/beeline-admin/beeline-admin/main.js */11);
 
 
 /***/ },
@@ -67,7 +67,7 @@
 /***/ function(module, exports) {
 
 	/**
-	 * @license AngularJS v1.5.5
+	 * @license AngularJS v1.5.6
 	 * (c) 2010-2016 Google, Inc. http://angularjs.org
 	 * License: MIT
 	 */
@@ -125,7 +125,7 @@
 	      return match;
 	    });
 	
-	    message += '\nhttp://errors.angularjs.org/1.5.5/' +
+	    message += '\nhttp://errors.angularjs.org/1.5.6/' +
 	      (module ? module + '/' : '') + code;
 	
 	    for (i = SKIP_INDEXES, paramPrefix = '?'; i < templateArgs.length; i++, paramPrefix = '&') {
@@ -584,12 +584,22 @@
 	 * functional style.
 	 *
 	   ```js
-	     function transformer(transformationFn, value) {
-	       return (transformationFn || angular.identity)(value);
-	     };
+	   function transformer(transformationFn, value) {
+	     return (transformationFn || angular.identity)(value);
+	   };
+	
+	   // E.g.
+	   function getResult(fn, input) {
+	     return (fn || angular.identity)(input);
+	   };
+	
+	   getResult(function(n) { return n * 2; }, 21);   // returns 42
+	   getResult(null, 21);                            // returns 21
+	   getResult(undefined, 21);                       // returns 21
 	   ```
-	  * @param {*} value to be returned.
-	  * @returns {*} the value passed in.
+	 *
+	 * @param {*} value to be returned.
+	 * @returns {*} the value passed in.
 	 */
 	function identity($) {return $;}
 	identity.$inject = [];
@@ -834,8 +844,8 @@
 	 */
 	function isElement(node) {
 	  return !!(node &&
-	    (node.nodeName  // we are a direct element
-	    || (node.prop && node.attr && node.find)));  // we have an on and find method part of jQuery API
+	    (node.nodeName  // We are a direct element.
+	    || (node.prop && node.attr && node.find)));  // We have an on and find method part of jQuery API.
 	}
 	
 	/**
@@ -1325,7 +1335,7 @@
 	            : fn.call(self);
 	        };
 	  } else {
-	    // in IE, native methods are not functions so they cannot be bound (note: they don't need to be)
+	    // In IE, native methods are not functions so they cannot be bound (note: they don't need to be).
 	    return fn;
 	  }
 	}
@@ -1362,6 +1372,27 @@
 	 * @param {boolean|number} [pretty=2] If set to true, the JSON output will contain newlines and whitespace.
 	 *    If set to an integer, the JSON output will contain that many spaces per indentation.
 	 * @returns {string|undefined} JSON-ified string representing `obj`.
+	 * @knownIssue
+	 *
+	 * The Safari browser throws a `RangeError` instead of returning `null` when it tries to stringify a `Date`
+	 * object with an invalid date value. The only reliable way to prevent this is to monkeypatch the
+	 * `Date.prototype.toJSON` method as follows:
+	 *
+	 * ```
+	 * var _DatetoJSON = Date.prototype.toJSON;
+	 * Date.prototype.toJSON = function() {
+	 *   try {
+	 *     return _DatetoJSON.call(this);
+	 *   } catch(e) {
+	 *     if (e instanceof RangeError) {
+	 *       return null;
+	 *     }
+	 *     throw e;
+	 *   }
+	 * };
+	 * ```
+	 *
+	 * See https://github.com/angular/angular.js/pull/14221 for more information.
 	 */
 	function toJson(obj, pretty) {
 	  if (isUndefined(obj)) return undefined;
@@ -1452,7 +1483,7 @@
 	  try {
 	    return decodeURIComponent(value);
 	  } catch (e) {
-	    // Ignore any invalid uri component
+	    // Ignore any invalid uri component.
 	  }
 	}
 	
@@ -1697,7 +1728,7 @@
 	      module,
 	      config = {};
 	
-	  // The element `element` has priority over any other element
+	  // The element `element` has priority over any other element.
 	  forEach(ngAttrPrefixes, function(prefix) {
 	    var name = prefix + 'app';
 	
@@ -1791,7 +1822,7 @@
 	
 	    if (element.injector()) {
 	      var tag = (element[0] === window.document) ? 'document' : startingTag(element);
-	      //Encode angle brackets to prevent input from being sanitized to empty string #8683
+	      // Encode angle brackets to prevent input from being sanitized to empty string #8683.
 	      throw ngMinErr(
 	          'btstrpd',
 	          "App already bootstrapped with this element '{0}'",
@@ -2547,11 +2578,11 @@
 	 * - `codeName` – `{string}` – Code name of the release, such as "jiggling-armfat".
 	 */
 	var version = {
-	  full: '1.5.5',    // all of these placeholder strings will be replaced by grunt's
+	  full: '1.5.6',    // all of these placeholder strings will be replaced by grunt's
 	  major: 1,    // package task
 	  minor: 5,
-	  dot: 5,
-	  codeName: 'material-conspiration'
+	  dot: 6,
+	  codeName: 'arrow-stringification'
 	};
 	
 	
@@ -2778,8 +2809,8 @@
 	 * - [`removeData()`](http://api.jquery.com/removeData/)
 	 * - [`replaceWith()`](http://api.jquery.com/replaceWith/)
 	 * - [`text()`](http://api.jquery.com/text/)
-	 * - [`toggleClass()`](http://api.jquery.com/toggleClass/)
-	 * - [`triggerHandler()`](http://api.jquery.com/triggerHandler/) - Passes a dummy event object to handlers.
+	 * - [`toggleClass()`](http://api.jquery.com/toggleClass/) - Does not support a function as first argument
+	 * - [`triggerHandler()`](http://api.jquery.com/triggerHandler/) - Passes a dummy event object to handlers
 	 * - [`unbind()`](http://api.jquery.com/unbind/) - Does not support namespaces or event object as parameter
 	 * - [`val()`](http://api.jquery.com/val/)
 	 * - [`wrap()`](http://api.jquery.com/wrap/)
@@ -3939,8 +3970,16 @@
 	var STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
 	var $injectorMinErr = minErr('$injector');
 	
+	function stringifyFn(fn) {
+	  // Support: Chrome 50-51 only
+	  // Creating a new string by adding `' '` at the end, to hack around some bug in Chrome v50/51
+	  // (See https://github.com/angular/angular.js/issues/14487.)
+	  // TODO (gkalpak): Remove workaround when Chrome v52 is released
+	  return Function.prototype.toString.call(fn) + ' ';
+	}
+	
 	function extractArgs(fn) {
-	  var fnText = Function.prototype.toString.call(fn).replace(STRIP_COMMENTS, ''),
+	  var fnText = stringifyFn(fn).replace(STRIP_COMMENTS, ''),
 	      args = fnText.match(ARROW_ARG) || fnText.match(FN_ARGS);
 	  return args;
 	}
@@ -4208,18 +4247,20 @@
 	 * these cases the {@link auto.$provide $provide} service has additional helper methods to register
 	 * services without specifying a provider.
 	 *
-	 * * {@link auto.$provide#provider provider(provider)} - registers a **service provider** with the
+	 * * {@link auto.$provide#provider provider(name, provider)} - registers a **service provider** with the
 	 *     {@link auto.$injector $injector}
-	 * * {@link auto.$provide#constant constant(obj)} - registers a value/object that can be accessed by
+	 * * {@link auto.$provide#constant constant(name, obj)} - registers a value/object that can be accessed by
 	 *     providers and services.
-	 * * {@link auto.$provide#value value(obj)} - registers a value/object that can only be accessed by
+	 * * {@link auto.$provide#value value(name, obj)} - registers a value/object that can only be accessed by
 	 *     services, not providers.
-	 * * {@link auto.$provide#factory factory(fn)} - registers a service **factory function**, `fn`,
+	 * * {@link auto.$provide#factory factory(name, fn)} - registers a service **factory function**
 	 *     that will be wrapped in a **service provider** object, whose `$get` property will contain the
 	 *     given factory function.
-	 * * {@link auto.$provide#service service(class)} - registers a **constructor function**, `class`
+	 * * {@link auto.$provide#service service(name, Fn)} - registers a **constructor function**
 	 *     that will be wrapped in a **service provider** object, whose `$get` property will instantiate
 	 *      a new object using the given constructor function.
+	 * * {@link auto.$provide#decorator decorator(name, decorFn)} - registers a **decorator function** that
+	 *      will be able to modify or replace the implementation of another service.
 	 *
 	 * See the individual methods for more information and examples.
 	 */
@@ -4476,18 +4517,20 @@
 	 * @name $provide#decorator
 	 * @description
 	 *
-	 * Register a **service decorator** with the {@link auto.$injector $injector}. A service decorator
+	 * Register a **decorator function** with the {@link auto.$injector $injector}. A decorator function
 	 * intercepts the creation of a service, allowing it to override or modify the behavior of the
-	 * service. The object returned by the decorator may be the original service, or a new service
-	 * object which replaces or wraps and delegates to the original service.
+	 * service. The return value of the decorator function may be the original service, or a new service
+	 * that replaces (or wraps and delegates to) the original service.
+	 *
+	 * You can find out more about using decorators in the {@link guide/decorators} guide.
 	 *
 	 * @param {string} name The name of the service to decorate.
 	 * @param {Function|Array.<string|Function>} decorator This function will be invoked when the service needs to be
-	 *    instantiated and should return the decorated service instance. The function is called using
+	 *    provided and should return the decorated service instance. The function is called using
 	 *    the {@link auto.$injector#invoke injector.invoke} method and is therefore fully injectable.
 	 *    Local injection arguments:
 	 *
-	 *    * `$delegate` - The original service instance, which can be monkey patched, configured,
+	 *    * `$delegate` - The original service instance, which can be replaced, monkey patched, configured,
 	 *      decorated or delegated to.
 	 *
 	 * @example
@@ -4713,7 +4756,7 @@
 	      // Workaround for MS Edge.
 	      // Check https://connect.microsoft.com/IE/Feedback/Details/2211653
 	      return typeof func === 'function'
-	        && /^(?:class\s|constructor\()/.test(Function.prototype.toString.call(func));
+	        && /^(?:class\s|constructor\()/.test(stringifyFn(func));
 	    }
 	
 	    function invoke(fn, self, locals, serviceName) {
@@ -4804,7 +4847,7 @@
 	   * When called, it scrolls to the element related to the specified `hash` or (if omitted) to the
 	   * current value of {@link ng.$location#hash $location.hash()}, according to the rules specified
 	   * in the
-	   * [HTML5 spec](http://www.w3.org/html/wg/drafts/html/master/browsers.html#the-indicated-part-of-the-document).
+	   * [HTML5 spec](http://www.w3.org/html/wg/drafts/html/master/browsers.html#an-indicated-part-of-the-document).
 	   *
 	   * It also watches the {@link ng.$location#hash $location.hash()} and automatically scrolls to
 	   * match any anchor whenever it changes. This can be disabled by calling
@@ -6042,7 +6085,7 @@
 	        // Do the assignment again so that those two variables are referentially identical.
 	        lastHistoryState = cachedState;
 	      } else {
-	        if (!sameBase || pendingLocation) {
+	        if (!sameBase) {
 	          pendingLocation = url;
 	        }
 	        if (replace) {
@@ -6055,6 +6098,9 @@
 	        if (location.href !== url) {
 	          pendingLocation = url;
 	        }
+	      }
+	      if (pendingLocation) {
+	        pendingLocation = url;
 	      }
 	      return self;
 	    // getter
@@ -6972,8 +7018,9 @@
 	 * If the `require` property is an object and `bindToController` is truthy, then the required controllers are
 	 * bound to the controller using the keys of the `require` property. This binding occurs after all the controllers
 	 * have been constructed but before `$onInit` is called.
+	 * If the name of the required controller is the same as the local name (the key), the name can be
+	 * omitted. For example, `{parentDir: '^^'}` is equivalent to `{parentDir: '^^parentDir'}`.
 	 * See the {@link $compileProvider#component} helper for an example of how this can be used.
-	 *
 	 * If no such required directive(s) can be found, or if the directive does not have a controller, then an error is
 	 * raised (unless no link function is specified and the required controllers are not being bound to the directive
 	 * controller, in which case error checking is skipped). The name can be prefixed with:
@@ -7602,6 +7649,20 @@
 	    }
 	  }
 	
+	  function getDirectiveRequire(directive) {
+	    var require = directive.require || (directive.controller && directive.name);
+	
+	    if (!isArray(require) && isObject(require)) {
+	      forEach(require, function(value, key) {
+	        var match = value.match(REQUIRE_PREFIX_REGEXP);
+	        var name = value.substring(match[0].length);
+	        if (!name) require[key] = match[0] + key;
+	      });
+	    }
+	
+	    return require;
+	  }
+	
 	  /**
 	   * @ngdoc method
 	   * @name $compileProvider#directive
@@ -7638,7 +7699,7 @@
 	                directive.priority = directive.priority || 0;
 	                directive.index = index;
 	                directive.name = directive.name || name;
-	                directive.require = directive.require || (directive.controller && directive.name);
+	                directive.require = getDirectiveRequire(directive);
 	                directive.restrict = directive.restrict || 'EA';
 	                directive.$$moduleName = directiveFactory.$$moduleName;
 	                directives.push(directive);
@@ -8095,7 +8156,7 @@
 	            (nodeName === 'img' && key === 'src')) {
 	          // sanitize a[href] and img[src] values
 	          this[key] = value = $$sanitizeUri(value, key === 'src');
-	        } else if (nodeName === 'img' && key === 'srcset') {
+	        } else if (nodeName === 'img' && key === 'srcset' && isDefined(value)) {
 	          // sanitize img[srcset] values
 	          var result = "";
 	
@@ -8254,7 +8315,8 @@
 	    compile.$$createComment = function(directiveName, comment) {
 	      var content = '';
 	      if (debugInfoEnabled) {
-	        content = ' ' + (directiveName || '') + ': ' + (comment || '') + ' ';
+	        content = ' ' + (directiveName || '') + ': ';
+	        if (comment) content += comment + ' ';
 	      }
 	      return window.document.createComment(content);
 	    };
@@ -8986,10 +9048,11 @@
 	        } else if (directive.compile) {
 	          try {
 	            linkFn = directive.compile($compileNode, templateAttrs, childTranscludeFn);
+	            var context = directive.$$originalDirective || directive;
 	            if (isFunction(linkFn)) {
-	              addLinkFns(null, linkFn, attrStart, attrEnd);
+	              addLinkFns(null, bind(context, linkFn), attrStart, attrEnd);
 	            } else if (linkFn) {
-	              addLinkFns(linkFn.pre, linkFn.post, attrStart, attrEnd);
+	              addLinkFns(bind(context, linkFn.pre), bind(context, linkFn.post), attrStart, attrEnd);
 	            }
 	          } catch (e) {
 	            $exceptionHandler(e, startingTag($compileNode));
@@ -9858,14 +9921,13 @@
 	
 	            parentGet = $parse(attrs[attrName]);
 	
-	            destination[scopeName] = parentGet(scope);
+	            var initialValue = destination[scopeName] = parentGet(scope);
 	            initialChanges[scopeName] = new SimpleChange(_UNINITIALIZED_VALUE, destination[scopeName]);
 	
 	            removeWatch = scope.$watch(parentGet, function parentValueWatchAction(newValue, oldValue) {
-	              if (newValue === oldValue) {
-	                // If the new and old values are identical then this is the first time the watch has been triggered
-	                // So instead we use the current value on the destination as the old value
-	                oldValue = destination[scopeName];
+	              if (oldValue === newValue) {
+	                if (oldValue === initialValue) return;
+	                oldValue = initialValue;
 	              }
 	              recordChanges(scopeName, newValue, oldValue);
 	              destination[scopeName] = newValue;
@@ -10768,10 +10830,13 @@
 	     *   - **config** – `{Object}` – The configuration object that was used to generate the request.
 	     *   - **statusText** – `{string}` – HTTP status text of the response.
 	     *
-	     * A response status code between 200 and 299 is considered a success status and
-	     * will result in the success callback being called. Note that if the response is a redirect,
-	     * XMLHttpRequest will transparently follow it, meaning that the error callback will not be
-	     * called for such responses.
+	     * A response status code between 200 and 299 is considered a success status and will result in
+	     * the success callback being called. Any response status code outside of that range is
+	     * considered an error status and will result in the error callback being called.
+	     * Also, status codes less than -1 are normalized to zero. -1 usually means the request was
+	     * aborted, e.g. using a `config.timeout`.
+	     * Note that if the response is a redirect, XMLHttpRequest will transparently follow it, meaning
+	     * that the outcome (success or error) will be determined by the final response status code.
 	     *
 	     *
 	     * ## Shortcut methods
@@ -12101,6 +12166,30 @@
 	     *  </file>
 	     * </example>
 	     *
+	     * @knownIssue
+	     * It is currently not possible for an interpolated expression to contain the interpolation end
+	     * symbol. For example, `{{ '}}' }}` will be incorrectly interpreted as `{{ ' }}` + `' }}`, i.e.
+	     * an interpolated expression consisting of a single-quote (`'`) and the `' }}` string.
+	     *
+	     * @knownIssue
+	     * All directives and components must use the standard `{{` `}}` interpolation symbols
+	     * in their templates. If you change the application interpolation symbols the {@link $compile}
+	     * service will attempt to denormalize the standard symbols to the custom symbols.
+	     * The denormalization process is not clever enough to know not to replace instances of the standard
+	     * symbols where they would not normally be treated as interpolation symbols. For example in the following
+	     * code snippet the closing braces of the literal object will get incorrectly denormalized:
+	     *
+	     * ```
+	     * <div data-context='{"context":{"id":3,"type":"page"}}">
+	     * ```
+	     *
+	     * The workaround is to ensure that such instances are separated by whitespace:
+	     * ```
+	     * <div data-context='{"context":{"id":3,"type":"page"} }">
+	     * ```
+	     *
+	     * See https://github.com/angular/angular.js/pull/14610#issuecomment-219401099 for more information.
+	     *
 	     * @param {string} text The text with markup to interpolate.
 	     * @param {boolean=} mustHaveExpression if set to true then the interpolation string must have
 	     *    embedded expression in order to return an interpolation function. Strings with no
@@ -12523,17 +12612,20 @@
 	  }
 	}
 	
+	function startsWith(haystack, needle) {
+	  return haystack.lastIndexOf(needle, 0) === 0;
+	}
 	
 	/**
 	 *
-	 * @param {string} begin
-	 * @param {string} whole
-	 * @returns {string} returns text from whole after begin or undefined if it does not begin with
-	 *                   expected string.
+	 * @param {string} base
+	 * @param {string} url
+	 * @returns {string} returns text from `url` after `base` or `undefined` if it does not begin with
+	 *                   the expected string.
 	 */
-	function beginsWith(begin, whole) {
-	  if (whole.indexOf(begin) === 0) {
-	    return whole.substr(begin.length);
+	function stripBaseUrl(base, url) {
+	  if (startsWith(url, base)) {
+	    return url.substr(base.length);
 	  }
 	}
 	
@@ -12579,7 +12671,7 @@
 	   * @private
 	   */
 	  this.$$parse = function(url) {
-	    var pathUrl = beginsWith(appBaseNoFile, url);
+	    var pathUrl = stripBaseUrl(appBaseNoFile, url);
 	    if (!isString(pathUrl)) {
 	      throw $locationMinErr('ipthprfx', 'Invalid url "{0}", missing path prefix "{1}".', url,
 	          appBaseNoFile);
@@ -12616,14 +12708,14 @@
 	    var appUrl, prevAppUrl;
 	    var rewrittenUrl;
 	
-	    if (isDefined(appUrl = beginsWith(appBase, url))) {
+	    if (isDefined(appUrl = stripBaseUrl(appBase, url))) {
 	      prevAppUrl = appUrl;
-	      if (isDefined(appUrl = beginsWith(basePrefix, appUrl))) {
-	        rewrittenUrl = appBaseNoFile + (beginsWith('/', appUrl) || appUrl);
+	      if (isDefined(appUrl = stripBaseUrl(basePrefix, appUrl))) {
+	        rewrittenUrl = appBaseNoFile + (stripBaseUrl('/', appUrl) || appUrl);
 	      } else {
 	        rewrittenUrl = appBase + prevAppUrl;
 	      }
-	    } else if (isDefined(appUrl = beginsWith(appBaseNoFile, url))) {
+	    } else if (isDefined(appUrl = stripBaseUrl(appBaseNoFile, url))) {
 	      rewrittenUrl = appBaseNoFile + appUrl;
 	    } else if (appBaseNoFile == url + '/') {
 	      rewrittenUrl = appBaseNoFile;
@@ -12657,14 +12749,14 @@
 	   * @private
 	   */
 	  this.$$parse = function(url) {
-	    var withoutBaseUrl = beginsWith(appBase, url) || beginsWith(appBaseNoFile, url);
+	    var withoutBaseUrl = stripBaseUrl(appBase, url) || stripBaseUrl(appBaseNoFile, url);
 	    var withoutHashUrl;
 	
 	    if (!isUndefined(withoutBaseUrl) && withoutBaseUrl.charAt(0) === '#') {
 	
 	      // The rest of the url starts with a hash so we have
 	      // got either a hashbang path or a plain hash fragment
-	      withoutHashUrl = beginsWith(hashPrefix, withoutBaseUrl);
+	      withoutHashUrl = stripBaseUrl(hashPrefix, withoutBaseUrl);
 	      if (isUndefined(withoutHashUrl)) {
 	        // There was no hashbang prefix so we just have a hash fragment
 	        withoutHashUrl = withoutBaseUrl;
@@ -12712,7 +12804,7 @@
 	      var firstPathSegmentMatch;
 	
 	      //Get the relative path from the input URL.
-	      if (url.indexOf(base) === 0) {
+	      if (startsWith(url, base)) {
 	        url = url.replace(base, '');
 	      }
 	
@@ -12775,7 +12867,7 @@
 	
 	    if (appBase == stripHash(url)) {
 	      rewrittenUrl = url;
-	    } else if ((appUrl = beginsWith(appBaseNoFile, url))) {
+	    } else if ((appUrl = stripBaseUrl(appBaseNoFile, url))) {
 	      rewrittenUrl = appBase + hashPrefix + appUrl;
 	    } else if (appBaseNoFile === url + '/') {
 	      rewrittenUrl = appBaseNoFile;
@@ -12957,7 +13049,7 @@
 	   * ```
 	   *
 	   * @param {(string|number)=} path New path
-	   * @return {string} path
+	   * @return {(string|object)} path if called with no parameters, or `$location` if called with a parameter
 	   */
 	  path: locationGetterSetter('$$path', function(path) {
 	    path = path !== null ? path.toString() : '';
@@ -13383,7 +13475,7 @@
 	    // update $location when $browser url changes
 	    $browser.onUrlChange(function(newUrl, newState) {
 	
-	      if (isUndefined(beginsWith(appBaseNoFile, newUrl))) {
+	      if (isUndefined(stripBaseUrl(appBaseNoFile, newUrl))) {
 	        // If we are navigating outside of the app then force a reload
 	        $window.location.href = newUrl;
 	        return;
@@ -14219,13 +14311,28 @@
 	        property = {type: AST.Property, kind: 'init'};
 	        if (this.peek().constant) {
 	          property.key = this.constant();
+	          property.computed = false;
+	          this.consume(':');
+	          property.value = this.expression();
 	        } else if (this.peek().identifier) {
 	          property.key = this.identifier();
+	          property.computed = false;
+	          if (this.peek(':')) {
+	            this.consume(':');
+	            property.value = this.expression();
+	          } else {
+	            property.value = property.key;
+	          }
+	        } else if (this.peek('[')) {
+	          this.consume('[');
+	          property.key = this.expression();
+	          this.consume(']');
+	          property.computed = true;
+	          this.consume(':');
+	          property.value = this.expression();
 	        } else {
 	          this.throwError("invalid key", this.peek());
 	        }
-	        this.consume(':');
-	        property.value = this.expression();
 	        properties.push(property);
 	      } while (this.expect(','));
 	    }
@@ -14394,7 +14501,7 @@
 	    argsToWatch = [];
 	    forEach(ast.properties, function(property) {
 	      findConstantAndWatchExpressions(property.value, $filter);
-	      allConstants = allConstants && property.value.constant;
+	      allConstants = allConstants && property.value.constant && !property.computed;
 	      if (!property.value.constant) {
 	        argsToWatch.push.apply(argsToWatch, property.value.toWatch);
 	      }
@@ -14566,7 +14673,7 @@
 	  },
 	
 	  recurse: function(ast, intoId, nameId, recursionFn, create, skipWatchIdCheck) {
-	    var left, right, self = this, args, expression;
+	    var left, right, self = this, args, expression, computed;
 	    recursionFn = recursionFn || noop;
 	    if (!skipWatchIdCheck && isDefined(ast.watchId)) {
 	      intoId = intoId || this.nextId();
@@ -14763,17 +14870,41 @@
 	      break;
 	    case AST.ObjectExpression:
 	      args = [];
+	      computed = false;
 	      forEach(ast.properties, function(property) {
-	        self.recurse(property.value, self.nextId(), undefined, function(expr) {
-	          args.push(self.escape(
-	              property.key.type === AST.Identifier ? property.key.name :
-	                ('' + property.key.value)) +
-	              ':' + expr);
-	        });
+	        if (property.computed) {
+	          computed = true;
+	        }
 	      });
-	      expression = '{' + args.join(',') + '}';
-	      this.assign(intoId, expression);
-	      recursionFn(expression);
+	      if (computed) {
+	        intoId = intoId || this.nextId();
+	        this.assign(intoId, '{}');
+	        forEach(ast.properties, function(property) {
+	          if (property.computed) {
+	            left = self.nextId();
+	            self.recurse(property.key, left);
+	          } else {
+	            left = property.key.type === AST.Identifier ?
+	                       property.key.name :
+	                       ('' + property.key.value);
+	          }
+	          right = self.nextId();
+	          self.recurse(property.value, right);
+	          self.assign(self.member(intoId, left, property.computed), right);
+	        });
+	      } else {
+	        forEach(ast.properties, function(property) {
+	          self.recurse(property.value, ast.constant ? undefined : self.nextId(), undefined, function(expr) {
+	            args.push(self.escape(
+	                property.key.type === AST.Identifier ? property.key.name :
+	                  ('' + property.key.value)) +
+	                ':' + expr);
+	          });
+	        });
+	        expression = '{' + args.join(',') + '}';
+	        this.assign(intoId, expression);
+	      }
+	      recursionFn(intoId || expression);
 	      break;
 	    case AST.ThisExpression:
 	      this.assign(intoId, 's');
@@ -15099,16 +15230,28 @@
 	    case AST.ObjectExpression:
 	      args = [];
 	      forEach(ast.properties, function(property) {
-	        args.push({key: property.key.type === AST.Identifier ?
-	                        property.key.name :
-	                        ('' + property.key.value),
-	                   value: self.recurse(property.value)
-	        });
+	        if (property.computed) {
+	          args.push({key: self.recurse(property.key),
+	                     computed: true,
+	                     value: self.recurse(property.value)
+	          });
+	        } else {
+	          args.push({key: property.key.type === AST.Identifier ?
+	                          property.key.name :
+	                          ('' + property.key.value),
+	                     computed: false,
+	                     value: self.recurse(property.value)
+	          });
+	        }
 	      });
 	      return function(scope, locals, assign, inputs) {
 	        var value = {};
 	        for (var i = 0; i < args.length; ++i) {
-	          value[args[i].key] = args[i].value(scope, locals, assign, inputs);
+	          if (args[i].computed) {
+	            value[args[i].key(scope, locals, assign, inputs)] = args[i].value(scope, locals, assign, inputs);
+	          } else {
+	            value[args[i].key] = args[i].value(scope, locals, assign, inputs);
+	          }
 	        }
 	        return context ? {value: value} : value;
 	      };
@@ -17107,15 +17250,19 @@
 	          dirty = false;
 	          current = target;
 	
-	          while (asyncQueue.length) {
+	          // It's safe for asyncQueuePosition to be a local variable here because this loop can't
+	          // be reentered recursively. Calling $digest from a function passed to $applyAsync would
+	          // lead to a '$digest already in progress' error.
+	          for (var asyncQueuePosition = 0; asyncQueuePosition < asyncQueue.length; asyncQueuePosition++) {
 	            try {
-	              asyncTask = asyncQueue.shift();
+	              asyncTask = asyncQueue[asyncQueuePosition];
 	              asyncTask.scope.$eval(asyncTask.expression, asyncTask.locals);
 	            } catch (e) {
 	              $exceptionHandler(e);
 	            }
 	            lastDirtyWatch = null;
 	          }
+	          asyncQueue.length = 0;
 	
 	          traverseScopesLoop:
 	          do { // "traverse the scopes" loop
@@ -17186,13 +17333,15 @@
 	
 	        clearPhase();
 	
-	        while (postDigestQueue.length) {
+	        // postDigestQueuePosition isn't local here because this loop can be reentered recursively.
+	        while (postDigestQueuePosition < postDigestQueue.length) {
 	          try {
-	            postDigestQueue.shift()();
+	            postDigestQueue[postDigestQueuePosition++]();
 	          } catch (e) {
 	            $exceptionHandler(e);
 	          }
 	        }
+	        postDigestQueue.length = postDigestQueuePosition = 0;
 	      },
 	
 	
@@ -17646,6 +17795,8 @@
 	    var asyncQueue = $rootScope.$$asyncQueue = [];
 	    var postDigestQueue = $rootScope.$$postDigestQueue = [];
 	    var applyAsyncQueue = $rootScope.$$applyAsyncQueue = [];
+	
+	    var postDigestQueuePosition = 0;
 	
 	    return $rootScope;
 	
@@ -18215,7 +18366,7 @@
 	 * You can ensure your document is in standards mode and not quirks mode by adding `<!doctype html>`
 	 * to the top of your HTML document.
 	 *
-	 * SCE assists in writing code in way that (a) is secure by default and (b) makes auditing for
+	 * SCE assists in writing code in a way that (a) is secure by default and (b) makes auditing for
 	 * security vulnerabilities such as XSS, clickjacking, etc. a lot easier.
 	 *
 	 * Here's an example of a binding in a privileged context:
@@ -18892,7 +19043,7 @@
 	      for (var prop in bodyStyle) {
 	        if (match = vendorRegex.exec(prop)) {
 	          vendorPrefix = match[0];
-	          vendorPrefix = vendorPrefix.substr(0, 1).toUpperCase() + vendorPrefix.substr(1);
+	          vendorPrefix = vendorPrefix[0].toUpperCase() + vendorPrefix.substr(1);
 	          break;
 	        }
 	      }
@@ -19015,7 +19166,7 @@
 	      // are included in there. This also makes Angular accept any script
 	      // directive, no matter its name. However, we still need to unwrap trusted
 	      // types.
-	      if (!isString(tpl) || !$templateCache.get(tpl)) {
+	      if (!isString(tpl) || isUndefined($templateCache.get(tpl))) {
 	        tpl = $sce.getTrustedResourceUrl(tpl);
 	      }
 	
@@ -20197,7 +20348,7 @@
 	
 	    // extract decimals digits
 	    if (integerLen > 0) {
-	      decimals = digits.splice(integerLen);
+	      decimals = digits.splice(integerLen, digits.length);
 	    } else {
 	      decimals = digits;
 	      digits = [0];
@@ -20206,10 +20357,10 @@
 	    // format the integer digits with grouping separators
 	    var groups = [];
 	    if (digits.length >= pattern.lgSize) {
-	      groups.unshift(digits.splice(-pattern.lgSize).join(''));
+	      groups.unshift(digits.splice(-pattern.lgSize, digits.length).join(''));
 	    }
 	    while (digits.length > pattern.gSize) {
-	      groups.unshift(digits.splice(-pattern.gSize).join(''));
+	      groups.unshift(digits.splice(-pattern.gSize, digits.length).join(''));
 	    }
 	    if (digits.length) {
 	      groups.unshift(digits.join(''));
@@ -22148,11 +22299,11 @@
 	             <span class="error" ng-show="myForm.input.$error.pattern">
 	               Single word only!</span>
 	           </div>
-	           <tt>text = {{example.text}}</tt><br/>
-	           <tt>myForm.input.$valid = {{myForm.input.$valid}}</tt><br/>
-	           <tt>myForm.input.$error = {{myForm.input.$error}}</tt><br/>
-	           <tt>myForm.$valid = {{myForm.$valid}}</tt><br/>
-	           <tt>myForm.$error.required = {{!!myForm.$error.required}}</tt><br/>
+	           <code>text = {{example.text}}</code><br/>
+	           <code>myForm.input.$valid = {{myForm.input.$valid}}</code><br/>
+	           <code>myForm.input.$error = {{myForm.input.$error}}</code><br/>
+	           <code>myForm.$valid = {{myForm.$valid}}</code><br/>
+	           <code>myForm.$error.required = {{!!myForm.$error.required}}</code><br/>
 	          </form>
 	        </file>
 	        <file name="protractor.js" type="protractor">
@@ -24031,8 +24182,9 @@
 	    restrict: 'A',
 	    compile: function ngBindHtmlCompile(tElement, tAttrs) {
 	      var ngBindHtmlGetter = $parse(tAttrs.ngBindHtml);
-	      var ngBindHtmlWatch = $parse(tAttrs.ngBindHtml, function getStringValue(value) {
-	        return (value || '').toString();
+	      var ngBindHtmlWatch = $parse(tAttrs.ngBindHtml, function sceValueOf(val) {
+	        // Unwrap the value to compare the actual inner safe value, not the wrapper object.
+	        return $sce.valueOf(val);
 	      });
 	      $compile.$$addBindingClass(tElement);
 	
@@ -24040,9 +24192,9 @@
 	        $compile.$$addBindingInfo(element, attr.ngBindHtml);
 	
 	        scope.$watch(ngBindHtmlWatch, function ngBindHtmlWatchAction() {
-	          // we re-evaluate the expr because we want a TrustedValueHolderType
-	          // for $sce, not a string
-	          element.html($sce.getTrustedHtml(ngBindHtmlGetter(scope)) || '');
+	          // The watched value is the unwrapped value. To avoid re-escaping, use the direct getter.
+	          var value = ngBindHtmlGetter(scope);
+	          element.html($sce.getTrustedHtml(value) || '');
 	        });
 	      };
 	    }
@@ -24195,7 +24347,9 @@
 	        }
 	
 	        function ngClassWatchAction(newVal) {
-	          if (selector === true || scope.$index % 2 === selector) {
+	          // jshint bitwise: false
+	          if (selector === true || (scope.$index & 1) === selector) {
+	          // jshint bitwise: true
 	            var newClasses = arrayClasses(newVal || []);
 	            if (!oldVal) {
 	              addClasses(newClasses);
@@ -30421,6 +30575,7 @@
 	/**
 	 * @ngdoc directive
 	 * @name ngRequired
+	 * @restrict A
 	 *
 	 * @description
 	 *
@@ -35493,7 +35648,7 @@
 	 * angular-ui-bootstrap
 	 * http://angular-ui.github.io/bootstrap/
 	
-	 * Version: 1.3.2 - 2016-04-14
+	 * Version: 1.3.3 - 2016-05-22
 	 * License: MIT
 	 */angular.module("ui.bootstrap", ["ui.bootstrap.collapse","ui.bootstrap.accordion","ui.bootstrap.alert","ui.bootstrap.buttons","ui.bootstrap.carousel","ui.bootstrap.dateparser","ui.bootstrap.isClass","ui.bootstrap.datepicker","ui.bootstrap.position","ui.bootstrap.datepickerPopup","ui.bootstrap.debounce","ui.bootstrap.dropdown","ui.bootstrap.stackedMap","ui.bootstrap.modal","ui.bootstrap.paging","ui.bootstrap.pager","ui.bootstrap.pagination","ui.bootstrap.tooltip","ui.bootstrap.popover","ui.bootstrap.progressbar","ui.bootstrap.rating","ui.bootstrap.tabs","ui.bootstrap.timepicker","ui.bootstrap.typeahead"]);
 	angular.module('ui.bootstrap.collapse', [])
@@ -35724,13 +35879,23 @@
 	    link: function(scope, element, attrs, controller) {
 	      scope.$watch(function() { return controller[attrs.uibAccordionTransclude]; }, function(heading) {
 	        if (heading) {
-	          var elem = angular.element(element[0].querySelector('[uib-accordion-header]'));
+	          var elem = angular.element(element[0].querySelector(getHeaderSelectors()));
 	          elem.html('');
 	          elem.append(heading);
 	        }
 	      });
 	    }
 	  };
+	
+	  function getHeaderSelectors() {
+	      return 'uib-accordion-header,' +
+	          'data-uib-accordion-header,' +
+	          'x-uib-accordion-header,' +
+	          'uib\\:accordion-header,' +
+	          '[uib-accordion-header],' +
+	          '[data-uib-accordion-header],' +
+	          '[x-uib-accordion-header]';
+	  }
 	});
 	
 	angular.module('ui.bootstrap.alert', [])
@@ -36674,8 +36839,9 @@
 	    return date && timezone ? convertTimezoneToLocal(date, timezone, true) : date;
 	  }
 	
-	  //https://github.com/angular/angular.js/blob/4daafd3dbe6a80d578f5a31df1bb99c77559543e/src/Angular.js#L1207
+	  //https://github.com/angular/angular.js/blob/622c42169699ec07fc6daaa19fe6d224e5d2f70e/src/Angular.js#L1207
 	  function timezoneToOffset(timezone, fallback) {
+	    timezone = timezone.replace(/:/g, '');
 	    var requestedTimezoneOffset = Date.parse('Jan 01, 1970 00:00:00 ' + timezone) / 60000;
 	    return isNaN(requestedTimezoneOffset) ? fallback : requestedTimezoneOffset;
 	  }
@@ -36688,8 +36854,9 @@
 	
 	  function convertTimezoneToLocal(date, timezone, reverse) {
 	    reverse = reverse ? -1 : 1;
-	    var timezoneOffset = timezoneToOffset(timezone, date.getTimezoneOffset());
-	    return addDateMinutes(date, reverse * (timezoneOffset - date.getTimezoneOffset()));
+	    var dateTimezoneOffset = date.getTimezoneOffset();
+	    var timezoneOffset = timezoneToOffset(timezone, dateTimezoneOffset);
+	    return addDateMinutes(date, reverse * (timezoneOffset - dateTimezoneOffset));
 	  }
 	}]);
 	
@@ -36961,8 +37128,9 @@
 	      self.activeDate = new Date();
 	    }
 	
-	    this.activeDate = ngModelCtrl.$modelValue ?
-	      dateParser.fromTimezone(new Date(ngModelCtrl.$modelValue), ngModelOptions.timezone) :
+	    var date = ngModelCtrl.$modelValue ? new Date(ngModelCtrl.$modelValue) : new Date();
+	    this.activeDate = !isNaN(date) ?
+	      dateParser.fromTimezone(date, ngModelOptions.timezone) :
 	      dateParser.fromTimezone(new Date(), ngModelOptions.timezone);
 	
 	    ngModelCtrl.$render = function() {
@@ -38167,11 +38335,11 @@
 	          return value;
 	        }
 	
-	        $scope.date = dateParser.fromTimezone(value, timezone);
-	
-	        if (angular.isNumber($scope.date)) {
-	          $scope.date = new Date($scope.date);
+	        if (angular.isNumber(value)) {
+	          value = new Date(value);
 	        }
+	
+	        $scope.date = dateParser.fromTimezone(value, timezone);
 	
 	        return dateParser.filter($scope.date, dateFormat);
 	      });
@@ -38707,7 +38875,8 @@
 	    if (appendTo && self.dropdownMenu) {
 	      var pos = $position.positionElements($element, self.dropdownMenu, 'bottom-left', true),
 	        css,
-	        rightalign;
+	        rightalign,
+	        scrollbarWidth;
 	
 	      css = {
 	        top: pos.top + 'px',
@@ -38720,7 +38889,8 @@
 	        css.right = 'auto';
 	      } else {
 	        css.left = 'auto';
-	        css.right = window.innerWidth -
+	        scrollbarWidth = $position.scrollbarWidth(true);
+	        css.right = window.innerWidth - scrollbarWidth -
 	          (pos.left + $element.prop('offsetWidth')) + 'px';
 	      }
 	
@@ -39607,29 +39777,26 @@
 	                //controllers
 	                if (modalOptions.controller) {
 	                  ctrlLocals.$scope = modalScope;
+	                  ctrlLocals.$scope.$resolve = {};
 	                  ctrlLocals.$uibModalInstance = modalInstance;
 	                  angular.forEach(tplAndVars[1], function(value, key) {
 	                    ctrlLocals[key] = value;
+	                    ctrlLocals.$scope.$resolve[key] = value;
 	                  });
 	
 	                  // the third param will make the controller instantiate later,private api
 	                  // @see https://github.com/angular/angular.js/blob/master/src/ng/controller.js#L126
-	                  ctrlInstantiate = $controller(modalOptions.controller, ctrlLocals, true);
-	                  if (modalOptions.controllerAs) {
+	                  ctrlInstantiate = $controller(modalOptions.controller, ctrlLocals, true, modalOptions.controllerAs);
+	                  if (modalOptions.controllerAs && modalOptions.bindToController) {
 	                    ctrlInstance = ctrlInstantiate.instance;
-	
-	                    if (modalOptions.bindToController) {
-	                      ctrlInstance.$close = modalScope.$close;
-	                      ctrlInstance.$dismiss = modalScope.$dismiss;
-	                      angular.extend(ctrlInstance, providedScope);
-	                    }
-	
-	                    ctrlInstance = ctrlInstantiate();
-	
-	                    modalScope[modalOptions.controllerAs] = ctrlInstance;
-	                  } else {
-	                    ctrlInstance = ctrlInstantiate();
+	                    ctrlInstance.$close = modalScope.$close;
+	                    ctrlInstance.$dismiss = modalScope.$dismiss;
+	                    angular.extend(ctrlInstance, {
+	                      $resolve: ctrlLocals.$scope.$resolve
+	                    }, providedScope);
 	                  }
+	
+	                  ctrlInstance = ctrlInstantiate();
 	
 	                  if (angular.isFunction(ctrlInstance.$onInit)) {
 	                    ctrlInstance.$onInit();
@@ -40935,7 +41102,8 @@
 	      var previousSelected = ctrl.tabs[previousIndex];
 	      if (previousSelected) {
 	        previousSelected.tab.onDeselect({
-	          $event: evt
+	          $event: evt,
+	          $selectedIndex: index
 	        });
 	        if (evt && evt.isDefaultPrevented()) {
 	          return;
@@ -40951,7 +41119,7 @@
 	        selected.tab.active = true;
 	        ctrl.active = selected.index;
 	        oldIndex = selected.index;
-	      } else if (!selected && angular.isNumber(oldIndex)) {
+	      } else if (!selected && angular.isDefined(oldIndex)) {
 	        ctrl.active = null;
 	        oldIndex = null;
 	      }
@@ -40975,7 +41143,7 @@
 	      return 0;
 	    });
 	
-	    if (tab.index === ctrl.active || !angular.isNumber(ctrl.active) && ctrl.tabs.length === 1) {
+	    if (tab.index === ctrl.active || !angular.isDefined(ctrl.active) && ctrl.tabs.length === 1) {
 	      var newActiveIndex = findTabIndex(tab.index);
 	      ctrl.select(newActiveIndex);
 	    }
@@ -41000,7 +41168,7 @@
 	  };
 	
 	  $scope.$watch('tabset.active', function(val) {
-	    if (angular.isNumber(val) && val !== oldIndex) {
+	    if (angular.isDefined(val) && val !== oldIndex) {
 	      ctrl.select(findTabIndex(val));
 	    }
 	  });
@@ -41038,9 +41206,6 @@
 	        scope.$parent.$eval(attrs.vertical) : false;
 	      scope.justified = angular.isDefined(attrs.justified) ?
 	        scope.$parent.$eval(attrs.justified) : false;
-	      if (angular.isUndefined(attrs.active)) {
-	        scope.active = 0;
-	      }
 	    }
 	  };
 	})
@@ -41771,7 +41936,7 @@
 	    originalScope.$watch(attrs.typeaheadMinLength, function (newVal) {
 	        minLength = !newVal && newVal !== 0 ? 1 : newVal;
 	    });
-	    
+	
 	    //minimal wait time after last character typed before typeahead kicks-in
 	    var waitTime = originalScope.$eval(attrs.typeaheadWaitMs) || 0;
 	
@@ -41783,6 +41948,12 @@
 	
 	    //binding to a variable that indicates if matches are being retrieved asynchronously
 	    var isLoadingSetter = $parse(attrs.typeaheadLoading).assign || angular.noop;
+	
+	    //a function to determine if an event should cause selection
+	    var isSelectEvent = attrs.typeaheadShouldSelect ? $parse(attrs.typeaheadShouldSelect) : function(scope, vals) {
+	      var evt = vals.$event;
+	      return evt.which === 13 || evt.which === 9;
+	    };
 	
 	    //a callback executed when a match is selected
 	    var onSelectCallback = $parse(attrs.typeaheadOnSelect);
@@ -42099,13 +42270,15 @@
 	        return;
 	      }
 	
+	      var shouldSelect = isSelectEvent(originalScope, {$event: evt});
+	
 	      /**
 	       * if there's nothing selected (i.e. focusFirst) and enter or tab is hit
 	       * or
 	       * shift + tab is pressed to bring focus to the previous element
 	       * then clear the results
 	       */
-	      if (scope.activeIdx === -1 && (evt.which === 9 || evt.which === 13) || evt.which === 9 && !!evt.shiftKey) {
+	      if (scope.activeIdx === -1 && shouldSelect || evt.which === 9 && !!evt.shiftKey) {
 	        resetMatches();
 	        scope.$digest();
 	        return;
@@ -42114,36 +42287,36 @@
 	      evt.preventDefault();
 	      var target;
 	      switch (evt.which) {
-	        case 9:
-	        case 13:
-	          scope.$apply(function () {
-	            if (angular.isNumber(scope.debounceUpdate) || angular.isObject(scope.debounceUpdate)) {
-	              $$debounce(function() {
-	                scope.select(scope.activeIdx, evt);
-	              }, angular.isNumber(scope.debounceUpdate) ? scope.debounceUpdate : scope.debounceUpdate['default']);
-	            } else {
-	              scope.select(scope.activeIdx, evt);
-	            }
-	          });
-	          break;
-	        case 27:
+	        case 27: // escape
 	          evt.stopPropagation();
 	
 	          resetMatches();
 	          originalScope.$digest();
 	          break;
-	        case 38:
+	        case 38: // up arrow
 	          scope.activeIdx = (scope.activeIdx > 0 ? scope.activeIdx : scope.matches.length) - 1;
 	          scope.$digest();
 	          target = popUpEl.find('li')[scope.activeIdx];
 	          target.parentNode.scrollTop = target.offsetTop;
 	          break;
-	        case 40:
+	        case 40: // down arrow
 	          scope.activeIdx = (scope.activeIdx + 1) % scope.matches.length;
 	          scope.$digest();
 	          target = popUpEl.find('li')[scope.activeIdx];
 	          target.parentNode.scrollTop = target.offsetTop;
 	          break;
+	        default:
+	          if (shouldSelect) {
+	            scope.$apply(function() {
+	              if (angular.isNumber(scope.debounceUpdate) || angular.isObject(scope.debounceUpdate)) {
+	                $$debounce(function() {
+	                  scope.select(scope.activeIdx, evt);
+	                }, angular.isNumber(scope.debounceUpdate) ? scope.debounceUpdate : scope.debounceUpdate['default']);
+	              } else {
+	                scope.select(scope.activeIdx, evt);
+	              }
+	            });
+	          }
 	      }
 	    });
 	
@@ -42407,7 +42580,7 @@
 	 * angular-ui-bootstrap
 	 * http://angular-ui.github.io/bootstrap/
 	
-	 * Version: 1.3.2 - 2016-04-14
+	 * Version: 1.3.3 - 2016-05-22
 	 * License: MIT
 	 */angular.module("ui.bootstrap", ["ui.bootstrap.tpls", "ui.bootstrap.collapse","ui.bootstrap.accordion","ui.bootstrap.alert","ui.bootstrap.buttons","ui.bootstrap.carousel","ui.bootstrap.dateparser","ui.bootstrap.isClass","ui.bootstrap.datepicker","ui.bootstrap.position","ui.bootstrap.datepickerPopup","ui.bootstrap.debounce","ui.bootstrap.dropdown","ui.bootstrap.stackedMap","ui.bootstrap.modal","ui.bootstrap.paging","ui.bootstrap.pager","ui.bootstrap.pagination","ui.bootstrap.tooltip","ui.bootstrap.popover","ui.bootstrap.progressbar","ui.bootstrap.rating","ui.bootstrap.tabs","ui.bootstrap.timepicker","ui.bootstrap.typeahead"]);
 	angular.module("ui.bootstrap.tpls", ["uib/template/accordion/accordion-group.html","uib/template/accordion/accordion.html","uib/template/alert/alert.html","uib/template/carousel/carousel.html","uib/template/carousel/slide.html","uib/template/datepicker/datepicker.html","uib/template/datepicker/day.html","uib/template/datepicker/month.html","uib/template/datepicker/year.html","uib/template/datepickerPopup/popup.html","uib/template/modal/backdrop.html","uib/template/modal/window.html","uib/template/pager/pager.html","uib/template/pagination/pagination.html","uib/template/tooltip/tooltip-html-popup.html","uib/template/tooltip/tooltip-popup.html","uib/template/tooltip/tooltip-template-popup.html","uib/template/popover/popover-html.html","uib/template/popover/popover-template.html","uib/template/popover/popover.html","uib/template/progressbar/bar.html","uib/template/progressbar/progress.html","uib/template/progressbar/progressbar.html","uib/template/rating/rating.html","uib/template/tabs/tab.html","uib/template/tabs/tabset.html","uib/template/timepicker/timepicker.html","uib/template/typeahead/typeahead-match.html","uib/template/typeahead/typeahead-popup.html"]);
@@ -42639,13 +42812,23 @@
 	    link: function(scope, element, attrs, controller) {
 	      scope.$watch(function() { return controller[attrs.uibAccordionTransclude]; }, function(heading) {
 	        if (heading) {
-	          var elem = angular.element(element[0].querySelector('[uib-accordion-header]'));
+	          var elem = angular.element(element[0].querySelector(getHeaderSelectors()));
 	          elem.html('');
 	          elem.append(heading);
 	        }
 	      });
 	    }
 	  };
+	
+	  function getHeaderSelectors() {
+	      return 'uib-accordion-header,' +
+	          'data-uib-accordion-header,' +
+	          'x-uib-accordion-header,' +
+	          'uib\\:accordion-header,' +
+	          '[uib-accordion-header],' +
+	          '[data-uib-accordion-header],' +
+	          '[x-uib-accordion-header]';
+	  }
 	});
 	
 	angular.module('ui.bootstrap.alert', [])
@@ -43589,8 +43772,9 @@
 	    return date && timezone ? convertTimezoneToLocal(date, timezone, true) : date;
 	  }
 	
-	  //https://github.com/angular/angular.js/blob/4daafd3dbe6a80d578f5a31df1bb99c77559543e/src/Angular.js#L1207
+	  //https://github.com/angular/angular.js/blob/622c42169699ec07fc6daaa19fe6d224e5d2f70e/src/Angular.js#L1207
 	  function timezoneToOffset(timezone, fallback) {
+	    timezone = timezone.replace(/:/g, '');
 	    var requestedTimezoneOffset = Date.parse('Jan 01, 1970 00:00:00 ' + timezone) / 60000;
 	    return isNaN(requestedTimezoneOffset) ? fallback : requestedTimezoneOffset;
 	  }
@@ -43603,8 +43787,9 @@
 	
 	  function convertTimezoneToLocal(date, timezone, reverse) {
 	    reverse = reverse ? -1 : 1;
-	    var timezoneOffset = timezoneToOffset(timezone, date.getTimezoneOffset());
-	    return addDateMinutes(date, reverse * (timezoneOffset - date.getTimezoneOffset()));
+	    var dateTimezoneOffset = date.getTimezoneOffset();
+	    var timezoneOffset = timezoneToOffset(timezone, dateTimezoneOffset);
+	    return addDateMinutes(date, reverse * (timezoneOffset - dateTimezoneOffset));
 	  }
 	}]);
 	
@@ -43876,8 +44061,9 @@
 	      self.activeDate = new Date();
 	    }
 	
-	    this.activeDate = ngModelCtrl.$modelValue ?
-	      dateParser.fromTimezone(new Date(ngModelCtrl.$modelValue), ngModelOptions.timezone) :
+	    var date = ngModelCtrl.$modelValue ? new Date(ngModelCtrl.$modelValue) : new Date();
+	    this.activeDate = !isNaN(date) ?
+	      dateParser.fromTimezone(date, ngModelOptions.timezone) :
 	      dateParser.fromTimezone(new Date(), ngModelOptions.timezone);
 	
 	    ngModelCtrl.$render = function() {
@@ -45082,11 +45268,11 @@
 	          return value;
 	        }
 	
-	        $scope.date = dateParser.fromTimezone(value, timezone);
-	
-	        if (angular.isNumber($scope.date)) {
-	          $scope.date = new Date($scope.date);
+	        if (angular.isNumber(value)) {
+	          value = new Date(value);
 	        }
+	
+	        $scope.date = dateParser.fromTimezone(value, timezone);
 	
 	        return dateParser.filter($scope.date, dateFormat);
 	      });
@@ -45622,7 +45808,8 @@
 	    if (appendTo && self.dropdownMenu) {
 	      var pos = $position.positionElements($element, self.dropdownMenu, 'bottom-left', true),
 	        css,
-	        rightalign;
+	        rightalign,
+	        scrollbarWidth;
 	
 	      css = {
 	        top: pos.top + 'px',
@@ -45635,7 +45822,8 @@
 	        css.right = 'auto';
 	      } else {
 	        css.left = 'auto';
-	        css.right = window.innerWidth -
+	        scrollbarWidth = $position.scrollbarWidth(true);
+	        css.right = window.innerWidth - scrollbarWidth -
 	          (pos.left + $element.prop('offsetWidth')) + 'px';
 	      }
 	
@@ -46522,29 +46710,26 @@
 	                //controllers
 	                if (modalOptions.controller) {
 	                  ctrlLocals.$scope = modalScope;
+	                  ctrlLocals.$scope.$resolve = {};
 	                  ctrlLocals.$uibModalInstance = modalInstance;
 	                  angular.forEach(tplAndVars[1], function(value, key) {
 	                    ctrlLocals[key] = value;
+	                    ctrlLocals.$scope.$resolve[key] = value;
 	                  });
 	
 	                  // the third param will make the controller instantiate later,private api
 	                  // @see https://github.com/angular/angular.js/blob/master/src/ng/controller.js#L126
-	                  ctrlInstantiate = $controller(modalOptions.controller, ctrlLocals, true);
-	                  if (modalOptions.controllerAs) {
+	                  ctrlInstantiate = $controller(modalOptions.controller, ctrlLocals, true, modalOptions.controllerAs);
+	                  if (modalOptions.controllerAs && modalOptions.bindToController) {
 	                    ctrlInstance = ctrlInstantiate.instance;
-	
-	                    if (modalOptions.bindToController) {
-	                      ctrlInstance.$close = modalScope.$close;
-	                      ctrlInstance.$dismiss = modalScope.$dismiss;
-	                      angular.extend(ctrlInstance, providedScope);
-	                    }
-	
-	                    ctrlInstance = ctrlInstantiate();
-	
-	                    modalScope[modalOptions.controllerAs] = ctrlInstance;
-	                  } else {
-	                    ctrlInstance = ctrlInstantiate();
+	                    ctrlInstance.$close = modalScope.$close;
+	                    ctrlInstance.$dismiss = modalScope.$dismiss;
+	                    angular.extend(ctrlInstance, {
+	                      $resolve: ctrlLocals.$scope.$resolve
+	                    }, providedScope);
 	                  }
+	
+	                  ctrlInstance = ctrlInstantiate();
 	
 	                  if (angular.isFunction(ctrlInstance.$onInit)) {
 	                    ctrlInstance.$onInit();
@@ -47850,7 +48035,8 @@
 	      var previousSelected = ctrl.tabs[previousIndex];
 	      if (previousSelected) {
 	        previousSelected.tab.onDeselect({
-	          $event: evt
+	          $event: evt,
+	          $selectedIndex: index
 	        });
 	        if (evt && evt.isDefaultPrevented()) {
 	          return;
@@ -47866,7 +48052,7 @@
 	        selected.tab.active = true;
 	        ctrl.active = selected.index;
 	        oldIndex = selected.index;
-	      } else if (!selected && angular.isNumber(oldIndex)) {
+	      } else if (!selected && angular.isDefined(oldIndex)) {
 	        ctrl.active = null;
 	        oldIndex = null;
 	      }
@@ -47890,7 +48076,7 @@
 	      return 0;
 	    });
 	
-	    if (tab.index === ctrl.active || !angular.isNumber(ctrl.active) && ctrl.tabs.length === 1) {
+	    if (tab.index === ctrl.active || !angular.isDefined(ctrl.active) && ctrl.tabs.length === 1) {
 	      var newActiveIndex = findTabIndex(tab.index);
 	      ctrl.select(newActiveIndex);
 	    }
@@ -47915,7 +48101,7 @@
 	  };
 	
 	  $scope.$watch('tabset.active', function(val) {
-	    if (angular.isNumber(val) && val !== oldIndex) {
+	    if (angular.isDefined(val) && val !== oldIndex) {
 	      ctrl.select(findTabIndex(val));
 	    }
 	  });
@@ -47953,9 +48139,6 @@
 	        scope.$parent.$eval(attrs.vertical) : false;
 	      scope.justified = angular.isDefined(attrs.justified) ?
 	        scope.$parent.$eval(attrs.justified) : false;
-	      if (angular.isUndefined(attrs.active)) {
-	        scope.active = 0;
-	      }
 	    }
 	  };
 	})
@@ -48686,7 +48869,7 @@
 	    originalScope.$watch(attrs.typeaheadMinLength, function (newVal) {
 	        minLength = !newVal && newVal !== 0 ? 1 : newVal;
 	    });
-	    
+	
 	    //minimal wait time after last character typed before typeahead kicks-in
 	    var waitTime = originalScope.$eval(attrs.typeaheadWaitMs) || 0;
 	
@@ -48698,6 +48881,12 @@
 	
 	    //binding to a variable that indicates if matches are being retrieved asynchronously
 	    var isLoadingSetter = $parse(attrs.typeaheadLoading).assign || angular.noop;
+	
+	    //a function to determine if an event should cause selection
+	    var isSelectEvent = attrs.typeaheadShouldSelect ? $parse(attrs.typeaheadShouldSelect) : function(scope, vals) {
+	      var evt = vals.$event;
+	      return evt.which === 13 || evt.which === 9;
+	    };
 	
 	    //a callback executed when a match is selected
 	    var onSelectCallback = $parse(attrs.typeaheadOnSelect);
@@ -49014,13 +49203,15 @@
 	        return;
 	      }
 	
+	      var shouldSelect = isSelectEvent(originalScope, {$event: evt});
+	
 	      /**
 	       * if there's nothing selected (i.e. focusFirst) and enter or tab is hit
 	       * or
 	       * shift + tab is pressed to bring focus to the previous element
 	       * then clear the results
 	       */
-	      if (scope.activeIdx === -1 && (evt.which === 9 || evt.which === 13) || evt.which === 9 && !!evt.shiftKey) {
+	      if (scope.activeIdx === -1 && shouldSelect || evt.which === 9 && !!evt.shiftKey) {
 	        resetMatches();
 	        scope.$digest();
 	        return;
@@ -49029,36 +49220,36 @@
 	      evt.preventDefault();
 	      var target;
 	      switch (evt.which) {
-	        case 9:
-	        case 13:
-	          scope.$apply(function () {
-	            if (angular.isNumber(scope.debounceUpdate) || angular.isObject(scope.debounceUpdate)) {
-	              $$debounce(function() {
-	                scope.select(scope.activeIdx, evt);
-	              }, angular.isNumber(scope.debounceUpdate) ? scope.debounceUpdate : scope.debounceUpdate['default']);
-	            } else {
-	              scope.select(scope.activeIdx, evt);
-	            }
-	          });
-	          break;
-	        case 27:
+	        case 27: // escape
 	          evt.stopPropagation();
 	
 	          resetMatches();
 	          originalScope.$digest();
 	          break;
-	        case 38:
+	        case 38: // up arrow
 	          scope.activeIdx = (scope.activeIdx > 0 ? scope.activeIdx : scope.matches.length) - 1;
 	          scope.$digest();
 	          target = popUpEl.find('li')[scope.activeIdx];
 	          target.parentNode.scrollTop = target.offsetTop;
 	          break;
-	        case 40:
+	        case 40: // down arrow
 	          scope.activeIdx = (scope.activeIdx + 1) % scope.matches.length;
 	          scope.$digest();
 	          target = popUpEl.find('li')[scope.activeIdx];
 	          target.parentNode.scrollTop = target.offsetTop;
 	          break;
+	        default:
+	          if (shouldSelect) {
+	            scope.$apply(function() {
+	              if (angular.isNumber(scope.debounceUpdate) || angular.isObject(scope.debounceUpdate)) {
+	                $$debounce(function() {
+	                  scope.select(scope.activeIdx, evt);
+	                }, angular.isNumber(scope.debounceUpdate) ? scope.debounceUpdate : scope.debounceUpdate['default']);
+	              } else {
+	                scope.select(scope.activeIdx, evt);
+	              }
+	            });
+	          }
 	      }
 	    });
 	
@@ -49741,7 +49932,7 @@
 /***/ function(module, exports) {
 
 	/**
-	 * @license AngularJS v1.5.5
+	 * @license AngularJS v1.5.6
 	 * (c) 2010-2016 Google, Inc. http://angularjs.org
 	 * License: MIT
 	 */
@@ -49874,7 +50065,7 @@
 	  if (element instanceof jqLite) {
 	    switch (element.length) {
 	      case 0:
-	        return [];
+	        return element;
 	        break;
 	
 	      case 1:
@@ -52985,7 +53176,8 @@
 	        }
 	
 	        function update(element) {
-	          getRunner(element).setHost(newRunner);
+	          var runner = getRunner(element);
+	          if (runner) runner.setHost(newRunner);
 	        }
 	      }
 	
@@ -53897,7 +54089,7 @@
 /***/ function(module, exports) {
 
 	/**
-	 * @license AngularJS v1.5.5
+	 * @license AngularJS v1.5.6
 	 * (c) 2010-2016 Google, Inc. http://angularjs.org
 	 * License: MIT
 	 */
@@ -55280,8 +55472,7 @@
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/**
 	 * @license
-	 * lodash 4.11.1 (Custom Build) <https://lodash.com/>
-	 * Build: `lodash -d -o ./foo/lodash.js`
+	 * lodash <https://lodash.com/>
 	 * Copyright jQuery Foundation and other contributors <https://jquery.org/>
 	 * Released under MIT license <https://lodash.com/license>
 	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
@@ -55293,7 +55484,7 @@
 	  var undefined;
 	
 	  /** Used as the semantic version number. */
-	  var VERSION = '4.11.1';
+	  var VERSION = '4.13.1';
 	
 	  /** Used as the size to enable large array optimizations. */
 	  var LARGE_ARRAY_SIZE = 200;
@@ -55397,7 +55588,7 @@
 	  /** Used to match property names within property paths. */
 	  var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/,
 	      reIsPlainProp = /^\w*$/,
-	      rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]/g;
+	      rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(\.|\[\])(?:\4|$))/g;
 	
 	  /**
 	   * Used to match `RegExp`
@@ -55461,11 +55652,11 @@
 	      rsLowerRange = 'a-z\\xdf-\\xf6\\xf8-\\xff',
 	      rsMathOpRange = '\\xac\\xb1\\xd7\\xf7',
 	      rsNonCharRange = '\\x00-\\x2f\\x3a-\\x40\\x5b-\\x60\\x7b-\\xbf',
-	      rsQuoteRange = '\\u2018\\u2019\\u201c\\u201d',
+	      rsPunctuationRange = '\\u2000-\\u206f',
 	      rsSpaceRange = ' \\t\\x0b\\f\\xa0\\ufeff\\n\\r\\u2028\\u2029\\u1680\\u180e\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200a\\u202f\\u205f\\u3000',
 	      rsUpperRange = 'A-Z\\xc0-\\xd6\\xd8-\\xde',
 	      rsVarRange = '\\ufe0e\\ufe0f',
-	      rsBreakRange = rsMathOpRange + rsNonCharRange + rsQuoteRange + rsSpaceRange;
+	      rsBreakRange = rsMathOpRange + rsNonCharRange + rsPunctuationRange + rsSpaceRange;
 	
 	  /** Used to compose unicode capture groups. */
 	  var rsApos = "['\u2019]",
@@ -55530,7 +55721,7 @@
 	    'Function', 'Int8Array', 'Int16Array', 'Int32Array', 'Map', 'Math', 'Object',
 	    'Promise', 'Reflect', 'RegExp', 'Set', 'String', 'Symbol', 'TypeError',
 	    'Uint8Array', 'Uint8ClampedArray', 'Uint16Array', 'Uint32Array', 'WeakMap',
-	    '_', 'clearTimeout', 'isFinite', 'parseInt', 'setTimeout'
+	    '_', 'isFinite', 'parseInt', 'setTimeout'
 	  ];
 	
 	  /** Used to make template sourceURLs easier to identify. */
@@ -55609,12 +55800,6 @@
 	    '&#96;': '`'
 	  };
 	
-	  /** Used to determine if values are of the language type `Object`. */
-	  var objectTypes = {
-	    'function': true,
-	    'object': true
-	  };
-	
 	  /** Used to escape characters for inclusion in compiled string literals. */
 	  var stringEscapes = {
 	    '\\': '\\',
@@ -55630,41 +55815,25 @@
 	      freeParseInt = parseInt;
 	
 	  /** Detect free variable `exports`. */
-	  var freeExports = (objectTypes[typeof exports] && exports && !exports.nodeType)
-	    ? exports
-	    : undefined;
+	  var freeExports = typeof exports == 'object' && exports;
 	
 	  /** Detect free variable `module`. */
-	  var freeModule = (objectTypes[typeof module] && module && !module.nodeType)
-	    ? module
-	    : undefined;
+	  var freeModule = freeExports && typeof module == 'object' && module;
 	
 	  /** Detect the popular CommonJS extension `module.exports`. */
-	  var moduleExports = (freeModule && freeModule.exports === freeExports)
-	    ? freeExports
-	    : undefined;
+	  var moduleExports = freeModule && freeModule.exports === freeExports;
 	
 	  /** Detect free variable `global` from Node.js. */
-	  var freeGlobal = checkGlobal(freeExports && freeModule && typeof global == 'object' && global);
+	  var freeGlobal = checkGlobal(typeof global == 'object' && global);
 	
 	  /** Detect free variable `self`. */
-	  var freeSelf = checkGlobal(objectTypes[typeof self] && self);
-	
-	  /** Detect free variable `window`. */
-	  var freeWindow = checkGlobal(objectTypes[typeof window] && window);
+	  var freeSelf = checkGlobal(typeof self == 'object' && self);
 	
 	  /** Detect `this` as the global object. */
-	  var thisGlobal = checkGlobal(objectTypes[typeof this] && this);
+	  var thisGlobal = checkGlobal(typeof this == 'object' && this);
 	
-	  /**
-	   * Used as a reference to the global object.
-	   *
-	   * The `this` value is used if it's the global object to avoid Greasemonkey's
-	   * restricted `window` object, otherwise the `window` object is used.
-	   */
-	  var root = freeGlobal ||
-	    ((freeWindow !== (thisGlobal && thisGlobal.window)) && freeWindow) ||
-	      freeSelf || thisGlobal || Function('return this')();
+	  /** Used as a reference to the global object. */
+	  var root = freeGlobal || freeSelf || thisGlobal || Function('return this')();
 	
 	  /*--------------------------------------------------------------------------*/
 	
@@ -55720,7 +55889,7 @@
 	   * A specialized version of `baseAggregator` for arrays.
 	   *
 	   * @private
-	   * @param {Array} array The array to iterate over.
+	   * @param {Array} [array] The array to iterate over.
 	   * @param {Function} setter The function to set `accumulator` values.
 	   * @param {Function} iteratee The iteratee to transform keys.
 	   * @param {Object} accumulator The initial aggregated object.
@@ -55728,7 +55897,7 @@
 	   */
 	  function arrayAggregator(array, setter, iteratee, accumulator) {
 	    var index = -1,
-	        length = array.length;
+	        length = array ? array.length : 0;
 	
 	    while (++index < length) {
 	      var value = array[index];
@@ -55738,41 +55907,17 @@
 	  }
 	
 	  /**
-	   * Creates a new array concatenating `array` with `other`.
-	   *
-	   * @private
-	   * @param {Array} array The first array to concatenate.
-	   * @param {Array} other The second array to concatenate.
-	   * @returns {Array} Returns the new concatenated array.
-	   */
-	  function arrayConcat(array, other) {
-	    var index = -1,
-	        length = array.length,
-	        othIndex = -1,
-	        othLength = other.length,
-	        result = Array(length + othLength);
-	
-	    while (++index < length) {
-	      result[index] = array[index];
-	    }
-	    while (++othIndex < othLength) {
-	      result[index++] = other[othIndex];
-	    }
-	    return result;
-	  }
-	
-	  /**
 	   * A specialized version of `_.forEach` for arrays without support for
 	   * iteratee shorthands.
 	   *
 	   * @private
-	   * @param {Array} array The array to iterate over.
+	   * @param {Array} [array] The array to iterate over.
 	   * @param {Function} iteratee The function invoked per iteration.
 	   * @returns {Array} Returns `array`.
 	   */
 	  function arrayEach(array, iteratee) {
 	    var index = -1,
-	        length = array.length;
+	        length = array ? array.length : 0;
 	
 	    while (++index < length) {
 	      if (iteratee(array[index], index, array) === false) {
@@ -55787,12 +55932,12 @@
 	   * iteratee shorthands.
 	   *
 	   * @private
-	   * @param {Array} array The array to iterate over.
+	   * @param {Array} [array] The array to iterate over.
 	   * @param {Function} iteratee The function invoked per iteration.
 	   * @returns {Array} Returns `array`.
 	   */
 	  function arrayEachRight(array, iteratee) {
-	    var length = array.length;
+	    var length = array ? array.length : 0;
 	
 	    while (length--) {
 	      if (iteratee(array[length], length, array) === false) {
@@ -55807,14 +55952,14 @@
 	   * iteratee shorthands.
 	   *
 	   * @private
-	   * @param {Array} array The array to iterate over.
+	   * @param {Array} [array] The array to iterate over.
 	   * @param {Function} predicate The function invoked per iteration.
 	   * @returns {boolean} Returns `true` if all elements pass the predicate check,
 	   *  else `false`.
 	   */
 	  function arrayEvery(array, predicate) {
 	    var index = -1,
-	        length = array.length;
+	        length = array ? array.length : 0;
 	
 	    while (++index < length) {
 	      if (!predicate(array[index], index, array)) {
@@ -55829,13 +55974,13 @@
 	   * iteratee shorthands.
 	   *
 	   * @private
-	   * @param {Array} array The array to iterate over.
+	   * @param {Array} [array] The array to iterate over.
 	   * @param {Function} predicate The function invoked per iteration.
 	   * @returns {Array} Returns the new filtered array.
 	   */
 	  function arrayFilter(array, predicate) {
 	    var index = -1,
-	        length = array.length,
+	        length = array ? array.length : 0,
 	        resIndex = 0,
 	        result = [];
 	
@@ -55853,26 +55998,27 @@
 	   * specifying an index to search from.
 	   *
 	   * @private
-	   * @param {Array} array The array to search.
+	   * @param {Array} [array] The array to search.
 	   * @param {*} target The value to search for.
 	   * @returns {boolean} Returns `true` if `target` is found, else `false`.
 	   */
 	  function arrayIncludes(array, value) {
-	    return !!array.length && baseIndexOf(array, value, 0) > -1;
+	    var length = array ? array.length : 0;
+	    return !!length && baseIndexOf(array, value, 0) > -1;
 	  }
 	
 	  /**
 	   * This function is like `arrayIncludes` except that it accepts a comparator.
 	   *
 	   * @private
-	   * @param {Array} array The array to search.
+	   * @param {Array} [array] The array to search.
 	   * @param {*} target The value to search for.
 	   * @param {Function} comparator The comparator invoked per element.
 	   * @returns {boolean} Returns `true` if `target` is found, else `false`.
 	   */
 	  function arrayIncludesWith(array, value, comparator) {
 	    var index = -1,
-	        length = array.length;
+	        length = array ? array.length : 0;
 	
 	    while (++index < length) {
 	      if (comparator(value, array[index])) {
@@ -55887,13 +56033,13 @@
 	   * shorthands.
 	   *
 	   * @private
-	   * @param {Array} array The array to iterate over.
+	   * @param {Array} [array] The array to iterate over.
 	   * @param {Function} iteratee The function invoked per iteration.
 	   * @returns {Array} Returns the new mapped array.
 	   */
 	  function arrayMap(array, iteratee) {
 	    var index = -1,
-	        length = array.length,
+	        length = array ? array.length : 0,
 	        result = Array(length);
 	
 	    while (++index < length) {
@@ -55926,7 +56072,7 @@
 	   * iteratee shorthands.
 	   *
 	   * @private
-	   * @param {Array} array The array to iterate over.
+	   * @param {Array} [array] The array to iterate over.
 	   * @param {Function} iteratee The function invoked per iteration.
 	   * @param {*} [accumulator] The initial value.
 	   * @param {boolean} [initAccum] Specify using the first element of `array` as
@@ -55935,7 +56081,7 @@
 	   */
 	  function arrayReduce(array, iteratee, accumulator, initAccum) {
 	    var index = -1,
-	        length = array.length;
+	        length = array ? array.length : 0;
 	
 	    if (initAccum && length) {
 	      accumulator = array[++index];
@@ -55951,7 +56097,7 @@
 	   * iteratee shorthands.
 	   *
 	   * @private
-	   * @param {Array} array The array to iterate over.
+	   * @param {Array} [array] The array to iterate over.
 	   * @param {Function} iteratee The function invoked per iteration.
 	   * @param {*} [accumulator] The initial value.
 	   * @param {boolean} [initAccum] Specify using the last element of `array` as
@@ -55959,7 +56105,7 @@
 	   * @returns {*} Returns the accumulated value.
 	   */
 	  function arrayReduceRight(array, iteratee, accumulator, initAccum) {
-	    var length = array.length;
+	    var length = array ? array.length : 0;
 	    if (initAccum && length) {
 	      accumulator = array[--length];
 	    }
@@ -55974,14 +56120,14 @@
 	   * shorthands.
 	   *
 	   * @private
-	   * @param {Array} array The array to iterate over.
+	   * @param {Array} [array] The array to iterate over.
 	   * @param {Function} predicate The function invoked per iteration.
 	   * @returns {boolean} Returns `true` if any element passes the predicate check,
 	   *  else `false`.
 	   */
 	  function arraySome(array, predicate) {
 	    var index = -1,
-	        length = array.length;
+	        length = array ? array.length : 0;
 	
 	    while (++index < length) {
 	      if (predicate(array[index], index, array)) {
@@ -55992,52 +56138,21 @@
 	  }
 	
 	  /**
-	   * The base implementation of methods like `_.max` and `_.min` which accepts a
-	   * `comparator` to determine the extremum value.
-	   *
-	   * @private
-	   * @param {Array} array The array to iterate over.
-	   * @param {Function} iteratee The iteratee invoked per iteration.
-	   * @param {Function} comparator The comparator used to compare values.
-	   * @returns {*} Returns the extremum value.
-	   */
-	  function baseExtremum(array, iteratee, comparator) {
-	    var index = -1,
-	        length = array.length;
-	
-	    while (++index < length) {
-	      var value = array[index],
-	          current = iteratee(value);
-	
-	      if (current != null && (computed === undefined
-	            ? current === current
-	            : comparator(current, computed)
-	          )) {
-	        var computed = current,
-	            result = value;
-	      }
-	    }
-	    return result;
-	  }
-	
-	  /**
-	   * The base implementation of methods like `_.find` and `_.findKey`, without
-	   * support for iteratee shorthands, which iterates over `collection` using
-	   * `eachFunc`.
+	   * The base implementation of methods like `_.findKey` and `_.findLastKey`,
+	   * without support for iteratee shorthands, which iterates over `collection`
+	   * using `eachFunc`.
 	   *
 	   * @private
 	   * @param {Array|Object} collection The collection to search.
 	   * @param {Function} predicate The function invoked per iteration.
 	   * @param {Function} eachFunc The function to iterate over `collection`.
-	   * @param {boolean} [retKey] Specify returning the key of the found element
-	   *  instead of the element itself.
 	   * @returns {*} Returns the found element or its key, else `undefined`.
 	   */
-	  function baseFind(collection, predicate, eachFunc, retKey) {
+	  function baseFindKey(collection, predicate, eachFunc) {
 	    var result;
 	    eachFunc(collection, function(value, key, collection) {
 	      if (predicate(value, key, collection)) {
-	        result = retKey ? key : value;
+	        result = key;
 	        return false;
 	      }
 	    });
@@ -56051,12 +56166,13 @@
 	   * @private
 	   * @param {Array} array The array to search.
 	   * @param {Function} predicate The function invoked per iteration.
+	   * @param {number} fromIndex The index to search from.
 	   * @param {boolean} [fromRight] Specify iterating from right to left.
 	   * @returns {number} Returns the index of the matched value, else `-1`.
 	   */
-	  function baseFindIndex(array, predicate, fromRight) {
+	  function baseFindIndex(array, predicate, fromIndex, fromRight) {
 	    var length = array.length,
-	        index = fromRight ? length : -1;
+	        index = fromIndex + (fromRight ? 1 : -1);
 	
 	    while ((fromRight ? index-- : ++index < length)) {
 	      if (predicate(array[index], index, array)) {
@@ -56217,7 +56333,7 @@
 	   * @private
 	   * @param {Object} object The object to query.
 	   * @param {Array} props The property names to get values for.
-	   * @returns {Object} Returns the new array of key-value pairs.
+	   * @returns {Object} Returns the key-value pairs.
 	   */
 	  function baseToPairs(object, props) {
 	    return arrayMap(props, function(key) {
@@ -56230,7 +56346,7 @@
 	   *
 	   * @private
 	   * @param {Function} func The function to cap arguments for.
-	   * @returns {Function} Returns the new function.
+	   * @returns {Function} Returns the new capped function.
 	   */
 	  function baseUnary(func) {
 	    return function(value) {
@@ -56252,6 +56368,18 @@
 	    return arrayMap(props, function(key) {
 	      return object[key];
 	    });
+	  }
+	
+	  /**
+	   * Checks if a cache value for `key` exists.
+	   *
+	   * @private
+	   * @param {Object} cache The cache to query.
+	   * @param {string} key The key of the entry to check.
+	   * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
+	   */
+	  function cacheHas(cache, key) {
+	    return cache.has(key);
 	  }
 	
 	  /**
@@ -56299,79 +56427,6 @@
 	  }
 	
 	  /**
-	   * Compares values to sort them in ascending order.
-	   *
-	   * @private
-	   * @param {*} value The value to compare.
-	   * @param {*} other The other value to compare.
-	   * @returns {number} Returns the sort order indicator for `value`.
-	   */
-	  function compareAscending(value, other) {
-	    if (value !== other) {
-	      var valIsNull = value === null,
-	          valIsUndef = value === undefined,
-	          valIsReflexive = value === value;
-	
-	      var othIsNull = other === null,
-	          othIsUndef = other === undefined,
-	          othIsReflexive = other === other;
-	
-	      if ((value > other && !othIsNull) || !valIsReflexive ||
-	          (valIsNull && !othIsUndef && othIsReflexive) ||
-	          (valIsUndef && othIsReflexive)) {
-	        return 1;
-	      }
-	      if ((value < other && !valIsNull) || !othIsReflexive ||
-	          (othIsNull && !valIsUndef && valIsReflexive) ||
-	          (othIsUndef && valIsReflexive)) {
-	        return -1;
-	      }
-	    }
-	    return 0;
-	  }
-	
-	  /**
-	   * Used by `_.orderBy` to compare multiple properties of a value to another
-	   * and stable sort them.
-	   *
-	   * If `orders` is unspecified, all values are sorted in ascending order. Otherwise,
-	   * specify an order of "desc" for descending or "asc" for ascending sort order
-	   * of corresponding values.
-	   *
-	   * @private
-	   * @param {Object} object The object to compare.
-	   * @param {Object} other The other object to compare.
-	   * @param {boolean[]|string[]} orders The order to sort by for each property.
-	   * @returns {number} Returns the sort order indicator for `object`.
-	   */
-	  function compareMultiple(object, other, orders) {
-	    var index = -1,
-	        objCriteria = object.criteria,
-	        othCriteria = other.criteria,
-	        length = objCriteria.length,
-	        ordersLength = orders.length;
-	
-	    while (++index < length) {
-	      var result = compareAscending(objCriteria[index], othCriteria[index]);
-	      if (result) {
-	        if (index >= ordersLength) {
-	          return result;
-	        }
-	        var order = orders[index];
-	        return result * (order == 'desc' ? -1 : 1);
-	      }
-	    }
-	    // Fixes an `Array#sort` bug in the JS engine embedded in Adobe applications
-	    // that causes it, under certain circumstances, to provide the same value for
-	    // `object` and `other`. See https://github.com/jashkenas/underscore/pull/1247
-	    // for more details.
-	    //
-	    // This also ensures a stable sort in V8 and other engines.
-	    // See https://bugs.chromium.org/p/v8/issues/detail?id=90 for more details.
-	    return object.index - other.index;
-	  }
-	
-	  /**
 	   * Gets the number of `placeholder` occurrences in `array`.
 	   *
 	   * @private
@@ -56389,29 +56444,6 @@
 	      }
 	    }
 	    return result;
-	  }
-	
-	  /**
-	   * Creates a function that performs a mathematical operation on two values.
-	   *
-	   * @private
-	   * @param {Function} operator The function to perform the operation.
-	   * @returns {Function} Returns the new mathematical operation function.
-	   */
-	  function createMathOperation(operator) {
-	    return function(value, other) {
-	      var result;
-	      if (value === undefined && other === undefined) {
-	        return 0;
-	      }
-	      if (value !== undefined) {
-	        result = value;
-	      }
-	      if (other !== undefined) {
-	        result = result === undefined ? other : operator(result, other);
-	      }
-	      return result;
-	    };
 	  }
 	
 	  /**
@@ -56448,6 +56480,18 @@
 	  }
 	
 	  /**
+	   * Gets the value at `key` of `object`.
+	   *
+	   * @private
+	   * @param {Object} [object] The object to query.
+	   * @param {string} key The key of the property to get.
+	   * @returns {*} Returns the property value.
+	   */
+	  function getValue(object, key) {
+	    return object == null ? undefined : object[key];
+	  }
+	
+	  /**
 	   * Gets the index at which the first occurrence of `NaN` is found in `array`.
 	   *
 	   * @private
@@ -56458,7 +56502,7 @@
 	   */
 	  function indexOfNaN(array, fromIndex, fromRight) {
 	    var length = array.length,
-	        index = fromIndex + (fromRight ? 0 : -1);
+	        index = fromIndex + (fromRight ? 1 : -1);
 	
 	    while ((fromRight ? index-- : ++index < length)) {
 	      var other = array[index];
@@ -56489,20 +56533,6 @@
 	  }
 	
 	  /**
-	   * Checks if `value` is a valid array-like index.
-	   *
-	   * @private
-	   * @param {*} value The value to check.
-	   * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
-	   * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
-	   */
-	  function isIndex(value, length) {
-	    value = (typeof value == 'number' || reIsUint.test(value)) ? +value : -1;
-	    length = length == null ? MAX_SAFE_INTEGER : length;
-	    return value > -1 && value % 1 == 0 && value < length;
-	  }
-	
-	  /**
 	   * Converts `iterator` to an array.
 	   *
 	   * @private
@@ -56520,11 +56550,11 @@
 	  }
 	
 	  /**
-	   * Converts `map` to an array.
+	   * Converts `map` to its key-value pairs.
 	   *
 	   * @private
 	   * @param {Object} map The map to convert.
-	   * @returns {Array} Returns the converted array.
+	   * @returns {Array} Returns the key-value pairs.
 	   */
 	  function mapToArray(map) {
 	    var index = -1,
@@ -56562,11 +56592,11 @@
 	  }
 	
 	  /**
-	   * Converts `set` to an array.
+	   * Converts `set` to an array of its values.
 	   *
 	   * @private
 	   * @param {Object} set The set to convert.
-	   * @returns {Array} Returns the converted array.
+	   * @returns {Array} Returns the values.
 	   */
 	  function setToArray(set) {
 	    var index = -1,
@@ -56574,6 +56604,23 @@
 	
 	    set.forEach(function(value) {
 	      result[++index] = value;
+	    });
+	    return result;
+	  }
+	
+	  /**
+	   * Converts `set` to its value-value pairs.
+	   *
+	   * @private
+	   * @param {Object} set The set to convert.
+	   * @returns {Array} Returns the value-value pairs.
+	   */
+	  function setToPairs(set) {
+	    var index = -1,
+	        result = Array(set.size);
+	
+	    set.forEach(function(value) {
+	      result[++index] = [value, value];
 	    });
 	    return result;
 	  }
@@ -56646,10 +56693,10 @@
 	   * lodash.isFunction(lodash.bar);
 	   * // => true
 	   *
-	   * // Use `context` to mock `Date#getTime` use in `_.now`.
-	   * var mock = _.runInContext({
+	   * // Use `context` to stub `Date#getTime` use in `_.now`.
+	   * var stubbed = _.runInContext({
 	   *   'Date': function() {
-	   *     return { 'getTime': getTimeMock };
+	   *     return { 'getTime': stubGetTime };
 	   *   }
 	   * });
 	   *
@@ -56670,6 +56717,15 @@
 	    var arrayProto = context.Array.prototype,
 	        objectProto = context.Object.prototype,
 	        stringProto = context.String.prototype;
+	
+	    /** Used to detect overreaching core-js shims. */
+	    var coreJsData = context['__core-js_shared__'];
+	
+	    /** Used to detect methods masquerading as native. */
+	    var maskSrcKey = (function() {
+	      var uid = /[^.]+$/.exec(coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO || '');
+	      return uid ? ('Symbol(src)_1.' + uid) : '';
+	    }());
 	
 	    /** Used to resolve the decompiled source of functions. */
 	    var funcToString = context.Function.prototype.toString;
@@ -56704,14 +56760,15 @@
 	        Reflect = context.Reflect,
 	        Symbol = context.Symbol,
 	        Uint8Array = context.Uint8Array,
-	        clearTimeout = context.clearTimeout,
 	        enumerate = Reflect ? Reflect.enumerate : undefined,
 	        getOwnPropertySymbols = Object.getOwnPropertySymbols,
 	        iteratorSymbol = typeof (iteratorSymbol = Symbol && Symbol.iterator) == 'symbol' ? iteratorSymbol : undefined,
 	        objectCreate = Object.create,
 	        propertyIsEnumerable = objectProto.propertyIsEnumerable,
-	        setTimeout = context.setTimeout,
 	        splice = arrayProto.splice;
+	
+	    /** Built-in method references that are mockable. */
+	    var setTimeout = function(func, wait) { return context.setTimeout.call(root, func, wait); };
 	
 	    /* Built-in method references for those with the same name as other `lodash` methods. */
 	    var nativeCeil = Math.ceil,
@@ -56831,22 +56888,24 @@
 	     * `floor`, `forEach`, `forEachRight`, `forIn`, `forInRight`, `forOwn`,
 	     * `forOwnRight`, `get`, `gt`, `gte`, `has`, `hasIn`, `head`, `identity`,
 	     * `includes`, `indexOf`, `inRange`, `invoke`, `isArguments`, `isArray`,
-	     * `isArrayBuffer`, `isArrayLike`, `isArrayLikeObject`, `isBoolean`, `isBuffer`,
-	     * `isDate`, `isElement`, `isEmpty`, `isEqual`, `isEqualWith`, `isError`,
-	     * `isFinite`, `isFunction`, `isInteger`, `isLength`, `isMap`, `isMatch`,
-	     * `isMatchWith`, `isNaN`, `isNative`, `isNil`, `isNull`, `isNumber`,
-	     * `isObject`, `isObjectLike`, `isPlainObject`, `isRegExp`, `isSafeInteger`,
-	     * `isSet`, `isString`, `isUndefined`, `isTypedArray`, `isWeakMap`, `isWeakSet`,
-	     * `join`, `kebabCase`, `last`, `lastIndexOf`, `lowerCase`, `lowerFirst`,
-	     * `lt`, `lte`, `max`, `maxBy`, `mean`, `meanBy`, `min`, `minBy`, `multiply`,
-	     * `noConflict`, `noop`, `now`, `nth`, `pad`, `padEnd`, `padStart`, `parseInt`,
-	     * `pop`, `random`, `reduce`, `reduceRight`, `repeat`, `result`, `round`,
-	     * `runInContext`, `sample`, `shift`, `size`, `snakeCase`, `some`, `sortedIndex`,
-	     * `sortedIndexBy`, `sortedLastIndex`, `sortedLastIndexBy`, `startCase`,
-	     * `startsWith`, `subtract`, `sum`, `sumBy`, `template`, `times`, `toInteger`,
-	     * `toJSON`, `toLength`, `toLower`, `toNumber`, `toSafeInteger`, `toString`,
-	     * `toUpper`, `trim`, `trimEnd`, `trimStart`, `truncate`, `unescape`,
-	     * `uniqueId`, `upperCase`, `upperFirst`, `value`, and `words`
+	     * `isArrayBuffer`, `isArrayLike`, `isArrayLikeObject`, `isBoolean`,
+	     * `isBuffer`, `isDate`, `isElement`, `isEmpty`, `isEqual`, `isEqualWith`,
+	     * `isError`, `isFinite`, `isFunction`, `isInteger`, `isLength`, `isMap`,
+	     * `isMatch`, `isMatchWith`, `isNaN`, `isNative`, `isNil`, `isNull`,
+	     * `isNumber`, `isObject`, `isObjectLike`, `isPlainObject`, `isRegExp`,
+	     * `isSafeInteger`, `isSet`, `isString`, `isUndefined`, `isTypedArray`,
+	     * `isWeakMap`, `isWeakSet`, `join`, `kebabCase`, `last`, `lastIndexOf`,
+	     * `lowerCase`, `lowerFirst`, `lt`, `lte`, `max`, `maxBy`, `mean`, `meanBy`,
+	     * `min`, `minBy`, `multiply`, `noConflict`, `noop`, `now`, `nth`, `pad`,
+	     * `padEnd`, `padStart`, `parseInt`, `pop`, `random`, `reduce`, `reduceRight`,
+	     * `repeat`, `result`, `round`, `runInContext`, `sample`, `shift`, `size`,
+	     * `snakeCase`, `some`, `sortedIndex`, `sortedIndexBy`, `sortedLastIndex`,
+	     * `sortedLastIndexBy`, `startCase`, `startsWith`, `stubArray`, `stubFalse`,
+	     * `stubObject`, `stubString`, `stubTrue`, `subtract`, `sum`, `sumBy`,
+	     * `template`, `times`, `toFinite`, `toInteger`, `toJSON`, `toLength`,
+	     * `toLower`, `toNumber`, `toSafeInteger`, `toString`, `toUpper`, `trim`,
+	     * `trimEnd`, `trimStart`, `truncate`, `unescape`, `uniqueId`, `upperCase`,
+	     * `upperFirst`, `value`, and `words`
 	     *
 	     * @name _
 	     * @constructor
@@ -57105,64 +57164,212 @@
 	     *
 	     * @private
 	     * @constructor
-	     * @returns {Object} Returns the new hash object.
+	     * @param {Array} [entries] The key-value pairs to cache.
 	     */
-	    function Hash() {}
+	    function Hash(entries) {
+	      var index = -1,
+	          length = entries ? entries.length : 0;
+	
+	      this.clear();
+	      while (++index < length) {
+	        var entry = entries[index];
+	        this.set(entry[0], entry[1]);
+	      }
+	    }
+	
+	    /**
+	     * Removes all key-value entries from the hash.
+	     *
+	     * @private
+	     * @name clear
+	     * @memberOf Hash
+	     */
+	    function hashClear() {
+	      this.__data__ = nativeCreate ? nativeCreate(null) : {};
+	    }
 	
 	    /**
 	     * Removes `key` and its value from the hash.
 	     *
 	     * @private
+	     * @name delete
+	     * @memberOf Hash
 	     * @param {Object} hash The hash to modify.
 	     * @param {string} key The key of the value to remove.
 	     * @returns {boolean} Returns `true` if the entry was removed, else `false`.
 	     */
-	    function hashDelete(hash, key) {
-	      return hashHas(hash, key) && delete hash[key];
+	    function hashDelete(key) {
+	      return this.has(key) && delete this.__data__[key];
 	    }
 	
 	    /**
 	     * Gets the hash value for `key`.
 	     *
 	     * @private
-	     * @param {Object} hash The hash to query.
+	     * @name get
+	     * @memberOf Hash
 	     * @param {string} key The key of the value to get.
 	     * @returns {*} Returns the entry value.
 	     */
-	    function hashGet(hash, key) {
+	    function hashGet(key) {
+	      var data = this.__data__;
 	      if (nativeCreate) {
-	        var result = hash[key];
+	        var result = data[key];
 	        return result === HASH_UNDEFINED ? undefined : result;
 	      }
-	      return hasOwnProperty.call(hash, key) ? hash[key] : undefined;
+	      return hasOwnProperty.call(data, key) ? data[key] : undefined;
 	    }
 	
 	    /**
 	     * Checks if a hash value for `key` exists.
 	     *
 	     * @private
-	     * @param {Object} hash The hash to query.
+	     * @name has
+	     * @memberOf Hash
 	     * @param {string} key The key of the entry to check.
 	     * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
 	     */
-	    function hashHas(hash, key) {
-	      return nativeCreate ? hash[key] !== undefined : hasOwnProperty.call(hash, key);
+	    function hashHas(key) {
+	      var data = this.__data__;
+	      return nativeCreate ? data[key] !== undefined : hasOwnProperty.call(data, key);
 	    }
 	
 	    /**
 	     * Sets the hash `key` to `value`.
 	     *
 	     * @private
-	     * @param {Object} hash The hash to modify.
+	     * @name set
+	     * @memberOf Hash
 	     * @param {string} key The key of the value to set.
 	     * @param {*} value The value to set.
+	     * @returns {Object} Returns the hash instance.
 	     */
-	    function hashSet(hash, key, value) {
-	      hash[key] = (nativeCreate && value === undefined) ? HASH_UNDEFINED : value;
+	    function hashSet(key, value) {
+	      var data = this.__data__;
+	      data[key] = (nativeCreate && value === undefined) ? HASH_UNDEFINED : value;
+	      return this;
 	    }
 	
-	    // Avoid inheriting from `Object.prototype` when possible.
-	    Hash.prototype = nativeCreate ? nativeCreate(null) : objectProto;
+	    // Add methods to `Hash`.
+	    Hash.prototype.clear = hashClear;
+	    Hash.prototype['delete'] = hashDelete;
+	    Hash.prototype.get = hashGet;
+	    Hash.prototype.has = hashHas;
+	    Hash.prototype.set = hashSet;
+	
+	    /*------------------------------------------------------------------------*/
+	
+	    /**
+	     * Creates an list cache object.
+	     *
+	     * @private
+	     * @constructor
+	     * @param {Array} [entries] The key-value pairs to cache.
+	     */
+	    function ListCache(entries) {
+	      var index = -1,
+	          length = entries ? entries.length : 0;
+	
+	      this.clear();
+	      while (++index < length) {
+	        var entry = entries[index];
+	        this.set(entry[0], entry[1]);
+	      }
+	    }
+	
+	    /**
+	     * Removes all key-value entries from the list cache.
+	     *
+	     * @private
+	     * @name clear
+	     * @memberOf ListCache
+	     */
+	    function listCacheClear() {
+	      this.__data__ = [];
+	    }
+	
+	    /**
+	     * Removes `key` and its value from the list cache.
+	     *
+	     * @private
+	     * @name delete
+	     * @memberOf ListCache
+	     * @param {string} key The key of the value to remove.
+	     * @returns {boolean} Returns `true` if the entry was removed, else `false`.
+	     */
+	    function listCacheDelete(key) {
+	      var data = this.__data__,
+	          index = assocIndexOf(data, key);
+	
+	      if (index < 0) {
+	        return false;
+	      }
+	      var lastIndex = data.length - 1;
+	      if (index == lastIndex) {
+	        data.pop();
+	      } else {
+	        splice.call(data, index, 1);
+	      }
+	      return true;
+	    }
+	
+	    /**
+	     * Gets the list cache value for `key`.
+	     *
+	     * @private
+	     * @name get
+	     * @memberOf ListCache
+	     * @param {string} key The key of the value to get.
+	     * @returns {*} Returns the entry value.
+	     */
+	    function listCacheGet(key) {
+	      var data = this.__data__,
+	          index = assocIndexOf(data, key);
+	
+	      return index < 0 ? undefined : data[index][1];
+	    }
+	
+	    /**
+	     * Checks if a list cache value for `key` exists.
+	     *
+	     * @private
+	     * @name has
+	     * @memberOf ListCache
+	     * @param {string} key The key of the entry to check.
+	     * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
+	     */
+	    function listCacheHas(key) {
+	      return assocIndexOf(this.__data__, key) > -1;
+	    }
+	
+	    /**
+	     * Sets the list cache `key` to `value`.
+	     *
+	     * @private
+	     * @name set
+	     * @memberOf ListCache
+	     * @param {string} key The key of the value to set.
+	     * @param {*} value The value to set.
+	     * @returns {Object} Returns the list cache instance.
+	     */
+	    function listCacheSet(key, value) {
+	      var data = this.__data__,
+	          index = assocIndexOf(data, key);
+	
+	      if (index < 0) {
+	        data.push([key, value]);
+	      } else {
+	        data[index][1] = value;
+	      }
+	      return this;
+	    }
+	
+	    // Add methods to `ListCache`.
+	    ListCache.prototype.clear = listCacheClear;
+	    ListCache.prototype['delete'] = listCacheDelete;
+	    ListCache.prototype.get = listCacheGet;
+	    ListCache.prototype.has = listCacheHas;
+	    ListCache.prototype.set = listCacheSet;
 	
 	    /*------------------------------------------------------------------------*/
 	
@@ -57171,15 +57378,15 @@
 	     *
 	     * @private
 	     * @constructor
-	     * @param {Array} [values] The values to cache.
+	     * @param {Array} [entries] The key-value pairs to cache.
 	     */
-	    function MapCache(values) {
+	    function MapCache(entries) {
 	      var index = -1,
-	          length = values ? values.length : 0;
+	          length = entries ? entries.length : 0;
 	
 	      this.clear();
 	      while (++index < length) {
-	        var entry = values[index];
+	        var entry = entries[index];
 	        this.set(entry[0], entry[1]);
 	      }
 	    }
@@ -57191,10 +57398,10 @@
 	     * @name clear
 	     * @memberOf MapCache
 	     */
-	    function mapClear() {
+	    function mapCacheClear() {
 	      this.__data__ = {
 	        'hash': new Hash,
-	        'map': Map ? new Map : [],
+	        'map': new (Map || ListCache),
 	        'string': new Hash
 	      };
 	    }
@@ -57208,12 +57415,8 @@
 	     * @param {string} key The key of the value to remove.
 	     * @returns {boolean} Returns `true` if the entry was removed, else `false`.
 	     */
-	    function mapDelete(key) {
-	      var data = this.__data__;
-	      if (isKeyable(key)) {
-	        return hashDelete(typeof key == 'string' ? data.string : data.hash, key);
-	      }
-	      return Map ? data.map['delete'](key) : assocDelete(data.map, key);
+	    function mapCacheDelete(key) {
+	      return getMapData(this, key)['delete'](key);
 	    }
 	
 	    /**
@@ -57225,12 +57428,8 @@
 	     * @param {string} key The key of the value to get.
 	     * @returns {*} Returns the entry value.
 	     */
-	    function mapGet(key) {
-	      var data = this.__data__;
-	      if (isKeyable(key)) {
-	        return hashGet(typeof key == 'string' ? data.string : data.hash, key);
-	      }
-	      return Map ? data.map.get(key) : assocGet(data.map, key);
+	    function mapCacheGet(key) {
+	      return getMapData(this, key).get(key);
 	    }
 	
 	    /**
@@ -57242,12 +57441,8 @@
 	     * @param {string} key The key of the entry to check.
 	     * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
 	     */
-	    function mapHas(key) {
-	      var data = this.__data__;
-	      if (isKeyable(key)) {
-	        return hashHas(typeof key == 'string' ? data.string : data.hash, key);
-	      }
-	      return Map ? data.map.has(key) : assocHas(data.map, key);
+	    function mapCacheHas(key) {
+	      return getMapData(this, key).has(key);
 	    }
 	
 	    /**
@@ -57260,30 +57455,23 @@
 	     * @param {*} value The value to set.
 	     * @returns {Object} Returns the map cache instance.
 	     */
-	    function mapSet(key, value) {
-	      var data = this.__data__;
-	      if (isKeyable(key)) {
-	        hashSet(typeof key == 'string' ? data.string : data.hash, key, value);
-	      } else if (Map) {
-	        data.map.set(key, value);
-	      } else {
-	        assocSet(data.map, key, value);
-	      }
+	    function mapCacheSet(key, value) {
+	      getMapData(this, key).set(key, value);
 	      return this;
 	    }
 	
 	    // Add methods to `MapCache`.
-	    MapCache.prototype.clear = mapClear;
-	    MapCache.prototype['delete'] = mapDelete;
-	    MapCache.prototype.get = mapGet;
-	    MapCache.prototype.has = mapHas;
-	    MapCache.prototype.set = mapSet;
+	    MapCache.prototype.clear = mapCacheClear;
+	    MapCache.prototype['delete'] = mapCacheDelete;
+	    MapCache.prototype.get = mapCacheGet;
+	    MapCache.prototype.has = mapCacheHas;
+	    MapCache.prototype.set = mapCacheSet;
 	
 	    /*------------------------------------------------------------------------*/
 	
 	    /**
 	     *
-	     * Creates a set cache object to store unique values.
+	     * Creates an array cache object to store unique values.
 	     *
 	     * @private
 	     * @constructor
@@ -57295,52 +57483,41 @@
 	
 	      this.__data__ = new MapCache;
 	      while (++index < length) {
-	        this.push(values[index]);
+	        this.add(values[index]);
 	      }
 	    }
 	
 	    /**
-	     * Checks if `value` is in `cache`.
+	     * Adds `value` to the array cache.
 	     *
 	     * @private
-	     * @param {Object} cache The set cache to search.
+	     * @name add
+	     * @memberOf SetCache
+	     * @alias push
+	     * @param {*} value The value to cache.
+	     * @returns {Object} Returns the cache instance.
+	     */
+	    function setCacheAdd(value) {
+	      this.__data__.set(value, HASH_UNDEFINED);
+	      return this;
+	    }
+	
+	    /**
+	     * Checks if `value` is in the array cache.
+	     *
+	     * @private
+	     * @name has
+	     * @memberOf SetCache
 	     * @param {*} value The value to search for.
 	     * @returns {number} Returns `true` if `value` is found, else `false`.
 	     */
-	    function cacheHas(cache, value) {
-	      var map = cache.__data__;
-	      if (isKeyable(value)) {
-	        var data = map.__data__,
-	            hash = typeof value == 'string' ? data.string : data.hash;
-	
-	        return hash[value] === HASH_UNDEFINED;
-	      }
-	      return map.has(value);
-	    }
-	
-	    /**
-	     * Adds `value` to the set cache.
-	     *
-	     * @private
-	     * @name push
-	     * @memberOf SetCache
-	     * @param {*} value The value to cache.
-	     */
-	    function cachePush(value) {
-	      var map = this.__data__;
-	      if (isKeyable(value)) {
-	        var data = map.__data__,
-	            hash = typeof value == 'string' ? data.string : data.hash;
-	
-	        hash[value] = HASH_UNDEFINED;
-	      }
-	      else {
-	        map.set(value, HASH_UNDEFINED);
-	      }
+	    function setCacheHas(value) {
+	      return this.__data__.has(value);
 	    }
 	
 	    // Add methods to `SetCache`.
-	    SetCache.prototype.push = cachePush;
+	    SetCache.prototype.add = SetCache.prototype.push = setCacheAdd;
+	    SetCache.prototype.has = setCacheHas;
 	
 	    /*------------------------------------------------------------------------*/
 	
@@ -57349,17 +57526,10 @@
 	     *
 	     * @private
 	     * @constructor
-	     * @param {Array} [values] The values to cache.
+	     * @param {Array} [entries] The key-value pairs to cache.
 	     */
-	    function Stack(values) {
-	      var index = -1,
-	          length = values ? values.length : 0;
-	
-	      this.clear();
-	      while (++index < length) {
-	        var entry = values[index];
-	        this.set(entry[0], entry[1]);
-	      }
+	    function Stack(entries) {
+	      this.__data__ = new ListCache(entries);
 	    }
 	
 	    /**
@@ -57370,7 +57540,7 @@
 	     * @memberOf Stack
 	     */
 	    function stackClear() {
-	      this.__data__ = { 'array': [], 'map': null };
+	      this.__data__ = new ListCache;
 	    }
 	
 	    /**
@@ -57383,10 +57553,7 @@
 	     * @returns {boolean} Returns `true` if the entry was removed, else `false`.
 	     */
 	    function stackDelete(key) {
-	      var data = this.__data__,
-	          array = data.array;
-	
-	      return array ? assocDelete(array, key) : data.map['delete'](key);
+	      return this.__data__['delete'](key);
 	    }
 	
 	    /**
@@ -57399,10 +57566,7 @@
 	     * @returns {*} Returns the entry value.
 	     */
 	    function stackGet(key) {
-	      var data = this.__data__,
-	          array = data.array;
-	
-	      return array ? assocGet(array, key) : data.map.get(key);
+	      return this.__data__.get(key);
 	    }
 	
 	    /**
@@ -57415,10 +57579,7 @@
 	     * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
 	     */
 	    function stackHas(key) {
-	      var data = this.__data__,
-	          array = data.array;
-	
-	      return array ? assocHas(array, key) : data.map.has(key);
+	      return this.__data__.has(key);
 	    }
 	
 	    /**
@@ -57432,21 +57593,11 @@
 	     * @returns {Object} Returns the stack cache instance.
 	     */
 	    function stackSet(key, value) {
-	      var data = this.__data__,
-	          array = data.array;
-	
-	      if (array) {
-	        if (array.length < (LARGE_ARRAY_SIZE - 1)) {
-	          assocSet(array, key, value);
-	        } else {
-	          data.array = null;
-	          data.map = new MapCache(array);
-	        }
+	      var cache = this.__data__;
+	      if (cache instanceof ListCache && cache.__data__.length == LARGE_ARRAY_SIZE) {
+	        cache = this.__data__ = new MapCache(cache.__data__);
 	      }
-	      var map = data.map;
-	      if (map) {
-	        map.set(key, value);
-	      }
+	      cache.set(key, value);
 	      return this;
 	    }
 	
@@ -57456,90 +57607,6 @@
 	    Stack.prototype.get = stackGet;
 	    Stack.prototype.has = stackHas;
 	    Stack.prototype.set = stackSet;
-	
-	    /*------------------------------------------------------------------------*/
-	
-	    /**
-	     * Removes `key` and its value from the associative array.
-	     *
-	     * @private
-	     * @param {Array} array The array to modify.
-	     * @param {string} key The key of the value to remove.
-	     * @returns {boolean} Returns `true` if the entry was removed, else `false`.
-	     */
-	    function assocDelete(array, key) {
-	      var index = assocIndexOf(array, key);
-	      if (index < 0) {
-	        return false;
-	      }
-	      var lastIndex = array.length - 1;
-	      if (index == lastIndex) {
-	        array.pop();
-	      } else {
-	        splice.call(array, index, 1);
-	      }
-	      return true;
-	    }
-	
-	    /**
-	     * Gets the associative array value for `key`.
-	     *
-	     * @private
-	     * @param {Array} array The array to query.
-	     * @param {string} key The key of the value to get.
-	     * @returns {*} Returns the entry value.
-	     */
-	    function assocGet(array, key) {
-	      var index = assocIndexOf(array, key);
-	      return index < 0 ? undefined : array[index][1];
-	    }
-	
-	    /**
-	     * Checks if an associative array value for `key` exists.
-	     *
-	     * @private
-	     * @param {Array} array The array to query.
-	     * @param {string} key The key of the entry to check.
-	     * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
-	     */
-	    function assocHas(array, key) {
-	      return assocIndexOf(array, key) > -1;
-	    }
-	
-	    /**
-	     * Gets the index at which the `key` is found in `array` of key-value pairs.
-	     *
-	     * @private
-	     * @param {Array} array The array to search.
-	     * @param {*} key The key to search for.
-	     * @returns {number} Returns the index of the matched value, else `-1`.
-	     */
-	    function assocIndexOf(array, key) {
-	      var length = array.length;
-	      while (length--) {
-	        if (eq(array[length][0], key)) {
-	          return length;
-	        }
-	      }
-	      return -1;
-	    }
-	
-	    /**
-	     * Sets the associative array `key` to `value`.
-	     *
-	     * @private
-	     * @param {Array} array The array to modify.
-	     * @param {string} key The key of the value to set.
-	     * @param {*} value The value to set.
-	     */
-	    function assocSet(array, key, value) {
-	      var index = assocIndexOf(array, key);
-	      if (index < 0) {
-	        array.push([key, value]);
-	      } else {
-	        array[index][1] = value;
-	      }
-	    }
 	
 	    /*------------------------------------------------------------------------*/
 	
@@ -57596,6 +57663,24 @@
 	    }
 	
 	    /**
+	     * Gets the index at which the `key` is found in `array` of key-value pairs.
+	     *
+	     * @private
+	     * @param {Array} array The array to search.
+	     * @param {*} key The key to search for.
+	     * @returns {number} Returns the index of the matched value, else `-1`.
+	     */
+	    function assocIndexOf(array, key) {
+	      var length = array.length;
+	      while (length--) {
+	        if (eq(array[length][0], key)) {
+	          return length;
+	        }
+	      }
+	      return -1;
+	    }
+	
+	    /**
 	     * Aggregates elements of `collection` on `accumulator` with keys transformed
 	     * by `iteratee` and values set by `setter`.
 	     *
@@ -57632,7 +57717,7 @@
 	     * @private
 	     * @param {Object} object The object to iterate over.
 	     * @param {string[]} paths The property paths of elements to pick.
-	     * @returns {Array} Returns the new array of picked elements.
+	     * @returns {Array} Returns the picked elements.
 	     */
 	    function baseAt(object, paths) {
 	      var index = -1,
@@ -57747,7 +57832,7 @@
 	     *
 	     * @private
 	     * @param {Object} source The object of property predicates to conform to.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new spec function.
 	     */
 	    function baseConforms(source) {
 	      var props = keys(source),
@@ -57840,6 +57925,7 @@
 	        var value = array[index],
 	            computed = iteratee ? iteratee(value) : value;
 	
+	        value = (comparator || value !== 0) ? value : 0;
 	        if (isCommon && computed === computed) {
 	          var valuesIndex = valuesLength;
 	          while (valuesIndex--) {
@@ -57891,6 +57977,35 @@
 	        result = !!predicate(value, index, collection);
 	        return result;
 	      });
+	      return result;
+	    }
+	
+	    /**
+	     * The base implementation of methods like `_.max` and `_.min` which accepts a
+	     * `comparator` to determine the extremum value.
+	     *
+	     * @private
+	     * @param {Array} array The array to iterate over.
+	     * @param {Function} iteratee The iteratee invoked per iteration.
+	     * @param {Function} comparator The comparator used to compare values.
+	     * @returns {*} Returns the extremum value.
+	     */
+	    function baseExtremum(array, iteratee, comparator) {
+	      var index = -1,
+	          length = array.length;
+	
+	      while (++index < length) {
+	        var value = array[index],
+	            current = iteratee(value);
+	
+	        if (current != null && (computed === undefined
+	              ? (current === current && !isSymbol(current))
+	              : comparator(current, computed)
+	            )) {
+	          var computed = current,
+	              result = value;
+	        }
+	      }
 	      return result;
 	    }
 	
@@ -58030,7 +58145,7 @@
 	     * @private
 	     * @param {Object} object The object to inspect.
 	     * @param {Array} props The property names to filter.
-	     * @returns {Array} Returns the new array of filtered property names.
+	     * @returns {Array} Returns the function names.
 	     */
 	    function baseFunctions(object, props) {
 	      return arrayFilter(props, function(key) {
@@ -58053,7 +58168,7 @@
 	          length = path.length;
 	
 	      while (object != null && index < length) {
-	        object = object[path[index++]];
+	        object = object[toKey(path[index++])];
 	      }
 	      return (index && index == length) ? object : undefined;
 	    }
@@ -58071,16 +58186,27 @@
 	     */
 	    function baseGetAllKeys(object, keysFunc, symbolsFunc) {
 	      var result = keysFunc(object);
-	      return isArray(object)
-	        ? result
-	        : arrayPush(result, symbolsFunc(object));
+	      return isArray(object) ? result : arrayPush(result, symbolsFunc(object));
+	    }
+	
+	    /**
+	     * The base implementation of `_.gt` which doesn't coerce arguments to numbers.
+	     *
+	     * @private
+	     * @param {*} value The value to compare.
+	     * @param {*} other The other value to compare.
+	     * @returns {boolean} Returns `true` if `value` is greater than `other`,
+	     *  else `false`.
+	     */
+	    function baseGt(value, other) {
+	      return value > other;
 	    }
 	
 	    /**
 	     * The base implementation of `_.has` without support for deep paths.
 	     *
 	     * @private
-	     * @param {Object} object The object to query.
+	     * @param {Object} [object] The object to query.
 	     * @param {Array|string} key The key to check.
 	     * @returns {boolean} Returns `true` if `key` exists, else `false`.
 	     */
@@ -58088,20 +58214,21 @@
 	      // Avoid a bug in IE 10-11 where objects with a [[Prototype]] of `null`,
 	      // that are composed entirely of index properties, return `false` for
 	      // `hasOwnProperty` checks of them.
-	      return hasOwnProperty.call(object, key) ||
-	        (typeof object == 'object' && key in object && getPrototype(object) === null);
+	      return object != null &&
+	        (hasOwnProperty.call(object, key) ||
+	          (typeof object == 'object' && key in object && getPrototype(object) === null));
 	    }
 	
 	    /**
 	     * The base implementation of `_.hasIn` without support for deep paths.
 	     *
 	     * @private
-	     * @param {Object} object The object to query.
+	     * @param {Object} [object] The object to query.
 	     * @param {Array|string} key The key to check.
 	     * @returns {boolean} Returns `true` if `key` exists, else `false`.
 	     */
 	    function baseHasIn(object, key) {
-	      return key in Object(object);
+	      return object != null && key in Object(object);
 	    }
 	
 	    /**
@@ -58156,6 +58283,7 @@
 	        var value = array[index],
 	            computed = iteratee ? iteratee(value) : value;
 	
+	        value = (comparator || value !== 0) ? value : 0;
 	        if (!(seen
 	              ? cacheHas(seen, computed)
 	              : includes(result, computed, comparator)
@@ -58213,7 +58341,7 @@
 	        object = parent(object, path);
 	        path = last(path);
 	      }
-	      var func = object == null ? object : object[path];
+	      var func = object == null ? object : object[toKey(path)];
 	      return func == null ? undefined : apply(func, object, args);
 	    }
 	
@@ -58355,6 +58483,22 @@
 	    }
 	
 	    /**
+	     * The base implementation of `_.isNative` without bad shim checks.
+	     *
+	     * @private
+	     * @param {*} value The value to check.
+	     * @returns {boolean} Returns `true` if `value` is a native function,
+	     *  else `false`.
+	     */
+	    function baseIsNative(value) {
+	      if (!isObject(value) || isMasked(value)) {
+	        return false;
+	      }
+	      var pattern = (isFunction(value) || isHostObject(value)) ? reIsNative : reIsHostCtor;
+	      return pattern.test(toSource(value));
+	    }
+	
+	    /**
 	     * The base implementation of `_.iteratee`.
 	     *
 	     * @private
@@ -58416,6 +58560,19 @@
 	    }
 	
 	    /**
+	     * The base implementation of `_.lt` which doesn't coerce arguments to numbers.
+	     *
+	     * @private
+	     * @param {*} value The value to compare.
+	     * @param {*} other The other value to compare.
+	     * @returns {boolean} Returns `true` if `value` is less than `other`,
+	     *  else `false`.
+	     */
+	    function baseLt(value, other) {
+	      return value < other;
+	    }
+	
+	    /**
 	     * The base implementation of `_.map` without support for iteratee shorthands.
 	     *
 	     * @private
@@ -58438,7 +58595,7 @@
 	     *
 	     * @private
 	     * @param {Object} source The object of property values to match.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new spec function.
 	     */
 	    function baseMatches(source) {
 	      var matchData = getMatchData(source);
@@ -58456,11 +58613,11 @@
 	     * @private
 	     * @param {string} path The path of the property to get.
 	     * @param {*} srcValue The value to match.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new spec function.
 	     */
 	    function baseMatchesProperty(path, srcValue) {
 	      if (isKey(path) && isStrictComparable(srcValue)) {
-	        return matchesStrictComparable(path, srcValue);
+	        return matchesStrictComparable(toKey(path), srcValue);
 	      }
 	      return function(object) {
 	        var objValue = get(object, path);
@@ -58671,7 +58828,7 @@
 	     *
 	     * @private
 	     * @param {string} key The key of the property to get.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new accessor function.
 	     */
 	    function baseProperty(key) {
 	      return function(object) {
@@ -58684,7 +58841,7 @@
 	     *
 	     * @private
 	     * @param {Array|string} path The path of the property to get.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new accessor function.
 	     */
 	    function basePropertyDeep(path) {
 	      return function(object) {
@@ -58709,6 +58866,9 @@
 	          length = values.length,
 	          seen = array;
 	
+	      if (array === values) {
+	        values = copyArray(values);
+	      }
 	      if (iteratee) {
 	        seen = arrayMap(array, baseUnary(iteratee));
 	      }
@@ -58742,7 +58902,7 @@
 	
 	      while (length--) {
 	        var index = indexes[length];
-	        if (lastIndex == length || index != previous) {
+	        if (length == lastIndex || index !== previous) {
 	          var previous = index;
 	          if (isIndex(index)) {
 	            splice.call(array, index, 1);
@@ -58752,11 +58912,11 @@
 	                object = parent(array, path);
 	
 	            if (object != null) {
-	              delete object[last(path)];
+	              delete object[toKey(last(path))];
 	            }
 	          }
 	          else {
-	            delete array[index];
+	            delete array[toKey(index)];
 	          }
 	        }
 	      }
@@ -58785,7 +58945,7 @@
 	     * @param {number} end The end of the range.
 	     * @param {number} step The value to increment or decrement by.
 	     * @param {boolean} [fromRight] Specify iterating from right to left.
-	     * @returns {Array} Returns the new array of numbers.
+	     * @returns {Array} Returns the range of numbers.
 	     */
 	    function baseRange(start, end, step, fromRight) {
 	      var index = -1,
@@ -58846,7 +59006,7 @@
 	          nested = object;
 	
 	      while (nested != null && ++index < length) {
-	        var key = path[index];
+	        var key = toKey(path[index]);
 	        if (isObject(nested)) {
 	          var newValue = value;
 	          if (index != lastIndex) {
@@ -58948,7 +59108,8 @@
 	          var mid = (low + high) >>> 1,
 	              computed = array[mid];
 	
-	          if ((retHighest ? (computed <= value) : (computed < value)) && computed !== null) {
+	          if (computed !== null && !isSymbol(computed) &&
+	              (retHighest ? (computed <= value) : (computed < value))) {
 	            low = mid + 1;
 	          } else {
 	            high = mid;
@@ -58979,21 +59140,26 @@
 	          high = array ? array.length : 0,
 	          valIsNaN = value !== value,
 	          valIsNull = value === null,
-	          valIsUndef = value === undefined;
+	          valIsSymbol = isSymbol(value),
+	          valIsUndefined = value === undefined;
 	
 	      while (low < high) {
 	        var mid = nativeFloor((low + high) / 2),
 	            computed = iteratee(array[mid]),
-	            isDef = computed !== undefined,
-	            isReflexive = computed === computed;
+	            othIsDefined = computed !== undefined,
+	            othIsNull = computed === null,
+	            othIsReflexive = computed === computed,
+	            othIsSymbol = isSymbol(computed);
 	
 	        if (valIsNaN) {
-	          var setLow = isReflexive || retHighest;
+	          var setLow = retHighest || othIsReflexive;
+	        } else if (valIsUndefined) {
+	          setLow = othIsReflexive && (retHighest || othIsDefined);
 	        } else if (valIsNull) {
-	          setLow = isReflexive && isDef && (retHighest || computed != null);
-	        } else if (valIsUndef) {
-	          setLow = isReflexive && (retHighest || isDef);
-	        } else if (computed == null) {
+	          setLow = othIsReflexive && othIsDefined && (retHighest || !othIsNull);
+	        } else if (valIsSymbol) {
+	          setLow = othIsReflexive && othIsDefined && !othIsNull && (retHighest || !othIsSymbol);
+	        } else if (othIsNull || othIsSymbol) {
 	          setLow = false;
 	        } else {
 	          setLow = retHighest ? (computed <= value) : (computed < value);
@@ -59008,44 +59174,68 @@
 	    }
 	
 	    /**
-	     * The base implementation of `_.sortedUniq`.
-	     *
-	     * @private
-	     * @param {Array} array The array to inspect.
-	     * @returns {Array} Returns the new duplicate free array.
-	     */
-	    function baseSortedUniq(array) {
-	      return baseSortedUniqBy(array);
-	    }
-	
-	    /**
-	     * The base implementation of `_.sortedUniqBy` without support for iteratee
-	     * shorthands.
+	     * The base implementation of `_.sortedUniq` and `_.sortedUniqBy` without
+	     * support for iteratee shorthands.
 	     *
 	     * @private
 	     * @param {Array} array The array to inspect.
 	     * @param {Function} [iteratee] The iteratee invoked per element.
 	     * @returns {Array} Returns the new duplicate free array.
 	     */
-	    function baseSortedUniqBy(array, iteratee) {
-	      var index = 0,
+	    function baseSortedUniq(array, iteratee) {
+	      var index = -1,
 	          length = array.length,
-	          value = array[0],
-	          computed = iteratee ? iteratee(value) : value,
-	          seen = computed,
-	          resIndex = 1,
-	          result = [value];
+	          resIndex = 0,
+	          result = [];
 	
 	      while (++index < length) {
-	        value = array[index],
-	        computed = iteratee ? iteratee(value) : value;
+	        var value = array[index],
+	            computed = iteratee ? iteratee(value) : value;
 	
-	        if (!eq(computed, seen)) {
-	          seen = computed;
-	          result[resIndex++] = value;
+	        if (!index || !eq(computed, seen)) {
+	          var seen = computed;
+	          result[resIndex++] = value === 0 ? 0 : value;
 	        }
 	      }
 	      return result;
+	    }
+	
+	    /**
+	     * The base implementation of `_.toNumber` which doesn't ensure correct
+	     * conversions of binary, hexadecimal, or octal string values.
+	     *
+	     * @private
+	     * @param {*} value The value to process.
+	     * @returns {number} Returns the number.
+	     */
+	    function baseToNumber(value) {
+	      if (typeof value == 'number') {
+	        return value;
+	      }
+	      if (isSymbol(value)) {
+	        return NAN;
+	      }
+	      return +value;
+	    }
+	
+	    /**
+	     * The base implementation of `_.toString` which doesn't convert nullish
+	     * values to empty strings.
+	     *
+	     * @private
+	     * @param {*} value The value to process.
+	     * @returns {string} Returns the string.
+	     */
+	    function baseToString(value) {
+	      // Exit early for strings to avoid a performance hit in some environments.
+	      if (typeof value == 'string') {
+	        return value;
+	      }
+	      if (isSymbol(value)) {
+	        return symbolToString ? symbolToString.call(value) : '';
+	      }
+	      var result = (value + '');
+	      return (result == '0' && (1 / value) == -INFINITY) ? '-0' : result;
 	    }
 	
 	    /**
@@ -59086,6 +59276,7 @@
 	        var value = array[index],
 	            computed = iteratee ? iteratee(value) : value;
 	
+	        value = (comparator || value !== 0) ? value : 0;
 	        if (isCommon && computed === computed) {
 	          var seenIndex = seen.length;
 	          while (seenIndex--) {
@@ -59119,8 +59310,9 @@
 	    function baseUnset(object, path) {
 	      path = isKey(path, object) ? [path] : castPath(path);
 	      object = parent(object, path);
-	      var key = last(path);
-	      return (object != null && has(object, key)) ? delete object[key] : true;
+	
+	      var key = toKey(last(path));
+	      return !(object != null && baseHas(object, key)) || delete object[key];
 	    }
 	
 	    /**
@@ -59384,11 +59576,90 @@
 	    }
 	
 	    /**
+	     * Compares values to sort them in ascending order.
+	     *
+	     * @private
+	     * @param {*} value The value to compare.
+	     * @param {*} other The other value to compare.
+	     * @returns {number} Returns the sort order indicator for `value`.
+	     */
+	    function compareAscending(value, other) {
+	      if (value !== other) {
+	        var valIsDefined = value !== undefined,
+	            valIsNull = value === null,
+	            valIsReflexive = value === value,
+	            valIsSymbol = isSymbol(value);
+	
+	        var othIsDefined = other !== undefined,
+	            othIsNull = other === null,
+	            othIsReflexive = other === other,
+	            othIsSymbol = isSymbol(other);
+	
+	        if ((!othIsNull && !othIsSymbol && !valIsSymbol && value > other) ||
+	            (valIsSymbol && othIsDefined && othIsReflexive && !othIsNull && !othIsSymbol) ||
+	            (valIsNull && othIsDefined && othIsReflexive) ||
+	            (!valIsDefined && othIsReflexive) ||
+	            !valIsReflexive) {
+	          return 1;
+	        }
+	        if ((!valIsNull && !valIsSymbol && !othIsSymbol && value < other) ||
+	            (othIsSymbol && valIsDefined && valIsReflexive && !valIsNull && !valIsSymbol) ||
+	            (othIsNull && valIsDefined && valIsReflexive) ||
+	            (!othIsDefined && valIsReflexive) ||
+	            !othIsReflexive) {
+	          return -1;
+	        }
+	      }
+	      return 0;
+	    }
+	
+	    /**
+	     * Used by `_.orderBy` to compare multiple properties of a value to another
+	     * and stable sort them.
+	     *
+	     * If `orders` is unspecified, all values are sorted in ascending order. Otherwise,
+	     * specify an order of "desc" for descending or "asc" for ascending sort order
+	     * of corresponding values.
+	     *
+	     * @private
+	     * @param {Object} object The object to compare.
+	     * @param {Object} other The other object to compare.
+	     * @param {boolean[]|string[]} orders The order to sort by for each property.
+	     * @returns {number} Returns the sort order indicator for `object`.
+	     */
+	    function compareMultiple(object, other, orders) {
+	      var index = -1,
+	          objCriteria = object.criteria,
+	          othCriteria = other.criteria,
+	          length = objCriteria.length,
+	          ordersLength = orders.length;
+	
+	      while (++index < length) {
+	        var result = compareAscending(objCriteria[index], othCriteria[index]);
+	        if (result) {
+	          if (index >= ordersLength) {
+	            return result;
+	          }
+	          var order = orders[index];
+	          return result * (order == 'desc' ? -1 : 1);
+	        }
+	      }
+	      // Fixes an `Array#sort` bug in the JS engine embedded in Adobe applications
+	      // that causes it, under certain circumstances, to provide the same value for
+	      // `object` and `other`. See https://github.com/jashkenas/underscore/pull/1247
+	      // for more details.
+	      //
+	      // This also ensures a stable sort in V8 and other engines.
+	      // See https://bugs.chromium.org/p/v8/issues/detail?id=90 for more details.
+	      return object.index - other.index;
+	    }
+	
+	    /**
 	     * Creates an array that is the composition of partially applied arguments,
 	     * placeholders, and provided arguments into a single array of arguments.
 	     *
 	     * @private
-	     * @param {Array|Object} args The provided arguments.
+	     * @param {Array} args The provided arguments.
 	     * @param {Array} partials The arguments to prepend to those provided.
 	     * @param {Array} holders The `partials` placeholder indexes.
 	     * @params {boolean} [isCurried] Specify composing for a curried function.
@@ -59423,7 +59694,7 @@
 	     * is tailored for `_.partialRight`.
 	     *
 	     * @private
-	     * @param {Array|Object} args The provided arguments.
+	     * @param {Array} args The provided arguments.
 	     * @param {Array} partials The arguments to append to those provided.
 	     * @param {Array} holders The `partials` placeholder indexes.
 	     * @params {boolean} [isCurried] Specify composing for a curried function.
@@ -59545,7 +59816,7 @@
 	            customizer = length > 1 ? sources[length - 1] : undefined,
 	            guard = length > 2 ? sources[2] : undefined;
 	
-	        customizer = typeof customizer == 'function'
+	        customizer = (assigner.length > 3 && typeof customizer == 'function')
 	          ? (length--, customizer)
 	          : undefined;
 	
@@ -59644,7 +59915,7 @@
 	     *
 	     * @private
 	     * @param {string} methodName The name of the `String` case method to use.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new case function.
 	     */
 	    function createCaseFirst(methodName) {
 	      return function(string) {
@@ -59729,7 +60000,7 @@
 	        var length = arguments.length,
 	            args = Array(length),
 	            index = length,
-	            placeholder = getPlaceholder(wrapper);
+	            placeholder = getHolder(wrapper);
 	
 	        while (index--) {
 	          args[index] = arguments[index];
@@ -59748,6 +60019,31 @@
 	        return apply(fn, this, args);
 	      }
 	      return wrapper;
+	    }
+	
+	    /**
+	     * Creates a `_.find` or `_.findLast` function.
+	     *
+	     * @private
+	     * @param {Function} findIndexFunc The function to find the collection index.
+	     * @returns {Function} Returns the new find function.
+	     */
+	    function createFind(findIndexFunc) {
+	      return function(collection, predicate, fromIndex) {
+	        var iterable = Object(collection);
+	        predicate = getIteratee(predicate, 3);
+	        if (!isArrayLike(collection)) {
+	          var props = keys(collection);
+	        }
+	        var index = findIndexFunc(props || collection, function(value, key) {
+	          if (props) {
+	            key = value;
+	            value = iterable[key];
+	          }
+	          return predicate(value, key, iterable);
+	        }, fromIndex);
+	        return index > -1 ? collection[props ? props[index] : index] : undefined;
+	      };
 	    }
 	
 	    /**
@@ -59844,14 +60140,14 @@
 	
 	      function wrapper() {
 	        var length = arguments.length,
-	            index = length,
-	            args = Array(length);
+	            args = Array(length),
+	            index = length;
 	
 	        while (index--) {
 	          args[index] = arguments[index];
 	        }
 	        if (isCurried) {
-	          var placeholder = getPlaceholder(wrapper),
+	          var placeholder = getHolder(wrapper),
 	              holdersCount = countHolders(args, placeholder);
 	        }
 	        if (partials) {
@@ -59903,11 +60199,44 @@
 	    }
 	
 	    /**
+	     * Creates a function that performs a mathematical operation on two values.
+	     *
+	     * @private
+	     * @param {Function} operator The function to perform the operation.
+	     * @returns {Function} Returns the new mathematical operation function.
+	     */
+	    function createMathOperation(operator) {
+	      return function(value, other) {
+	        var result;
+	        if (value === undefined && other === undefined) {
+	          return 0;
+	        }
+	        if (value !== undefined) {
+	          result = value;
+	        }
+	        if (other !== undefined) {
+	          if (result === undefined) {
+	            return other;
+	          }
+	          if (typeof value == 'string' || typeof other == 'string') {
+	            value = baseToString(value);
+	            other = baseToString(other);
+	          } else {
+	            value = baseToNumber(value);
+	            other = baseToNumber(other);
+	          }
+	          result = operator(value, other);
+	        }
+	        return result;
+	      };
+	    }
+	
+	    /**
 	     * Creates a function like `_.over`.
 	     *
 	     * @private
 	     * @param {Function} arrayFunc The function to iterate over iteratees.
-	     * @returns {Function} Returns the new invoker function.
+	     * @returns {Function} Returns the new over function.
 	     */
 	    function createOver(arrayFunc) {
 	      return rest(function(iteratees) {
@@ -59934,7 +60263,7 @@
 	     * @returns {string} Returns the padding for `string`.
 	     */
 	    function createPadding(length, chars) {
-	      chars = chars === undefined ? ' ' : (chars + '');
+	      chars = chars === undefined ? ' ' : baseToString(chars);
 	
 	      var charsLength = chars.length;
 	      if (charsLength < 2) {
@@ -60009,6 +60338,23 @@
 	    }
 	
 	    /**
+	     * Creates a function that performs a relational operation on two values.
+	     *
+	     * @private
+	     * @param {Function} operator The function to perform the operation.
+	     * @returns {Function} Returns the new relational operation function.
+	     */
+	    function createRelationalOperation(operator) {
+	      return function(value, other) {
+	        if (!(typeof value == 'string' && typeof other == 'string')) {
+	          value = toNumber(value);
+	          other = toNumber(other);
+	        }
+	        return operator(value, other);
+	      };
+	    }
+	
+	    /**
 	     * Creates a function that wraps `func` to continue currying.
 	     *
 	     * @private
@@ -60063,7 +60409,7 @@
 	      var func = Math[methodName];
 	      return function(number, precision) {
 	        number = toNumber(number);
-	        precision = toInteger(precision);
+	        precision = nativeMin(toInteger(precision), 292);
 	        if (precision) {
 	          // Shift with exponential notation to avoid floating-point issues.
 	          // See [MDN](https://mdn.io/round#Examples) for more details.
@@ -60084,9 +60430,29 @@
 	     * @param {Array} values The values to add to the set.
 	     * @returns {Object} Returns the new set.
 	     */
-	    var createSet = !(Set && new Set([1, 2]).size === 2) ? noop : function(values) {
+	    var createSet = !(Set && (1 / setToArray(new Set([,-0]))[1]) == INFINITY) ? noop : function(values) {
 	      return new Set(values);
 	    };
+	
+	    /**
+	     * Creates a `_.toPairs` or `_.toPairsIn` function.
+	     *
+	     * @private
+	     * @param {Function} keysFunc The function to get the keys of a given object.
+	     * @returns {Function} Returns the new pairs function.
+	     */
+	    function createToPairs(keysFunc) {
+	      return function(object) {
+	        var tag = getTag(object);
+	        if (tag == mapTag) {
+	          return mapToArray(object);
+	        }
+	        if (tag == setTag) {
+	          return setToPairs(object);
+	        }
+	        return baseToPairs(object, keysFunc(object));
+	      };
+	    }
 	
 	    /**
 	     * Creates a function that either curries or invokes `func` with optional
@@ -60105,6 +60471,7 @@
 	     *    64 - `_.partialRight`
 	     *   128 - `_.rearg`
 	     *   256 - `_.ary`
+	     *   512 - `_.flip`
 	     * @param {*} [thisArg] The `this` binding of `func`.
 	     * @param {Array} [partials] The arguments to be partially applied.
 	     * @param {Array} [holders] The `partials` placeholder indexes.
@@ -60183,9 +60550,7 @@
 	     * @returns {boolean} Returns `true` if the arrays are equivalent, else `false`.
 	     */
 	    function equalArrays(array, other, equalFunc, customizer, bitmask, stack) {
-	      var index = -1,
-	          isPartial = bitmask & PARTIAL_COMPARE_FLAG,
-	          isUnordered = bitmask & UNORDERED_COMPARE_FLAG,
+	      var isPartial = bitmask & PARTIAL_COMPARE_FLAG,
 	          arrLength = array.length,
 	          othLength = other.length;
 	
@@ -60197,7 +60562,10 @@
 	      if (stacked) {
 	        return stacked == other;
 	      }
-	      var result = true;
+	      var index = -1,
+	          result = true,
+	          seen = (bitmask & UNORDERED_COMPARE_FLAG) ? new SetCache : undefined;
+	
 	      stack.set(array, other);
 	
 	      // Ignore non-index properties.
@@ -60218,10 +60586,12 @@
 	          break;
 	        }
 	        // Recursively compare arrays (susceptible to call stack limits).
-	        if (isUnordered) {
-	          if (!arraySome(other, function(othValue) {
-	                return arrValue === othValue ||
-	                  equalFunc(arrValue, othValue, customizer, bitmask, stack);
+	        if (seen) {
+	          if (!arraySome(other, function(othValue, othIndex) {
+	                if (!seen.has(othIndex) &&
+	                    (arrValue === othValue || equalFunc(arrValue, othValue, customizer, bitmask, stack))) {
+	                  return seen.add(othIndex);
+	                }
 	              })) {
 	            result = false;
 	            break;
@@ -60456,6 +60826,18 @@
 	    }
 	
 	    /**
+	     * Gets the argument placeholder value for `func`.
+	     *
+	     * @private
+	     * @param {Function} func The function to inspect.
+	     * @returns {*} Returns the placeholder value.
+	     */
+	    function getHolder(func) {
+	      var object = hasOwnProperty.call(lodash, 'placeholder') ? lodash : func;
+	      return object.placeholder;
+	    }
+	
+	    /**
 	     * Gets the appropriate "iteratee" function. If `_.iteratee` is customized,
 	     * this function returns the custom method, otherwise it returns `baseIteratee`.
 	     * If arguments are provided, the chosen function is invoked with them and
@@ -60486,6 +60868,21 @@
 	    var getLength = baseProperty('length');
 	
 	    /**
+	     * Gets the data for `map`.
+	     *
+	     * @private
+	     * @param {Object} map The map to query.
+	     * @param {string} key The reference key.
+	     * @returns {*} Returns the map data.
+	     */
+	    function getMapData(map, key) {
+	      var data = map.__data__;
+	      return isKeyable(key)
+	        ? data[typeof key == 'string' ? 'string' : 'hash']
+	        : data.map;
+	    }
+	
+	    /**
 	     * Gets the property names, values, and compare flags of `object`.
 	     *
 	     * @private
@@ -60493,11 +60890,14 @@
 	     * @returns {Array} Returns the match data of `object`.
 	     */
 	    function getMatchData(object) {
-	      var result = toPairs(object),
+	      var result = keys(object),
 	          length = result.length;
 	
 	      while (length--) {
-	        result[length][2] = isStrictComparable(result[length][1]);
+	        var key = result[length],
+	            value = object[key];
+	
+	        result[length] = [key, value, isStrictComparable(value)];
 	      }
 	      return result;
 	    }
@@ -60511,20 +60911,8 @@
 	     * @returns {*} Returns the function if it's native, else `undefined`.
 	     */
 	    function getNative(object, key) {
-	      var value = object[key];
-	      return isNative(value) ? value : undefined;
-	    }
-	
-	    /**
-	     * Gets the argument placeholder value for `func`.
-	     *
-	     * @private
-	     * @param {Function} func The function to inspect.
-	     * @returns {*} Returns the placeholder value.
-	     */
-	    function getPlaceholder(func) {
-	      var object = hasOwnProperty.call(lodash, 'placeholder') ? lodash : func;
-	      return object.placeholder;
+	      var value = getValue(object, key);
+	      return baseIsNative(value) ? value : undefined;
 	    }
 	
 	    /**
@@ -60553,9 +60941,7 @@
 	
 	    // Fallback for IE < 11.
 	    if (!getOwnPropertySymbols) {
-	      getSymbols = function() {
-	        return [];
-	      };
+	      getSymbols = stubArray;
 	    }
 	
 	    /**
@@ -60656,7 +61042,7 @@
 	          length = path.length;
 	
 	      while (++index < length) {
-	        var key = path[index];
+	        var key = toKey(path[index]);
 	        if (!(result = object != null && hasFunc(object, key))) {
 	          break;
 	        }
@@ -60776,7 +61162,7 @@
 	     * @returns {boolean} Returns `true` if `value` is flattenable, else `false`.
 	     */
 	    function isFlattenable(value) {
-	      return isArrayLikeObject(value) && (isArray(value) || isArguments(value));
+	      return isArray(value) || isArguments(value);
 	    }
 	
 	    /**
@@ -60789,6 +61175,21 @@
 	     */
 	    function isFlattenableIteratee(value) {
 	      return isArray(value) && !(value.length == 2 && !isFunction(value[0]));
+	    }
+	
+	    /**
+	     * Checks if `value` is a valid array-like index.
+	     *
+	     * @private
+	     * @param {*} value The value to check.
+	     * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
+	     * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
+	     */
+	    function isIndex(value, length) {
+	      length = length == null ? MAX_SAFE_INTEGER : length;
+	      return !!length &&
+	        (typeof value == 'number' || reIsUint.test(value)) &&
+	        (value > -1 && value % 1 == 0 && value < length);
 	    }
 	
 	    /**
@@ -60824,13 +61225,16 @@
 	     * @returns {boolean} Returns `true` if `value` is a property name, else `false`.
 	     */
 	    function isKey(value, object) {
+	      if (isArray(value)) {
+	        return false;
+	      }
 	      var type = typeof value;
-	      if (type == 'number' || type == 'symbol') {
+	      if (type == 'number' || type == 'symbol' || type == 'boolean' ||
+	          value == null || isSymbol(value)) {
 	        return true;
 	      }
-	      return !isArray(value) &&
-	        (isSymbol(value) || reIsPlainProp.test(value) || !reIsDeepProp.test(value) ||
-	          (object != null && value in Object(object)));
+	      return reIsPlainProp.test(value) || !reIsDeepProp.test(value) ||
+	        (object != null && value in Object(object));
 	    }
 	
 	    /**
@@ -60842,8 +61246,9 @@
 	     */
 	    function isKeyable(value) {
 	      var type = typeof value;
-	      return type == 'number' || type == 'boolean' ||
-	        (type == 'string' && value != '__proto__') || value == null;
+	      return (type == 'string' || type == 'number' || type == 'symbol' || type == 'boolean')
+	        ? (value !== '__proto__')
+	        : (value === null);
 	    }
 	
 	    /**
@@ -60867,6 +61272,26 @@
 	      var data = getData(other);
 	      return !!data && func === data[0];
 	    }
+	
+	    /**
+	     * Checks if `func` has its source masked.
+	     *
+	     * @private
+	     * @param {Function} func The function to check.
+	     * @returns {boolean} Returns `true` if `func` is masked, else `false`.
+	     */
+	    function isMasked(func) {
+	      return !!maskSrcKey && (maskSrcKey in func);
+	    }
+	
+	    /**
+	     * Checks if `func` is capable of being masked.
+	     *
+	     * @private
+	     * @param {*} value The value to check.
+	     * @returns {boolean} Returns `true` if `func` is maskable, else `false`.
+	     */
+	    var isMaskable = coreJsData ? isFunction : stubFalse;
 	
 	    /**
 	     * Checks if `value` is likely a prototype object.
@@ -60901,7 +61326,7 @@
 	     * @private
 	     * @param {string} key The key of the property to get.
 	     * @param {*} srcValue The value to match.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new spec function.
 	     */
 	    function matchesStrictComparable(key, srcValue) {
 	      return function(object) {
@@ -61094,8 +61519,12 @@
 	     * @param {*} value The value to inspect.
 	     * @returns {string|symbol} Returns the key.
 	     */
-	    function toKey(key) {
-	      return (typeof key == 'string' || isSymbol(key)) ? key : (key + '');
+	    function toKey(value) {
+	      if (typeof value == 'string' || isSymbol(value)) {
+	        return value;
+	      }
+	      var result = (value + '');
+	      return (result == '0' && (1 / value) == -INFINITY) ? '-0' : result;
 	    }
 	
 	    /**
@@ -61149,7 +61578,7 @@
 	     * @param {Array} array The array to process.
 	     * @param {number} [size=1] The length of each chunk
 	     * @param- {Object} [guard] Enables use as an iteratee for methods like `_.map`.
-	     * @returns {Array} Returns the new array containing chunks.
+	     * @returns {Array} Returns the new array of chunks.
 	     * @example
 	     *
 	     * _.chunk(['a', 'b', 'c', 'd'], 2);
@@ -61232,16 +61661,16 @@
 	     */
 	    function concat() {
 	      var length = arguments.length,
-	          array = castArray(arguments[0]);
+	          args = Array(length ? length - 1 : 0),
+	          array = arguments[0],
+	          index = length;
 	
-	      if (length < 2) {
-	        return length ? copyArray(array) : [];
+	      while (index--) {
+	        args[index - 1] = arguments[index];
 	      }
-	      var args = Array(length - 1);
-	      while (length--) {
-	        args[length - 1] = arguments[length];
-	      }
-	      return arrayConcat(array, baseFlatten(args, 1));
+	      return length
+	        ? arrayPush(isArray(array) ? copyArray(array) : [array], baseFlatten(args, 1))
+	        : [];
 	    }
 	
 	    /**
@@ -61257,10 +61686,11 @@
 	     * @param {Array} array The array to inspect.
 	     * @param {...Array} [values] The values to exclude.
 	     * @returns {Array} Returns the new array of filtered values.
+	     * @see _.without, _.xor
 	     * @example
 	     *
-	     * _.difference([3, 2, 1], [4, 2]);
-	     * // => [3, 1]
+	     * _.difference([2, 1], [2, 3]);
+	     * // => [1]
 	     */
 	    var difference = rest(function(array, values) {
 	      return isArrayLikeObject(array)
@@ -61285,8 +61715,8 @@
 	     * @returns {Array} Returns the new array of filtered values.
 	     * @example
 	     *
-	     * _.differenceBy([3.1, 2.2, 1.3], [4.4, 2.5], Math.floor);
-	     * // => [3.1, 1.3]
+	     * _.differenceBy([2.1, 1.2], [2.3, 3.4], Math.floor);
+	     * // => [1.2]
 	     *
 	     * // The `_.property` iteratee shorthand.
 	     * _.differenceBy([{ 'x': 2 }, { 'x': 1 }], [{ 'x': 1 }], 'x');
@@ -61538,6 +61968,7 @@
 	     * @param {Array} array The array to search.
 	     * @param {Array|Function|Object|string} [predicate=_.identity]
 	     *  The function invoked per iteration.
+	     * @param {number} [fromIndex=0] The index to search from.
 	     * @returns {number} Returns the index of the found element, else `-1`.
 	     * @example
 	     *
@@ -61562,10 +61993,16 @@
 	     * _.findIndex(users, 'active');
 	     * // => 2
 	     */
-	    function findIndex(array, predicate) {
-	      return (array && array.length)
-	        ? baseFindIndex(array, getIteratee(predicate, 3))
-	        : -1;
+	    function findIndex(array, predicate, fromIndex) {
+	      var length = array ? array.length : 0;
+	      if (!length) {
+	        return -1;
+	      }
+	      var index = fromIndex == null ? 0 : toInteger(fromIndex);
+	      if (index < 0) {
+	        index = nativeMax(length + index, 0);
+	      }
+	      return baseFindIndex(array, getIteratee(predicate, 3), index);
 	    }
 	
 	    /**
@@ -61579,6 +62016,7 @@
 	     * @param {Array} array The array to search.
 	     * @param {Array|Function|Object|string} [predicate=_.identity]
 	     *  The function invoked per iteration.
+	     * @param {number} [fromIndex=array.length-1] The index to search from.
 	     * @returns {number} Returns the index of the found element, else `-1`.
 	     * @example
 	     *
@@ -61603,10 +62041,19 @@
 	     * _.findLastIndex(users, 'active');
 	     * // => 0
 	     */
-	    function findLastIndex(array, predicate) {
-	      return (array && array.length)
-	        ? baseFindIndex(array, getIteratee(predicate, 3), true)
-	        : -1;
+	    function findLastIndex(array, predicate, fromIndex) {
+	      var length = array ? array.length : 0;
+	      if (!length) {
+	        return -1;
+	      }
+	      var index = length - 1;
+	      if (fromIndex !== undefined) {
+	        index = toInteger(fromIndex);
+	        index = fromIndex < 0
+	          ? nativeMax(length + index, 0)
+	          : nativeMin(index, length - 1);
+	      }
+	      return baseFindIndex(array, getIteratee(predicate, 3), index, true);
 	    }
 	
 	    /**
@@ -61753,11 +62200,11 @@
 	      if (!length) {
 	        return -1;
 	      }
-	      fromIndex = toInteger(fromIndex);
-	      if (fromIndex < 0) {
-	        fromIndex = nativeMax(length + fromIndex, 0);
+	      var index = fromIndex == null ? 0 : toInteger(fromIndex);
+	      if (index < 0) {
+	        index = nativeMax(length + index, 0);
 	      }
-	      return baseIndexOf(array, value, fromIndex);
+	      return baseIndexOf(array, value, index);
 	    }
 	
 	    /**
@@ -61792,7 +62239,7 @@
 	     * @returns {Array} Returns the new array of intersecting values.
 	     * @example
 	     *
-	     * _.intersection([2, 1], [4, 2], [1, 2]);
+	     * _.intersection([2, 1], [2, 3]);
 	     * // => [2]
 	     */
 	    var intersection = rest(function(arrays) {
@@ -61818,7 +62265,7 @@
 	     * @returns {Array} Returns the new array of intersecting values.
 	     * @example
 	     *
-	     * _.intersectionBy([2.1, 1.2], [4.3, 2.4], Math.floor);
+	     * _.intersectionBy([2.1, 1.2], [2.3, 3.4], Math.floor);
 	     * // => [2.1]
 	     *
 	     * // The `_.property` iteratee shorthand.
@@ -61948,7 +62395,7 @@
 	        ) + 1;
 	      }
 	      if (value !== value) {
-	        return indexOfNaN(array, index, true);
+	        return indexOfNaN(array, index - 1, true);
 	      }
 	      while (index--) {
 	        if (array[index] === value) {
@@ -61959,8 +62406,8 @@
 	    }
 	
 	    /**
-	     * Gets the nth element of `array`. If `n` is negative, the nth element
-	     * from the end is returned.
+	     * Gets the element at index `n` of `array`. If `n` is negative, the nth
+	     * element from the end is returned.
 	     *
 	     * @static
 	     * @memberOf _
@@ -62000,11 +62447,11 @@
 	     * @returns {Array} Returns `array`.
 	     * @example
 	     *
-	     * var array = [1, 2, 3, 1, 2, 3];
+	     * var array = ['a', 'b', 'c', 'a', 'b', 'c'];
 	     *
-	     * _.pull(array, 2, 3);
+	     * _.pull(array, 'a', 'c');
 	     * console.log(array);
-	     * // => [1, 1]
+	     * // => ['b', 'b']
 	     */
 	    var pull = rest(pullAll);
 	
@@ -62022,11 +62469,11 @@
 	     * @returns {Array} Returns `array`.
 	     * @example
 	     *
-	     * var array = [1, 2, 3, 1, 2, 3];
+	     * var array = ['a', 'b', 'c', 'a', 'b', 'c'];
 	     *
-	     * _.pullAll(array, [2, 3]);
+	     * _.pullAll(array, ['a', 'c']);
 	     * console.log(array);
-	     * // => [1, 1]
+	     * // => ['b', 'b']
 	     */
 	    function pullAll(array, values) {
 	      return (array && array.length && values && values.length)
@@ -62108,20 +62555,25 @@
 	     * @returns {Array} Returns the new array of removed elements.
 	     * @example
 	     *
-	     * var array = [5, 10, 15, 20];
-	     * var evens = _.pullAt(array, 1, 3);
+	     * var array = ['a', 'b', 'c', 'd'];
+	     * var pulled = _.pullAt(array, [1, 3]);
 	     *
 	     * console.log(array);
-	     * // => [5, 15]
+	     * // => ['a', 'c']
 	     *
-	     * console.log(evens);
-	     * // => [10, 20]
+	     * console.log(pulled);
+	     * // => ['b', 'd']
 	     */
 	    var pullAt = rest(function(array, indexes) {
-	      indexes = arrayMap(baseFlatten(indexes, 1), String);
+	      indexes = baseFlatten(indexes, 1);
 	
-	      var result = baseAt(array, indexes);
-	      basePullAt(array, indexes.sort(compareAscending));
+	      var length = array ? array.length : 0,
+	          result = baseAt(array, indexes);
+	
+	      basePullAt(array, arrayMap(indexes, function(index) {
+	        return isIndex(index, length) ? +index : index;
+	      }).sort(compareAscending));
+	
 	      return result;
 	    });
 	
@@ -62250,9 +62702,6 @@
 	     *
 	     * _.sortedIndex([30, 50], 40);
 	     * // => 1
-	     *
-	     * _.sortedIndex([4, 5], 4);
-	     * // => 0
 	     */
 	    function sortedIndex(array, value) {
 	      return baseSortedIndex(array, value);
@@ -62275,13 +62724,13 @@
 	     *  into `array`.
 	     * @example
 	     *
-	     * var dict = { 'thirty': 30, 'forty': 40, 'fifty': 50 };
+	     * var objects = [{ 'x': 4 }, { 'x': 5 }];
 	     *
-	     * _.sortedIndexBy(['thirty', 'fifty'], 'forty', _.propertyOf(dict));
-	     * // => 1
+	     * _.sortedIndexBy(objects, { 'x': 4 }, function(o) { return o.x; });
+	     * // => 0
 	     *
 	     * // The `_.property` iteratee shorthand.
-	     * _.sortedIndexBy([{ 'x': 4 }, { 'x': 5 }], { 'x': 4 }, 'x');
+	     * _.sortedIndexBy(objects, { 'x': 4 }, 'x');
 	     * // => 0
 	     */
 	    function sortedIndexBy(array, value, iteratee) {
@@ -62301,8 +62750,8 @@
 	     * @returns {number} Returns the index of the matched value, else `-1`.
 	     * @example
 	     *
-	     * _.sortedIndexOf([1, 1, 2, 2], 2);
-	     * // => 2
+	     * _.sortedIndexOf([4, 5, 5, 5, 6], 5);
+	     * // => 1
 	     */
 	    function sortedIndexOf(array, value) {
 	      var length = array ? array.length : 0;
@@ -62330,8 +62779,8 @@
 	     *  into `array`.
 	     * @example
 	     *
-	     * _.sortedLastIndex([4, 5], 4);
-	     * // => 1
+	     * _.sortedLastIndex([4, 5, 5, 5, 6], 5);
+	     * // => 4
 	     */
 	    function sortedLastIndex(array, value) {
 	      return baseSortedIndex(array, value, true);
@@ -62354,8 +62803,13 @@
 	     *  into `array`.
 	     * @example
 	     *
+	     * var objects = [{ 'x': 4 }, { 'x': 5 }];
+	     *
+	     * _.sortedLastIndexBy(objects, { 'x': 4 }, function(o) { return o.x; });
+	     * // => 1
+	     *
 	     * // The `_.property` iteratee shorthand.
-	     * _.sortedLastIndexBy([{ 'x': 4 }, { 'x': 5 }], { 'x': 4 }, 'x');
+	     * _.sortedLastIndexBy(objects, { 'x': 4 }, 'x');
 	     * // => 1
 	     */
 	    function sortedLastIndexBy(array, value, iteratee) {
@@ -62375,7 +62829,7 @@
 	     * @returns {number} Returns the index of the matched value, else `-1`.
 	     * @example
 	     *
-	     * _.sortedLastIndexOf([1, 1, 2, 2], 2);
+	     * _.sortedLastIndexOf([4, 5, 5, 5, 6], 5);
 	     * // => 3
 	     */
 	    function sortedLastIndexOf(array, value) {
@@ -62428,7 +62882,7 @@
 	     */
 	    function sortedUniqBy(array, iteratee) {
 	      return (array && array.length)
-	        ? baseSortedUniqBy(array, getIteratee(iteratee))
+	        ? baseSortedUniq(array, getIteratee(iteratee))
 	        : [];
 	    }
 	
@@ -62615,8 +63069,8 @@
 	     * @returns {Array} Returns the new array of combined values.
 	     * @example
 	     *
-	     * _.union([2, 1], [4, 2], [1, 2]);
-	     * // => [2, 1, 4]
+	     * _.union([2], [1, 2]);
+	     * // => [2, 1]
 	     */
 	    var union = rest(function(arrays) {
 	      return baseUniq(baseFlatten(arrays, 1, isArrayLikeObject, true));
@@ -62638,8 +63092,8 @@
 	     * @returns {Array} Returns the new array of combined values.
 	     * @example
 	     *
-	     * _.unionBy([2.1, 1.2], [4.3, 2.4], Math.floor);
-	     * // => [2.1, 1.2, 4.3]
+	     * _.unionBy([2.1], [1.2, 2.3], Math.floor);
+	     * // => [2.1, 1.2]
 	     *
 	     * // The `_.property` iteratee shorthand.
 	     * _.unionBy([{ 'x': 1 }], [{ 'x': 2 }, { 'x': 1 }], 'x');
@@ -62746,7 +63200,7 @@
 	     * @returns {Array} Returns the new duplicate free array.
 	     * @example
 	     *
-	     * var objects = [{ 'x': 1, 'y': 2 }, { 'x': 2, 'y': 1 },  { 'x': 1, 'y': 2 }];
+	     * var objects = [{ 'x': 1, 'y': 2 }, { 'x': 2, 'y': 1 }, { 'x': 1, 'y': 2 }];
 	     *
 	     * _.uniqWith(objects, _.isEqual);
 	     * // => [{ 'x': 1, 'y': 2 }, { 'x': 2, 'y': 1 }]
@@ -62835,12 +63289,13 @@
 	     * @memberOf _
 	     * @since 0.1.0
 	     * @category Array
-	     * @param {Array} array The array to filter.
+	     * @param {Array} array The array to inspect.
 	     * @param {...*} [values] The values to exclude.
 	     * @returns {Array} Returns the new array of filtered values.
+	     * @see _.difference, _.xor
 	     * @example
 	     *
-	     * _.without([1, 2, 1, 3], 1, 2);
+	     * _.without([2, 1, 2, 3], 1, 2);
 	     * // => [3]
 	     */
 	    var without = rest(function(array, values) {
@@ -62860,11 +63315,12 @@
 	     * @since 2.4.0
 	     * @category Array
 	     * @param {...Array} [arrays] The arrays to inspect.
-	     * @returns {Array} Returns the new array of values.
+	     * @returns {Array} Returns the new array of filtered values.
+	     * @see _.difference, _.without
 	     * @example
 	     *
-	     * _.xor([2, 1], [4, 2]);
-	     * // => [1, 4]
+	     * _.xor([2, 1], [2, 3]);
+	     * // => [1, 3]
 	     */
 	    var xor = rest(function(arrays) {
 	      return baseXor(arrayFilter(arrays, isArrayLikeObject));
@@ -62883,11 +63339,11 @@
 	     * @param {...Array} [arrays] The arrays to inspect.
 	     * @param {Array|Function|Object|string} [iteratee=_.identity]
 	     *  The iteratee invoked per element.
-	     * @returns {Array} Returns the new array of values.
+	     * @returns {Array} Returns the new array of filtered values.
 	     * @example
 	     *
-	     * _.xorBy([2.1, 1.2], [4.3, 2.4], Math.floor);
-	     * // => [1.2, 4.3]
+	     * _.xorBy([2.1, 1.2], [2.3, 3.4], Math.floor);
+	     * // => [1.2, 3.4]
 	     *
 	     * // The `_.property` iteratee shorthand.
 	     * _.xorBy([{ 'x': 1 }], [{ 'x': 2 }, { 'x': 1 }], 'x');
@@ -62912,7 +63368,7 @@
 	     * @category Array
 	     * @param {...Array} [arrays] The arrays to inspect.
 	     * @param {Function} [comparator] The comparator invoked per element.
-	     * @returns {Array} Returns the new array of values.
+	     * @returns {Array} Returns the new array of filtered values.
 	     * @example
 	     *
 	     * var objects = [{ 'x': 1, 'y': 2 }, { 'x': 2, 'y': 1 }];
@@ -63120,9 +63576,6 @@
 	     *
 	     * _(object).at(['a[0].b.c', 'a[1]']).value();
 	     * // => [3, 4]
-	     *
-	     * _(['a', 'b', 'c']).at(0, 2).value();
-	     * // => ['a', 'c']
 	     */
 	    var wrapperAt = rest(function(paths) {
 	      paths = baseFlatten(paths, 1);
@@ -63385,6 +63838,7 @@
 	     * _.countBy([6.1, 4.2, 6.3], Math.floor);
 	     * // => { '4': 1, '6': 2 }
 	     *
+	     * // The `_.property` iteratee shorthand.
 	     * _.countBy(['one', 'two', 'three'], 'length');
 	     * // => { '3': 2, '5': 1 }
 	     */
@@ -63450,6 +63904,7 @@
 	     * @param {Array|Function|Object|string} [predicate=_.identity]
 	     *  The function invoked per iteration.
 	     * @returns {Array} Returns the new filtered array.
+	     * @see _.reject
 	     * @example
 	     *
 	     * var users = [
@@ -63489,6 +63944,7 @@
 	     * @param {Array|Object} collection The collection to search.
 	     * @param {Array|Function|Object|string} [predicate=_.identity]
 	     *  The function invoked per iteration.
+	     * @param {number} [fromIndex=0] The index to search from.
 	     * @returns {*} Returns the matched element, else `undefined`.
 	     * @example
 	     *
@@ -63513,14 +63969,7 @@
 	     * _.find(users, 'active');
 	     * // => object for 'barney'
 	     */
-	    function find(collection, predicate) {
-	      predicate = getIteratee(predicate, 3);
-	      if (isArray(collection)) {
-	        var index = baseFindIndex(collection, predicate);
-	        return index > -1 ? collection[index] : undefined;
-	      }
-	      return baseFind(collection, predicate, baseEach);
-	    }
+	    var find = createFind(findIndex);
 	
 	    /**
 	     * This method is like `_.find` except that it iterates over elements of
@@ -63533,6 +63982,7 @@
 	     * @param {Array|Object} collection The collection to search.
 	     * @param {Array|Function|Object|string} [predicate=_.identity]
 	     *  The function invoked per iteration.
+	     * @param {number} [fromIndex=collection.length-1] The index to search from.
 	     * @returns {*} Returns the matched element, else `undefined`.
 	     * @example
 	     *
@@ -63541,14 +63991,7 @@
 	     * });
 	     * // => 3
 	     */
-	    function findLast(collection, predicate) {
-	      predicate = getIteratee(predicate, 3);
-	      if (isArray(collection)) {
-	        var index = baseFindIndex(collection, predicate, true);
-	        return index > -1 ? collection[index] : undefined;
-	      }
-	      return baseFind(collection, predicate, baseEachRight);
-	    }
+	    var findLast = createFind(findLastIndex);
 	
 	    /**
 	     * Creates a flattened array of values by running each element in `collection`
@@ -63645,6 +64088,7 @@
 	     * @param {Array|Object} collection The collection to iterate over.
 	     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
 	     * @returns {Array|Object} Returns `collection`.
+	     * @see _.forEachRight
 	     * @example
 	     *
 	     * _([1, 2]).forEach(function(value) {
@@ -63658,9 +64102,8 @@
 	     * // => Logs 'a' then 'b' (iteration order is not guaranteed).
 	     */
 	    function forEach(collection, iteratee) {
-	      return (typeof iteratee == 'function' && isArray(collection))
-	        ? arrayEach(collection, iteratee)
-	        : baseEach(collection, getIteratee(iteratee));
+	      var func = isArray(collection) ? arrayEach : baseEach;
+	      return func(collection, getIteratee(iteratee, 3));
 	    }
 	
 	    /**
@@ -63675,6 +64118,7 @@
 	     * @param {Array|Object} collection The collection to iterate over.
 	     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
 	     * @returns {Array|Object} Returns `collection`.
+	     * @see _.forEach
 	     * @example
 	     *
 	     * _.forEachRight([1, 2], function(value) {
@@ -63683,9 +64127,8 @@
 	     * // => Logs `2` then `1`.
 	     */
 	    function forEachRight(collection, iteratee) {
-	      return (typeof iteratee == 'function' && isArray(collection))
-	        ? arrayEachRight(collection, iteratee)
-	        : baseEachRight(collection, getIteratee(iteratee));
+	      var func = isArray(collection) ? arrayEachRight : baseEachRight;
+	      return func(collection, getIteratee(iteratee, 3));
 	    }
 	
 	    /**
@@ -63987,6 +64430,7 @@
 	     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
 	     * @param {*} [accumulator] The initial value.
 	     * @returns {*} Returns the accumulated value.
+	     * @see _.reduceRight
 	     * @example
 	     *
 	     * _.reduce([1, 2], function(sum, n) {
@@ -64019,6 +64463,7 @@
 	     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
 	     * @param {*} [accumulator] The initial value.
 	     * @returns {*} Returns the accumulated value.
+	     * @see _.reduce
 	     * @example
 	     *
 	     * var array = [[0, 1], [2, 3], [4, 5]];
@@ -64047,6 +64492,7 @@
 	     * @param {Array|Function|Object|string} [predicate=_.identity]
 	     *  The function invoked per iteration.
 	     * @returns {Array} Returns the new filtered array.
+	     * @see _.filter
 	     * @example
 	     *
 	     * var users = [
@@ -64302,7 +64748,6 @@
 	     * @static
 	     * @memberOf _
 	     * @since 2.4.0
-	     * @type {Function}
 	     * @category Date
 	     * @returns {number} Returns the timestamp.
 	     * @example
@@ -64310,9 +64755,11 @@
 	     * _.defer(function(stamp) {
 	     *   console.log(_.now() - stamp);
 	     * }, _.now());
-	     * // => Logs the number of milliseconds it took for the deferred function to be invoked.
+	     * // => Logs the number of milliseconds it took for the deferred invocation.
 	     */
-	    var now = Date.now;
+	    function now() {
+	      return Date.now();
+	    }
 	
 	    /*------------------------------------------------------------------------*/
 	
@@ -64363,7 +64810,7 @@
 	     * @param {Function} func The function to cap arguments for.
 	     * @param {number} [n=func.length] The arity cap.
 	     * @param- {Object} [guard] Enables use as an iteratee for methods like `_.map`.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new capped function.
 	     * @example
 	     *
 	     * _.map(['6', '8', '10'], _.ary(parseInt, 1));
@@ -64416,7 +64863,7 @@
 	     * The `_.bind.placeholder` value, which defaults to `_` in monolithic builds,
 	     * may be used as a placeholder for partially applied arguments.
 	     *
-	     * **Note:** Unlike native `Function#bind` this method doesn't set the "length"
+	     * **Note:** Unlike native `Function#bind`, this method doesn't set the "length"
 	     * property of bound functions.
 	     *
 	     * @static
@@ -64447,7 +64894,7 @@
 	    var bind = rest(function(func, thisArg, partials) {
 	      var bitmask = BIND_FLAG;
 	      if (partials.length) {
-	        var holders = replaceHolders(partials, getPlaceholder(bind));
+	        var holders = replaceHolders(partials, getHolder(bind));
 	        bitmask |= PARTIAL_FLAG;
 	      }
 	      return createWrapper(func, bitmask, thisArg, partials, holders);
@@ -64501,7 +64948,7 @@
 	    var bindKey = rest(function(object, key, partials) {
 	      var bitmask = BIND_FLAG | BIND_KEY_FLAG;
 	      if (partials.length) {
-	        var holders = replaceHolders(partials, getPlaceholder(bindKey));
+	        var holders = replaceHolders(partials, getHolder(bindKey));
 	        bitmask |= PARTIAL_FLAG;
 	      }
 	      return createWrapper(key, bitmask, object, partials, holders);
@@ -64656,7 +65103,7 @@
 	          maxWait,
 	          result,
 	          timerId,
-	          lastCallTime = 0,
+	          lastCallTime,
 	          lastInvokeTime = 0,
 	          leading = false,
 	          maxing = false,
@@ -64707,7 +65154,7 @@
 	        // Either this is the first call, activity has stopped and we're at the
 	        // trailing edge, the system time has gone backwards and we're treating
 	        // it as the trailing edge, or we've hit the `maxWait` limit.
-	        return (!lastCallTime || (timeSinceLastCall >= wait) ||
+	        return (lastCallTime === undefined || (timeSinceLastCall >= wait) ||
 	          (timeSinceLastCall < 0) || (maxing && timeSinceLastInvoke >= maxWait));
 	      }
 	
@@ -64721,7 +65168,6 @@
 	      }
 	
 	      function trailingEdge(time) {
-	        clearTimeout(timerId);
 	        timerId = undefined;
 	
 	        // Only invoke if we have `lastArgs` which means `func` has been
@@ -64734,11 +65180,8 @@
 	      }
 	
 	      function cancel() {
-	        if (timerId !== undefined) {
-	          clearTimeout(timerId);
-	        }
-	        lastCallTime = lastInvokeTime = 0;
-	        lastArgs = lastThis = timerId = undefined;
+	        lastInvokeTime = 0;
+	        lastArgs = lastCallTime = lastThis = timerId = undefined;
 	      }
 	
 	      function flush() {
@@ -64759,7 +65202,6 @@
 	          }
 	          if (maxing) {
 	            // Handle invocations in a tight loop.
-	            clearTimeout(timerId);
 	            timerId = setTimeout(timerExpired, wait);
 	            return invokeFunc(lastCallTime);
 	          }
@@ -64827,7 +65269,7 @@
 	     * @since 4.0.0
 	     * @category Function
 	     * @param {Function} func The function to flip arguments for.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new flipped function.
 	     * @example
 	     *
 	     * var flipped = _.flip(function() {
@@ -64860,7 +65302,7 @@
 	     * @category Function
 	     * @param {Function} func The function to have its output memoized.
 	     * @param {Function} [resolver] The function to resolve the cache key.
-	     * @returns {Function} Returns the new memoizing function.
+	     * @returns {Function} Returns the new memoized function.
 	     * @example
 	     *
 	     * var object = { 'a': 1, 'b': 2 };
@@ -64918,7 +65360,7 @@
 	     * @since 3.0.0
 	     * @category Function
 	     * @param {Function} predicate The predicate to negate.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new negated function.
 	     * @example
 	     *
 	     * function isEven(n) {
@@ -64983,7 +65425,7 @@
 	     *
 	     * var func = _.overArgs(function(x, y) {
 	     *   return [x, y];
-	     * }, square, doubled);
+	     * }, [square, doubled]);
 	     *
 	     * func(9, 3);
 	     * // => [81, 6]
@@ -65042,7 +65484,7 @@
 	     * // => 'hi fred'
 	     */
 	    var partial = rest(function(func, partials) {
-	      var holders = replaceHolders(partials, getPlaceholder(partial));
+	      var holders = replaceHolders(partials, getHolder(partial));
 	      return createWrapper(func, PARTIAL_FLAG, undefined, partials, holders);
 	    });
 	
@@ -65079,7 +65521,7 @@
 	     * // => 'hello fred'
 	     */
 	    var partialRight = rest(function(func, partials) {
-	      var holders = replaceHolders(partials, getPlaceholder(partialRight));
+	      var holders = replaceHolders(partials, getHolder(partialRight));
 	      return createWrapper(func, PARTIAL_RIGHT_FLAG, undefined, partials, holders);
 	    });
 	
@@ -65100,7 +65542,7 @@
 	     *
 	     * var rearged = _.rearg(function(a, b, c) {
 	     *   return [a, b, c];
-	     * }, 2, 0, 1);
+	     * }, [2, 0, 1]);
 	     *
 	     * rearged('b', 'c', 'a')
 	     * // => ['a', 'b', 'c']
@@ -65281,7 +65723,7 @@
 	     * @since 4.0.0
 	     * @category Function
 	     * @param {Function} func The function to cap arguments for.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new capped function.
 	     * @example
 	     *
 	     * _.map(['6', '8', '10'], _.unary(parseInt));
@@ -65378,6 +65820,7 @@
 	     * @category Lang
 	     * @param {*} value The value to clone.
 	     * @returns {*} Returns the cloned value.
+	     * @see _.cloneDeep
 	     * @example
 	     *
 	     * var objects = [{ 'a': 1 }, { 'b': 2 }];
@@ -65403,6 +65846,7 @@
 	     * @param {*} value The value to clone.
 	     * @param {Function} [customizer] The function to customize cloning.
 	     * @returns {*} Returns the cloned value.
+	     * @see _.cloneDeepWith
 	     * @example
 	     *
 	     * function customizer(value) {
@@ -65433,6 +65877,7 @@
 	     * @category Lang
 	     * @param {*} value The value to recursively clone.
 	     * @returns {*} Returns the deep cloned value.
+	     * @see _.clone
 	     * @example
 	     *
 	     * var objects = [{ 'a': 1 }, { 'b': 2 }];
@@ -65455,6 +65900,7 @@
 	     * @param {*} value The value to recursively clone.
 	     * @param {Function} [customizer] The function to customize cloning.
 	     * @returns {*} Returns the deep cloned value.
+	     * @see _.cloneWith
 	     * @example
 	     *
 	     * function customizer(value) {
@@ -65523,6 +65969,7 @@
 	     * @param {*} other The other value to compare.
 	     * @returns {boolean} Returns `true` if `value` is greater than `other`,
 	     *  else `false`.
+	     * @see _.lt
 	     * @example
 	     *
 	     * _.gt(3, 1);
@@ -65534,9 +65981,7 @@
 	     * _.gt(1, 3);
 	     * // => false
 	     */
-	    function gt(value, other) {
-	      return value > other;
-	    }
+	    var gt = createRelationalOperation(baseGt);
 	
 	    /**
 	     * Checks if `value` is greater than or equal to `other`.
@@ -65549,6 +65994,7 @@
 	     * @param {*} other The other value to compare.
 	     * @returns {boolean} Returns `true` if `value` is greater than or equal to
 	     *  `other`, else `false`.
+	     * @see _.lte
 	     * @example
 	     *
 	     * _.gte(3, 1);
@@ -65560,9 +66006,9 @@
 	     * _.gte(1, 3);
 	     * // => false
 	     */
-	    function gte(value, other) {
+	    var gte = createRelationalOperation(function(value, other) {
 	      return value >= other;
-	    }
+	    });
 	
 	    /**
 	     * Checks if `value` is likely an `arguments` object.
@@ -65735,7 +66181,7 @@
 	     * _.isBuffer(new Uint8Array(2));
 	     * // => false
 	     */
-	    var isBuffer = !Buffer ? constant(false) : function(value) {
+	    var isBuffer = !Buffer ? stubFalse : function(value) {
 	      return value instanceof Buffer;
 	    };
 	
@@ -65953,13 +66399,13 @@
 	     * _.isFinite(3);
 	     * // => true
 	     *
-	     * _.isFinite(Number.MAX_VALUE);
-	     * // => true
-	     *
-	     * _.isFinite(3.14);
+	     * _.isFinite(Number.MIN_VALUE);
 	     * // => true
 	     *
 	     * _.isFinite(Infinity);
+	     * // => false
+	     *
+	     * _.isFinite('3');
 	     * // => false
 	     */
 	    function isFinite(value) {
@@ -66235,7 +66681,15 @@
 	    }
 	
 	    /**
-	     * Checks if `value` is a native function.
+	     * Checks if `value` is a pristine native function.
+	     *
+	     * **Note:** This method can't reliably detect native functions in the
+	     * presence of the `core-js` package because `core-js` circumvents this kind
+	     * of detection. Despite multiple requests, the `core-js` maintainer has made
+	     * it clear: any attempt to fix the detection will be obstructed. As a result,
+	     * we're left with little choice but to throw an error. Unfortunately, this
+	     * also affects packages, like [babel-polyfill](https://www.npmjs.com/package/babel-polyfill),
+	     * which rely on `core-js`.
 	     *
 	     * @static
 	     * @memberOf _
@@ -66253,11 +66707,10 @@
 	     * // => false
 	     */
 	    function isNative(value) {
-	      if (!isObject(value)) {
-	        return false;
+	      if (isMaskable(value)) {
+	        throw new Error('This method is not supported with `core-js`. Try https://github.com/es-shims.');
 	      }
-	      var pattern = (isFunction(value) || isHostObject(value)) ? reIsNative : reIsHostCtor;
-	      return pattern.test(toSource(value));
+	      return baseIsNative(value);
 	    }
 	
 	    /**
@@ -66601,6 +67054,7 @@
 	     * @param {*} other The other value to compare.
 	     * @returns {boolean} Returns `true` if `value` is less than `other`,
 	     *  else `false`.
+	     * @see _.gt
 	     * @example
 	     *
 	     * _.lt(1, 3);
@@ -66612,9 +67066,7 @@
 	     * _.lt(3, 1);
 	     * // => false
 	     */
-	    function lt(value, other) {
-	      return value < other;
-	    }
+	    var lt = createRelationalOperation(baseLt);
 	
 	    /**
 	     * Checks if `value` is less than or equal to `other`.
@@ -66627,6 +67079,7 @@
 	     * @param {*} other The other value to compare.
 	     * @returns {boolean} Returns `true` if `value` is less than or equal to
 	     *  `other`, else `false`.
+	     * @see _.gte
 	     * @example
 	     *
 	     * _.lte(1, 3);
@@ -66638,9 +67091,9 @@
 	     * _.lte(3, 1);
 	     * // => false
 	     */
-	    function lte(value, other) {
+	    var lte = createRelationalOperation(function(value, other) {
 	      return value <= other;
-	    }
+	    });
 	
 	    /**
 	     * Converts `value` to an array.
@@ -66682,9 +67135,44 @@
 	    }
 	
 	    /**
+	     * Converts `value` to a finite number.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @since 4.12.0
+	     * @category Lang
+	     * @param {*} value The value to convert.
+	     * @returns {number} Returns the converted number.
+	     * @example
+	     *
+	     * _.toFinite(3.2);
+	     * // => 3.2
+	     *
+	     * _.toFinite(Number.MIN_VALUE);
+	     * // => 5e-324
+	     *
+	     * _.toFinite(Infinity);
+	     * // => 1.7976931348623157e+308
+	     *
+	     * _.toFinite('3.2');
+	     * // => 3.2
+	     */
+	    function toFinite(value) {
+	      if (!value) {
+	        return value === 0 ? value : 0;
+	      }
+	      value = toNumber(value);
+	      if (value === INFINITY || value === -INFINITY) {
+	        var sign = (value < 0 ? -1 : 1);
+	        return sign * MAX_INTEGER;
+	      }
+	      return value === value ? value : 0;
+	    }
+	
+	    /**
 	     * Converts `value` to an integer.
 	     *
-	     * **Note:** This function is loosely based on
+	     * **Note:** This method is loosely based on
 	     * [`ToInteger`](http://www.ecma-international.org/ecma-262/6.0/#sec-tointeger).
 	     *
 	     * @static
@@ -66695,7 +67183,7 @@
 	     * @returns {number} Returns the converted integer.
 	     * @example
 	     *
-	     * _.toInteger(3);
+	     * _.toInteger(3.2);
 	     * // => 3
 	     *
 	     * _.toInteger(Number.MIN_VALUE);
@@ -66704,20 +67192,14 @@
 	     * _.toInteger(Infinity);
 	     * // => 1.7976931348623157e+308
 	     *
-	     * _.toInteger('3');
+	     * _.toInteger('3.2');
 	     * // => 3
 	     */
 	    function toInteger(value) {
-	      if (!value) {
-	        return value === 0 ? value : 0;
-	      }
-	      value = toNumber(value);
-	      if (value === INFINITY || value === -INFINITY) {
-	        var sign = (value < 0 ? -1 : 1);
-	        return sign * MAX_INTEGER;
-	      }
-	      var remainder = value % 1;
-	      return value === value ? (remainder ? value - remainder : value) : 0;
+	      var result = toFinite(value),
+	          remainder = result % 1;
+	
+	      return result === result ? (remainder ? result - remainder : result) : 0;
 	    }
 	
 	    /**
@@ -66735,7 +67217,7 @@
 	     * @returns {number} Returns the converted integer.
 	     * @example
 	     *
-	     * _.toLength(3);
+	     * _.toLength(3.2);
 	     * // => 3
 	     *
 	     * _.toLength(Number.MIN_VALUE);
@@ -66744,7 +67226,7 @@
 	     * _.toLength(Infinity);
 	     * // => 4294967295
 	     *
-	     * _.toLength('3');
+	     * _.toLength('3.2');
 	     * // => 3
 	     */
 	    function toLength(value) {
@@ -66762,8 +67244,8 @@
 	     * @returns {number} Returns the number.
 	     * @example
 	     *
-	     * _.toNumber(3);
-	     * // => 3
+	     * _.toNumber(3.2);
+	     * // => 3.2
 	     *
 	     * _.toNumber(Number.MIN_VALUE);
 	     * // => 5e-324
@@ -66771,8 +67253,8 @@
 	     * _.toNumber(Infinity);
 	     * // => Infinity
 	     *
-	     * _.toNumber('3');
-	     * // => 3
+	     * _.toNumber('3.2');
+	     * // => 3.2
 	     */
 	    function toNumber(value) {
 	      if (typeof value == 'number') {
@@ -66835,7 +67317,7 @@
 	     * @returns {number} Returns the converted integer.
 	     * @example
 	     *
-	     * _.toSafeInteger(3);
+	     * _.toSafeInteger(3.2);
 	     * // => 3
 	     *
 	     * _.toSafeInteger(Number.MIN_VALUE);
@@ -66844,7 +67326,7 @@
 	     * _.toSafeInteger(Infinity);
 	     * // => 9007199254740991
 	     *
-	     * _.toSafeInteger('3');
+	     * _.toSafeInteger('3.2');
 	     * // => 3
 	     */
 	    function toSafeInteger(value) {
@@ -66873,18 +67355,7 @@
 	     * // => '1,2,3'
 	     */
 	    function toString(value) {
-	      // Exit early for strings to avoid a performance hit in some environments.
-	      if (typeof value == 'string') {
-	        return value;
-	      }
-	      if (value == null) {
-	        return '';
-	      }
-	      if (isSymbol(value)) {
-	        return symbolToString ? symbolToString.call(value) : '';
-	      }
-	      var result = (value + '');
-	      return (result == '0' && (1 / value) == -INFINITY) ? '-0' : result;
+	      return value == null ? '' : baseToString(value);
 	    }
 	
 	    /*------------------------------------------------------------------------*/
@@ -66904,6 +67375,7 @@
 	     * @param {Object} object The destination object.
 	     * @param {...Object} [sources] The source objects.
 	     * @returns {Object} Returns `object`.
+	     * @see _.assignIn
 	     * @example
 	     *
 	     * function Foo() {
@@ -66946,6 +67418,7 @@
 	     * @param {Object} object The destination object.
 	     * @param {...Object} [sources] The source objects.
 	     * @returns {Object} Returns `object`.
+	     * @see _.assign
 	     * @example
 	     *
 	     * function Foo() {
@@ -66989,6 +67462,7 @@
 	     * @param {...Object} sources The source objects.
 	     * @param {Function} [customizer] The function to customize assigned values.
 	     * @returns {Object} Returns `object`.
+	     * @see _.assignWith
 	     * @example
 	     *
 	     * function customizer(objValue, srcValue) {
@@ -67020,6 +67494,7 @@
 	     * @param {...Object} sources The source objects.
 	     * @param {Function} [customizer] The function to customize assigned values.
 	     * @returns {Object} Returns `object`.
+	     * @see _.assignInWith
 	     * @example
 	     *
 	     * function customizer(objValue, srcValue) {
@@ -67044,16 +67519,13 @@
 	     * @category Object
 	     * @param {Object} object The object to iterate over.
 	     * @param {...(string|string[])} [paths] The property paths of elements to pick.
-	     * @returns {Array} Returns the new array of picked elements.
+	     * @returns {Array} Returns the picked values.
 	     * @example
 	     *
 	     * var object = { 'a': [{ 'b': { 'c': 3 } }, 4] };
 	     *
 	     * _.at(object, ['a[0].b.c', 'a[1]']);
 	     * // => [3, 4]
-	     *
-	     * _.at(['a', 'b', 'c'], 0, 2);
-	     * // => ['a', 'c']
 	     */
 	    var at = rest(function(object, paths) {
 	      return baseAt(object, baseFlatten(paths, 1));
@@ -67113,6 +67585,7 @@
 	     * @param {Object} object The destination object.
 	     * @param {...Object} [sources] The source objects.
 	     * @returns {Object} Returns `object`.
+	     * @see _.defaultsDeep
 	     * @example
 	     *
 	     * _.defaults({ 'user': 'barney' }, { 'age': 36 }, { 'user': 'fred' });
@@ -67136,6 +67609,7 @@
 	     * @param {Object} object The destination object.
 	     * @param {...Object} [sources] The source objects.
 	     * @returns {Object} Returns `object`.
+	     * @see _.defaults
 	     * @example
 	     *
 	     * _.defaultsDeep({ 'user': { 'name': 'barney' } }, { 'user': { 'name': 'fred', 'age': 36 } });
@@ -67184,7 +67658,7 @@
 	     * // => 'barney'
 	     */
 	    function findKey(object, predicate) {
-	      return baseFind(object, getIteratee(predicate, 3), baseForOwn, true);
+	      return baseFindKey(object, getIteratee(predicate, 3), baseForOwn);
 	    }
 	
 	    /**
@@ -67224,7 +67698,7 @@
 	     * // => 'pebbles'
 	     */
 	    function findLastKey(object, predicate) {
-	      return baseFind(object, getIteratee(predicate, 3), baseForOwnRight, true);
+	      return baseFindKey(object, getIteratee(predicate, 3), baseForOwnRight);
 	    }
 	
 	    /**
@@ -67240,6 +67714,7 @@
 	     * @param {Object} object The object to iterate over.
 	     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
 	     * @returns {Object} Returns `object`.
+	     * @see _.forInRight
 	     * @example
 	     *
 	     * function Foo() {
@@ -67257,7 +67732,7 @@
 	    function forIn(object, iteratee) {
 	      return object == null
 	        ? object
-	        : baseFor(object, getIteratee(iteratee), keysIn);
+	        : baseFor(object, getIteratee(iteratee, 3), keysIn);
 	    }
 	
 	    /**
@@ -67271,6 +67746,7 @@
 	     * @param {Object} object The object to iterate over.
 	     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
 	     * @returns {Object} Returns `object`.
+	     * @see _.forIn
 	     * @example
 	     *
 	     * function Foo() {
@@ -67288,7 +67764,7 @@
 	    function forInRight(object, iteratee) {
 	      return object == null
 	        ? object
-	        : baseForRight(object, getIteratee(iteratee), keysIn);
+	        : baseForRight(object, getIteratee(iteratee, 3), keysIn);
 	    }
 	
 	    /**
@@ -67304,6 +67780,7 @@
 	     * @param {Object} object The object to iterate over.
 	     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
 	     * @returns {Object} Returns `object`.
+	     * @see _.forOwnRight
 	     * @example
 	     *
 	     * function Foo() {
@@ -67319,7 +67796,7 @@
 	     * // => Logs 'a' then 'b' (iteration order is not guaranteed).
 	     */
 	    function forOwn(object, iteratee) {
-	      return object && baseForOwn(object, getIteratee(iteratee));
+	      return object && baseForOwn(object, getIteratee(iteratee, 3));
 	    }
 	
 	    /**
@@ -67333,6 +67810,7 @@
 	     * @param {Object} object The object to iterate over.
 	     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
 	     * @returns {Object} Returns `object`.
+	     * @see _.forOwn
 	     * @example
 	     *
 	     * function Foo() {
@@ -67348,7 +67826,7 @@
 	     * // => Logs 'b' then 'a' assuming `_.forOwn` logs 'a' then 'b'.
 	     */
 	    function forOwnRight(object, iteratee) {
-	      return object && baseForOwnRight(object, getIteratee(iteratee));
+	      return object && baseForOwnRight(object, getIteratee(iteratee, 3));
 	    }
 	
 	    /**
@@ -67360,7 +67838,8 @@
 	     * @memberOf _
 	     * @category Object
 	     * @param {Object} object The object to inspect.
-	     * @returns {Array} Returns the new array of property names.
+	     * @returns {Array} Returns the function names.
+	     * @see _.functionsIn
 	     * @example
 	     *
 	     * function Foo() {
@@ -67386,7 +67865,8 @@
 	     * @since 4.0.0
 	     * @category Object
 	     * @param {Object} object The object to inspect.
-	     * @returns {Array} Returns the new array of property names.
+	     * @returns {Array} Returns the function names.
+	     * @see _.functions
 	     * @example
 	     *
 	     * function Foo() {
@@ -67676,6 +68156,7 @@
 	     * @param {Array|Function|Object|string} [iteratee=_.identity]
 	     *  The function invoked per iteration.
 	     * @returns {Object} Returns the new mapped object.
+	     * @see _.mapValues
 	     * @example
 	     *
 	     * _.mapKeys({ 'a': 1, 'b': 2 }, function(value, key) {
@@ -67707,6 +68188,7 @@
 	     * @param {Array|Function|Object|string} [iteratee=_.identity]
 	     *  The function invoked per iteration.
 	     * @returns {Object} Returns the new mapped object.
+	     * @see _.mapKeys
 	     * @example
 	     *
 	     * var users = {
@@ -67736,7 +68218,7 @@
 	     * inherited enumerable string keyed properties of source objects into the
 	     * destination object. Source properties that resolve to `undefined` are
 	     * skipped if a destination value exists. Array and plain object properties
-	     * are merged recursively.Other objects and value types are overridden by
+	     * are merged recursively. Other objects and value types are overridden by
 	     * assignment. Source objects are applied from left to right. Subsequent
 	     * sources overwrite property assignments of previous sources.
 	     *
@@ -67881,7 +68363,7 @@
 	     * // => { 'a': 1, 'c': 3 }
 	     */
 	    var pick = rest(function(object, props) {
-	      return object == null ? {} : basePick(object, baseFlatten(props, 1));
+	      return object == null ? {} : basePick(object, arrayMap(baseFlatten(props, 1), toKey));
 	    });
 	
 	    /**
@@ -67948,7 +68430,7 @@
 	        length = 1;
 	      }
 	      while (++index < length) {
-	        var value = object == null ? undefined : object[path[index]];
+	        var value = object == null ? undefined : object[toKey(path[index])];
 	        if (value === undefined) {
 	          index = length;
 	          value = defaultValue;
@@ -68021,7 +68503,8 @@
 	
 	    /**
 	     * Creates an array of own enumerable string keyed-value pairs for `object`
-	     * which can be consumed by `_.fromPairs`.
+	     * which can be consumed by `_.fromPairs`. If `object` is a map or set, its
+	     * entries are returned.
 	     *
 	     * @static
 	     * @memberOf _
@@ -68029,7 +68512,7 @@
 	     * @alias entries
 	     * @category Object
 	     * @param {Object} object The object to query.
-	     * @returns {Array} Returns the new array of key-value pairs.
+	     * @returns {Array} Returns the key-value pairs.
 	     * @example
 	     *
 	     * function Foo() {
@@ -68042,13 +68525,12 @@
 	     * _.toPairs(new Foo);
 	     * // => [['a', 1], ['b', 2]] (iteration order is not guaranteed)
 	     */
-	    function toPairs(object) {
-	      return baseToPairs(object, keys(object));
-	    }
+	    var toPairs = createToPairs(keys);
 	
 	    /**
 	     * Creates an array of own and inherited enumerable string keyed-value pairs
-	     * for `object` which can be consumed by `_.fromPairs`.
+	     * for `object` which can be consumed by `_.fromPairs`. If `object` is a map
+	     * or set, its entries are returned.
 	     *
 	     * @static
 	     * @memberOf _
@@ -68056,7 +68538,7 @@
 	     * @alias entriesIn
 	     * @category Object
 	     * @param {Object} object The object to query.
-	     * @returns {Array} Returns the new array of key-value pairs.
+	     * @returns {Array} Returns the key-value pairs.
 	     * @example
 	     *
 	     * function Foo() {
@@ -68067,25 +68549,24 @@
 	     * Foo.prototype.c = 3;
 	     *
 	     * _.toPairsIn(new Foo);
-	     * // => [['a', 1], ['b', 2], ['c', 1]] (iteration order is not guaranteed)
+	     * // => [['a', 1], ['b', 2], ['c', 3]] (iteration order is not guaranteed)
 	     */
-	    function toPairsIn(object) {
-	      return baseToPairs(object, keysIn(object));
-	    }
+	    var toPairsIn = createToPairs(keysIn);
 	
 	    /**
 	     * An alternative to `_.reduce`; this method transforms `object` to a new
 	     * `accumulator` object which is the result of running each of its own
 	     * enumerable string keyed properties thru `iteratee`, with each invocation
-	     * potentially mutating the `accumulator` object. The iteratee is invoked
-	     * with four arguments: (accumulator, value, key, object). Iteratee functions
-	     * may exit iteration early by explicitly returning `false`.
+	     * potentially mutating the `accumulator` object. If `accumulator` is not
+	     * provided, a new object with the same `[[Prototype]]` will be used. The
+	     * iteratee is invoked with four arguments: (accumulator, value, key, object).
+	     * Iteratee functions may exit iteration early by explicitly returning `false`.
 	     *
 	     * @static
 	     * @memberOf _
 	     * @since 1.3.0
 	     * @category Object
-	     * @param {Array|Object} object The object to iterate over.
+	     * @param {Object} object The object to iterate over.
 	     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
 	     * @param {*} [accumulator] The custom accumulator value.
 	     * @returns {*} Returns the accumulated value.
@@ -68311,7 +68792,7 @@
 	    }
 	
 	    /**
-	     * Checks if `n` is between `start` and up to but not including, `end`. If
+	     * Checks if `n` is between `start` and up to, but not including, `end`. If
 	     * `end` is not specified, it's set to `start` with `start` then set to `0`.
 	     * If `start` is greater than `end` the params are swapped to support
 	     * negative ranges.
@@ -68324,6 +68805,7 @@
 	     * @param {number} [start=0] The start of the range.
 	     * @param {number} end The end of the range.
 	     * @returns {boolean} Returns `true` if `number` is in the range, else `false`.
+	     * @see _.range, _.rangeRight
 	     * @example
 	     *
 	     * _.inRange(3, 2, 4);
@@ -68506,7 +68988,7 @@
 	     * @category String
 	     * @param {string} [string=''] The string to search.
 	     * @param {string} [target] The string to search for.
-	     * @param {number} [position=string.length] The position to search from.
+	     * @param {number} [position=string.length] The position to search up to.
 	     * @returns {boolean} Returns `true` if `string` ends with `target`,
 	     *  else `false`.
 	     * @example
@@ -68522,7 +69004,7 @@
 	     */
 	    function endsWith(string, target, position) {
 	      string = toString(string);
-	      target = typeof target == 'string' ? target : (target + '');
+	      target = baseToString(target);
 	
 	      var length = string.length;
 	      position = position === undefined
@@ -68900,7 +69382,7 @@
 	     * @param {string} [string=''] The string to split.
 	     * @param {RegExp|string} separator The separator pattern to split by.
 	     * @param {number} [limit] The length to truncate results to.
-	     * @returns {Array} Returns the new array of string segments.
+	     * @returns {Array} Returns the string segments.
 	     * @example
 	     *
 	     * _.split('a-b-c', '-', 2);
@@ -68919,7 +69401,7 @@
 	            typeof separator == 'string' ||
 	            (separator != null && !isRegExp(separator))
 	          )) {
-	        separator += '';
+	        separator = baseToString(separator);
 	        if (separator == '' && reHasComplexSymbol.test(string)) {
 	          return castSlice(stringToArray(string), 0, limit);
 	        }
@@ -68978,7 +69460,7 @@
 	    function startsWith(string, target, position) {
 	      string = toString(string);
 	      position = baseClamp(toInteger(position), 0, string.length);
-	      return string.lastIndexOf(target, position) == position;
+	      return string.lastIndexOf(baseToString(target), position) == position;
 	    }
 	
 	    /**
@@ -69045,12 +69527,6 @@
 	     * compiled({ 'user': 'pebbles' });
 	     * // => 'hello pebbles!'
 	     *
-	     * // Use custom template delimiters.
-	     * _.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
-	     * var compiled = _.template('hello {{ user }}!');
-	     * compiled({ 'user': 'mustache' });
-	     * // => 'hello mustache!'
-	     *
 	     * // Use backslashes to treat delimiters as plain text.
 	     * var compiled = _.template('<%= "\\<%- value %\\>" %>');
 	     * compiled({ 'value': 'ignored' });
@@ -69076,9 +69552,15 @@
 	     * //   return __p;
 	     * // }
 	     *
+	     * // Use custom template delimiters.
+	     * _.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
+	     * var compiled = _.template('hello {{ user }}!');
+	     * compiled({ 'user': 'mustache' });
+	     * // => 'hello mustache!'
+	     *
 	     * // Use the `source` property to inline compiled templates for meaningful
 	     * // line numbers in error messages and stack traces.
-	     * fs.writeFileSync(path.join(cwd, 'jst.js'), '\
+	     * fs.writeFileSync(path.join(process.cwd(), 'jst.js'), '\
 	     *   var JST = {\
 	     *     "main": ' + _.template(mainText).source + '\
 	     *   };\
@@ -69266,13 +69748,10 @@
 	     */
 	    function trim(string, chars, guard) {
 	      string = toString(string);
-	      if (!string) {
-	        return string;
-	      }
-	      if (guard || chars === undefined) {
+	      if (string && (guard || chars === undefined)) {
 	        return string.replace(reTrim, '');
 	      }
-	      if (!(chars += '')) {
+	      if (!string || !(chars = baseToString(chars))) {
 	        return string;
 	      }
 	      var strSymbols = stringToArray(string),
@@ -69304,13 +69783,10 @@
 	     */
 	    function trimEnd(string, chars, guard) {
 	      string = toString(string);
-	      if (!string) {
-	        return string;
-	      }
-	      if (guard || chars === undefined) {
+	      if (string && (guard || chars === undefined)) {
 	        return string.replace(reTrimEnd, '');
 	      }
-	      if (!(chars += '')) {
+	      if (!string || !(chars = baseToString(chars))) {
 	        return string;
 	      }
 	      var strSymbols = stringToArray(string),
@@ -69340,13 +69816,10 @@
 	     */
 	    function trimStart(string, chars, guard) {
 	      string = toString(string);
-	      if (!string) {
-	        return string;
-	      }
-	      if (guard || chars === undefined) {
+	      if (string && (guard || chars === undefined)) {
 	        return string.replace(reTrimStart, '');
 	      }
-	      if (!(chars += '')) {
+	      if (!string || !(chars = baseToString(chars))) {
 	        return string;
 	      }
 	      var strSymbols = stringToArray(string),
@@ -69399,7 +69872,7 @@
 	      if (isObject(options)) {
 	        var separator = 'separator' in options ? options.separator : separator;
 	        length = 'length' in options ? toInteger(options.length) : length;
-	        omission = 'omission' in options ? toString(options.omission) : omission;
+	        omission = 'omission' in options ? baseToString(options.omission) : omission;
 	      }
 	      string = toString(string);
 	
@@ -69439,7 +69912,7 @@
 	          }
 	          result = result.slice(0, newEnd === undefined ? end : newEnd);
 	        }
-	      } else if (string.indexOf(separator, end) != end) {
+	      } else if (string.indexOf(baseToString(separator), end) != end) {
 	        var index = result.lastIndexOf(separator);
 	        if (index > -1) {
 	          result = result.slice(0, index);
@@ -69600,12 +70073,13 @@
 	     *   }
 	     * };
 	     *
-	     * _.bindAll(view, 'onClick');
+	     * _.bindAll(view, ['onClick']);
 	     * jQuery(element).on('click', view.onClick);
 	     * // => Logs 'clicked docs' when clicked.
 	     */
 	    var bindAll = rest(function(object, methodNames) {
 	      arrayEach(baseFlatten(methodNames, 1), function(key) {
+	        key = toKey(key);
 	        object[key] = bind(object[key], object);
 	      });
 	      return object;
@@ -69622,7 +70096,7 @@
 	     * @since 4.0.0
 	     * @category Util
 	     * @param {Array} pairs The predicate-function pairs.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new composite function.
 	     * @example
 	     *
 	     * var func = _.cond([
@@ -69672,7 +70146,7 @@
 	     * @since 4.0.0
 	     * @category Util
 	     * @param {Object} source The object of property predicates to conform to.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new spec function.
 	     * @example
 	     *
 	     * var users = [
@@ -69680,7 +70154,7 @@
 	     *   { 'user': 'fred',   'age': 40 }
 	     * ];
 	     *
-	     * _.filter(users, _.conforms({ 'age': _.partial(_.gt, _, 38) }));
+	     * _.filter(users, _.conforms({ 'age': function(n) { return n > 38; } }));
 	     * // => [{ 'user': 'fred', 'age': 40 }]
 	     */
 	    function conforms(source) {
@@ -69695,13 +70169,15 @@
 	     * @since 2.4.0
 	     * @category Util
 	     * @param {*} value The value to return from the new function.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new constant function.
 	     * @example
 	     *
-	     * var object = { 'user': 'fred' };
-	     * var getter = _.constant(object);
+	     * var objects = _.times(2, _.constant({ 'a': 1 }));
 	     *
-	     * getter() === object;
+	     * console.log(objects);
+	     * // => [{ 'a': 1 }, { 'a': 1 }]
+	     *
+	     * console.log(objects[0] === objects[1]);
 	     * // => true
 	     */
 	    function constant(value) {
@@ -69720,14 +70196,15 @@
 	     * @since 3.0.0
 	     * @category Util
 	     * @param {...(Function|Function[])} [funcs] Functions to invoke.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new composite function.
+	     * @see _.flowRight
 	     * @example
 	     *
 	     * function square(n) {
 	     *   return n * n;
 	     * }
 	     *
-	     * var addSquare = _.flow(_.add, square);
+	     * var addSquare = _.flow([_.add, square]);
 	     * addSquare(1, 2);
 	     * // => 9
 	     */
@@ -69738,18 +70215,19 @@
 	     * invokes the given functions from right to left.
 	     *
 	     * @static
-	     * @since 0.1.0
+	     * @since 3.0.0
 	     * @memberOf _
 	     * @category Util
 	     * @param {...(Function|Function[])} [funcs] Functions to invoke.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new composite function.
+	     * @see _.flow
 	     * @example
 	     *
 	     * function square(n) {
 	     *   return n * n;
 	     * }
 	     *
-	     * var addSquare = _.flowRight(square, _.add);
+	     * var addSquare = _.flowRight([square, _.add]);
 	     * addSquare(1, 2);
 	     * // => 9
 	     */
@@ -69768,7 +70246,7 @@
 	     *
 	     * var object = { 'user': 'fred' };
 	     *
-	     * _.identity(object) === object;
+	     * console.log(_.identity(object) === object);
 	     * // => true
 	     */
 	    function identity(value) {
@@ -69834,7 +70312,7 @@
 	     * @since 3.0.0
 	     * @category Util
 	     * @param {Object} source The object of property values to match.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new spec function.
 	     * @example
 	     *
 	     * var users = [
@@ -69862,7 +70340,7 @@
 	     * @category Util
 	     * @param {Array|string} path The path of the property to get.
 	     * @param {*} srcValue The value to match.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new spec function.
 	     * @example
 	     *
 	     * var users = [
@@ -69887,7 +70365,7 @@
 	     * @category Util
 	     * @param {Array|string} path The path of the method to invoke.
 	     * @param {...*} [args] The arguments to invoke the method with.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new invoker function.
 	     * @example
 	     *
 	     * var objects = [
@@ -69918,7 +70396,7 @@
 	     * @category Util
 	     * @param {Object} object The object to query.
 	     * @param {...*} [args] The arguments to invoke the method with.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new invoker function.
 	     * @example
 	     *
 	     * var array = _.times(3, _.constant),
@@ -70029,8 +70507,7 @@
 	    }
 	
 	    /**
-	     * A no-operation function that returns `undefined` regardless of the
-	     * arguments it receives.
+	     * A method that returns `undefined`.
 	     *
 	     * @static
 	     * @memberOf _
@@ -70038,17 +70515,15 @@
 	     * @category Util
 	     * @example
 	     *
-	     * var object = { 'user': 'fred' };
-	     *
-	     * _.noop(object) === undefined;
-	     * // => true
+	     * _.times(2, _.noop);
+	     * // => [undefined, undefined]
 	     */
 	    function noop() {
 	      // No operation performed.
 	    }
 	
 	    /**
-	     * Creates a function that returns its nth argument. If `n` is negative,
+	     * Creates a function that gets the argument at index `n`. If `n` is negative,
 	     * the nth argument from the end is returned.
 	     *
 	     * @static
@@ -70056,7 +70531,7 @@
 	     * @since 4.0.0
 	     * @category Util
 	     * @param {number} [n=0] The index of the argument to return.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new pass-thru function.
 	     * @example
 	     *
 	     * var func = _.nthArg(1);
@@ -70087,7 +70562,7 @@
 	     * @returns {Function} Returns the new function.
 	     * @example
 	     *
-	     * var func = _.over(Math.max, Math.min);
+	     * var func = _.over([Math.max, Math.min]);
 	     *
 	     * func(1, 2, 3, 4);
 	     * // => [4, 1]
@@ -70107,7 +70582,7 @@
 	     * @returns {Function} Returns the new function.
 	     * @example
 	     *
-	     * var func = _.overEvery(Boolean, isFinite);
+	     * var func = _.overEvery([Boolean, isFinite]);
 	     *
 	     * func('1');
 	     * // => true
@@ -70133,7 +70608,7 @@
 	     * @returns {Function} Returns the new function.
 	     * @example
 	     *
-	     * var func = _.overSome(Boolean, isFinite);
+	     * var func = _.overSome([Boolean, isFinite]);
 	     *
 	     * func('1');
 	     * // => true
@@ -70154,7 +70629,7 @@
 	     * @since 2.4.0
 	     * @category Util
 	     * @param {Array|string} path The path of the property to get.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new accessor function.
 	     * @example
 	     *
 	     * var objects = [
@@ -70169,7 +70644,7 @@
 	     * // => [1, 2]
 	     */
 	    function property(path) {
-	      return isKey(path) ? baseProperty(path) : basePropertyDeep(path);
+	      return isKey(path) ? baseProperty(toKey(path)) : basePropertyDeep(path);
 	    }
 	
 	    /**
@@ -70181,7 +70656,7 @@
 	     * @since 3.0.0
 	     * @category Util
 	     * @param {Object} object The object to query.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new accessor function.
 	     * @example
 	     *
 	     * var array = [0, 1, 2],
@@ -70215,7 +70690,8 @@
 	     * @param {number} [start=0] The start of the range.
 	     * @param {number} end The end of the range.
 	     * @param {number} [step=1] The value to increment or decrement by.
-	     * @returns {Array} Returns the new array of numbers.
+	     * @returns {Array} Returns the range of numbers.
+	     * @see _.inRange, _.rangeRight
 	     * @example
 	     *
 	     * _.range(4);
@@ -70252,7 +70728,8 @@
 	     * @param {number} [start=0] The start of the range.
 	     * @param {number} end The end of the range.
 	     * @param {number} [step=1] The value to increment or decrement by.
-	     * @returns {Array} Returns the new array of numbers.
+	     * @returns {Array} Returns the range of numbers.
+	     * @see _.inRange, _.range
 	     * @example
 	     *
 	     * _.rangeRight(4);
@@ -70279,6 +70756,101 @@
 	    var rangeRight = createRange(true);
 	
 	    /**
+	     * A method that returns a new empty array.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @since 4.13.0
+	     * @category Util
+	     * @returns {Array} Returns the new empty array.
+	     * @example
+	     *
+	     * var arrays = _.times(2, _.stubArray);
+	     *
+	     * console.log(arrays);
+	     * // => [[], []]
+	     *
+	     * console.log(arrays[0] === arrays[1]);
+	     * // => false
+	     */
+	    function stubArray() {
+	      return [];
+	    }
+	
+	    /**
+	     * A method that returns `false`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @since 4.13.0
+	     * @category Util
+	     * @returns {boolean} Returns `false`.
+	     * @example
+	     *
+	     * _.times(2, _.stubFalse);
+	     * // => [false, false]
+	     */
+	    function stubFalse() {
+	      return false;
+	    }
+	
+	    /**
+	     * A method that returns a new empty object.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @since 4.13.0
+	     * @category Util
+	     * @returns {Object} Returns the new empty object.
+	     * @example
+	     *
+	     * var objects = _.times(2, _.stubObject);
+	     *
+	     * console.log(objects);
+	     * // => [{}, {}]
+	     *
+	     * console.log(objects[0] === objects[1]);
+	     * // => false
+	     */
+	    function stubObject() {
+	      return {};
+	    }
+	
+	    /**
+	     * A method that returns an empty string.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @since 4.13.0
+	     * @category Util
+	     * @returns {string} Returns the empty string.
+	     * @example
+	     *
+	     * _.times(2, _.stubString);
+	     * // => ['', '']
+	     */
+	    function stubString() {
+	      return '';
+	    }
+	
+	    /**
+	     * A method that returns `true`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @since 4.13.0
+	     * @category Util
+	     * @returns {boolean} Returns `true`.
+	     * @example
+	     *
+	     * _.times(2, _.stubTrue);
+	     * // => [true, true]
+	     */
+	    function stubTrue() {
+	      return true;
+	    }
+	
+	    /**
 	     * Invokes the iteratee `n` times, returning an array of the results of
 	     * each invocation. The iteratee is invoked with one argument; (index).
 	     *
@@ -70294,8 +70866,8 @@
 	     * _.times(3, String);
 	     * // => ['0', '1', '2']
 	     *
-	     *  _.times(4, _.constant(true));
-	     * // => [true, true, true, true]
+	     *  _.times(4, _.constant(0));
+	     * // => [0, 0, 0, 0]
 	     */
 	    function times(n, iteratee) {
 	      n = toInteger(n);
@@ -70331,15 +70903,6 @@
 	     *
 	     * _.toPath('a[0].b.c');
 	     * // => ['a', '0', 'b', 'c']
-	     *
-	     * var path = ['a', 'b', 'c'],
-	     *     newPath = _.toPath(path);
-	     *
-	     * console.log(newPath);
-	     * // => ['a', 'b', 'c']
-	     *
-	     * console.log(path === newPath);
-	     * // => false
 	     */
 	    function toPath(value) {
 	      if (isArray(value)) {
@@ -70476,7 +71039,7 @@
 	     */
 	    function max(array) {
 	      return (array && array.length)
-	        ? baseExtremum(array, identity, gt)
+	        ? baseExtremum(array, identity, baseGt)
 	        : undefined;
 	    }
 	
@@ -70506,7 +71069,7 @@
 	     */
 	    function maxBy(array, iteratee) {
 	      return (array && array.length)
-	        ? baseExtremum(array, getIteratee(iteratee), gt)
+	        ? baseExtremum(array, getIteratee(iteratee), baseGt)
 	        : undefined;
 	    }
 	
@@ -70576,7 +71139,7 @@
 	     */
 	    function min(array) {
 	      return (array && array.length)
-	        ? baseExtremum(array, identity, lt)
+	        ? baseExtremum(array, identity, baseLt)
 	        : undefined;
 	    }
 	
@@ -70606,7 +71169,7 @@
 	     */
 	    function minBy(array, iteratee) {
 	      return (array && array.length)
-	        ? baseExtremum(array, getIteratee(iteratee), lt)
+	        ? baseExtremum(array, getIteratee(iteratee), baseLt)
 	        : undefined;
 	    }
 	
@@ -70978,6 +71541,11 @@
 	    lodash.meanBy = meanBy;
 	    lodash.min = min;
 	    lodash.minBy = minBy;
+	    lodash.stubArray = stubArray;
+	    lodash.stubFalse = stubFalse;
+	    lodash.stubObject = stubObject;
+	    lodash.stubString = stubString;
+	    lodash.stubTrue = stubTrue;
 	    lodash.multiply = multiply;
 	    lodash.nth = nth;
 	    lodash.noConflict = noConflict;
@@ -71012,6 +71580,7 @@
 	    lodash.sumBy = sumBy;
 	    lodash.template = template;
 	    lodash.times = times;
+	    lodash.toFinite = toFinite;
 	    lodash.toInteger = toInteger;
 	    lodash.toLength = toLength;
 	    lodash.toLower = toLower;
@@ -71278,10 +71847,12 @@
 	  // Export lodash.
 	  var _ = runInContext();
 	
-	  // Expose lodash on the free variable `window` or `self` when available. This
-	  // prevents errors in cases where lodash is loaded by a script tag in the presence
-	  // of an AMD loader. See http://requirejs.org/docs/errors.html#mismatch for more details.
-	  (freeWindow || freeSelf || {})._ = _;
+	  // Expose Lodash on the free variable `window` or `self` when available so it's
+	  // globally accessible, even when bundled with Browserify, Webpack, etc. This
+	  // also prevents errors in cases where Lodash is loaded by a script tag in the
+	  // presence of an AMD loader. See http://requirejs.org/docs/errors.html#mismatch
+	  // for more details. Use `_.noConflict` to remove Lodash from the global object.
+	  (freeSelf || {})._ = _;
 	
 	  // Some AMD build optimizers like r.js check for condition patterns like the following:
 	  if (true) {
@@ -71292,11 +71863,9 @@
 	    }.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	  }
 	  // Check for `exports` after `define` in case a build optimizer adds an `exports` object.
-	  else if (freeExports && freeModule) {
+	  else if (freeModule) {
 	    // Export for Node.js.
-	    if (moduleExports) {
-	      (freeModule.exports = _)._ = _;
-	    }
+	    (freeModule.exports = _)._ = _;
 	    // Export for CommonJS support.
 	    freeExports._ = _;
 	  }
@@ -71334,7 +71903,7 @@
   \***********************************************************/
 /***/ function(module, exports) {
 
-	/*! angular-google-maps 2.3.2 2016-02-11
+	/*! angular-google-maps 2.3.3 2016-05-13
 	 *  AngularJS directives for Google Maps
 	 *  git: https://github.com/angular-ui/angular-google-maps.git
 	 */
@@ -72372,7 +72941,7 @@
 	}).call(this);
 	;(function() {
 	  angular.module('uiGmapgoogle-maps.directives.api.utils').service('uiGmapFitHelper', [
-	    'uiGmapLogger', function($log) {
+	    'uiGmapLogger', '$timeout', function($log, $timeout) {
 	      return {
 	        fit: function(markersOrPoints, gMap) {
 	          var bounds, everSet, key, markerOrPoint, point;
@@ -72390,7 +72959,9 @@
 	              bounds.extend(point);
 	            }
 	            if (everSet) {
-	              return gMap.fitBounds(bounds);
+	              return $timeout(function() {
+	                return gMap.fitBounds(bounds);
+	              });
 	            }
 	          }
 	        }
@@ -72434,7 +73005,9 @@
 	        if (!value) {
 	          return;
 	        }
-	        if (Array.isArray(value) && value.length === 2) {
+	        if (value instanceof google.maps.LatLng) {
+	          return value;
+	        } else if (Array.isArray(value) && value.length === 2) {
 	          return new google.maps.LatLng(value[1], value[0]);
 	        } else if (angular.isDefined(value.type) && value.type === 'Point') {
 	          return new google.maps.LatLng(value.coordinates[1], value.coordinates[0]);
@@ -77406,12 +77979,16 @@
 	          Control.__super__.constructor.call(this);
 	        }
 	
-	        Control.prototype.link = function(scope, element, attrs, ctrl) {
+	        Control.prototype.transclude = true;
+	
+	        Control.prototype.link = function(scope, element, attrs, ctrl, transclude) {
 	          return GoogleMapApi.then((function(_this) {
 	            return function(maps) {
-	              var index, position;
-	              if (angular.isUndefined(scope.template)) {
-	                _this.$log.error('mapControl: could not find a valid template property');
+	              var hasTranscludedContent, index, position, transcludedContent;
+	              transcludedContent = transclude();
+	              hasTranscludedContent = transclude().length > 0;
+	              if (!hasTranscludedContent && angular.isUndefined(scope.template)) {
+	                _this.$log.error('mapControl: could not find a valid template property or elements for transclusion');
 	                return;
 	              }
 	              index = angular.isDefined(scope.index && !isNaN(parseInt(scope.index))) ? parseInt(scope.index) : void 0;
@@ -77421,30 +77998,40 @@
 	                return;
 	              }
 	              return IControl.mapPromise(scope, ctrl).then(function(map) {
-	                var control, controlDiv;
+	                var control, controlDiv, pushControl;
 	                control = void 0;
 	                controlDiv = angular.element('<div></div>');
-	                return $http.get(scope.template, {
-	                  cache: $templateCache
-	                }).success(function(template) {
-	                  var templateCtrl, templateScope;
-	                  templateScope = scope.$new();
-	                  controlDiv.append(template);
-	                  if (angular.isDefined(scope.controller)) {
-	                    templateCtrl = $controller(scope.controller, {
-	                      $scope: templateScope
-	                    });
-	                    controlDiv.children().data('$ngControllerController', templateCtrl);
-	                  }
-	                  control = $compile(controlDiv.children())(templateScope);
+	                pushControl = function(map, control, index) {
 	                  if (index) {
-	                    return control[0].index = index;
+	                    control[0].index = index;
 	                  }
-	                }).error(function(error) {
-	                  return _this.$log.error('mapControl: template could not be found');
-	                }).then(function() {
 	                  return map.controls[google.maps.ControlPosition[position]].push(control[0]);
-	                });
+	                };
+	                if (hasTranscludedContent) {
+	                  return transclude(function(transcludeEl) {
+	                    controlDiv.append(transcludeEl);
+	                    return pushControl(map, controlDiv, index);
+	                  });
+	                } else {
+	                  return $http.get(scope.template, {
+	                    cache: $templateCache
+	                  }).success(function(template) {
+	                    var templateCtrl, templateScope;
+	                    templateScope = scope.$new();
+	                    controlDiv.append(template);
+	                    if (angular.isDefined(scope.controller)) {
+	                      templateCtrl = $controller(scope.controller, {
+	                        $scope: templateScope
+	                      });
+	                      controlDiv.children().data('$ngControllerController', templateCtrl);
+	                    }
+	                    return control = $compile(controlDiv.children())(templateScope);
+	                  }).error(function(error) {
+	                    return _this.$log.error('mapControl: template could not be found');
+	                  }).then(function() {
+	                    return pushControl(map, control, index);
+	                  });
+	                }
 	              });
 	            };
 	          })(this));
@@ -77980,7 +78567,7 @@
 	      };
 	
 	      Map.prototype.link = function(scope, element, attrs) {
-	        var listeners, unbindCenterWatch;
+	        var listeners;
 	        listeners = [];
 	        scope.$on('$destroy', function() {
 	          uiGmapEventsHelper.removeEvents(listeners);
@@ -77990,18 +78577,6 @@
 	          }
 	        });
 	        scope.idleAndZoomChanged = false;
-	        if (scope.center == null) {
-	          unbindCenterWatch = scope.$watch('center', (function(_this) {
-	            return function() {
-	              if (!scope.center) {
-	                return;
-	              }
-	              unbindCenterWatch();
-	              return _this.link(scope, element, attrs);
-	            };
-	          })(this));
-	          return;
-	        }
 	        return uiGmapGoogleMapApi.then((function(_this) {
 	          return function(maps) {
 	            var _gMap, customListeners, disabledEvents, dragging, el, eventName, getEventHandler, mapOptions, maybeHookToEvent, opts, ref, resolveSpawned, settingFromDirective, spawned, type, updateCenter, zoomPromise;
@@ -78015,13 +78590,15 @@
 	                map: _gMap
 	              });
 	            };
-	            if (!_this.validateCoords(scope.center)) {
-	              $log.error('angular-google-maps: could not find a valid center property');
+	            if (!angular.isDefined(scope.center) && !angular.isDefined(scope.bounds)) {
+	              $log.error('angular-google-maps: a center or bounds property is required');
 	              return;
 	            }
+	            if (!angular.isDefined(scope.center)) {
+	              scope.center = new google.maps.LatLngBounds(_this.getCoords(scope.bounds.southwest), _this.getCoords(scope.bounds.northeast)).getCenter();
+	            }
 	            if (!angular.isDefined(scope.zoom)) {
-	              $log.error('angular-google-maps: map zoom property not set');
-	              return;
+	              scope.zoom = 10;
 	            }
 	            el = angular.element(element);
 	            el.addClass('angular-google-map');
@@ -78100,16 +78677,6 @@
 	                  s = scope;
 	                }
 	                if (_.includes(disabledEvents, 'center')) {
-	                  return;
-	                }
-	                if (angular.isDefined(s.center.type)) {
-	                  if (s.center.coordinates[1] !== c.lat()) {
-	                    s.center.coordinates[1] = c.lat();
-	                  }
-	                  if (s.center.coordinates[0] !== c.lng()) {
-	                    return s.center.coordinates[0] = c.lng();
-	                  }
-	                } else {
 	                  if (s.center.latitude !== c.lat()) {
 	                    s.center.latitude = c.lat();
 	                  }
@@ -79527,32 +80094,23 @@
 	      //BEGIN REPLACE
 	      /* istanbul ignore next */
 	      +function(){
-	      /**
-	 * @name InfoBox
-	 * @version 1.1.13 [March 19, 2014]
-	 * @author Gary Little (inspired by proof-of-concept code from Pamela Fox of Google)
-	 * @copyright Copyright 2010 Gary Little [gary at luxcentral.com]
+	      function ClusterIcon(cluster,styles){cluster.getMarkerClusterer().extend(ClusterIcon,google.maps.OverlayView),this.cluster_=cluster,this.className_=cluster.getMarkerClusterer().getClusterClass(),this.styles_=styles,this.center_=null,this.div_=null,this.sums_=null,this.visible_=!1,this.setMap(cluster.getMap())}function Cluster(mc){this.markerClusterer_=mc,this.map_=mc.getMap(),this.gridSize_=mc.getGridSize(),this.minClusterSize_=mc.getMinimumClusterSize(),this.averageCenter_=mc.getAverageCenter(),this.hideLabel_=mc.getHideLabel(),this.markers_=[],this.center_=null,this.bounds_=null,this.clusterIcon_=new ClusterIcon(this,mc.getStyles())}function MarkerClusterer(map,opt_markers,opt_options){this.extend(MarkerClusterer,google.maps.OverlayView),opt_markers=opt_markers||[],opt_options=opt_options||{},this.markers_=[],this.clusters_=[],this.listeners_=[],this.activeMap_=null,this.ready_=!1,this.gridSize_=opt_options.gridSize||60,this.minClusterSize_=opt_options.minimumClusterSize||2,this.maxZoom_=opt_options.maxZoom||null,this.styles_=opt_options.styles||[],this.title_=opt_options.title||"",this.zoomOnClick_=!0,void 0!==opt_options.zoomOnClick&&(this.zoomOnClick_=opt_options.zoomOnClick),this.averageCenter_=!1,void 0!==opt_options.averageCenter&&(this.averageCenter_=opt_options.averageCenter),this.ignoreHidden_=!1,void 0!==opt_options.ignoreHidden&&(this.ignoreHidden_=opt_options.ignoreHidden),this.enableRetinaIcons_=!1,void 0!==opt_options.enableRetinaIcons&&(this.enableRetinaIcons_=opt_options.enableRetinaIcons),this.hideLabel_=!1,void 0!==opt_options.hideLabel&&(this.hideLabel_=opt_options.hideLabel),this.imagePath_=opt_options.imagePath||MarkerClusterer.IMAGE_PATH,this.imageExtension_=opt_options.imageExtension||MarkerClusterer.IMAGE_EXTENSION,this.imageSizes_=opt_options.imageSizes||MarkerClusterer.IMAGE_SIZES,this.calculator_=opt_options.calculator||MarkerClusterer.CALCULATOR,this.batchSize_=opt_options.batchSize||MarkerClusterer.BATCH_SIZE,this.batchSizeIE_=opt_options.batchSizeIE||MarkerClusterer.BATCH_SIZE_IE,this.clusterClass_=opt_options.clusterClass||"cluster",-1!==navigator.userAgent.toLowerCase().indexOf("msie")&&(this.batchSize_=this.batchSizeIE_),this.setupStyles_(),this.addMarkers(opt_markers,!0),this.setMap(map)}ClusterIcon.prototype.onAdd=function(){var cMouseDownInCluster,cDraggingMapByCluster,cClusterIcon=this;this.div_=document.createElement("div"),this.div_.className=this.className_,this.visible_&&this.show(),this.getPanes().overlayMouseTarget.appendChild(this.div_),this.boundsChangedListener_=google.maps.event.addListener(this.getMap(),"bounds_changed",function(){cDraggingMapByCluster=cMouseDownInCluster}),google.maps.event.addDomListener(this.div_,"mousedown",function(){cMouseDownInCluster=!0,cDraggingMapByCluster=!1}),google.maps.event.addDomListener(this.div_,"click",function(e){if(cMouseDownInCluster=!1,!cDraggingMapByCluster){var theBounds,mz,mc=cClusterIcon.cluster_.getMarkerClusterer();google.maps.event.trigger(mc,"click",cClusterIcon.cluster_),google.maps.event.trigger(mc,"clusterclick",cClusterIcon.cluster_),mc.getZoomOnClick()&&(mz=mc.getMaxZoom(),theBounds=cClusterIcon.cluster_.getBounds(),mc.getMap().fitBounds(theBounds),setTimeout(function(){mc.getMap().fitBounds(theBounds),null!==mz&&mc.getMap().getZoom()>mz&&mc.getMap().setZoom(mz+1)},100)),e.cancelBubble=!0,e.stopPropagation&&e.stopPropagation()}}),google.maps.event.addDomListener(this.div_,"mouseover",function(){var mc=cClusterIcon.cluster_.getMarkerClusterer();google.maps.event.trigger(mc,"mouseover",cClusterIcon.cluster_)}),google.maps.event.addDomListener(this.div_,"mouseout",function(){var mc=cClusterIcon.cluster_.getMarkerClusterer();google.maps.event.trigger(mc,"mouseout",cClusterIcon.cluster_)})},ClusterIcon.prototype.onRemove=function(){this.div_&&this.div_.parentNode&&(this.hide(),google.maps.event.removeListener(this.boundsChangedListener_),google.maps.event.clearInstanceListeners(this.div_),this.div_.parentNode.removeChild(this.div_),this.div_=null)},ClusterIcon.prototype.draw=function(){if(this.visible_){var pos=this.getPosFromLatLng_(this.center_);this.div_.style.top=pos.y+"px",this.div_.style.left=pos.x+"px"}},ClusterIcon.prototype.hide=function(){this.div_&&(this.div_.style.display="none"),this.visible_=!1},ClusterIcon.prototype.show=function(){if(this.div_){var img="",bp=this.backgroundPosition_.split(" "),spriteH=parseInt(bp[0].trim(),10),spriteV=parseInt(bp[1].trim(),10),pos=this.getPosFromLatLng_(this.center_);this.div_.style.cssText=this.createCss(pos),img="<img src='"+this.url_+"' style='position: absolute; top: "+spriteV+"px; left: "+spriteH+"px; ",img+=this.cluster_.getMarkerClusterer().enableRetinaIcons_?"width: "+this.width_+"px;height: "+this.height_+"px;":"clip: rect("+-1*spriteV+"px, "+(-1*spriteH+this.width_)+"px, "+(-1*spriteV+this.height_)+"px, "+-1*spriteH+"px);",img+="'>",this.div_.innerHTML=img+"<div style='position: absolute;top: "+this.anchorText_[0]+"px;left: "+this.anchorText_[1]+"px;color: "+this.textColor_+";font-size: "+this.textSize_+"px;font-family: "+this.fontFamily_+";font-weight: "+this.fontWeight_+";font-style: "+this.fontStyle_+";text-decoration: "+this.textDecoration_+";text-align: center;width: "+this.width_+"px;line-height:"+this.height_+"px;'>"+(this.cluster_.hideLabel_?" ":this.sums_.text)+"</div>",this.div_.title="undefined"==typeof this.sums_.title||""===this.sums_.title?this.cluster_.getMarkerClusterer().getTitle():this.sums_.title,this.div_.style.display=""}this.visible_=!0},ClusterIcon.prototype.useStyle=function(sums){this.sums_=sums;var index=Math.max(0,sums.index-1);index=Math.min(this.styles_.length-1,index);var style=this.styles_[index];this.url_=style.url,this.height_=style.height,this.width_=style.width,this.anchorText_=style.anchorText||[0,0],this.anchorIcon_=style.anchorIcon||[parseInt(this.height_/2,10),parseInt(this.width_/2,10)],this.textColor_=style.textColor||"black",this.textSize_=style.textSize||11,this.textDecoration_=style.textDecoration||"none",this.fontWeight_=style.fontWeight||"bold",this.fontStyle_=style.fontStyle||"normal",this.fontFamily_=style.fontFamily||"Arial,sans-serif",this.backgroundPosition_=style.backgroundPosition||"0 0"},ClusterIcon.prototype.setCenter=function(center){this.center_=center},ClusterIcon.prototype.createCss=function(pos){var style=[];return style.push("cursor: pointer;"),style.push("position: absolute; top: "+pos.y+"px; left: "+pos.x+"px;"),style.push("width: "+this.width_+"px; height: "+this.height_+"px;"),style.join("")},ClusterIcon.prototype.getPosFromLatLng_=function(latlng){var pos=this.getProjection().fromLatLngToDivPixel(latlng);return pos.x-=this.anchorIcon_[1],pos.y-=this.anchorIcon_[0],pos.x=parseInt(pos.x,10),pos.y=parseInt(pos.y,10),pos},Cluster.prototype.getSize=function(){return this.markers_.length},Cluster.prototype.getMarkers=function(){return this.markers_},Cluster.prototype.getCenter=function(){return this.center_},Cluster.prototype.getMap=function(){return this.map_},Cluster.prototype.getMarkerClusterer=function(){return this.markerClusterer_},Cluster.prototype.getBounds=function(){var i,bounds=new google.maps.LatLngBounds(this.center_,this.center_),markers=this.getMarkers();for(i=0;i<markers.length;i++)bounds.extend(markers[i].getPosition());return bounds},Cluster.prototype.remove=function(){this.clusterIcon_.setMap(null),this.markers_=[],delete this.markers_},Cluster.prototype.addMarker=function(marker){var i,mCount,mz;if(this.isMarkerAlreadyAdded_(marker))return!1;if(this.center_){if(this.averageCenter_){var l=this.markers_.length+1,lat=(this.center_.lat()*(l-1)+marker.getPosition().lat())/l,lng=(this.center_.lng()*(l-1)+marker.getPosition().lng())/l;this.center_=new google.maps.LatLng(lat,lng),this.calculateBounds_()}}else this.center_=marker.getPosition(),this.calculateBounds_();if(marker.isAdded=!0,this.markers_.push(marker),mCount=this.markers_.length,mz=this.markerClusterer_.getMaxZoom(),null!==mz&&this.map_.getZoom()>mz)marker.getMap()!==this.map_&&marker.setMap(this.map_);else if(mCount<this.minClusterSize_)marker.getMap()!==this.map_&&marker.setMap(this.map_);else if(mCount===this.minClusterSize_)for(i=0;mCount>i;i++)this.markers_[i].setMap(null);else marker.setMap(null);return!0},Cluster.prototype.isMarkerInClusterBounds=function(marker){return this.bounds_.contains(marker.getPosition())},Cluster.prototype.calculateBounds_=function(){var bounds=new google.maps.LatLngBounds(this.center_,this.center_);this.bounds_=this.markerClusterer_.getExtendedBounds(bounds)},Cluster.prototype.updateIcon_=function(){var mCount=this.markers_.length,mz=this.markerClusterer_.getMaxZoom();if(null!==mz&&this.map_.getZoom()>mz)return void this.clusterIcon_.hide();if(mCount<this.minClusterSize_)return void this.clusterIcon_.hide();var numStyles=this.markerClusterer_.getStyles().length,sums=this.markerClusterer_.getCalculator()(this.markers_,numStyles);this.clusterIcon_.setCenter(this.center_),this.clusterIcon_.useStyle(sums),this.clusterIcon_.show()},Cluster.prototype.isMarkerAlreadyAdded_=function(marker){for(var i=0,n=this.markers_.length;n>i;i++)if(marker===this.markers_[i])return!0;return!1},MarkerClusterer.prototype.onAdd=function(){var cMarkerClusterer=this;this.activeMap_=this.getMap(),this.ready_=!0,this.repaint(),this.listeners_=[google.maps.event.addListener(this.getMap(),"zoom_changed",function(){cMarkerClusterer.resetViewport_(!1),(this.getZoom()===(this.get("minZoom")||0)||this.getZoom()===this.get("maxZoom"))&&google.maps.event.trigger(this,"idle")}),google.maps.event.addListener(this.getMap(),"idle",function(){cMarkerClusterer.redraw_()})]},MarkerClusterer.prototype.onRemove=function(){var i;for(i=0;i<this.markers_.length;i++)this.markers_[i].getMap()!==this.activeMap_&&this.markers_[i].setMap(this.activeMap_);for(i=0;i<this.clusters_.length;i++)this.clusters_[i].remove();for(this.clusters_=[],i=0;i<this.listeners_.length;i++)google.maps.event.removeListener(this.listeners_[i]);this.listeners_=[],this.activeMap_=null,this.ready_=!1},MarkerClusterer.prototype.draw=function(){},MarkerClusterer.prototype.setupStyles_=function(){var i,size;if(!(this.styles_.length>0))for(i=0;i<this.imageSizes_.length;i++)size=this.imageSizes_[i],this.styles_.push({url:this.imagePath_+(i+1)+"."+this.imageExtension_,height:size,width:size})},MarkerClusterer.prototype.fitMapToMarkers=function(){var i,markers=this.getMarkers(),bounds=new google.maps.LatLngBounds;for(i=0;i<markers.length;i++)bounds.extend(markers[i].getPosition());this.getMap().fitBounds(bounds)},MarkerClusterer.prototype.getGridSize=function(){return this.gridSize_},MarkerClusterer.prototype.setGridSize=function(gridSize){this.gridSize_=gridSize},MarkerClusterer.prototype.getMinimumClusterSize=function(){return this.minClusterSize_},MarkerClusterer.prototype.setMinimumClusterSize=function(minimumClusterSize){this.minClusterSize_=minimumClusterSize},MarkerClusterer.prototype.getMaxZoom=function(){return this.maxZoom_},MarkerClusterer.prototype.setMaxZoom=function(maxZoom){this.maxZoom_=maxZoom},MarkerClusterer.prototype.getStyles=function(){return this.styles_},MarkerClusterer.prototype.setStyles=function(styles){this.styles_=styles},MarkerClusterer.prototype.getTitle=function(){return this.title_},MarkerClusterer.prototype.setTitle=function(title){this.title_=title},MarkerClusterer.prototype.getZoomOnClick=function(){return this.zoomOnClick_},MarkerClusterer.prototype.setZoomOnClick=function(zoomOnClick){this.zoomOnClick_=zoomOnClick},MarkerClusterer.prototype.getAverageCenter=function(){return this.averageCenter_},MarkerClusterer.prototype.setAverageCenter=function(averageCenter){this.averageCenter_=averageCenter},MarkerClusterer.prototype.getIgnoreHidden=function(){return this.ignoreHidden_},MarkerClusterer.prototype.setIgnoreHidden=function(ignoreHidden){this.ignoreHidden_=ignoreHidden},MarkerClusterer.prototype.getEnableRetinaIcons=function(){return this.enableRetinaIcons_},MarkerClusterer.prototype.setEnableRetinaIcons=function(enableRetinaIcons){this.enableRetinaIcons_=enableRetinaIcons},MarkerClusterer.prototype.getImageExtension=function(){return this.imageExtension_},MarkerClusterer.prototype.setImageExtension=function(imageExtension){this.imageExtension_=imageExtension},MarkerClusterer.prototype.getImagePath=function(){return this.imagePath_},MarkerClusterer.prototype.setImagePath=function(imagePath){this.imagePath_=imagePath},MarkerClusterer.prototype.getImageSizes=function(){return this.imageSizes_},MarkerClusterer.prototype.setImageSizes=function(imageSizes){this.imageSizes_=imageSizes},MarkerClusterer.prototype.getCalculator=function(){return this.calculator_},MarkerClusterer.prototype.setCalculator=function(calculator){this.calculator_=calculator},MarkerClusterer.prototype.setHideLabel=function(hideLabel){this.hideLabel_=hideLabel},MarkerClusterer.prototype.getHideLabel=function(){return this.hideLabel_},MarkerClusterer.prototype.getBatchSizeIE=function(){return this.batchSizeIE_},MarkerClusterer.prototype.setBatchSizeIE=function(batchSizeIE){this.batchSizeIE_=batchSizeIE},MarkerClusterer.prototype.getClusterClass=function(){return this.clusterClass_},MarkerClusterer.prototype.setClusterClass=function(clusterClass){this.clusterClass_=clusterClass},MarkerClusterer.prototype.getMarkers=function(){return this.markers_},MarkerClusterer.prototype.getTotalMarkers=function(){return this.markers_.length},MarkerClusterer.prototype.getClusters=function(){return this.clusters_},MarkerClusterer.prototype.getTotalClusters=function(){return this.clusters_.length},MarkerClusterer.prototype.addMarker=function(marker,opt_nodraw){this.pushMarkerTo_(marker),opt_nodraw||this.redraw_()},MarkerClusterer.prototype.addMarkers=function(markers,opt_nodraw){var key;for(key in markers)markers.hasOwnProperty(key)&&this.pushMarkerTo_(markers[key]);opt_nodraw||this.redraw_()},MarkerClusterer.prototype.pushMarkerTo_=function(marker){if(marker.getDraggable()){var cMarkerClusterer=this;google.maps.event.addListener(marker,"dragend",function(){cMarkerClusterer.ready_&&(this.isAdded=!1,cMarkerClusterer.repaint())})}marker.isAdded=!1,this.markers_.push(marker)},MarkerClusterer.prototype.removeMarker=function(marker,opt_nodraw,opt_noMapRemove){var removeFromMap=!0&&!opt_noMapRemove,removed=this.removeMarker_(marker,removeFromMap);return!opt_nodraw&&removed&&this.repaint(),removed},MarkerClusterer.prototype.removeMarkers=function(markers,opt_nodraw,opt_noMapRemove){var i,r,removed=!1,removeFromMap=!0&&!opt_noMapRemove;for(i=0;i<markers.length;i++)r=this.removeMarker_(markers[i],removeFromMap),removed=removed||r;return!opt_nodraw&&removed&&this.repaint(),removed},MarkerClusterer.prototype.removeMarker_=function(marker,removeFromMap){var i,index=-1;if(this.markers_.indexOf)index=this.markers_.indexOf(marker);else for(i=0;i<this.markers_.length;i++)if(marker===this.markers_[i]){index=i;break}return-1===index?!1:(removeFromMap&&marker.setMap(null),this.markers_.splice(index,1),!0)},MarkerClusterer.prototype.clearMarkers=function(){this.resetViewport_(!0),this.markers_=[]},MarkerClusterer.prototype.repaint=function(){var oldClusters=this.clusters_.slice();this.clusters_=[],this.resetViewport_(!1),this.redraw_(),setTimeout(function(){var i;for(i=0;i<oldClusters.length;i++)oldClusters[i].remove()},0)},MarkerClusterer.prototype.getExtendedBounds=function(bounds){var projection=this.getProjection(),tr=new google.maps.LatLng(bounds.getNorthEast().lat(),bounds.getNorthEast().lng()),bl=new google.maps.LatLng(bounds.getSouthWest().lat(),bounds.getSouthWest().lng()),trPix=projection.fromLatLngToDivPixel(tr);trPix.x+=this.gridSize_,trPix.y-=this.gridSize_;var blPix=projection.fromLatLngToDivPixel(bl);blPix.x-=this.gridSize_,blPix.y+=this.gridSize_;var ne=projection.fromDivPixelToLatLng(trPix),sw=projection.fromDivPixelToLatLng(blPix);return bounds.extend(ne),bounds.extend(sw),bounds},MarkerClusterer.prototype.redraw_=function(){this.createClusters_(0)},MarkerClusterer.prototype.resetViewport_=function(opt_hide){var i,marker;for(i=0;i<this.clusters_.length;i++)this.clusters_[i].remove();for(this.clusters_=[],i=0;i<this.markers_.length;i++)marker=this.markers_[i],marker.isAdded=!1,opt_hide&&marker.setMap(null)},MarkerClusterer.prototype.distanceBetweenPoints_=function(p1,p2){var R=6371,dLat=(p2.lat()-p1.lat())*Math.PI/180,dLon=(p2.lng()-p1.lng())*Math.PI/180,a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(p1.lat()*Math.PI/180)*Math.cos(p2.lat()*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2),c=2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)),d=R*c;return d},MarkerClusterer.prototype.isMarkerInBounds_=function(marker,bounds){return bounds.contains(marker.getPosition())},MarkerClusterer.prototype.addToClosestCluster_=function(marker){var i,d,cluster,center,distance=4e4,clusterToAddTo=null;for(i=0;i<this.clusters_.length;i++)cluster=this.clusters_[i],center=cluster.getCenter(),center&&(d=this.distanceBetweenPoints_(center,marker.getPosition()),distance>d&&(distance=d,clusterToAddTo=cluster));clusterToAddTo&&clusterToAddTo.isMarkerInClusterBounds(marker)?clusterToAddTo.addMarker(marker):(cluster=new Cluster(this),cluster.addMarker(marker),this.clusters_.push(cluster))},MarkerClusterer.prototype.createClusters_=function(iFirst){var i,marker,mapBounds,cMarkerClusterer=this;if(this.ready_){0===iFirst&&(google.maps.event.trigger(this,"clusteringbegin",this),"undefined"!=typeof this.timerRefStatic&&(clearTimeout(this.timerRefStatic),delete this.timerRefStatic)),mapBounds=this.getMap().getZoom()>3?new google.maps.LatLngBounds(this.getMap().getBounds().getSouthWest(),this.getMap().getBounds().getNorthEast()):new google.maps.LatLngBounds(new google.maps.LatLng(85.02070771743472,-178.48388434375),new google.maps.LatLng(-85.08136444384544,178.00048865625));var bounds=this.getExtendedBounds(mapBounds),iLast=Math.min(iFirst+this.batchSize_,this.markers_.length);for(i=iFirst;iLast>i;i++)marker=this.markers_[i],!marker.isAdded&&this.isMarkerInBounds_(marker,bounds)&&(!this.ignoreHidden_||this.ignoreHidden_&&marker.getVisible())&&this.addToClosestCluster_(marker);if(iLast<this.markers_.length)this.timerRefStatic=setTimeout(function(){cMarkerClusterer.createClusters_(iLast)},0);else for(delete this.timerRefStatic,google.maps.event.trigger(this,"clusteringend",this),i=0;i<this.clusters_.length;i++)this.clusters_[i].updateIcon_()}},MarkerClusterer.prototype.extend=function(obj1,obj2){return function(object){var property;for(property in object.prototype)this.prototype[property]=object.prototype[property];return this}.apply(obj1,[obj2])},MarkerClusterer.CALCULATOR=function(markers,numStyles){for(var index=0,title="",count=markers.length.toString(),dv=count;0!==dv;)dv=parseInt(dv/10,10),index++;return index=Math.min(index,numStyles),{text:count,index:index,title:title}},MarkerClusterer.BATCH_SIZE=2e3,MarkerClusterer.BATCH_SIZE_IE=500,MarkerClusterer.IMAGE_PATH="//cdn.rawgit.com/mahnunchik/markerclustererplus/master/images/m",MarkerClusterer.IMAGE_EXTENSION="png",MarkerClusterer.IMAGE_SIZES=[53,56,66,78,90],"function"!=typeof String.prototype.trim&&(String.prototype.trim=function(){return this.replace(/^\s+|\s+$/g,"")});
+	/**
+	 *  google-maps-utility-library-v3-infobox
+	 *
+	 * @version: 1.1.14
+	 * @author: Gary Little (inspired by proof-of-concept code from Pamela Fox of Google)
+	 * @contributors: Nicholas McCready
+	 * @date: Fri May 13 2016 16:35:27 GMT-0400 (EDT)
+	 * @license: Apache License 2.0
+	 */
+	/**
 	 * @fileoverview InfoBox extends the Google Maps JavaScript API V3 <tt>OverlayView</tt> class.
 	 *  <p>
 	 *  An InfoBox behaves like a <tt>google.maps.InfoWindow</tt>, but it supports several
 	 *  additional properties for advanced styling. An InfoBox can also be used as a map label.
 	 *  <p>
 	 *  An InfoBox also fires the same events as a <tt>google.maps.InfoWindow</tt>.
-	 */
-	
-	/*!
-	 *
-	 * Licensed under the Apache License, Version 2.0 (the "License");
-	 * you may not use this file except in compliance with the License.
-	 * You may obtain a copy of the License at
-	 *
-	 *       http://www.apache.org/licenses/LICENSE-2.0
-	 *
-	 * Unless required by applicable law or agreed to in writing, software
-	 * distributed under the License is distributed on an "AS IS" BASIS,
-	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	 * See the License for the specific language governing permissions and
-	 * limitations under the License.
 	 */
 	
 	/*jslint browser:true */
@@ -79747,7 +80305,7 @@
 	
 	        this.eventListeners_.push(google.maps.event.addDomListener(this.div_, events[i], cancelHandler));
 	      }
-	      
+	
 	      // Workaround for Google bug that causes the cursor to change to a pointer
 	      // when the mouse moves over a marker underneath InfoBox.
 	      this.eventListeners_.push(google.maps.event.addDomListener(this.div_, "mouseover", function (e) {
@@ -80013,7 +80571,7 @@
 	  var pixPosition = this.getProjection().fromLatLngToDivPixel(this.position_);
 	
 	  this.div_.style.left = (pixPosition.x + this.pixelOffset_.width) + "px";
-	  
+	
 	  if (this.alignBottom_) {
 	    this.div_.style.bottom = -(pixPosition.y + this.pixelOffset_.height) + "px";
 	  } else {
@@ -80322,7 +80880,7 @@
 	  }
 	
 	  if (this.eventListeners_) {
-	    
+	
 	    for (i = 0; i < this.eventListeners_.length; i++) {
 	
 	      google.maps.event.removeListener(this.eventListeners_[i]);
@@ -80346,9 +80904,15 @@
 	};
 	
 	/**
-	 * @name KeyDragZoom for V3
-	 * @version 2.0.9 [December 17, 2012] NOT YET RELEASED
+	 *  google-maps-utility-library-v3-keydragzoom
+	 *
+	 * @version: 2.0.9
 	 * @author: Nianwei Liu [nianwei at gmail dot com] & Gary Little [gary at luxcentral dot com]
+	 * @contributors: undefined
+	 * @date: Fri May 13 2016 13:45:18 GMT-0400 (EDT)
+	 * @license: Apache License 2.0
+	 */
+	/**
 	 * @fileoverview This library adds a drag zoom capability to a V3 Google map.
 	 *  When drag zoom is enabled, holding down a designated hot key <code>(shift | ctrl | alt)</code>
 	 *  while dragging a box around an area of interest will zoom the map in to that area when
@@ -80365,20 +80929,6 @@
 	 *  <br>NL: 2009-11-02: added a temp fix for -moz-transform for FF3.5.x using code from Paul Kulchenko (http://notebook.kulchenko.com/maps/gridmove).
 	 *  <br>NL: 2010-02-02: added a fix for IE flickering on divs onmousemove, caused by scroll value when get mouse position.
 	 *  <br>GL: 2010-06-15: added a visual control option.
-	 */
-	/*!
-	 *
-	 * Licensed under the Apache License, Version 2.0 (the "License");
-	 * you may not use this file except in compliance with the License.
-	 * You may obtain a copy of the License at
-	 *
-	 *       http://www.apache.org/licenses/LICENSE-2.0
-	 *
-	 * Unless required by applicable law or agreed to in writing, software
-	 * distributed under the License is distributed on an "AS IS" BASIS,
-	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	 * See the License for the specific language governing permissions and
-	 * limitations under the License.
 	 */
 	(function () {
 	  /*jslint browser:true */
@@ -80759,7 +81309,7 @@
 	    var control;
 	    var image;
 	    var me = this;
-	    
+	
 	    control = document.createElement("div");
 	    control.className = this.visualClass_;
 	    control.style.position = "relative";
@@ -81214,1647 +81764,17 @@
 	    return this.dragZoom_;
 	  };
 	})();
-	/**
-	 * @name MarkerClustererPlus for Google Maps V3
-	 * @version 2.1.1 [November 4, 2013]
-	 * @author Gary Little
-	 * @fileoverview
-	 * The library creates and manages per-zoom-level clusters for large amounts of markers.
-	 * <p>
-	 * This is an enhanced V3 implementation of the
-	 * <a href="http://gmaps-utility-library-dev.googlecode.com/svn/tags/markerclusterer/"
-	 * >V2 MarkerClusterer</a> by Xiaoxi Wu. It is based on the
-	 * <a href="http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerclusterer/"
-	 * >V3 MarkerClusterer</a> port by Luke Mahe. MarkerClustererPlus was created by Gary Little.
-	 * <p>
-	 * v2.0 release: MarkerClustererPlus v2.0 is backward compatible with MarkerClusterer v1.0. It
-	 *  adds support for the <code>ignoreHidden</code>, <code>title</code>, <code>batchSizeIE</code>,
-	 *  and <code>calculator</code> properties as well as support for four more events. It also allows
-	 *  greater control over the styling of the text that appears on the cluster marker. The
-	 *  documentation has been significantly improved and the overall code has been simplified and
-	 *  polished. Very large numbers of markers can now be managed without causing Javascript timeout
-	 *  errors on Internet Explorer. Note that the name of the <code>clusterclick</code> event has been
-	 *  deprecated. The new name is <code>click</code>, so please change your application code now.
-	 */
-	
-	/**
-	 * Licensed under the Apache License, Version 2.0 (the "License");
-	 * you may not use this file except in compliance with the License.
-	 * You may obtain a copy of the License at
-	 *
-	 *     http://www.apache.org/licenses/LICENSE-2.0
-	 *
-	 * Unless required by applicable law or agreed to in writing, software
-	 * distributed under the License is distributed on an "AS IS" BASIS,
-	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	 * See the License for the specific language governing permissions and
-	 * limitations under the License.
-	 */
-	
-	
-	/**
-	 * @name ClusterIconStyle
-	 * @class This class represents the object for values in the <code>styles</code> array passed
-	 *  to the {@link MarkerClusterer} constructor. The element in this array that is used to
-	 *  style the cluster icon is determined by calling the <code>calculator</code> function.
-	 *
-	 * @property {string} url The URL of the cluster icon image file. Required.
-	 * @property {number} height The display height (in pixels) of the cluster icon. Required.
-	 * @property {number} width The display width (in pixels) of the cluster icon. Required.
-	 * @property {Array} [anchorText] The position (in pixels) from the center of the cluster icon to
-	 *  where the text label is to be centered and drawn. The format is <code>[yoffset, xoffset]</code>
-	 *  where <code>yoffset</code> increases as you go down from center and <code>xoffset</code>
-	 *  increases to the right of center. The default is <code>[0, 0]</code>.
-	 * @property {Array} [anchorIcon] The anchor position (in pixels) of the cluster icon. This is the
-	 *  spot on the cluster icon that is to be aligned with the cluster position. The format is
-	 *  <code>[yoffset, xoffset]</code> where <code>yoffset</code> increases as you go down and
-	 *  <code>xoffset</code> increases to the right of the top-left corner of the icon. The default
-	 *  anchor position is the center of the cluster icon.
-	 * @property {string} [textColor="black"] The color of the label text shown on the
-	 *  cluster icon.
-	 * @property {number} [textSize=11] The size (in pixels) of the label text shown on the
-	 *  cluster icon.
-	 * @property {string} [textDecoration="none"] The value of the CSS <code>text-decoration</code>
-	 *  property for the label text shown on the cluster icon.
-	 * @property {string} [fontWeight="bold"] The value of the CSS <code>font-weight</code>
-	 *  property for the label text shown on the cluster icon.
-	 * @property {string} [fontStyle="normal"] The value of the CSS <code>font-style</code>
-	 *  property for the label text shown on the cluster icon.
-	 * @property {string} [fontFamily="Arial,sans-serif"] The value of the CSS <code>font-family</code>
-	 *  property for the label text shown on the cluster icon.
-	 * @property {string} [backgroundPosition="0 0"] The position of the cluster icon image
-	 *  within the image defined by <code>url</code>. The format is <code>"xpos ypos"</code>
-	 *  (the same format as for the CSS <code>background-position</code> property). You must set
-	 *  this property appropriately when the image defined by <code>url</code> represents a sprite
-	 *  containing multiple images. Note that the position <i>must</i> be specified in px units.
-	 */
-	/**
-	 * @name ClusterIconInfo
-	 * @class This class is an object containing general information about a cluster icon. This is
-	 *  the object that a <code>calculator</code> function returns.
-	 *
-	 * @property {string} text The text of the label to be shown on the cluster icon.
-	 * @property {number} index The index plus 1 of the element in the <code>styles</code>
-	 *  array to be used to style the cluster icon.
-	 * @property {string} title The tooltip to display when the mouse moves over the cluster icon.
-	 *  If this value is <code>undefined</code> or <code>""</code>, <code>title</code> is set to the
-	 *  value of the <code>title</code> property passed to the MarkerClusterer.
-	 */
-	/**
-	 * A cluster icon.
-	 *
-	 * @constructor
-	 * @extends google.maps.OverlayView
-	 * @param {Cluster} cluster The cluster with which the icon is to be associated.
-	 * @param {Array} [styles] An array of {@link ClusterIconStyle} defining the cluster icons
-	 *  to use for various cluster sizes.
-	 * @private
-	 */
-	function ClusterIcon(cluster, styles) {
-	  cluster.getMarkerClusterer().extend(ClusterIcon, google.maps.OverlayView);
-	
-	  this.cluster_ = cluster;
-	  this.className_ = cluster.getMarkerClusterer().getClusterClass();
-	  this.styles_ = styles;
-	  this.center_ = null;
-	  this.div_ = null;
-	  this.sums_ = null;
-	  this.visible_ = false;
-	
-	  this.setMap(cluster.getMap()); // Note: this causes onAdd to be called
-	}
-	
-	
-	/**
-	 * Adds the icon to the DOM.
-	 */
-	ClusterIcon.prototype.onAdd = function () {
-	  var cClusterIcon = this;
-	  var cMouseDownInCluster;
-	  var cDraggingMapByCluster;
-	
-	  this.div_ = document.createElement("div");
-	  this.div_.className = this.className_;
-	  if (this.visible_) {
-	    this.show();
-	  }
-	
-	  this.getPanes().overlayMouseTarget.appendChild(this.div_);
-	
-	  // Fix for Issue 157
-	  this.boundsChangedListener_ = google.maps.event.addListener(this.getMap(), "bounds_changed", function () {
-	    cDraggingMapByCluster = cMouseDownInCluster;
-	  });
-	
-	  google.maps.event.addDomListener(this.div_, "mousedown", function () {
-	    cMouseDownInCluster = true;
-	    cDraggingMapByCluster = false;
-	  });
-	
-	  google.maps.event.addDomListener(this.div_, "click", function (e) {
-	    cMouseDownInCluster = false;
-	    if (!cDraggingMapByCluster) {
-	      var theBounds;
-	      var mz;
-	      var mc = cClusterIcon.cluster_.getMarkerClusterer();
-	      /**
-	       * This event is fired when a cluster marker is clicked.
-	       * @name MarkerClusterer#click
-	       * @param {Cluster} c The cluster that was clicked.
-	       * @event
-	       */
-	      google.maps.event.trigger(mc, "click", cClusterIcon.cluster_);
-	      google.maps.event.trigger(mc, "clusterclick", cClusterIcon.cluster_); // deprecated name
-	
-	      // The default click handler follows. Disable it by setting
-	      // the zoomOnClick property to false.
-	      if (mc.getZoomOnClick()) {
-	        // Zoom into the cluster.
-	        mz = mc.getMaxZoom();
-	        theBounds = cClusterIcon.cluster_.getBounds();
-	        mc.getMap().fitBounds(theBounds);
-	        // There is a fix for Issue 170 here:
-	        setTimeout(function () {
-	          mc.getMap().fitBounds(theBounds);
-	          // Don't zoom beyond the max zoom level
-	          if (mz !== null && (mc.getMap().getZoom() > mz)) {
-	            mc.getMap().setZoom(mz + 1);
-	          }
-	        }, 100);
-	      }
-	
-	      // Prevent event propagation to the map:
-	      e.cancelBubble = true;
-	      if (e.stopPropagation) {
-	        e.stopPropagation();
-	      }
-	    }
-	  });
-	
-	  google.maps.event.addDomListener(this.div_, "mouseover", function () {
-	    var mc = cClusterIcon.cluster_.getMarkerClusterer();
-	    /**
-	     * This event is fired when the mouse moves over a cluster marker.
-	     * @name MarkerClusterer#mouseover
-	     * @param {Cluster} c The cluster that the mouse moved over.
-	     * @event
-	     */
-	    google.maps.event.trigger(mc, "mouseover", cClusterIcon.cluster_);
-	  });
-	
-	  google.maps.event.addDomListener(this.div_, "mouseout", function () {
-	    var mc = cClusterIcon.cluster_.getMarkerClusterer();
-	    /**
-	     * This event is fired when the mouse moves out of a cluster marker.
-	     * @name MarkerClusterer#mouseout
-	     * @param {Cluster} c The cluster that the mouse moved out of.
-	     * @event
-	     */
-	    google.maps.event.trigger(mc, "mouseout", cClusterIcon.cluster_);
-	  });
-	};
-	
-	
-	/**
-	 * Removes the icon from the DOM.
-	 */
-	ClusterIcon.prototype.onRemove = function () {
-	  if (this.div_ && this.div_.parentNode) {
-	    this.hide();
-	    google.maps.event.removeListener(this.boundsChangedListener_);
-	    google.maps.event.clearInstanceListeners(this.div_);
-	    this.div_.parentNode.removeChild(this.div_);
-	    this.div_ = null;
-	  }
-	};
-	
-	
-	/**
-	 * Draws the icon.
-	 */
-	ClusterIcon.prototype.draw = function () {
-	  if (this.visible_) {
-	    var pos = this.getPosFromLatLng_(this.center_);
-	    this.div_.style.top = pos.y + "px";
-	    this.div_.style.left = pos.x + "px";
-	  }
-	};
-	
-	
-	/**
-	 * Hides the icon.
-	 */
-	ClusterIcon.prototype.hide = function () {
-	  if (this.div_) {
-	    this.div_.style.display = "none";
-	  }
-	  this.visible_ = false;
-	};
-	
-	
-	/**
-	 * Positions and shows the icon.
-	 */
-	ClusterIcon.prototype.show = function () {
-	  if (this.div_) {
-	    var img = "";
-	    // NOTE: values must be specified in px units
-	    var bp = this.backgroundPosition_.split(" ");
-	    var spriteH = parseInt(bp[0].trim(), 10);
-	    var spriteV = parseInt(bp[1].trim(), 10);
-	    var pos = this.getPosFromLatLng_(this.center_);
-	    this.div_.style.cssText = this.createCss(pos);
-	    img = "<img src='" + this.url_ + "' style='position: absolute; top: " + spriteV + "px; left: " + spriteH + "px; ";
-	    if (!this.cluster_.getMarkerClusterer().enableRetinaIcons_) {
-	      img += "clip: rect(" + (-1 * spriteV) + "px, " + ((-1 * spriteH) + this.width_) + "px, " +
-	          ((-1 * spriteV) + this.height_) + "px, " + (-1 * spriteH) + "px);";
-	    }
-	    img += "'>";
-	    this.div_.innerHTML = img + "<div style='" +
-	        "position: absolute;" +
-	        "top: " + this.anchorText_[0] + "px;" +
-	        "left: " + this.anchorText_[1] + "px;" +
-	        "color: " + this.textColor_ + ";" +
-	        "font-size: " + this.textSize_ + "px;" +
-	        "font-family: " + this.fontFamily_ + ";" +
-	        "font-weight: " + this.fontWeight_ + ";" +
-	        "font-style: " + this.fontStyle_ + ";" +
-	        "text-decoration: " + this.textDecoration_ + ";" +
-	        "text-align: center;" +
-	        "width: " + this.width_ + "px;" +
-	        "line-height:" + this.height_ + "px;" +
-	        "'>" + this.sums_.text + "</div>";
-	    if (typeof this.sums_.title === "undefined" || this.sums_.title === "") {
-	      this.div_.title = this.cluster_.getMarkerClusterer().getTitle();
-	    } else {
-	      this.div_.title = this.sums_.title;
-	    }
-	    this.div_.style.display = "";
-	  }
-	  this.visible_ = true;
-	};
-	
-	
-	/**
-	 * Sets the icon styles to the appropriate element in the styles array.
-	 *
-	 * @param {ClusterIconInfo} sums The icon label text and styles index.
-	 */
-	ClusterIcon.prototype.useStyle = function (sums) {
-	  this.sums_ = sums;
-	  var index = Math.max(0, sums.index - 1);
-	  index = Math.min(this.styles_.length - 1, index);
-	  var style = this.styles_[index];
-	  this.url_ = style.url;
-	  this.height_ = style.height;
-	  this.width_ = style.width;
-	  this.anchorText_ = style.anchorText || [0, 0];
-	  this.anchorIcon_ = style.anchorIcon || [parseInt(this.height_ / 2, 10), parseInt(this.width_ / 2, 10)];
-	  this.textColor_ = style.textColor || "black";
-	  this.textSize_ = style.textSize || 11;
-	  this.textDecoration_ = style.textDecoration || "none";
-	  this.fontWeight_ = style.fontWeight || "bold";
-	  this.fontStyle_ = style.fontStyle || "normal";
-	  this.fontFamily_ = style.fontFamily || "Arial,sans-serif";
-	  this.backgroundPosition_ = style.backgroundPosition || "0 0";
-	};
-	
-	
-	/**
-	 * Sets the position at which to center the icon.
-	 *
-	 * @param {google.maps.LatLng} center The latlng to set as the center.
-	 */
-	ClusterIcon.prototype.setCenter = function (center) {
-	  this.center_ = center;
-	};
-	
-	
-	/**
-	 * Creates the cssText style parameter based on the position of the icon.
-	 *
-	 * @param {google.maps.Point} pos The position of the icon.
-	 * @return {string} The CSS style text.
-	 */
-	ClusterIcon.prototype.createCss = function (pos) {
-	  var style = [];
-	  style.push("cursor: pointer;");
-	  style.push("position: absolute; top: " + pos.y + "px; left: " + pos.x + "px;");
-	  style.push("width: " + this.width_ + "px; height: " + this.height_ + "px;");
-	  return style.join("");
-	};
-	
-	
-	/**
-	 * Returns the position at which to place the DIV depending on the latlng.
-	 *
-	 * @param {google.maps.LatLng} latlng The position in latlng.
-	 * @return {google.maps.Point} The position in pixels.
-	 */
-	ClusterIcon.prototype.getPosFromLatLng_ = function (latlng) {
-	  var pos = this.getProjection().fromLatLngToDivPixel(latlng);
-	  pos.x -= this.anchorIcon_[1];
-	  pos.y -= this.anchorIcon_[0];
-	  pos.x = parseInt(pos.x, 10);
-	  pos.y = parseInt(pos.y, 10);
-	  return pos;
-	};
-	
-	
-	/**
-	 * Creates a single cluster that manages a group of proximate markers.
-	 *  Used internally, do not call this constructor directly.
-	 * @constructor
-	 * @param {MarkerClusterer} mc The <code>MarkerClusterer</code> object with which this
-	 *  cluster is associated.
-	 */
-	function Cluster(mc) {
-	  this.markerClusterer_ = mc;
-	  this.map_ = mc.getMap();
-	  this.gridSize_ = mc.getGridSize();
-	  this.minClusterSize_ = mc.getMinimumClusterSize();
-	  this.averageCenter_ = mc.getAverageCenter();
-	  this.markers_ = [];
-	  this.center_ = null;
-	  this.bounds_ = null;
-	  this.clusterIcon_ = new ClusterIcon(this, mc.getStyles());
-	}
-	
-	
-	/**
-	 * Returns the number of markers managed by the cluster. You can call this from
-	 * a <code>click</code>, <code>mouseover</code>, or <code>mouseout</code> event handler
-	 * for the <code>MarkerClusterer</code> object.
-	 *
-	 * @return {number} The number of markers in the cluster.
-	 */
-	Cluster.prototype.getSize = function () {
-	  return this.markers_.length;
-	};
-	
-	
-	/**
-	 * Returns the array of markers managed by the cluster. You can call this from
-	 * a <code>click</code>, <code>mouseover</code>, or <code>mouseout</code> event handler
-	 * for the <code>MarkerClusterer</code> object.
-	 *
-	 * @return {Array} The array of markers in the cluster.
-	 */
-	Cluster.prototype.getMarkers = function () {
-	  return this.markers_;
-	};
-	
-	
-	/**
-	 * Returns the center of the cluster. You can call this from
-	 * a <code>click</code>, <code>mouseover</code>, or <code>mouseout</code> event handler
-	 * for the <code>MarkerClusterer</code> object.
-	 *
-	 * @return {google.maps.LatLng} The center of the cluster.
-	 */
-	Cluster.prototype.getCenter = function () {
-	  return this.center_;
-	};
-	
-	
-	/**
-	 * Returns the map with which the cluster is associated.
-	 *
-	 * @return {google.maps.Map} The map.
-	 * @ignore
-	 */
-	Cluster.prototype.getMap = function () {
-	  return this.map_;
-	};
-	
-	
-	/**
-	 * Returns the <code>MarkerClusterer</code> object with which the cluster is associated.
-	 *
-	 * @return {MarkerClusterer} The associated marker clusterer.
-	 * @ignore
-	 */
-	Cluster.prototype.getMarkerClusterer = function () {
-	  return this.markerClusterer_;
-	};
-	
-	
-	/**
-	 * Returns the bounds of the cluster.
-	 *
-	 * @return {google.maps.LatLngBounds} the cluster bounds.
-	 * @ignore
-	 */
-	Cluster.prototype.getBounds = function () {
-	  var i;
-	  var bounds = new google.maps.LatLngBounds(this.center_, this.center_);
-	  var markers = this.getMarkers();
-	  for (i = 0; i < markers.length; i++) {
-	    bounds.extend(markers[i].getPosition());
-	  }
-	  return bounds;
-	};
-	
-	
-	/**
-	 * Removes the cluster from the map.
-	 *
-	 * @ignore
-	 */
-	Cluster.prototype.remove = function () {
-	  this.clusterIcon_.setMap(null);
-	  this.markers_ = [];
-	  delete this.markers_;
-	};
-	
-	
-	/**
-	 * Adds a marker to the cluster.
-	 *
-	 * @param {google.maps.Marker} marker The marker to be added.
-	 * @return {boolean} True if the marker was added.
-	 * @ignore
-	 */
-	Cluster.prototype.addMarker = function (marker) {
-	  var i;
-	  var mCount;
-	  var mz;
-	
-	  if (this.isMarkerAlreadyAdded_(marker)) {
-	    return false;
-	  }
-	
-	  if (!this.center_) {
-	    this.center_ = marker.getPosition();
-	    this.calculateBounds_();
-	  } else {
-	    if (this.averageCenter_) {
-	      var l = this.markers_.length + 1;
-	      var lat = (this.center_.lat() * (l - 1) + marker.getPosition().lat()) / l;
-	      var lng = (this.center_.lng() * (l - 1) + marker.getPosition().lng()) / l;
-	      this.center_ = new google.maps.LatLng(lat, lng);
-	      this.calculateBounds_();
-	    }
-	  }
-	
-	  marker.isAdded = true;
-	  this.markers_.push(marker);
-	
-	  mCount = this.markers_.length;
-	  mz = this.markerClusterer_.getMaxZoom();
-	  if (mz !== null && this.map_.getZoom() > mz) {
-	    // Zoomed in past max zoom, so show the marker.
-	    if (marker.getMap() !== this.map_) {
-	      marker.setMap(this.map_);
-	    }
-	  } else if (mCount < this.minClusterSize_) {
-	    // Min cluster size not reached so show the marker.
-	    if (marker.getMap() !== this.map_) {
-	      marker.setMap(this.map_);
-	    }
-	  } else if (mCount === this.minClusterSize_) {
-	    // Hide the markers that were showing.
-	    for (i = 0; i < mCount; i++) {
-	      this.markers_[i].setMap(null);
-	    }
-	  } else {
-	    marker.setMap(null);
-	  }
-	
-	  this.updateIcon_();
-	  return true;
-	};
-	
-	
-	/**
-	 * Determines if a marker lies within the cluster's bounds.
-	 *
-	 * @param {google.maps.Marker} marker The marker to check.
-	 * @return {boolean} True if the marker lies in the bounds.
-	 * @ignore
-	 */
-	Cluster.prototype.isMarkerInClusterBounds = function (marker) {
-	  return this.bounds_.contains(marker.getPosition());
-	};
-	
-	
-	/**
-	 * Calculates the extended bounds of the cluster with the grid.
-	 */
-	Cluster.prototype.calculateBounds_ = function () {
-	  var bounds = new google.maps.LatLngBounds(this.center_, this.center_);
-	  this.bounds_ = this.markerClusterer_.getExtendedBounds(bounds);
-	};
-	
-	
-	/**
-	 * Updates the cluster icon.
-	 */
-	Cluster.prototype.updateIcon_ = function () {
-	  var mCount = this.markers_.length;
-	  var mz = this.markerClusterer_.getMaxZoom();
-	
-	  if (mz !== null && this.map_.getZoom() > mz) {
-	    this.clusterIcon_.hide();
-	    return;
-	  }
-	
-	  if (mCount < this.minClusterSize_) {
-	    // Min cluster size not yet reached.
-	    this.clusterIcon_.hide();
-	    return;
-	  }
-	
-	  var numStyles = this.markerClusterer_.getStyles().length;
-	  var sums = this.markerClusterer_.getCalculator()(this.markers_, numStyles);
-	  this.clusterIcon_.setCenter(this.center_);
-	  this.clusterIcon_.useStyle(sums);
-	  this.clusterIcon_.show();
-	};
-	
-	
-	/**
-	 * Determines if a marker has already been added to the cluster.
-	 *
-	 * @param {google.maps.Marker} marker The marker to check.
-	 * @return {boolean} True if the marker has already been added.
-	 */
-	Cluster.prototype.isMarkerAlreadyAdded_ = function (marker) {
-	  var i;
-	  if (this.markers_.indexOf) {
-	    return this.markers_.indexOf(marker) !== -1;
-	  } else {
-	    for (i = 0; i < this.markers_.length; i++) {
-	      if (marker === this.markers_[i]) {
-	        return true;
-	      }
-	    }
-	  }
-	  return false;
-	};
-	
-	
-	/**
-	 * @name MarkerClustererOptions
-	 * @class This class represents the optional parameter passed to
-	 *  the {@link MarkerClusterer} constructor.
-	 * @property {number} [gridSize=60] The grid size of a cluster in pixels. The grid is a square.
-	 * @property {number} [maxZoom=null] The maximum zoom level at which clustering is enabled or
-	 *  <code>null</code> if clustering is to be enabled at all zoom levels.
-	 * @property {boolean} [zoomOnClick=true] Whether to zoom the map when a cluster marker is
-	 *  clicked. You may want to set this to <code>false</code> if you have installed a handler
-	 *  for the <code>click</code> event and it deals with zooming on its own.
-	 * @property {boolean} [averageCenter=false] Whether the position of a cluster marker should be
-	 *  the average position of all markers in the cluster. If set to <code>false</code>, the
-	 *  cluster marker is positioned at the location of the first marker added to the cluster.
-	 * @property {number} [minimumClusterSize=2] The minimum number of markers needed in a cluster
-	 *  before the markers are hidden and a cluster marker appears.
-	 * @property {boolean} [ignoreHidden=false] Whether to ignore hidden markers in clusters. You
-	 *  may want to set this to <code>true</code> to ensure that hidden markers are not included
-	 *  in the marker count that appears on a cluster marker (this count is the value of the
-	 *  <code>text</code> property of the result returned by the default <code>calculator</code>).
-	 *  If set to <code>true</code> and you change the visibility of a marker being clustered, be
-	 *  sure to also call <code>MarkerClusterer.repaint()</code>.
-	 * @property {string} [title=""] The tooltip to display when the mouse moves over a cluster
-	 *  marker. (Alternatively, you can use a custom <code>calculator</code> function to specify a
-	 *  different tooltip for each cluster marker.)
-	 * @property {function} [calculator=MarkerClusterer.CALCULATOR] The function used to determine
-	 *  the text to be displayed on a cluster marker and the index indicating which style to use
-	 *  for the cluster marker. The input parameters for the function are (1) the array of markers
-	 *  represented by a cluster marker and (2) the number of cluster icon styles. It returns a
-	 *  {@link ClusterIconInfo} object. The default <code>calculator</code> returns a
-	 *  <code>text</code> property which is the number of markers in the cluster and an
-	 *  <code>index</code> property which is one higher than the lowest integer such that
-	 *  <code>10^i</code> exceeds the number of markers in the cluster, or the size of the styles
-	 *  array, whichever is less. The <code>styles</code> array element used has an index of
-	 *  <code>index</code> minus 1. For example, the default <code>calculator</code> returns a
-	 *  <code>text</code> value of <code>"125"</code> and an <code>index</code> of <code>3</code>
-	 *  for a cluster icon representing 125 markers so the element used in the <code>styles</code>
-	 *  array is <code>2</code>. A <code>calculator</code> may also return a <code>title</code>
-	 *  property that contains the text of the tooltip to be used for the cluster marker. If
-	 *   <code>title</code> is not defined, the tooltip is set to the value of the <code>title</code>
-	 *   property for the MarkerClusterer.
-	 * @property {string} [clusterClass="cluster"] The name of the CSS class defining general styles
-	 *  for the cluster markers. Use this class to define CSS styles that are not set up by the code
-	 *  that processes the <code>styles</code> array.
-	 * @property {Array} [styles] An array of {@link ClusterIconStyle} elements defining the styles
-	 *  of the cluster markers to be used. The element to be used to style a given cluster marker
-	 *  is determined by the function defined by the <code>calculator</code> property.
-	 *  The default is an array of {@link ClusterIconStyle} elements whose properties are derived
-	 *  from the values for <code>imagePath</code>, <code>imageExtension</code>, and
-	 *  <code>imageSizes</code>.
-	 * @property {boolean} [enableRetinaIcons=false] Whether to allow the use of cluster icons that
-	 * have sizes that are some multiple (typically double) of their actual display size. Icons such
-	 * as these look better when viewed on high-resolution monitors such as Apple's Retina displays.
-	 * Note: if this property is <code>true</code>, sprites cannot be used as cluster icons.
-	 * @property {number} [batchSize=MarkerClusterer.BATCH_SIZE] Set this property to the
-	 *  number of markers to be processed in a single batch when using a browser other than
-	 *  Internet Explorer (for Internet Explorer, use the batchSizeIE property instead).
-	 * @property {number} [batchSizeIE=MarkerClusterer.BATCH_SIZE_IE] When Internet Explorer is
-	 *  being used, markers are processed in several batches with a small delay inserted between
-	 *  each batch in an attempt to avoid Javascript timeout errors. Set this property to the
-	 *  number of markers to be processed in a single batch; select as high a number as you can
-	 *  without causing a timeout error in the browser. This number might need to be as low as 100
-	 *  if 15,000 markers are being managed, for example.
-	 * @property {string} [imagePath=MarkerClusterer.IMAGE_PATH]
-	 *  The full URL of the root name of the group of image files to use for cluster icons.
-	 *  The complete file name is of the form <code>imagePath</code>n.<code>imageExtension</code>
-	 *  where n is the image file number (1, 2, etc.).
-	 * @property {string} [imageExtension=MarkerClusterer.IMAGE_EXTENSION]
-	 *  The extension name for the cluster icon image files (e.g., <code>"png"</code> or
-	 *  <code>"jpg"</code>).
-	 * @property {Array} [imageSizes=MarkerClusterer.IMAGE_SIZES]
-	 *  An array of numbers containing the widths of the group of
-	 *  <code>imagePath</code>n.<code>imageExtension</code> image files.
-	 *  (The images are assumed to be square.)
-	 */
-	/**
-	 * Creates a MarkerClusterer object with the options specified in {@link MarkerClustererOptions}.
-	 * @constructor
-	 * @extends google.maps.OverlayView
-	 * @param {google.maps.Map} map The Google map to attach to.
-	 * @param {Array.<google.maps.Marker>} [opt_markers] The markers to be added to the cluster.
-	 * @param {MarkerClustererOptions} [opt_options] The optional parameters.
-	 */
-	function MarkerClusterer(map, opt_markers, opt_options) {
-	  // MarkerClusterer implements google.maps.OverlayView interface. We use the
-	  // extend function to extend MarkerClusterer with google.maps.OverlayView
-	  // because it might not always be available when the code is defined so we
-	  // look for it at the last possible moment. If it doesn't exist now then
-	  // there is no point going ahead :)
-	  this.extend(MarkerClusterer, google.maps.OverlayView);
-	
-	  opt_markers = opt_markers || [];
-	  opt_options = opt_options || {};
-	
-	  this.markers_ = [];
-	  this.clusters_ = [];
-	  this.listeners_ = [];
-	  this.activeMap_ = null;
-	  this.ready_ = false;
-	
-	  this.gridSize_ = opt_options.gridSize || 60;
-	  this.minClusterSize_ = opt_options.minimumClusterSize || 2;
-	  this.maxZoom_ = opt_options.maxZoom || null;
-	  this.styles_ = opt_options.styles || [];
-	  this.title_ = opt_options.title || "";
-	  this.zoomOnClick_ = true;
-	  if (opt_options.zoomOnClick !== undefined) {
-	    this.zoomOnClick_ = opt_options.zoomOnClick;
-	  }
-	  this.averageCenter_ = false;
-	  if (opt_options.averageCenter !== undefined) {
-	    this.averageCenter_ = opt_options.averageCenter;
-	  }
-	  this.ignoreHidden_ = false;
-	  if (opt_options.ignoreHidden !== undefined) {
-	    this.ignoreHidden_ = opt_options.ignoreHidden;
-	  }
-	  this.enableRetinaIcons_ = false;
-	  if (opt_options.enableRetinaIcons !== undefined) {
-	    this.enableRetinaIcons_ = opt_options.enableRetinaIcons;
-	  }
-	  this.imagePath_ = opt_options.imagePath || MarkerClusterer.IMAGE_PATH;
-	  this.imageExtension_ = opt_options.imageExtension || MarkerClusterer.IMAGE_EXTENSION;
-	  this.imageSizes_ = opt_options.imageSizes || MarkerClusterer.IMAGE_SIZES;
-	  this.calculator_ = opt_options.calculator || MarkerClusterer.CALCULATOR;
-	  this.batchSize_ = opt_options.batchSize || MarkerClusterer.BATCH_SIZE;
-	  this.batchSizeIE_ = opt_options.batchSizeIE || MarkerClusterer.BATCH_SIZE_IE;
-	  this.clusterClass_ = opt_options.clusterClass || "cluster";
-	
-	  if (navigator.userAgent.toLowerCase().indexOf("msie") !== -1) {
-	    // Try to avoid IE timeout when processing a huge number of markers:
-	    this.batchSize_ = this.batchSizeIE_;
-	  }
-	
-	  this.setupStyles_();
-	
-	  this.addMarkers(opt_markers, true);
-	  this.setMap(map); // Note: this causes onAdd to be called
-	}
-	
-	
-	/**
-	 * Implementation of the onAdd interface method.
-	 * @ignore
-	 */
-	MarkerClusterer.prototype.onAdd = function () {
-	  var cMarkerClusterer = this;
-	
-	  this.activeMap_ = this.getMap();
-	  this.ready_ = true;
-	
-	  this.repaint();
-	
-	  // Add the map event listeners
-	  this.listeners_ = [
-	    google.maps.event.addListener(this.getMap(), "zoom_changed", function () {
-	      cMarkerClusterer.resetViewport_(false);
-	      // Workaround for this Google bug: when map is at level 0 and "-" of
-	      // zoom slider is clicked, a "zoom_changed" event is fired even though
-	      // the map doesn't zoom out any further. In this situation, no "idle"
-	      // event is triggered so the cluster markers that have been removed
-	      // do not get redrawn. Same goes for a zoom in at maxZoom.
-	      if (this.getZoom() === (this.get("minZoom") || 0) || this.getZoom() === this.get("maxZoom")) {
-	        google.maps.event.trigger(this, "idle");
-	      }
-	    }),
-	    google.maps.event.addListener(this.getMap(), "idle", function () {
-	      cMarkerClusterer.redraw_();
-	    })
-	  ];
-	};
-	
-	
-	/**
-	 * Implementation of the onRemove interface method.
-	 * Removes map event listeners and all cluster icons from the DOM.
-	 * All managed markers are also put back on the map.
-	 * @ignore
-	 */
-	MarkerClusterer.prototype.onRemove = function () {
-	  var i;
-	
-	  // Put all the managed markers back on the map:
-	  for (i = 0; i < this.markers_.length; i++) {
-	    if (this.markers_[i].getMap() !== this.activeMap_) {
-	      this.markers_[i].setMap(this.activeMap_);
-	    }
-	  }
-	
-	  // Remove all clusters:
-	  for (i = 0; i < this.clusters_.length; i++) {
-	    this.clusters_[i].remove();
-	  }
-	  this.clusters_ = [];
-	
-	  // Remove map event listeners:
-	  for (i = 0; i < this.listeners_.length; i++) {
-	    google.maps.event.removeListener(this.listeners_[i]);
-	  }
-	  this.listeners_ = [];
-	
-	  this.activeMap_ = null;
-	  this.ready_ = false;
-	};
-	
-	
-	/**
-	 * Implementation of the draw interface method.
-	 * @ignore
-	 */
-	MarkerClusterer.prototype.draw = function () {};
-	
-	
-	/**
-	 * Sets up the styles object.
-	 */
-	MarkerClusterer.prototype.setupStyles_ = function () {
-	  var i, size;
-	  if (this.styles_.length > 0) {
-	    return;
-	  }
-	
-	  for (i = 0; i < this.imageSizes_.length; i++) {
-	    size = this.imageSizes_[i];
-	    this.styles_.push({
-	      url: this.imagePath_ + (i + 1) + "." + this.imageExtension_,
-	      height: size,
-	      width: size
-	    });
-	  }
-	};
-	
-	
-	/**
-	 *  Fits the map to the bounds of the markers managed by the clusterer.
-	 */
-	MarkerClusterer.prototype.fitMapToMarkers = function () {
-	  var i;
-	  var markers = this.getMarkers();
-	  var bounds = new google.maps.LatLngBounds();
-	  for (i = 0; i < markers.length; i++) {
-	    bounds.extend(markers[i].getPosition());
-	  }
-	
-	  this.getMap().fitBounds(bounds);
-	};
-	
-	
-	/**
-	 * Returns the value of the <code>gridSize</code> property.
-	 *
-	 * @return {number} The grid size.
-	 */
-	MarkerClusterer.prototype.getGridSize = function () {
-	  return this.gridSize_;
-	};
-	
-	
-	/**
-	 * Sets the value of the <code>gridSize</code> property.
-	 *
-	 * @param {number} gridSize The grid size.
-	 */
-	MarkerClusterer.prototype.setGridSize = function (gridSize) {
-	  this.gridSize_ = gridSize;
-	};
-	
-	
-	/**
-	 * Returns the value of the <code>minimumClusterSize</code> property.
-	 *
-	 * @return {number} The minimum cluster size.
-	 */
-	MarkerClusterer.prototype.getMinimumClusterSize = function () {
-	  return this.minClusterSize_;
-	};
-	
-	/**
-	 * Sets the value of the <code>minimumClusterSize</code> property.
-	 *
-	 * @param {number} minimumClusterSize The minimum cluster size.
-	 */
-	MarkerClusterer.prototype.setMinimumClusterSize = function (minimumClusterSize) {
-	  this.minClusterSize_ = minimumClusterSize;
-	};
-	
-	
-	/**
-	 *  Returns the value of the <code>maxZoom</code> property.
-	 *
-	 *  @return {number} The maximum zoom level.
-	 */
-	MarkerClusterer.prototype.getMaxZoom = function () {
-	  return this.maxZoom_;
-	};
-	
-	
-	/**
-	 *  Sets the value of the <code>maxZoom</code> property.
-	 *
-	 *  @param {number} maxZoom The maximum zoom level.
-	 */
-	MarkerClusterer.prototype.setMaxZoom = function (maxZoom) {
-	  this.maxZoom_ = maxZoom;
-	};
-	
-	
-	/**
-	 *  Returns the value of the <code>styles</code> property.
-	 *
-	 *  @return {Array} The array of styles defining the cluster markers to be used.
-	 */
-	MarkerClusterer.prototype.getStyles = function () {
-	  return this.styles_;
-	};
-	
-	
-	/**
-	 *  Sets the value of the <code>styles</code> property.
-	 *
-	 *  @param {Array.<ClusterIconStyle>} styles The array of styles to use.
-	 */
-	MarkerClusterer.prototype.setStyles = function (styles) {
-	  this.styles_ = styles;
-	};
-	
-	
-	/**
-	 * Returns the value of the <code>title</code> property.
-	 *
-	 * @return {string} The content of the title text.
-	 */
-	MarkerClusterer.prototype.getTitle = function () {
-	  return this.title_;
-	};
-	
-	
-	/**
-	 *  Sets the value of the <code>title</code> property.
-	 *
-	 *  @param {string} title The value of the title property.
-	 */
-	MarkerClusterer.prototype.setTitle = function (title) {
-	  this.title_ = title;
-	};
-	
-	
-	/**
-	 * Returns the value of the <code>zoomOnClick</code> property.
-	 *
-	 * @return {boolean} True if zoomOnClick property is set.
-	 */
-	MarkerClusterer.prototype.getZoomOnClick = function () {
-	  return this.zoomOnClick_;
-	};
-	
-	
-	/**
-	 *  Sets the value of the <code>zoomOnClick</code> property.
-	 *
-	 *  @param {boolean} zoomOnClick The value of the zoomOnClick property.
-	 */
-	MarkerClusterer.prototype.setZoomOnClick = function (zoomOnClick) {
-	  this.zoomOnClick_ = zoomOnClick;
-	};
-	
-	
-	/**
-	 * Returns the value of the <code>averageCenter</code> property.
-	 *
-	 * @return {boolean} True if averageCenter property is set.
-	 */
-	MarkerClusterer.prototype.getAverageCenter = function () {
-	  return this.averageCenter_;
-	};
-	
-	
-	/**
-	 *  Sets the value of the <code>averageCenter</code> property.
-	 *
-	 *  @param {boolean} averageCenter The value of the averageCenter property.
-	 */
-	MarkerClusterer.prototype.setAverageCenter = function (averageCenter) {
-	  this.averageCenter_ = averageCenter;
-	};
-	
-	
-	/**
-	 * Returns the value of the <code>ignoreHidden</code> property.
-	 *
-	 * @return {boolean} True if ignoreHidden property is set.
-	 */
-	MarkerClusterer.prototype.getIgnoreHidden = function () {
-	  return this.ignoreHidden_;
-	};
-	
-	
-	/**
-	 *  Sets the value of the <code>ignoreHidden</code> property.
-	 *
-	 *  @param {boolean} ignoreHidden The value of the ignoreHidden property.
-	 */
-	MarkerClusterer.prototype.setIgnoreHidden = function (ignoreHidden) {
-	  this.ignoreHidden_ = ignoreHidden;
-	};
-	
-	
-	/**
-	 * Returns the value of the <code>enableRetinaIcons</code> property.
-	 *
-	 * @return {boolean} True if enableRetinaIcons property is set.
-	 */
-	MarkerClusterer.prototype.getEnableRetinaIcons = function () {
-	  return this.enableRetinaIcons_;
-	};
-	
-	
-	/**
-	 *  Sets the value of the <code>enableRetinaIcons</code> property.
-	 *
-	 *  @param {boolean} enableRetinaIcons The value of the enableRetinaIcons property.
-	 */
-	MarkerClusterer.prototype.setEnableRetinaIcons = function (enableRetinaIcons) {
-	  this.enableRetinaIcons_ = enableRetinaIcons;
-	};
-	
-	
-	/**
-	 * Returns the value of the <code>imageExtension</code> property.
-	 *
-	 * @return {string} The value of the imageExtension property.
-	 */
-	MarkerClusterer.prototype.getImageExtension = function () {
-	  return this.imageExtension_;
-	};
-	
-	
-	/**
-	 *  Sets the value of the <code>imageExtension</code> property.
-	 *
-	 *  @param {string} imageExtension The value of the imageExtension property.
-	 */
-	MarkerClusterer.prototype.setImageExtension = function (imageExtension) {
-	  this.imageExtension_ = imageExtension;
-	};
-	
-	
-	/**
-	 * Returns the value of the <code>imagePath</code> property.
-	 *
-	 * @return {string} The value of the imagePath property.
-	 */
-	MarkerClusterer.prototype.getImagePath = function () {
-	  return this.imagePath_;
-	};
-	
-	
-	/**
-	 *  Sets the value of the <code>imagePath</code> property.
-	 *
-	 *  @param {string} imagePath The value of the imagePath property.
-	 */
-	MarkerClusterer.prototype.setImagePath = function (imagePath) {
-	  this.imagePath_ = imagePath;
-	};
-	
-	
-	/**
-	 * Returns the value of the <code>imageSizes</code> property.
-	 *
-	 * @return {Array} The value of the imageSizes property.
-	 */
-	MarkerClusterer.prototype.getImageSizes = function () {
-	  return this.imageSizes_;
-	};
-	
-	
-	/**
-	 *  Sets the value of the <code>imageSizes</code> property.
-	 *
-	 *  @param {Array} imageSizes The value of the imageSizes property.
-	 */
-	MarkerClusterer.prototype.setImageSizes = function (imageSizes) {
-	  this.imageSizes_ = imageSizes;
-	};
-	
-	
-	/**
-	 * Returns the value of the <code>calculator</code> property.
-	 *
-	 * @return {function} the value of the calculator property.
-	 */
-	MarkerClusterer.prototype.getCalculator = function () {
-	  return this.calculator_;
-	};
-	
-	
-	/**
-	 * Sets the value of the <code>calculator</code> property.
-	 *
-	 * @param {function(Array.<google.maps.Marker>, number)} calculator The value
-	 *  of the calculator property.
-	 */
-	MarkerClusterer.prototype.setCalculator = function (calculator) {
-	  this.calculator_ = calculator;
-	};
-	
-	
-	/**
-	 * Returns the value of the <code>batchSizeIE</code> property.
-	 *
-	 * @return {number} the value of the batchSizeIE property.
-	 */
-	MarkerClusterer.prototype.getBatchSizeIE = function () {
-	  return this.batchSizeIE_;
-	};
-	
-	
-	/**
-	 * Sets the value of the <code>batchSizeIE</code> property.
-	 *
-	 *  @param {number} batchSizeIE The value of the batchSizeIE property.
-	 */
-	MarkerClusterer.prototype.setBatchSizeIE = function (batchSizeIE) {
-	  this.batchSizeIE_ = batchSizeIE;
-	};
-	
-	
-	/**
-	 * Returns the value of the <code>clusterClass</code> property.
-	 *
-	 * @return {string} the value of the clusterClass property.
-	 */
-	MarkerClusterer.prototype.getClusterClass = function () {
-	  return this.clusterClass_;
-	};
-	
-	
-	/**
-	 * Sets the value of the <code>clusterClass</code> property.
-	 *
-	 *  @param {string} clusterClass The value of the clusterClass property.
-	 */
-	MarkerClusterer.prototype.setClusterClass = function (clusterClass) {
-	  this.clusterClass_ = clusterClass;
-	};
-	
-	
-	/**
-	 *  Returns the array of markers managed by the clusterer.
-	 *
-	 *  @return {Array} The array of markers managed by the clusterer.
-	 */
-	MarkerClusterer.prototype.getMarkers = function () {
-	  return this.markers_;
-	};
-	
-	
-	/**
-	 *  Returns the number of markers managed by the clusterer.
-	 *
-	 *  @return {number} The number of markers.
-	 */
-	MarkerClusterer.prototype.getTotalMarkers = function () {
-	  return this.markers_.length;
-	};
-	
-	
-	/**
-	 * Returns the current array of clusters formed by the clusterer.
-	 *
-	 * @return {Array} The array of clusters formed by the clusterer.
-	 */
-	MarkerClusterer.prototype.getClusters = function () {
-	  return this.clusters_;
-	};
-	
-	
-	/**
-	 * Returns the number of clusters formed by the clusterer.
-	 *
-	 * @return {number} The number of clusters formed by the clusterer.
-	 */
-	MarkerClusterer.prototype.getTotalClusters = function () {
-	  return this.clusters_.length;
-	};
-	
-	
-	/**
-	 * Adds a marker to the clusterer. The clusters are redrawn unless
-	 *  <code>opt_nodraw</code> is set to <code>true</code>.
-	 *
-	 * @param {google.maps.Marker} marker The marker to add.
-	 * @param {boolean} [opt_nodraw] Set to <code>true</code> to prevent redrawing.
-	 */
-	MarkerClusterer.prototype.addMarker = function (marker, opt_nodraw) {
-	  this.pushMarkerTo_(marker);
-	  if (!opt_nodraw) {
-	    this.redraw_();
-	  }
-	};
-	
-	
-	/**
-	 * Adds an array of markers to the clusterer. The clusters are redrawn unless
-	 *  <code>opt_nodraw</code> is set to <code>true</code>.
-	 *
-	 * @param {Array.<google.maps.Marker>} markers The markers to add.
-	 * @param {boolean} [opt_nodraw] Set to <code>true</code> to prevent redrawing.
-	 */
-	MarkerClusterer.prototype.addMarkers = function (markers, opt_nodraw) {
-	  var key;
-	  for (key in markers) {
-	    if (markers.hasOwnProperty(key)) {
-	      this.pushMarkerTo_(markers[key]);
-	    }
-	  }  
-	  if (!opt_nodraw) {
-	    this.redraw_();
-	  }
-	};
-	
-	
-	/**
-	 * Pushes a marker to the clusterer.
-	 *
-	 * @param {google.maps.Marker} marker The marker to add.
-	 */
-	MarkerClusterer.prototype.pushMarkerTo_ = function (marker) {
-	  // If the marker is draggable add a listener so we can update the clusters on the dragend:
-	  if (marker.getDraggable()) {
-	    var cMarkerClusterer = this;
-	    google.maps.event.addListener(marker, "dragend", function () {
-	      if (cMarkerClusterer.ready_) {
-	        this.isAdded = false;
-	        cMarkerClusterer.repaint();
-	      }
-	    });
-	  }
-	  marker.isAdded = false;
-	  this.markers_.push(marker);
-	};
-	
-	
-	/**
-	 * Removes a marker from the cluster.  The clusters are redrawn unless
-	 *  <code>opt_nodraw</code> is set to <code>true</code>. Returns <code>true</code> if the
-	 *  marker was removed from the clusterer.
-	 *
-	 * @param {google.maps.Marker} marker The marker to remove.
-	 * @param {boolean} [opt_nodraw] Set to <code>true</code> to prevent redrawing.
-	 * @return {boolean} True if the marker was removed from the clusterer.
-	 */
-	MarkerClusterer.prototype.removeMarker = function (marker, opt_nodraw) {
-	  var removed = this.removeMarker_(marker);
-	
-	  if (!opt_nodraw && removed) {
-	    this.repaint();
-	  }
-	
-	  return removed;
-	};
-	
-	
-	/**
-	 * Removes an array of markers from the cluster. The clusters are redrawn unless
-	 *  <code>opt_nodraw</code> is set to <code>true</code>. Returns <code>true</code> if markers
-	 *  were removed from the clusterer.
-	 *
-	 * @param {Array.<google.maps.Marker>} markers The markers to remove.
-	 * @param {boolean} [opt_nodraw] Set to <code>true</code> to prevent redrawing.
-	 * @return {boolean} True if markers were removed from the clusterer.
-	 */
-	MarkerClusterer.prototype.removeMarkers = function (markers, opt_nodraw) {
-	  var i, r;
-	  var removed = false;
-	
-	  for (i = 0; i < markers.length; i++) {
-	    r = this.removeMarker_(markers[i]);
-	    removed = removed || r;
-	  }
-	
-	  if (!opt_nodraw && removed) {
-	    this.repaint();
-	  }
-	
-	  return removed;
-	};
-	
-	
-	/**
-	 * Removes a marker and returns true if removed, false if not.
-	 *
-	 * @param {google.maps.Marker} marker The marker to remove
-	 * @return {boolean} Whether the marker was removed or not
-	 */
-	MarkerClusterer.prototype.removeMarker_ = function (marker) {
-	  var i;
-	  var index = -1;
-	  if (this.markers_.indexOf) {
-	    index = this.markers_.indexOf(marker);
-	  } else {
-	    for (i = 0; i < this.markers_.length; i++) {
-	      if (marker === this.markers_[i]) {
-	        index = i;
-	        break;
-	      }
-	    }
-	  }
-	
-	  if (index === -1) {
-	    // Marker is not in our list of markers, so do nothing:
-	    return false;
-	  }
-	
-	  marker.setMap(null);
-	  this.markers_.splice(index, 1); // Remove the marker from the list of managed markers
-	  return true;
-	};
-	
-	
-	/**
-	 * Removes all clusters and markers from the map and also removes all markers
-	 *  managed by the clusterer.
-	 */
-	MarkerClusterer.prototype.clearMarkers = function () {
-	  this.resetViewport_(true);
-	  this.markers_ = [];
-	};
-	
-	
-	/**
-	 * Recalculates and redraws all the marker clusters from scratch.
-	 *  Call this after changing any properties.
-	 */
-	MarkerClusterer.prototype.repaint = function () {
-	  var oldClusters = this.clusters_.slice();
-	  this.clusters_ = [];
-	  this.resetViewport_(false);
-	  this.redraw_();
-	
-	  // Remove the old clusters.
-	  // Do it in a timeout to prevent blinking effect.
-	  setTimeout(function () {
-	    var i;
-	    for (i = 0; i < oldClusters.length; i++) {
-	      oldClusters[i].remove();
-	    }
-	  }, 0);
-	};
-	
-	
-	/**
-	 * Returns the current bounds extended by the grid size.
-	 *
-	 * @param {google.maps.LatLngBounds} bounds The bounds to extend.
-	 * @return {google.maps.LatLngBounds} The extended bounds.
-	 * @ignore
-	 */
-	MarkerClusterer.prototype.getExtendedBounds = function (bounds) {
-	  var projection = this.getProjection();
-	
-	  // Turn the bounds into latlng.
-	  var tr = new google.maps.LatLng(bounds.getNorthEast().lat(),
-	      bounds.getNorthEast().lng());
-	  var bl = new google.maps.LatLng(bounds.getSouthWest().lat(),
-	      bounds.getSouthWest().lng());
-	
-	  // Convert the points to pixels and the extend out by the grid size.
-	  var trPix = projection.fromLatLngToDivPixel(tr);
-	  trPix.x += this.gridSize_;
-	  trPix.y -= this.gridSize_;
-	
-	  var blPix = projection.fromLatLngToDivPixel(bl);
-	  blPix.x -= this.gridSize_;
-	  blPix.y += this.gridSize_;
-	
-	  // Convert the pixel points back to LatLng
-	  var ne = projection.fromDivPixelToLatLng(trPix);
-	  var sw = projection.fromDivPixelToLatLng(blPix);
-	
-	  // Extend the bounds to contain the new bounds.
-	  bounds.extend(ne);
-	  bounds.extend(sw);
-	
-	  return bounds;
-	};
-	
-	
-	/**
-	 * Redraws all the clusters.
-	 */
-	MarkerClusterer.prototype.redraw_ = function () {
-	  this.createClusters_(0);
-	};
-	
-	
-	/**
-	 * Removes all clusters from the map. The markers are also removed from the map
-	 *  if <code>opt_hide</code> is set to <code>true</code>.
-	 *
-	 * @param {boolean} [opt_hide] Set to <code>true</code> to also remove the markers
-	 *  from the map.
-	 */
-	MarkerClusterer.prototype.resetViewport_ = function (opt_hide) {
-	  var i, marker;
-	  // Remove all the clusters
-	  for (i = 0; i < this.clusters_.length; i++) {
-	    this.clusters_[i].remove();
-	  }
-	  this.clusters_ = [];
-	
-	  // Reset the markers to not be added and to be removed from the map.
-	  for (i = 0; i < this.markers_.length; i++) {
-	    marker = this.markers_[i];
-	    marker.isAdded = false;
-	    if (opt_hide) {
-	      marker.setMap(null);
-	    }
-	  }
-	};
-	
 	
 	/**
-	 * Calculates the distance between two latlng locations in km.
+	 *  google-maps-utility-library-v3-markerwithlabel
 	 *
-	 * @param {google.maps.LatLng} p1 The first lat lng point.
-	 * @param {google.maps.LatLng} p2 The second lat lng point.
-	 * @return {number} The distance between the two points in km.
-	 * @see http://www.movable-type.co.uk/scripts/latlong.html
-	*/
-	MarkerClusterer.prototype.distanceBetweenPoints_ = function (p1, p2) {
-	  var R = 6371; // Radius of the Earth in km
-	  var dLat = (p2.lat() - p1.lat()) * Math.PI / 180;
-	  var dLon = (p2.lng() - p1.lng()) * Math.PI / 180;
-	  var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-	    Math.cos(p1.lat() * Math.PI / 180) * Math.cos(p2.lat() * Math.PI / 180) *
-	    Math.sin(dLon / 2) * Math.sin(dLon / 2);
-	  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-	  var d = R * c;
-	  return d;
-	};
-	
-	
-	/**
-	 * Determines if a marker is contained in a bounds.
-	 *
-	 * @param {google.maps.Marker} marker The marker to check.
-	 * @param {google.maps.LatLngBounds} bounds The bounds to check against.
-	 * @return {boolean} True if the marker is in the bounds.
-	 */
-	MarkerClusterer.prototype.isMarkerInBounds_ = function (marker, bounds) {
-	  return bounds.contains(marker.getPosition());
-	};
-	
-	
-	/**
-	 * Adds a marker to a cluster, or creates a new cluster.
-	 *
-	 * @param {google.maps.Marker} marker The marker to add.
-	 */
-	MarkerClusterer.prototype.addToClosestCluster_ = function (marker) {
-	  var i, d, cluster, center;
-	  var distance = 40000; // Some large number
-	  var clusterToAddTo = null;
-	  for (i = 0; i < this.clusters_.length; i++) {
-	    cluster = this.clusters_[i];
-	    center = cluster.getCenter();
-	    if (center) {
-	      d = this.distanceBetweenPoints_(center, marker.getPosition());
-	      if (d < distance) {
-	        distance = d;
-	        clusterToAddTo = cluster;
-	      }
-	    }
-	  }
-	
-	  if (clusterToAddTo && clusterToAddTo.isMarkerInClusterBounds(marker)) {
-	    clusterToAddTo.addMarker(marker);
-	  } else {
-	    cluster = new Cluster(this);
-	    cluster.addMarker(marker);
-	    this.clusters_.push(cluster);
-	  }
-	};
-	
-	
-	/**
-	 * Creates the clusters. This is done in batches to avoid timeout errors
-	 *  in some browsers when there is a huge number of markers.
-	 *
-	 * @param {number} iFirst The index of the first marker in the batch of
-	 *  markers to be added to clusters.
-	 */
-	MarkerClusterer.prototype.createClusters_ = function (iFirst) {
-	  var i, marker;
-	  var mapBounds;
-	  var cMarkerClusterer = this;
-	  if (!this.ready_) {
-	    return;
-	  }
-	
-	  // Cancel previous batch processing if we're working on the first batch:
-	  if (iFirst === 0) {
-	    /**
-	     * This event is fired when the <code>MarkerClusterer</code> begins
-	     *  clustering markers.
-	     * @name MarkerClusterer#clusteringbegin
-	     * @param {MarkerClusterer} mc The MarkerClusterer whose markers are being clustered.
-	     * @event
-	     */
-	    google.maps.event.trigger(this, "clusteringbegin", this);
-	
-	    if (typeof this.timerRefStatic !== "undefined") {
-	      clearTimeout(this.timerRefStatic);
-	      delete this.timerRefStatic;
-	    }
-	  }
-	
-	  // Get our current map view bounds.
-	  // Create a new bounds object so we don't affect the map.
-	  //
-	  // See Comments 9 & 11 on Issue 3651 relating to this workaround for a Google Maps bug:
-	  if (this.getMap().getZoom() > 3) {
-	    mapBounds = new google.maps.LatLngBounds(this.getMap().getBounds().getSouthWest(),
-	      this.getMap().getBounds().getNorthEast());
-	  } else {
-	    mapBounds = new google.maps.LatLngBounds(new google.maps.LatLng(85.02070771743472, -178.48388434375), new google.maps.LatLng(-85.08136444384544, 178.00048865625));
-	  }
-	  var bounds = this.getExtendedBounds(mapBounds);
-	
-	  var iLast = Math.min(iFirst + this.batchSize_, this.markers_.length);
-	
-	  for (i = iFirst; i < iLast; i++) {
-	    marker = this.markers_[i];
-	    if (!marker.isAdded && this.isMarkerInBounds_(marker, bounds)) {
-	      if (!this.ignoreHidden_ || (this.ignoreHidden_ && marker.getVisible())) {
-	        this.addToClosestCluster_(marker);
-	      }
-	    }
-	  }
-	
-	  if (iLast < this.markers_.length) {
-	    this.timerRefStatic = setTimeout(function () {
-	      cMarkerClusterer.createClusters_(iLast);
-	    }, 0);
-	  } else {
-	    delete this.timerRefStatic;
-	
-	    /**
-	     * This event is fired when the <code>MarkerClusterer</code> stops
-	     *  clustering markers.
-	     * @name MarkerClusterer#clusteringend
-	     * @param {MarkerClusterer} mc The MarkerClusterer whose markers are being clustered.
-	     * @event
-	     */
-	    google.maps.event.trigger(this, "clusteringend", this);
-	  }
-	};
-	
-	
-	/**
-	 * Extends an object's prototype by another's.
-	 *
-	 * @param {Object} obj1 The object to be extended.
-	 * @param {Object} obj2 The object to extend with.
-	 * @return {Object} The new extended object.
-	 * @ignore
-	 */
-	MarkerClusterer.prototype.extend = function (obj1, obj2) {
-	  return (function (object) {
-	    var property;
-	    for (property in object.prototype) {
-	      this.prototype[property] = object.prototype[property];
-	    }
-	    return this;
-	  }).apply(obj1, [obj2]);
-	};
-	
-	
-	/**
-	 * The default function for determining the label text and style
-	 * for a cluster icon.
-	 *
-	 * @param {Array.<google.maps.Marker>} markers The array of markers represented by the cluster.
-	 * @param {number} numStyles The number of marker styles available.
-	 * @return {ClusterIconInfo} The information resource for the cluster.
-	 * @constant
-	 * @ignore
-	 */
-	MarkerClusterer.CALCULATOR = function (markers, numStyles) {
-	  var index = 0;
-	  var title = "";
-	  var count = markers.length.toString();
-	
-	  var dv = count;
-	  while (dv !== 0) {
-	    dv = parseInt(dv / 10, 10);
-	    index++;
-	  }
-	
-	  index = Math.min(index, numStyles);
-	  return {
-	    text: count,
-	    index: index,
-	    title: title
-	  };
-	};
-	
-	
-	/**
-	 * The number of markers to process in one batch.
-	 *
-	 * @type {number}
-	 * @constant
-	 */
-	MarkerClusterer.BATCH_SIZE = 2000;
-	
-	
-	/**
-	 * The number of markers to process in one batch (IE only).
-	 *
-	 * @type {number}
-	 * @constant
-	 */
-	MarkerClusterer.BATCH_SIZE_IE = 500;
-	
-	
-	/**
-	 * The default root name for the marker cluster images.
-	 *
-	 * @type {string}
-	 * @constant
-	 */
-	MarkerClusterer.IMAGE_PATH = "http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclustererplus/images/m";
-	
-	
-	/**
-	 * The default extension name for the marker cluster images.
-	 *
-	 * @type {string}
-	 * @constant
-	 */
-	MarkerClusterer.IMAGE_EXTENSION = "png";
-	
-	
-	/**
-	 * The default array of sizes for the marker cluster images.
-	 *
-	 * @type {Array.<number>}
-	 * @constant
+	 * @version: 1.1.10
+	 * @author: Gary Little (inspired by code from Marc Ridey of Google).
+	 * @contributors: Nicholas McCready
+	 * @date: Fri May 13 2016 16:29:58 GMT-0400 (EDT)
+	 * @license: Apache License 2.0
 	 */
-	MarkerClusterer.IMAGE_SIZES = [53, 56, 66, 78, 90];
-	
 	/**
-	 * @name MarkerWithLabel for V3
-	 * @version 1.1.10 [April 8, 2014]
-	 * @author Gary Little (inspired by code from Marc Ridey of Google).
-	 * @copyright Copyright 2012 Gary Little [gary at luxcentral.com]
-	 * @fileoverview MarkerWithLabel extends the Google Maps JavaScript API V3
-	 *  <code>google.maps.Marker</code> class.
-	 *  <p>
 	 *  MarkerWithLabel allows you to define markers with associated labels. As you would expect,
 	 *  if the marker is draggable, so too will be the label. In addition, a marker with a label
 	 *  responds to all mouse events in the same manner as a regular marker. It also fires mouse
@@ -82864,21 +81784,6 @@
 	 *  If you drag a marker by its label, you can cancel the drag and return the marker to its
 	 *  original position by pressing the <code>Esc</code> key. This doesn't work if you drag the marker
 	 *  itself because this feature is not (yet) supported in the <code>google.maps.Marker</code> class.
-	 */
-	
-	/*!
-	 *
-	 * Licensed under the Apache License, Version 2.0 (the "License");
-	 * you may not use this file except in compliance with the License.
-	 * You may obtain a copy of the License at
-	 *
-	 *       http://www.apache.org/licenses/LICENSE-2.0
-	 *
-	 * Unless required by applicable law or agreed to in writing, software
-	 * distributed under the License is distributed on an "AS IS" BASIS,
-	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	 * See the License for the specific language governing permissions and
-	 * limitations under the License.
 	 */
 	
 	/*jslint browser:true */
@@ -87030,19 +85935,23 @@
 
 	'use strict';
 	
-	__webpack_require__(/*! beeline-calendar */ 12);
-	__webpack_require__(/*! angular-storage */ 53);
-	__webpack_require__(/*! angular-jwt */ 55);
-	__webpack_require__(/*! auth0-angular */ 57);
+	//require css for webpack
+	__webpack_require__(/*! ../~/bootstrap/dist/css/bootstrap.min.css */ 12);
+	__webpack_require__(/*! ../scss/ionic.app.scss */ 21);
 	
-	var env = __webpack_require__(/*! ./env */ 58);
+	__webpack_require__(/*! beeline-calendar */ 23);
+	__webpack_require__(/*! angular-storage */ 79);
+	__webpack_require__(/*! angular-jwt */ 81);
+	__webpack_require__(/*! auth0-angular */ 83);
+	
+	var env = __webpack_require__(/*! ./env */ 84);
 	
 	// angular.module is a global place for creating, registering and retrieving Angular modules
 	// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 	// the 2nd parameter is an array of 'requires'
 	// 'starter.services' is found in services.js
 	// 'starter.controllers' is found in controllers.js
-	angular.module('beeline-admin', ['uiGmapgoogle-maps', 'ui.router', 'ui.bootstrap', 'beeline.calendar', 'auth0', 'angular-storage', 'angular-jwt']).config(__webpack_require__(/*! ./router */ 59).default).config(configureGoogleMaps).config(configureLoginPage).directive('adminNav', __webpack_require__(/*! ./directives/adminNav/adminNav */ 60).default).directive('accountView', __webpack_require__(/*! ./directives/accountView/accountView */ 62).default).directive('paymentView', __webpack_require__(/*! ./directives/paymentView/paymentView */ 63).default).directive('ticketView', __webpack_require__(/*! ./directives/ticketView/ticketView */ 74).default).directive('routeSelector', __webpack_require__(/*! ./directives/routeSelector/routeSelector */ 76).default).directive('routeEditor', __webpack_require__(/*! ./directives/routeEditor/routeEditor */ 78).default).directive('pathEditor', __webpack_require__(/*! ./directives/pathEditor/pathEditor */ 80).default).directive('tripsEditor', __webpack_require__(/*! ./directives/tripsEditor/tripsEditor */ 82).default).directive('companySelector', __webpack_require__(/*! ./directives/companySelector/companySelector */ 112).default).directive('stopSelector', __webpack_require__(/*! ./directives/stopSelector/stopSelector */ 113).default).directive('superAdminCompanySelector', __webpack_require__(/*! ./directives/companySelector/superAdminCompanySelector */ 114).default).service('AdminService', __webpack_require__(/*! ./services/adminService */ 115).default).service('RoutesService', __webpack_require__(/*! ./services/routesService */ 129).default).service('StopsPopup', __webpack_require__(/*! ./services/stopsPopup */ 133).default).service('mapService', __webpack_require__(/*! ./services/mapService */ 135).default).service('DriverService', __webpack_require__(/*! ./services/driverService */ 136).default).controller('transactions', __webpack_require__(/*! ./controllers/transactionsController.js */ 139).default).controller('routes', __webpack_require__(/*! ./controllers/routesController.js */ 140).default).controller('summary', __webpack_require__(/*! ./controllers/summaryController.js */ 141).default).controller('bookings', __webpack_require__(/*! ./controllers/bookingsController.js */ 142).default).controller('login', __webpack_require__(/*! ./controllers/loginController.js */ 143).default).filter('makeRoutePath', __webpack_require__(/*! ./shared/filters.js */ 144).makeRoutePath).run(function (auth, $rootScope, store, jwtHelper) {
+	angular.module('beeline-admin', ['uiGmapgoogle-maps', 'ui.router', 'ui.bootstrap', 'beeline.calendar', 'auth0', 'angular-storage', 'angular-jwt']).config(__webpack_require__(/*! ./router */ 85).default).config(configureGoogleMaps).config(configureLoginPage).directive('adminNav', __webpack_require__(/*! ./directives/adminNav/adminNav */ 86).default).directive('accountView', __webpack_require__(/*! ./directives/accountView/accountView */ 88).default).directive('paymentView', __webpack_require__(/*! ./directives/paymentView/paymentView */ 89).default).directive('ticketView', __webpack_require__(/*! ./directives/ticketView/ticketView */ 111).default).directive('routeSelector', __webpack_require__(/*! ./directives/routeSelector/routeSelector */ 113).default).directive('routeEditor', __webpack_require__(/*! ./directives/routeEditor/routeEditor */ 115).default).directive('pathEditor', __webpack_require__(/*! ./directives/pathEditor/pathEditor */ 117).default).directive('tripsEditor', __webpack_require__(/*! ./directives/tripsEditor/tripsEditor */ 119).default).directive('companySelector', __webpack_require__(/*! ./directives/companySelector/companySelector */ 141).default).directive('stopSelector', __webpack_require__(/*! ./directives/stopSelector/stopSelector */ 142).default).directive('superAdminCompanySelector', __webpack_require__(/*! ./directives/companySelector/superAdminCompanySelector */ 143).default).service('AdminService', __webpack_require__(/*! ./services/adminService */ 144).default).service('RoutesService', __webpack_require__(/*! ./services/routesService */ 158).default).service('StopsPopup', __webpack_require__(/*! ./services/stopsPopup */ 162).default).service('mapService', __webpack_require__(/*! ./services/mapService */ 164).default).service('DriverService', __webpack_require__(/*! ./services/driverService */ 165).default).controller('transactions', __webpack_require__(/*! ./controllers/transactionsController.js */ 168).default).controller('routes', __webpack_require__(/*! ./controllers/routesController.js */ 169).default).controller('summary', __webpack_require__(/*! ./controllers/summaryController.js */ 170).default).controller('bookings', __webpack_require__(/*! ./controllers/bookingsController.js */ 171).default).controller('login', __webpack_require__(/*! ./controllers/loginController.js */ 172).default).filter('makeRoutePath', __webpack_require__(/*! ./shared/filters.js */ 173).makeRoutePath).run(function (auth, $rootScope, store, jwtHelper) {
 	  auth.hookEvents();
 	
 	  // This events gets triggered on refresh or URL change
@@ -87112,6 +86021,33 @@
 
 /***/ },
 /* 12 */
+/*!************************************************!*\
+  !*** ./~/bootstrap/dist/css/bootstrap.min.css ***!
+  \************************************************/
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 13 */,
+/* 14 */,
+/* 15 */,
+/* 16 */,
+/* 17 */,
+/* 18 */,
+/* 19 */,
+/* 20 */,
+/* 21 */
+/*!*****************************!*\
+  !*** ./scss/ionic.app.scss ***!
+  \*****************************/
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 22 */,
+/* 23 */
 /*!*************************************!*\
   !*** ./~/beeline-calendar/index.js ***!
   \*************************************/
@@ -87120,16 +86056,16 @@
 	
 	
 	angular.module('beeline.calendar', [])
-	.directive('touchStart', __webpack_require__(/*! ./dist/datePicker */ 13).TouchStart)
-	.directive('touchEnd', __webpack_require__(/*! ./dist/datePicker */ 13).TouchEnd)
-	.directive('touchMove', __webpack_require__(/*! ./dist/datePicker */ 13).TouchMove)
-	.directive('mouseMove', __webpack_require__(/*! ./dist/datePicker */ 13).MouseMove)
-	.directive('beelineDatepicker', __webpack_require__(/*! ./dist/datePicker */ 13).DatePicker)
+	.directive('touchStart', __webpack_require__(/*! ./dist/datePicker */ 24).TouchStart)
+	.directive('touchEnd', __webpack_require__(/*! ./dist/datePicker */ 24).TouchEnd)
+	.directive('touchMove', __webpack_require__(/*! ./dist/datePicker */ 24).TouchMove)
+	.directive('mouseMove', __webpack_require__(/*! ./dist/datePicker */ 24).MouseMove)
+	.directive('beelineDatepicker', __webpack_require__(/*! ./dist/datePicker */ 24).DatePicker)
 	
 
 
 /***/ },
-/* 13 */
+/* 24 */
 /*!***********************************************!*\
   !*** ./~/beeline-calendar/dist/datePicker.js ***!
   \***********************************************/
@@ -87142,11 +86078,11 @@
 	});
 	exports.MouseMove = exports.TouchMove = exports.TouchEnd = exports.TouchStart = exports.DatePicker = undefined;
 	
-	var _getIterator2 = __webpack_require__(/*! babel-runtime/core-js/get-iterator */ 14);
+	var _getIterator2 = __webpack_require__(/*! babel-runtime/core-js/get-iterator */ 25);
 	
 	var _getIterator3 = _interopRequireDefault(_getIterator2);
 	
-	var _datePicker = __webpack_require__(/*! ./datePicker.html */ 52);
+	var _datePicker = __webpack_require__(/*! ./datePicker.html */ 78);
 	
 	var _datePicker2 = _interopRequireDefault(_datePicker);
 	
@@ -87464,54 +86400,64 @@
 	var MouseMove = exports.MouseMove = TouchDirective('mousemove');
 
 /***/ },
-/* 14 */
+/* 25 */
 /*!*************************************************!*\
   !*** ./~/babel-runtime/core-js/get-iterator.js ***!
   \*************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/get-iterator */ 15), __esModule: true };
+	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/get-iterator */ 26), __esModule: true };
 
 /***/ },
-/* 15 */
-/*!**********************************************!*\
-  !*** ./~/core-js/library/fn/get-iterator.js ***!
-  \**********************************************/
+/* 26 */
+/*!**************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/fn/get-iterator.js ***!
+  \**************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(/*! ../modules/web.dom.iterable */ 16);
-	__webpack_require__(/*! ../modules/es6.string.iterator */ 44);
-	module.exports = __webpack_require__(/*! ../modules/core.get-iterator */ 47);
+	__webpack_require__(/*! ../modules/web.dom.iterable */ 27);
+	__webpack_require__(/*! ../modules/es6.string.iterator */ 73);
+	module.exports = __webpack_require__(/*! ../modules/core.get-iterator */ 75);
 
 /***/ },
-/* 16 */
-/*!*******************************************************!*\
-  !*** ./~/core-js/library/modules/web.dom.iterable.js ***!
-  \*******************************************************/
+/* 27 */
+/*!***********************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/web.dom.iterable.js ***!
+  \***********************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(/*! ./es6.array.iterator */ 17);
-	var Iterators = __webpack_require__(/*! ./$.iterators */ 20);
-	Iterators.NodeList = Iterators.HTMLCollection = Iterators.Array;
+	__webpack_require__(/*! ./es6.array.iterator */ 28);
+	var global        = __webpack_require__(/*! ./_global */ 39)
+	  , hide          = __webpack_require__(/*! ./_hide */ 43)
+	  , Iterators     = __webpack_require__(/*! ./_iterators */ 31)
+	  , TO_STRING_TAG = __webpack_require__(/*! ./_wks */ 70)('toStringTag');
+	
+	for(var collections = ['NodeList', 'DOMTokenList', 'MediaList', 'StyleSheetList', 'CSSRuleList'], i = 0; i < 5; i++){
+	  var NAME       = collections[i]
+	    , Collection = global[NAME]
+	    , proto      = Collection && Collection.prototype;
+	  if(proto && !proto[TO_STRING_TAG])hide(proto, TO_STRING_TAG, NAME);
+	  Iterators[NAME] = Iterators.Array;
+	}
 
 /***/ },
-/* 17 */
-/*!*********************************************************!*\
-  !*** ./~/core-js/library/modules/es6.array.iterator.js ***!
-  \*********************************************************/
+/* 28 */
+/*!*************************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/es6.array.iterator.js ***!
+  \*************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var addToUnscopables = __webpack_require__(/*! ./$.add-to-unscopables */ 18)
-	  , step             = __webpack_require__(/*! ./$.iter-step */ 19)
-	  , Iterators        = __webpack_require__(/*! ./$.iterators */ 20)
-	  , toIObject        = __webpack_require__(/*! ./$.to-iobject */ 21);
+	var addToUnscopables = __webpack_require__(/*! ./_add-to-unscopables */ 29)
+	  , step             = __webpack_require__(/*! ./_iter-step */ 30)
+	  , Iterators        = __webpack_require__(/*! ./_iterators */ 31)
+	  , toIObject        = __webpack_require__(/*! ./_to-iobject */ 32);
 	
 	// 22.1.3.4 Array.prototype.entries()
 	// 22.1.3.13 Array.prototype.keys()
 	// 22.1.3.29 Array.prototype.values()
 	// 22.1.3.30 Array.prototype[@@iterator]()
-	module.exports = __webpack_require__(/*! ./$.iter-define */ 25)(Array, 'Array', function(iterated, kind){
+	module.exports = __webpack_require__(/*! ./_iter-define */ 36)(Array, 'Array', function(iterated, kind){
 	  this._t = toIObject(iterated); // target
 	  this._i = 0;                   // next index
 	  this._k = kind;                // kind
@@ -87537,19 +86483,19 @@
 	addToUnscopables('entries');
 
 /***/ },
-/* 18 */
-/*!***********************************************************!*\
-  !*** ./~/core-js/library/modules/$.add-to-unscopables.js ***!
-  \***********************************************************/
+/* 29 */
+/*!**************************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_add-to-unscopables.js ***!
+  \**************************************************************************/
 /***/ function(module, exports) {
 
 	module.exports = function(){ /* empty */ };
 
 /***/ },
-/* 19 */
-/*!**************************************************!*\
-  !*** ./~/core-js/library/modules/$.iter-step.js ***!
-  \**************************************************/
+/* 30 */
+/*!*****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_iter-step.js ***!
+  \*****************************************************************/
 /***/ function(module, exports) {
 
 	module.exports = function(done, value){
@@ -87557,46 +86503,46 @@
 	};
 
 /***/ },
-/* 20 */
-/*!**************************************************!*\
-  !*** ./~/core-js/library/modules/$.iterators.js ***!
-  \**************************************************/
+/* 31 */
+/*!*****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_iterators.js ***!
+  \*****************************************************************/
 /***/ function(module, exports) {
 
 	module.exports = {};
 
 /***/ },
-/* 21 */
-/*!***************************************************!*\
-  !*** ./~/core-js/library/modules/$.to-iobject.js ***!
-  \***************************************************/
+/* 32 */
+/*!******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_to-iobject.js ***!
+  \******************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	// to indexed object, toObject with fallback for non-array-like ES3 strings
-	var IObject = __webpack_require__(/*! ./$.iobject */ 22)
-	  , defined = __webpack_require__(/*! ./$.defined */ 24);
+	var IObject = __webpack_require__(/*! ./_iobject */ 33)
+	  , defined = __webpack_require__(/*! ./_defined */ 35);
 	module.exports = function(it){
 	  return IObject(defined(it));
 	};
 
 /***/ },
-/* 22 */
-/*!************************************************!*\
-  !*** ./~/core-js/library/modules/$.iobject.js ***!
-  \************************************************/
+/* 33 */
+/*!***************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_iobject.js ***!
+  \***************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	// fallback for non-array-like ES3 and non-enumerable old V8 strings
-	var cof = __webpack_require__(/*! ./$.cof */ 23);
+	var cof = __webpack_require__(/*! ./_cof */ 34);
 	module.exports = Object('z').propertyIsEnumerable(0) ? Object : function(it){
 	  return cof(it) == 'String' ? it.split('') : Object(it);
 	};
 
 /***/ },
-/* 23 */
-/*!********************************************!*\
-  !*** ./~/core-js/library/modules/$.cof.js ***!
-  \********************************************/
+/* 34 */
+/*!***********************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_cof.js ***!
+  \***********************************************************/
 /***/ function(module, exports) {
 
 	var toString = {}.toString;
@@ -87606,10 +86552,10 @@
 	};
 
 /***/ },
-/* 24 */
-/*!************************************************!*\
-  !*** ./~/core-js/library/modules/$.defined.js ***!
-  \************************************************/
+/* 35 */
+/*!***************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_defined.js ***!
+  \***************************************************************/
 /***/ function(module, exports) {
 
 	// 7.2.1 RequireObjectCoercible(argument)
@@ -87619,23 +86565,23 @@
 	};
 
 /***/ },
-/* 25 */
-/*!****************************************************!*\
-  !*** ./~/core-js/library/modules/$.iter-define.js ***!
-  \****************************************************/
+/* 36 */
+/*!*******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_iter-define.js ***!
+  \*******************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var LIBRARY        = __webpack_require__(/*! ./$.library */ 26)
-	  , $export        = __webpack_require__(/*! ./$.export */ 27)
-	  , redefine       = __webpack_require__(/*! ./$.redefine */ 32)
-	  , hide           = __webpack_require__(/*! ./$.hide */ 33)
-	  , has            = __webpack_require__(/*! ./$.has */ 38)
-	  , Iterators      = __webpack_require__(/*! ./$.iterators */ 20)
-	  , $iterCreate    = __webpack_require__(/*! ./$.iter-create */ 39)
-	  , setToStringTag = __webpack_require__(/*! ./$.set-to-string-tag */ 40)
-	  , getProto       = __webpack_require__(/*! ./$ */ 34).getProto
-	  , ITERATOR       = __webpack_require__(/*! ./$.wks */ 41)('iterator')
+	var LIBRARY        = __webpack_require__(/*! ./_library */ 37)
+	  , $export        = __webpack_require__(/*! ./_export */ 38)
+	  , redefine       = __webpack_require__(/*! ./_redefine */ 53)
+	  , hide           = __webpack_require__(/*! ./_hide */ 43)
+	  , has            = __webpack_require__(/*! ./_has */ 54)
+	  , Iterators      = __webpack_require__(/*! ./_iterators */ 31)
+	  , $iterCreate    = __webpack_require__(/*! ./_iter-create */ 55)
+	  , setToStringTag = __webpack_require__(/*! ./_set-to-string-tag */ 69)
+	  , getPrototypeOf = __webpack_require__(/*! ./_object-gpo */ 71)
+	  , ITERATOR       = __webpack_require__(/*! ./_wks */ 70)('iterator')
 	  , BUGGY          = !([].keys && 'next' in [].keys()) // Safari has buggy iterators w/o `next`
 	  , FF_ITERATOR    = '@@iterator'
 	  , KEYS           = 'keys'
@@ -87658,19 +86604,23 @@
 	    , proto      = Base.prototype
 	    , $native    = proto[ITERATOR] || proto[FF_ITERATOR] || DEFAULT && proto[DEFAULT]
 	    , $default   = $native || getMethod(DEFAULT)
-	    , methods, key;
+	    , $entries   = DEFAULT ? !DEF_VALUES ? $default : getMethod('entries') : undefined
+	    , $anyNative = NAME == 'Array' ? proto.entries || $native : $native
+	    , methods, key, IteratorPrototype;
 	  // Fix native
-	  if($native){
-	    var IteratorPrototype = getProto($default.call(new Base));
-	    // Set @@toStringTag to native iterators
-	    setToStringTag(IteratorPrototype, TAG, true);
-	    // FF fix
-	    if(!LIBRARY && has(proto, FF_ITERATOR))hide(IteratorPrototype, ITERATOR, returnThis);
-	    // fix Array#{values, @@iterator}.name in V8 / FF
-	    if(DEF_VALUES && $native.name !== VALUES){
-	      VALUES_BUG = true;
-	      $default = function values(){ return $native.call(this); };
+	  if($anyNative){
+	    IteratorPrototype = getPrototypeOf($anyNative.call(new Base));
+	    if(IteratorPrototype !== Object.prototype){
+	      // Set @@toStringTag to native iterators
+	      setToStringTag(IteratorPrototype, TAG, true);
+	      // fix for some old engines
+	      if(!LIBRARY && !has(IteratorPrototype, ITERATOR))hide(IteratorPrototype, ITERATOR, returnThis);
 	    }
+	  }
+	  // fix Array#{values, @@iterator}.name in V8 / FF
+	  if(DEF_VALUES && $native && $native.name !== VALUES){
+	    VALUES_BUG = true;
+	    $default = function values(){ return $native.call(this); };
 	  }
 	  // Define iterator
 	  if((!LIBRARY || FORCED) && (BUGGY || VALUES_BUG || !proto[ITERATOR])){
@@ -87681,9 +86631,9 @@
 	  Iterators[TAG]  = returnThis;
 	  if(DEFAULT){
 	    methods = {
-	      values:  DEF_VALUES  ? $default : getMethod(VALUES),
-	      keys:    IS_SET      ? $default : getMethod(KEYS),
-	      entries: !DEF_VALUES ? $default : getMethod('entries')
+	      values:  DEF_VALUES ? $default : getMethod(VALUES),
+	      keys:    IS_SET     ? $default : getMethod(KEYS),
+	      entries: $entries
 	    };
 	    if(FORCED)for(key in methods){
 	      if(!(key in proto))redefine(proto, key, methods[key]);
@@ -87693,24 +86643,25 @@
 	};
 
 /***/ },
-/* 26 */
-/*!************************************************!*\
-  !*** ./~/core-js/library/modules/$.library.js ***!
-  \************************************************/
+/* 37 */
+/*!***************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_library.js ***!
+  \***************************************************************/
 /***/ function(module, exports) {
 
 	module.exports = true;
 
 /***/ },
-/* 27 */
-/*!***********************************************!*\
-  !*** ./~/core-js/library/modules/$.export.js ***!
-  \***********************************************/
+/* 38 */
+/*!**************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_export.js ***!
+  \**************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var global    = __webpack_require__(/*! ./$.global */ 28)
-	  , core      = __webpack_require__(/*! ./$.core */ 29)
-	  , ctx       = __webpack_require__(/*! ./$.ctx */ 30)
+	var global    = __webpack_require__(/*! ./_global */ 39)
+	  , core      = __webpack_require__(/*! ./_core */ 40)
+	  , ctx       = __webpack_require__(/*! ./_ctx */ 41)
+	  , hide      = __webpack_require__(/*! ./_hide */ 43)
 	  , PROTOTYPE = 'prototype';
 	
 	var $export = function(type, name, source){
@@ -87721,12 +86672,13 @@
 	    , IS_BIND   = type & $export.B
 	    , IS_WRAP   = type & $export.W
 	    , exports   = IS_GLOBAL ? core : core[name] || (core[name] = {})
+	    , expProto  = exports[PROTOTYPE]
 	    , target    = IS_GLOBAL ? global : IS_STATIC ? global[name] : (global[name] || {})[PROTOTYPE]
 	    , key, own, out;
 	  if(IS_GLOBAL)source = name;
 	  for(key in source){
 	    // contains in native
-	    own = !IS_FORCED && target && key in target;
+	    own = !IS_FORCED && target && target[key] !== undefined;
 	    if(own && key in exports)continue;
 	    // export native or passed
 	    out = own ? target[key] : source[key];
@@ -87736,30 +86688,43 @@
 	    : IS_BIND && own ? ctx(out, global)
 	    // wrap global constructors for prevent change them in library
 	    : IS_WRAP && target[key] == out ? (function(C){
-	      var F = function(param){
-	        return this instanceof C ? new C(param) : C(param);
+	      var F = function(a, b, c){
+	        if(this instanceof C){
+	          switch(arguments.length){
+	            case 0: return new C;
+	            case 1: return new C(a);
+	            case 2: return new C(a, b);
+	          } return new C(a, b, c);
+	        } return C.apply(this, arguments);
 	      };
 	      F[PROTOTYPE] = C[PROTOTYPE];
 	      return F;
 	    // make static versions for prototype methods
 	    })(out) : IS_PROTO && typeof out == 'function' ? ctx(Function.call, out) : out;
-	    if(IS_PROTO)(exports[PROTOTYPE] || (exports[PROTOTYPE] = {}))[key] = out;
+	    // export proto methods to core.%CONSTRUCTOR%.methods.%NAME%
+	    if(IS_PROTO){
+	      (exports.virtual || (exports.virtual = {}))[key] = out;
+	      // export proto methods to core.%CONSTRUCTOR%.prototype.%NAME%
+	      if(type & $export.R && expProto && !expProto[key])hide(expProto, key, out);
+	    }
 	  }
 	};
 	// type bitmap
-	$export.F = 1;  // forced
-	$export.G = 2;  // global
-	$export.S = 4;  // static
-	$export.P = 8;  // proto
-	$export.B = 16; // bind
-	$export.W = 32; // wrap
+	$export.F = 1;   // forced
+	$export.G = 2;   // global
+	$export.S = 4;   // static
+	$export.P = 8;   // proto
+	$export.B = 16;  // bind
+	$export.W = 32;  // wrap
+	$export.U = 64;  // safe
+	$export.R = 128; // real proto method for `library` 
 	module.exports = $export;
 
 /***/ },
-/* 28 */
-/*!***********************************************!*\
-  !*** ./~/core-js/library/modules/$.global.js ***!
-  \***********************************************/
+/* 39 */
+/*!**************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_global.js ***!
+  \**************************************************************/
 /***/ function(module, exports) {
 
 	// https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
@@ -87768,24 +86733,24 @@
 	if(typeof __g == 'number')__g = global; // eslint-disable-line no-undef
 
 /***/ },
-/* 29 */
-/*!*********************************************!*\
-  !*** ./~/core-js/library/modules/$.core.js ***!
-  \*********************************************/
+/* 40 */
+/*!************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_core.js ***!
+  \************************************************************/
 /***/ function(module, exports) {
 
-	var core = module.exports = {version: '1.2.6'};
+	var core = module.exports = {version: '2.4.0'};
 	if(typeof __e == 'number')__e = core; // eslint-disable-line no-undef
 
 /***/ },
-/* 30 */
-/*!********************************************!*\
-  !*** ./~/core-js/library/modules/$.ctx.js ***!
-  \********************************************/
+/* 41 */
+/*!***********************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_ctx.js ***!
+  \***********************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	// optional / simple context binding
-	var aFunction = __webpack_require__(/*! ./$.a-function */ 31);
+	var aFunction = __webpack_require__(/*! ./_a-function */ 42);
 	module.exports = function(fn, that, length){
 	  aFunction(fn);
 	  if(that === undefined)return fn;
@@ -87806,10 +86771,10 @@
 	};
 
 /***/ },
-/* 31 */
-/*!***************************************************!*\
-  !*** ./~/core-js/library/modules/$.a-function.js ***!
-  \***************************************************/
+/* 42 */
+/*!******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_a-function.js ***!
+  \******************************************************************/
 /***/ function(module, exports) {
 
 	module.exports = function(it){
@@ -87818,56 +86783,147 @@
 	};
 
 /***/ },
-/* 32 */
-/*!*************************************************!*\
-  !*** ./~/core-js/library/modules/$.redefine.js ***!
-  \*************************************************/
+/* 43 */
+/*!************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_hide.js ***!
+  \************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(/*! ./$.hide */ 33);
-
-/***/ },
-/* 33 */
-/*!*********************************************!*\
-  !*** ./~/core-js/library/modules/$.hide.js ***!
-  \*********************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	var $          = __webpack_require__(/*! ./$ */ 34)
-	  , createDesc = __webpack_require__(/*! ./$.property-desc */ 35);
-	module.exports = __webpack_require__(/*! ./$.descriptors */ 36) ? function(object, key, value){
-	  return $.setDesc(object, key, createDesc(1, value));
+	var dP         = __webpack_require__(/*! ./_object-dp */ 44)
+	  , createDesc = __webpack_require__(/*! ./_property-desc */ 52);
+	module.exports = __webpack_require__(/*! ./_descriptors */ 48) ? function(object, key, value){
+	  return dP.f(object, key, createDesc(1, value));
 	} : function(object, key, value){
 	  object[key] = value;
 	  return object;
 	};
 
 /***/ },
-/* 34 */
-/*!****************************************!*\
-  !*** ./~/core-js/library/modules/$.js ***!
-  \****************************************/
-/***/ function(module, exports) {
+/* 44 */
+/*!*****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_object-dp.js ***!
+  \*****************************************************************/
+/***/ function(module, exports, __webpack_require__) {
 
-	var $Object = Object;
-	module.exports = {
-	  create:     $Object.create,
-	  getProto:   $Object.getPrototypeOf,
-	  isEnum:     {}.propertyIsEnumerable,
-	  getDesc:    $Object.getOwnPropertyDescriptor,
-	  setDesc:    $Object.defineProperty,
-	  setDescs:   $Object.defineProperties,
-	  getKeys:    $Object.keys,
-	  getNames:   $Object.getOwnPropertyNames,
-	  getSymbols: $Object.getOwnPropertySymbols,
-	  each:       [].forEach
+	var anObject       = __webpack_require__(/*! ./_an-object */ 45)
+	  , IE8_DOM_DEFINE = __webpack_require__(/*! ./_ie8-dom-define */ 47)
+	  , toPrimitive    = __webpack_require__(/*! ./_to-primitive */ 51)
+	  , dP             = Object.defineProperty;
+	
+	exports.f = __webpack_require__(/*! ./_descriptors */ 48) ? Object.defineProperty : function defineProperty(O, P, Attributes){
+	  anObject(O);
+	  P = toPrimitive(P, true);
+	  anObject(Attributes);
+	  if(IE8_DOM_DEFINE)try {
+	    return dP(O, P, Attributes);
+	  } catch(e){ /* empty */ }
+	  if('get' in Attributes || 'set' in Attributes)throw TypeError('Accessors not supported!');
+	  if('value' in Attributes)O[P] = Attributes.value;
+	  return O;
 	};
 
 /***/ },
-/* 35 */
-/*!******************************************************!*\
-  !*** ./~/core-js/library/modules/$.property-desc.js ***!
-  \******************************************************/
+/* 45 */
+/*!*****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_an-object.js ***!
+  \*****************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	var isObject = __webpack_require__(/*! ./_is-object */ 46);
+	module.exports = function(it){
+	  if(!isObject(it))throw TypeError(it + ' is not an object!');
+	  return it;
+	};
+
+/***/ },
+/* 46 */
+/*!*****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_is-object.js ***!
+  \*****************************************************************/
+/***/ function(module, exports) {
+
+	module.exports = function(it){
+	  return typeof it === 'object' ? it !== null : typeof it === 'function';
+	};
+
+/***/ },
+/* 47 */
+/*!**********************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_ie8-dom-define.js ***!
+  \**********************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = !__webpack_require__(/*! ./_descriptors */ 48) && !__webpack_require__(/*! ./_fails */ 49)(function(){
+	  return Object.defineProperty(__webpack_require__(/*! ./_dom-create */ 50)('div'), 'a', {get: function(){ return 7; }}).a != 7;
+	});
+
+/***/ },
+/* 48 */
+/*!*******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_descriptors.js ***!
+  \*******************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	// Thank's IE8 for his funny defineProperty
+	module.exports = !__webpack_require__(/*! ./_fails */ 49)(function(){
+	  return Object.defineProperty({}, 'a', {get: function(){ return 7; }}).a != 7;
+	});
+
+/***/ },
+/* 49 */
+/*!*************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_fails.js ***!
+  \*************************************************************/
+/***/ function(module, exports) {
+
+	module.exports = function(exec){
+	  try {
+	    return !!exec();
+	  } catch(e){
+	    return true;
+	  }
+	};
+
+/***/ },
+/* 50 */
+/*!******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_dom-create.js ***!
+  \******************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	var isObject = __webpack_require__(/*! ./_is-object */ 46)
+	  , document = __webpack_require__(/*! ./_global */ 39).document
+	  // in old IE typeof document.createElement is 'object'
+	  , is = isObject(document) && isObject(document.createElement);
+	module.exports = function(it){
+	  return is ? document.createElement(it) : {};
+	};
+
+/***/ },
+/* 51 */
+/*!********************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_to-primitive.js ***!
+  \********************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	// 7.1.1 ToPrimitive(input [, PreferredType])
+	var isObject = __webpack_require__(/*! ./_is-object */ 46);
+	// instead of the ES6 spec version, we didn't implement @@toPrimitive case
+	// and the second argument - flag - preferred type is a string
+	module.exports = function(it, S){
+	  if(!isObject(it))return it;
+	  var fn, val;
+	  if(S && typeof (fn = it.toString) == 'function' && !isObject(val = fn.call(it)))return val;
+	  if(typeof (fn = it.valueOf) == 'function' && !isObject(val = fn.call(it)))return val;
+	  if(!S && typeof (fn = it.toString) == 'function' && !isObject(val = fn.call(it)))return val;
+	  throw TypeError("Can't convert object to primitive value");
+	};
+
+/***/ },
+/* 52 */
+/*!*********************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_property-desc.js ***!
+  \*********************************************************************/
 /***/ function(module, exports) {
 
 	module.exports = function(bitmap, value){
@@ -87880,37 +86936,19 @@
 	};
 
 /***/ },
-/* 36 */
-/*!****************************************************!*\
-  !*** ./~/core-js/library/modules/$.descriptors.js ***!
-  \****************************************************/
+/* 53 */
+/*!****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_redefine.js ***!
+  \****************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	// Thank's IE8 for his funny defineProperty
-	module.exports = !__webpack_require__(/*! ./$.fails */ 37)(function(){
-	  return Object.defineProperty({}, 'a', {get: function(){ return 7; }}).a != 7;
-	});
+	module.exports = __webpack_require__(/*! ./_hide */ 43);
 
 /***/ },
-/* 37 */
-/*!**********************************************!*\
-  !*** ./~/core-js/library/modules/$.fails.js ***!
-  \**********************************************/
-/***/ function(module, exports) {
-
-	module.exports = function(exec){
-	  try {
-	    return !!exec();
-	  } catch(e){
-	    return true;
-	  }
-	};
-
-/***/ },
-/* 38 */
-/*!********************************************!*\
-  !*** ./~/core-js/library/modules/$.has.js ***!
-  \********************************************/
+/* 54 */
+/*!***********************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_has.js ***!
+  \***********************************************************/
 /***/ function(module, exports) {
 
 	var hasOwnProperty = {}.hasOwnProperty;
@@ -87919,64 +86957,228 @@
 	};
 
 /***/ },
-/* 39 */
-/*!****************************************************!*\
-  !*** ./~/core-js/library/modules/$.iter-create.js ***!
-  \****************************************************/
+/* 55 */
+/*!*******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_iter-create.js ***!
+  \*******************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var $              = __webpack_require__(/*! ./$ */ 34)
-	  , descriptor     = __webpack_require__(/*! ./$.property-desc */ 35)
-	  , setToStringTag = __webpack_require__(/*! ./$.set-to-string-tag */ 40)
+	var create         = __webpack_require__(/*! ./_object-create */ 56)
+	  , descriptor     = __webpack_require__(/*! ./_property-desc */ 52)
+	  , setToStringTag = __webpack_require__(/*! ./_set-to-string-tag */ 69)
 	  , IteratorPrototype = {};
 	
 	// 25.1.2.1.1 %IteratorPrototype%[@@iterator]()
-	__webpack_require__(/*! ./$.hide */ 33)(IteratorPrototype, __webpack_require__(/*! ./$.wks */ 41)('iterator'), function(){ return this; });
+	__webpack_require__(/*! ./_hide */ 43)(IteratorPrototype, __webpack_require__(/*! ./_wks */ 70)('iterator'), function(){ return this; });
 	
 	module.exports = function(Constructor, NAME, next){
-	  Constructor.prototype = $.create(IteratorPrototype, {next: descriptor(1, next)});
+	  Constructor.prototype = create(IteratorPrototype, {next: descriptor(1, next)});
 	  setToStringTag(Constructor, NAME + ' Iterator');
 	};
 
 /***/ },
-/* 40 */
-/*!**********************************************************!*\
-  !*** ./~/core-js/library/modules/$.set-to-string-tag.js ***!
-  \**********************************************************/
+/* 56 */
+/*!*********************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_object-create.js ***!
+  \*********************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var def = __webpack_require__(/*! ./$ */ 34).setDesc
-	  , has = __webpack_require__(/*! ./$.has */ 38)
-	  , TAG = __webpack_require__(/*! ./$.wks */ 41)('toStringTag');
+	// 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
+	var anObject    = __webpack_require__(/*! ./_an-object */ 45)
+	  , dPs         = __webpack_require__(/*! ./_object-dps */ 57)
+	  , enumBugKeys = __webpack_require__(/*! ./_enum-bug-keys */ 67)
+	  , IE_PROTO    = __webpack_require__(/*! ./_shared-key */ 64)('IE_PROTO')
+	  , Empty       = function(){ /* empty */ }
+	  , PROTOTYPE   = 'prototype';
 	
-	module.exports = function(it, tag, stat){
-	  if(it && !has(it = stat ? it : it.prototype, TAG))def(it, TAG, {configurable: true, value: tag});
+	// Create object with fake `null` prototype: use iframe Object with cleared prototype
+	var createDict = function(){
+	  // Thrash, waste and sodomy: IE GC bug
+	  var iframe = __webpack_require__(/*! ./_dom-create */ 50)('iframe')
+	    , i      = enumBugKeys.length
+	    , gt     = '>'
+	    , iframeDocument;
+	  iframe.style.display = 'none';
+	  __webpack_require__(/*! ./_html */ 68).appendChild(iframe);
+	  iframe.src = 'javascript:'; // eslint-disable-line no-script-url
+	  // createDict = iframe.contentWindow.Object;
+	  // html.removeChild(iframe);
+	  iframeDocument = iframe.contentWindow.document;
+	  iframeDocument.open();
+	  iframeDocument.write('<script>document.F=Object</script' + gt);
+	  iframeDocument.close();
+	  createDict = iframeDocument.F;
+	  while(i--)delete createDict[PROTOTYPE][enumBugKeys[i]];
+	  return createDict();
+	};
+	
+	module.exports = Object.create || function create(O, Properties){
+	  var result;
+	  if(O !== null){
+	    Empty[PROTOTYPE] = anObject(O);
+	    result = new Empty;
+	    Empty[PROTOTYPE] = null;
+	    // add "__proto__" for Object.getPrototypeOf polyfill
+	    result[IE_PROTO] = O;
+	  } else result = createDict();
+	  return Properties === undefined ? result : dPs(result, Properties);
 	};
 
 /***/ },
-/* 41 */
-/*!********************************************!*\
-  !*** ./~/core-js/library/modules/$.wks.js ***!
-  \********************************************/
+/* 57 */
+/*!******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_object-dps.js ***!
+  \******************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var store  = __webpack_require__(/*! ./$.shared */ 42)('wks')
-	  , uid    = __webpack_require__(/*! ./$.uid */ 43)
-	  , Symbol = __webpack_require__(/*! ./$.global */ 28).Symbol;
-	module.exports = function(name){
-	  return store[name] || (store[name] =
-	    Symbol && Symbol[name] || (Symbol || uid)('Symbol.' + name));
+	var dP       = __webpack_require__(/*! ./_object-dp */ 44)
+	  , anObject = __webpack_require__(/*! ./_an-object */ 45)
+	  , getKeys  = __webpack_require__(/*! ./_object-keys */ 58);
+	
+	module.exports = __webpack_require__(/*! ./_descriptors */ 48) ? Object.defineProperties : function defineProperties(O, Properties){
+	  anObject(O);
+	  var keys   = getKeys(Properties)
+	    , length = keys.length
+	    , i = 0
+	    , P;
+	  while(length > i)dP.f(O, P = keys[i++], Properties[P]);
+	  return O;
 	};
 
 /***/ },
-/* 42 */
-/*!***********************************************!*\
-  !*** ./~/core-js/library/modules/$.shared.js ***!
-  \***********************************************/
+/* 58 */
+/*!*******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_object-keys.js ***!
+  \*******************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var global = __webpack_require__(/*! ./$.global */ 28)
+	// 19.1.2.14 / 15.2.3.14 Object.keys(O)
+	var $keys       = __webpack_require__(/*! ./_object-keys-internal */ 59)
+	  , enumBugKeys = __webpack_require__(/*! ./_enum-bug-keys */ 67);
+	
+	module.exports = Object.keys || function keys(O){
+	  return $keys(O, enumBugKeys);
+	};
+
+/***/ },
+/* 59 */
+/*!****************************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_object-keys-internal.js ***!
+  \****************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	var has          = __webpack_require__(/*! ./_has */ 54)
+	  , toIObject    = __webpack_require__(/*! ./_to-iobject */ 32)
+	  , arrayIndexOf = __webpack_require__(/*! ./_array-includes */ 60)(false)
+	  , IE_PROTO     = __webpack_require__(/*! ./_shared-key */ 64)('IE_PROTO');
+	
+	module.exports = function(object, names){
+	  var O      = toIObject(object)
+	    , i      = 0
+	    , result = []
+	    , key;
+	  for(key in O)if(key != IE_PROTO)has(O, key) && result.push(key);
+	  // Don't enum bug & hidden keys
+	  while(names.length > i)if(has(O, key = names[i++])){
+	    ~arrayIndexOf(result, key) || result.push(key);
+	  }
+	  return result;
+	};
+
+/***/ },
+/* 60 */
+/*!**********************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_array-includes.js ***!
+  \**********************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	// false -> Array#indexOf
+	// true  -> Array#includes
+	var toIObject = __webpack_require__(/*! ./_to-iobject */ 32)
+	  , toLength  = __webpack_require__(/*! ./_to-length */ 61)
+	  , toIndex   = __webpack_require__(/*! ./_to-index */ 63);
+	module.exports = function(IS_INCLUDES){
+	  return function($this, el, fromIndex){
+	    var O      = toIObject($this)
+	      , length = toLength(O.length)
+	      , index  = toIndex(fromIndex, length)
+	      , value;
+	    // Array#includes uses SameValueZero equality algorithm
+	    if(IS_INCLUDES && el != el)while(length > index){
+	      value = O[index++];
+	      if(value != value)return true;
+	    // Array#toIndex ignores holes, Array#includes - not
+	    } else for(;length > index; index++)if(IS_INCLUDES || index in O){
+	      if(O[index] === el)return IS_INCLUDES || index || 0;
+	    } return !IS_INCLUDES && -1;
+	  };
+	};
+
+/***/ },
+/* 61 */
+/*!*****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_to-length.js ***!
+  \*****************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	// 7.1.15 ToLength
+	var toInteger = __webpack_require__(/*! ./_to-integer */ 62)
+	  , min       = Math.min;
+	module.exports = function(it){
+	  return it > 0 ? min(toInteger(it), 0x1fffffffffffff) : 0; // pow(2, 53) - 1 == 9007199254740991
+	};
+
+/***/ },
+/* 62 */
+/*!******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_to-integer.js ***!
+  \******************************************************************/
+/***/ function(module, exports) {
+
+	// 7.1.4 ToInteger
+	var ceil  = Math.ceil
+	  , floor = Math.floor;
+	module.exports = function(it){
+	  return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
+	};
+
+/***/ },
+/* 63 */
+/*!****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_to-index.js ***!
+  \****************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	var toInteger = __webpack_require__(/*! ./_to-integer */ 62)
+	  , max       = Math.max
+	  , min       = Math.min;
+	module.exports = function(index, length){
+	  index = toInteger(index);
+	  return index < 0 ? max(index + length, 0) : min(index, length);
+	};
+
+/***/ },
+/* 64 */
+/*!******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_shared-key.js ***!
+  \******************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	var shared = __webpack_require__(/*! ./_shared */ 65)('keys')
+	  , uid    = __webpack_require__(/*! ./_uid */ 66);
+	module.exports = function(key){
+	  return shared[key] || (shared[key] = uid(key));
+	};
+
+/***/ },
+/* 65 */
+/*!**************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_shared.js ***!
+  \**************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	var global = __webpack_require__(/*! ./_global */ 39)
 	  , SHARED = '__core-js_shared__'
 	  , store  = global[SHARED] || (global[SHARED] = {});
 	module.exports = function(key){
@@ -87984,10 +87186,10 @@
 	};
 
 /***/ },
-/* 43 */
-/*!********************************************!*\
-  !*** ./~/core-js/library/modules/$.uid.js ***!
-  \********************************************/
+/* 66 */
+/*!***********************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_uid.js ***!
+  \***********************************************************/
 /***/ function(module, exports) {
 
 	var id = 0
@@ -87997,17 +87199,106 @@
 	};
 
 /***/ },
-/* 44 */
-/*!**********************************************************!*\
-  !*** ./~/core-js/library/modules/es6.string.iterator.js ***!
-  \**********************************************************/
+/* 67 */
+/*!*********************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_enum-bug-keys.js ***!
+  \*********************************************************************/
+/***/ function(module, exports) {
+
+	// IE 8- don't enum bug keys
+	module.exports = (
+	  'constructor,hasOwnProperty,isPrototypeOf,propertyIsEnumerable,toLocaleString,toString,valueOf'
+	).split(',');
+
+/***/ },
+/* 68 */
+/*!************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_html.js ***!
+  \************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(/*! ./_global */ 39).document && document.documentElement;
+
+/***/ },
+/* 69 */
+/*!*************************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_set-to-string-tag.js ***!
+  \*************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	var def = __webpack_require__(/*! ./_object-dp */ 44).f
+	  , has = __webpack_require__(/*! ./_has */ 54)
+	  , TAG = __webpack_require__(/*! ./_wks */ 70)('toStringTag');
+	
+	module.exports = function(it, tag, stat){
+	  if(it && !has(it = stat ? it : it.prototype, TAG))def(it, TAG, {configurable: true, value: tag});
+	};
+
+/***/ },
+/* 70 */
+/*!***********************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_wks.js ***!
+  \***********************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	var store      = __webpack_require__(/*! ./_shared */ 65)('wks')
+	  , uid        = __webpack_require__(/*! ./_uid */ 66)
+	  , Symbol     = __webpack_require__(/*! ./_global */ 39).Symbol
+	  , USE_SYMBOL = typeof Symbol == 'function';
+	
+	var $exports = module.exports = function(name){
+	  return store[name] || (store[name] =
+	    USE_SYMBOL && Symbol[name] || (USE_SYMBOL ? Symbol : uid)('Symbol.' + name));
+	};
+	
+	$exports.store = store;
+
+/***/ },
+/* 71 */
+/*!******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_object-gpo.js ***!
+  \******************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	// 19.1.2.9 / 15.2.3.2 Object.getPrototypeOf(O)
+	var has         = __webpack_require__(/*! ./_has */ 54)
+	  , toObject    = __webpack_require__(/*! ./_to-object */ 72)
+	  , IE_PROTO    = __webpack_require__(/*! ./_shared-key */ 64)('IE_PROTO')
+	  , ObjectProto = Object.prototype;
+	
+	module.exports = Object.getPrototypeOf || function(O){
+	  O = toObject(O);
+	  if(has(O, IE_PROTO))return O[IE_PROTO];
+	  if(typeof O.constructor == 'function' && O instanceof O.constructor){
+	    return O.constructor.prototype;
+	  } return O instanceof Object ? ObjectProto : null;
+	};
+
+/***/ },
+/* 72 */
+/*!*****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_to-object.js ***!
+  \*****************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	// 7.1.13 ToObject(argument)
+	var defined = __webpack_require__(/*! ./_defined */ 35);
+	module.exports = function(it){
+	  return Object(defined(it));
+	};
+
+/***/ },
+/* 73 */
+/*!**************************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/es6.string.iterator.js ***!
+  \**************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var $at  = __webpack_require__(/*! ./$.string-at */ 45)(true);
+	var $at  = __webpack_require__(/*! ./_string-at */ 74)(true);
 	
 	// 21.1.3.27 String.prototype[@@iterator]()
-	__webpack_require__(/*! ./$.iter-define */ 25)(String, 'String', function(iterated){
+	__webpack_require__(/*! ./_iter-define */ 36)(String, 'String', function(iterated){
 	  this._t = String(iterated); // target
 	  this._i = 0;                // next index
 	// 21.1.5.2.1 %StringIteratorPrototype%.next()
@@ -88022,14 +87313,14 @@
 	});
 
 /***/ },
-/* 45 */
-/*!**************************************************!*\
-  !*** ./~/core-js/library/modules/$.string-at.js ***!
-  \**************************************************/
+/* 74 */
+/*!*****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_string-at.js ***!
+  \*****************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var toInteger = __webpack_require__(/*! ./$.to-integer */ 46)
-	  , defined   = __webpack_require__(/*! ./$.defined */ 24);
+	var toInteger = __webpack_require__(/*! ./_to-integer */ 62)
+	  , defined   = __webpack_require__(/*! ./_defined */ 35);
 	// true  -> String#at
 	// false -> String#codePointAt
 	module.exports = function(TO_STRING){
@@ -88047,92 +87338,61 @@
 	};
 
 /***/ },
-/* 46 */
-/*!***************************************************!*\
-  !*** ./~/core-js/library/modules/$.to-integer.js ***!
-  \***************************************************/
-/***/ function(module, exports) {
-
-	// 7.1.4 ToInteger
-	var ceil  = Math.ceil
-	  , floor = Math.floor;
-	module.exports = function(it){
-	  return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
-	};
-
-/***/ },
-/* 47 */
-/*!********************************************************!*\
-  !*** ./~/core-js/library/modules/core.get-iterator.js ***!
-  \********************************************************/
+/* 75 */
+/*!************************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/core.get-iterator.js ***!
+  \************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var anObject = __webpack_require__(/*! ./$.an-object */ 48)
-	  , get      = __webpack_require__(/*! ./core.get-iterator-method */ 50);
-	module.exports = __webpack_require__(/*! ./$.core */ 29).getIterator = function(it){
+	var anObject = __webpack_require__(/*! ./_an-object */ 45)
+	  , get      = __webpack_require__(/*! ./core.get-iterator-method */ 76);
+	module.exports = __webpack_require__(/*! ./_core */ 40).getIterator = function(it){
 	  var iterFn = get(it);
 	  if(typeof iterFn != 'function')throw TypeError(it + ' is not iterable!');
 	  return anObject(iterFn.call(it));
 	};
 
 /***/ },
-/* 48 */
-/*!**************************************************!*\
-  !*** ./~/core-js/library/modules/$.an-object.js ***!
-  \**************************************************/
+/* 76 */
+/*!*******************************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/core.get-iterator-method.js ***!
+  \*******************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(/*! ./$.is-object */ 49);
-	module.exports = function(it){
-	  if(!isObject(it))throw TypeError(it + ' is not an object!');
-	  return it;
-	};
-
-/***/ },
-/* 49 */
-/*!**************************************************!*\
-  !*** ./~/core-js/library/modules/$.is-object.js ***!
-  \**************************************************/
-/***/ function(module, exports) {
-
-	module.exports = function(it){
-	  return typeof it === 'object' ? it !== null : typeof it === 'function';
-	};
-
-/***/ },
-/* 50 */
-/*!***************************************************************!*\
-  !*** ./~/core-js/library/modules/core.get-iterator-method.js ***!
-  \***************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	var classof   = __webpack_require__(/*! ./$.classof */ 51)
-	  , ITERATOR  = __webpack_require__(/*! ./$.wks */ 41)('iterator')
-	  , Iterators = __webpack_require__(/*! ./$.iterators */ 20);
-	module.exports = __webpack_require__(/*! ./$.core */ 29).getIteratorMethod = function(it){
+	var classof   = __webpack_require__(/*! ./_classof */ 77)
+	  , ITERATOR  = __webpack_require__(/*! ./_wks */ 70)('iterator')
+	  , Iterators = __webpack_require__(/*! ./_iterators */ 31);
+	module.exports = __webpack_require__(/*! ./_core */ 40).getIteratorMethod = function(it){
 	  if(it != undefined)return it[ITERATOR]
 	    || it['@@iterator']
 	    || Iterators[classof(it)];
 	};
 
 /***/ },
-/* 51 */
-/*!************************************************!*\
-  !*** ./~/core-js/library/modules/$.classof.js ***!
-  \************************************************/
+/* 77 */
+/*!***************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_classof.js ***!
+  \***************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	// getting tag from 19.1.3.6 Object.prototype.toString()
-	var cof = __webpack_require__(/*! ./$.cof */ 23)
-	  , TAG = __webpack_require__(/*! ./$.wks */ 41)('toStringTag')
+	var cof = __webpack_require__(/*! ./_cof */ 34)
+	  , TAG = __webpack_require__(/*! ./_wks */ 70)('toStringTag')
 	  // ES3 wrong here
 	  , ARG = cof(function(){ return arguments; }()) == 'Arguments';
+	
+	// fallback for IE11 Script Access Denied error
+	var tryGet = function(it, key){
+	  try {
+	    return it[key];
+	  } catch(e){ /* empty */ }
+	};
 	
 	module.exports = function(it){
 	  var O, T, B;
 	  return it === undefined ? 'Undefined' : it === null ? 'Null'
 	    // @@toStringTag case
-	    : typeof (T = (O = Object(it))[TAG]) == 'string' ? T
+	    : typeof (T = tryGet(O = Object(it), TAG)) == 'string' ? T
 	    // builtinTag case
 	    : ARG ? cof(O)
 	    // ES3 arguments fallback
@@ -88140,7 +87400,7 @@
 	};
 
 /***/ },
-/* 52 */
+/* 78 */
 /*!****************************************************!*\
   !*** ./~/beeline-calendar/dist/datePicker.html.js ***!
   \****************************************************/
@@ -88154,19 +87414,19 @@
 	exports.default = "<div>\n  <div class=\"month-selector\">\n    <i class=\"icon ion-chevron-left prev\" ng-click=\"previousMonth()\"></i>\n\n    <div class=\"mmyyyy-holder\">\n      <select class=\"mm\" ng-model=\"startMonth\"\n        ng-options=\"i as monthNames[i] for i in displayMonths\"\n      >\n      </select>\n\n      <select class=\"yyyy\" ng-model=\"startYear\"\n        ng-options=\"i for i in displayYears\"\n      >\n      </select>\n    </div>\n\n    <i class=\"icon ion-chevron-right next\" ng-click=\"nextMonth()\"></i>\n  </div>\n\n  <table class=\"dates\" data-tap-disabled=\"true\">\n    <thead>\n      <tr>\n        <th>Sun</th>\n        <th>Mon</th>\n        <th>Tue</th>\n        <th>Wed</th>\n        <th>Thu</th>\n        <th>Fri</th>\n        <th>Sat</th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr ng-repeat=\"week in weeks\">\n        <td ng-repeat=\"day in week\"\n          ng-class=\"dateClasses(day)\"\n          data-date=\"{{day.date.getTime()}}\"\n\n          ng-mousedown='beginSelection(day, $event)'\n          ng-mouseup='endSelection(day, $event)'\n          ng-mousemove='dragSelection(day, $event)'\n\n          my-touchstart='beginTouch(day, $event)'\n          my-touchend='endTouch(day, $event)'\n          my-touchmove='moveTouch(day, $event)'\n        >\n        {{day.date.getDate()}}\n        </td>\n      </tr>\n    </tbody>\n  </table>\n\n  <table class=\"legend\" ng-if=\"showLegend\">\n    <tr>\n      <td class=\"invalid\">#</td>\n      <td>Not available / fully booked</td>\n    </tr>\n    <tr>\n      <td class=\"selected valid\">#</td>\n      <td>Selected dates</td>\n    </tr>\n    <tr>\n      <td class=\"invalid previously-booked\">#</td>\n      <td>Prior booking</td>\n    </tr>\n  </table>\n</div>\n";
 
 /***/ },
-/* 53 */
+/* 79 */
 /*!************************************!*\
   !*** ./~/angular-storage/index.js ***!
   \************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(/*! ./dist/angular-storage.js */ 54);
+	__webpack_require__(/*! ./dist/angular-storage.js */ 80);
 	module.exports = 'angular-storage';
 	
 
 
 /***/ },
-/* 54 */
+/* 80 */
 /*!***************************************************!*\
   !*** ./~/angular-storage/dist/angular-storage.js ***!
   \***************************************************/
@@ -88387,19 +87647,19 @@
 	}());
 
 /***/ },
-/* 55 */
+/* 81 */
 /*!********************************!*\
   !*** ./~/angular-jwt/index.js ***!
   \********************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(/*! ./dist/angular-jwt.js */ 56);
+	__webpack_require__(/*! ./dist/angular-jwt.js */ 82);
 	module.exports = 'angular-jwt';
 	
 
 
 /***/ },
-/* 56 */
+/* 82 */
 /*!*******************************************!*\
   !*** ./~/angular-jwt/dist/angular-jwt.js ***!
   \*******************************************/
@@ -88539,7 +87799,7 @@
 	}());
 
 /***/ },
-/* 57 */
+/* 83 */
 /*!************************************************!*\
   !*** ./~/auth0-angular/build/auth0-angular.js ***!
   \************************************************/
@@ -88986,7 +88246,7 @@
 	}());
 
 /***/ },
-/* 58 */
+/* 84 */
 /*!********************************!*\
   !*** ./beeline-admin/env.json ***!
   \********************************/
@@ -88999,7 +88259,7 @@
 	};
 
 /***/ },
-/* 59 */
+/* 85 */
 /*!*********************************!*\
   !*** ./beeline-admin/router.js ***!
   \*********************************/
@@ -89064,7 +88324,7 @@
 	};
 
 /***/ },
-/* 60 */
+/* 86 */
 /*!*******************************************************!*\
   !*** ./beeline-admin/directives/adminNav/adminNav.js ***!
   \*******************************************************/
@@ -89079,7 +88339,7 @@
 	exports.default = function (AdminService) {
 	  return {
 	    replace: true,
-	    template: __webpack_require__(/*! ./adminNav.html */ 61),
+	    template: __webpack_require__(/*! ./adminNav.html */ 87),
 	    link: function link(scope, elem, attr) {
 	      scope.adminService = AdminService;
 	    }
@@ -89087,16 +88347,16 @@
 	};
 
 /***/ },
-/* 61 */
+/* 87 */
 /*!*********************************************************!*\
   !*** ./beeline-admin/directives/adminNav/adminNav.html ***!
   \*********************************************************/
 /***/ function(module, exports) {
 
-	module.exports = "\n<nav class=\"tabs tabs-top tabs-icon-left tabs-light tabs-striped admin-nav\">\n  <ul>\n    <li>\n      <!-- The tabs at the top of the page -->\n      <a class=\"tab-item\"\n         ui-sref=\"transactions\"\n         >\n      \t <span class=\"tab-title\">Transactions</span>\n      </a>\n    </li>\n    <li>\n      <a class=\"tab-item\"\n         ui-sref=\"routes({routeId: 0, action: 'route'})\"\n         >\n      \t <span class=\"tab-title\">Routes</span>\n      </a>\n    </li>\n    <li>\n      <a class=\"tab-item\"\n         ui-sref=\"bookings\"\n         >\n      \t <span class=\"tab-title\">Bookings</span>\n      </a>\n    </li>\n    <li>\n      <a class=\"tab-item\"\n         ui-sref=\"summary\"\n         title=\"See the list of bookings for each month\"\n         >\n      \t <span class=\"tab-title\">Summary</span>\n      </a>\n    </li>\n    <li>\n      <a class=\"tab-item\"\n        ng-click=\"adminService.logout()\"\n        >\n        Logout\n      </a>\n    </li>\n  </ul>\n  <super-admin-company-selector></super-admin-company-selector>\n</nav>\n";
+	module.exports = "\n<nav class=\"tabs tabs-top tabs-icon-left tabs-light tabs-striped admin-nav\">\n  <ul>\n    <li>\n      <!-- The tabs at the top of the page -->\n      <a class=\"tab-item\"\n         ui-sref=\"transactions\"\n         >\n      \t <span class=\"tab-title\">Transactions</span>\n      </a>\n    </li>\n    <li>\n      <a class=\"tab-item\"\n         ui-sref=\"routes({routeId: 0, action: 'route'})\"\n         >\n      \t <span class=\"tab-title\">Routes</span>\n      </a>\n    </li>\n    <li>\n      <a class=\"tab-item\"\n         ui-sref=\"bookings\"\n         >\n      \t <span class=\"tab-title\">Bookings</span>\n      </a>\n    </li>\n    <li>\n      <a class=\"tab-item\"\n         ui-sref=\"summary\"\n         >\n      \t <span class=\"tab-title\">Summary</span>\n      </a>\n    </li>\n    <li>\n      <a class=\"tab-item\"\n        ng-click=\"adminService.logout()\"\n        >\n        Logout\n      </a>\n    </li>\n  </ul>\n  <super-admin-company-selector></super-admin-company-selector>\n</nav>\n";
 
 /***/ },
-/* 62 */
+/* 88 */
 /*!*************************************************************!*\
   !*** ./beeline-admin/directives/accountView/accountView.js ***!
   \*************************************************************/
@@ -89118,7 +88378,7 @@
 	};
 
 /***/ },
-/* 63 */
+/* 89 */
 /*!*************************************************************!*\
   !*** ./beeline-admin/directives/paymentView/paymentView.js ***!
   \*************************************************************/
@@ -89130,13 +88390,13 @@
 	  value: true
 	});
 	
-	var _typeof2 = __webpack_require__(/*! babel-runtime/helpers/typeof */ 64);
+	var _typeof2 = __webpack_require__(/*! babel-runtime/helpers/typeof */ 90);
 	
 	var _typeof3 = _interopRequireDefault(_typeof2);
 	
 	exports.default = function () {
 	  return {
-	    template: __webpack_require__(/*! ./paymentView.html */ 73),
+	    template: __webpack_require__(/*! ./paymentView.html */ 110),
 	    scope: {
 	      pvData: '=',
 	      pvTitle: '=',
@@ -89154,7 +88414,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 64 */
+/* 90 */
 /*!*******************************************!*\
   !*** ./~/babel-runtime/helpers/typeof.js ***!
   \*******************************************/
@@ -89162,115 +88422,168 @@
 
 	"use strict";
 	
-	var _Symbol = __webpack_require__(/*! babel-runtime/core-js/symbol */ 65)["default"];
-	
-	exports["default"] = function (obj) {
-	  return obj && obj.constructor === _Symbol ? "symbol" : typeof obj;
-	};
-	
 	exports.__esModule = true;
+	
+	var _iterator = __webpack_require__(/*! ../core-js/symbol/iterator */ 91);
+	
+	var _iterator2 = _interopRequireDefault(_iterator);
+	
+	var _symbol = __webpack_require__(/*! ../core-js/symbol */ 94);
+	
+	var _symbol2 = _interopRequireDefault(_symbol);
+	
+	var _typeof = typeof _symbol2.default === "function" && typeof _iterator2.default === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof _symbol2.default === "function" && obj.constructor === _symbol2.default ? "symbol" : typeof obj; };
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	exports.default = typeof _symbol2.default === "function" && _typeof(_iterator2.default) === "symbol" ? function (obj) {
+	  return typeof obj === "undefined" ? "undefined" : _typeof(obj);
+	} : function (obj) {
+	  return obj && typeof _symbol2.default === "function" && obj.constructor === _symbol2.default ? "symbol" : typeof obj === "undefined" ? "undefined" : _typeof(obj);
+	};
 
 /***/ },
-/* 65 */
+/* 91 */
+/*!****************************************************!*\
+  !*** ./~/babel-runtime/core-js/symbol/iterator.js ***!
+  \****************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/symbol/iterator */ 92), __esModule: true };
+
+/***/ },
+/* 92 */
+/*!*****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/fn/symbol/iterator.js ***!
+  \*****************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(/*! ../../modules/es6.string.iterator */ 73);
+	__webpack_require__(/*! ../../modules/web.dom.iterable */ 27);
+	module.exports = __webpack_require__(/*! ../../modules/_wks-ext */ 93).f('iterator');
+
+/***/ },
+/* 93 */
+/*!***************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_wks-ext.js ***!
+  \***************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	exports.f = __webpack_require__(/*! ./_wks */ 70);
+
+/***/ },
+/* 94 */
 /*!*******************************************!*\
   !*** ./~/babel-runtime/core-js/symbol.js ***!
   \*******************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/symbol */ 66), __esModule: true };
+	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/symbol */ 95), __esModule: true };
 
 /***/ },
-/* 66 */
-/*!**********************************************!*\
-  !*** ./~/core-js/library/fn/symbol/index.js ***!
-  \**********************************************/
+/* 95 */
+/*!**************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/fn/symbol/index.js ***!
+  \**************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(/*! ../../modules/es6.symbol */ 67);
-	__webpack_require__(/*! ../../modules/es6.object.to-string */ 72);
-	module.exports = __webpack_require__(/*! ../../modules/$.core */ 29).Symbol;
+	__webpack_require__(/*! ../../modules/es6.symbol */ 96);
+	__webpack_require__(/*! ../../modules/es6.object.to-string */ 107);
+	__webpack_require__(/*! ../../modules/es7.symbol.async-iterator */ 108);
+	__webpack_require__(/*! ../../modules/es7.symbol.observable */ 109);
+	module.exports = __webpack_require__(/*! ../../modules/_core */ 40).Symbol;
 
 /***/ },
-/* 67 */
-/*!*************************************************!*\
-  !*** ./~/core-js/library/modules/es6.symbol.js ***!
-  \*************************************************/
+/* 96 */
+/*!*****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/es6.symbol.js ***!
+  \*****************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	// ECMAScript 6 symbols shim
-	var $              = __webpack_require__(/*! ./$ */ 34)
-	  , global         = __webpack_require__(/*! ./$.global */ 28)
-	  , has            = __webpack_require__(/*! ./$.has */ 38)
-	  , DESCRIPTORS    = __webpack_require__(/*! ./$.descriptors */ 36)
-	  , $export        = __webpack_require__(/*! ./$.export */ 27)
-	  , redefine       = __webpack_require__(/*! ./$.redefine */ 32)
-	  , $fails         = __webpack_require__(/*! ./$.fails */ 37)
-	  , shared         = __webpack_require__(/*! ./$.shared */ 42)
-	  , setToStringTag = __webpack_require__(/*! ./$.set-to-string-tag */ 40)
-	  , uid            = __webpack_require__(/*! ./$.uid */ 43)
-	  , wks            = __webpack_require__(/*! ./$.wks */ 41)
-	  , keyOf          = __webpack_require__(/*! ./$.keyof */ 68)
-	  , $names         = __webpack_require__(/*! ./$.get-names */ 69)
-	  , enumKeys       = __webpack_require__(/*! ./$.enum-keys */ 70)
-	  , isArray        = __webpack_require__(/*! ./$.is-array */ 71)
-	  , anObject       = __webpack_require__(/*! ./$.an-object */ 48)
-	  , toIObject      = __webpack_require__(/*! ./$.to-iobject */ 21)
-	  , createDesc     = __webpack_require__(/*! ./$.property-desc */ 35)
-	  , getDesc        = $.getDesc
-	  , setDesc        = $.setDesc
-	  , _create        = $.create
-	  , getNames       = $names.get
+	var global         = __webpack_require__(/*! ./_global */ 39)
+	  , has            = __webpack_require__(/*! ./_has */ 54)
+	  , DESCRIPTORS    = __webpack_require__(/*! ./_descriptors */ 48)
+	  , $export        = __webpack_require__(/*! ./_export */ 38)
+	  , redefine       = __webpack_require__(/*! ./_redefine */ 53)
+	  , META           = __webpack_require__(/*! ./_meta */ 97).KEY
+	  , $fails         = __webpack_require__(/*! ./_fails */ 49)
+	  , shared         = __webpack_require__(/*! ./_shared */ 65)
+	  , setToStringTag = __webpack_require__(/*! ./_set-to-string-tag */ 69)
+	  , uid            = __webpack_require__(/*! ./_uid */ 66)
+	  , wks            = __webpack_require__(/*! ./_wks */ 70)
+	  , wksExt         = __webpack_require__(/*! ./_wks-ext */ 93)
+	  , wksDefine      = __webpack_require__(/*! ./_wks-define */ 98)
+	  , keyOf          = __webpack_require__(/*! ./_keyof */ 99)
+	  , enumKeys       = __webpack_require__(/*! ./_enum-keys */ 100)
+	  , isArray        = __webpack_require__(/*! ./_is-array */ 103)
+	  , anObject       = __webpack_require__(/*! ./_an-object */ 45)
+	  , toIObject      = __webpack_require__(/*! ./_to-iobject */ 32)
+	  , toPrimitive    = __webpack_require__(/*! ./_to-primitive */ 51)
+	  , createDesc     = __webpack_require__(/*! ./_property-desc */ 52)
+	  , _create        = __webpack_require__(/*! ./_object-create */ 56)
+	  , gOPNExt        = __webpack_require__(/*! ./_object-gopn-ext */ 104)
+	  , $GOPD          = __webpack_require__(/*! ./_object-gopd */ 106)
+	  , $DP            = __webpack_require__(/*! ./_object-dp */ 44)
+	  , $keys          = __webpack_require__(/*! ./_object-keys */ 58)
+	  , gOPD           = $GOPD.f
+	  , dP             = $DP.f
+	  , gOPN           = gOPNExt.f
 	  , $Symbol        = global.Symbol
 	  , $JSON          = global.JSON
 	  , _stringify     = $JSON && $JSON.stringify
-	  , setter         = false
+	  , PROTOTYPE      = 'prototype'
 	  , HIDDEN         = wks('_hidden')
-	  , isEnum         = $.isEnum
+	  , TO_PRIMITIVE   = wks('toPrimitive')
+	  , isEnum         = {}.propertyIsEnumerable
 	  , SymbolRegistry = shared('symbol-registry')
 	  , AllSymbols     = shared('symbols')
-	  , useNative      = typeof $Symbol == 'function'
-	  , ObjectProto    = Object.prototype;
+	  , OPSymbols      = shared('op-symbols')
+	  , ObjectProto    = Object[PROTOTYPE]
+	  , USE_NATIVE     = typeof $Symbol == 'function'
+	  , QObject        = global.QObject;
+	// Don't use setters in Qt Script, https://github.com/zloirock/core-js/issues/173
+	var setter = !QObject || !QObject[PROTOTYPE] || !QObject[PROTOTYPE].findChild;
 	
 	// fallback for old Android, https://code.google.com/p/v8/issues/detail?id=687
 	var setSymbolDesc = DESCRIPTORS && $fails(function(){
-	  return _create(setDesc({}, 'a', {
-	    get: function(){ return setDesc(this, 'a', {value: 7}).a; }
+	  return _create(dP({}, 'a', {
+	    get: function(){ return dP(this, 'a', {value: 7}).a; }
 	  })).a != 7;
 	}) ? function(it, key, D){
-	  var protoDesc = getDesc(ObjectProto, key);
+	  var protoDesc = gOPD(ObjectProto, key);
 	  if(protoDesc)delete ObjectProto[key];
-	  setDesc(it, key, D);
-	  if(protoDesc && it !== ObjectProto)setDesc(ObjectProto, key, protoDesc);
-	} : setDesc;
+	  dP(it, key, D);
+	  if(protoDesc && it !== ObjectProto)dP(ObjectProto, key, protoDesc);
+	} : dP;
 	
 	var wrap = function(tag){
-	  var sym = AllSymbols[tag] = _create($Symbol.prototype);
+	  var sym = AllSymbols[tag] = _create($Symbol[PROTOTYPE]);
 	  sym._k = tag;
-	  DESCRIPTORS && setter && setSymbolDesc(ObjectProto, tag, {
-	    configurable: true,
-	    set: function(value){
-	      if(has(this, HIDDEN) && has(this[HIDDEN], tag))this[HIDDEN][tag] = false;
-	      setSymbolDesc(this, tag, createDesc(1, value));
-	    }
-	  });
 	  return sym;
 	};
 	
-	var isSymbol = function(it){
+	var isSymbol = USE_NATIVE && typeof $Symbol.iterator == 'symbol' ? function(it){
 	  return typeof it == 'symbol';
+	} : function(it){
+	  return it instanceof $Symbol;
 	};
 	
 	var $defineProperty = function defineProperty(it, key, D){
-	  if(D && has(AllSymbols, key)){
+	  if(it === ObjectProto)$defineProperty(OPSymbols, key, D);
+	  anObject(it);
+	  key = toPrimitive(key, true);
+	  anObject(D);
+	  if(has(AllSymbols, key)){
 	    if(!D.enumerable){
-	      if(!has(it, HIDDEN))setDesc(it, HIDDEN, createDesc(1, {}));
+	      if(!has(it, HIDDEN))dP(it, HIDDEN, createDesc(1, {}));
 	      it[HIDDEN][key] = true;
 	    } else {
 	      if(has(it, HIDDEN) && it[HIDDEN][key])it[HIDDEN][key] = false;
 	      D = _create(D, {enumerable: createDesc(0, false)});
 	    } return setSymbolDesc(it, key, D);
-	  } return setDesc(it, key, D);
+	  } return dP(it, key, D);
 	};
 	var $defineProperties = function defineProperties(it, P){
 	  anObject(it);
@@ -89285,83 +88598,80 @@
 	  return P === undefined ? _create(it) : $defineProperties(_create(it), P);
 	};
 	var $propertyIsEnumerable = function propertyIsEnumerable(key){
-	  var E = isEnum.call(this, key);
-	  return E || !has(this, key) || !has(AllSymbols, key) || has(this, HIDDEN) && this[HIDDEN][key]
-	    ? E : true;
+	  var E = isEnum.call(this, key = toPrimitive(key, true));
+	  if(this === ObjectProto && has(AllSymbols, key) && !has(OPSymbols, key))return false;
+	  return E || !has(this, key) || !has(AllSymbols, key) || has(this, HIDDEN) && this[HIDDEN][key] ? E : true;
 	};
 	var $getOwnPropertyDescriptor = function getOwnPropertyDescriptor(it, key){
-	  var D = getDesc(it = toIObject(it), key);
+	  it  = toIObject(it);
+	  key = toPrimitive(key, true);
+	  if(it === ObjectProto && has(AllSymbols, key) && !has(OPSymbols, key))return;
+	  var D = gOPD(it, key);
 	  if(D && has(AllSymbols, key) && !(has(it, HIDDEN) && it[HIDDEN][key]))D.enumerable = true;
 	  return D;
 	};
 	var $getOwnPropertyNames = function getOwnPropertyNames(it){
-	  var names  = getNames(toIObject(it))
+	  var names  = gOPN(toIObject(it))
 	    , result = []
 	    , i      = 0
 	    , key;
-	  while(names.length > i)if(!has(AllSymbols, key = names[i++]) && key != HIDDEN)result.push(key);
-	  return result;
+	  while(names.length > i){
+	    if(!has(AllSymbols, key = names[i++]) && key != HIDDEN && key != META)result.push(key);
+	  } return result;
 	};
 	var $getOwnPropertySymbols = function getOwnPropertySymbols(it){
-	  var names  = getNames(toIObject(it))
+	  var IS_OP  = it === ObjectProto
+	    , names  = gOPN(IS_OP ? OPSymbols : toIObject(it))
 	    , result = []
 	    , i      = 0
 	    , key;
-	  while(names.length > i)if(has(AllSymbols, key = names[i++]))result.push(AllSymbols[key]);
-	  return result;
+	  while(names.length > i){
+	    if(has(AllSymbols, key = names[i++]) && (IS_OP ? has(ObjectProto, key) : true))result.push(AllSymbols[key]);
+	  } return result;
 	};
-	var $stringify = function stringify(it){
-	  if(it === undefined || isSymbol(it))return; // IE8 returns string on undefined
-	  var args = [it]
-	    , i    = 1
-	    , $$   = arguments
-	    , replacer, $replacer;
-	  while($$.length > i)args.push($$[i++]);
-	  replacer = args[1];
-	  if(typeof replacer == 'function')$replacer = replacer;
-	  if($replacer || !isArray(replacer))replacer = function(key, value){
-	    if($replacer)value = $replacer.call(this, key, value);
-	    if(!isSymbol(value))return value;
-	  };
-	  args[1] = replacer;
-	  return _stringify.apply($JSON, args);
-	};
-	var buggyJSON = $fails(function(){
-	  var S = $Symbol();
-	  // MS Edge converts symbol values to JSON as {}
-	  // WebKit converts symbol values to JSON as null
-	  // V8 throws on boxed symbols
-	  return _stringify([S]) != '[null]' || _stringify({a: S}) != '{}' || _stringify(Object(S)) != '{}';
-	});
 	
 	// 19.4.1.1 Symbol([description])
-	if(!useNative){
+	if(!USE_NATIVE){
 	  $Symbol = function Symbol(){
-	    if(isSymbol(this))throw TypeError('Symbol is not a constructor');
-	    return wrap(uid(arguments.length > 0 ? arguments[0] : undefined));
+	    if(this instanceof $Symbol)throw TypeError('Symbol is not a constructor!');
+	    var tag = uid(arguments.length > 0 ? arguments[0] : undefined);
+	    var $set = function(value){
+	      if(this === ObjectProto)$set.call(OPSymbols, value);
+	      if(has(this, HIDDEN) && has(this[HIDDEN], tag))this[HIDDEN][tag] = false;
+	      setSymbolDesc(this, tag, createDesc(1, value));
+	    };
+	    if(DESCRIPTORS && setter)setSymbolDesc(ObjectProto, tag, {configurable: true, set: $set});
+	    return wrap(tag);
 	  };
-	  redefine($Symbol.prototype, 'toString', function toString(){
+	  redefine($Symbol[PROTOTYPE], 'toString', function toString(){
 	    return this._k;
 	  });
 	
-	  isSymbol = function(it){
-	    return it instanceof $Symbol;
-	  };
+	  $GOPD.f = $getOwnPropertyDescriptor;
+	  $DP.f   = $defineProperty;
+	  __webpack_require__(/*! ./_object-gopn */ 105).f = gOPNExt.f = $getOwnPropertyNames;
+	  __webpack_require__(/*! ./_object-pie */ 102).f  = $propertyIsEnumerable;
+	  __webpack_require__(/*! ./_object-gops */ 101).f = $getOwnPropertySymbols;
 	
-	  $.create     = $create;
-	  $.isEnum     = $propertyIsEnumerable;
-	  $.getDesc    = $getOwnPropertyDescriptor;
-	  $.setDesc    = $defineProperty;
-	  $.setDescs   = $defineProperties;
-	  $.getNames   = $names.get = $getOwnPropertyNames;
-	  $.getSymbols = $getOwnPropertySymbols;
-	
-	  if(DESCRIPTORS && !__webpack_require__(/*! ./$.library */ 26)){
+	  if(DESCRIPTORS && !__webpack_require__(/*! ./_library */ 37)){
 	    redefine(ObjectProto, 'propertyIsEnumerable', $propertyIsEnumerable, true);
+	  }
+	
+	  wksExt.f = function(name){
+	    return wrap(wks(name));
 	  }
 	}
 	
-	var symbolStatics = {
+	$export($export.G + $export.W + $export.F * !USE_NATIVE, {Symbol: $Symbol});
+	
+	for(var symbols = (
+	  // 19.4.2.2, 19.4.2.3, 19.4.2.4, 19.4.2.6, 19.4.2.8, 19.4.2.9, 19.4.2.10, 19.4.2.11, 19.4.2.12, 19.4.2.13, 19.4.2.14
+	  'hasInstance,isConcatSpreadable,iterator,match,replace,search,species,split,toPrimitive,toStringTag,unscopables'
+	).split(','), i = 0; symbols.length > i; )wks(symbols[i++]);
+	
+	for(var symbols = $keys(wks.store), i = 0; symbols.length > i; )wksDefine(symbols[i++]);
+	
+	$export($export.S + $export.F * !USE_NATIVE, 'Symbol', {
 	  // 19.4.2.1 Symbol.for(key)
 	  'for': function(key){
 	    return has(SymbolRegistry, key += '')
@@ -89370,37 +88680,14 @@
 	  },
 	  // 19.4.2.5 Symbol.keyFor(sym)
 	  keyFor: function keyFor(key){
-	    return keyOf(SymbolRegistry, key);
+	    if(isSymbol(key))return keyOf(SymbolRegistry, key);
+	    throw TypeError(key + ' is not a symbol!');
 	  },
 	  useSetter: function(){ setter = true; },
 	  useSimple: function(){ setter = false; }
-	};
-	// 19.4.2.2 Symbol.hasInstance
-	// 19.4.2.3 Symbol.isConcatSpreadable
-	// 19.4.2.4 Symbol.iterator
-	// 19.4.2.6 Symbol.match
-	// 19.4.2.8 Symbol.replace
-	// 19.4.2.9 Symbol.search
-	// 19.4.2.10 Symbol.species
-	// 19.4.2.11 Symbol.split
-	// 19.4.2.12 Symbol.toPrimitive
-	// 19.4.2.13 Symbol.toStringTag
-	// 19.4.2.14 Symbol.unscopables
-	$.each.call((
-	  'hasInstance,isConcatSpreadable,iterator,match,replace,search,' +
-	  'species,split,toPrimitive,toStringTag,unscopables'
-	).split(','), function(it){
-	  var sym = wks(it);
-	  symbolStatics[it] = useNative ? sym : wrap(sym);
 	});
 	
-	setter = true;
-	
-	$export($export.G + $export.W, {Symbol: $Symbol});
-	
-	$export($export.S, 'Symbol', symbolStatics);
-	
-	$export($export.S + $export.F * !useNative, 'Object', {
+	$export($export.S + $export.F * !USE_NATIVE, 'Object', {
 	  // 19.1.2.2 Object.create(O [, Properties])
 	  create: $create,
 	  // 19.1.2.4 Object.defineProperty(O, P, Attributes)
@@ -89416,8 +88703,32 @@
 	});
 	
 	// 24.3.2 JSON.stringify(value [, replacer [, space]])
-	$JSON && $export($export.S + $export.F * (!useNative || buggyJSON), 'JSON', {stringify: $stringify});
+	$JSON && $export($export.S + $export.F * (!USE_NATIVE || $fails(function(){
+	  var S = $Symbol();
+	  // MS Edge converts symbol values to JSON as {}
+	  // WebKit converts symbol values to JSON as null
+	  // V8 throws on boxed symbols
+	  return _stringify([S]) != '[null]' || _stringify({a: S}) != '{}' || _stringify(Object(S)) != '{}';
+	})), 'JSON', {
+	  stringify: function stringify(it){
+	    if(it === undefined || isSymbol(it))return; // IE8 returns string on undefined
+	    var args = [it]
+	      , i    = 1
+	      , replacer, $replacer;
+	    while(arguments.length > i)args.push(arguments[i++]);
+	    replacer = args[1];
+	    if(typeof replacer == 'function')$replacer = replacer;
+	    if($replacer || !isArray(replacer))replacer = function(key, value){
+	      if($replacer)value = $replacer.call(this, key, value);
+	      if(!isSymbol(value))return value;
+	    };
+	    args[1] = replacer;
+	    return _stringify.apply($JSON, args);
+	  }
+	});
 	
+	// 19.4.3.4 Symbol.prototype[@@toPrimitive](hint)
+	$Symbol[PROTOTYPE][TO_PRIMITIVE] || __webpack_require__(/*! ./_hide */ 43)($Symbol[PROTOTYPE], TO_PRIMITIVE, $Symbol[PROTOTYPE].valueOf);
 	// 19.4.3.5 Symbol.prototype[@@toStringTag]
 	setToStringTag($Symbol, 'Symbol');
 	// 20.2.1.9 Math[@@toStringTag]
@@ -89426,17 +88737,95 @@
 	setToStringTag(global.JSON, 'JSON', true);
 
 /***/ },
-/* 68 */
-/*!**********************************************!*\
-  !*** ./~/core-js/library/modules/$.keyof.js ***!
-  \**********************************************/
+/* 97 */
+/*!************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_meta.js ***!
+  \************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var $         = __webpack_require__(/*! ./$ */ 34)
-	  , toIObject = __webpack_require__(/*! ./$.to-iobject */ 21);
+	var META     = __webpack_require__(/*! ./_uid */ 66)('meta')
+	  , isObject = __webpack_require__(/*! ./_is-object */ 46)
+	  , has      = __webpack_require__(/*! ./_has */ 54)
+	  , setDesc  = __webpack_require__(/*! ./_object-dp */ 44).f
+	  , id       = 0;
+	var isExtensible = Object.isExtensible || function(){
+	  return true;
+	};
+	var FREEZE = !__webpack_require__(/*! ./_fails */ 49)(function(){
+	  return isExtensible(Object.preventExtensions({}));
+	});
+	var setMeta = function(it){
+	  setDesc(it, META, {value: {
+	    i: 'O' + ++id, // object ID
+	    w: {}          // weak collections IDs
+	  }});
+	};
+	var fastKey = function(it, create){
+	  // return primitive with prefix
+	  if(!isObject(it))return typeof it == 'symbol' ? it : (typeof it == 'string' ? 'S' : 'P') + it;
+	  if(!has(it, META)){
+	    // can't set metadata to uncaught frozen object
+	    if(!isExtensible(it))return 'F';
+	    // not necessary to add metadata
+	    if(!create)return 'E';
+	    // add missing metadata
+	    setMeta(it);
+	  // return object ID
+	  } return it[META].i;
+	};
+	var getWeak = function(it, create){
+	  if(!has(it, META)){
+	    // can't set metadata to uncaught frozen object
+	    if(!isExtensible(it))return true;
+	    // not necessary to add metadata
+	    if(!create)return false;
+	    // add missing metadata
+	    setMeta(it);
+	  // return hash weak collections IDs
+	  } return it[META].w;
+	};
+	// add metadata on freeze-family methods calling
+	var onFreeze = function(it){
+	  if(FREEZE && meta.NEED && isExtensible(it) && !has(it, META))setMeta(it);
+	  return it;
+	};
+	var meta = module.exports = {
+	  KEY:      META,
+	  NEED:     false,
+	  fastKey:  fastKey,
+	  getWeak:  getWeak,
+	  onFreeze: onFreeze
+	};
+
+/***/ },
+/* 98 */
+/*!******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_wks-define.js ***!
+  \******************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	var global         = __webpack_require__(/*! ./_global */ 39)
+	  , core           = __webpack_require__(/*! ./_core */ 40)
+	  , LIBRARY        = __webpack_require__(/*! ./_library */ 37)
+	  , wksExt         = __webpack_require__(/*! ./_wks-ext */ 93)
+	  , defineProperty = __webpack_require__(/*! ./_object-dp */ 44).f;
+	module.exports = function(name){
+	  var $Symbol = core.Symbol || (core.Symbol = LIBRARY ? {} : global.Symbol || {});
+	  if(name.charAt(0) != '_' && !(name in $Symbol))defineProperty($Symbol, name, {value: wksExt.f(name)});
+	};
+
+/***/ },
+/* 99 */
+/*!*************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_keyof.js ***!
+  \*************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	var getKeys   = __webpack_require__(/*! ./_object-keys */ 58)
+	  , toIObject = __webpack_require__(/*! ./_to-iobject */ 32);
 	module.exports = function(object, el){
 	  var O      = toIObject(object)
-	    , keys   = $.getKeys(O)
+	    , keys   = getKeys(O)
 	    , length = keys.length
 	    , index  = 0
 	    , key;
@@ -89444,79 +88833,155 @@
 	};
 
 /***/ },
-/* 69 */
-/*!**************************************************!*\
-  !*** ./~/core-js/library/modules/$.get-names.js ***!
-  \**************************************************/
+/* 100 */
+/*!*****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_enum-keys.js ***!
+  \*****************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	// all enumerable object keys, includes symbols
+	var getKeys = __webpack_require__(/*! ./_object-keys */ 58)
+	  , gOPS    = __webpack_require__(/*! ./_object-gops */ 101)
+	  , pIE     = __webpack_require__(/*! ./_object-pie */ 102);
+	module.exports = function(it){
+	  var result     = getKeys(it)
+	    , getSymbols = gOPS.f;
+	  if(getSymbols){
+	    var symbols = getSymbols(it)
+	      , isEnum  = pIE.f
+	      , i       = 0
+	      , key;
+	    while(symbols.length > i)if(isEnum.call(it, key = symbols[i++]))result.push(key);
+	  } return result;
+	};
+
+/***/ },
+/* 101 */
+/*!*******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_object-gops.js ***!
+  \*******************************************************************/
+/***/ function(module, exports) {
+
+	exports.f = Object.getOwnPropertySymbols;
+
+/***/ },
+/* 102 */
+/*!******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_object-pie.js ***!
+  \******************************************************************/
+/***/ function(module, exports) {
+
+	exports.f = {}.propertyIsEnumerable;
+
+/***/ },
+/* 103 */
+/*!****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_is-array.js ***!
+  \****************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	// 7.2.2 IsArray(argument)
+	var cof = __webpack_require__(/*! ./_cof */ 34);
+	module.exports = Array.isArray || function isArray(arg){
+	  return cof(arg) == 'Array';
+	};
+
+/***/ },
+/* 104 */
+/*!***********************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_object-gopn-ext.js ***!
+  \***********************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	// fallback for IE11 buggy Object.getOwnPropertyNames with iframe and window
-	var toIObject = __webpack_require__(/*! ./$.to-iobject */ 21)
-	  , getNames  = __webpack_require__(/*! ./$ */ 34).getNames
+	var toIObject = __webpack_require__(/*! ./_to-iobject */ 32)
+	  , gOPN      = __webpack_require__(/*! ./_object-gopn */ 105).f
 	  , toString  = {}.toString;
 	
-	var windowNames = typeof window == 'object' && Object.getOwnPropertyNames
+	var windowNames = typeof window == 'object' && window && Object.getOwnPropertyNames
 	  ? Object.getOwnPropertyNames(window) : [];
 	
 	var getWindowNames = function(it){
 	  try {
-	    return getNames(it);
+	    return gOPN(it);
 	  } catch(e){
 	    return windowNames.slice();
 	  }
 	};
 	
-	module.exports.get = function getOwnPropertyNames(it){
-	  if(windowNames && toString.call(it) == '[object Window]')return getWindowNames(it);
-	  return getNames(toIObject(it));
+	module.exports.f = function getOwnPropertyNames(it){
+	  return windowNames && toString.call(it) == '[object Window]' ? getWindowNames(it) : gOPN(toIObject(it));
 	};
 
+
 /***/ },
-/* 70 */
-/*!**************************************************!*\
-  !*** ./~/core-js/library/modules/$.enum-keys.js ***!
-  \**************************************************/
+/* 105 */
+/*!*******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_object-gopn.js ***!
+  \*******************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	// all enumerable object keys, includes symbols
-	var $ = __webpack_require__(/*! ./$ */ 34);
-	module.exports = function(it){
-	  var keys       = $.getKeys(it)
-	    , getSymbols = $.getSymbols;
-	  if(getSymbols){
-	    var symbols = getSymbols(it)
-	      , isEnum  = $.isEnum
-	      , i       = 0
-	      , key;
-	    while(symbols.length > i)if(isEnum.call(it, key = symbols[i++]))keys.push(key);
-	  }
-	  return keys;
+	// 19.1.2.7 / 15.2.3.4 Object.getOwnPropertyNames(O)
+	var $keys      = __webpack_require__(/*! ./_object-keys-internal */ 59)
+	  , hiddenKeys = __webpack_require__(/*! ./_enum-bug-keys */ 67).concat('length', 'prototype');
+	
+	exports.f = Object.getOwnPropertyNames || function getOwnPropertyNames(O){
+	  return $keys(O, hiddenKeys);
 	};
 
 /***/ },
-/* 71 */
-/*!*************************************************!*\
-  !*** ./~/core-js/library/modules/$.is-array.js ***!
-  \*************************************************/
+/* 106 */
+/*!*******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_object-gopd.js ***!
+  \*******************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	// 7.2.2 IsArray(argument)
-	var cof = __webpack_require__(/*! ./$.cof */ 23);
-	module.exports = Array.isArray || function(arg){
-	  return cof(arg) == 'Array';
+	var pIE            = __webpack_require__(/*! ./_object-pie */ 102)
+	  , createDesc     = __webpack_require__(/*! ./_property-desc */ 52)
+	  , toIObject      = __webpack_require__(/*! ./_to-iobject */ 32)
+	  , toPrimitive    = __webpack_require__(/*! ./_to-primitive */ 51)
+	  , has            = __webpack_require__(/*! ./_has */ 54)
+	  , IE8_DOM_DEFINE = __webpack_require__(/*! ./_ie8-dom-define */ 47)
+	  , gOPD           = Object.getOwnPropertyDescriptor;
+	
+	exports.f = __webpack_require__(/*! ./_descriptors */ 48) ? gOPD : function getOwnPropertyDescriptor(O, P){
+	  O = toIObject(O);
+	  P = toPrimitive(P, true);
+	  if(IE8_DOM_DEFINE)try {
+	    return gOPD(O, P);
+	  } catch(e){ /* empty */ }
+	  if(has(O, P))return createDesc(!pIE.f.call(O, P), O[P]);
 	};
 
 /***/ },
-/* 72 */
-/*!***********************************************************!*\
-  !*** ./~/core-js/library/modules/es6.object.to-string.js ***!
-  \***********************************************************/
+/* 107 */
+/*!***************************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/es6.object.to-string.js ***!
+  \***************************************************************************/
 /***/ function(module, exports) {
 
 
 
 /***/ },
-/* 73 */
+/* 108 */
+/*!********************************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/es7.symbol.async-iterator.js ***!
+  \********************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(/*! ./_wks-define */ 98)('asyncIterator');
+
+/***/ },
+/* 109 */
+/*!****************************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/es7.symbol.observable.js ***!
+  \****************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(/*! ./_wks-define */ 98)('observable');
+
+/***/ },
+/* 110 */
 /*!***************************************************************!*\
   !*** ./beeline-admin/directives/paymentView/paymentView.html ***!
   \***************************************************************/
@@ -89525,7 +88990,7 @@
 	module.exports = "<div>\n  <button class=\"btn btn-default\"\n    ng-click=\"collapsed = !collapsed\">\n    {{pvTitle}}\n  </button>\n  <dl class=\"dl-compact\"\n      ng-repeat=\"(key, val) in pvData\"\n      ng-hide=\"collapsed\">\n    <dt>{{key}}</dt>\n    <dd ng-if=\"!isObject(val)\">{{val}}</dd>\n    <dd ng-if=\"isObject(val)\">\n      <payment-view ng-if=\"val != null\" pv-data=\"val\" pv-title=\"\"></payment-view>\n      <span ng-if=\"val == null\"><i>null</i></span>\n    </dd>\n  </dl>\n</div>\n";
 
 /***/ },
-/* 74 */
+/* 111 */
 /*!***********************************************************!*\
   !*** ./beeline-admin/directives/ticketView/ticketView.js ***!
   \***********************************************************/
@@ -89537,13 +89002,13 @@
 	  value: true
 	});
 	
-	var _typeof2 = __webpack_require__(/*! babel-runtime/helpers/typeof */ 64);
+	var _typeof2 = __webpack_require__(/*! babel-runtime/helpers/typeof */ 90);
 	
 	var _typeof3 = _interopRequireDefault(_typeof2);
 	
 	exports.default = function () {
 	  return {
-	    template: __webpack_require__(/*! ./ticketView.html */ 75),
+	    template: __webpack_require__(/*! ./ticketView.html */ 112),
 	    scope: {
 	      data: '=',
 	      collapse: '='
@@ -89560,7 +89025,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 75 */
+/* 112 */
 /*!*************************************************************!*\
   !*** ./beeline-admin/directives/ticketView/ticketView.html ***!
   \*************************************************************/
@@ -89569,7 +89034,7 @@
 	module.exports = "<div>\n<b>{{data.trips[0].route.label}}</b> \n{{data.trips[0].date | date: 'EEE dd MMM yy':'UTC'}}\n  <dl class=\"dl-compact\">\n    <dt>Board Stop</dt>\n    <dd>\n        {{data.boardStop.stop.description}}\n        ({{data.boardStop.time | date:'HH:mm'}})\n    </dd>\n\n\n    <dt>Alight Stop</dt>\n    <dd>\n        {{data.alightStop.stop.description}}\n        ({{data.alightStop.time | date:'HH:mm'}})\n    </dd>\n\n    <dt>User</dt>\n    <dd>\n        {{data.user.name}} /\n        {{data.user.email}} /\n        {{data.user.telephone}}\n    </dd>\n\n    <dt>Id</dt>\n    <dd>{{data.id}}</dd>\n  </dl>\n</div>\n";
 
 /***/ },
-/* 76 */
+/* 113 */
 /*!*****************************************************************!*\
   !*** ./beeline-admin/directives/routeSelector/routeSelector.js ***!
   \*****************************************************************/
@@ -89584,7 +89049,7 @@
 	exports.default = function (RoutesService) {
 	
 	  return {
-	    template: __webpack_require__(/*! ./routeSelector.html */ 77),
+	    template: __webpack_require__(/*! ./routeSelector.html */ 114),
 	    scope: {
 	      selectedRoute: '=',
 	      selectedRouteId: '=?'
@@ -89631,7 +89096,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 77 */
+/* 114 */
 /*!*******************************************************************!*\
   !*** ./beeline-admin/directives/routeSelector/routeSelector.html ***!
   \*******************************************************************/
@@ -89640,7 +89105,7 @@
 	module.exports = "<div>\n  <button class=\"glyphicon glyphicon-duplicate btn btn-default\"\n    title=\"copy\"\n    ng-click=\"copySelected()\"\n    ng-disabled=\"!selectedRoute\">\n  </button>\n  <ul>\n    <li ng-repeat=\"route in availableRoutes | orderBy:'label' track by route.id\"\n    ng-click=\"selectRoute(route)\"\n    ng-class=\"{\n      active: selectedRoute == route\n    }\"\n    >\n        {{route.label}}:\n        {{route.from}} to {{route.to}}\n    </li>\n    <li ng-click=\"selectRoute({})\">\n      <em>New route!</em>\n    </li>\n  </ul>\n</div>\n";
 
 /***/ },
-/* 78 */
+/* 115 */
 /*!*************************************************************!*\
   !*** ./beeline-admin/directives/routeEditor/routeEditor.js ***!
   \*************************************************************/
@@ -89654,7 +89119,7 @@
 	
 	exports.default = function (AdminService, RoutesService, $rootScope) {
 	  return {
-	    template: __webpack_require__(/*! ./routeEditor.html */ 79),
+	    template: __webpack_require__(/*! ./routeEditor.html */ 116),
 	    scope: {
 	      route: '=',
 	      edit: '=?'
@@ -89693,7 +89158,7 @@
 	};
 
 /***/ },
-/* 79 */
+/* 116 */
 /*!***************************************************************!*\
   !*** ./beeline-admin/directives/routeEditor/routeEditor.html ***!
   \***************************************************************/
@@ -89702,7 +89167,7 @@
 	module.exports = "<div>\n  <span class=\"btn-group\">\n    <button class=\"btn btn-default\"\n      ng-click=\"edit = 'route'\">\n      Edit Route Description\n    </button>\n    <button class=\"btn btn-default\"\n      ng-click=\"edit = 'trips'\"\n      >\n      Edit Trips\n    </button>\n  </span>\n</div>\n\n<div ng-show=\"route\">\n  <div ng-show=\"edit == 'route'\">\n    <h2>{{route.label}}</h2>\n\n    <label>\n      Label:\n      <input type=\"text\" ng-model=\"route.label\">\n    </label>\n\n    <label>\n      Name:\n      <input type=\"text\" ng-model=\"route.name\">\n    </label>\n\n    <label>\n      From:\n      <input type=\"text\" ng-model=\"route.from\">\n    </label>\n\n    <label>\n      To:\n      <input type=\"text\" ng-model=\"route.to\">\n    </label>\n\n    <!-- ng-if creates a scope -->\n    <label ng-if=\"adminService.session().role == 'superadmin'\">\n      Company:\n      <company-selector ng-model=\"$parent.route.transportCompanyId\">\n      </company-selector>\n    </label>\n\n    <label>Path:</label>\n    <path-editor path=\"route.path\">\n    </path-editor>\n\n    <div class=\"btn-group\">\n      <button class=\"btn btn-primary\" ng-click=\"saveRoute()\"\n        ng-disabled=\"!route\">\n        Save\n      </button>\n      <button class=\"btn btn-default\" ng-click=\"resetRoute()\">\n        Reset\n      </button>\n    </div>\n    <button class=\"btn btn-danger\" ng-click=\"deleteRoute()\"\n      ng-disabled=\"!route || !route.id\">\n      Delete\n    </button>\n  </div>\n\n  <div ng-show=\"edit == 'trips'\">\n    <trips-editor route-id=\"route.id\" ng-if=\"route.id\">\n    </trips-editor>\n  </div>\n</div>\n";
 
 /***/ },
-/* 80 */
+/* 117 */
 /*!***********************************************************!*\
   !*** ./beeline-admin/directives/pathEditor/pathEditor.js ***!
   \***********************************************************/
@@ -89716,7 +89181,7 @@
 	
 	exports.default = function ($rootScope, $location) {
 	  return {
-	    template: __webpack_require__(/*! ./pathEditor.html */ 81),
+	    template: __webpack_require__(/*! ./pathEditor.html */ 118),
 	    scope: {
 	      path: '='
 	    },
@@ -89773,7 +89238,7 @@
 	};
 
 /***/ },
-/* 81 */
+/* 118 */
 /*!*************************************************************!*\
   !*** ./beeline-admin/directives/pathEditor/pathEditor.html ***!
   \*************************************************************/
@@ -89782,7 +89247,7 @@
 	module.exports = "\n<div>\n  <button class=\"btn btn-default\"\n    ng-click=\"clearPath\"\n  >\n    Clear path\n  </button>\n\n  <span class=\"btn-group\">\n    <button class=\"btn btn-primary\"\n      uib-btn-radio=\"'start'\"\n      ng-model=\"addToWhere\"\n      >\n      Add to start\n    </button>\n\n    <button class=\"btn btn-primary\"\n      uib-btn-radio=\"'end'\"\n      ng-model=\"addToWhere\"\n      >\n      Add to end\n    </button>\n  </span>\n</div>\n\n<div class=\"main\">\n  <ui-gmap-google-map\n    center=\"{latitude: 1.38, longitude: 103.8}\"\n    zoom=\"12\"\n    events=\"events\"\n    options=\"{ draggableCursor: 'crosshair' }\"\n    control=\"mapControl\"\n  >\n    <ui-gmap-polyline\n      path=\"pathX\"\n      stroke=\"{\n        color: '#4b3863',\n        weight: 3.0,\n      }\"\n    >\n    </ui-gmap-polyline>\n  </ui-gmap-google-map>\n\n  <ul class=\"point-list\">\n    <li ng-repeat=\"p in path\"\n      ng-click=\"path.splice($index, 1)\"\n    >\n      {{p.lat | number:5}}, {{p.lng | number:5}}\n    </li>\n  </ul>\n</div>\n";
 
 /***/ },
-/* 82 */
+/* 119 */
 /*!*************************************************************!*\
   !*** ./beeline-admin/directives/tripsEditor/tripsEditor.js ***!
   \*************************************************************/
@@ -89794,15 +89259,15 @@
 	  value: true
 	});
 	
-	var _regenerator = __webpack_require__(/*! babel-runtime/regenerator */ 83);
+	var _regenerator = __webpack_require__(/*! babel-runtime/regenerator */ 120);
 	
 	var _regenerator2 = _interopRequireDefault(_regenerator);
 	
-	var _asyncToGenerator2 = __webpack_require__(/*! babel-runtime/helpers/asyncToGenerator */ 110);
+	var _asyncToGenerator2 = __webpack_require__(/*! babel-runtime/helpers/asyncToGenerator */ 124);
 	
 	var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 	
-	var _getIterator2 = __webpack_require__(/*! babel-runtime/core-js/get-iterator */ 14);
+	var _getIterator2 = __webpack_require__(/*! babel-runtime/core-js/get-iterator */ 25);
 	
 	var _getIterator3 = _interopRequireDefault(_getIterator2);
 	
@@ -89812,7 +89277,7 @@
 	    scope: {
 	      routeId: '='
 	    },
-	    template: __webpack_require__(/*! ./tripsEditor.html */ 111),
+	    template: __webpack_require__(/*! ./tripsEditor.html */ 140),
 	    link: function link(scope, elem, attr) {
 	      scope.adminService = AdminService;
 	
@@ -89842,7 +89307,6 @@
 	        }
 	      };
 	      scope.refreshTrips = function () {
-	        console.log(scope.filter.startDate);
 	        RoutesService.getTrips({
 	          routeId: scope.routeId,
 	          startDate: new Date(scope.filter.startDate),
@@ -89853,7 +89317,6 @@
 	          return DriverService.fetchDriverInfo(trips);
 	        }).then(function (trips) {
 	          scope.trips = trips;
-	          console.log(trips);
 	
 	          // populate dates
 	          scope.disp.existingDates = _lodash2.default.uniq(trips.map(function (tr) {
@@ -90125,10 +89588,20 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 83 */
+/* 120 */
 /*!**********************************************!*\
   !*** ./~/babel-runtime/regenerator/index.js ***!
   \**********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(/*! regenerator-runtime */ 121);
+
+
+/***/ },
+/* 121 */
+/*!*****************************************************************!*\
+  !*** ./~/babel-runtime/~/regenerator-runtime/runtime-module.js ***!
+  \*****************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {// This method of obtaining a reference to the global object needs to be
@@ -90149,7 +89622,7 @@
 	// Force reevalutation of runtime.js.
 	g.regeneratorRuntime = undefined;
 	
-	module.exports = __webpack_require__(/*! ./runtime */ 84);
+	module.exports = __webpack_require__(/*! ./runtime */ 122);
 	
 	if (hadRuntime) {
 	  // Restore the original runtime.
@@ -90163,15 +89636,13 @@
 	  }
 	}
 	
-	module.exports = { "default": module.exports, __esModule: true };
-	
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 84 */
-/*!************************************************!*\
-  !*** ./~/babel-runtime/regenerator/runtime.js ***!
-  \************************************************/
+/* 122 */
+/*!**********************************************************!*\
+  !*** ./~/babel-runtime/~/regenerator-runtime/runtime.js ***!
+  \**********************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global, process) {/**
@@ -90184,22 +89655,12 @@
 	 * the same directory.
 	 */
 	
-	"use strict";
-	
-	var _Symbol = __webpack_require__(/*! babel-runtime/core-js/symbol */ 65)["default"];
-	
-	var _Object$create = __webpack_require__(/*! babel-runtime/core-js/object/create */ 86)["default"];
-	
-	var _Object$setPrototypeOf = __webpack_require__(/*! babel-runtime/core-js/object/set-prototype-of */ 88)["default"];
-	
-	var _Promise = __webpack_require__(/*! babel-runtime/core-js/promise */ 92)["default"];
-	
-	!(function (global) {
+	!(function(global) {
 	  "use strict";
 	
 	  var hasOwn = Object.prototype.hasOwnProperty;
 	  var undefined; // More compressible than void 0.
-	  var $Symbol = typeof _Symbol === "function" ? _Symbol : {};
+	  var $Symbol = typeof Symbol === "function" ? Symbol : {};
 	  var iteratorSymbol = $Symbol.iterator || "@@iterator";
 	  var toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag";
 	
@@ -90222,7 +89683,7 @@
 	
 	  function wrap(innerFn, outerFn, self, tryLocsList) {
 	    // If outerFn provided, then outerFn.prototype instanceof Generator.
-	    var generator = _Object$create((outerFn || Generator).prototype);
+	    var generator = Object.create((outerFn || Generator).prototype);
 	    var context = new Context(tryLocsList || []);
 	
 	    // The ._invoke method unifies the implementations of the .next,
@@ -90276,31 +89737,33 @@
 	  // Helper for defining the .next, .throw, and .return methods of the
 	  // Iterator interface in terms of a single ._invoke method.
 	  function defineIteratorMethods(prototype) {
-	    ["next", "throw", "return"].forEach(function (method) {
-	      prototype[method] = function (arg) {
+	    ["next", "throw", "return"].forEach(function(method) {
+	      prototype[method] = function(arg) {
 	        return this._invoke(method, arg);
 	      };
 	    });
 	  }
 	
-	  runtime.isGeneratorFunction = function (genFun) {
+	  runtime.isGeneratorFunction = function(genFun) {
 	    var ctor = typeof genFun === "function" && genFun.constructor;
-	    return ctor ? ctor === GeneratorFunction ||
-	    // For the native GeneratorFunction constructor, the best we can
-	    // do is to check its .name property.
-	    (ctor.displayName || ctor.name) === "GeneratorFunction" : false;
+	    return ctor
+	      ? ctor === GeneratorFunction ||
+	        // For the native GeneratorFunction constructor, the best we can
+	        // do is to check its .name property.
+	        (ctor.displayName || ctor.name) === "GeneratorFunction"
+	      : false;
 	  };
 	
-	  runtime.mark = function (genFun) {
-	    if (_Object$setPrototypeOf) {
-	      _Object$setPrototypeOf(genFun, GeneratorFunctionPrototype);
+	  runtime.mark = function(genFun) {
+	    if (Object.setPrototypeOf) {
+	      Object.setPrototypeOf(genFun, GeneratorFunctionPrototype);
 	    } else {
 	      genFun.__proto__ = GeneratorFunctionPrototype;
 	      if (!(toStringTagSymbol in genFun)) {
 	        genFun[toStringTagSymbol] = "GeneratorFunction";
 	      }
 	    }
-	    genFun.prototype = _Object$create(Gp);
+	    genFun.prototype = Object.create(Gp);
 	    return genFun;
 	  };
 	
@@ -90309,7 +89772,7 @@
 	  // `value instanceof AwaitArgument` to determine if the yielded value is
 	  // meant to be awaited. Some may consider the name of this method too
 	  // cutesy, but they are curmudgeons.
-	  runtime.awrap = function (arg) {
+	  runtime.awrap = function(arg) {
 	    return new AwaitArgument(arg);
 	  };
 	
@@ -90326,14 +89789,14 @@
 	        var result = record.arg;
 	        var value = result.value;
 	        if (value instanceof AwaitArgument) {
-	          return _Promise.resolve(value.arg).then(function (value) {
+	          return Promise.resolve(value.arg).then(function(value) {
 	            invoke("next", value, resolve, reject);
-	          }, function (err) {
+	          }, function(err) {
 	            invoke("throw", err, resolve, reject);
 	          });
 	        }
 	
-	        return _Promise.resolve(value).then(function (unwrapped) {
+	        return Promise.resolve(value).then(function(unwrapped) {
 	          // When a yielded Promise is resolved, its final value becomes
 	          // the .value of the Promise<{value,done}> result for the
 	          // current iteration. If the Promise is rejected, however, the
@@ -90363,28 +89826,30 @@
 	
 	    function enqueue(method, arg) {
 	      function callInvokeWithMethodAndArg() {
-	        return new _Promise(function (resolve, reject) {
+	        return new Promise(function(resolve, reject) {
 	          invoke(method, arg, resolve, reject);
 	        });
 	      }
 	
 	      return previousPromise =
-	      // If enqueue has been called before, then we want to wait until
-	      // all previous Promises have been resolved before calling invoke,
-	      // so that results are always delivered in the correct order. If
-	      // enqueue has not been called before, then it is important to
-	      // call invoke immediately, without waiting on a callback to fire,
-	      // so that the async generator function has the opportunity to do
-	      // any necessary setup in a predictable way. This predictability
-	      // is why the Promise constructor synchronously invokes its
-	      // executor callback, and why async functions synchronously
-	      // execute code before the first await. Since we implement simple
-	      // async functions in terms of async generators, it is especially
-	      // important to get this right, even though it requires care.
-	      previousPromise ? previousPromise.then(callInvokeWithMethodAndArg,
-	      // Avoid propagating failures to Promises returned by later
-	      // invocations of the iterator.
-	      callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg();
+	        // If enqueue has been called before, then we want to wait until
+	        // all previous Promises have been resolved before calling invoke,
+	        // so that results are always delivered in the correct order. If
+	        // enqueue has not been called before, then it is important to
+	        // call invoke immediately, without waiting on a callback to fire,
+	        // so that the async generator function has the opportunity to do
+	        // any necessary setup in a predictable way. This predictability
+	        // is why the Promise constructor synchronously invokes its
+	        // executor callback, and why async functions synchronously
+	        // execute code before the first await. Since we implement simple
+	        // async functions in terms of async generators, it is especially
+	        // important to get this right, even though it requires care.
+	        previousPromise ? previousPromise.then(
+	          callInvokeWithMethodAndArg,
+	          // Avoid propagating failures to Promises returned by later
+	          // invocations of the iterator.
+	          callInvokeWithMethodAndArg
+	        ) : callInvokeWithMethodAndArg();
 	    }
 	
 	    // Define the unified helper method that is used to implement .next,
@@ -90397,13 +89862,16 @@
 	  // Note that simple async functions are implemented on top of
 	  // AsyncIterator objects; they just return a Promise for the value of
 	  // the final result produced by the iterator.
-	  runtime.async = function (innerFn, outerFn, self, tryLocsList) {
-	    var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList));
+	  runtime.async = function(innerFn, outerFn, self, tryLocsList) {
+	    var iter = new AsyncIterator(
+	      wrap(innerFn, outerFn, self, tryLocsList)
+	    );
 	
-	    return runtime.isGeneratorFunction(outerFn) ? iter // If outerFn is a generator, return the full iterator.
-	    : iter.next().then(function (result) {
-	      return result.done ? result.value : iter.next();
-	    });
+	    return runtime.isGeneratorFunction(outerFn)
+	      ? iter // If outerFn is a generator, return the full iterator.
+	      : iter.next().then(function(result) {
+	          return result.done ? result.value : iter.next();
+	        });
 	  };
 	
 	  function makeInvokeMethod(innerFn, self, context) {
@@ -90427,7 +89895,8 @@
 	      while (true) {
 	        var delegate = context.delegate;
 	        if (delegate) {
-	          if (method === "return" || method === "throw" && delegate.iterator[method] === undefined) {
+	          if (method === "return" ||
+	              (method === "throw" && delegate.iterator[method] === undefined)) {
 	            // A return or throw (when the delegate iterator has no throw
 	            // method) always terminates the yield* loop.
 	            context.delegate = null;
@@ -90453,7 +89922,11 @@
 	            }
 	          }
 	
-	          var record = tryCatch(delegate.iterator[method], delegate.iterator, arg);
+	          var record = tryCatch(
+	            delegate.iterator[method],
+	            delegate.iterator,
+	            arg
+	          );
 	
 	          if (record.type === "throw") {
 	            context.delegate = null;
@@ -90484,11 +89957,10 @@
 	        }
 	
 	        if (method === "next") {
-	          if (state === GenStateSuspendedYield) {
-	            context.sent = arg;
-	          } else {
-	            context.sent = undefined;
-	          }
+	          // Setting context._sent for legacy support of Babel's
+	          // function.sent implementation.
+	          context.sent = context._sent = arg;
+	
 	        } else if (method === "throw") {
 	          if (state === GenStateSuspendedStart) {
 	            state = GenStateCompleted;
@@ -90501,6 +89973,7 @@
 	            method = "next";
 	            arg = undefined;
 	          }
+	
 	        } else if (method === "return") {
 	          context.abrupt("return", arg);
 	        }
@@ -90511,7 +89984,9 @@
 	        if (record.type === "normal") {
 	          // If an exception is thrown from innerFn, we leave state ===
 	          // GenStateExecuting and loop back for another invocation.
-	          state = context.done ? GenStateCompleted : GenStateSuspendedYield;
+	          state = context.done
+	            ? GenStateCompleted
+	            : GenStateSuspendedYield;
 	
 	          var info = {
 	            value: record.arg,
@@ -90527,6 +90002,7 @@
 	          } else {
 	            return info;
 	          }
+	
 	        } else if (record.type === "throw") {
 	          state = GenStateCompleted;
 	          // Dispatch the exception by looping back around to the
@@ -90542,13 +90018,13 @@
 	  // unified ._invoke helper method.
 	  defineIteratorMethods(Gp);
 	
-	  Gp[iteratorSymbol] = function () {
+	  Gp[iteratorSymbol] = function() {
 	    return this;
 	  };
 	
 	  Gp[toStringTagSymbol] = "Generator";
 	
-	  Gp.toString = function () {
+	  Gp.toString = function() {
 	    return "[object Generator]";
 	  };
 	
@@ -90583,7 +90059,7 @@
 	    this.reset(true);
 	  }
 	
-	  runtime.keys = function (object) {
+	  runtime.keys = function(object) {
 	    var keys = [];
 	    for (var key in object) {
 	      keys.push(key);
@@ -90622,8 +90098,7 @@
 	      }
 	
 	      if (!isNaN(iterable.length)) {
-	        var i = -1,
-	            next = function next() {
+	        var i = -1, next = function next() {
 	          while (++i < iterable.length) {
 	            if (hasOwn.call(iterable, i)) {
 	              next.value = iterable[i];
@@ -90654,10 +90129,12 @@
 	  Context.prototype = {
 	    constructor: Context,
 	
-	    reset: function reset(skipTempReset) {
+	    reset: function(skipTempReset) {
 	      this.prev = 0;
 	      this.next = 0;
-	      this.sent = undefined;
+	      // Resetting context._sent for legacy support of Babel's
+	      // function.sent implementation.
+	      this.sent = this._sent = undefined;
 	      this.done = false;
 	      this.delegate = null;
 	
@@ -90666,14 +90143,16 @@
 	      if (!skipTempReset) {
 	        for (var name in this) {
 	          // Not sure about the optimal order of these conditions:
-	          if (name.charAt(0) === "t" && hasOwn.call(this, name) && !isNaN(+name.slice(1))) {
+	          if (name.charAt(0) === "t" &&
+	              hasOwn.call(this, name) &&
+	              !isNaN(+name.slice(1))) {
 	            this[name] = undefined;
 	          }
 	        }
 	      }
 	    },
 	
-	    stop: function stop() {
+	    stop: function() {
 	      this.done = true;
 	
 	      var rootEntry = this.tryEntries[0];
@@ -90685,7 +90164,7 @@
 	      return this.rval;
 	    },
 	
-	    dispatchException: function dispatchException(exception) {
+	    dispatchException: function(exception) {
 	      if (this.done) {
 	        throw exception;
 	      }
@@ -90719,14 +90198,17 @@
 	            } else if (this.prev < entry.finallyLoc) {
 	              return handle(entry.finallyLoc);
 	            }
+	
 	          } else if (hasCatch) {
 	            if (this.prev < entry.catchLoc) {
 	              return handle(entry.catchLoc, true);
 	            }
+	
 	          } else if (hasFinally) {
 	            if (this.prev < entry.finallyLoc) {
 	              return handle(entry.finallyLoc);
 	            }
+	
 	          } else {
 	            throw new Error("try statement without catch or finally");
 	          }
@@ -90734,16 +90216,22 @@
 	      }
 	    },
 	
-	    abrupt: function abrupt(type, arg) {
+	    abrupt: function(type, arg) {
 	      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
 	        var entry = this.tryEntries[i];
-	        if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) {
+	        if (entry.tryLoc <= this.prev &&
+	            hasOwn.call(entry, "finallyLoc") &&
+	            this.prev < entry.finallyLoc) {
 	          var finallyEntry = entry;
 	          break;
 	        }
 	      }
 	
-	      if (finallyEntry && (type === "break" || type === "continue") && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc) {
+	      if (finallyEntry &&
+	          (type === "break" ||
+	           type === "continue") &&
+	          finallyEntry.tryLoc <= arg &&
+	          arg <= finallyEntry.finallyLoc) {
 	        // Ignore the finally entry if control is not jumping to a
 	        // location outside the try/catch block.
 	        finallyEntry = null;
@@ -90762,12 +90250,13 @@
 	      return ContinueSentinel;
 	    },
 	
-	    complete: function complete(record, afterLoc) {
+	    complete: function(record, afterLoc) {
 	      if (record.type === "throw") {
 	        throw record.arg;
 	      }
 	
-	      if (record.type === "break" || record.type === "continue") {
+	      if (record.type === "break" ||
+	          record.type === "continue") {
 	        this.next = record.arg;
 	      } else if (record.type === "return") {
 	        this.rval = record.arg;
@@ -90777,7 +90266,7 @@
 	      }
 	    },
 	
-	    finish: function finish(finallyLoc) {
+	    finish: function(finallyLoc) {
 	      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
 	        var entry = this.tryEntries[i];
 	        if (entry.finallyLoc === finallyLoc) {
@@ -90788,7 +90277,7 @@
 	      }
 	    },
 	
-	    "catch": function _catch(tryLoc) {
+	    "catch": function(tryLoc) {
 	      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
 	        var entry = this.tryEntries[i];
 	        if (entry.tryLoc === tryLoc) {
@@ -90806,7 +90295,7 @@
 	      throw new Error("illegal catch attempt");
 	    },
 	
-	    delegateYield: function delegateYield(iterable, resultName, nextLoc) {
+	    delegateYield: function(iterable, resultName, nextLoc) {
 	      this.delegate = {
 	        iterator: values(iterable),
 	        resultName: resultName,
@@ -90817,17 +90306,21 @@
 	    }
 	  };
 	})(
-	// Among the various tricks for obtaining a reference to the global
-	// object, this seems to be the most reliable technique that does not
-	// use indirect eval (which violates Content Security Policy).
-	typeof global === "object" ? global : typeof window === "object" ? window : typeof self === "object" ? self : undefined);
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(/*! ./~/process/browser.js */ 85)))
+	  // Among the various tricks for obtaining a reference to the global
+	  // object, this seems to be the most reliable technique that does not
+	  // use indirect eval (which violates Content Security Policy).
+	  typeof global === "object" ? global :
+	  typeof window === "object" ? window :
+	  typeof self === "object" ? self : this
+	);
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(/*! (webpack)/~/node-libs-browser/~/process/browser.js */ 123)))
 
 /***/ },
-/* 85 */
-/*!******************************!*\
-  !*** ./~/process/browser.js ***!
-  \******************************/
+/* 123 */
+/*!**********************************************************!*\
+  !*** (webpack)/~/node-libs-browser/~/process/browser.js ***!
+  \**********************************************************/
 /***/ function(module, exports) {
 
 	// shim for using process in browser
@@ -90927,794 +90420,7 @@
 
 
 /***/ },
-/* 86 */
-/*!**************************************************!*\
-  !*** ./~/babel-runtime/core-js/object/create.js ***!
-  \**************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/create */ 87), __esModule: true };
-
-/***/ },
-/* 87 */
-/*!***********************************************!*\
-  !*** ./~/core-js/library/fn/object/create.js ***!
-  \***********************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	var $ = __webpack_require__(/*! ../../modules/$ */ 34);
-	module.exports = function create(P, D){
-	  return $.create(P, D);
-	};
-
-/***/ },
-/* 88 */
-/*!************************************************************!*\
-  !*** ./~/babel-runtime/core-js/object/set-prototype-of.js ***!
-  \************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/set-prototype-of */ 89), __esModule: true };
-
-/***/ },
-/* 89 */
-/*!*********************************************************!*\
-  !*** ./~/core-js/library/fn/object/set-prototype-of.js ***!
-  \*********************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	__webpack_require__(/*! ../../modules/es6.object.set-prototype-of */ 90);
-	module.exports = __webpack_require__(/*! ../../modules/$.core */ 29).Object.setPrototypeOf;
-
-/***/ },
-/* 90 */
-/*!******************************************************************!*\
-  !*** ./~/core-js/library/modules/es6.object.set-prototype-of.js ***!
-  \******************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	// 19.1.3.19 Object.setPrototypeOf(O, proto)
-	var $export = __webpack_require__(/*! ./$.export */ 27);
-	$export($export.S, 'Object', {setPrototypeOf: __webpack_require__(/*! ./$.set-proto */ 91).set});
-
-/***/ },
-/* 91 */
-/*!**************************************************!*\
-  !*** ./~/core-js/library/modules/$.set-proto.js ***!
-  \**************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	// Works with __proto__ only. Old v8 can't work with null proto objects.
-	/* eslint-disable no-proto */
-	var getDesc  = __webpack_require__(/*! ./$ */ 34).getDesc
-	  , isObject = __webpack_require__(/*! ./$.is-object */ 49)
-	  , anObject = __webpack_require__(/*! ./$.an-object */ 48);
-	var check = function(O, proto){
-	  anObject(O);
-	  if(!isObject(proto) && proto !== null)throw TypeError(proto + ": can't set as prototype!");
-	};
-	module.exports = {
-	  set: Object.setPrototypeOf || ('__proto__' in {} ? // eslint-disable-line
-	    function(test, buggy, set){
-	      try {
-	        set = __webpack_require__(/*! ./$.ctx */ 30)(Function.call, getDesc(Object.prototype, '__proto__').set, 2);
-	        set(test, []);
-	        buggy = !(test instanceof Array);
-	      } catch(e){ buggy = true; }
-	      return function setPrototypeOf(O, proto){
-	        check(O, proto);
-	        if(buggy)O.__proto__ = proto;
-	        else set(O, proto);
-	        return O;
-	      };
-	    }({}, false) : undefined),
-	  check: check
-	};
-
-/***/ },
-/* 92 */
-/*!********************************************!*\
-  !*** ./~/babel-runtime/core-js/promise.js ***!
-  \********************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/promise */ 93), __esModule: true };
-
-/***/ },
-/* 93 */
-/*!*****************************************!*\
-  !*** ./~/core-js/library/fn/promise.js ***!
-  \*****************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	__webpack_require__(/*! ../modules/es6.object.to-string */ 72);
-	__webpack_require__(/*! ../modules/es6.string.iterator */ 44);
-	__webpack_require__(/*! ../modules/web.dom.iterable */ 16);
-	__webpack_require__(/*! ../modules/es6.promise */ 94);
-	module.exports = __webpack_require__(/*! ../modules/$.core */ 29).Promise;
-
-/***/ },
-/* 94 */
-/*!**************************************************!*\
-  !*** ./~/core-js/library/modules/es6.promise.js ***!
-  \**************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	var $          = __webpack_require__(/*! ./$ */ 34)
-	  , LIBRARY    = __webpack_require__(/*! ./$.library */ 26)
-	  , global     = __webpack_require__(/*! ./$.global */ 28)
-	  , ctx        = __webpack_require__(/*! ./$.ctx */ 30)
-	  , classof    = __webpack_require__(/*! ./$.classof */ 51)
-	  , $export    = __webpack_require__(/*! ./$.export */ 27)
-	  , isObject   = __webpack_require__(/*! ./$.is-object */ 49)
-	  , anObject   = __webpack_require__(/*! ./$.an-object */ 48)
-	  , aFunction  = __webpack_require__(/*! ./$.a-function */ 31)
-	  , strictNew  = __webpack_require__(/*! ./$.strict-new */ 95)
-	  , forOf      = __webpack_require__(/*! ./$.for-of */ 96)
-	  , setProto   = __webpack_require__(/*! ./$.set-proto */ 91).set
-	  , same       = __webpack_require__(/*! ./$.same-value */ 100)
-	  , SPECIES    = __webpack_require__(/*! ./$.wks */ 41)('species')
-	  , speciesConstructor = __webpack_require__(/*! ./$.species-constructor */ 101)
-	  , asap       = __webpack_require__(/*! ./$.microtask */ 102)
-	  , PROMISE    = 'Promise'
-	  , process    = global.process
-	  , isNode     = classof(process) == 'process'
-	  , P          = global[PROMISE]
-	  , Wrapper;
-	
-	var testResolve = function(sub){
-	  var test = new P(function(){});
-	  if(sub)test.constructor = Object;
-	  return P.resolve(test) === test;
-	};
-	
-	var USE_NATIVE = function(){
-	  var works = false;
-	  function P2(x){
-	    var self = new P(x);
-	    setProto(self, P2.prototype);
-	    return self;
-	  }
-	  try {
-	    works = P && P.resolve && testResolve();
-	    setProto(P2, P);
-	    P2.prototype = $.create(P.prototype, {constructor: {value: P2}});
-	    // actual Firefox has broken subclass support, test that
-	    if(!(P2.resolve(5).then(function(){}) instanceof P2)){
-	      works = false;
-	    }
-	    // actual V8 bug, https://code.google.com/p/v8/issues/detail?id=4162
-	    if(works && __webpack_require__(/*! ./$.descriptors */ 36)){
-	      var thenableThenGotten = false;
-	      P.resolve($.setDesc({}, 'then', {
-	        get: function(){ thenableThenGotten = true; }
-	      }));
-	      works = thenableThenGotten;
-	    }
-	  } catch(e){ works = false; }
-	  return works;
-	}();
-	
-	// helpers
-	var sameConstructor = function(a, b){
-	  // library wrapper special case
-	  if(LIBRARY && a === P && b === Wrapper)return true;
-	  return same(a, b);
-	};
-	var getConstructor = function(C){
-	  var S = anObject(C)[SPECIES];
-	  return S != undefined ? S : C;
-	};
-	var isThenable = function(it){
-	  var then;
-	  return isObject(it) && typeof (then = it.then) == 'function' ? then : false;
-	};
-	var PromiseCapability = function(C){
-	  var resolve, reject;
-	  this.promise = new C(function($$resolve, $$reject){
-	    if(resolve !== undefined || reject !== undefined)throw TypeError('Bad Promise constructor');
-	    resolve = $$resolve;
-	    reject  = $$reject;
-	  });
-	  this.resolve = aFunction(resolve),
-	  this.reject  = aFunction(reject)
-	};
-	var perform = function(exec){
-	  try {
-	    exec();
-	  } catch(e){
-	    return {error: e};
-	  }
-	};
-	var notify = function(record, isReject){
-	  if(record.n)return;
-	  record.n = true;
-	  var chain = record.c;
-	  asap(function(){
-	    var value = record.v
-	      , ok    = record.s == 1
-	      , i     = 0;
-	    var run = function(reaction){
-	      var handler = ok ? reaction.ok : reaction.fail
-	        , resolve = reaction.resolve
-	        , reject  = reaction.reject
-	        , result, then;
-	      try {
-	        if(handler){
-	          if(!ok)record.h = true;
-	          result = handler === true ? value : handler(value);
-	          if(result === reaction.promise){
-	            reject(TypeError('Promise-chain cycle'));
-	          } else if(then = isThenable(result)){
-	            then.call(result, resolve, reject);
-	          } else resolve(result);
-	        } else reject(value);
-	      } catch(e){
-	        reject(e);
-	      }
-	    };
-	    while(chain.length > i)run(chain[i++]); // variable length - can't use forEach
-	    chain.length = 0;
-	    record.n = false;
-	    if(isReject)setTimeout(function(){
-	      var promise = record.p
-	        , handler, console;
-	      if(isUnhandled(promise)){
-	        if(isNode){
-	          process.emit('unhandledRejection', value, promise);
-	        } else if(handler = global.onunhandledrejection){
-	          handler({promise: promise, reason: value});
-	        } else if((console = global.console) && console.error){
-	          console.error('Unhandled promise rejection', value);
-	        }
-	      } record.a = undefined;
-	    }, 1);
-	  });
-	};
-	var isUnhandled = function(promise){
-	  var record = promise._d
-	    , chain  = record.a || record.c
-	    , i      = 0
-	    , reaction;
-	  if(record.h)return false;
-	  while(chain.length > i){
-	    reaction = chain[i++];
-	    if(reaction.fail || !isUnhandled(reaction.promise))return false;
-	  } return true;
-	};
-	var $reject = function(value){
-	  var record = this;
-	  if(record.d)return;
-	  record.d = true;
-	  record = record.r || record; // unwrap
-	  record.v = value;
-	  record.s = 2;
-	  record.a = record.c.slice();
-	  notify(record, true);
-	};
-	var $resolve = function(value){
-	  var record = this
-	    , then;
-	  if(record.d)return;
-	  record.d = true;
-	  record = record.r || record; // unwrap
-	  try {
-	    if(record.p === value)throw TypeError("Promise can't be resolved itself");
-	    if(then = isThenable(value)){
-	      asap(function(){
-	        var wrapper = {r: record, d: false}; // wrap
-	        try {
-	          then.call(value, ctx($resolve, wrapper, 1), ctx($reject, wrapper, 1));
-	        } catch(e){
-	          $reject.call(wrapper, e);
-	        }
-	      });
-	    } else {
-	      record.v = value;
-	      record.s = 1;
-	      notify(record, false);
-	    }
-	  } catch(e){
-	    $reject.call({r: record, d: false}, e); // wrap
-	  }
-	};
-	
-	// constructor polyfill
-	if(!USE_NATIVE){
-	  // 25.4.3.1 Promise(executor)
-	  P = function Promise(executor){
-	    aFunction(executor);
-	    var record = this._d = {
-	      p: strictNew(this, P, PROMISE),         // <- promise
-	      c: [],                                  // <- awaiting reactions
-	      a: undefined,                           // <- checked in isUnhandled reactions
-	      s: 0,                                   // <- state
-	      d: false,                               // <- done
-	      v: undefined,                           // <- value
-	      h: false,                               // <- handled rejection
-	      n: false                                // <- notify
-	    };
-	    try {
-	      executor(ctx($resolve, record, 1), ctx($reject, record, 1));
-	    } catch(err){
-	      $reject.call(record, err);
-	    }
-	  };
-	  __webpack_require__(/*! ./$.redefine-all */ 107)(P.prototype, {
-	    // 25.4.5.3 Promise.prototype.then(onFulfilled, onRejected)
-	    then: function then(onFulfilled, onRejected){
-	      var reaction = new PromiseCapability(speciesConstructor(this, P))
-	        , promise  = reaction.promise
-	        , record   = this._d;
-	      reaction.ok   = typeof onFulfilled == 'function' ? onFulfilled : true;
-	      reaction.fail = typeof onRejected == 'function' && onRejected;
-	      record.c.push(reaction);
-	      if(record.a)record.a.push(reaction);
-	      if(record.s)notify(record, false);
-	      return promise;
-	    },
-	    // 25.4.5.1 Promise.prototype.catch(onRejected)
-	    'catch': function(onRejected){
-	      return this.then(undefined, onRejected);
-	    }
-	  });
-	}
-	
-	$export($export.G + $export.W + $export.F * !USE_NATIVE, {Promise: P});
-	__webpack_require__(/*! ./$.set-to-string-tag */ 40)(P, PROMISE);
-	__webpack_require__(/*! ./$.set-species */ 108)(PROMISE);
-	Wrapper = __webpack_require__(/*! ./$.core */ 29)[PROMISE];
-	
-	// statics
-	$export($export.S + $export.F * !USE_NATIVE, PROMISE, {
-	  // 25.4.4.5 Promise.reject(r)
-	  reject: function reject(r){
-	    var capability = new PromiseCapability(this)
-	      , $$reject   = capability.reject;
-	    $$reject(r);
-	    return capability.promise;
-	  }
-	});
-	$export($export.S + $export.F * (!USE_NATIVE || testResolve(true)), PROMISE, {
-	  // 25.4.4.6 Promise.resolve(x)
-	  resolve: function resolve(x){
-	    // instanceof instead of internal slot check because we should fix it without replacement native Promise core
-	    if(x instanceof P && sameConstructor(x.constructor, this))return x;
-	    var capability = new PromiseCapability(this)
-	      , $$resolve  = capability.resolve;
-	    $$resolve(x);
-	    return capability.promise;
-	  }
-	});
-	$export($export.S + $export.F * !(USE_NATIVE && __webpack_require__(/*! ./$.iter-detect */ 109)(function(iter){
-	  P.all(iter)['catch'](function(){});
-	})), PROMISE, {
-	  // 25.4.4.1 Promise.all(iterable)
-	  all: function all(iterable){
-	    var C          = getConstructor(this)
-	      , capability = new PromiseCapability(C)
-	      , resolve    = capability.resolve
-	      , reject     = capability.reject
-	      , values     = [];
-	    var abrupt = perform(function(){
-	      forOf(iterable, false, values.push, values);
-	      var remaining = values.length
-	        , results   = Array(remaining);
-	      if(remaining)$.each.call(values, function(promise, index){
-	        var alreadyCalled = false;
-	        C.resolve(promise).then(function(value){
-	          if(alreadyCalled)return;
-	          alreadyCalled = true;
-	          results[index] = value;
-	          --remaining || resolve(results);
-	        }, reject);
-	      });
-	      else resolve(results);
-	    });
-	    if(abrupt)reject(abrupt.error);
-	    return capability.promise;
-	  },
-	  // 25.4.4.4 Promise.race(iterable)
-	  race: function race(iterable){
-	    var C          = getConstructor(this)
-	      , capability = new PromiseCapability(C)
-	      , reject     = capability.reject;
-	    var abrupt = perform(function(){
-	      forOf(iterable, false, function(promise){
-	        C.resolve(promise).then(capability.resolve, reject);
-	      });
-	    });
-	    if(abrupt)reject(abrupt.error);
-	    return capability.promise;
-	  }
-	});
-
-/***/ },
-/* 95 */
-/*!***************************************************!*\
-  !*** ./~/core-js/library/modules/$.strict-new.js ***!
-  \***************************************************/
-/***/ function(module, exports) {
-
-	module.exports = function(it, Constructor, name){
-	  if(!(it instanceof Constructor))throw TypeError(name + ": use the 'new' operator!");
-	  return it;
-	};
-
-/***/ },
-/* 96 */
-/*!***********************************************!*\
-  !*** ./~/core-js/library/modules/$.for-of.js ***!
-  \***********************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	var ctx         = __webpack_require__(/*! ./$.ctx */ 30)
-	  , call        = __webpack_require__(/*! ./$.iter-call */ 97)
-	  , isArrayIter = __webpack_require__(/*! ./$.is-array-iter */ 98)
-	  , anObject    = __webpack_require__(/*! ./$.an-object */ 48)
-	  , toLength    = __webpack_require__(/*! ./$.to-length */ 99)
-	  , getIterFn   = __webpack_require__(/*! ./core.get-iterator-method */ 50);
-	module.exports = function(iterable, entries, fn, that){
-	  var iterFn = getIterFn(iterable)
-	    , f      = ctx(fn, that, entries ? 2 : 1)
-	    , index  = 0
-	    , length, step, iterator;
-	  if(typeof iterFn != 'function')throw TypeError(iterable + ' is not iterable!');
-	  // fast case for arrays with default iterator
-	  if(isArrayIter(iterFn))for(length = toLength(iterable.length); length > index; index++){
-	    entries ? f(anObject(step = iterable[index])[0], step[1]) : f(iterable[index]);
-	  } else for(iterator = iterFn.call(iterable); !(step = iterator.next()).done; ){
-	    call(iterator, f, step.value, entries);
-	  }
-	};
-
-/***/ },
-/* 97 */
-/*!**************************************************!*\
-  !*** ./~/core-js/library/modules/$.iter-call.js ***!
-  \**************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	// call something on iterator step with safe closing on error
-	var anObject = __webpack_require__(/*! ./$.an-object */ 48);
-	module.exports = function(iterator, fn, value, entries){
-	  try {
-	    return entries ? fn(anObject(value)[0], value[1]) : fn(value);
-	  // 7.4.6 IteratorClose(iterator, completion)
-	  } catch(e){
-	    var ret = iterator['return'];
-	    if(ret !== undefined)anObject(ret.call(iterator));
-	    throw e;
-	  }
-	};
-
-/***/ },
-/* 98 */
-/*!******************************************************!*\
-  !*** ./~/core-js/library/modules/$.is-array-iter.js ***!
-  \******************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	// check on default Array iterator
-	var Iterators  = __webpack_require__(/*! ./$.iterators */ 20)
-	  , ITERATOR   = __webpack_require__(/*! ./$.wks */ 41)('iterator')
-	  , ArrayProto = Array.prototype;
-	
-	module.exports = function(it){
-	  return it !== undefined && (Iterators.Array === it || ArrayProto[ITERATOR] === it);
-	};
-
-/***/ },
-/* 99 */
-/*!**************************************************!*\
-  !*** ./~/core-js/library/modules/$.to-length.js ***!
-  \**************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	// 7.1.15 ToLength
-	var toInteger = __webpack_require__(/*! ./$.to-integer */ 46)
-	  , min       = Math.min;
-	module.exports = function(it){
-	  return it > 0 ? min(toInteger(it), 0x1fffffffffffff) : 0; // pow(2, 53) - 1 == 9007199254740991
-	};
-
-/***/ },
-/* 100 */
-/*!***************************************************!*\
-  !*** ./~/core-js/library/modules/$.same-value.js ***!
-  \***************************************************/
-/***/ function(module, exports) {
-
-	// 7.2.9 SameValue(x, y)
-	module.exports = Object.is || function is(x, y){
-	  return x === y ? x !== 0 || 1 / x === 1 / y : x != x && y != y;
-	};
-
-/***/ },
-/* 101 */
-/*!************************************************************!*\
-  !*** ./~/core-js/library/modules/$.species-constructor.js ***!
-  \************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	// 7.3.20 SpeciesConstructor(O, defaultConstructor)
-	var anObject  = __webpack_require__(/*! ./$.an-object */ 48)
-	  , aFunction = __webpack_require__(/*! ./$.a-function */ 31)
-	  , SPECIES   = __webpack_require__(/*! ./$.wks */ 41)('species');
-	module.exports = function(O, D){
-	  var C = anObject(O).constructor, S;
-	  return C === undefined || (S = anObject(C)[SPECIES]) == undefined ? D : aFunction(S);
-	};
-
-/***/ },
-/* 102 */
-/*!**************************************************!*\
-  !*** ./~/core-js/library/modules/$.microtask.js ***!
-  \**************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	var global    = __webpack_require__(/*! ./$.global */ 28)
-	  , macrotask = __webpack_require__(/*! ./$.task */ 103).set
-	  , Observer  = global.MutationObserver || global.WebKitMutationObserver
-	  , process   = global.process
-	  , Promise   = global.Promise
-	  , isNode    = __webpack_require__(/*! ./$.cof */ 23)(process) == 'process'
-	  , head, last, notify;
-	
-	var flush = function(){
-	  var parent, domain, fn;
-	  if(isNode && (parent = process.domain)){
-	    process.domain = null;
-	    parent.exit();
-	  }
-	  while(head){
-	    domain = head.domain;
-	    fn     = head.fn;
-	    if(domain)domain.enter();
-	    fn(); // <- currently we use it only for Promise - try / catch not required
-	    if(domain)domain.exit();
-	    head = head.next;
-	  } last = undefined;
-	  if(parent)parent.enter();
-	};
-	
-	// Node.js
-	if(isNode){
-	  notify = function(){
-	    process.nextTick(flush);
-	  };
-	// browsers with MutationObserver
-	} else if(Observer){
-	  var toggle = 1
-	    , node   = document.createTextNode('');
-	  new Observer(flush).observe(node, {characterData: true}); // eslint-disable-line no-new
-	  notify = function(){
-	    node.data = toggle = -toggle;
-	  };
-	// environments with maybe non-completely correct, but existent Promise
-	} else if(Promise && Promise.resolve){
-	  notify = function(){
-	    Promise.resolve().then(flush);
-	  };
-	// for other environments - macrotask based on:
-	// - setImmediate
-	// - MessageChannel
-	// - window.postMessag
-	// - onreadystatechange
-	// - setTimeout
-	} else {
-	  notify = function(){
-	    // strange IE + webpack dev server bug - use .call(global)
-	    macrotask.call(global, flush);
-	  };
-	}
-	
-	module.exports = function asap(fn){
-	  var task = {fn: fn, next: undefined, domain: isNode && process.domain};
-	  if(last)last.next = task;
-	  if(!head){
-	    head = task;
-	    notify();
-	  } last = task;
-	};
-
-/***/ },
-/* 103 */
-/*!*********************************************!*\
-  !*** ./~/core-js/library/modules/$.task.js ***!
-  \*********************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	var ctx                = __webpack_require__(/*! ./$.ctx */ 30)
-	  , invoke             = __webpack_require__(/*! ./$.invoke */ 104)
-	  , html               = __webpack_require__(/*! ./$.html */ 105)
-	  , cel                = __webpack_require__(/*! ./$.dom-create */ 106)
-	  , global             = __webpack_require__(/*! ./$.global */ 28)
-	  , process            = global.process
-	  , setTask            = global.setImmediate
-	  , clearTask          = global.clearImmediate
-	  , MessageChannel     = global.MessageChannel
-	  , counter            = 0
-	  , queue              = {}
-	  , ONREADYSTATECHANGE = 'onreadystatechange'
-	  , defer, channel, port;
-	var run = function(){
-	  var id = +this;
-	  if(queue.hasOwnProperty(id)){
-	    var fn = queue[id];
-	    delete queue[id];
-	    fn();
-	  }
-	};
-	var listner = function(event){
-	  run.call(event.data);
-	};
-	// Node.js 0.9+ & IE10+ has setImmediate, otherwise:
-	if(!setTask || !clearTask){
-	  setTask = function setImmediate(fn){
-	    var args = [], i = 1;
-	    while(arguments.length > i)args.push(arguments[i++]);
-	    queue[++counter] = function(){
-	      invoke(typeof fn == 'function' ? fn : Function(fn), args);
-	    };
-	    defer(counter);
-	    return counter;
-	  };
-	  clearTask = function clearImmediate(id){
-	    delete queue[id];
-	  };
-	  // Node.js 0.8-
-	  if(__webpack_require__(/*! ./$.cof */ 23)(process) == 'process'){
-	    defer = function(id){
-	      process.nextTick(ctx(run, id, 1));
-	    };
-	  // Browsers with MessageChannel, includes WebWorkers
-	  } else if(MessageChannel){
-	    channel = new MessageChannel;
-	    port    = channel.port2;
-	    channel.port1.onmessage = listner;
-	    defer = ctx(port.postMessage, port, 1);
-	  // Browsers with postMessage, skip WebWorkers
-	  // IE8 has postMessage, but it's sync & typeof its postMessage is 'object'
-	  } else if(global.addEventListener && typeof postMessage == 'function' && !global.importScripts){
-	    defer = function(id){
-	      global.postMessage(id + '', '*');
-	    };
-	    global.addEventListener('message', listner, false);
-	  // IE8-
-	  } else if(ONREADYSTATECHANGE in cel('script')){
-	    defer = function(id){
-	      html.appendChild(cel('script'))[ONREADYSTATECHANGE] = function(){
-	        html.removeChild(this);
-	        run.call(id);
-	      };
-	    };
-	  // Rest old browsers
-	  } else {
-	    defer = function(id){
-	      setTimeout(ctx(run, id, 1), 0);
-	    };
-	  }
-	}
-	module.exports = {
-	  set:   setTask,
-	  clear: clearTask
-	};
-
-/***/ },
-/* 104 */
-/*!***********************************************!*\
-  !*** ./~/core-js/library/modules/$.invoke.js ***!
-  \***********************************************/
-/***/ function(module, exports) {
-
-	// fast apply, http://jsperf.lnkit.com/fast-apply/5
-	module.exports = function(fn, args, that){
-	  var un = that === undefined;
-	  switch(args.length){
-	    case 0: return un ? fn()
-	                      : fn.call(that);
-	    case 1: return un ? fn(args[0])
-	                      : fn.call(that, args[0]);
-	    case 2: return un ? fn(args[0], args[1])
-	                      : fn.call(that, args[0], args[1]);
-	    case 3: return un ? fn(args[0], args[1], args[2])
-	                      : fn.call(that, args[0], args[1], args[2]);
-	    case 4: return un ? fn(args[0], args[1], args[2], args[3])
-	                      : fn.call(that, args[0], args[1], args[2], args[3]);
-	  } return              fn.apply(that, args);
-	};
-
-/***/ },
-/* 105 */
-/*!*********************************************!*\
-  !*** ./~/core-js/library/modules/$.html.js ***!
-  \*********************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __webpack_require__(/*! ./$.global */ 28).document && document.documentElement;
-
-/***/ },
-/* 106 */
-/*!***************************************************!*\
-  !*** ./~/core-js/library/modules/$.dom-create.js ***!
-  \***************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	var isObject = __webpack_require__(/*! ./$.is-object */ 49)
-	  , document = __webpack_require__(/*! ./$.global */ 28).document
-	  // in old IE typeof document.createElement is 'object'
-	  , is = isObject(document) && isObject(document.createElement);
-	module.exports = function(it){
-	  return is ? document.createElement(it) : {};
-	};
-
-/***/ },
-/* 107 */
-/*!*****************************************************!*\
-  !*** ./~/core-js/library/modules/$.redefine-all.js ***!
-  \*****************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	var redefine = __webpack_require__(/*! ./$.redefine */ 32);
-	module.exports = function(target, src){
-	  for(var key in src)redefine(target, key, src[key]);
-	  return target;
-	};
-
-/***/ },
-/* 108 */
-/*!****************************************************!*\
-  !*** ./~/core-js/library/modules/$.set-species.js ***!
-  \****************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	var core        = __webpack_require__(/*! ./$.core */ 29)
-	  , $           = __webpack_require__(/*! ./$ */ 34)
-	  , DESCRIPTORS = __webpack_require__(/*! ./$.descriptors */ 36)
-	  , SPECIES     = __webpack_require__(/*! ./$.wks */ 41)('species');
-	
-	module.exports = function(KEY){
-	  var C = core[KEY];
-	  if(DESCRIPTORS && C && !C[SPECIES])$.setDesc(C, SPECIES, {
-	    configurable: true,
-	    get: function(){ return this; }
-	  });
-	};
-
-/***/ },
-/* 109 */
-/*!****************************************************!*\
-  !*** ./~/core-js/library/modules/$.iter-detect.js ***!
-  \****************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	var ITERATOR     = __webpack_require__(/*! ./$.wks */ 41)('iterator')
-	  , SAFE_CLOSING = false;
-	
-	try {
-	  var riter = [7][ITERATOR]();
-	  riter['return'] = function(){ SAFE_CLOSING = true; };
-	  Array.from(riter, function(){ throw 2; });
-	} catch(e){ /* empty */ }
-	
-	module.exports = function(exec, skipClosing){
-	  if(!skipClosing && !SAFE_CLOSING)return false;
-	  var safe = false;
-	  try {
-	    var arr  = [7]
-	      , iter = arr[ITERATOR]();
-	    iter.next = function(){ safe = true; };
-	    arr[ITERATOR] = function(){ return iter; };
-	    exec(arr);
-	  } catch(e){ /* empty */ }
-	  return safe;
-	};
-
-/***/ },
-/* 110 */
+/* 124 */
 /*!*****************************************************!*\
   !*** ./~/babel-runtime/helpers/asyncToGenerator.js ***!
   \*****************************************************/
@@ -91724,7 +90430,7 @@
 	
 	exports.__esModule = true;
 	
-	var _promise = __webpack_require__(/*! ../core-js/promise */ 92);
+	var _promise = __webpack_require__(/*! ../core-js/promise */ 125);
 	
 	var _promise2 = _interopRequireDefault(_promise);
 	
@@ -91760,7 +90466,718 @@
 	};
 
 /***/ },
-/* 111 */
+/* 125 */
+/*!********************************************!*\
+  !*** ./~/babel-runtime/core-js/promise.js ***!
+  \********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/promise */ 126), __esModule: true };
+
+/***/ },
+/* 126 */
+/*!*********************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/fn/promise.js ***!
+  \*********************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(/*! ../modules/es6.object.to-string */ 107);
+	__webpack_require__(/*! ../modules/es6.string.iterator */ 73);
+	__webpack_require__(/*! ../modules/web.dom.iterable */ 27);
+	__webpack_require__(/*! ../modules/es6.promise */ 127);
+	module.exports = __webpack_require__(/*! ../modules/_core */ 40).Promise;
+
+/***/ },
+/* 127 */
+/*!******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/es6.promise.js ***!
+  \******************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	var LIBRARY            = __webpack_require__(/*! ./_library */ 37)
+	  , global             = __webpack_require__(/*! ./_global */ 39)
+	  , ctx                = __webpack_require__(/*! ./_ctx */ 41)
+	  , classof            = __webpack_require__(/*! ./_classof */ 77)
+	  , $export            = __webpack_require__(/*! ./_export */ 38)
+	  , isObject           = __webpack_require__(/*! ./_is-object */ 46)
+	  , anObject           = __webpack_require__(/*! ./_an-object */ 45)
+	  , aFunction          = __webpack_require__(/*! ./_a-function */ 42)
+	  , anInstance         = __webpack_require__(/*! ./_an-instance */ 128)
+	  , forOf              = __webpack_require__(/*! ./_for-of */ 129)
+	  , setProto           = __webpack_require__(/*! ./_set-proto */ 132).set
+	  , speciesConstructor = __webpack_require__(/*! ./_species-constructor */ 133)
+	  , task               = __webpack_require__(/*! ./_task */ 134).set
+	  , microtask          = __webpack_require__(/*! ./_microtask */ 136)()
+	  , PROMISE            = 'Promise'
+	  , TypeError          = global.TypeError
+	  , process            = global.process
+	  , $Promise           = global[PROMISE]
+	  , process            = global.process
+	  , isNode             = classof(process) == 'process'
+	  , empty              = function(){ /* empty */ }
+	  , Internal, GenericPromiseCapability, Wrapper;
+	
+	var USE_NATIVE = !!function(){
+	  try {
+	    // correct subclassing with @@species support
+	    var promise     = $Promise.resolve(1)
+	      , FakePromise = (promise.constructor = {})[__webpack_require__(/*! ./_wks */ 70)('species')] = function(exec){ exec(empty, empty); };
+	    // unhandled rejections tracking support, NodeJS Promise without it fails @@species test
+	    return (isNode || typeof PromiseRejectionEvent == 'function') && promise.then(empty) instanceof FakePromise;
+	  } catch(e){ /* empty */ }
+	}();
+	
+	// helpers
+	var sameConstructor = function(a, b){
+	  // with library wrapper special case
+	  return a === b || a === $Promise && b === Wrapper;
+	};
+	var isThenable = function(it){
+	  var then;
+	  return isObject(it) && typeof (then = it.then) == 'function' ? then : false;
+	};
+	var newPromiseCapability = function(C){
+	  return sameConstructor($Promise, C)
+	    ? new PromiseCapability(C)
+	    : new GenericPromiseCapability(C);
+	};
+	var PromiseCapability = GenericPromiseCapability = function(C){
+	  var resolve, reject;
+	  this.promise = new C(function($$resolve, $$reject){
+	    if(resolve !== undefined || reject !== undefined)throw TypeError('Bad Promise constructor');
+	    resolve = $$resolve;
+	    reject  = $$reject;
+	  });
+	  this.resolve = aFunction(resolve);
+	  this.reject  = aFunction(reject);
+	};
+	var perform = function(exec){
+	  try {
+	    exec();
+	  } catch(e){
+	    return {error: e};
+	  }
+	};
+	var notify = function(promise, isReject){
+	  if(promise._n)return;
+	  promise._n = true;
+	  var chain = promise._c;
+	  microtask(function(){
+	    var value = promise._v
+	      , ok    = promise._s == 1
+	      , i     = 0;
+	    var run = function(reaction){
+	      var handler = ok ? reaction.ok : reaction.fail
+	        , resolve = reaction.resolve
+	        , reject  = reaction.reject
+	        , domain  = reaction.domain
+	        , result, then;
+	      try {
+	        if(handler){
+	          if(!ok){
+	            if(promise._h == 2)onHandleUnhandled(promise);
+	            promise._h = 1;
+	          }
+	          if(handler === true)result = value;
+	          else {
+	            if(domain)domain.enter();
+	            result = handler(value);
+	            if(domain)domain.exit();
+	          }
+	          if(result === reaction.promise){
+	            reject(TypeError('Promise-chain cycle'));
+	          } else if(then = isThenable(result)){
+	            then.call(result, resolve, reject);
+	          } else resolve(result);
+	        } else reject(value);
+	      } catch(e){
+	        reject(e);
+	      }
+	    };
+	    while(chain.length > i)run(chain[i++]); // variable length - can't use forEach
+	    promise._c = [];
+	    promise._n = false;
+	    if(isReject && !promise._h)onUnhandled(promise);
+	  });
+	};
+	var onUnhandled = function(promise){
+	  task.call(global, function(){
+	    var value = promise._v
+	      , abrupt, handler, console;
+	    if(isUnhandled(promise)){
+	      abrupt = perform(function(){
+	        if(isNode){
+	          process.emit('unhandledRejection', value, promise);
+	        } else if(handler = global.onunhandledrejection){
+	          handler({promise: promise, reason: value});
+	        } else if((console = global.console) && console.error){
+	          console.error('Unhandled promise rejection', value);
+	        }
+	      });
+	      // Browsers should not trigger `rejectionHandled` event if it was handled here, NodeJS - should
+	      promise._h = isNode || isUnhandled(promise) ? 2 : 1;
+	    } promise._a = undefined;
+	    if(abrupt)throw abrupt.error;
+	  });
+	};
+	var isUnhandled = function(promise){
+	  if(promise._h == 1)return false;
+	  var chain = promise._a || promise._c
+	    , i     = 0
+	    , reaction;
+	  while(chain.length > i){
+	    reaction = chain[i++];
+	    if(reaction.fail || !isUnhandled(reaction.promise))return false;
+	  } return true;
+	};
+	var onHandleUnhandled = function(promise){
+	  task.call(global, function(){
+	    var handler;
+	    if(isNode){
+	      process.emit('rejectionHandled', promise);
+	    } else if(handler = global.onrejectionhandled){
+	      handler({promise: promise, reason: promise._v});
+	    }
+	  });
+	};
+	var $reject = function(value){
+	  var promise = this;
+	  if(promise._d)return;
+	  promise._d = true;
+	  promise = promise._w || promise; // unwrap
+	  promise._v = value;
+	  promise._s = 2;
+	  if(!promise._a)promise._a = promise._c.slice();
+	  notify(promise, true);
+	};
+	var $resolve = function(value){
+	  var promise = this
+	    , then;
+	  if(promise._d)return;
+	  promise._d = true;
+	  promise = promise._w || promise; // unwrap
+	  try {
+	    if(promise === value)throw TypeError("Promise can't be resolved itself");
+	    if(then = isThenable(value)){
+	      microtask(function(){
+	        var wrapper = {_w: promise, _d: false}; // wrap
+	        try {
+	          then.call(value, ctx($resolve, wrapper, 1), ctx($reject, wrapper, 1));
+	        } catch(e){
+	          $reject.call(wrapper, e);
+	        }
+	      });
+	    } else {
+	      promise._v = value;
+	      promise._s = 1;
+	      notify(promise, false);
+	    }
+	  } catch(e){
+	    $reject.call({_w: promise, _d: false}, e); // wrap
+	  }
+	};
+	
+	// constructor polyfill
+	if(!USE_NATIVE){
+	  // 25.4.3.1 Promise(executor)
+	  $Promise = function Promise(executor){
+	    anInstance(this, $Promise, PROMISE, '_h');
+	    aFunction(executor);
+	    Internal.call(this);
+	    try {
+	      executor(ctx($resolve, this, 1), ctx($reject, this, 1));
+	    } catch(err){
+	      $reject.call(this, err);
+	    }
+	  };
+	  Internal = function Promise(executor){
+	    this._c = [];             // <- awaiting reactions
+	    this._a = undefined;      // <- checked in isUnhandled reactions
+	    this._s = 0;              // <- state
+	    this._d = false;          // <- done
+	    this._v = undefined;      // <- value
+	    this._h = 0;              // <- rejection state, 0 - default, 1 - handled, 2 - unhandled
+	    this._n = false;          // <- notify
+	  };
+	  Internal.prototype = __webpack_require__(/*! ./_redefine-all */ 137)($Promise.prototype, {
+	    // 25.4.5.3 Promise.prototype.then(onFulfilled, onRejected)
+	    then: function then(onFulfilled, onRejected){
+	      var reaction    = newPromiseCapability(speciesConstructor(this, $Promise));
+	      reaction.ok     = typeof onFulfilled == 'function' ? onFulfilled : true;
+	      reaction.fail   = typeof onRejected == 'function' && onRejected;
+	      reaction.domain = isNode ? process.domain : undefined;
+	      this._c.push(reaction);
+	      if(this._a)this._a.push(reaction);
+	      if(this._s)notify(this, false);
+	      return reaction.promise;
+	    },
+	    // 25.4.5.1 Promise.prototype.catch(onRejected)
+	    'catch': function(onRejected){
+	      return this.then(undefined, onRejected);
+	    }
+	  });
+	  PromiseCapability = function(){
+	    var promise  = new Internal;
+	    this.promise = promise;
+	    this.resolve = ctx($resolve, promise, 1);
+	    this.reject  = ctx($reject, promise, 1);
+	  };
+	}
+	
+	$export($export.G + $export.W + $export.F * !USE_NATIVE, {Promise: $Promise});
+	__webpack_require__(/*! ./_set-to-string-tag */ 69)($Promise, PROMISE);
+	__webpack_require__(/*! ./_set-species */ 138)(PROMISE);
+	Wrapper = __webpack_require__(/*! ./_core */ 40)[PROMISE];
+	
+	// statics
+	$export($export.S + $export.F * !USE_NATIVE, PROMISE, {
+	  // 25.4.4.5 Promise.reject(r)
+	  reject: function reject(r){
+	    var capability = newPromiseCapability(this)
+	      , $$reject   = capability.reject;
+	    $$reject(r);
+	    return capability.promise;
+	  }
+	});
+	$export($export.S + $export.F * (LIBRARY || !USE_NATIVE), PROMISE, {
+	  // 25.4.4.6 Promise.resolve(x)
+	  resolve: function resolve(x){
+	    // instanceof instead of internal slot check because we should fix it without replacement native Promise core
+	    if(x instanceof $Promise && sameConstructor(x.constructor, this))return x;
+	    var capability = newPromiseCapability(this)
+	      , $$resolve  = capability.resolve;
+	    $$resolve(x);
+	    return capability.promise;
+	  }
+	});
+	$export($export.S + $export.F * !(USE_NATIVE && __webpack_require__(/*! ./_iter-detect */ 139)(function(iter){
+	  $Promise.all(iter)['catch'](empty);
+	})), PROMISE, {
+	  // 25.4.4.1 Promise.all(iterable)
+	  all: function all(iterable){
+	    var C          = this
+	      , capability = newPromiseCapability(C)
+	      , resolve    = capability.resolve
+	      , reject     = capability.reject;
+	    var abrupt = perform(function(){
+	      var values    = []
+	        , index     = 0
+	        , remaining = 1;
+	      forOf(iterable, false, function(promise){
+	        var $index        = index++
+	          , alreadyCalled = false;
+	        values.push(undefined);
+	        remaining++;
+	        C.resolve(promise).then(function(value){
+	          if(alreadyCalled)return;
+	          alreadyCalled  = true;
+	          values[$index] = value;
+	          --remaining || resolve(values);
+	        }, reject);
+	      });
+	      --remaining || resolve(values);
+	    });
+	    if(abrupt)reject(abrupt.error);
+	    return capability.promise;
+	  },
+	  // 25.4.4.4 Promise.race(iterable)
+	  race: function race(iterable){
+	    var C          = this
+	      , capability = newPromiseCapability(C)
+	      , reject     = capability.reject;
+	    var abrupt = perform(function(){
+	      forOf(iterable, false, function(promise){
+	        C.resolve(promise).then(capability.resolve, reject);
+	      });
+	    });
+	    if(abrupt)reject(abrupt.error);
+	    return capability.promise;
+	  }
+	});
+
+/***/ },
+/* 128 */
+/*!*******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_an-instance.js ***!
+  \*******************************************************************/
+/***/ function(module, exports) {
+
+	module.exports = function(it, Constructor, name, forbiddenField){
+	  if(!(it instanceof Constructor) || (forbiddenField !== undefined && forbiddenField in it)){
+	    throw TypeError(name + ': incorrect invocation!');
+	  } return it;
+	};
+
+/***/ },
+/* 129 */
+/*!**************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_for-of.js ***!
+  \**************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	var ctx         = __webpack_require__(/*! ./_ctx */ 41)
+	  , call        = __webpack_require__(/*! ./_iter-call */ 130)
+	  , isArrayIter = __webpack_require__(/*! ./_is-array-iter */ 131)
+	  , anObject    = __webpack_require__(/*! ./_an-object */ 45)
+	  , toLength    = __webpack_require__(/*! ./_to-length */ 61)
+	  , getIterFn   = __webpack_require__(/*! ./core.get-iterator-method */ 76)
+	  , BREAK       = {}
+	  , RETURN      = {};
+	var exports = module.exports = function(iterable, entries, fn, that, ITERATOR){
+	  var iterFn = ITERATOR ? function(){ return iterable; } : getIterFn(iterable)
+	    , f      = ctx(fn, that, entries ? 2 : 1)
+	    , index  = 0
+	    , length, step, iterator, result;
+	  if(typeof iterFn != 'function')throw TypeError(iterable + ' is not iterable!');
+	  // fast case for arrays with default iterator
+	  if(isArrayIter(iterFn))for(length = toLength(iterable.length); length > index; index++){
+	    result = entries ? f(anObject(step = iterable[index])[0], step[1]) : f(iterable[index]);
+	    if(result === BREAK || result === RETURN)return result;
+	  } else for(iterator = iterFn.call(iterable); !(step = iterator.next()).done; ){
+	    result = call(iterator, f, step.value, entries);
+	    if(result === BREAK || result === RETURN)return result;
+	  }
+	};
+	exports.BREAK  = BREAK;
+	exports.RETURN = RETURN;
+
+/***/ },
+/* 130 */
+/*!*****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_iter-call.js ***!
+  \*****************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	// call something on iterator step with safe closing on error
+	var anObject = __webpack_require__(/*! ./_an-object */ 45);
+	module.exports = function(iterator, fn, value, entries){
+	  try {
+	    return entries ? fn(anObject(value)[0], value[1]) : fn(value);
+	  // 7.4.6 IteratorClose(iterator, completion)
+	  } catch(e){
+	    var ret = iterator['return'];
+	    if(ret !== undefined)anObject(ret.call(iterator));
+	    throw e;
+	  }
+	};
+
+/***/ },
+/* 131 */
+/*!*********************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_is-array-iter.js ***!
+  \*********************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	// check on default Array iterator
+	var Iterators  = __webpack_require__(/*! ./_iterators */ 31)
+	  , ITERATOR   = __webpack_require__(/*! ./_wks */ 70)('iterator')
+	  , ArrayProto = Array.prototype;
+	
+	module.exports = function(it){
+	  return it !== undefined && (Iterators.Array === it || ArrayProto[ITERATOR] === it);
+	};
+
+/***/ },
+/* 132 */
+/*!*****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_set-proto.js ***!
+  \*****************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	// Works with __proto__ only. Old v8 can't work with null proto objects.
+	/* eslint-disable no-proto */
+	var isObject = __webpack_require__(/*! ./_is-object */ 46)
+	  , anObject = __webpack_require__(/*! ./_an-object */ 45);
+	var check = function(O, proto){
+	  anObject(O);
+	  if(!isObject(proto) && proto !== null)throw TypeError(proto + ": can't set as prototype!");
+	};
+	module.exports = {
+	  set: Object.setPrototypeOf || ('__proto__' in {} ? // eslint-disable-line
+	    function(test, buggy, set){
+	      try {
+	        set = __webpack_require__(/*! ./_ctx */ 41)(Function.call, __webpack_require__(/*! ./_object-gopd */ 106).f(Object.prototype, '__proto__').set, 2);
+	        set(test, []);
+	        buggy = !(test instanceof Array);
+	      } catch(e){ buggy = true; }
+	      return function setPrototypeOf(O, proto){
+	        check(O, proto);
+	        if(buggy)O.__proto__ = proto;
+	        else set(O, proto);
+	        return O;
+	      };
+	    }({}, false) : undefined),
+	  check: check
+	};
+
+/***/ },
+/* 133 */
+/*!***************************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_species-constructor.js ***!
+  \***************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	// 7.3.20 SpeciesConstructor(O, defaultConstructor)
+	var anObject  = __webpack_require__(/*! ./_an-object */ 45)
+	  , aFunction = __webpack_require__(/*! ./_a-function */ 42)
+	  , SPECIES   = __webpack_require__(/*! ./_wks */ 70)('species');
+	module.exports = function(O, D){
+	  var C = anObject(O).constructor, S;
+	  return C === undefined || (S = anObject(C)[SPECIES]) == undefined ? D : aFunction(S);
+	};
+
+/***/ },
+/* 134 */
+/*!************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_task.js ***!
+  \************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	var ctx                = __webpack_require__(/*! ./_ctx */ 41)
+	  , invoke             = __webpack_require__(/*! ./_invoke */ 135)
+	  , html               = __webpack_require__(/*! ./_html */ 68)
+	  , cel                = __webpack_require__(/*! ./_dom-create */ 50)
+	  , global             = __webpack_require__(/*! ./_global */ 39)
+	  , process            = global.process
+	  , setTask            = global.setImmediate
+	  , clearTask          = global.clearImmediate
+	  , MessageChannel     = global.MessageChannel
+	  , counter            = 0
+	  , queue              = {}
+	  , ONREADYSTATECHANGE = 'onreadystatechange'
+	  , defer, channel, port;
+	var run = function(){
+	  var id = +this;
+	  if(queue.hasOwnProperty(id)){
+	    var fn = queue[id];
+	    delete queue[id];
+	    fn();
+	  }
+	};
+	var listener = function(event){
+	  run.call(event.data);
+	};
+	// Node.js 0.9+ & IE10+ has setImmediate, otherwise:
+	if(!setTask || !clearTask){
+	  setTask = function setImmediate(fn){
+	    var args = [], i = 1;
+	    while(arguments.length > i)args.push(arguments[i++]);
+	    queue[++counter] = function(){
+	      invoke(typeof fn == 'function' ? fn : Function(fn), args);
+	    };
+	    defer(counter);
+	    return counter;
+	  };
+	  clearTask = function clearImmediate(id){
+	    delete queue[id];
+	  };
+	  // Node.js 0.8-
+	  if(__webpack_require__(/*! ./_cof */ 34)(process) == 'process'){
+	    defer = function(id){
+	      process.nextTick(ctx(run, id, 1));
+	    };
+	  // Browsers with MessageChannel, includes WebWorkers
+	  } else if(MessageChannel){
+	    channel = new MessageChannel;
+	    port    = channel.port2;
+	    channel.port1.onmessage = listener;
+	    defer = ctx(port.postMessage, port, 1);
+	  // Browsers with postMessage, skip WebWorkers
+	  // IE8 has postMessage, but it's sync & typeof its postMessage is 'object'
+	  } else if(global.addEventListener && typeof postMessage == 'function' && !global.importScripts){
+	    defer = function(id){
+	      global.postMessage(id + '', '*');
+	    };
+	    global.addEventListener('message', listener, false);
+	  // IE8-
+	  } else if(ONREADYSTATECHANGE in cel('script')){
+	    defer = function(id){
+	      html.appendChild(cel('script'))[ONREADYSTATECHANGE] = function(){
+	        html.removeChild(this);
+	        run.call(id);
+	      };
+	    };
+	  // Rest old browsers
+	  } else {
+	    defer = function(id){
+	      setTimeout(ctx(run, id, 1), 0);
+	    };
+	  }
+	}
+	module.exports = {
+	  set:   setTask,
+	  clear: clearTask
+	};
+
+/***/ },
+/* 135 */
+/*!**************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_invoke.js ***!
+  \**************************************************************/
+/***/ function(module, exports) {
+
+	// fast apply, http://jsperf.lnkit.com/fast-apply/5
+	module.exports = function(fn, args, that){
+	  var un = that === undefined;
+	  switch(args.length){
+	    case 0: return un ? fn()
+	                      : fn.call(that);
+	    case 1: return un ? fn(args[0])
+	                      : fn.call(that, args[0]);
+	    case 2: return un ? fn(args[0], args[1])
+	                      : fn.call(that, args[0], args[1]);
+	    case 3: return un ? fn(args[0], args[1], args[2])
+	                      : fn.call(that, args[0], args[1], args[2]);
+	    case 4: return un ? fn(args[0], args[1], args[2], args[3])
+	                      : fn.call(that, args[0], args[1], args[2], args[3]);
+	  } return              fn.apply(that, args);
+	};
+
+/***/ },
+/* 136 */
+/*!*****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_microtask.js ***!
+  \*****************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	var global    = __webpack_require__(/*! ./_global */ 39)
+	  , macrotask = __webpack_require__(/*! ./_task */ 134).set
+	  , Observer  = global.MutationObserver || global.WebKitMutationObserver
+	  , process   = global.process
+	  , Promise   = global.Promise
+	  , isNode    = __webpack_require__(/*! ./_cof */ 34)(process) == 'process';
+	
+	module.exports = function(){
+	  var head, last, notify;
+	
+	  var flush = function(){
+	    var parent, fn;
+	    if(isNode && (parent = process.domain))parent.exit();
+	    while(head){
+	      fn   = head.fn;
+	      head = head.next;
+	      try {
+	        fn();
+	      } catch(e){
+	        if(head)notify();
+	        else last = undefined;
+	        throw e;
+	      }
+	    } last = undefined;
+	    if(parent)parent.enter();
+	  };
+	
+	  // Node.js
+	  if(isNode){
+	    notify = function(){
+	      process.nextTick(flush);
+	    };
+	  // browsers with MutationObserver
+	  } else if(Observer){
+	    var toggle = true
+	      , node   = document.createTextNode('');
+	    new Observer(flush).observe(node, {characterData: true}); // eslint-disable-line no-new
+	    notify = function(){
+	      node.data = toggle = !toggle;
+	    };
+	  // environments with maybe non-completely correct, but existent Promise
+	  } else if(Promise && Promise.resolve){
+	    var promise = Promise.resolve();
+	    notify = function(){
+	      promise.then(flush);
+	    };
+	  // for other environments - macrotask based on:
+	  // - setImmediate
+	  // - MessageChannel
+	  // - window.postMessag
+	  // - onreadystatechange
+	  // - setTimeout
+	  } else {
+	    notify = function(){
+	      // strange IE + webpack dev server bug - use .call(global)
+	      macrotask.call(global, flush);
+	    };
+	  }
+	
+	  return function(fn){
+	    var task = {fn: fn, next: undefined};
+	    if(last)last.next = task;
+	    if(!head){
+	      head = task;
+	      notify();
+	    } last = task;
+	  };
+	};
+
+/***/ },
+/* 137 */
+/*!********************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_redefine-all.js ***!
+  \********************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	var hide = __webpack_require__(/*! ./_hide */ 43);
+	module.exports = function(target, src, safe){
+	  for(var key in src){
+	    if(safe && target[key])target[key] = src[key];
+	    else hide(target, key, src[key]);
+	  } return target;
+	};
+
+/***/ },
+/* 138 */
+/*!*******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_set-species.js ***!
+  \*******************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	var global      = __webpack_require__(/*! ./_global */ 39)
+	  , core        = __webpack_require__(/*! ./_core */ 40)
+	  , dP          = __webpack_require__(/*! ./_object-dp */ 44)
+	  , DESCRIPTORS = __webpack_require__(/*! ./_descriptors */ 48)
+	  , SPECIES     = __webpack_require__(/*! ./_wks */ 70)('species');
+	
+	module.exports = function(KEY){
+	  var C = typeof core[KEY] == 'function' ? core[KEY] : global[KEY];
+	  if(DESCRIPTORS && C && !C[SPECIES])dP.f(C, SPECIES, {
+	    configurable: true,
+	    get: function(){ return this; }
+	  });
+	};
+
+/***/ },
+/* 139 */
+/*!*******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_iter-detect.js ***!
+  \*******************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	var ITERATOR     = __webpack_require__(/*! ./_wks */ 70)('iterator')
+	  , SAFE_CLOSING = false;
+	
+	try {
+	  var riter = [7][ITERATOR]();
+	  riter['return'] = function(){ SAFE_CLOSING = true; };
+	  Array.from(riter, function(){ throw 2; });
+	} catch(e){ /* empty */ }
+	
+	module.exports = function(exec, skipClosing){
+	  if(!skipClosing && !SAFE_CLOSING)return false;
+	  var safe = false;
+	  try {
+	    var arr  = [7]
+	      , iter = arr[ITERATOR]();
+	    iter.next = function(){ return {done: safe = true}; };
+	    arr[ITERATOR] = function(){ return iter; };
+	    exec(arr);
+	  } catch(e){ /* empty */ }
+	  return safe;
+	};
+
+/***/ },
+/* 140 */
 /*!***************************************************************!*\
   !*** ./beeline-admin/directives/tripsEditor/tripsEditor.html ***!
   \***************************************************************/
@@ -91769,7 +91186,7 @@
 	module.exports = "\n<section class=\"filter\">\n  <label>\n    Start Date:\n    <button class=\"glyphicon glyphicon-calendar\"\n      ng-click=\"filter.$startDatePopupIsOpen = !filter.$startDatePopupIsOpen\">\n    </button>\n    <input type=\"text\" uib-datepicker-popup=\"dd-MMM-yyyy\"\n      ng-model=\"filter.startDate\"\n      is-open=\"filter.$startDatePopupIsOpen\">\n  </label>\n  <label ng-if=\"false\">\n    End Date:\n    <button class=\"glyphicon glyphicon-calendar\"\n      ng-click=\"filter.$startDatePopupIsOpen = !filter.$startDatePopupIsOpen\">\n    </button>\n    <input type=\"text\" uib-datepicker-popup=\"dd-MMM-yyyy\"\n      ng-model=\"filter.endDate\">\n  </label>\n</section>\n\n<section class=\"add-trips\">\n  <h2>Add Trips</h2>\n  <div class=\"add-trips-components flex-row\">\n    <beeline-datepicker\n      ng-if=\"!disp.trip.id\"\n      class=\"flex-shrink\"\n      dates=\"disp.newDates\"\n      booked-dates=\"disp.existingDates\"\n      valid-dates=\"disp.validDates\"\n      show-legend=\"false\"\n      start-date=\"filter.startDate\"\n    >\n    </beeline-datepicker>\n    <div class=\"flex-shrink overflow-scroll selected-dates\"\n      ng-if=\"!disp.trip.id\"\n    >\n      <h3>{{disp.newDates.length}} dates selected</h3>\n      <ul>\n        <li ng-repeat=\"date in disp.newDates | orderBy:date.getTime() track by $index\">\n          {{date | date:'dd-MMM-yy (EEE)':'UTC'}}\n        </li>\n      </ul>\n    </div>\n\n    <div class=\"flex-grow overflow-scroll\">\n      <h3 ng-if=\"!disp.trip.id\">Stops</h3>\n      <!-- <h3 ng-if=\"disp.trip\">Editing trip on {{disp.trip.date | date:'dd-MMM-yy':'UTC'}}</h3> -->\n\n      <h3 ng-if=\"disp.trip.id\">Editing trip on\n        <ng-repeat ng-repeat=\"(key, value) in selection.selected\">\n          {{value.date | date:'dd MMM yy'}},\n        </ng-repeat>\n      </h3>\n\n      <label>\n        Telephone number of driver: +65 <input type=\"tel\" ng-model=\"disp.trip.driverTelephone\" />\n\n        <span ng-if=\"disp.trip.driverName\">\n          ~{{disp.driver.name}}\n        </span>\n      </label>\n\n      <label>\n        Trip capacity: <input type=\"number\" ng-model=\"disp.trip.capacity\" />\n      </label>\n\n      <label ng-if=\"adminService.session().role == 'superadmin'\">\n        Company:\n        <company-selector ng-model=\"disp.trip.transportCompanyId\">\n        </company-selector>\n      </label>\n\n      <table>\n        <thead>\n          <tr>\n            <th>Time</th>\n            <th>Stop</th>\n          </tr>\n        </thead>\n        <tbody>\n          <tr ng-repeat=\"tripStop in disp.tripStops\">\n            <td>\n              <uib-timepicker ng-model=\"tripStop.time\"\n              show-spinners=\"false\" show-meridian=\"false\">\n            </td>\n            <td>\n              <!-- <input type=\"text\" ng-model=\"tripStop.stopId\"> -->\n              <stop-selector\n                ng-model=\"tripStop.stopId\"\n              ></stop-selector>\n              <button ng-click=\"showPopupFor(tripStop)\">\n                ?\n              </button>\n            </td>\n            <td>\n              <label>\n                <input type=\"checkbox\" ng-model=\"tripStop.canBoard\" />\n                Boarding\n              </label>\n            </td>\n            <td>\n              <label>\n                <input type=\"checkbox\" ng-model=\"tripStop.canAlight\" />\n                Alighting\n              </label>\n            </td>\n            <td>\n              <button class=\"btn btn-default glyphicon glyphicon-trash\"\n                ng-click=\"disp.deleteTripStop($index)\"\n              ></button>\n            </td>\n          </tr>\n        </tbody>\n        <tfoot>\n          <tr>\n            <td>\n              <button class=\"btn btn-default glyphicon glyphicon-plus\"\n                ng-click=\"disp.addTripStop()\"\n              ></button>\n            </td>\n          </tr>\n        </tfoot>\n      </table>\n    </div>\n  </div>\n\n  <span class=\"btn-group\">\n    <button class=\"btn btn-primary\" ng-click=\"saveTrips()\"\n      >\n      Save\n    </button>\n    <button class=\"btn btn-default\" ng-click=\"clearEdit()\"\n      ng-if=\"disp.trip\">\n      Clear\n    </button>\n  </span>\n</section>\n\n<div>\n  <table class=\"table table-striped\">\n    <thead>\n      <tr>\n        <th></th> <!-- selection button -->\n        <th></th> <!-- actions (delete, use) -->\n        <th></th> <!-- pax -->\n        <th></th> <!-- booked -->\n        <th></th> <!--date -->\n        <th></th> <!-- driver -->\n        <th colspan=\"{{disp.stopsList.length}}\">Stops</th>\n      </tr>\n      <tr>\n        <th></th>\n        <th></th>\n        <th>Cap</th>\n        <th>Booked</th>\n        <th>Date</th>\n        <th>Driver</th>\n        <th ng-repeat=\"stop in disp.stopsList track by $index\">\n          {{stop.stop.label}} /\n          {{stop.stop.postcode}}\n        </th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr ng-repeat=\"trip in (sorted_trips = trips | orderBy:'date') track by trip.id\"\n        class=\"{\n          active: selection.selected[trip.id]\n        }\"\n      >\n        <td\n          ng-mousedown=\"selectTrips(sorted_trips, $index, $event)\"\n          >\n          <small>{{trip.id}}</small>\n          <i ng-hide=\"!selection.selected[trip.id]\"\n            class=\"glyphicon glyphicon-ok\">\n          </i>\n        </td>\n        <td>\n          <span class=\"btn-group\">\n            <button class=\"btn btn-default glyphicon glyphicon-copy\"\n              ng-click='referenceTrip(trip)'\n            >\n            </button>\n            <button class=\"btn btn-default glyphicon glyphicon-trash\"\n              ng-click='deleteTrip(trip)'\n            >\n            </button>\n          </span>\n        </td>\n        <td>\n          {{trip.capacity}}\n          <i class=\"glyphicon glyphicon-user\"></i>\n        </td>\n        <td>\n          {{trip.availability.seatsBooked}}\n          <i class=\"glyphicon glyphicon-user\"></i>\n        </td>\n        <td>\n          {{trip.date | date:'dd/MM/yy EEE'}}\n        </td>\n        <td>\n          {{trip.driverTelephone }}\n        </td>\n        <td ng-repeat=\"stop in disp.stopsList\">\n          {{ findStop(trip, stop.stop.id).time | date:'HH:mm'}}\n        </td>\n      </tr>\n    </tbody>\n  </table>\n</div>\n";
 
 /***/ },
-/* 112 */
+/* 141 */
 /*!*********************************************************************!*\
   !*** ./beeline-admin/directives/companySelector/companySelector.js ***!
   \*********************************************************************/
@@ -91816,7 +91233,7 @@
 	};
 
 /***/ },
-/* 113 */
+/* 142 */
 /*!***************************************************************!*\
   !*** ./beeline-admin/directives/stopSelector/stopSelector.js ***!
   \***************************************************************/
@@ -91864,7 +91281,7 @@
 	};
 
 /***/ },
-/* 114 */
+/* 143 */
 /*!*******************************************************************************!*\
   !*** ./beeline-admin/directives/companySelector/superAdminCompanySelector.js ***!
   \*******************************************************************************/
@@ -91887,7 +91304,7 @@
 	};
 
 /***/ },
-/* 115 */
+/* 144 */
 /*!************************************************!*\
   !*** ./beeline-admin/services/adminService.js ***!
   \************************************************/
@@ -91899,7 +91316,7 @@
 	  value: true
 	});
 	
-	var _slicedToArray2 = __webpack_require__(/*! babel-runtime/helpers/slicedToArray */ 116);
+	var _slicedToArray2 = __webpack_require__(/*! babel-runtime/helpers/slicedToArray */ 145);
 	
 	var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 	
@@ -91946,13 +91363,13 @@
 	  };
 	};
 	
-	var _assert = __webpack_require__(/*! assert */ 120);
+	var _assert = __webpack_require__(/*! assert */ 149);
 	
 	var _assert2 = _interopRequireDefault(_assert);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var env = __webpack_require__(/*! ../env.json */ 58);
+	var env = __webpack_require__(/*! ../env.json */ 84);
 	
 	function b64_to_utf8(str) {
 	  return decodeURIComponent(unescape(window.atob(str)));
@@ -91972,7 +91389,7 @@
 	}
 
 /***/ },
-/* 116 */
+/* 145 */
 /*!**************************************************!*\
   !*** ./~/babel-runtime/helpers/slicedToArray.js ***!
   \**************************************************/
@@ -91982,11 +91399,11 @@
 	
 	exports.__esModule = true;
 	
-	var _isIterable2 = __webpack_require__(/*! ../core-js/is-iterable */ 117);
+	var _isIterable2 = __webpack_require__(/*! ../core-js/is-iterable */ 146);
 	
 	var _isIterable3 = _interopRequireDefault(_isIterable2);
 	
-	var _getIterator2 = __webpack_require__(/*! ../core-js/get-iterator */ 14);
+	var _getIterator2 = __webpack_require__(/*! ../core-js/get-iterator */ 25);
 	
 	var _getIterator3 = _interopRequireDefault(_getIterator2);
 	
@@ -92031,36 +91448,36 @@
 	}();
 
 /***/ },
-/* 117 */
+/* 146 */
 /*!************************************************!*\
   !*** ./~/babel-runtime/core-js/is-iterable.js ***!
   \************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/is-iterable */ 118), __esModule: true };
+	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/is-iterable */ 147), __esModule: true };
 
 /***/ },
-/* 118 */
-/*!*********************************************!*\
-  !*** ./~/core-js/library/fn/is-iterable.js ***!
-  \*********************************************/
+/* 147 */
+/*!*************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/fn/is-iterable.js ***!
+  \*************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(/*! ../modules/web.dom.iterable */ 16);
-	__webpack_require__(/*! ../modules/es6.string.iterator */ 44);
-	module.exports = __webpack_require__(/*! ../modules/core.is-iterable */ 119);
+	__webpack_require__(/*! ../modules/web.dom.iterable */ 27);
+	__webpack_require__(/*! ../modules/es6.string.iterator */ 73);
+	module.exports = __webpack_require__(/*! ../modules/core.is-iterable */ 148);
 
 /***/ },
-/* 119 */
-/*!*******************************************************!*\
-  !*** ./~/core-js/library/modules/core.is-iterable.js ***!
-  \*******************************************************/
+/* 148 */
+/*!***********************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/core.is-iterable.js ***!
+  \***********************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var classof   = __webpack_require__(/*! ./$.classof */ 51)
-	  , ITERATOR  = __webpack_require__(/*! ./$.wks */ 41)('iterator')
-	  , Iterators = __webpack_require__(/*! ./$.iterators */ 20);
-	module.exports = __webpack_require__(/*! ./$.core */ 29).isIterable = function(it){
+	var classof   = __webpack_require__(/*! ./_classof */ 77)
+	  , ITERATOR  = __webpack_require__(/*! ./_wks */ 70)('iterator')
+	  , Iterators = __webpack_require__(/*! ./_iterators */ 31);
+	module.exports = __webpack_require__(/*! ./_core */ 40).isIterable = function(it){
 	  var O = Object(it);
 	  return O[ITERATOR] !== undefined
 	    || '@@iterator' in O
@@ -92068,10 +91485,10 @@
 	};
 
 /***/ },
-/* 120 */
-/*!****************************!*\
-  !*** ./~/assert/assert.js ***!
-  \****************************/
+/* 149 */
+/*!********************************************************!*\
+  !*** (webpack)/~/node-libs-browser/~/assert/assert.js ***!
+  \********************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {// http://wiki.commonjs.org/wiki/Unit_Testing/1.0
@@ -92119,9 +91536,9 @@
 	  }
 	  return 0;
 	}
-	var util = __webpack_require__(/*! util/ */ 121);
-	var Buffer = __webpack_require__(/*! buffer */ 124).Buffer;
-	var BufferShim = __webpack_require__(/*! buffer-shims */ 128);
+	var util = __webpack_require__(/*! util/ */ 150);
+	var Buffer = __webpack_require__(/*! buffer */ 153).Buffer;
+	var BufferShim = __webpack_require__(/*! buffer-shims */ 157);
 	var hasOwn = Object.prototype.hasOwnProperty;
 	var pSlice = Array.prototype.slice;
 	var functionsHaveNames = (function () {
@@ -92542,10 +91959,10 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 121 */
-/*!************************!*\
-  !*** ./~/util/util.js ***!
-  \************************/
+/* 150 */
+/*!****************************************************!*\
+  !*** (webpack)/~/node-libs-browser/~/util/util.js ***!
+  \****************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global, process) {// Copyright Joyent, Inc. and other Node contributors.
@@ -93073,7 +92490,7 @@
 	}
 	exports.isPrimitive = isPrimitive;
 	
-	exports.isBuffer = __webpack_require__(/*! ./support/isBuffer */ 122);
+	exports.isBuffer = __webpack_require__(/*! ./support/isBuffer */ 151);
 	
 	function objectToString(o) {
 	  return Object.prototype.toString.call(o);
@@ -93117,7 +92534,7 @@
 	 *     prototype.
 	 * @param {function} superCtor Constructor function to inherit prototype from.
 	 */
-	exports.inherits = __webpack_require__(/*! inherits */ 123);
+	exports.inherits = __webpack_require__(/*! inherits */ 152);
 	
 	exports._extend = function(origin, add) {
 	  // Don't do anything if add isn't an object
@@ -93135,13 +92552,13 @@
 	  return Object.prototype.hasOwnProperty.call(obj, prop);
 	}
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(/*! ./~/process/browser.js */ 85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(/*! (webpack)/~/node-libs-browser/~/process/browser.js */ 123)))
 
 /***/ },
-/* 122 */
-/*!*******************************************!*\
-  !*** ./~/util/support/isBufferBrowser.js ***!
-  \*******************************************/
+/* 151 */
+/*!***********************************************************************!*\
+  !*** (webpack)/~/node-libs-browser/~/util/support/isBufferBrowser.js ***!
+  \***********************************************************************/
 /***/ function(module, exports) {
 
 	module.exports = function isBuffer(arg) {
@@ -93152,10 +92569,10 @@
 	}
 
 /***/ },
-/* 123 */
-/*!****************************************!*\
-  !*** ./~/inherits/inherits_browser.js ***!
-  \****************************************/
+/* 152 */
+/*!***************************************************************************!*\
+  !*** (webpack)/~/node-libs-browser/~/util/~/inherits/inherits_browser.js ***!
+  \***************************************************************************/
 /***/ function(module, exports) {
 
 	if (typeof Object.create === 'function') {
@@ -93184,10 +92601,10 @@
 
 
 /***/ },
-/* 124 */
-/*!***************************!*\
-  !*** ./~/buffer/index.js ***!
-  \***************************/
+/* 153 */
+/*!*******************************************************!*\
+  !*** (webpack)/~/node-libs-browser/~/buffer/index.js ***!
+  \*******************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer, global) {/*!
@@ -93200,9 +92617,9 @@
 	
 	'use strict'
 	
-	var base64 = __webpack_require__(/*! base64-js */ 125)
-	var ieee754 = __webpack_require__(/*! ieee754 */ 126)
-	var isArray = __webpack_require__(/*! isarray */ 127)
+	var base64 = __webpack_require__(/*! base64-js */ 154)
+	var ieee754 = __webpack_require__(/*! ieee754 */ 155)
+	var isArray = __webpack_require__(/*! isarray */ 156)
 	
 	exports.Buffer = Buffer
 	exports.SlowBuffer = SlowBuffer
@@ -94739,13 +94156,13 @@
 	  return i
 	}
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 124).Buffer, (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! (webpack)/~/node-libs-browser/~/buffer/index.js */ 153).Buffer, (function() { return this; }())))
 
 /***/ },
-/* 125 */
-/*!********************************!*\
-  !*** ./~/base64-js/lib/b64.js ***!
-  \********************************/
+/* 154 */
+/*!*********************************************************************!*\
+  !*** (webpack)/~/node-libs-browser/~/buffer/~/base64-js/lib/b64.js ***!
+  \*********************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
@@ -94875,10 +94292,10 @@
 
 
 /***/ },
-/* 126 */
-/*!****************************!*\
-  !*** ./~/ieee754/index.js ***!
-  \****************************/
+/* 155 */
+/*!*****************************************************************!*\
+  !*** (webpack)/~/node-libs-browser/~/buffer/~/ieee754/index.js ***!
+  \*****************************************************************/
 /***/ function(module, exports) {
 
 	exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -94968,10 +94385,10 @@
 
 
 /***/ },
-/* 127 */
-/*!****************************!*\
-  !*** ./~/isarray/index.js ***!
-  \****************************/
+/* 156 */
+/*!*****************************************************************!*\
+  !*** (webpack)/~/node-libs-browser/~/buffer/~/isarray/index.js ***!
+  \*****************************************************************/
 /***/ function(module, exports) {
 
 	var toString = {}.toString;
@@ -94982,15 +94399,15 @@
 
 
 /***/ },
-/* 128 */
-/*!*********************************!*\
-  !*** ./~/buffer-shims/index.js ***!
-  \*********************************/
+/* 157 */
+/*!**********************************************************************!*\
+  !*** (webpack)/~/node-libs-browser/~/assert/~/buffer-shims/index.js ***!
+  \**********************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
 	
-	var buffer = __webpack_require__(/*! buffer */ 124);
+	var buffer = __webpack_require__(/*! buffer */ 153);
 	var Buffer = buffer.Buffer;
 	var SlowBuffer = buffer.SlowBuffer;
 	var MAX_LEN = buffer.kMaxLength || 2147483647;
@@ -95100,7 +94517,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 129 */
+/* 158 */
 /*!*************************************************!*\
   !*** ./beeline-admin/services/routesService.js ***!
   \*************************************************/
@@ -95112,15 +94529,15 @@
 	  value: true
 	});
 	
-	var _regenerator = __webpack_require__(/*! babel-runtime/regenerator */ 83);
+	var _regenerator = __webpack_require__(/*! babel-runtime/regenerator */ 120);
 	
 	var _regenerator2 = _interopRequireDefault(_regenerator);
 	
-	var _promise = __webpack_require__(/*! babel-runtime/core-js/promise */ 92);
+	var _promise = __webpack_require__(/*! babel-runtime/core-js/promise */ 125);
 	
 	var _promise2 = _interopRequireDefault(_promise);
 	
-	var _asyncToGenerator2 = __webpack_require__(/*! babel-runtime/helpers/asyncToGenerator */ 110);
+	var _asyncToGenerator2 = __webpack_require__(/*! babel-runtime/helpers/asyncToGenerator */ 124);
 	
 	var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 	
@@ -95427,34 +94844,34 @@
 	
 	var _lodash2 = _interopRequireDefault(_lodash);
 	
-	var _querystring = __webpack_require__(/*! querystring */ 130);
+	var _querystring = __webpack_require__(/*! querystring */ 159);
 	
 	var _querystring2 = _interopRequireDefault(_querystring);
 	
-	var _assert = __webpack_require__(/*! assert */ 120);
+	var _assert = __webpack_require__(/*! assert */ 149);
 	
 	var _assert2 = _interopRequireDefault(_assert);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 130 */
-/*!********************************!*\
-  !*** ./~/querystring/index.js ***!
-  \********************************/
+/* 159 */
+/*!****************************************************************!*\
+  !*** (webpack)/~/node-libs-browser/~/querystring-es3/index.js ***!
+  \****************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	exports.decode = exports.parse = __webpack_require__(/*! ./decode */ 131);
-	exports.encode = exports.stringify = __webpack_require__(/*! ./encode */ 132);
+	exports.decode = exports.parse = __webpack_require__(/*! ./decode */ 160);
+	exports.encode = exports.stringify = __webpack_require__(/*! ./encode */ 161);
 
 
 /***/ },
-/* 131 */
-/*!*********************************!*\
-  !*** ./~/querystring/decode.js ***!
-  \*********************************/
+/* 160 */
+/*!*****************************************************************!*\
+  !*** (webpack)/~/node-libs-browser/~/querystring-es3/decode.js ***!
+  \*****************************************************************/
 /***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -95528,7 +94945,7 @@
 	
 	    if (!hasOwnProperty(obj, k)) {
 	      obj[k] = v;
-	    } else if (Array.isArray(obj[k])) {
+	    } else if (isArray(obj[k])) {
 	      obj[k].push(v);
 	    } else {
 	      obj[k] = [obj[k], v];
@@ -95537,13 +94954,17 @@
 	
 	  return obj;
 	};
+	
+	var isArray = Array.isArray || function (xs) {
+	  return Object.prototype.toString.call(xs) === '[object Array]';
+	};
 
 
 /***/ },
-/* 132 */
-/*!*********************************!*\
-  !*** ./~/querystring/encode.js ***!
-  \*********************************/
+/* 161 */
+/*!*****************************************************************!*\
+  !*** (webpack)/~/node-libs-browser/~/querystring-es3/encode.js ***!
+  \*****************************************************************/
 /***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -95593,10 +95014,10 @@
 	  }
 	
 	  if (typeof obj === 'object') {
-	    return Object.keys(obj).map(function(k) {
+	    return map(objectKeys(obj), function(k) {
 	      var ks = encodeURIComponent(stringifyPrimitive(k)) + eq;
-	      if (Array.isArray(obj[k])) {
-	        return obj[k].map(function(v) {
+	      if (isArray(obj[k])) {
+	        return map(obj[k], function(v) {
 	          return ks + encodeURIComponent(stringifyPrimitive(v));
 	        }).join(sep);
 	      } else {
@@ -95610,10 +95031,31 @@
 	  return encodeURIComponent(stringifyPrimitive(name)) + eq +
 	         encodeURIComponent(stringifyPrimitive(obj));
 	};
+	
+	var isArray = Array.isArray || function (xs) {
+	  return Object.prototype.toString.call(xs) === '[object Array]';
+	};
+	
+	function map (xs, f) {
+	  if (xs.map) return xs.map(f);
+	  var res = [];
+	  for (var i = 0; i < xs.length; i++) {
+	    res.push(f(xs[i], i));
+	  }
+	  return res;
+	}
+	
+	var objectKeys = Object.keys || function (obj) {
+	  var res = [];
+	  for (var key in obj) {
+	    if (Object.prototype.hasOwnProperty.call(obj, key)) res.push(key);
+	  }
+	  return res;
+	};
 
 
 /***/ },
-/* 133 */
+/* 162 */
 /*!**********************************************!*\
   !*** ./beeline-admin/services/stopsPopup.js ***!
   \**********************************************/
@@ -95625,11 +95067,11 @@
 	  value: true
 	});
 	
-	var _getIterator2 = __webpack_require__(/*! babel-runtime/core-js/get-iterator */ 14);
+	var _getIterator2 = __webpack_require__(/*! babel-runtime/core-js/get-iterator */ 25);
 	
 	var _getIterator3 = _interopRequireDefault(_getIterator2);
 	
-	var _promise = __webpack_require__(/*! babel-runtime/core-js/promise */ 92);
+	var _promise = __webpack_require__(/*! babel-runtime/core-js/promise */ 125);
 	
 	var _promise2 = _interopRequireDefault(_promise);
 	
@@ -95763,14 +95205,14 @@
 	  };
 	};
 	
-	var _stopsPopup = __webpack_require__(/*! ../templates/stopsPopup.html */ 134);
+	var _stopsPopup = __webpack_require__(/*! ../templates/stopsPopup.html */ 163);
 	
 	var _stopsPopup2 = _interopRequireDefault(_stopsPopup);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 134 */
+/* 163 */
 /*!*************************************************!*\
   !*** ./beeline-admin/templates/stopsPopup.html ***!
   \*************************************************/
@@ -95779,7 +95221,7 @@
 	module.exports = "\n<div class=\"stops-popup\">\n  <div class=\"modal-header\">\n    <h3>{{title}}</h3>\n  </div>\n\n  <div class=\"modal-body\">\n    <ui-gmap-google-map\n      center=\"map.center\"\n      zoom=\"map.zoom\"\n      control=\"map.control\"\n      options=\"map.options\"\n      events=\"map.events\"\n    >\n      <ui-gmap-markers\n        models=\"allStops\"\n        coords=\"'$latlng'\"\n        idKey=\"'id'\"\n        doCluster=\"true\"\n        click=\"stopClicked\"\n        dorebuildall=\"true\"\n        modelsbyref=\"true\"\n        control=\"map.markersControl\"\n        >\n      </ui-gmap-markers>\n\n      <ui-gmap-marker\n        idkey=\"'newstop'\"\n        coords=\"selectedStop.$latlng\"\n        ng-if=\"!selectedStop.id\"\n        options=\"map.newStopOptions\"\n      >\n      </ui-gmap-marker>\n    </ui-gmap-google-map>\n  </div>\n\n  <div class=\"modal-footer\">\n    <form name=\"stopForm\">\n      <div ng-show=\"selectedStop\">\n        <h3>\n          <i ng-if=\"!selectedStop.id\">New Stop</i>\n          <span ng-if=\"selectedStop.id\">{{selectedStop.description}}</span>\n        </h3>\n        <label>\n          Description:\n          <input type=\"text\" ng-model=\"selectedStop.description\"\n              ng-required\n              >\n        </label>\n        <label>\n          Road:\n          <input type=\"text\" ng-model=\"selectedStop.road\"\n              ng-required\n          >\n        </label>\n        <label>\n          Label:\n          <input type=\"text\" ng-model=\"selectedStop.label\"\n              ng-required\n          >\n        </label>\n      </div>\n\n      <span class=\"btn-group\">\n        <button class=\"btn btn-primary\"\n          ng-disabled=\"!selectedStop.id\"\n          ng-click=\"done()\">\n          OK\n        </button>\n        <button class=\"btn btn-default\"\n          ng-click=\"cancel()\">\n          Cancel\n        </button>\n      </span>\n\n      <span class=\"btn-group\">\n        <button class=\"btn btn-primary\"\n          ng-disabled=\"stopForm.$invalid || stopForm.$pristine\"\n          ng-click=\"saveStop(selectedStop)\"\n          >\n          Save Stop\n        </button>\n        <button class=\"btn btn-danger\"\n          ng-show=\"selectedStop.id\"\n          ng-click=\"deleteStop(selectedStop)\"\n          >\n          Delete Stop\n        </button>\n      </span>\n    </form>\n  </div>\n</div>\n";
 
 /***/ },
-/* 135 */
+/* 164 */
 /*!**********************************************!*\
   !*** ./beeline-admin/services/mapService.js ***!
   \**********************************************/
@@ -95825,7 +95267,7 @@
 	};
 
 /***/ },
-/* 136 */
+/* 165 */
 /*!*************************************************!*\
   !*** ./beeline-admin/services/driverService.js ***!
   \*************************************************/
@@ -95837,11 +95279,11 @@
 	  value: true
 	});
 	
-	var _getIterator2 = __webpack_require__(/*! babel-runtime/core-js/get-iterator */ 14);
+	var _getIterator2 = __webpack_require__(/*! babel-runtime/core-js/get-iterator */ 25);
 	
 	var _getIterator3 = _interopRequireDefault(_getIterator2);
 	
-	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 137);
+	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 166);
 	
 	var _stringify2 = _interopRequireDefault(_stringify);
 	
@@ -95963,35 +95405,36 @@
 	
 	var _lodash2 = _interopRequireDefault(_lodash);
 	
-	var _querystring = __webpack_require__(/*! querystring */ 130);
+	var _querystring = __webpack_require__(/*! querystring */ 159);
 	
 	var _querystring2 = _interopRequireDefault(_querystring);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 137 */
+/* 166 */
 /*!***************************************************!*\
   !*** ./~/babel-runtime/core-js/json/stringify.js ***!
   \***************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/json/stringify */ 138), __esModule: true };
+	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/json/stringify */ 167), __esModule: true };
 
 /***/ },
-/* 138 */
-/*!************************************************!*\
-  !*** ./~/core-js/library/fn/json/stringify.js ***!
-  \************************************************/
+/* 167 */
+/*!****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/fn/json/stringify.js ***!
+  \****************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var core = __webpack_require__(/*! ../../modules/$.core */ 29);
+	var core  = __webpack_require__(/*! ../../modules/_core */ 40)
+	  , $JSON = core.JSON || (core.JSON = {stringify: JSON.stringify});
 	module.exports = function stringify(it){ // eslint-disable-line no-unused-vars
-	  return (core.JSON && core.JSON.stringify || JSON.stringify).apply(JSON, arguments);
+	  return $JSON.stringify.apply($JSON, arguments);
 	};
 
 /***/ },
-/* 139 */
+/* 168 */
 /*!*************************************************************!*\
   !*** ./beeline-admin/controllers/transactionsController.js ***!
   \*************************************************************/
@@ -96030,14 +95473,14 @@
 	  $scope.$watchGroup(['currentPage', 'perPage'], query);
 	};
 	
-	var _querystring = __webpack_require__(/*! querystring */ 130);
+	var _querystring = __webpack_require__(/*! querystring */ 159);
 	
 	var _querystring2 = _interopRequireDefault(_querystring);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 140 */
+/* 169 */
 /*!*******************************************************!*\
   !*** ./beeline-admin/controllers/routesController.js ***!
   \*******************************************************/
@@ -96049,7 +95492,7 @@
 	  value: true
 	});
 	
-	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 137);
+	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 166);
 	
 	var _stringify2 = _interopRequireDefault(_stringify);
 	
@@ -96070,7 +95513,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 141 */
+/* 170 */
 /*!********************************************************!*\
   !*** ./beeline-admin/controllers/summaryController.js ***!
   \********************************************************/
@@ -96082,7 +95525,7 @@
 	  value: true
 	});
 	
-	var _getIterator2 = __webpack_require__(/*! babel-runtime/core-js/get-iterator */ 14);
+	var _getIterator2 = __webpack_require__(/*! babel-runtime/core-js/get-iterator */ 25);
 	
 	var _getIterator3 = _interopRequireDefault(_getIterator2);
 	
@@ -96167,7 +95610,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 142 */
+/* 171 */
 /*!*********************************************************!*\
   !*** ./beeline-admin/controllers/bookingsController.js ***!
   \*********************************************************/
@@ -96179,7 +95622,7 @@
 	  value: true
 	});
 	
-	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 137);
+	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 166);
 	
 	var _stringify2 = _interopRequireDefault(_stringify);
 	
@@ -96253,14 +95696,14 @@
 	  $scope.$watch('filter.date', queryRoutes, true);
 	};
 	
-	var _querystring = __webpack_require__(/*! querystring */ 130);
+	var _querystring = __webpack_require__(/*! querystring */ 159);
 	
 	var _querystring2 = _interopRequireDefault(_querystring);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 143 */
+/* 172 */
 /*!******************************************************!*\
   !*** ./beeline-admin/controllers/loginController.js ***!
   \******************************************************/
@@ -96277,7 +95720,7 @@
 	};
 
 /***/ },
-/* 144 */
+/* 173 */
 /*!*****************************************!*\
   !*** ./beeline-admin/shared/filters.js ***!
   \*****************************************/

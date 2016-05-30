@@ -1,3 +1,6 @@
+//require css for webpack
+require('../node_modules/bootstrap/dist/css/bootstrap.min.css');
+require('../scss/ionic.app.scss');
 
 require('beeline-calendar')
 require('angular-storage')
