@@ -21,7 +21,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner) {
 
   $scope.filter = {
     showPartial: false,
-    filterBy: 'transaction.createdAt',
+    filterBy: 'boardStop.time',
     order: 'desc',
     routeId: false,
     status: {
@@ -36,6 +36,8 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner) {
   $scope.disp = {
     availableRoutes: [],
     month: now,
+    datesBetween: [],
+    counts: {},
   }
 
   $scope.$watch('disp.month', () => {
@@ -84,6 +86,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner) {
       $scope.tickets = result.data.rows;
       $scope.pageCount = Math.ceil(result.data.count / result.data.perPage);
 
+      $scope.disp.counts = _.keyBy(result.data.countByDate, r => new Date(r.date).getTime())
       for (let ticket of $scope.tickets) {
         try {
           ticket.user.json = JSON.parse(ticket.user.name)
@@ -113,7 +116,23 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner) {
     })
   }
 
+  function updateDatesBetween() {
+    var start = Date.UTC(
+      $scope.filter.startDate.getFullYear(),
+      $scope.filter.startDate.getMonth(),
+      $scope.filter.startDate.getDate()
+    );
+    var end = Date.UTC(
+      $scope.filter.endDate.getFullYear(),
+      $scope.filter.endDate.getMonth(),
+      $scope.filter.endDate.getDate()
+    );
+
+    $scope.disp.datesBetween = _.range(start, end + 24*3600*1000, 24*3600*1000)
+  }
+
   $scope.$watchGroup(['currentPage', 'perPage'], query)
   $scope.$watchGroup(['filter.startDate', 'filter.endDate'], queryRoutes)
+  $scope.$watchGroup(['filter.startDate', 'filter.endDate'], updateDatesBetween)
   $scope.$watch('filter', query, true)
 }
