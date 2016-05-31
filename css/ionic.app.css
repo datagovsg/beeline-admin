@@ -148,9 +148,6 @@ trips-editor section.add-trips {
   float: left;
   margin: 0 1em; }
 
-.bookings-page nav label {
-  display: block; }
-
 .bookings-page nav:after {
   content: ".";
   visibility: hidden;
@@ -245,3 +242,6 @@ li.active {
           color: #00C; }
   .admin-nav super-admin-company-selector {
     flex: 0 0 auto; }
+
+.datepicker-wrap {
+  display: inline-block; }
