@@ -85836,6 +85836,7 @@
 	      });
 	
 	      if (bits.error) {
+	        auth.signout();
 	        alert(bits.error + '\n\n' + bits.error_description);
 	      }
 	
@@ -87837,7 +87838,7 @@
 	  authProvider.init({
 	    domain: env.AUTH0_DOMAIN,
 	    clientId: env.AUTH0_CID,
-	    loginUrl: '/login'
+	    loginState: 'login'
 	  });
 	  // if none of the above states are matched, use this as the fallback
 	  $urlRouterProvider.otherwise('/');
@@ -87858,12 +87859,13 @@
 	  value: true
 	});
 	
-	exports.default = function (AdminService) {
+	exports.default = function (AdminService, auth) {
 	  return {
 	    replace: true,
 	    template: __webpack_require__(/*! ./adminNav.html */ 61),
 	    link: function link(scope, elem, attr) {
 	      scope.adminService = AdminService;
+	      scope.auth = auth;
 	    }
 	  };
 	};
@@ -87875,7 +87877,7 @@
   \*********************************************************/
 /***/ function(module, exports) {
 
-	module.exports = "\n<nav class=\"tabs tabs-top tabs-icon-left tabs-light tabs-striped admin-nav\">\n  <ul>\n    <li>\n      <!-- The tabs at the top of the page -->\n      <a class=\"tab-item\"\n         ui-sref=\"transactions\"\n         >\n      \t <span class=\"tab-title\">Transactions</span>\n      </a>\n    </li>\n    <li>\n      <a class=\"tab-item\"\n         ui-sref=\"routes({routeId: 0, action: 'route'})\"\n         >\n      \t <span class=\"tab-title\">Routes</span>\n      </a>\n    </li>\n    <li>\n      <a class=\"tab-item\"\n         ui-sref=\"bookings\"\n         >\n      \t <span class=\"tab-title\">Bookings</span>\n      </a>\n    </li>\n    <li>\n      <a class=\"tab-item\"\n         ui-sref=\"summary\"\n         title=\"See the list of bookings for each month\"\n         >\n      \t <span class=\"tab-title\">Summary</span>\n      </a>\n    </li>\n    <li>\n      <a class=\"tab-item\"\n        ng-click=\"adminService.logout()\"\n        >\n        Logout\n      </a>\n    </li>\n  </ul>\n  <super-admin-company-selector></super-admin-company-selector>\n</nav>\n";
+	module.exports = "\n<nav class=\"tabs tabs-top tabs-icon-left tabs-light tabs-striped admin-nav\">\n  <ul>\n    <li>\n      <!-- The tabs at the top of the page -->\n      <a class=\"tab-item\"\n         ui-sref=\"transactions\"\n         >\n      \t <span class=\"tab-title\">Transactions</span>\n      </a>\n    </li>\n    <li>\n      <a class=\"tab-item\"\n         ui-sref=\"routes({routeId: 0, action: 'route'})\"\n         >\n      \t <span class=\"tab-title\">Routes</span>\n      </a>\n    </li>\n    <li>\n      <a class=\"tab-item\"\n         ui-sref=\"bookings\"\n         >\n      \t <span class=\"tab-title\">Bookings</span>\n      </a>\n    </li>\n    <li>\n      <a class=\"tab-item\"\n         ui-sref=\"summary\"\n         title=\"See the list of bookings for each month\"\n         >\n      \t <span class=\"tab-title\">Summary</span>\n      </a>\n    </li>\n    <li ng-if=\"auth.isAuthenticated\">\n      <a class=\"tab-item\"\n        ng-click=\"adminService.logout()\"\n        >\n        Logout\n      </a>\n    </li>\n    <li ng-if=\"!auth.isAuthenticated\">\n      <a class=\"tab-item\"\n        ng-click=\"adminService.login()\"\n        >\n        Login\n      </a>\n    </li>\n  </ul>\n  <super-admin-company-selector></super-admin-company-selector>\n</nav>\n";
 
 /***/ },
 /* 62 */
@@ -93933,6 +93935,22 @@
 	    $location.path('/login');
 	  };
 	
+	  this.login = function () {
+	    auth.signin({
+	      authParams: {
+	        scope: 'openid name email app_metadata user_id'
+	      }
+	    });
+	  };
+	
+	  this.signup = function () {
+	    auth.signup({
+	      authParams: {
+	        scope: 'openid name email app_metadata user_id'
+	      }
+	    });
+	  };
+	
 	  var lastSessionToken = null;
 	  var lastSession;
 	
@@ -95653,7 +95671,7 @@
   \******************************************************/
 /***/ function(module, exports) {
 
-	'use strict';
+	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -95661,20 +95679,6 @@
 	
 	exports.default = function ($scope, auth) {
 	  $scope.auth = auth;
-	  $scope.signin = function () {
-	    auth.signin({
-	      authParams: {
-	        scope: 'openid name email app_metadata user_id'
-	      }
-	    });
-	  };
-	  $scope.signup = function () {
-	    auth.signup({
-	      authParams: {
-	        scope: 'openid name email app_metadata user_id'
-	      }
-	    });
-	  };
 	};
 
 /***/ },

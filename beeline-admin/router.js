@@ -76,9 +76,8 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
   authProvider.init({
     domain: env.AUTH0_DOMAIN,
     clientId: env.AUTH0_CID,
-    loginUrl: '/login',
+    loginState: 'login',
   })
   // if none of the above states are matched, use this as the fallback
- $urlRouterProvider.otherwise('/');
-
+  $urlRouterProvider.otherwise('/');
 }

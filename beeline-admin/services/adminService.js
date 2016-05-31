@@ -34,6 +34,22 @@ export default function ($http, $location, store, jwtHelper, auth) {
     $location.path('/login');
   }
 
+  this.login = function() {
+    auth.signin({
+      authParams: {
+        scope: 'openid name email app_metadata user_id'
+      }
+    })
+  }
+
+  this.signup = function() {
+    auth.signup({
+      authParams: {
+        scope: 'openid name email app_metadata user_id'
+      }
+    })
+  }
+  
   var lastSessionToken = null;
   var lastSession;
 

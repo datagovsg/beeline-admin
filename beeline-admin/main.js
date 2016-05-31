@@ -81,6 +81,7 @@ angular.module('beeline-admin', [
       bits = _.mapValues(bits, v => decodeURIComponent(v[1]))
 
       if (bits.error) {
+        auth.signout()
         alert(
       `${bits.error}
 
