@@ -35493,7 +35493,7 @@
 	 * angular-ui-bootstrap
 	 * http://angular-ui.github.io/bootstrap/
 	
-	 * Version: 1.3.2 - 2016-04-14
+	 * Version: 1.3.3 - 2016-05-22
 	 * License: MIT
 	 */angular.module("ui.bootstrap", ["ui.bootstrap.collapse","ui.bootstrap.accordion","ui.bootstrap.alert","ui.bootstrap.buttons","ui.bootstrap.carousel","ui.bootstrap.dateparser","ui.bootstrap.isClass","ui.bootstrap.datepicker","ui.bootstrap.position","ui.bootstrap.datepickerPopup","ui.bootstrap.debounce","ui.bootstrap.dropdown","ui.bootstrap.stackedMap","ui.bootstrap.modal","ui.bootstrap.paging","ui.bootstrap.pager","ui.bootstrap.pagination","ui.bootstrap.tooltip","ui.bootstrap.popover","ui.bootstrap.progressbar","ui.bootstrap.rating","ui.bootstrap.tabs","ui.bootstrap.timepicker","ui.bootstrap.typeahead"]);
 	angular.module('ui.bootstrap.collapse', [])
@@ -35724,13 +35724,23 @@
 	    link: function(scope, element, attrs, controller) {
 	      scope.$watch(function() { return controller[attrs.uibAccordionTransclude]; }, function(heading) {
 	        if (heading) {
-	          var elem = angular.element(element[0].querySelector('[uib-accordion-header]'));
+	          var elem = angular.element(element[0].querySelector(getHeaderSelectors()));
 	          elem.html('');
 	          elem.append(heading);
 	        }
 	      });
 	    }
 	  };
+	
+	  function getHeaderSelectors() {
+	      return 'uib-accordion-header,' +
+	          'data-uib-accordion-header,' +
+	          'x-uib-accordion-header,' +
+	          'uib\\:accordion-header,' +
+	          '[uib-accordion-header],' +
+	          '[data-uib-accordion-header],' +
+	          '[x-uib-accordion-header]';
+	  }
 	});
 	
 	angular.module('ui.bootstrap.alert', [])
@@ -36674,8 +36684,9 @@
 	    return date && timezone ? convertTimezoneToLocal(date, timezone, true) : date;
 	  }
 	
-	  //https://github.com/angular/angular.js/blob/4daafd3dbe6a80d578f5a31df1bb99c77559543e/src/Angular.js#L1207
+	  //https://github.com/angular/angular.js/blob/622c42169699ec07fc6daaa19fe6d224e5d2f70e/src/Angular.js#L1207
 	  function timezoneToOffset(timezone, fallback) {
+	    timezone = timezone.replace(/:/g, '');
 	    var requestedTimezoneOffset = Date.parse('Jan 01, 1970 00:00:00 ' + timezone) / 60000;
 	    return isNaN(requestedTimezoneOffset) ? fallback : requestedTimezoneOffset;
 	  }
@@ -36688,8 +36699,9 @@
 	
 	  function convertTimezoneToLocal(date, timezone, reverse) {
 	    reverse = reverse ? -1 : 1;
-	    var timezoneOffset = timezoneToOffset(timezone, date.getTimezoneOffset());
-	    return addDateMinutes(date, reverse * (timezoneOffset - date.getTimezoneOffset()));
+	    var dateTimezoneOffset = date.getTimezoneOffset();
+	    var timezoneOffset = timezoneToOffset(timezone, dateTimezoneOffset);
+	    return addDateMinutes(date, reverse * (timezoneOffset - dateTimezoneOffset));
 	  }
 	}]);
 	
@@ -36961,8 +36973,9 @@
 	      self.activeDate = new Date();
 	    }
 	
-	    this.activeDate = ngModelCtrl.$modelValue ?
-	      dateParser.fromTimezone(new Date(ngModelCtrl.$modelValue), ngModelOptions.timezone) :
+	    var date = ngModelCtrl.$modelValue ? new Date(ngModelCtrl.$modelValue) : new Date();
+	    this.activeDate = !isNaN(date) ?
+	      dateParser.fromTimezone(date, ngModelOptions.timezone) :
 	      dateParser.fromTimezone(new Date(), ngModelOptions.timezone);
 	
 	    ngModelCtrl.$render = function() {
@@ -38167,11 +38180,11 @@
 	          return value;
 	        }
 	
-	        $scope.date = dateParser.fromTimezone(value, timezone);
-	
-	        if (angular.isNumber($scope.date)) {
-	          $scope.date = new Date($scope.date);
+	        if (angular.isNumber(value)) {
+	          value = new Date(value);
 	        }
+	
+	        $scope.date = dateParser.fromTimezone(value, timezone);
 	
 	        return dateParser.filter($scope.date, dateFormat);
 	      });
@@ -38707,7 +38720,8 @@
 	    if (appendTo && self.dropdownMenu) {
 	      var pos = $position.positionElements($element, self.dropdownMenu, 'bottom-left', true),
 	        css,
-	        rightalign;
+	        rightalign,
+	        scrollbarWidth;
 	
 	      css = {
 	        top: pos.top + 'px',
@@ -38720,7 +38734,8 @@
 	        css.right = 'auto';
 	      } else {
 	        css.left = 'auto';
-	        css.right = window.innerWidth -
+	        scrollbarWidth = $position.scrollbarWidth(true);
+	        css.right = window.innerWidth - scrollbarWidth -
 	          (pos.left + $element.prop('offsetWidth')) + 'px';
 	      }
 	
@@ -39607,29 +39622,26 @@
 	                //controllers
 	                if (modalOptions.controller) {
 	                  ctrlLocals.$scope = modalScope;
+	                  ctrlLocals.$scope.$resolve = {};
 	                  ctrlLocals.$uibModalInstance = modalInstance;
 	                  angular.forEach(tplAndVars[1], function(value, key) {
 	                    ctrlLocals[key] = value;
+	                    ctrlLocals.$scope.$resolve[key] = value;
 	                  });
 	
 	                  // the third param will make the controller instantiate later,private api
 	                  // @see https://github.com/angular/angular.js/blob/master/src/ng/controller.js#L126
-	                  ctrlInstantiate = $controller(modalOptions.controller, ctrlLocals, true);
-	                  if (modalOptions.controllerAs) {
+	                  ctrlInstantiate = $controller(modalOptions.controller, ctrlLocals, true, modalOptions.controllerAs);
+	                  if (modalOptions.controllerAs && modalOptions.bindToController) {
 	                    ctrlInstance = ctrlInstantiate.instance;
-	
-	                    if (modalOptions.bindToController) {
-	                      ctrlInstance.$close = modalScope.$close;
-	                      ctrlInstance.$dismiss = modalScope.$dismiss;
-	                      angular.extend(ctrlInstance, providedScope);
-	                    }
-	
-	                    ctrlInstance = ctrlInstantiate();
-	
-	                    modalScope[modalOptions.controllerAs] = ctrlInstance;
-	                  } else {
-	                    ctrlInstance = ctrlInstantiate();
+	                    ctrlInstance.$close = modalScope.$close;
+	                    ctrlInstance.$dismiss = modalScope.$dismiss;
+	                    angular.extend(ctrlInstance, {
+	                      $resolve: ctrlLocals.$scope.$resolve
+	                    }, providedScope);
 	                  }
+	
+	                  ctrlInstance = ctrlInstantiate();
 	
 	                  if (angular.isFunction(ctrlInstance.$onInit)) {
 	                    ctrlInstance.$onInit();
@@ -40935,7 +40947,8 @@
 	      var previousSelected = ctrl.tabs[previousIndex];
 	      if (previousSelected) {
 	        previousSelected.tab.onDeselect({
-	          $event: evt
+	          $event: evt,
+	          $selectedIndex: index
 	        });
 	        if (evt && evt.isDefaultPrevented()) {
 	          return;
@@ -40951,7 +40964,7 @@
 	        selected.tab.active = true;
 	        ctrl.active = selected.index;
 	        oldIndex = selected.index;
-	      } else if (!selected && angular.isNumber(oldIndex)) {
+	      } else if (!selected && angular.isDefined(oldIndex)) {
 	        ctrl.active = null;
 	        oldIndex = null;
 	      }
@@ -40975,7 +40988,7 @@
 	      return 0;
 	    });
 	
-	    if (tab.index === ctrl.active || !angular.isNumber(ctrl.active) && ctrl.tabs.length === 1) {
+	    if (tab.index === ctrl.active || !angular.isDefined(ctrl.active) && ctrl.tabs.length === 1) {
 	      var newActiveIndex = findTabIndex(tab.index);
 	      ctrl.select(newActiveIndex);
 	    }
@@ -41000,7 +41013,7 @@
 	  };
 	
 	  $scope.$watch('tabset.active', function(val) {
-	    if (angular.isNumber(val) && val !== oldIndex) {
+	    if (angular.isDefined(val) && val !== oldIndex) {
 	      ctrl.select(findTabIndex(val));
 	    }
 	  });
@@ -41038,9 +41051,6 @@
 	        scope.$parent.$eval(attrs.vertical) : false;
 	      scope.justified = angular.isDefined(attrs.justified) ?
 	        scope.$parent.$eval(attrs.justified) : false;
-	      if (angular.isUndefined(attrs.active)) {
-	        scope.active = 0;
-	      }
 	    }
 	  };
 	})
@@ -41771,7 +41781,7 @@
 	    originalScope.$watch(attrs.typeaheadMinLength, function (newVal) {
 	        minLength = !newVal && newVal !== 0 ? 1 : newVal;
 	    });
-	    
+	
 	    //minimal wait time after last character typed before typeahead kicks-in
 	    var waitTime = originalScope.$eval(attrs.typeaheadWaitMs) || 0;
 	
@@ -41783,6 +41793,12 @@
 	
 	    //binding to a variable that indicates if matches are being retrieved asynchronously
 	    var isLoadingSetter = $parse(attrs.typeaheadLoading).assign || angular.noop;
+	
+	    //a function to determine if an event should cause selection
+	    var isSelectEvent = attrs.typeaheadShouldSelect ? $parse(attrs.typeaheadShouldSelect) : function(scope, vals) {
+	      var evt = vals.$event;
+	      return evt.which === 13 || evt.which === 9;
+	    };
 	
 	    //a callback executed when a match is selected
 	    var onSelectCallback = $parse(attrs.typeaheadOnSelect);
@@ -42099,13 +42115,15 @@
 	        return;
 	      }
 	
+	      var shouldSelect = isSelectEvent(originalScope, {$event: evt});
+	
 	      /**
 	       * if there's nothing selected (i.e. focusFirst) and enter or tab is hit
 	       * or
 	       * shift + tab is pressed to bring focus to the previous element
 	       * then clear the results
 	       */
-	      if (scope.activeIdx === -1 && (evt.which === 9 || evt.which === 13) || evt.which === 9 && !!evt.shiftKey) {
+	      if (scope.activeIdx === -1 && shouldSelect || evt.which === 9 && !!evt.shiftKey) {
 	        resetMatches();
 	        scope.$digest();
 	        return;
@@ -42114,36 +42132,36 @@
 	      evt.preventDefault();
 	      var target;
 	      switch (evt.which) {
-	        case 9:
-	        case 13:
-	          scope.$apply(function () {
-	            if (angular.isNumber(scope.debounceUpdate) || angular.isObject(scope.debounceUpdate)) {
-	              $$debounce(function() {
-	                scope.select(scope.activeIdx, evt);
-	              }, angular.isNumber(scope.debounceUpdate) ? scope.debounceUpdate : scope.debounceUpdate['default']);
-	            } else {
-	              scope.select(scope.activeIdx, evt);
-	            }
-	          });
-	          break;
-	        case 27:
+	        case 27: // escape
 	          evt.stopPropagation();
 	
 	          resetMatches();
 	          originalScope.$digest();
 	          break;
-	        case 38:
+	        case 38: // up arrow
 	          scope.activeIdx = (scope.activeIdx > 0 ? scope.activeIdx : scope.matches.length) - 1;
 	          scope.$digest();
 	          target = popUpEl.find('li')[scope.activeIdx];
 	          target.parentNode.scrollTop = target.offsetTop;
 	          break;
-	        case 40:
+	        case 40: // down arrow
 	          scope.activeIdx = (scope.activeIdx + 1) % scope.matches.length;
 	          scope.$digest();
 	          target = popUpEl.find('li')[scope.activeIdx];
 	          target.parentNode.scrollTop = target.offsetTop;
 	          break;
+	        default:
+	          if (shouldSelect) {
+	            scope.$apply(function() {
+	              if (angular.isNumber(scope.debounceUpdate) || angular.isObject(scope.debounceUpdate)) {
+	                $$debounce(function() {
+	                  scope.select(scope.activeIdx, evt);
+	                }, angular.isNumber(scope.debounceUpdate) ? scope.debounceUpdate : scope.debounceUpdate['default']);
+	              } else {
+	                scope.select(scope.activeIdx, evt);
+	              }
+	            });
+	          }
 	      }
 	    });
 	
@@ -42407,7 +42425,7 @@
 	 * angular-ui-bootstrap
 	 * http://angular-ui.github.io/bootstrap/
 	
-	 * Version: 1.3.2 - 2016-04-14
+	 * Version: 1.3.3 - 2016-05-22
 	 * License: MIT
 	 */angular.module("ui.bootstrap", ["ui.bootstrap.tpls", "ui.bootstrap.collapse","ui.bootstrap.accordion","ui.bootstrap.alert","ui.bootstrap.buttons","ui.bootstrap.carousel","ui.bootstrap.dateparser","ui.bootstrap.isClass","ui.bootstrap.datepicker","ui.bootstrap.position","ui.bootstrap.datepickerPopup","ui.bootstrap.debounce","ui.bootstrap.dropdown","ui.bootstrap.stackedMap","ui.bootstrap.modal","ui.bootstrap.paging","ui.bootstrap.pager","ui.bootstrap.pagination","ui.bootstrap.tooltip","ui.bootstrap.popover","ui.bootstrap.progressbar","ui.bootstrap.rating","ui.bootstrap.tabs","ui.bootstrap.timepicker","ui.bootstrap.typeahead"]);
 	angular.module("ui.bootstrap.tpls", ["uib/template/accordion/accordion-group.html","uib/template/accordion/accordion.html","uib/template/alert/alert.html","uib/template/carousel/carousel.html","uib/template/carousel/slide.html","uib/template/datepicker/datepicker.html","uib/template/datepicker/day.html","uib/template/datepicker/month.html","uib/template/datepicker/year.html","uib/template/datepickerPopup/popup.html","uib/template/modal/backdrop.html","uib/template/modal/window.html","uib/template/pager/pager.html","uib/template/pagination/pagination.html","uib/template/tooltip/tooltip-html-popup.html","uib/template/tooltip/tooltip-popup.html","uib/template/tooltip/tooltip-template-popup.html","uib/template/popover/popover-html.html","uib/template/popover/popover-template.html","uib/template/popover/popover.html","uib/template/progressbar/bar.html","uib/template/progressbar/progress.html","uib/template/progressbar/progressbar.html","uib/template/rating/rating.html","uib/template/tabs/tab.html","uib/template/tabs/tabset.html","uib/template/timepicker/timepicker.html","uib/template/typeahead/typeahead-match.html","uib/template/typeahead/typeahead-popup.html"]);
@@ -42639,13 +42657,23 @@
 	    link: function(scope, element, attrs, controller) {
 	      scope.$watch(function() { return controller[attrs.uibAccordionTransclude]; }, function(heading) {
 	        if (heading) {
-	          var elem = angular.element(element[0].querySelector('[uib-accordion-header]'));
+	          var elem = angular.element(element[0].querySelector(getHeaderSelectors()));
 	          elem.html('');
 	          elem.append(heading);
 	        }
 	      });
 	    }
 	  };
+	
+	  function getHeaderSelectors() {
+	      return 'uib-accordion-header,' +
+	          'data-uib-accordion-header,' +
+	          'x-uib-accordion-header,' +
+	          'uib\\:accordion-header,' +
+	          '[uib-accordion-header],' +
+	          '[data-uib-accordion-header],' +
+	          '[x-uib-accordion-header]';
+	  }
 	});
 	
 	angular.module('ui.bootstrap.alert', [])
@@ -43589,8 +43617,9 @@
 	    return date && timezone ? convertTimezoneToLocal(date, timezone, true) : date;
 	  }
 	
-	  //https://github.com/angular/angular.js/blob/4daafd3dbe6a80d578f5a31df1bb99c77559543e/src/Angular.js#L1207
+	  //https://github.com/angular/angular.js/blob/622c42169699ec07fc6daaa19fe6d224e5d2f70e/src/Angular.js#L1207
 	  function timezoneToOffset(timezone, fallback) {
+	    timezone = timezone.replace(/:/g, '');
 	    var requestedTimezoneOffset = Date.parse('Jan 01, 1970 00:00:00 ' + timezone) / 60000;
 	    return isNaN(requestedTimezoneOffset) ? fallback : requestedTimezoneOffset;
 	  }
@@ -43603,8 +43632,9 @@
 	
 	  function convertTimezoneToLocal(date, timezone, reverse) {
 	    reverse = reverse ? -1 : 1;
-	    var timezoneOffset = timezoneToOffset(timezone, date.getTimezoneOffset());
-	    return addDateMinutes(date, reverse * (timezoneOffset - date.getTimezoneOffset()));
+	    var dateTimezoneOffset = date.getTimezoneOffset();
+	    var timezoneOffset = timezoneToOffset(timezone, dateTimezoneOffset);
+	    return addDateMinutes(date, reverse * (timezoneOffset - dateTimezoneOffset));
 	  }
 	}]);
 	
@@ -43876,8 +43906,9 @@
 	      self.activeDate = new Date();
 	    }
 	
-	    this.activeDate = ngModelCtrl.$modelValue ?
-	      dateParser.fromTimezone(new Date(ngModelCtrl.$modelValue), ngModelOptions.timezone) :
+	    var date = ngModelCtrl.$modelValue ? new Date(ngModelCtrl.$modelValue) : new Date();
+	    this.activeDate = !isNaN(date) ?
+	      dateParser.fromTimezone(date, ngModelOptions.timezone) :
 	      dateParser.fromTimezone(new Date(), ngModelOptions.timezone);
 	
 	    ngModelCtrl.$render = function() {
@@ -45082,11 +45113,11 @@
 	          return value;
 	        }
 	
-	        $scope.date = dateParser.fromTimezone(value, timezone);
-	
-	        if (angular.isNumber($scope.date)) {
-	          $scope.date = new Date($scope.date);
+	        if (angular.isNumber(value)) {
+	          value = new Date(value);
 	        }
+	
+	        $scope.date = dateParser.fromTimezone(value, timezone);
 	
 	        return dateParser.filter($scope.date, dateFormat);
 	      });
@@ -45622,7 +45653,8 @@
 	    if (appendTo && self.dropdownMenu) {
 	      var pos = $position.positionElements($element, self.dropdownMenu, 'bottom-left', true),
 	        css,
-	        rightalign;
+	        rightalign,
+	        scrollbarWidth;
 	
 	      css = {
 	        top: pos.top + 'px',
@@ -45635,7 +45667,8 @@
 	        css.right = 'auto';
 	      } else {
 	        css.left = 'auto';
-	        css.right = window.innerWidth -
+	        scrollbarWidth = $position.scrollbarWidth(true);
+	        css.right = window.innerWidth - scrollbarWidth -
 	          (pos.left + $element.prop('offsetWidth')) + 'px';
 	      }
 	
@@ -46522,29 +46555,26 @@
 	                //controllers
 	                if (modalOptions.controller) {
 	                  ctrlLocals.$scope = modalScope;
+	                  ctrlLocals.$scope.$resolve = {};
 	                  ctrlLocals.$uibModalInstance = modalInstance;
 	                  angular.forEach(tplAndVars[1], function(value, key) {
 	                    ctrlLocals[key] = value;
+	                    ctrlLocals.$scope.$resolve[key] = value;
 	                  });
 	
 	                  // the third param will make the controller instantiate later,private api
 	                  // @see https://github.com/angular/angular.js/blob/master/src/ng/controller.js#L126
-	                  ctrlInstantiate = $controller(modalOptions.controller, ctrlLocals, true);
-	                  if (modalOptions.controllerAs) {
+	                  ctrlInstantiate = $controller(modalOptions.controller, ctrlLocals, true, modalOptions.controllerAs);
+	                  if (modalOptions.controllerAs && modalOptions.bindToController) {
 	                    ctrlInstance = ctrlInstantiate.instance;
-	
-	                    if (modalOptions.bindToController) {
-	                      ctrlInstance.$close = modalScope.$close;
-	                      ctrlInstance.$dismiss = modalScope.$dismiss;
-	                      angular.extend(ctrlInstance, providedScope);
-	                    }
-	
-	                    ctrlInstance = ctrlInstantiate();
-	
-	                    modalScope[modalOptions.controllerAs] = ctrlInstance;
-	                  } else {
-	                    ctrlInstance = ctrlInstantiate();
+	                    ctrlInstance.$close = modalScope.$close;
+	                    ctrlInstance.$dismiss = modalScope.$dismiss;
+	                    angular.extend(ctrlInstance, {
+	                      $resolve: ctrlLocals.$scope.$resolve
+	                    }, providedScope);
 	                  }
+	
+	                  ctrlInstance = ctrlInstantiate();
 	
 	                  if (angular.isFunction(ctrlInstance.$onInit)) {
 	                    ctrlInstance.$onInit();
@@ -47850,7 +47880,8 @@
 	      var previousSelected = ctrl.tabs[previousIndex];
 	      if (previousSelected) {
 	        previousSelected.tab.onDeselect({
-	          $event: evt
+	          $event: evt,
+	          $selectedIndex: index
 	        });
 	        if (evt && evt.isDefaultPrevented()) {
 	          return;
@@ -47866,7 +47897,7 @@
 	        selected.tab.active = true;
 	        ctrl.active = selected.index;
 	        oldIndex = selected.index;
-	      } else if (!selected && angular.isNumber(oldIndex)) {
+	      } else if (!selected && angular.isDefined(oldIndex)) {
 	        ctrl.active = null;
 	        oldIndex = null;
 	      }
@@ -47890,7 +47921,7 @@
 	      return 0;
 	    });
 	
-	    if (tab.index === ctrl.active || !angular.isNumber(ctrl.active) && ctrl.tabs.length === 1) {
+	    if (tab.index === ctrl.active || !angular.isDefined(ctrl.active) && ctrl.tabs.length === 1) {
 	      var newActiveIndex = findTabIndex(tab.index);
 	      ctrl.select(newActiveIndex);
 	    }
@@ -47915,7 +47946,7 @@
 	  };
 	
 	  $scope.$watch('tabset.active', function(val) {
-	    if (angular.isNumber(val) && val !== oldIndex) {
+	    if (angular.isDefined(val) && val !== oldIndex) {
 	      ctrl.select(findTabIndex(val));
 	    }
 	  });
@@ -47953,9 +47984,6 @@
 	        scope.$parent.$eval(attrs.vertical) : false;
 	      scope.justified = angular.isDefined(attrs.justified) ?
 	        scope.$parent.$eval(attrs.justified) : false;
-	      if (angular.isUndefined(attrs.active)) {
-	        scope.active = 0;
-	      }
 	    }
 	  };
 	})
@@ -48686,7 +48714,7 @@
 	    originalScope.$watch(attrs.typeaheadMinLength, function (newVal) {
 	        minLength = !newVal && newVal !== 0 ? 1 : newVal;
 	    });
-	    
+	
 	    //minimal wait time after last character typed before typeahead kicks-in
 	    var waitTime = originalScope.$eval(attrs.typeaheadWaitMs) || 0;
 	
@@ -48698,6 +48726,12 @@
 	
 	    //binding to a variable that indicates if matches are being retrieved asynchronously
 	    var isLoadingSetter = $parse(attrs.typeaheadLoading).assign || angular.noop;
+	
+	    //a function to determine if an event should cause selection
+	    var isSelectEvent = attrs.typeaheadShouldSelect ? $parse(attrs.typeaheadShouldSelect) : function(scope, vals) {
+	      var evt = vals.$event;
+	      return evt.which === 13 || evt.which === 9;
+	    };
 	
 	    //a callback executed when a match is selected
 	    var onSelectCallback = $parse(attrs.typeaheadOnSelect);
@@ -49014,13 +49048,15 @@
 	        return;
 	      }
 	
+	      var shouldSelect = isSelectEvent(originalScope, {$event: evt});
+	
 	      /**
 	       * if there's nothing selected (i.e. focusFirst) and enter or tab is hit
 	       * or
 	       * shift + tab is pressed to bring focus to the previous element
 	       * then clear the results
 	       */
-	      if (scope.activeIdx === -1 && (evt.which === 9 || evt.which === 13) || evt.which === 9 && !!evt.shiftKey) {
+	      if (scope.activeIdx === -1 && shouldSelect || evt.which === 9 && !!evt.shiftKey) {
 	        resetMatches();
 	        scope.$digest();
 	        return;
@@ -49029,36 +49065,36 @@
 	      evt.preventDefault();
 	      var target;
 	      switch (evt.which) {
-	        case 9:
-	        case 13:
-	          scope.$apply(function () {
-	            if (angular.isNumber(scope.debounceUpdate) || angular.isObject(scope.debounceUpdate)) {
-	              $$debounce(function() {
-	                scope.select(scope.activeIdx, evt);
-	              }, angular.isNumber(scope.debounceUpdate) ? scope.debounceUpdate : scope.debounceUpdate['default']);
-	            } else {
-	              scope.select(scope.activeIdx, evt);
-	            }
-	          });
-	          break;
-	        case 27:
+	        case 27: // escape
 	          evt.stopPropagation();
 	
 	          resetMatches();
 	          originalScope.$digest();
 	          break;
-	        case 38:
+	        case 38: // up arrow
 	          scope.activeIdx = (scope.activeIdx > 0 ? scope.activeIdx : scope.matches.length) - 1;
 	          scope.$digest();
 	          target = popUpEl.find('li')[scope.activeIdx];
 	          target.parentNode.scrollTop = target.offsetTop;
 	          break;
-	        case 40:
+	        case 40: // down arrow
 	          scope.activeIdx = (scope.activeIdx + 1) % scope.matches.length;
 	          scope.$digest();
 	          target = popUpEl.find('li')[scope.activeIdx];
 	          target.parentNode.scrollTop = target.offsetTop;
 	          break;
+	        default:
+	          if (shouldSelect) {
+	            scope.$apply(function() {
+	              if (angular.isNumber(scope.debounceUpdate) || angular.isObject(scope.debounceUpdate)) {
+	                $$debounce(function() {
+	                  scope.select(scope.activeIdx, evt);
+	                }, angular.isNumber(scope.debounceUpdate) ? scope.debounceUpdate : scope.debounceUpdate['default']);
+	              } else {
+	                scope.select(scope.activeIdx, evt);
+	              }
+	            });
+	          }
 	      }
 	    });
 	
@@ -49741,7 +49777,7 @@
 /***/ function(module, exports) {
 
 	/**
-	 * @license AngularJS v1.5.5
+	 * @license AngularJS v1.5.6
 	 * (c) 2010-2016 Google, Inc. http://angularjs.org
 	 * License: MIT
 	 */
@@ -49874,7 +49910,7 @@
 	  if (element instanceof jqLite) {
 	    switch (element.length) {
 	      case 0:
-	        return [];
+	        return element;
 	        break;
 	
 	      case 1:
@@ -52985,7 +53021,8 @@
 	        }
 	
 	        function update(element) {
-	          getRunner(element).setHost(newRunner);
+	          var runner = getRunner(element);
+	          if (runner) runner.setHost(newRunner);
 	        }
 	      }
 	
@@ -53897,7 +53934,7 @@
 /***/ function(module, exports) {
 
 	/**
-	 * @license AngularJS v1.5.5
+	 * @license AngularJS v1.5.6
 	 * (c) 2010-2016 Google, Inc. http://angularjs.org
 	 * License: MIT
 	 */
@@ -55280,8 +55317,7 @@
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/**
 	 * @license
-	 * lodash 4.11.1 (Custom Build) <https://lodash.com/>
-	 * Build: `lodash -d -o ./foo/lodash.js`
+	 * lodash <https://lodash.com/>
 	 * Copyright jQuery Foundation and other contributors <https://jquery.org/>
 	 * Released under MIT license <https://lodash.com/license>
 	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
@@ -55293,7 +55329,7 @@
 	  var undefined;
 	
 	  /** Used as the semantic version number. */
-	  var VERSION = '4.11.1';
+	  var VERSION = '4.13.1';
 	
 	  /** Used as the size to enable large array optimizations. */
 	  var LARGE_ARRAY_SIZE = 200;
@@ -55397,7 +55433,7 @@
 	  /** Used to match property names within property paths. */
 	  var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/,
 	      reIsPlainProp = /^\w*$/,
-	      rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]/g;
+	      rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(\.|\[\])(?:\4|$))/g;
 	
 	  /**
 	   * Used to match `RegExp`
@@ -55461,11 +55497,11 @@
 	      rsLowerRange = 'a-z\\xdf-\\xf6\\xf8-\\xff',
 	      rsMathOpRange = '\\xac\\xb1\\xd7\\xf7',
 	      rsNonCharRange = '\\x00-\\x2f\\x3a-\\x40\\x5b-\\x60\\x7b-\\xbf',
-	      rsQuoteRange = '\\u2018\\u2019\\u201c\\u201d',
+	      rsPunctuationRange = '\\u2000-\\u206f',
 	      rsSpaceRange = ' \\t\\x0b\\f\\xa0\\ufeff\\n\\r\\u2028\\u2029\\u1680\\u180e\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200a\\u202f\\u205f\\u3000',
 	      rsUpperRange = 'A-Z\\xc0-\\xd6\\xd8-\\xde',
 	      rsVarRange = '\\ufe0e\\ufe0f',
-	      rsBreakRange = rsMathOpRange + rsNonCharRange + rsQuoteRange + rsSpaceRange;
+	      rsBreakRange = rsMathOpRange + rsNonCharRange + rsPunctuationRange + rsSpaceRange;
 	
 	  /** Used to compose unicode capture groups. */
 	  var rsApos = "['\u2019]",
@@ -55530,7 +55566,7 @@
 	    'Function', 'Int8Array', 'Int16Array', 'Int32Array', 'Map', 'Math', 'Object',
 	    'Promise', 'Reflect', 'RegExp', 'Set', 'String', 'Symbol', 'TypeError',
 	    'Uint8Array', 'Uint8ClampedArray', 'Uint16Array', 'Uint32Array', 'WeakMap',
-	    '_', 'clearTimeout', 'isFinite', 'parseInt', 'setTimeout'
+	    '_', 'isFinite', 'parseInt', 'setTimeout'
 	  ];
 	
 	  /** Used to make template sourceURLs easier to identify. */
@@ -55609,12 +55645,6 @@
 	    '&#96;': '`'
 	  };
 	
-	  /** Used to determine if values are of the language type `Object`. */
-	  var objectTypes = {
-	    'function': true,
-	    'object': true
-	  };
-	
 	  /** Used to escape characters for inclusion in compiled string literals. */
 	  var stringEscapes = {
 	    '\\': '\\',
@@ -55630,41 +55660,25 @@
 	      freeParseInt = parseInt;
 	
 	  /** Detect free variable `exports`. */
-	  var freeExports = (objectTypes[typeof exports] && exports && !exports.nodeType)
-	    ? exports
-	    : undefined;
+	  var freeExports = typeof exports == 'object' && exports;
 	
 	  /** Detect free variable `module`. */
-	  var freeModule = (objectTypes[typeof module] && module && !module.nodeType)
-	    ? module
-	    : undefined;
+	  var freeModule = freeExports && typeof module == 'object' && module;
 	
 	  /** Detect the popular CommonJS extension `module.exports`. */
-	  var moduleExports = (freeModule && freeModule.exports === freeExports)
-	    ? freeExports
-	    : undefined;
+	  var moduleExports = freeModule && freeModule.exports === freeExports;
 	
 	  /** Detect free variable `global` from Node.js. */
-	  var freeGlobal = checkGlobal(freeExports && freeModule && typeof global == 'object' && global);
+	  var freeGlobal = checkGlobal(typeof global == 'object' && global);
 	
 	  /** Detect free variable `self`. */
-	  var freeSelf = checkGlobal(objectTypes[typeof self] && self);
-	
-	  /** Detect free variable `window`. */
-	  var freeWindow = checkGlobal(objectTypes[typeof window] && window);
+	  var freeSelf = checkGlobal(typeof self == 'object' && self);
 	
 	  /** Detect `this` as the global object. */
-	  var thisGlobal = checkGlobal(objectTypes[typeof this] && this);
+	  var thisGlobal = checkGlobal(typeof this == 'object' && this);
 	
-	  /**
-	   * Used as a reference to the global object.
-	   *
-	   * The `this` value is used if it's the global object to avoid Greasemonkey's
-	   * restricted `window` object, otherwise the `window` object is used.
-	   */
-	  var root = freeGlobal ||
-	    ((freeWindow !== (thisGlobal && thisGlobal.window)) && freeWindow) ||
-	      freeSelf || thisGlobal || Function('return this')();
+	  /** Used as a reference to the global object. */
+	  var root = freeGlobal || freeSelf || thisGlobal || Function('return this')();
 	
 	  /*--------------------------------------------------------------------------*/
 	
@@ -55720,7 +55734,7 @@
 	   * A specialized version of `baseAggregator` for arrays.
 	   *
 	   * @private
-	   * @param {Array} array The array to iterate over.
+	   * @param {Array} [array] The array to iterate over.
 	   * @param {Function} setter The function to set `accumulator` values.
 	   * @param {Function} iteratee The iteratee to transform keys.
 	   * @param {Object} accumulator The initial aggregated object.
@@ -55728,7 +55742,7 @@
 	   */
 	  function arrayAggregator(array, setter, iteratee, accumulator) {
 	    var index = -1,
-	        length = array.length;
+	        length = array ? array.length : 0;
 	
 	    while (++index < length) {
 	      var value = array[index];
@@ -55738,41 +55752,17 @@
 	  }
 	
 	  /**
-	   * Creates a new array concatenating `array` with `other`.
-	   *
-	   * @private
-	   * @param {Array} array The first array to concatenate.
-	   * @param {Array} other The second array to concatenate.
-	   * @returns {Array} Returns the new concatenated array.
-	   */
-	  function arrayConcat(array, other) {
-	    var index = -1,
-	        length = array.length,
-	        othIndex = -1,
-	        othLength = other.length,
-	        result = Array(length + othLength);
-	
-	    while (++index < length) {
-	      result[index] = array[index];
-	    }
-	    while (++othIndex < othLength) {
-	      result[index++] = other[othIndex];
-	    }
-	    return result;
-	  }
-	
-	  /**
 	   * A specialized version of `_.forEach` for arrays without support for
 	   * iteratee shorthands.
 	   *
 	   * @private
-	   * @param {Array} array The array to iterate over.
+	   * @param {Array} [array] The array to iterate over.
 	   * @param {Function} iteratee The function invoked per iteration.
 	   * @returns {Array} Returns `array`.
 	   */
 	  function arrayEach(array, iteratee) {
 	    var index = -1,
-	        length = array.length;
+	        length = array ? array.length : 0;
 	
 	    while (++index < length) {
 	      if (iteratee(array[index], index, array) === false) {
@@ -55787,12 +55777,12 @@
 	   * iteratee shorthands.
 	   *
 	   * @private
-	   * @param {Array} array The array to iterate over.
+	   * @param {Array} [array] The array to iterate over.
 	   * @param {Function} iteratee The function invoked per iteration.
 	   * @returns {Array} Returns `array`.
 	   */
 	  function arrayEachRight(array, iteratee) {
-	    var length = array.length;
+	    var length = array ? array.length : 0;
 	
 	    while (length--) {
 	      if (iteratee(array[length], length, array) === false) {
@@ -55807,14 +55797,14 @@
 	   * iteratee shorthands.
 	   *
 	   * @private
-	   * @param {Array} array The array to iterate over.
+	   * @param {Array} [array] The array to iterate over.
 	   * @param {Function} predicate The function invoked per iteration.
 	   * @returns {boolean} Returns `true` if all elements pass the predicate check,
 	   *  else `false`.
 	   */
 	  function arrayEvery(array, predicate) {
 	    var index = -1,
-	        length = array.length;
+	        length = array ? array.length : 0;
 	
 	    while (++index < length) {
 	      if (!predicate(array[index], index, array)) {
@@ -55829,13 +55819,13 @@
 	   * iteratee shorthands.
 	   *
 	   * @private
-	   * @param {Array} array The array to iterate over.
+	   * @param {Array} [array] The array to iterate over.
 	   * @param {Function} predicate The function invoked per iteration.
 	   * @returns {Array} Returns the new filtered array.
 	   */
 	  function arrayFilter(array, predicate) {
 	    var index = -1,
-	        length = array.length,
+	        length = array ? array.length : 0,
 	        resIndex = 0,
 	        result = [];
 	
@@ -55853,26 +55843,27 @@
 	   * specifying an index to search from.
 	   *
 	   * @private
-	   * @param {Array} array The array to search.
+	   * @param {Array} [array] The array to search.
 	   * @param {*} target The value to search for.
 	   * @returns {boolean} Returns `true` if `target` is found, else `false`.
 	   */
 	  function arrayIncludes(array, value) {
-	    return !!array.length && baseIndexOf(array, value, 0) > -1;
+	    var length = array ? array.length : 0;
+	    return !!length && baseIndexOf(array, value, 0) > -1;
 	  }
 	
 	  /**
 	   * This function is like `arrayIncludes` except that it accepts a comparator.
 	   *
 	   * @private
-	   * @param {Array} array The array to search.
+	   * @param {Array} [array] The array to search.
 	   * @param {*} target The value to search for.
 	   * @param {Function} comparator The comparator invoked per element.
 	   * @returns {boolean} Returns `true` if `target` is found, else `false`.
 	   */
 	  function arrayIncludesWith(array, value, comparator) {
 	    var index = -1,
-	        length = array.length;
+	        length = array ? array.length : 0;
 	
 	    while (++index < length) {
 	      if (comparator(value, array[index])) {
@@ -55887,13 +55878,13 @@
 	   * shorthands.
 	   *
 	   * @private
-	   * @param {Array} array The array to iterate over.
+	   * @param {Array} [array] The array to iterate over.
 	   * @param {Function} iteratee The function invoked per iteration.
 	   * @returns {Array} Returns the new mapped array.
 	   */
 	  function arrayMap(array, iteratee) {
 	    var index = -1,
-	        length = array.length,
+	        length = array ? array.length : 0,
 	        result = Array(length);
 	
 	    while (++index < length) {
@@ -55926,7 +55917,7 @@
 	   * iteratee shorthands.
 	   *
 	   * @private
-	   * @param {Array} array The array to iterate over.
+	   * @param {Array} [array] The array to iterate over.
 	   * @param {Function} iteratee The function invoked per iteration.
 	   * @param {*} [accumulator] The initial value.
 	   * @param {boolean} [initAccum] Specify using the first element of `array` as
@@ -55935,7 +55926,7 @@
 	   */
 	  function arrayReduce(array, iteratee, accumulator, initAccum) {
 	    var index = -1,
-	        length = array.length;
+	        length = array ? array.length : 0;
 	
 	    if (initAccum && length) {
 	      accumulator = array[++index];
@@ -55951,7 +55942,7 @@
 	   * iteratee shorthands.
 	   *
 	   * @private
-	   * @param {Array} array The array to iterate over.
+	   * @param {Array} [array] The array to iterate over.
 	   * @param {Function} iteratee The function invoked per iteration.
 	   * @param {*} [accumulator] The initial value.
 	   * @param {boolean} [initAccum] Specify using the last element of `array` as
@@ -55959,7 +55950,7 @@
 	   * @returns {*} Returns the accumulated value.
 	   */
 	  function arrayReduceRight(array, iteratee, accumulator, initAccum) {
-	    var length = array.length;
+	    var length = array ? array.length : 0;
 	    if (initAccum && length) {
 	      accumulator = array[--length];
 	    }
@@ -55974,14 +55965,14 @@
 	   * shorthands.
 	   *
 	   * @private
-	   * @param {Array} array The array to iterate over.
+	   * @param {Array} [array] The array to iterate over.
 	   * @param {Function} predicate The function invoked per iteration.
 	   * @returns {boolean} Returns `true` if any element passes the predicate check,
 	   *  else `false`.
 	   */
 	  function arraySome(array, predicate) {
 	    var index = -1,
-	        length = array.length;
+	        length = array ? array.length : 0;
 	
 	    while (++index < length) {
 	      if (predicate(array[index], index, array)) {
@@ -55992,52 +55983,21 @@
 	  }
 	
 	  /**
-	   * The base implementation of methods like `_.max` and `_.min` which accepts a
-	   * `comparator` to determine the extremum value.
-	   *
-	   * @private
-	   * @param {Array} array The array to iterate over.
-	   * @param {Function} iteratee The iteratee invoked per iteration.
-	   * @param {Function} comparator The comparator used to compare values.
-	   * @returns {*} Returns the extremum value.
-	   */
-	  function baseExtremum(array, iteratee, comparator) {
-	    var index = -1,
-	        length = array.length;
-	
-	    while (++index < length) {
-	      var value = array[index],
-	          current = iteratee(value);
-	
-	      if (current != null && (computed === undefined
-	            ? current === current
-	            : comparator(current, computed)
-	          )) {
-	        var computed = current,
-	            result = value;
-	      }
-	    }
-	    return result;
-	  }
-	
-	  /**
-	   * The base implementation of methods like `_.find` and `_.findKey`, without
-	   * support for iteratee shorthands, which iterates over `collection` using
-	   * `eachFunc`.
+	   * The base implementation of methods like `_.findKey` and `_.findLastKey`,
+	   * without support for iteratee shorthands, which iterates over `collection`
+	   * using `eachFunc`.
 	   *
 	   * @private
 	   * @param {Array|Object} collection The collection to search.
 	   * @param {Function} predicate The function invoked per iteration.
 	   * @param {Function} eachFunc The function to iterate over `collection`.
-	   * @param {boolean} [retKey] Specify returning the key of the found element
-	   *  instead of the element itself.
 	   * @returns {*} Returns the found element or its key, else `undefined`.
 	   */
-	  function baseFind(collection, predicate, eachFunc, retKey) {
+	  function baseFindKey(collection, predicate, eachFunc) {
 	    var result;
 	    eachFunc(collection, function(value, key, collection) {
 	      if (predicate(value, key, collection)) {
-	        result = retKey ? key : value;
+	        result = key;
 	        return false;
 	      }
 	    });
@@ -56051,12 +56011,13 @@
 	   * @private
 	   * @param {Array} array The array to search.
 	   * @param {Function} predicate The function invoked per iteration.
+	   * @param {number} fromIndex The index to search from.
 	   * @param {boolean} [fromRight] Specify iterating from right to left.
 	   * @returns {number} Returns the index of the matched value, else `-1`.
 	   */
-	  function baseFindIndex(array, predicate, fromRight) {
+	  function baseFindIndex(array, predicate, fromIndex, fromRight) {
 	    var length = array.length,
-	        index = fromRight ? length : -1;
+	        index = fromIndex + (fromRight ? 1 : -1);
 	
 	    while ((fromRight ? index-- : ++index < length)) {
 	      if (predicate(array[index], index, array)) {
@@ -56217,7 +56178,7 @@
 	   * @private
 	   * @param {Object} object The object to query.
 	   * @param {Array} props The property names to get values for.
-	   * @returns {Object} Returns the new array of key-value pairs.
+	   * @returns {Object} Returns the key-value pairs.
 	   */
 	  function baseToPairs(object, props) {
 	    return arrayMap(props, function(key) {
@@ -56230,7 +56191,7 @@
 	   *
 	   * @private
 	   * @param {Function} func The function to cap arguments for.
-	   * @returns {Function} Returns the new function.
+	   * @returns {Function} Returns the new capped function.
 	   */
 	  function baseUnary(func) {
 	    return function(value) {
@@ -56252,6 +56213,18 @@
 	    return arrayMap(props, function(key) {
 	      return object[key];
 	    });
+	  }
+	
+	  /**
+	   * Checks if a cache value for `key` exists.
+	   *
+	   * @private
+	   * @param {Object} cache The cache to query.
+	   * @param {string} key The key of the entry to check.
+	   * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
+	   */
+	  function cacheHas(cache, key) {
+	    return cache.has(key);
 	  }
 	
 	  /**
@@ -56299,79 +56272,6 @@
 	  }
 	
 	  /**
-	   * Compares values to sort them in ascending order.
-	   *
-	   * @private
-	   * @param {*} value The value to compare.
-	   * @param {*} other The other value to compare.
-	   * @returns {number} Returns the sort order indicator for `value`.
-	   */
-	  function compareAscending(value, other) {
-	    if (value !== other) {
-	      var valIsNull = value === null,
-	          valIsUndef = value === undefined,
-	          valIsReflexive = value === value;
-	
-	      var othIsNull = other === null,
-	          othIsUndef = other === undefined,
-	          othIsReflexive = other === other;
-	
-	      if ((value > other && !othIsNull) || !valIsReflexive ||
-	          (valIsNull && !othIsUndef && othIsReflexive) ||
-	          (valIsUndef && othIsReflexive)) {
-	        return 1;
-	      }
-	      if ((value < other && !valIsNull) || !othIsReflexive ||
-	          (othIsNull && !valIsUndef && valIsReflexive) ||
-	          (othIsUndef && valIsReflexive)) {
-	        return -1;
-	      }
-	    }
-	    return 0;
-	  }
-	
-	  /**
-	   * Used by `_.orderBy` to compare multiple properties of a value to another
-	   * and stable sort them.
-	   *
-	   * If `orders` is unspecified, all values are sorted in ascending order. Otherwise,
-	   * specify an order of "desc" for descending or "asc" for ascending sort order
-	   * of corresponding values.
-	   *
-	   * @private
-	   * @param {Object} object The object to compare.
-	   * @param {Object} other The other object to compare.
-	   * @param {boolean[]|string[]} orders The order to sort by for each property.
-	   * @returns {number} Returns the sort order indicator for `object`.
-	   */
-	  function compareMultiple(object, other, orders) {
-	    var index = -1,
-	        objCriteria = object.criteria,
-	        othCriteria = other.criteria,
-	        length = objCriteria.length,
-	        ordersLength = orders.length;
-	
-	    while (++index < length) {
-	      var result = compareAscending(objCriteria[index], othCriteria[index]);
-	      if (result) {
-	        if (index >= ordersLength) {
-	          return result;
-	        }
-	        var order = orders[index];
-	        return result * (order == 'desc' ? -1 : 1);
-	      }
-	    }
-	    // Fixes an `Array#sort` bug in the JS engine embedded in Adobe applications
-	    // that causes it, under certain circumstances, to provide the same value for
-	    // `object` and `other`. See https://github.com/jashkenas/underscore/pull/1247
-	    // for more details.
-	    //
-	    // This also ensures a stable sort in V8 and other engines.
-	    // See https://bugs.chromium.org/p/v8/issues/detail?id=90 for more details.
-	    return object.index - other.index;
-	  }
-	
-	  /**
 	   * Gets the number of `placeholder` occurrences in `array`.
 	   *
 	   * @private
@@ -56389,29 +56289,6 @@
 	      }
 	    }
 	    return result;
-	  }
-	
-	  /**
-	   * Creates a function that performs a mathematical operation on two values.
-	   *
-	   * @private
-	   * @param {Function} operator The function to perform the operation.
-	   * @returns {Function} Returns the new mathematical operation function.
-	   */
-	  function createMathOperation(operator) {
-	    return function(value, other) {
-	      var result;
-	      if (value === undefined && other === undefined) {
-	        return 0;
-	      }
-	      if (value !== undefined) {
-	        result = value;
-	      }
-	      if (other !== undefined) {
-	        result = result === undefined ? other : operator(result, other);
-	      }
-	      return result;
-	    };
 	  }
 	
 	  /**
@@ -56448,6 +56325,18 @@
 	  }
 	
 	  /**
+	   * Gets the value at `key` of `object`.
+	   *
+	   * @private
+	   * @param {Object} [object] The object to query.
+	   * @param {string} key The key of the property to get.
+	   * @returns {*} Returns the property value.
+	   */
+	  function getValue(object, key) {
+	    return object == null ? undefined : object[key];
+	  }
+	
+	  /**
 	   * Gets the index at which the first occurrence of `NaN` is found in `array`.
 	   *
 	   * @private
@@ -56458,7 +56347,7 @@
 	   */
 	  function indexOfNaN(array, fromIndex, fromRight) {
 	    var length = array.length,
-	        index = fromIndex + (fromRight ? 0 : -1);
+	        index = fromIndex + (fromRight ? 1 : -1);
 	
 	    while ((fromRight ? index-- : ++index < length)) {
 	      var other = array[index];
@@ -56489,20 +56378,6 @@
 	  }
 	
 	  /**
-	   * Checks if `value` is a valid array-like index.
-	   *
-	   * @private
-	   * @param {*} value The value to check.
-	   * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
-	   * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
-	   */
-	  function isIndex(value, length) {
-	    value = (typeof value == 'number' || reIsUint.test(value)) ? +value : -1;
-	    length = length == null ? MAX_SAFE_INTEGER : length;
-	    return value > -1 && value % 1 == 0 && value < length;
-	  }
-	
-	  /**
 	   * Converts `iterator` to an array.
 	   *
 	   * @private
@@ -56520,11 +56395,11 @@
 	  }
 	
 	  /**
-	   * Converts `map` to an array.
+	   * Converts `map` to its key-value pairs.
 	   *
 	   * @private
 	   * @param {Object} map The map to convert.
-	   * @returns {Array} Returns the converted array.
+	   * @returns {Array} Returns the key-value pairs.
 	   */
 	  function mapToArray(map) {
 	    var index = -1,
@@ -56562,11 +56437,11 @@
 	  }
 	
 	  /**
-	   * Converts `set` to an array.
+	   * Converts `set` to an array of its values.
 	   *
 	   * @private
 	   * @param {Object} set The set to convert.
-	   * @returns {Array} Returns the converted array.
+	   * @returns {Array} Returns the values.
 	   */
 	  function setToArray(set) {
 	    var index = -1,
@@ -56574,6 +56449,23 @@
 	
 	    set.forEach(function(value) {
 	      result[++index] = value;
+	    });
+	    return result;
+	  }
+	
+	  /**
+	   * Converts `set` to its value-value pairs.
+	   *
+	   * @private
+	   * @param {Object} set The set to convert.
+	   * @returns {Array} Returns the value-value pairs.
+	   */
+	  function setToPairs(set) {
+	    var index = -1,
+	        result = Array(set.size);
+	
+	    set.forEach(function(value) {
+	      result[++index] = [value, value];
 	    });
 	    return result;
 	  }
@@ -56646,10 +56538,10 @@
 	   * lodash.isFunction(lodash.bar);
 	   * // => true
 	   *
-	   * // Use `context` to mock `Date#getTime` use in `_.now`.
-	   * var mock = _.runInContext({
+	   * // Use `context` to stub `Date#getTime` use in `_.now`.
+	   * var stubbed = _.runInContext({
 	   *   'Date': function() {
-	   *     return { 'getTime': getTimeMock };
+	   *     return { 'getTime': stubGetTime };
 	   *   }
 	   * });
 	   *
@@ -56670,6 +56562,15 @@
 	    var arrayProto = context.Array.prototype,
 	        objectProto = context.Object.prototype,
 	        stringProto = context.String.prototype;
+	
+	    /** Used to detect overreaching core-js shims. */
+	    var coreJsData = context['__core-js_shared__'];
+	
+	    /** Used to detect methods masquerading as native. */
+	    var maskSrcKey = (function() {
+	      var uid = /[^.]+$/.exec(coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO || '');
+	      return uid ? ('Symbol(src)_1.' + uid) : '';
+	    }());
 	
 	    /** Used to resolve the decompiled source of functions. */
 	    var funcToString = context.Function.prototype.toString;
@@ -56704,14 +56605,15 @@
 	        Reflect = context.Reflect,
 	        Symbol = context.Symbol,
 	        Uint8Array = context.Uint8Array,
-	        clearTimeout = context.clearTimeout,
 	        enumerate = Reflect ? Reflect.enumerate : undefined,
 	        getOwnPropertySymbols = Object.getOwnPropertySymbols,
 	        iteratorSymbol = typeof (iteratorSymbol = Symbol && Symbol.iterator) == 'symbol' ? iteratorSymbol : undefined,
 	        objectCreate = Object.create,
 	        propertyIsEnumerable = objectProto.propertyIsEnumerable,
-	        setTimeout = context.setTimeout,
 	        splice = arrayProto.splice;
+	
+	    /** Built-in method references that are mockable. */
+	    var setTimeout = function(func, wait) { return context.setTimeout.call(root, func, wait); };
 	
 	    /* Built-in method references for those with the same name as other `lodash` methods. */
 	    var nativeCeil = Math.ceil,
@@ -56831,22 +56733,24 @@
 	     * `floor`, `forEach`, `forEachRight`, `forIn`, `forInRight`, `forOwn`,
 	     * `forOwnRight`, `get`, `gt`, `gte`, `has`, `hasIn`, `head`, `identity`,
 	     * `includes`, `indexOf`, `inRange`, `invoke`, `isArguments`, `isArray`,
-	     * `isArrayBuffer`, `isArrayLike`, `isArrayLikeObject`, `isBoolean`, `isBuffer`,
-	     * `isDate`, `isElement`, `isEmpty`, `isEqual`, `isEqualWith`, `isError`,
-	     * `isFinite`, `isFunction`, `isInteger`, `isLength`, `isMap`, `isMatch`,
-	     * `isMatchWith`, `isNaN`, `isNative`, `isNil`, `isNull`, `isNumber`,
-	     * `isObject`, `isObjectLike`, `isPlainObject`, `isRegExp`, `isSafeInteger`,
-	     * `isSet`, `isString`, `isUndefined`, `isTypedArray`, `isWeakMap`, `isWeakSet`,
-	     * `join`, `kebabCase`, `last`, `lastIndexOf`, `lowerCase`, `lowerFirst`,
-	     * `lt`, `lte`, `max`, `maxBy`, `mean`, `meanBy`, `min`, `minBy`, `multiply`,
-	     * `noConflict`, `noop`, `now`, `nth`, `pad`, `padEnd`, `padStart`, `parseInt`,
-	     * `pop`, `random`, `reduce`, `reduceRight`, `repeat`, `result`, `round`,
-	     * `runInContext`, `sample`, `shift`, `size`, `snakeCase`, `some`, `sortedIndex`,
-	     * `sortedIndexBy`, `sortedLastIndex`, `sortedLastIndexBy`, `startCase`,
-	     * `startsWith`, `subtract`, `sum`, `sumBy`, `template`, `times`, `toInteger`,
-	     * `toJSON`, `toLength`, `toLower`, `toNumber`, `toSafeInteger`, `toString`,
-	     * `toUpper`, `trim`, `trimEnd`, `trimStart`, `truncate`, `unescape`,
-	     * `uniqueId`, `upperCase`, `upperFirst`, `value`, and `words`
+	     * `isArrayBuffer`, `isArrayLike`, `isArrayLikeObject`, `isBoolean`,
+	     * `isBuffer`, `isDate`, `isElement`, `isEmpty`, `isEqual`, `isEqualWith`,
+	     * `isError`, `isFinite`, `isFunction`, `isInteger`, `isLength`, `isMap`,
+	     * `isMatch`, `isMatchWith`, `isNaN`, `isNative`, `isNil`, `isNull`,
+	     * `isNumber`, `isObject`, `isObjectLike`, `isPlainObject`, `isRegExp`,
+	     * `isSafeInteger`, `isSet`, `isString`, `isUndefined`, `isTypedArray`,
+	     * `isWeakMap`, `isWeakSet`, `join`, `kebabCase`, `last`, `lastIndexOf`,
+	     * `lowerCase`, `lowerFirst`, `lt`, `lte`, `max`, `maxBy`, `mean`, `meanBy`,
+	     * `min`, `minBy`, `multiply`, `noConflict`, `noop`, `now`, `nth`, `pad`,
+	     * `padEnd`, `padStart`, `parseInt`, `pop`, `random`, `reduce`, `reduceRight`,
+	     * `repeat`, `result`, `round`, `runInContext`, `sample`, `shift`, `size`,
+	     * `snakeCase`, `some`, `sortedIndex`, `sortedIndexBy`, `sortedLastIndex`,
+	     * `sortedLastIndexBy`, `startCase`, `startsWith`, `stubArray`, `stubFalse`,
+	     * `stubObject`, `stubString`, `stubTrue`, `subtract`, `sum`, `sumBy`,
+	     * `template`, `times`, `toFinite`, `toInteger`, `toJSON`, `toLength`,
+	     * `toLower`, `toNumber`, `toSafeInteger`, `toString`, `toUpper`, `trim`,
+	     * `trimEnd`, `trimStart`, `truncate`, `unescape`, `uniqueId`, `upperCase`,
+	     * `upperFirst`, `value`, and `words`
 	     *
 	     * @name _
 	     * @constructor
@@ -57105,64 +57009,212 @@
 	     *
 	     * @private
 	     * @constructor
-	     * @returns {Object} Returns the new hash object.
+	     * @param {Array} [entries] The key-value pairs to cache.
 	     */
-	    function Hash() {}
+	    function Hash(entries) {
+	      var index = -1,
+	          length = entries ? entries.length : 0;
+	
+	      this.clear();
+	      while (++index < length) {
+	        var entry = entries[index];
+	        this.set(entry[0], entry[1]);
+	      }
+	    }
+	
+	    /**
+	     * Removes all key-value entries from the hash.
+	     *
+	     * @private
+	     * @name clear
+	     * @memberOf Hash
+	     */
+	    function hashClear() {
+	      this.__data__ = nativeCreate ? nativeCreate(null) : {};
+	    }
 	
 	    /**
 	     * Removes `key` and its value from the hash.
 	     *
 	     * @private
+	     * @name delete
+	     * @memberOf Hash
 	     * @param {Object} hash The hash to modify.
 	     * @param {string} key The key of the value to remove.
 	     * @returns {boolean} Returns `true` if the entry was removed, else `false`.
 	     */
-	    function hashDelete(hash, key) {
-	      return hashHas(hash, key) && delete hash[key];
+	    function hashDelete(key) {
+	      return this.has(key) && delete this.__data__[key];
 	    }
 	
 	    /**
 	     * Gets the hash value for `key`.
 	     *
 	     * @private
-	     * @param {Object} hash The hash to query.
+	     * @name get
+	     * @memberOf Hash
 	     * @param {string} key The key of the value to get.
 	     * @returns {*} Returns the entry value.
 	     */
-	    function hashGet(hash, key) {
+	    function hashGet(key) {
+	      var data = this.__data__;
 	      if (nativeCreate) {
-	        var result = hash[key];
+	        var result = data[key];
 	        return result === HASH_UNDEFINED ? undefined : result;
 	      }
-	      return hasOwnProperty.call(hash, key) ? hash[key] : undefined;
+	      return hasOwnProperty.call(data, key) ? data[key] : undefined;
 	    }
 	
 	    /**
 	     * Checks if a hash value for `key` exists.
 	     *
 	     * @private
-	     * @param {Object} hash The hash to query.
+	     * @name has
+	     * @memberOf Hash
 	     * @param {string} key The key of the entry to check.
 	     * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
 	     */
-	    function hashHas(hash, key) {
-	      return nativeCreate ? hash[key] !== undefined : hasOwnProperty.call(hash, key);
+	    function hashHas(key) {
+	      var data = this.__data__;
+	      return nativeCreate ? data[key] !== undefined : hasOwnProperty.call(data, key);
 	    }
 	
 	    /**
 	     * Sets the hash `key` to `value`.
 	     *
 	     * @private
-	     * @param {Object} hash The hash to modify.
+	     * @name set
+	     * @memberOf Hash
 	     * @param {string} key The key of the value to set.
 	     * @param {*} value The value to set.
+	     * @returns {Object} Returns the hash instance.
 	     */
-	    function hashSet(hash, key, value) {
-	      hash[key] = (nativeCreate && value === undefined) ? HASH_UNDEFINED : value;
+	    function hashSet(key, value) {
+	      var data = this.__data__;
+	      data[key] = (nativeCreate && value === undefined) ? HASH_UNDEFINED : value;
+	      return this;
 	    }
 	
-	    // Avoid inheriting from `Object.prototype` when possible.
-	    Hash.prototype = nativeCreate ? nativeCreate(null) : objectProto;
+	    // Add methods to `Hash`.
+	    Hash.prototype.clear = hashClear;
+	    Hash.prototype['delete'] = hashDelete;
+	    Hash.prototype.get = hashGet;
+	    Hash.prototype.has = hashHas;
+	    Hash.prototype.set = hashSet;
+	
+	    /*------------------------------------------------------------------------*/
+	
+	    /**
+	     * Creates an list cache object.
+	     *
+	     * @private
+	     * @constructor
+	     * @param {Array} [entries] The key-value pairs to cache.
+	     */
+	    function ListCache(entries) {
+	      var index = -1,
+	          length = entries ? entries.length : 0;
+	
+	      this.clear();
+	      while (++index < length) {
+	        var entry = entries[index];
+	        this.set(entry[0], entry[1]);
+	      }
+	    }
+	
+	    /**
+	     * Removes all key-value entries from the list cache.
+	     *
+	     * @private
+	     * @name clear
+	     * @memberOf ListCache
+	     */
+	    function listCacheClear() {
+	      this.__data__ = [];
+	    }
+	
+	    /**
+	     * Removes `key` and its value from the list cache.
+	     *
+	     * @private
+	     * @name delete
+	     * @memberOf ListCache
+	     * @param {string} key The key of the value to remove.
+	     * @returns {boolean} Returns `true` if the entry was removed, else `false`.
+	     */
+	    function listCacheDelete(key) {
+	      var data = this.__data__,
+	          index = assocIndexOf(data, key);
+	
+	      if (index < 0) {
+	        return false;
+	      }
+	      var lastIndex = data.length - 1;
+	      if (index == lastIndex) {
+	        data.pop();
+	      } else {
+	        splice.call(data, index, 1);
+	      }
+	      return true;
+	    }
+	
+	    /**
+	     * Gets the list cache value for `key`.
+	     *
+	     * @private
+	     * @name get
+	     * @memberOf ListCache
+	     * @param {string} key The key of the value to get.
+	     * @returns {*} Returns the entry value.
+	     */
+	    function listCacheGet(key) {
+	      var data = this.__data__,
+	          index = assocIndexOf(data, key);
+	
+	      return index < 0 ? undefined : data[index][1];
+	    }
+	
+	    /**
+	     * Checks if a list cache value for `key` exists.
+	     *
+	     * @private
+	     * @name has
+	     * @memberOf ListCache
+	     * @param {string} key The key of the entry to check.
+	     * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
+	     */
+	    function listCacheHas(key) {
+	      return assocIndexOf(this.__data__, key) > -1;
+	    }
+	
+	    /**
+	     * Sets the list cache `key` to `value`.
+	     *
+	     * @private
+	     * @name set
+	     * @memberOf ListCache
+	     * @param {string} key The key of the value to set.
+	     * @param {*} value The value to set.
+	     * @returns {Object} Returns the list cache instance.
+	     */
+	    function listCacheSet(key, value) {
+	      var data = this.__data__,
+	          index = assocIndexOf(data, key);
+	
+	      if (index < 0) {
+	        data.push([key, value]);
+	      } else {
+	        data[index][1] = value;
+	      }
+	      return this;
+	    }
+	
+	    // Add methods to `ListCache`.
+	    ListCache.prototype.clear = listCacheClear;
+	    ListCache.prototype['delete'] = listCacheDelete;
+	    ListCache.prototype.get = listCacheGet;
+	    ListCache.prototype.has = listCacheHas;
+	    ListCache.prototype.set = listCacheSet;
 	
 	    /*------------------------------------------------------------------------*/
 	
@@ -57171,15 +57223,15 @@
 	     *
 	     * @private
 	     * @constructor
-	     * @param {Array} [values] The values to cache.
+	     * @param {Array} [entries] The key-value pairs to cache.
 	     */
-	    function MapCache(values) {
+	    function MapCache(entries) {
 	      var index = -1,
-	          length = values ? values.length : 0;
+	          length = entries ? entries.length : 0;
 	
 	      this.clear();
 	      while (++index < length) {
-	        var entry = values[index];
+	        var entry = entries[index];
 	        this.set(entry[0], entry[1]);
 	      }
 	    }
@@ -57191,10 +57243,10 @@
 	     * @name clear
 	     * @memberOf MapCache
 	     */
-	    function mapClear() {
+	    function mapCacheClear() {
 	      this.__data__ = {
 	        'hash': new Hash,
-	        'map': Map ? new Map : [],
+	        'map': new (Map || ListCache),
 	        'string': new Hash
 	      };
 	    }
@@ -57208,12 +57260,8 @@
 	     * @param {string} key The key of the value to remove.
 	     * @returns {boolean} Returns `true` if the entry was removed, else `false`.
 	     */
-	    function mapDelete(key) {
-	      var data = this.__data__;
-	      if (isKeyable(key)) {
-	        return hashDelete(typeof key == 'string' ? data.string : data.hash, key);
-	      }
-	      return Map ? data.map['delete'](key) : assocDelete(data.map, key);
+	    function mapCacheDelete(key) {
+	      return getMapData(this, key)['delete'](key);
 	    }
 	
 	    /**
@@ -57225,12 +57273,8 @@
 	     * @param {string} key The key of the value to get.
 	     * @returns {*} Returns the entry value.
 	     */
-	    function mapGet(key) {
-	      var data = this.__data__;
-	      if (isKeyable(key)) {
-	        return hashGet(typeof key == 'string' ? data.string : data.hash, key);
-	      }
-	      return Map ? data.map.get(key) : assocGet(data.map, key);
+	    function mapCacheGet(key) {
+	      return getMapData(this, key).get(key);
 	    }
 	
 	    /**
@@ -57242,12 +57286,8 @@
 	     * @param {string} key The key of the entry to check.
 	     * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
 	     */
-	    function mapHas(key) {
-	      var data = this.__data__;
-	      if (isKeyable(key)) {
-	        return hashHas(typeof key == 'string' ? data.string : data.hash, key);
-	      }
-	      return Map ? data.map.has(key) : assocHas(data.map, key);
+	    function mapCacheHas(key) {
+	      return getMapData(this, key).has(key);
 	    }
 	
 	    /**
@@ -57260,30 +57300,23 @@
 	     * @param {*} value The value to set.
 	     * @returns {Object} Returns the map cache instance.
 	     */
-	    function mapSet(key, value) {
-	      var data = this.__data__;
-	      if (isKeyable(key)) {
-	        hashSet(typeof key == 'string' ? data.string : data.hash, key, value);
-	      } else if (Map) {
-	        data.map.set(key, value);
-	      } else {
-	        assocSet(data.map, key, value);
-	      }
+	    function mapCacheSet(key, value) {
+	      getMapData(this, key).set(key, value);
 	      return this;
 	    }
 	
 	    // Add methods to `MapCache`.
-	    MapCache.prototype.clear = mapClear;
-	    MapCache.prototype['delete'] = mapDelete;
-	    MapCache.prototype.get = mapGet;
-	    MapCache.prototype.has = mapHas;
-	    MapCache.prototype.set = mapSet;
+	    MapCache.prototype.clear = mapCacheClear;
+	    MapCache.prototype['delete'] = mapCacheDelete;
+	    MapCache.prototype.get = mapCacheGet;
+	    MapCache.prototype.has = mapCacheHas;
+	    MapCache.prototype.set = mapCacheSet;
 	
 	    /*------------------------------------------------------------------------*/
 	
 	    /**
 	     *
-	     * Creates a set cache object to store unique values.
+	     * Creates an array cache object to store unique values.
 	     *
 	     * @private
 	     * @constructor
@@ -57295,52 +57328,41 @@
 	
 	      this.__data__ = new MapCache;
 	      while (++index < length) {
-	        this.push(values[index]);
+	        this.add(values[index]);
 	      }
 	    }
 	
 	    /**
-	     * Checks if `value` is in `cache`.
+	     * Adds `value` to the array cache.
 	     *
 	     * @private
-	     * @param {Object} cache The set cache to search.
+	     * @name add
+	     * @memberOf SetCache
+	     * @alias push
+	     * @param {*} value The value to cache.
+	     * @returns {Object} Returns the cache instance.
+	     */
+	    function setCacheAdd(value) {
+	      this.__data__.set(value, HASH_UNDEFINED);
+	      return this;
+	    }
+	
+	    /**
+	     * Checks if `value` is in the array cache.
+	     *
+	     * @private
+	     * @name has
+	     * @memberOf SetCache
 	     * @param {*} value The value to search for.
 	     * @returns {number} Returns `true` if `value` is found, else `false`.
 	     */
-	    function cacheHas(cache, value) {
-	      var map = cache.__data__;
-	      if (isKeyable(value)) {
-	        var data = map.__data__,
-	            hash = typeof value == 'string' ? data.string : data.hash;
-	
-	        return hash[value] === HASH_UNDEFINED;
-	      }
-	      return map.has(value);
-	    }
-	
-	    /**
-	     * Adds `value` to the set cache.
-	     *
-	     * @private
-	     * @name push
-	     * @memberOf SetCache
-	     * @param {*} value The value to cache.
-	     */
-	    function cachePush(value) {
-	      var map = this.__data__;
-	      if (isKeyable(value)) {
-	        var data = map.__data__,
-	            hash = typeof value == 'string' ? data.string : data.hash;
-	
-	        hash[value] = HASH_UNDEFINED;
-	      }
-	      else {
-	        map.set(value, HASH_UNDEFINED);
-	      }
+	    function setCacheHas(value) {
+	      return this.__data__.has(value);
 	    }
 	
 	    // Add methods to `SetCache`.
-	    SetCache.prototype.push = cachePush;
+	    SetCache.prototype.add = SetCache.prototype.push = setCacheAdd;
+	    SetCache.prototype.has = setCacheHas;
 	
 	    /*------------------------------------------------------------------------*/
 	
@@ -57349,17 +57371,10 @@
 	     *
 	     * @private
 	     * @constructor
-	     * @param {Array} [values] The values to cache.
+	     * @param {Array} [entries] The key-value pairs to cache.
 	     */
-	    function Stack(values) {
-	      var index = -1,
-	          length = values ? values.length : 0;
-	
-	      this.clear();
-	      while (++index < length) {
-	        var entry = values[index];
-	        this.set(entry[0], entry[1]);
-	      }
+	    function Stack(entries) {
+	      this.__data__ = new ListCache(entries);
 	    }
 	
 	    /**
@@ -57370,7 +57385,7 @@
 	     * @memberOf Stack
 	     */
 	    function stackClear() {
-	      this.__data__ = { 'array': [], 'map': null };
+	      this.__data__ = new ListCache;
 	    }
 	
 	    /**
@@ -57383,10 +57398,7 @@
 	     * @returns {boolean} Returns `true` if the entry was removed, else `false`.
 	     */
 	    function stackDelete(key) {
-	      var data = this.__data__,
-	          array = data.array;
-	
-	      return array ? assocDelete(array, key) : data.map['delete'](key);
+	      return this.__data__['delete'](key);
 	    }
 	
 	    /**
@@ -57399,10 +57411,7 @@
 	     * @returns {*} Returns the entry value.
 	     */
 	    function stackGet(key) {
-	      var data = this.__data__,
-	          array = data.array;
-	
-	      return array ? assocGet(array, key) : data.map.get(key);
+	      return this.__data__.get(key);
 	    }
 	
 	    /**
@@ -57415,10 +57424,7 @@
 	     * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
 	     */
 	    function stackHas(key) {
-	      var data = this.__data__,
-	          array = data.array;
-	
-	      return array ? assocHas(array, key) : data.map.has(key);
+	      return this.__data__.has(key);
 	    }
 	
 	    /**
@@ -57432,21 +57438,11 @@
 	     * @returns {Object} Returns the stack cache instance.
 	     */
 	    function stackSet(key, value) {
-	      var data = this.__data__,
-	          array = data.array;
-	
-	      if (array) {
-	        if (array.length < (LARGE_ARRAY_SIZE - 1)) {
-	          assocSet(array, key, value);
-	        } else {
-	          data.array = null;
-	          data.map = new MapCache(array);
-	        }
+	      var cache = this.__data__;
+	      if (cache instanceof ListCache && cache.__data__.length == LARGE_ARRAY_SIZE) {
+	        cache = this.__data__ = new MapCache(cache.__data__);
 	      }
-	      var map = data.map;
-	      if (map) {
-	        map.set(key, value);
-	      }
+	      cache.set(key, value);
 	      return this;
 	    }
 	
@@ -57456,90 +57452,6 @@
 	    Stack.prototype.get = stackGet;
 	    Stack.prototype.has = stackHas;
 	    Stack.prototype.set = stackSet;
-	
-	    /*------------------------------------------------------------------------*/
-	
-	    /**
-	     * Removes `key` and its value from the associative array.
-	     *
-	     * @private
-	     * @param {Array} array The array to modify.
-	     * @param {string} key The key of the value to remove.
-	     * @returns {boolean} Returns `true` if the entry was removed, else `false`.
-	     */
-	    function assocDelete(array, key) {
-	      var index = assocIndexOf(array, key);
-	      if (index < 0) {
-	        return false;
-	      }
-	      var lastIndex = array.length - 1;
-	      if (index == lastIndex) {
-	        array.pop();
-	      } else {
-	        splice.call(array, index, 1);
-	      }
-	      return true;
-	    }
-	
-	    /**
-	     * Gets the associative array value for `key`.
-	     *
-	     * @private
-	     * @param {Array} array The array to query.
-	     * @param {string} key The key of the value to get.
-	     * @returns {*} Returns the entry value.
-	     */
-	    function assocGet(array, key) {
-	      var index = assocIndexOf(array, key);
-	      return index < 0 ? undefined : array[index][1];
-	    }
-	
-	    /**
-	     * Checks if an associative array value for `key` exists.
-	     *
-	     * @private
-	     * @param {Array} array The array to query.
-	     * @param {string} key The key of the entry to check.
-	     * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
-	     */
-	    function assocHas(array, key) {
-	      return assocIndexOf(array, key) > -1;
-	    }
-	
-	    /**
-	     * Gets the index at which the `key` is found in `array` of key-value pairs.
-	     *
-	     * @private
-	     * @param {Array} array The array to search.
-	     * @param {*} key The key to search for.
-	     * @returns {number} Returns the index of the matched value, else `-1`.
-	     */
-	    function assocIndexOf(array, key) {
-	      var length = array.length;
-	      while (length--) {
-	        if (eq(array[length][0], key)) {
-	          return length;
-	        }
-	      }
-	      return -1;
-	    }
-	
-	    /**
-	     * Sets the associative array `key` to `value`.
-	     *
-	     * @private
-	     * @param {Array} array The array to modify.
-	     * @param {string} key The key of the value to set.
-	     * @param {*} value The value to set.
-	     */
-	    function assocSet(array, key, value) {
-	      var index = assocIndexOf(array, key);
-	      if (index < 0) {
-	        array.push([key, value]);
-	      } else {
-	        array[index][1] = value;
-	      }
-	    }
 	
 	    /*------------------------------------------------------------------------*/
 	
@@ -57596,6 +57508,24 @@
 	    }
 	
 	    /**
+	     * Gets the index at which the `key` is found in `array` of key-value pairs.
+	     *
+	     * @private
+	     * @param {Array} array The array to search.
+	     * @param {*} key The key to search for.
+	     * @returns {number} Returns the index of the matched value, else `-1`.
+	     */
+	    function assocIndexOf(array, key) {
+	      var length = array.length;
+	      while (length--) {
+	        if (eq(array[length][0], key)) {
+	          return length;
+	        }
+	      }
+	      return -1;
+	    }
+	
+	    /**
 	     * Aggregates elements of `collection` on `accumulator` with keys transformed
 	     * by `iteratee` and values set by `setter`.
 	     *
@@ -57632,7 +57562,7 @@
 	     * @private
 	     * @param {Object} object The object to iterate over.
 	     * @param {string[]} paths The property paths of elements to pick.
-	     * @returns {Array} Returns the new array of picked elements.
+	     * @returns {Array} Returns the picked elements.
 	     */
 	    function baseAt(object, paths) {
 	      var index = -1,
@@ -57747,7 +57677,7 @@
 	     *
 	     * @private
 	     * @param {Object} source The object of property predicates to conform to.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new spec function.
 	     */
 	    function baseConforms(source) {
 	      var props = keys(source),
@@ -57840,6 +57770,7 @@
 	        var value = array[index],
 	            computed = iteratee ? iteratee(value) : value;
 	
+	        value = (comparator || value !== 0) ? value : 0;
 	        if (isCommon && computed === computed) {
 	          var valuesIndex = valuesLength;
 	          while (valuesIndex--) {
@@ -57891,6 +57822,35 @@
 	        result = !!predicate(value, index, collection);
 	        return result;
 	      });
+	      return result;
+	    }
+	
+	    /**
+	     * The base implementation of methods like `_.max` and `_.min` which accepts a
+	     * `comparator` to determine the extremum value.
+	     *
+	     * @private
+	     * @param {Array} array The array to iterate over.
+	     * @param {Function} iteratee The iteratee invoked per iteration.
+	     * @param {Function} comparator The comparator used to compare values.
+	     * @returns {*} Returns the extremum value.
+	     */
+	    function baseExtremum(array, iteratee, comparator) {
+	      var index = -1,
+	          length = array.length;
+	
+	      while (++index < length) {
+	        var value = array[index],
+	            current = iteratee(value);
+	
+	        if (current != null && (computed === undefined
+	              ? (current === current && !isSymbol(current))
+	              : comparator(current, computed)
+	            )) {
+	          var computed = current,
+	              result = value;
+	        }
+	      }
 	      return result;
 	    }
 	
@@ -58030,7 +57990,7 @@
 	     * @private
 	     * @param {Object} object The object to inspect.
 	     * @param {Array} props The property names to filter.
-	     * @returns {Array} Returns the new array of filtered property names.
+	     * @returns {Array} Returns the function names.
 	     */
 	    function baseFunctions(object, props) {
 	      return arrayFilter(props, function(key) {
@@ -58053,7 +58013,7 @@
 	          length = path.length;
 	
 	      while (object != null && index < length) {
-	        object = object[path[index++]];
+	        object = object[toKey(path[index++])];
 	      }
 	      return (index && index == length) ? object : undefined;
 	    }
@@ -58071,16 +58031,27 @@
 	     */
 	    function baseGetAllKeys(object, keysFunc, symbolsFunc) {
 	      var result = keysFunc(object);
-	      return isArray(object)
-	        ? result
-	        : arrayPush(result, symbolsFunc(object));
+	      return isArray(object) ? result : arrayPush(result, symbolsFunc(object));
+	    }
+	
+	    /**
+	     * The base implementation of `_.gt` which doesn't coerce arguments to numbers.
+	     *
+	     * @private
+	     * @param {*} value The value to compare.
+	     * @param {*} other The other value to compare.
+	     * @returns {boolean} Returns `true` if `value` is greater than `other`,
+	     *  else `false`.
+	     */
+	    function baseGt(value, other) {
+	      return value > other;
 	    }
 	
 	    /**
 	     * The base implementation of `_.has` without support for deep paths.
 	     *
 	     * @private
-	     * @param {Object} object The object to query.
+	     * @param {Object} [object] The object to query.
 	     * @param {Array|string} key The key to check.
 	     * @returns {boolean} Returns `true` if `key` exists, else `false`.
 	     */
@@ -58088,20 +58059,21 @@
 	      // Avoid a bug in IE 10-11 where objects with a [[Prototype]] of `null`,
 	      // that are composed entirely of index properties, return `false` for
 	      // `hasOwnProperty` checks of them.
-	      return hasOwnProperty.call(object, key) ||
-	        (typeof object == 'object' && key in object && getPrototype(object) === null);
+	      return object != null &&
+	        (hasOwnProperty.call(object, key) ||
+	          (typeof object == 'object' && key in object && getPrototype(object) === null));
 	    }
 	
 	    /**
 	     * The base implementation of `_.hasIn` without support for deep paths.
 	     *
 	     * @private
-	     * @param {Object} object The object to query.
+	     * @param {Object} [object] The object to query.
 	     * @param {Array|string} key The key to check.
 	     * @returns {boolean} Returns `true` if `key` exists, else `false`.
 	     */
 	    function baseHasIn(object, key) {
-	      return key in Object(object);
+	      return object != null && key in Object(object);
 	    }
 	
 	    /**
@@ -58156,6 +58128,7 @@
 	        var value = array[index],
 	            computed = iteratee ? iteratee(value) : value;
 	
+	        value = (comparator || value !== 0) ? value : 0;
 	        if (!(seen
 	              ? cacheHas(seen, computed)
 	              : includes(result, computed, comparator)
@@ -58213,7 +58186,7 @@
 	        object = parent(object, path);
 	        path = last(path);
 	      }
-	      var func = object == null ? object : object[path];
+	      var func = object == null ? object : object[toKey(path)];
 	      return func == null ? undefined : apply(func, object, args);
 	    }
 	
@@ -58355,6 +58328,22 @@
 	    }
 	
 	    /**
+	     * The base implementation of `_.isNative` without bad shim checks.
+	     *
+	     * @private
+	     * @param {*} value The value to check.
+	     * @returns {boolean} Returns `true` if `value` is a native function,
+	     *  else `false`.
+	     */
+	    function baseIsNative(value) {
+	      if (!isObject(value) || isMasked(value)) {
+	        return false;
+	      }
+	      var pattern = (isFunction(value) || isHostObject(value)) ? reIsNative : reIsHostCtor;
+	      return pattern.test(toSource(value));
+	    }
+	
+	    /**
 	     * The base implementation of `_.iteratee`.
 	     *
 	     * @private
@@ -58416,6 +58405,19 @@
 	    }
 	
 	    /**
+	     * The base implementation of `_.lt` which doesn't coerce arguments to numbers.
+	     *
+	     * @private
+	     * @param {*} value The value to compare.
+	     * @param {*} other The other value to compare.
+	     * @returns {boolean} Returns `true` if `value` is less than `other`,
+	     *  else `false`.
+	     */
+	    function baseLt(value, other) {
+	      return value < other;
+	    }
+	
+	    /**
 	     * The base implementation of `_.map` without support for iteratee shorthands.
 	     *
 	     * @private
@@ -58438,7 +58440,7 @@
 	     *
 	     * @private
 	     * @param {Object} source The object of property values to match.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new spec function.
 	     */
 	    function baseMatches(source) {
 	      var matchData = getMatchData(source);
@@ -58456,11 +58458,11 @@
 	     * @private
 	     * @param {string} path The path of the property to get.
 	     * @param {*} srcValue The value to match.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new spec function.
 	     */
 	    function baseMatchesProperty(path, srcValue) {
 	      if (isKey(path) && isStrictComparable(srcValue)) {
-	        return matchesStrictComparable(path, srcValue);
+	        return matchesStrictComparable(toKey(path), srcValue);
 	      }
 	      return function(object) {
 	        var objValue = get(object, path);
@@ -58671,7 +58673,7 @@
 	     *
 	     * @private
 	     * @param {string} key The key of the property to get.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new accessor function.
 	     */
 	    function baseProperty(key) {
 	      return function(object) {
@@ -58684,7 +58686,7 @@
 	     *
 	     * @private
 	     * @param {Array|string} path The path of the property to get.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new accessor function.
 	     */
 	    function basePropertyDeep(path) {
 	      return function(object) {
@@ -58709,6 +58711,9 @@
 	          length = values.length,
 	          seen = array;
 	
+	      if (array === values) {
+	        values = copyArray(values);
+	      }
 	      if (iteratee) {
 	        seen = arrayMap(array, baseUnary(iteratee));
 	      }
@@ -58742,7 +58747,7 @@
 	
 	      while (length--) {
 	        var index = indexes[length];
-	        if (lastIndex == length || index != previous) {
+	        if (length == lastIndex || index !== previous) {
 	          var previous = index;
 	          if (isIndex(index)) {
 	            splice.call(array, index, 1);
@@ -58752,11 +58757,11 @@
 	                object = parent(array, path);
 	
 	            if (object != null) {
-	              delete object[last(path)];
+	              delete object[toKey(last(path))];
 	            }
 	          }
 	          else {
-	            delete array[index];
+	            delete array[toKey(index)];
 	          }
 	        }
 	      }
@@ -58785,7 +58790,7 @@
 	     * @param {number} end The end of the range.
 	     * @param {number} step The value to increment or decrement by.
 	     * @param {boolean} [fromRight] Specify iterating from right to left.
-	     * @returns {Array} Returns the new array of numbers.
+	     * @returns {Array} Returns the range of numbers.
 	     */
 	    function baseRange(start, end, step, fromRight) {
 	      var index = -1,
@@ -58846,7 +58851,7 @@
 	          nested = object;
 	
 	      while (nested != null && ++index < length) {
-	        var key = path[index];
+	        var key = toKey(path[index]);
 	        if (isObject(nested)) {
 	          var newValue = value;
 	          if (index != lastIndex) {
@@ -58948,7 +58953,8 @@
 	          var mid = (low + high) >>> 1,
 	              computed = array[mid];
 	
-	          if ((retHighest ? (computed <= value) : (computed < value)) && computed !== null) {
+	          if (computed !== null && !isSymbol(computed) &&
+	              (retHighest ? (computed <= value) : (computed < value))) {
 	            low = mid + 1;
 	          } else {
 	            high = mid;
@@ -58979,21 +58985,26 @@
 	          high = array ? array.length : 0,
 	          valIsNaN = value !== value,
 	          valIsNull = value === null,
-	          valIsUndef = value === undefined;
+	          valIsSymbol = isSymbol(value),
+	          valIsUndefined = value === undefined;
 	
 	      while (low < high) {
 	        var mid = nativeFloor((low + high) / 2),
 	            computed = iteratee(array[mid]),
-	            isDef = computed !== undefined,
-	            isReflexive = computed === computed;
+	            othIsDefined = computed !== undefined,
+	            othIsNull = computed === null,
+	            othIsReflexive = computed === computed,
+	            othIsSymbol = isSymbol(computed);
 	
 	        if (valIsNaN) {
-	          var setLow = isReflexive || retHighest;
+	          var setLow = retHighest || othIsReflexive;
+	        } else if (valIsUndefined) {
+	          setLow = othIsReflexive && (retHighest || othIsDefined);
 	        } else if (valIsNull) {
-	          setLow = isReflexive && isDef && (retHighest || computed != null);
-	        } else if (valIsUndef) {
-	          setLow = isReflexive && (retHighest || isDef);
-	        } else if (computed == null) {
+	          setLow = othIsReflexive && othIsDefined && (retHighest || !othIsNull);
+	        } else if (valIsSymbol) {
+	          setLow = othIsReflexive && othIsDefined && !othIsNull && (retHighest || !othIsSymbol);
+	        } else if (othIsNull || othIsSymbol) {
 	          setLow = false;
 	        } else {
 	          setLow = retHighest ? (computed <= value) : (computed < value);
@@ -59008,44 +59019,68 @@
 	    }
 	
 	    /**
-	     * The base implementation of `_.sortedUniq`.
-	     *
-	     * @private
-	     * @param {Array} array The array to inspect.
-	     * @returns {Array} Returns the new duplicate free array.
-	     */
-	    function baseSortedUniq(array) {
-	      return baseSortedUniqBy(array);
-	    }
-	
-	    /**
-	     * The base implementation of `_.sortedUniqBy` without support for iteratee
-	     * shorthands.
+	     * The base implementation of `_.sortedUniq` and `_.sortedUniqBy` without
+	     * support for iteratee shorthands.
 	     *
 	     * @private
 	     * @param {Array} array The array to inspect.
 	     * @param {Function} [iteratee] The iteratee invoked per element.
 	     * @returns {Array} Returns the new duplicate free array.
 	     */
-	    function baseSortedUniqBy(array, iteratee) {
-	      var index = 0,
+	    function baseSortedUniq(array, iteratee) {
+	      var index = -1,
 	          length = array.length,
-	          value = array[0],
-	          computed = iteratee ? iteratee(value) : value,
-	          seen = computed,
-	          resIndex = 1,
-	          result = [value];
+	          resIndex = 0,
+	          result = [];
 	
 	      while (++index < length) {
-	        value = array[index],
-	        computed = iteratee ? iteratee(value) : value;
+	        var value = array[index],
+	            computed = iteratee ? iteratee(value) : value;
 	
-	        if (!eq(computed, seen)) {
-	          seen = computed;
-	          result[resIndex++] = value;
+	        if (!index || !eq(computed, seen)) {
+	          var seen = computed;
+	          result[resIndex++] = value === 0 ? 0 : value;
 	        }
 	      }
 	      return result;
+	    }
+	
+	    /**
+	     * The base implementation of `_.toNumber` which doesn't ensure correct
+	     * conversions of binary, hexadecimal, or octal string values.
+	     *
+	     * @private
+	     * @param {*} value The value to process.
+	     * @returns {number} Returns the number.
+	     */
+	    function baseToNumber(value) {
+	      if (typeof value == 'number') {
+	        return value;
+	      }
+	      if (isSymbol(value)) {
+	        return NAN;
+	      }
+	      return +value;
+	    }
+	
+	    /**
+	     * The base implementation of `_.toString` which doesn't convert nullish
+	     * values to empty strings.
+	     *
+	     * @private
+	     * @param {*} value The value to process.
+	     * @returns {string} Returns the string.
+	     */
+	    function baseToString(value) {
+	      // Exit early for strings to avoid a performance hit in some environments.
+	      if (typeof value == 'string') {
+	        return value;
+	      }
+	      if (isSymbol(value)) {
+	        return symbolToString ? symbolToString.call(value) : '';
+	      }
+	      var result = (value + '');
+	      return (result == '0' && (1 / value) == -INFINITY) ? '-0' : result;
 	    }
 	
 	    /**
@@ -59086,6 +59121,7 @@
 	        var value = array[index],
 	            computed = iteratee ? iteratee(value) : value;
 	
+	        value = (comparator || value !== 0) ? value : 0;
 	        if (isCommon && computed === computed) {
 	          var seenIndex = seen.length;
 	          while (seenIndex--) {
@@ -59119,8 +59155,9 @@
 	    function baseUnset(object, path) {
 	      path = isKey(path, object) ? [path] : castPath(path);
 	      object = parent(object, path);
-	      var key = last(path);
-	      return (object != null && has(object, key)) ? delete object[key] : true;
+	
+	      var key = toKey(last(path));
+	      return !(object != null && baseHas(object, key)) || delete object[key];
 	    }
 	
 	    /**
@@ -59384,11 +59421,90 @@
 	    }
 	
 	    /**
+	     * Compares values to sort them in ascending order.
+	     *
+	     * @private
+	     * @param {*} value The value to compare.
+	     * @param {*} other The other value to compare.
+	     * @returns {number} Returns the sort order indicator for `value`.
+	     */
+	    function compareAscending(value, other) {
+	      if (value !== other) {
+	        var valIsDefined = value !== undefined,
+	            valIsNull = value === null,
+	            valIsReflexive = value === value,
+	            valIsSymbol = isSymbol(value);
+	
+	        var othIsDefined = other !== undefined,
+	            othIsNull = other === null,
+	            othIsReflexive = other === other,
+	            othIsSymbol = isSymbol(other);
+	
+	        if ((!othIsNull && !othIsSymbol && !valIsSymbol && value > other) ||
+	            (valIsSymbol && othIsDefined && othIsReflexive && !othIsNull && !othIsSymbol) ||
+	            (valIsNull && othIsDefined && othIsReflexive) ||
+	            (!valIsDefined && othIsReflexive) ||
+	            !valIsReflexive) {
+	          return 1;
+	        }
+	        if ((!valIsNull && !valIsSymbol && !othIsSymbol && value < other) ||
+	            (othIsSymbol && valIsDefined && valIsReflexive && !valIsNull && !valIsSymbol) ||
+	            (othIsNull && valIsDefined && valIsReflexive) ||
+	            (!othIsDefined && valIsReflexive) ||
+	            !othIsReflexive) {
+	          return -1;
+	        }
+	      }
+	      return 0;
+	    }
+	
+	    /**
+	     * Used by `_.orderBy` to compare multiple properties of a value to another
+	     * and stable sort them.
+	     *
+	     * If `orders` is unspecified, all values are sorted in ascending order. Otherwise,
+	     * specify an order of "desc" for descending or "asc" for ascending sort order
+	     * of corresponding values.
+	     *
+	     * @private
+	     * @param {Object} object The object to compare.
+	     * @param {Object} other The other object to compare.
+	     * @param {boolean[]|string[]} orders The order to sort by for each property.
+	     * @returns {number} Returns the sort order indicator for `object`.
+	     */
+	    function compareMultiple(object, other, orders) {
+	      var index = -1,
+	          objCriteria = object.criteria,
+	          othCriteria = other.criteria,
+	          length = objCriteria.length,
+	          ordersLength = orders.length;
+	
+	      while (++index < length) {
+	        var result = compareAscending(objCriteria[index], othCriteria[index]);
+	        if (result) {
+	          if (index >= ordersLength) {
+	            return result;
+	          }
+	          var order = orders[index];
+	          return result * (order == 'desc' ? -1 : 1);
+	        }
+	      }
+	      // Fixes an `Array#sort` bug in the JS engine embedded in Adobe applications
+	      // that causes it, under certain circumstances, to provide the same value for
+	      // `object` and `other`. See https://github.com/jashkenas/underscore/pull/1247
+	      // for more details.
+	      //
+	      // This also ensures a stable sort in V8 and other engines.
+	      // See https://bugs.chromium.org/p/v8/issues/detail?id=90 for more details.
+	      return object.index - other.index;
+	    }
+	
+	    /**
 	     * Creates an array that is the composition of partially applied arguments,
 	     * placeholders, and provided arguments into a single array of arguments.
 	     *
 	     * @private
-	     * @param {Array|Object} args The provided arguments.
+	     * @param {Array} args The provided arguments.
 	     * @param {Array} partials The arguments to prepend to those provided.
 	     * @param {Array} holders The `partials` placeholder indexes.
 	     * @params {boolean} [isCurried] Specify composing for a curried function.
@@ -59423,7 +59539,7 @@
 	     * is tailored for `_.partialRight`.
 	     *
 	     * @private
-	     * @param {Array|Object} args The provided arguments.
+	     * @param {Array} args The provided arguments.
 	     * @param {Array} partials The arguments to append to those provided.
 	     * @param {Array} holders The `partials` placeholder indexes.
 	     * @params {boolean} [isCurried] Specify composing for a curried function.
@@ -59545,7 +59661,7 @@
 	            customizer = length > 1 ? sources[length - 1] : undefined,
 	            guard = length > 2 ? sources[2] : undefined;
 	
-	        customizer = typeof customizer == 'function'
+	        customizer = (assigner.length > 3 && typeof customizer == 'function')
 	          ? (length--, customizer)
 	          : undefined;
 	
@@ -59644,7 +59760,7 @@
 	     *
 	     * @private
 	     * @param {string} methodName The name of the `String` case method to use.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new case function.
 	     */
 	    function createCaseFirst(methodName) {
 	      return function(string) {
@@ -59729,7 +59845,7 @@
 	        var length = arguments.length,
 	            args = Array(length),
 	            index = length,
-	            placeholder = getPlaceholder(wrapper);
+	            placeholder = getHolder(wrapper);
 	
 	        while (index--) {
 	          args[index] = arguments[index];
@@ -59748,6 +59864,31 @@
 	        return apply(fn, this, args);
 	      }
 	      return wrapper;
+	    }
+	
+	    /**
+	     * Creates a `_.find` or `_.findLast` function.
+	     *
+	     * @private
+	     * @param {Function} findIndexFunc The function to find the collection index.
+	     * @returns {Function} Returns the new find function.
+	     */
+	    function createFind(findIndexFunc) {
+	      return function(collection, predicate, fromIndex) {
+	        var iterable = Object(collection);
+	        predicate = getIteratee(predicate, 3);
+	        if (!isArrayLike(collection)) {
+	          var props = keys(collection);
+	        }
+	        var index = findIndexFunc(props || collection, function(value, key) {
+	          if (props) {
+	            key = value;
+	            value = iterable[key];
+	          }
+	          return predicate(value, key, iterable);
+	        }, fromIndex);
+	        return index > -1 ? collection[props ? props[index] : index] : undefined;
+	      };
 	    }
 	
 	    /**
@@ -59844,14 +59985,14 @@
 	
 	      function wrapper() {
 	        var length = arguments.length,
-	            index = length,
-	            args = Array(length);
+	            args = Array(length),
+	            index = length;
 	
 	        while (index--) {
 	          args[index] = arguments[index];
 	        }
 	        if (isCurried) {
-	          var placeholder = getPlaceholder(wrapper),
+	          var placeholder = getHolder(wrapper),
 	              holdersCount = countHolders(args, placeholder);
 	        }
 	        if (partials) {
@@ -59903,11 +60044,44 @@
 	    }
 	
 	    /**
+	     * Creates a function that performs a mathematical operation on two values.
+	     *
+	     * @private
+	     * @param {Function} operator The function to perform the operation.
+	     * @returns {Function} Returns the new mathematical operation function.
+	     */
+	    function createMathOperation(operator) {
+	      return function(value, other) {
+	        var result;
+	        if (value === undefined && other === undefined) {
+	          return 0;
+	        }
+	        if (value !== undefined) {
+	          result = value;
+	        }
+	        if (other !== undefined) {
+	          if (result === undefined) {
+	            return other;
+	          }
+	          if (typeof value == 'string' || typeof other == 'string') {
+	            value = baseToString(value);
+	            other = baseToString(other);
+	          } else {
+	            value = baseToNumber(value);
+	            other = baseToNumber(other);
+	          }
+	          result = operator(value, other);
+	        }
+	        return result;
+	      };
+	    }
+	
+	    /**
 	     * Creates a function like `_.over`.
 	     *
 	     * @private
 	     * @param {Function} arrayFunc The function to iterate over iteratees.
-	     * @returns {Function} Returns the new invoker function.
+	     * @returns {Function} Returns the new over function.
 	     */
 	    function createOver(arrayFunc) {
 	      return rest(function(iteratees) {
@@ -59934,7 +60108,7 @@
 	     * @returns {string} Returns the padding for `string`.
 	     */
 	    function createPadding(length, chars) {
-	      chars = chars === undefined ? ' ' : (chars + '');
+	      chars = chars === undefined ? ' ' : baseToString(chars);
 	
 	      var charsLength = chars.length;
 	      if (charsLength < 2) {
@@ -60009,6 +60183,23 @@
 	    }
 	
 	    /**
+	     * Creates a function that performs a relational operation on two values.
+	     *
+	     * @private
+	     * @param {Function} operator The function to perform the operation.
+	     * @returns {Function} Returns the new relational operation function.
+	     */
+	    function createRelationalOperation(operator) {
+	      return function(value, other) {
+	        if (!(typeof value == 'string' && typeof other == 'string')) {
+	          value = toNumber(value);
+	          other = toNumber(other);
+	        }
+	        return operator(value, other);
+	      };
+	    }
+	
+	    /**
 	     * Creates a function that wraps `func` to continue currying.
 	     *
 	     * @private
@@ -60063,7 +60254,7 @@
 	      var func = Math[methodName];
 	      return function(number, precision) {
 	        number = toNumber(number);
-	        precision = toInteger(precision);
+	        precision = nativeMin(toInteger(precision), 292);
 	        if (precision) {
 	          // Shift with exponential notation to avoid floating-point issues.
 	          // See [MDN](https://mdn.io/round#Examples) for more details.
@@ -60084,9 +60275,29 @@
 	     * @param {Array} values The values to add to the set.
 	     * @returns {Object} Returns the new set.
 	     */
-	    var createSet = !(Set && new Set([1, 2]).size === 2) ? noop : function(values) {
+	    var createSet = !(Set && (1 / setToArray(new Set([,-0]))[1]) == INFINITY) ? noop : function(values) {
 	      return new Set(values);
 	    };
+	
+	    /**
+	     * Creates a `_.toPairs` or `_.toPairsIn` function.
+	     *
+	     * @private
+	     * @param {Function} keysFunc The function to get the keys of a given object.
+	     * @returns {Function} Returns the new pairs function.
+	     */
+	    function createToPairs(keysFunc) {
+	      return function(object) {
+	        var tag = getTag(object);
+	        if (tag == mapTag) {
+	          return mapToArray(object);
+	        }
+	        if (tag == setTag) {
+	          return setToPairs(object);
+	        }
+	        return baseToPairs(object, keysFunc(object));
+	      };
+	    }
 	
 	    /**
 	     * Creates a function that either curries or invokes `func` with optional
@@ -60105,6 +60316,7 @@
 	     *    64 - `_.partialRight`
 	     *   128 - `_.rearg`
 	     *   256 - `_.ary`
+	     *   512 - `_.flip`
 	     * @param {*} [thisArg] The `this` binding of `func`.
 	     * @param {Array} [partials] The arguments to be partially applied.
 	     * @param {Array} [holders] The `partials` placeholder indexes.
@@ -60183,9 +60395,7 @@
 	     * @returns {boolean} Returns `true` if the arrays are equivalent, else `false`.
 	     */
 	    function equalArrays(array, other, equalFunc, customizer, bitmask, stack) {
-	      var index = -1,
-	          isPartial = bitmask & PARTIAL_COMPARE_FLAG,
-	          isUnordered = bitmask & UNORDERED_COMPARE_FLAG,
+	      var isPartial = bitmask & PARTIAL_COMPARE_FLAG,
 	          arrLength = array.length,
 	          othLength = other.length;
 	
@@ -60197,7 +60407,10 @@
 	      if (stacked) {
 	        return stacked == other;
 	      }
-	      var result = true;
+	      var index = -1,
+	          result = true,
+	          seen = (bitmask & UNORDERED_COMPARE_FLAG) ? new SetCache : undefined;
+	
 	      stack.set(array, other);
 	
 	      // Ignore non-index properties.
@@ -60218,10 +60431,12 @@
 	          break;
 	        }
 	        // Recursively compare arrays (susceptible to call stack limits).
-	        if (isUnordered) {
-	          if (!arraySome(other, function(othValue) {
-	                return arrValue === othValue ||
-	                  equalFunc(arrValue, othValue, customizer, bitmask, stack);
+	        if (seen) {
+	          if (!arraySome(other, function(othValue, othIndex) {
+	                if (!seen.has(othIndex) &&
+	                    (arrValue === othValue || equalFunc(arrValue, othValue, customizer, bitmask, stack))) {
+	                  return seen.add(othIndex);
+	                }
 	              })) {
 	            result = false;
 	            break;
@@ -60456,6 +60671,18 @@
 	    }
 	
 	    /**
+	     * Gets the argument placeholder value for `func`.
+	     *
+	     * @private
+	     * @param {Function} func The function to inspect.
+	     * @returns {*} Returns the placeholder value.
+	     */
+	    function getHolder(func) {
+	      var object = hasOwnProperty.call(lodash, 'placeholder') ? lodash : func;
+	      return object.placeholder;
+	    }
+	
+	    /**
 	     * Gets the appropriate "iteratee" function. If `_.iteratee` is customized,
 	     * this function returns the custom method, otherwise it returns `baseIteratee`.
 	     * If arguments are provided, the chosen function is invoked with them and
@@ -60486,6 +60713,21 @@
 	    var getLength = baseProperty('length');
 	
 	    /**
+	     * Gets the data for `map`.
+	     *
+	     * @private
+	     * @param {Object} map The map to query.
+	     * @param {string} key The reference key.
+	     * @returns {*} Returns the map data.
+	     */
+	    function getMapData(map, key) {
+	      var data = map.__data__;
+	      return isKeyable(key)
+	        ? data[typeof key == 'string' ? 'string' : 'hash']
+	        : data.map;
+	    }
+	
+	    /**
 	     * Gets the property names, values, and compare flags of `object`.
 	     *
 	     * @private
@@ -60493,11 +60735,14 @@
 	     * @returns {Array} Returns the match data of `object`.
 	     */
 	    function getMatchData(object) {
-	      var result = toPairs(object),
+	      var result = keys(object),
 	          length = result.length;
 	
 	      while (length--) {
-	        result[length][2] = isStrictComparable(result[length][1]);
+	        var key = result[length],
+	            value = object[key];
+	
+	        result[length] = [key, value, isStrictComparable(value)];
 	      }
 	      return result;
 	    }
@@ -60511,20 +60756,8 @@
 	     * @returns {*} Returns the function if it's native, else `undefined`.
 	     */
 	    function getNative(object, key) {
-	      var value = object[key];
-	      return isNative(value) ? value : undefined;
-	    }
-	
-	    /**
-	     * Gets the argument placeholder value for `func`.
-	     *
-	     * @private
-	     * @param {Function} func The function to inspect.
-	     * @returns {*} Returns the placeholder value.
-	     */
-	    function getPlaceholder(func) {
-	      var object = hasOwnProperty.call(lodash, 'placeholder') ? lodash : func;
-	      return object.placeholder;
+	      var value = getValue(object, key);
+	      return baseIsNative(value) ? value : undefined;
 	    }
 	
 	    /**
@@ -60553,9 +60786,7 @@
 	
 	    // Fallback for IE < 11.
 	    if (!getOwnPropertySymbols) {
-	      getSymbols = function() {
-	        return [];
-	      };
+	      getSymbols = stubArray;
 	    }
 	
 	    /**
@@ -60656,7 +60887,7 @@
 	          length = path.length;
 	
 	      while (++index < length) {
-	        var key = path[index];
+	        var key = toKey(path[index]);
 	        if (!(result = object != null && hasFunc(object, key))) {
 	          break;
 	        }
@@ -60776,7 +61007,7 @@
 	     * @returns {boolean} Returns `true` if `value` is flattenable, else `false`.
 	     */
 	    function isFlattenable(value) {
-	      return isArrayLikeObject(value) && (isArray(value) || isArguments(value));
+	      return isArray(value) || isArguments(value);
 	    }
 	
 	    /**
@@ -60789,6 +61020,21 @@
 	     */
 	    function isFlattenableIteratee(value) {
 	      return isArray(value) && !(value.length == 2 && !isFunction(value[0]));
+	    }
+	
+	    /**
+	     * Checks if `value` is a valid array-like index.
+	     *
+	     * @private
+	     * @param {*} value The value to check.
+	     * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
+	     * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
+	     */
+	    function isIndex(value, length) {
+	      length = length == null ? MAX_SAFE_INTEGER : length;
+	      return !!length &&
+	        (typeof value == 'number' || reIsUint.test(value)) &&
+	        (value > -1 && value % 1 == 0 && value < length);
 	    }
 	
 	    /**
@@ -60824,13 +61070,16 @@
 	     * @returns {boolean} Returns `true` if `value` is a property name, else `false`.
 	     */
 	    function isKey(value, object) {
+	      if (isArray(value)) {
+	        return false;
+	      }
 	      var type = typeof value;
-	      if (type == 'number' || type == 'symbol') {
+	      if (type == 'number' || type == 'symbol' || type == 'boolean' ||
+	          value == null || isSymbol(value)) {
 	        return true;
 	      }
-	      return !isArray(value) &&
-	        (isSymbol(value) || reIsPlainProp.test(value) || !reIsDeepProp.test(value) ||
-	          (object != null && value in Object(object)));
+	      return reIsPlainProp.test(value) || !reIsDeepProp.test(value) ||
+	        (object != null && value in Object(object));
 	    }
 	
 	    /**
@@ -60842,8 +61091,9 @@
 	     */
 	    function isKeyable(value) {
 	      var type = typeof value;
-	      return type == 'number' || type == 'boolean' ||
-	        (type == 'string' && value != '__proto__') || value == null;
+	      return (type == 'string' || type == 'number' || type == 'symbol' || type == 'boolean')
+	        ? (value !== '__proto__')
+	        : (value === null);
 	    }
 	
 	    /**
@@ -60867,6 +61117,26 @@
 	      var data = getData(other);
 	      return !!data && func === data[0];
 	    }
+	
+	    /**
+	     * Checks if `func` has its source masked.
+	     *
+	     * @private
+	     * @param {Function} func The function to check.
+	     * @returns {boolean} Returns `true` if `func` is masked, else `false`.
+	     */
+	    function isMasked(func) {
+	      return !!maskSrcKey && (maskSrcKey in func);
+	    }
+	
+	    /**
+	     * Checks if `func` is capable of being masked.
+	     *
+	     * @private
+	     * @param {*} value The value to check.
+	     * @returns {boolean} Returns `true` if `func` is maskable, else `false`.
+	     */
+	    var isMaskable = coreJsData ? isFunction : stubFalse;
 	
 	    /**
 	     * Checks if `value` is likely a prototype object.
@@ -60901,7 +61171,7 @@
 	     * @private
 	     * @param {string} key The key of the property to get.
 	     * @param {*} srcValue The value to match.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new spec function.
 	     */
 	    function matchesStrictComparable(key, srcValue) {
 	      return function(object) {
@@ -61094,8 +61364,12 @@
 	     * @param {*} value The value to inspect.
 	     * @returns {string|symbol} Returns the key.
 	     */
-	    function toKey(key) {
-	      return (typeof key == 'string' || isSymbol(key)) ? key : (key + '');
+	    function toKey(value) {
+	      if (typeof value == 'string' || isSymbol(value)) {
+	        return value;
+	      }
+	      var result = (value + '');
+	      return (result == '0' && (1 / value) == -INFINITY) ? '-0' : result;
 	    }
 	
 	    /**
@@ -61149,7 +61423,7 @@
 	     * @param {Array} array The array to process.
 	     * @param {number} [size=1] The length of each chunk
 	     * @param- {Object} [guard] Enables use as an iteratee for methods like `_.map`.
-	     * @returns {Array} Returns the new array containing chunks.
+	     * @returns {Array} Returns the new array of chunks.
 	     * @example
 	     *
 	     * _.chunk(['a', 'b', 'c', 'd'], 2);
@@ -61232,16 +61506,16 @@
 	     */
 	    function concat() {
 	      var length = arguments.length,
-	          array = castArray(arguments[0]);
+	          args = Array(length ? length - 1 : 0),
+	          array = arguments[0],
+	          index = length;
 	
-	      if (length < 2) {
-	        return length ? copyArray(array) : [];
+	      while (index--) {
+	        args[index - 1] = arguments[index];
 	      }
-	      var args = Array(length - 1);
-	      while (length--) {
-	        args[length - 1] = arguments[length];
-	      }
-	      return arrayConcat(array, baseFlatten(args, 1));
+	      return length
+	        ? arrayPush(isArray(array) ? copyArray(array) : [array], baseFlatten(args, 1))
+	        : [];
 	    }
 	
 	    /**
@@ -61257,10 +61531,11 @@
 	     * @param {Array} array The array to inspect.
 	     * @param {...Array} [values] The values to exclude.
 	     * @returns {Array} Returns the new array of filtered values.
+	     * @see _.without, _.xor
 	     * @example
 	     *
-	     * _.difference([3, 2, 1], [4, 2]);
-	     * // => [3, 1]
+	     * _.difference([2, 1], [2, 3]);
+	     * // => [1]
 	     */
 	    var difference = rest(function(array, values) {
 	      return isArrayLikeObject(array)
@@ -61285,8 +61560,8 @@
 	     * @returns {Array} Returns the new array of filtered values.
 	     * @example
 	     *
-	     * _.differenceBy([3.1, 2.2, 1.3], [4.4, 2.5], Math.floor);
-	     * // => [3.1, 1.3]
+	     * _.differenceBy([2.1, 1.2], [2.3, 3.4], Math.floor);
+	     * // => [1.2]
 	     *
 	     * // The `_.property` iteratee shorthand.
 	     * _.differenceBy([{ 'x': 2 }, { 'x': 1 }], [{ 'x': 1 }], 'x');
@@ -61538,6 +61813,7 @@
 	     * @param {Array} array The array to search.
 	     * @param {Array|Function|Object|string} [predicate=_.identity]
 	     *  The function invoked per iteration.
+	     * @param {number} [fromIndex=0] The index to search from.
 	     * @returns {number} Returns the index of the found element, else `-1`.
 	     * @example
 	     *
@@ -61562,10 +61838,16 @@
 	     * _.findIndex(users, 'active');
 	     * // => 2
 	     */
-	    function findIndex(array, predicate) {
-	      return (array && array.length)
-	        ? baseFindIndex(array, getIteratee(predicate, 3))
-	        : -1;
+	    function findIndex(array, predicate, fromIndex) {
+	      var length = array ? array.length : 0;
+	      if (!length) {
+	        return -1;
+	      }
+	      var index = fromIndex == null ? 0 : toInteger(fromIndex);
+	      if (index < 0) {
+	        index = nativeMax(length + index, 0);
+	      }
+	      return baseFindIndex(array, getIteratee(predicate, 3), index);
 	    }
 	
 	    /**
@@ -61579,6 +61861,7 @@
 	     * @param {Array} array The array to search.
 	     * @param {Array|Function|Object|string} [predicate=_.identity]
 	     *  The function invoked per iteration.
+	     * @param {number} [fromIndex=array.length-1] The index to search from.
 	     * @returns {number} Returns the index of the found element, else `-1`.
 	     * @example
 	     *
@@ -61603,10 +61886,19 @@
 	     * _.findLastIndex(users, 'active');
 	     * // => 0
 	     */
-	    function findLastIndex(array, predicate) {
-	      return (array && array.length)
-	        ? baseFindIndex(array, getIteratee(predicate, 3), true)
-	        : -1;
+	    function findLastIndex(array, predicate, fromIndex) {
+	      var length = array ? array.length : 0;
+	      if (!length) {
+	        return -1;
+	      }
+	      var index = length - 1;
+	      if (fromIndex !== undefined) {
+	        index = toInteger(fromIndex);
+	        index = fromIndex < 0
+	          ? nativeMax(length + index, 0)
+	          : nativeMin(index, length - 1);
+	      }
+	      return baseFindIndex(array, getIteratee(predicate, 3), index, true);
 	    }
 	
 	    /**
@@ -61753,11 +62045,11 @@
 	      if (!length) {
 	        return -1;
 	      }
-	      fromIndex = toInteger(fromIndex);
-	      if (fromIndex < 0) {
-	        fromIndex = nativeMax(length + fromIndex, 0);
+	      var index = fromIndex == null ? 0 : toInteger(fromIndex);
+	      if (index < 0) {
+	        index = nativeMax(length + index, 0);
 	      }
-	      return baseIndexOf(array, value, fromIndex);
+	      return baseIndexOf(array, value, index);
 	    }
 	
 	    /**
@@ -61792,7 +62084,7 @@
 	     * @returns {Array} Returns the new array of intersecting values.
 	     * @example
 	     *
-	     * _.intersection([2, 1], [4, 2], [1, 2]);
+	     * _.intersection([2, 1], [2, 3]);
 	     * // => [2]
 	     */
 	    var intersection = rest(function(arrays) {
@@ -61818,7 +62110,7 @@
 	     * @returns {Array} Returns the new array of intersecting values.
 	     * @example
 	     *
-	     * _.intersectionBy([2.1, 1.2], [4.3, 2.4], Math.floor);
+	     * _.intersectionBy([2.1, 1.2], [2.3, 3.4], Math.floor);
 	     * // => [2.1]
 	     *
 	     * // The `_.property` iteratee shorthand.
@@ -61948,7 +62240,7 @@
 	        ) + 1;
 	      }
 	      if (value !== value) {
-	        return indexOfNaN(array, index, true);
+	        return indexOfNaN(array, index - 1, true);
 	      }
 	      while (index--) {
 	        if (array[index] === value) {
@@ -61959,8 +62251,8 @@
 	    }
 	
 	    /**
-	     * Gets the nth element of `array`. If `n` is negative, the nth element
-	     * from the end is returned.
+	     * Gets the element at index `n` of `array`. If `n` is negative, the nth
+	     * element from the end is returned.
 	     *
 	     * @static
 	     * @memberOf _
@@ -62000,11 +62292,11 @@
 	     * @returns {Array} Returns `array`.
 	     * @example
 	     *
-	     * var array = [1, 2, 3, 1, 2, 3];
+	     * var array = ['a', 'b', 'c', 'a', 'b', 'c'];
 	     *
-	     * _.pull(array, 2, 3);
+	     * _.pull(array, 'a', 'c');
 	     * console.log(array);
-	     * // => [1, 1]
+	     * // => ['b', 'b']
 	     */
 	    var pull = rest(pullAll);
 	
@@ -62022,11 +62314,11 @@
 	     * @returns {Array} Returns `array`.
 	     * @example
 	     *
-	     * var array = [1, 2, 3, 1, 2, 3];
+	     * var array = ['a', 'b', 'c', 'a', 'b', 'c'];
 	     *
-	     * _.pullAll(array, [2, 3]);
+	     * _.pullAll(array, ['a', 'c']);
 	     * console.log(array);
-	     * // => [1, 1]
+	     * // => ['b', 'b']
 	     */
 	    function pullAll(array, values) {
 	      return (array && array.length && values && values.length)
@@ -62108,20 +62400,25 @@
 	     * @returns {Array} Returns the new array of removed elements.
 	     * @example
 	     *
-	     * var array = [5, 10, 15, 20];
-	     * var evens = _.pullAt(array, 1, 3);
+	     * var array = ['a', 'b', 'c', 'd'];
+	     * var pulled = _.pullAt(array, [1, 3]);
 	     *
 	     * console.log(array);
-	     * // => [5, 15]
+	     * // => ['a', 'c']
 	     *
-	     * console.log(evens);
-	     * // => [10, 20]
+	     * console.log(pulled);
+	     * // => ['b', 'd']
 	     */
 	    var pullAt = rest(function(array, indexes) {
-	      indexes = arrayMap(baseFlatten(indexes, 1), String);
+	      indexes = baseFlatten(indexes, 1);
 	
-	      var result = baseAt(array, indexes);
-	      basePullAt(array, indexes.sort(compareAscending));
+	      var length = array ? array.length : 0,
+	          result = baseAt(array, indexes);
+	
+	      basePullAt(array, arrayMap(indexes, function(index) {
+	        return isIndex(index, length) ? +index : index;
+	      }).sort(compareAscending));
+	
 	      return result;
 	    });
 	
@@ -62250,9 +62547,6 @@
 	     *
 	     * _.sortedIndex([30, 50], 40);
 	     * // => 1
-	     *
-	     * _.sortedIndex([4, 5], 4);
-	     * // => 0
 	     */
 	    function sortedIndex(array, value) {
 	      return baseSortedIndex(array, value);
@@ -62275,13 +62569,13 @@
 	     *  into `array`.
 	     * @example
 	     *
-	     * var dict = { 'thirty': 30, 'forty': 40, 'fifty': 50 };
+	     * var objects = [{ 'x': 4 }, { 'x': 5 }];
 	     *
-	     * _.sortedIndexBy(['thirty', 'fifty'], 'forty', _.propertyOf(dict));
-	     * // => 1
+	     * _.sortedIndexBy(objects, { 'x': 4 }, function(o) { return o.x; });
+	     * // => 0
 	     *
 	     * // The `_.property` iteratee shorthand.
-	     * _.sortedIndexBy([{ 'x': 4 }, { 'x': 5 }], { 'x': 4 }, 'x');
+	     * _.sortedIndexBy(objects, { 'x': 4 }, 'x');
 	     * // => 0
 	     */
 	    function sortedIndexBy(array, value, iteratee) {
@@ -62301,8 +62595,8 @@
 	     * @returns {number} Returns the index of the matched value, else `-1`.
 	     * @example
 	     *
-	     * _.sortedIndexOf([1, 1, 2, 2], 2);
-	     * // => 2
+	     * _.sortedIndexOf([4, 5, 5, 5, 6], 5);
+	     * // => 1
 	     */
 	    function sortedIndexOf(array, value) {
 	      var length = array ? array.length : 0;
@@ -62330,8 +62624,8 @@
 	     *  into `array`.
 	     * @example
 	     *
-	     * _.sortedLastIndex([4, 5], 4);
-	     * // => 1
+	     * _.sortedLastIndex([4, 5, 5, 5, 6], 5);
+	     * // => 4
 	     */
 	    function sortedLastIndex(array, value) {
 	      return baseSortedIndex(array, value, true);
@@ -62354,8 +62648,13 @@
 	     *  into `array`.
 	     * @example
 	     *
+	     * var objects = [{ 'x': 4 }, { 'x': 5 }];
+	     *
+	     * _.sortedLastIndexBy(objects, { 'x': 4 }, function(o) { return o.x; });
+	     * // => 1
+	     *
 	     * // The `_.property` iteratee shorthand.
-	     * _.sortedLastIndexBy([{ 'x': 4 }, { 'x': 5 }], { 'x': 4 }, 'x');
+	     * _.sortedLastIndexBy(objects, { 'x': 4 }, 'x');
 	     * // => 1
 	     */
 	    function sortedLastIndexBy(array, value, iteratee) {
@@ -62375,7 +62674,7 @@
 	     * @returns {number} Returns the index of the matched value, else `-1`.
 	     * @example
 	     *
-	     * _.sortedLastIndexOf([1, 1, 2, 2], 2);
+	     * _.sortedLastIndexOf([4, 5, 5, 5, 6], 5);
 	     * // => 3
 	     */
 	    function sortedLastIndexOf(array, value) {
@@ -62428,7 +62727,7 @@
 	     */
 	    function sortedUniqBy(array, iteratee) {
 	      return (array && array.length)
-	        ? baseSortedUniqBy(array, getIteratee(iteratee))
+	        ? baseSortedUniq(array, getIteratee(iteratee))
 	        : [];
 	    }
 	
@@ -62615,8 +62914,8 @@
 	     * @returns {Array} Returns the new array of combined values.
 	     * @example
 	     *
-	     * _.union([2, 1], [4, 2], [1, 2]);
-	     * // => [2, 1, 4]
+	     * _.union([2], [1, 2]);
+	     * // => [2, 1]
 	     */
 	    var union = rest(function(arrays) {
 	      return baseUniq(baseFlatten(arrays, 1, isArrayLikeObject, true));
@@ -62638,8 +62937,8 @@
 	     * @returns {Array} Returns the new array of combined values.
 	     * @example
 	     *
-	     * _.unionBy([2.1, 1.2], [4.3, 2.4], Math.floor);
-	     * // => [2.1, 1.2, 4.3]
+	     * _.unionBy([2.1], [1.2, 2.3], Math.floor);
+	     * // => [2.1, 1.2]
 	     *
 	     * // The `_.property` iteratee shorthand.
 	     * _.unionBy([{ 'x': 1 }], [{ 'x': 2 }, { 'x': 1 }], 'x');
@@ -62746,7 +63045,7 @@
 	     * @returns {Array} Returns the new duplicate free array.
 	     * @example
 	     *
-	     * var objects = [{ 'x': 1, 'y': 2 }, { 'x': 2, 'y': 1 },  { 'x': 1, 'y': 2 }];
+	     * var objects = [{ 'x': 1, 'y': 2 }, { 'x': 2, 'y': 1 }, { 'x': 1, 'y': 2 }];
 	     *
 	     * _.uniqWith(objects, _.isEqual);
 	     * // => [{ 'x': 1, 'y': 2 }, { 'x': 2, 'y': 1 }]
@@ -62835,12 +63134,13 @@
 	     * @memberOf _
 	     * @since 0.1.0
 	     * @category Array
-	     * @param {Array} array The array to filter.
+	     * @param {Array} array The array to inspect.
 	     * @param {...*} [values] The values to exclude.
 	     * @returns {Array} Returns the new array of filtered values.
+	     * @see _.difference, _.xor
 	     * @example
 	     *
-	     * _.without([1, 2, 1, 3], 1, 2);
+	     * _.without([2, 1, 2, 3], 1, 2);
 	     * // => [3]
 	     */
 	    var without = rest(function(array, values) {
@@ -62860,11 +63160,12 @@
 	     * @since 2.4.0
 	     * @category Array
 	     * @param {...Array} [arrays] The arrays to inspect.
-	     * @returns {Array} Returns the new array of values.
+	     * @returns {Array} Returns the new array of filtered values.
+	     * @see _.difference, _.without
 	     * @example
 	     *
-	     * _.xor([2, 1], [4, 2]);
-	     * // => [1, 4]
+	     * _.xor([2, 1], [2, 3]);
+	     * // => [1, 3]
 	     */
 	    var xor = rest(function(arrays) {
 	      return baseXor(arrayFilter(arrays, isArrayLikeObject));
@@ -62883,11 +63184,11 @@
 	     * @param {...Array} [arrays] The arrays to inspect.
 	     * @param {Array|Function|Object|string} [iteratee=_.identity]
 	     *  The iteratee invoked per element.
-	     * @returns {Array} Returns the new array of values.
+	     * @returns {Array} Returns the new array of filtered values.
 	     * @example
 	     *
-	     * _.xorBy([2.1, 1.2], [4.3, 2.4], Math.floor);
-	     * // => [1.2, 4.3]
+	     * _.xorBy([2.1, 1.2], [2.3, 3.4], Math.floor);
+	     * // => [1.2, 3.4]
 	     *
 	     * // The `_.property` iteratee shorthand.
 	     * _.xorBy([{ 'x': 1 }], [{ 'x': 2 }, { 'x': 1 }], 'x');
@@ -62912,7 +63213,7 @@
 	     * @category Array
 	     * @param {...Array} [arrays] The arrays to inspect.
 	     * @param {Function} [comparator] The comparator invoked per element.
-	     * @returns {Array} Returns the new array of values.
+	     * @returns {Array} Returns the new array of filtered values.
 	     * @example
 	     *
 	     * var objects = [{ 'x': 1, 'y': 2 }, { 'x': 2, 'y': 1 }];
@@ -63120,9 +63421,6 @@
 	     *
 	     * _(object).at(['a[0].b.c', 'a[1]']).value();
 	     * // => [3, 4]
-	     *
-	     * _(['a', 'b', 'c']).at(0, 2).value();
-	     * // => ['a', 'c']
 	     */
 	    var wrapperAt = rest(function(paths) {
 	      paths = baseFlatten(paths, 1);
@@ -63385,6 +63683,7 @@
 	     * _.countBy([6.1, 4.2, 6.3], Math.floor);
 	     * // => { '4': 1, '6': 2 }
 	     *
+	     * // The `_.property` iteratee shorthand.
 	     * _.countBy(['one', 'two', 'three'], 'length');
 	     * // => { '3': 2, '5': 1 }
 	     */
@@ -63450,6 +63749,7 @@
 	     * @param {Array|Function|Object|string} [predicate=_.identity]
 	     *  The function invoked per iteration.
 	     * @returns {Array} Returns the new filtered array.
+	     * @see _.reject
 	     * @example
 	     *
 	     * var users = [
@@ -63489,6 +63789,7 @@
 	     * @param {Array|Object} collection The collection to search.
 	     * @param {Array|Function|Object|string} [predicate=_.identity]
 	     *  The function invoked per iteration.
+	     * @param {number} [fromIndex=0] The index to search from.
 	     * @returns {*} Returns the matched element, else `undefined`.
 	     * @example
 	     *
@@ -63513,14 +63814,7 @@
 	     * _.find(users, 'active');
 	     * // => object for 'barney'
 	     */
-	    function find(collection, predicate) {
-	      predicate = getIteratee(predicate, 3);
-	      if (isArray(collection)) {
-	        var index = baseFindIndex(collection, predicate);
-	        return index > -1 ? collection[index] : undefined;
-	      }
-	      return baseFind(collection, predicate, baseEach);
-	    }
+	    var find = createFind(findIndex);
 	
 	    /**
 	     * This method is like `_.find` except that it iterates over elements of
@@ -63533,6 +63827,7 @@
 	     * @param {Array|Object} collection The collection to search.
 	     * @param {Array|Function|Object|string} [predicate=_.identity]
 	     *  The function invoked per iteration.
+	     * @param {number} [fromIndex=collection.length-1] The index to search from.
 	     * @returns {*} Returns the matched element, else `undefined`.
 	     * @example
 	     *
@@ -63541,14 +63836,7 @@
 	     * });
 	     * // => 3
 	     */
-	    function findLast(collection, predicate) {
-	      predicate = getIteratee(predicate, 3);
-	      if (isArray(collection)) {
-	        var index = baseFindIndex(collection, predicate, true);
-	        return index > -1 ? collection[index] : undefined;
-	      }
-	      return baseFind(collection, predicate, baseEachRight);
-	    }
+	    var findLast = createFind(findLastIndex);
 	
 	    /**
 	     * Creates a flattened array of values by running each element in `collection`
@@ -63645,6 +63933,7 @@
 	     * @param {Array|Object} collection The collection to iterate over.
 	     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
 	     * @returns {Array|Object} Returns `collection`.
+	     * @see _.forEachRight
 	     * @example
 	     *
 	     * _([1, 2]).forEach(function(value) {
@@ -63658,9 +63947,8 @@
 	     * // => Logs 'a' then 'b' (iteration order is not guaranteed).
 	     */
 	    function forEach(collection, iteratee) {
-	      return (typeof iteratee == 'function' && isArray(collection))
-	        ? arrayEach(collection, iteratee)
-	        : baseEach(collection, getIteratee(iteratee));
+	      var func = isArray(collection) ? arrayEach : baseEach;
+	      return func(collection, getIteratee(iteratee, 3));
 	    }
 	
 	    /**
@@ -63675,6 +63963,7 @@
 	     * @param {Array|Object} collection The collection to iterate over.
 	     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
 	     * @returns {Array|Object} Returns `collection`.
+	     * @see _.forEach
 	     * @example
 	     *
 	     * _.forEachRight([1, 2], function(value) {
@@ -63683,9 +63972,8 @@
 	     * // => Logs `2` then `1`.
 	     */
 	    function forEachRight(collection, iteratee) {
-	      return (typeof iteratee == 'function' && isArray(collection))
-	        ? arrayEachRight(collection, iteratee)
-	        : baseEachRight(collection, getIteratee(iteratee));
+	      var func = isArray(collection) ? arrayEachRight : baseEachRight;
+	      return func(collection, getIteratee(iteratee, 3));
 	    }
 	
 	    /**
@@ -63987,6 +64275,7 @@
 	     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
 	     * @param {*} [accumulator] The initial value.
 	     * @returns {*} Returns the accumulated value.
+	     * @see _.reduceRight
 	     * @example
 	     *
 	     * _.reduce([1, 2], function(sum, n) {
@@ -64019,6 +64308,7 @@
 	     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
 	     * @param {*} [accumulator] The initial value.
 	     * @returns {*} Returns the accumulated value.
+	     * @see _.reduce
 	     * @example
 	     *
 	     * var array = [[0, 1], [2, 3], [4, 5]];
@@ -64047,6 +64337,7 @@
 	     * @param {Array|Function|Object|string} [predicate=_.identity]
 	     *  The function invoked per iteration.
 	     * @returns {Array} Returns the new filtered array.
+	     * @see _.filter
 	     * @example
 	     *
 	     * var users = [
@@ -64302,7 +64593,6 @@
 	     * @static
 	     * @memberOf _
 	     * @since 2.4.0
-	     * @type {Function}
 	     * @category Date
 	     * @returns {number} Returns the timestamp.
 	     * @example
@@ -64310,9 +64600,11 @@
 	     * _.defer(function(stamp) {
 	     *   console.log(_.now() - stamp);
 	     * }, _.now());
-	     * // => Logs the number of milliseconds it took for the deferred function to be invoked.
+	     * // => Logs the number of milliseconds it took for the deferred invocation.
 	     */
-	    var now = Date.now;
+	    function now() {
+	      return Date.now();
+	    }
 	
 	    /*------------------------------------------------------------------------*/
 	
@@ -64363,7 +64655,7 @@
 	     * @param {Function} func The function to cap arguments for.
 	     * @param {number} [n=func.length] The arity cap.
 	     * @param- {Object} [guard] Enables use as an iteratee for methods like `_.map`.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new capped function.
 	     * @example
 	     *
 	     * _.map(['6', '8', '10'], _.ary(parseInt, 1));
@@ -64416,7 +64708,7 @@
 	     * The `_.bind.placeholder` value, which defaults to `_` in monolithic builds,
 	     * may be used as a placeholder for partially applied arguments.
 	     *
-	     * **Note:** Unlike native `Function#bind` this method doesn't set the "length"
+	     * **Note:** Unlike native `Function#bind`, this method doesn't set the "length"
 	     * property of bound functions.
 	     *
 	     * @static
@@ -64447,7 +64739,7 @@
 	    var bind = rest(function(func, thisArg, partials) {
 	      var bitmask = BIND_FLAG;
 	      if (partials.length) {
-	        var holders = replaceHolders(partials, getPlaceholder(bind));
+	        var holders = replaceHolders(partials, getHolder(bind));
 	        bitmask |= PARTIAL_FLAG;
 	      }
 	      return createWrapper(func, bitmask, thisArg, partials, holders);
@@ -64501,7 +64793,7 @@
 	    var bindKey = rest(function(object, key, partials) {
 	      var bitmask = BIND_FLAG | BIND_KEY_FLAG;
 	      if (partials.length) {
-	        var holders = replaceHolders(partials, getPlaceholder(bindKey));
+	        var holders = replaceHolders(partials, getHolder(bindKey));
 	        bitmask |= PARTIAL_FLAG;
 	      }
 	      return createWrapper(key, bitmask, object, partials, holders);
@@ -64656,7 +64948,7 @@
 	          maxWait,
 	          result,
 	          timerId,
-	          lastCallTime = 0,
+	          lastCallTime,
 	          lastInvokeTime = 0,
 	          leading = false,
 	          maxing = false,
@@ -64707,7 +64999,7 @@
 	        // Either this is the first call, activity has stopped and we're at the
 	        // trailing edge, the system time has gone backwards and we're treating
 	        // it as the trailing edge, or we've hit the `maxWait` limit.
-	        return (!lastCallTime || (timeSinceLastCall >= wait) ||
+	        return (lastCallTime === undefined || (timeSinceLastCall >= wait) ||
 	          (timeSinceLastCall < 0) || (maxing && timeSinceLastInvoke >= maxWait));
 	      }
 	
@@ -64721,7 +65013,6 @@
 	      }
 	
 	      function trailingEdge(time) {
-	        clearTimeout(timerId);
 	        timerId = undefined;
 	
 	        // Only invoke if we have `lastArgs` which means `func` has been
@@ -64734,11 +65025,8 @@
 	      }
 	
 	      function cancel() {
-	        if (timerId !== undefined) {
-	          clearTimeout(timerId);
-	        }
-	        lastCallTime = lastInvokeTime = 0;
-	        lastArgs = lastThis = timerId = undefined;
+	        lastInvokeTime = 0;
+	        lastArgs = lastCallTime = lastThis = timerId = undefined;
 	      }
 	
 	      function flush() {
@@ -64759,7 +65047,6 @@
 	          }
 	          if (maxing) {
 	            // Handle invocations in a tight loop.
-	            clearTimeout(timerId);
 	            timerId = setTimeout(timerExpired, wait);
 	            return invokeFunc(lastCallTime);
 	          }
@@ -64827,7 +65114,7 @@
 	     * @since 4.0.0
 	     * @category Function
 	     * @param {Function} func The function to flip arguments for.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new flipped function.
 	     * @example
 	     *
 	     * var flipped = _.flip(function() {
@@ -64860,7 +65147,7 @@
 	     * @category Function
 	     * @param {Function} func The function to have its output memoized.
 	     * @param {Function} [resolver] The function to resolve the cache key.
-	     * @returns {Function} Returns the new memoizing function.
+	     * @returns {Function} Returns the new memoized function.
 	     * @example
 	     *
 	     * var object = { 'a': 1, 'b': 2 };
@@ -64918,7 +65205,7 @@
 	     * @since 3.0.0
 	     * @category Function
 	     * @param {Function} predicate The predicate to negate.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new negated function.
 	     * @example
 	     *
 	     * function isEven(n) {
@@ -64983,7 +65270,7 @@
 	     *
 	     * var func = _.overArgs(function(x, y) {
 	     *   return [x, y];
-	     * }, square, doubled);
+	     * }, [square, doubled]);
 	     *
 	     * func(9, 3);
 	     * // => [81, 6]
@@ -65042,7 +65329,7 @@
 	     * // => 'hi fred'
 	     */
 	    var partial = rest(function(func, partials) {
-	      var holders = replaceHolders(partials, getPlaceholder(partial));
+	      var holders = replaceHolders(partials, getHolder(partial));
 	      return createWrapper(func, PARTIAL_FLAG, undefined, partials, holders);
 	    });
 	
@@ -65079,7 +65366,7 @@
 	     * // => 'hello fred'
 	     */
 	    var partialRight = rest(function(func, partials) {
-	      var holders = replaceHolders(partials, getPlaceholder(partialRight));
+	      var holders = replaceHolders(partials, getHolder(partialRight));
 	      return createWrapper(func, PARTIAL_RIGHT_FLAG, undefined, partials, holders);
 	    });
 	
@@ -65100,7 +65387,7 @@
 	     *
 	     * var rearged = _.rearg(function(a, b, c) {
 	     *   return [a, b, c];
-	     * }, 2, 0, 1);
+	     * }, [2, 0, 1]);
 	     *
 	     * rearged('b', 'c', 'a')
 	     * // => ['a', 'b', 'c']
@@ -65281,7 +65568,7 @@
 	     * @since 4.0.0
 	     * @category Function
 	     * @param {Function} func The function to cap arguments for.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new capped function.
 	     * @example
 	     *
 	     * _.map(['6', '8', '10'], _.unary(parseInt));
@@ -65378,6 +65665,7 @@
 	     * @category Lang
 	     * @param {*} value The value to clone.
 	     * @returns {*} Returns the cloned value.
+	     * @see _.cloneDeep
 	     * @example
 	     *
 	     * var objects = [{ 'a': 1 }, { 'b': 2 }];
@@ -65403,6 +65691,7 @@
 	     * @param {*} value The value to clone.
 	     * @param {Function} [customizer] The function to customize cloning.
 	     * @returns {*} Returns the cloned value.
+	     * @see _.cloneDeepWith
 	     * @example
 	     *
 	     * function customizer(value) {
@@ -65433,6 +65722,7 @@
 	     * @category Lang
 	     * @param {*} value The value to recursively clone.
 	     * @returns {*} Returns the deep cloned value.
+	     * @see _.clone
 	     * @example
 	     *
 	     * var objects = [{ 'a': 1 }, { 'b': 2 }];
@@ -65455,6 +65745,7 @@
 	     * @param {*} value The value to recursively clone.
 	     * @param {Function} [customizer] The function to customize cloning.
 	     * @returns {*} Returns the deep cloned value.
+	     * @see _.cloneWith
 	     * @example
 	     *
 	     * function customizer(value) {
@@ -65523,6 +65814,7 @@
 	     * @param {*} other The other value to compare.
 	     * @returns {boolean} Returns `true` if `value` is greater than `other`,
 	     *  else `false`.
+	     * @see _.lt
 	     * @example
 	     *
 	     * _.gt(3, 1);
@@ -65534,9 +65826,7 @@
 	     * _.gt(1, 3);
 	     * // => false
 	     */
-	    function gt(value, other) {
-	      return value > other;
-	    }
+	    var gt = createRelationalOperation(baseGt);
 	
 	    /**
 	     * Checks if `value` is greater than or equal to `other`.
@@ -65549,6 +65839,7 @@
 	     * @param {*} other The other value to compare.
 	     * @returns {boolean} Returns `true` if `value` is greater than or equal to
 	     *  `other`, else `false`.
+	     * @see _.lte
 	     * @example
 	     *
 	     * _.gte(3, 1);
@@ -65560,9 +65851,9 @@
 	     * _.gte(1, 3);
 	     * // => false
 	     */
-	    function gte(value, other) {
+	    var gte = createRelationalOperation(function(value, other) {
 	      return value >= other;
-	    }
+	    });
 	
 	    /**
 	     * Checks if `value` is likely an `arguments` object.
@@ -65735,7 +66026,7 @@
 	     * _.isBuffer(new Uint8Array(2));
 	     * // => false
 	     */
-	    var isBuffer = !Buffer ? constant(false) : function(value) {
+	    var isBuffer = !Buffer ? stubFalse : function(value) {
 	      return value instanceof Buffer;
 	    };
 	
@@ -65953,13 +66244,13 @@
 	     * _.isFinite(3);
 	     * // => true
 	     *
-	     * _.isFinite(Number.MAX_VALUE);
-	     * // => true
-	     *
-	     * _.isFinite(3.14);
+	     * _.isFinite(Number.MIN_VALUE);
 	     * // => true
 	     *
 	     * _.isFinite(Infinity);
+	     * // => false
+	     *
+	     * _.isFinite('3');
 	     * // => false
 	     */
 	    function isFinite(value) {
@@ -66235,7 +66526,15 @@
 	    }
 	
 	    /**
-	     * Checks if `value` is a native function.
+	     * Checks if `value` is a pristine native function.
+	     *
+	     * **Note:** This method can't reliably detect native functions in the
+	     * presence of the `core-js` package because `core-js` circumvents this kind
+	     * of detection. Despite multiple requests, the `core-js` maintainer has made
+	     * it clear: any attempt to fix the detection will be obstructed. As a result,
+	     * we're left with little choice but to throw an error. Unfortunately, this
+	     * also affects packages, like [babel-polyfill](https://www.npmjs.com/package/babel-polyfill),
+	     * which rely on `core-js`.
 	     *
 	     * @static
 	     * @memberOf _
@@ -66253,11 +66552,10 @@
 	     * // => false
 	     */
 	    function isNative(value) {
-	      if (!isObject(value)) {
-	        return false;
+	      if (isMaskable(value)) {
+	        throw new Error('This method is not supported with `core-js`. Try https://github.com/es-shims.');
 	      }
-	      var pattern = (isFunction(value) || isHostObject(value)) ? reIsNative : reIsHostCtor;
-	      return pattern.test(toSource(value));
+	      return baseIsNative(value);
 	    }
 	
 	    /**
@@ -66601,6 +66899,7 @@
 	     * @param {*} other The other value to compare.
 	     * @returns {boolean} Returns `true` if `value` is less than `other`,
 	     *  else `false`.
+	     * @see _.gt
 	     * @example
 	     *
 	     * _.lt(1, 3);
@@ -66612,9 +66911,7 @@
 	     * _.lt(3, 1);
 	     * // => false
 	     */
-	    function lt(value, other) {
-	      return value < other;
-	    }
+	    var lt = createRelationalOperation(baseLt);
 	
 	    /**
 	     * Checks if `value` is less than or equal to `other`.
@@ -66627,6 +66924,7 @@
 	     * @param {*} other The other value to compare.
 	     * @returns {boolean} Returns `true` if `value` is less than or equal to
 	     *  `other`, else `false`.
+	     * @see _.gte
 	     * @example
 	     *
 	     * _.lte(1, 3);
@@ -66638,9 +66936,9 @@
 	     * _.lte(3, 1);
 	     * // => false
 	     */
-	    function lte(value, other) {
+	    var lte = createRelationalOperation(function(value, other) {
 	      return value <= other;
-	    }
+	    });
 	
 	    /**
 	     * Converts `value` to an array.
@@ -66682,9 +66980,44 @@
 	    }
 	
 	    /**
+	     * Converts `value` to a finite number.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @since 4.12.0
+	     * @category Lang
+	     * @param {*} value The value to convert.
+	     * @returns {number} Returns the converted number.
+	     * @example
+	     *
+	     * _.toFinite(3.2);
+	     * // => 3.2
+	     *
+	     * _.toFinite(Number.MIN_VALUE);
+	     * // => 5e-324
+	     *
+	     * _.toFinite(Infinity);
+	     * // => 1.7976931348623157e+308
+	     *
+	     * _.toFinite('3.2');
+	     * // => 3.2
+	     */
+	    function toFinite(value) {
+	      if (!value) {
+	        return value === 0 ? value : 0;
+	      }
+	      value = toNumber(value);
+	      if (value === INFINITY || value === -INFINITY) {
+	        var sign = (value < 0 ? -1 : 1);
+	        return sign * MAX_INTEGER;
+	      }
+	      return value === value ? value : 0;
+	    }
+	
+	    /**
 	     * Converts `value` to an integer.
 	     *
-	     * **Note:** This function is loosely based on
+	     * **Note:** This method is loosely based on
 	     * [`ToInteger`](http://www.ecma-international.org/ecma-262/6.0/#sec-tointeger).
 	     *
 	     * @static
@@ -66695,7 +67028,7 @@
 	     * @returns {number} Returns the converted integer.
 	     * @example
 	     *
-	     * _.toInteger(3);
+	     * _.toInteger(3.2);
 	     * // => 3
 	     *
 	     * _.toInteger(Number.MIN_VALUE);
@@ -66704,20 +67037,14 @@
 	     * _.toInteger(Infinity);
 	     * // => 1.7976931348623157e+308
 	     *
-	     * _.toInteger('3');
+	     * _.toInteger('3.2');
 	     * // => 3
 	     */
 	    function toInteger(value) {
-	      if (!value) {
-	        return value === 0 ? value : 0;
-	      }
-	      value = toNumber(value);
-	      if (value === INFINITY || value === -INFINITY) {
-	        var sign = (value < 0 ? -1 : 1);
-	        return sign * MAX_INTEGER;
-	      }
-	      var remainder = value % 1;
-	      return value === value ? (remainder ? value - remainder : value) : 0;
+	      var result = toFinite(value),
+	          remainder = result % 1;
+	
+	      return result === result ? (remainder ? result - remainder : result) : 0;
 	    }
 	
 	    /**
@@ -66735,7 +67062,7 @@
 	     * @returns {number} Returns the converted integer.
 	     * @example
 	     *
-	     * _.toLength(3);
+	     * _.toLength(3.2);
 	     * // => 3
 	     *
 	     * _.toLength(Number.MIN_VALUE);
@@ -66744,7 +67071,7 @@
 	     * _.toLength(Infinity);
 	     * // => 4294967295
 	     *
-	     * _.toLength('3');
+	     * _.toLength('3.2');
 	     * // => 3
 	     */
 	    function toLength(value) {
@@ -66762,8 +67089,8 @@
 	     * @returns {number} Returns the number.
 	     * @example
 	     *
-	     * _.toNumber(3);
-	     * // => 3
+	     * _.toNumber(3.2);
+	     * // => 3.2
 	     *
 	     * _.toNumber(Number.MIN_VALUE);
 	     * // => 5e-324
@@ -66771,8 +67098,8 @@
 	     * _.toNumber(Infinity);
 	     * // => Infinity
 	     *
-	     * _.toNumber('3');
-	     * // => 3
+	     * _.toNumber('3.2');
+	     * // => 3.2
 	     */
 	    function toNumber(value) {
 	      if (typeof value == 'number') {
@@ -66835,7 +67162,7 @@
 	     * @returns {number} Returns the converted integer.
 	     * @example
 	     *
-	     * _.toSafeInteger(3);
+	     * _.toSafeInteger(3.2);
 	     * // => 3
 	     *
 	     * _.toSafeInteger(Number.MIN_VALUE);
@@ -66844,7 +67171,7 @@
 	     * _.toSafeInteger(Infinity);
 	     * // => 9007199254740991
 	     *
-	     * _.toSafeInteger('3');
+	     * _.toSafeInteger('3.2');
 	     * // => 3
 	     */
 	    function toSafeInteger(value) {
@@ -66873,18 +67200,7 @@
 	     * // => '1,2,3'
 	     */
 	    function toString(value) {
-	      // Exit early for strings to avoid a performance hit in some environments.
-	      if (typeof value == 'string') {
-	        return value;
-	      }
-	      if (value == null) {
-	        return '';
-	      }
-	      if (isSymbol(value)) {
-	        return symbolToString ? symbolToString.call(value) : '';
-	      }
-	      var result = (value + '');
-	      return (result == '0' && (1 / value) == -INFINITY) ? '-0' : result;
+	      return value == null ? '' : baseToString(value);
 	    }
 	
 	    /*------------------------------------------------------------------------*/
@@ -66904,6 +67220,7 @@
 	     * @param {Object} object The destination object.
 	     * @param {...Object} [sources] The source objects.
 	     * @returns {Object} Returns `object`.
+	     * @see _.assignIn
 	     * @example
 	     *
 	     * function Foo() {
@@ -66946,6 +67263,7 @@
 	     * @param {Object} object The destination object.
 	     * @param {...Object} [sources] The source objects.
 	     * @returns {Object} Returns `object`.
+	     * @see _.assign
 	     * @example
 	     *
 	     * function Foo() {
@@ -66989,6 +67307,7 @@
 	     * @param {...Object} sources The source objects.
 	     * @param {Function} [customizer] The function to customize assigned values.
 	     * @returns {Object} Returns `object`.
+	     * @see _.assignWith
 	     * @example
 	     *
 	     * function customizer(objValue, srcValue) {
@@ -67020,6 +67339,7 @@
 	     * @param {...Object} sources The source objects.
 	     * @param {Function} [customizer] The function to customize assigned values.
 	     * @returns {Object} Returns `object`.
+	     * @see _.assignInWith
 	     * @example
 	     *
 	     * function customizer(objValue, srcValue) {
@@ -67044,16 +67364,13 @@
 	     * @category Object
 	     * @param {Object} object The object to iterate over.
 	     * @param {...(string|string[])} [paths] The property paths of elements to pick.
-	     * @returns {Array} Returns the new array of picked elements.
+	     * @returns {Array} Returns the picked values.
 	     * @example
 	     *
 	     * var object = { 'a': [{ 'b': { 'c': 3 } }, 4] };
 	     *
 	     * _.at(object, ['a[0].b.c', 'a[1]']);
 	     * // => [3, 4]
-	     *
-	     * _.at(['a', 'b', 'c'], 0, 2);
-	     * // => ['a', 'c']
 	     */
 	    var at = rest(function(object, paths) {
 	      return baseAt(object, baseFlatten(paths, 1));
@@ -67113,6 +67430,7 @@
 	     * @param {Object} object The destination object.
 	     * @param {...Object} [sources] The source objects.
 	     * @returns {Object} Returns `object`.
+	     * @see _.defaultsDeep
 	     * @example
 	     *
 	     * _.defaults({ 'user': 'barney' }, { 'age': 36 }, { 'user': 'fred' });
@@ -67136,6 +67454,7 @@
 	     * @param {Object} object The destination object.
 	     * @param {...Object} [sources] The source objects.
 	     * @returns {Object} Returns `object`.
+	     * @see _.defaults
 	     * @example
 	     *
 	     * _.defaultsDeep({ 'user': { 'name': 'barney' } }, { 'user': { 'name': 'fred', 'age': 36 } });
@@ -67184,7 +67503,7 @@
 	     * // => 'barney'
 	     */
 	    function findKey(object, predicate) {
-	      return baseFind(object, getIteratee(predicate, 3), baseForOwn, true);
+	      return baseFindKey(object, getIteratee(predicate, 3), baseForOwn);
 	    }
 	
 	    /**
@@ -67224,7 +67543,7 @@
 	     * // => 'pebbles'
 	     */
 	    function findLastKey(object, predicate) {
-	      return baseFind(object, getIteratee(predicate, 3), baseForOwnRight, true);
+	      return baseFindKey(object, getIteratee(predicate, 3), baseForOwnRight);
 	    }
 	
 	    /**
@@ -67240,6 +67559,7 @@
 	     * @param {Object} object The object to iterate over.
 	     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
 	     * @returns {Object} Returns `object`.
+	     * @see _.forInRight
 	     * @example
 	     *
 	     * function Foo() {
@@ -67257,7 +67577,7 @@
 	    function forIn(object, iteratee) {
 	      return object == null
 	        ? object
-	        : baseFor(object, getIteratee(iteratee), keysIn);
+	        : baseFor(object, getIteratee(iteratee, 3), keysIn);
 	    }
 	
 	    /**
@@ -67271,6 +67591,7 @@
 	     * @param {Object} object The object to iterate over.
 	     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
 	     * @returns {Object} Returns `object`.
+	     * @see _.forIn
 	     * @example
 	     *
 	     * function Foo() {
@@ -67288,7 +67609,7 @@
 	    function forInRight(object, iteratee) {
 	      return object == null
 	        ? object
-	        : baseForRight(object, getIteratee(iteratee), keysIn);
+	        : baseForRight(object, getIteratee(iteratee, 3), keysIn);
 	    }
 	
 	    /**
@@ -67304,6 +67625,7 @@
 	     * @param {Object} object The object to iterate over.
 	     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
 	     * @returns {Object} Returns `object`.
+	     * @see _.forOwnRight
 	     * @example
 	     *
 	     * function Foo() {
@@ -67319,7 +67641,7 @@
 	     * // => Logs 'a' then 'b' (iteration order is not guaranteed).
 	     */
 	    function forOwn(object, iteratee) {
-	      return object && baseForOwn(object, getIteratee(iteratee));
+	      return object && baseForOwn(object, getIteratee(iteratee, 3));
 	    }
 	
 	    /**
@@ -67333,6 +67655,7 @@
 	     * @param {Object} object The object to iterate over.
 	     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
 	     * @returns {Object} Returns `object`.
+	     * @see _.forOwn
 	     * @example
 	     *
 	     * function Foo() {
@@ -67348,7 +67671,7 @@
 	     * // => Logs 'b' then 'a' assuming `_.forOwn` logs 'a' then 'b'.
 	     */
 	    function forOwnRight(object, iteratee) {
-	      return object && baseForOwnRight(object, getIteratee(iteratee));
+	      return object && baseForOwnRight(object, getIteratee(iteratee, 3));
 	    }
 	
 	    /**
@@ -67360,7 +67683,8 @@
 	     * @memberOf _
 	     * @category Object
 	     * @param {Object} object The object to inspect.
-	     * @returns {Array} Returns the new array of property names.
+	     * @returns {Array} Returns the function names.
+	     * @see _.functionsIn
 	     * @example
 	     *
 	     * function Foo() {
@@ -67386,7 +67710,8 @@
 	     * @since 4.0.0
 	     * @category Object
 	     * @param {Object} object The object to inspect.
-	     * @returns {Array} Returns the new array of property names.
+	     * @returns {Array} Returns the function names.
+	     * @see _.functions
 	     * @example
 	     *
 	     * function Foo() {
@@ -67676,6 +68001,7 @@
 	     * @param {Array|Function|Object|string} [iteratee=_.identity]
 	     *  The function invoked per iteration.
 	     * @returns {Object} Returns the new mapped object.
+	     * @see _.mapValues
 	     * @example
 	     *
 	     * _.mapKeys({ 'a': 1, 'b': 2 }, function(value, key) {
@@ -67707,6 +68033,7 @@
 	     * @param {Array|Function|Object|string} [iteratee=_.identity]
 	     *  The function invoked per iteration.
 	     * @returns {Object} Returns the new mapped object.
+	     * @see _.mapKeys
 	     * @example
 	     *
 	     * var users = {
@@ -67736,7 +68063,7 @@
 	     * inherited enumerable string keyed properties of source objects into the
 	     * destination object. Source properties that resolve to `undefined` are
 	     * skipped if a destination value exists. Array and plain object properties
-	     * are merged recursively.Other objects and value types are overridden by
+	     * are merged recursively. Other objects and value types are overridden by
 	     * assignment. Source objects are applied from left to right. Subsequent
 	     * sources overwrite property assignments of previous sources.
 	     *
@@ -67881,7 +68208,7 @@
 	     * // => { 'a': 1, 'c': 3 }
 	     */
 	    var pick = rest(function(object, props) {
-	      return object == null ? {} : basePick(object, baseFlatten(props, 1));
+	      return object == null ? {} : basePick(object, arrayMap(baseFlatten(props, 1), toKey));
 	    });
 	
 	    /**
@@ -67948,7 +68275,7 @@
 	        length = 1;
 	      }
 	      while (++index < length) {
-	        var value = object == null ? undefined : object[path[index]];
+	        var value = object == null ? undefined : object[toKey(path[index])];
 	        if (value === undefined) {
 	          index = length;
 	          value = defaultValue;
@@ -68021,7 +68348,8 @@
 	
 	    /**
 	     * Creates an array of own enumerable string keyed-value pairs for `object`
-	     * which can be consumed by `_.fromPairs`.
+	     * which can be consumed by `_.fromPairs`. If `object` is a map or set, its
+	     * entries are returned.
 	     *
 	     * @static
 	     * @memberOf _
@@ -68029,7 +68357,7 @@
 	     * @alias entries
 	     * @category Object
 	     * @param {Object} object The object to query.
-	     * @returns {Array} Returns the new array of key-value pairs.
+	     * @returns {Array} Returns the key-value pairs.
 	     * @example
 	     *
 	     * function Foo() {
@@ -68042,13 +68370,12 @@
 	     * _.toPairs(new Foo);
 	     * // => [['a', 1], ['b', 2]] (iteration order is not guaranteed)
 	     */
-	    function toPairs(object) {
-	      return baseToPairs(object, keys(object));
-	    }
+	    var toPairs = createToPairs(keys);
 	
 	    /**
 	     * Creates an array of own and inherited enumerable string keyed-value pairs
-	     * for `object` which can be consumed by `_.fromPairs`.
+	     * for `object` which can be consumed by `_.fromPairs`. If `object` is a map
+	     * or set, its entries are returned.
 	     *
 	     * @static
 	     * @memberOf _
@@ -68056,7 +68383,7 @@
 	     * @alias entriesIn
 	     * @category Object
 	     * @param {Object} object The object to query.
-	     * @returns {Array} Returns the new array of key-value pairs.
+	     * @returns {Array} Returns the key-value pairs.
 	     * @example
 	     *
 	     * function Foo() {
@@ -68067,25 +68394,24 @@
 	     * Foo.prototype.c = 3;
 	     *
 	     * _.toPairsIn(new Foo);
-	     * // => [['a', 1], ['b', 2], ['c', 1]] (iteration order is not guaranteed)
+	     * // => [['a', 1], ['b', 2], ['c', 3]] (iteration order is not guaranteed)
 	     */
-	    function toPairsIn(object) {
-	      return baseToPairs(object, keysIn(object));
-	    }
+	    var toPairsIn = createToPairs(keysIn);
 	
 	    /**
 	     * An alternative to `_.reduce`; this method transforms `object` to a new
 	     * `accumulator` object which is the result of running each of its own
 	     * enumerable string keyed properties thru `iteratee`, with each invocation
-	     * potentially mutating the `accumulator` object. The iteratee is invoked
-	     * with four arguments: (accumulator, value, key, object). Iteratee functions
-	     * may exit iteration early by explicitly returning `false`.
+	     * potentially mutating the `accumulator` object. If `accumulator` is not
+	     * provided, a new object with the same `[[Prototype]]` will be used. The
+	     * iteratee is invoked with four arguments: (accumulator, value, key, object).
+	     * Iteratee functions may exit iteration early by explicitly returning `false`.
 	     *
 	     * @static
 	     * @memberOf _
 	     * @since 1.3.0
 	     * @category Object
-	     * @param {Array|Object} object The object to iterate over.
+	     * @param {Object} object The object to iterate over.
 	     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
 	     * @param {*} [accumulator] The custom accumulator value.
 	     * @returns {*} Returns the accumulated value.
@@ -68311,7 +68637,7 @@
 	    }
 	
 	    /**
-	     * Checks if `n` is between `start` and up to but not including, `end`. If
+	     * Checks if `n` is between `start` and up to, but not including, `end`. If
 	     * `end` is not specified, it's set to `start` with `start` then set to `0`.
 	     * If `start` is greater than `end` the params are swapped to support
 	     * negative ranges.
@@ -68324,6 +68650,7 @@
 	     * @param {number} [start=0] The start of the range.
 	     * @param {number} end The end of the range.
 	     * @returns {boolean} Returns `true` if `number` is in the range, else `false`.
+	     * @see _.range, _.rangeRight
 	     * @example
 	     *
 	     * _.inRange(3, 2, 4);
@@ -68506,7 +68833,7 @@
 	     * @category String
 	     * @param {string} [string=''] The string to search.
 	     * @param {string} [target] The string to search for.
-	     * @param {number} [position=string.length] The position to search from.
+	     * @param {number} [position=string.length] The position to search up to.
 	     * @returns {boolean} Returns `true` if `string` ends with `target`,
 	     *  else `false`.
 	     * @example
@@ -68522,7 +68849,7 @@
 	     */
 	    function endsWith(string, target, position) {
 	      string = toString(string);
-	      target = typeof target == 'string' ? target : (target + '');
+	      target = baseToString(target);
 	
 	      var length = string.length;
 	      position = position === undefined
@@ -68900,7 +69227,7 @@
 	     * @param {string} [string=''] The string to split.
 	     * @param {RegExp|string} separator The separator pattern to split by.
 	     * @param {number} [limit] The length to truncate results to.
-	     * @returns {Array} Returns the new array of string segments.
+	     * @returns {Array} Returns the string segments.
 	     * @example
 	     *
 	     * _.split('a-b-c', '-', 2);
@@ -68919,7 +69246,7 @@
 	            typeof separator == 'string' ||
 	            (separator != null && !isRegExp(separator))
 	          )) {
-	        separator += '';
+	        separator = baseToString(separator);
 	        if (separator == '' && reHasComplexSymbol.test(string)) {
 	          return castSlice(stringToArray(string), 0, limit);
 	        }
@@ -68978,7 +69305,7 @@
 	    function startsWith(string, target, position) {
 	      string = toString(string);
 	      position = baseClamp(toInteger(position), 0, string.length);
-	      return string.lastIndexOf(target, position) == position;
+	      return string.lastIndexOf(baseToString(target), position) == position;
 	    }
 	
 	    /**
@@ -69045,12 +69372,6 @@
 	     * compiled({ 'user': 'pebbles' });
 	     * // => 'hello pebbles!'
 	     *
-	     * // Use custom template delimiters.
-	     * _.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
-	     * var compiled = _.template('hello {{ user }}!');
-	     * compiled({ 'user': 'mustache' });
-	     * // => 'hello mustache!'
-	     *
 	     * // Use backslashes to treat delimiters as plain text.
 	     * var compiled = _.template('<%= "\\<%- value %\\>" %>');
 	     * compiled({ 'value': 'ignored' });
@@ -69076,9 +69397,15 @@
 	     * //   return __p;
 	     * // }
 	     *
+	     * // Use custom template delimiters.
+	     * _.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
+	     * var compiled = _.template('hello {{ user }}!');
+	     * compiled({ 'user': 'mustache' });
+	     * // => 'hello mustache!'
+	     *
 	     * // Use the `source` property to inline compiled templates for meaningful
 	     * // line numbers in error messages and stack traces.
-	     * fs.writeFileSync(path.join(cwd, 'jst.js'), '\
+	     * fs.writeFileSync(path.join(process.cwd(), 'jst.js'), '\
 	     *   var JST = {\
 	     *     "main": ' + _.template(mainText).source + '\
 	     *   };\
@@ -69266,13 +69593,10 @@
 	     */
 	    function trim(string, chars, guard) {
 	      string = toString(string);
-	      if (!string) {
-	        return string;
-	      }
-	      if (guard || chars === undefined) {
+	      if (string && (guard || chars === undefined)) {
 	        return string.replace(reTrim, '');
 	      }
-	      if (!(chars += '')) {
+	      if (!string || !(chars = baseToString(chars))) {
 	        return string;
 	      }
 	      var strSymbols = stringToArray(string),
@@ -69304,13 +69628,10 @@
 	     */
 	    function trimEnd(string, chars, guard) {
 	      string = toString(string);
-	      if (!string) {
-	        return string;
-	      }
-	      if (guard || chars === undefined) {
+	      if (string && (guard || chars === undefined)) {
 	        return string.replace(reTrimEnd, '');
 	      }
-	      if (!(chars += '')) {
+	      if (!string || !(chars = baseToString(chars))) {
 	        return string;
 	      }
 	      var strSymbols = stringToArray(string),
@@ -69340,13 +69661,10 @@
 	     */
 	    function trimStart(string, chars, guard) {
 	      string = toString(string);
-	      if (!string) {
-	        return string;
-	      }
-	      if (guard || chars === undefined) {
+	      if (string && (guard || chars === undefined)) {
 	        return string.replace(reTrimStart, '');
 	      }
-	      if (!(chars += '')) {
+	      if (!string || !(chars = baseToString(chars))) {
 	        return string;
 	      }
 	      var strSymbols = stringToArray(string),
@@ -69399,7 +69717,7 @@
 	      if (isObject(options)) {
 	        var separator = 'separator' in options ? options.separator : separator;
 	        length = 'length' in options ? toInteger(options.length) : length;
-	        omission = 'omission' in options ? toString(options.omission) : omission;
+	        omission = 'omission' in options ? baseToString(options.omission) : omission;
 	      }
 	      string = toString(string);
 	
@@ -69439,7 +69757,7 @@
 	          }
 	          result = result.slice(0, newEnd === undefined ? end : newEnd);
 	        }
-	      } else if (string.indexOf(separator, end) != end) {
+	      } else if (string.indexOf(baseToString(separator), end) != end) {
 	        var index = result.lastIndexOf(separator);
 	        if (index > -1) {
 	          result = result.slice(0, index);
@@ -69600,12 +69918,13 @@
 	     *   }
 	     * };
 	     *
-	     * _.bindAll(view, 'onClick');
+	     * _.bindAll(view, ['onClick']);
 	     * jQuery(element).on('click', view.onClick);
 	     * // => Logs 'clicked docs' when clicked.
 	     */
 	    var bindAll = rest(function(object, methodNames) {
 	      arrayEach(baseFlatten(methodNames, 1), function(key) {
+	        key = toKey(key);
 	        object[key] = bind(object[key], object);
 	      });
 	      return object;
@@ -69622,7 +69941,7 @@
 	     * @since 4.0.0
 	     * @category Util
 	     * @param {Array} pairs The predicate-function pairs.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new composite function.
 	     * @example
 	     *
 	     * var func = _.cond([
@@ -69672,7 +69991,7 @@
 	     * @since 4.0.0
 	     * @category Util
 	     * @param {Object} source The object of property predicates to conform to.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new spec function.
 	     * @example
 	     *
 	     * var users = [
@@ -69680,7 +69999,7 @@
 	     *   { 'user': 'fred',   'age': 40 }
 	     * ];
 	     *
-	     * _.filter(users, _.conforms({ 'age': _.partial(_.gt, _, 38) }));
+	     * _.filter(users, _.conforms({ 'age': function(n) { return n > 38; } }));
 	     * // => [{ 'user': 'fred', 'age': 40 }]
 	     */
 	    function conforms(source) {
@@ -69695,13 +70014,15 @@
 	     * @since 2.4.0
 	     * @category Util
 	     * @param {*} value The value to return from the new function.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new constant function.
 	     * @example
 	     *
-	     * var object = { 'user': 'fred' };
-	     * var getter = _.constant(object);
+	     * var objects = _.times(2, _.constant({ 'a': 1 }));
 	     *
-	     * getter() === object;
+	     * console.log(objects);
+	     * // => [{ 'a': 1 }, { 'a': 1 }]
+	     *
+	     * console.log(objects[0] === objects[1]);
 	     * // => true
 	     */
 	    function constant(value) {
@@ -69720,14 +70041,15 @@
 	     * @since 3.0.0
 	     * @category Util
 	     * @param {...(Function|Function[])} [funcs] Functions to invoke.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new composite function.
+	     * @see _.flowRight
 	     * @example
 	     *
 	     * function square(n) {
 	     *   return n * n;
 	     * }
 	     *
-	     * var addSquare = _.flow(_.add, square);
+	     * var addSquare = _.flow([_.add, square]);
 	     * addSquare(1, 2);
 	     * // => 9
 	     */
@@ -69738,18 +70060,19 @@
 	     * invokes the given functions from right to left.
 	     *
 	     * @static
-	     * @since 0.1.0
+	     * @since 3.0.0
 	     * @memberOf _
 	     * @category Util
 	     * @param {...(Function|Function[])} [funcs] Functions to invoke.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new composite function.
+	     * @see _.flow
 	     * @example
 	     *
 	     * function square(n) {
 	     *   return n * n;
 	     * }
 	     *
-	     * var addSquare = _.flowRight(square, _.add);
+	     * var addSquare = _.flowRight([square, _.add]);
 	     * addSquare(1, 2);
 	     * // => 9
 	     */
@@ -69768,7 +70091,7 @@
 	     *
 	     * var object = { 'user': 'fred' };
 	     *
-	     * _.identity(object) === object;
+	     * console.log(_.identity(object) === object);
 	     * // => true
 	     */
 	    function identity(value) {
@@ -69834,7 +70157,7 @@
 	     * @since 3.0.0
 	     * @category Util
 	     * @param {Object} source The object of property values to match.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new spec function.
 	     * @example
 	     *
 	     * var users = [
@@ -69862,7 +70185,7 @@
 	     * @category Util
 	     * @param {Array|string} path The path of the property to get.
 	     * @param {*} srcValue The value to match.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new spec function.
 	     * @example
 	     *
 	     * var users = [
@@ -69887,7 +70210,7 @@
 	     * @category Util
 	     * @param {Array|string} path The path of the method to invoke.
 	     * @param {...*} [args] The arguments to invoke the method with.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new invoker function.
 	     * @example
 	     *
 	     * var objects = [
@@ -69918,7 +70241,7 @@
 	     * @category Util
 	     * @param {Object} object The object to query.
 	     * @param {...*} [args] The arguments to invoke the method with.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new invoker function.
 	     * @example
 	     *
 	     * var array = _.times(3, _.constant),
@@ -70029,8 +70352,7 @@
 	    }
 	
 	    /**
-	     * A no-operation function that returns `undefined` regardless of the
-	     * arguments it receives.
+	     * A method that returns `undefined`.
 	     *
 	     * @static
 	     * @memberOf _
@@ -70038,17 +70360,15 @@
 	     * @category Util
 	     * @example
 	     *
-	     * var object = { 'user': 'fred' };
-	     *
-	     * _.noop(object) === undefined;
-	     * // => true
+	     * _.times(2, _.noop);
+	     * // => [undefined, undefined]
 	     */
 	    function noop() {
 	      // No operation performed.
 	    }
 	
 	    /**
-	     * Creates a function that returns its nth argument. If `n` is negative,
+	     * Creates a function that gets the argument at index `n`. If `n` is negative,
 	     * the nth argument from the end is returned.
 	     *
 	     * @static
@@ -70056,7 +70376,7 @@
 	     * @since 4.0.0
 	     * @category Util
 	     * @param {number} [n=0] The index of the argument to return.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new pass-thru function.
 	     * @example
 	     *
 	     * var func = _.nthArg(1);
@@ -70087,7 +70407,7 @@
 	     * @returns {Function} Returns the new function.
 	     * @example
 	     *
-	     * var func = _.over(Math.max, Math.min);
+	     * var func = _.over([Math.max, Math.min]);
 	     *
 	     * func(1, 2, 3, 4);
 	     * // => [4, 1]
@@ -70107,7 +70427,7 @@
 	     * @returns {Function} Returns the new function.
 	     * @example
 	     *
-	     * var func = _.overEvery(Boolean, isFinite);
+	     * var func = _.overEvery([Boolean, isFinite]);
 	     *
 	     * func('1');
 	     * // => true
@@ -70133,7 +70453,7 @@
 	     * @returns {Function} Returns the new function.
 	     * @example
 	     *
-	     * var func = _.overSome(Boolean, isFinite);
+	     * var func = _.overSome([Boolean, isFinite]);
 	     *
 	     * func('1');
 	     * // => true
@@ -70154,7 +70474,7 @@
 	     * @since 2.4.0
 	     * @category Util
 	     * @param {Array|string} path The path of the property to get.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new accessor function.
 	     * @example
 	     *
 	     * var objects = [
@@ -70169,7 +70489,7 @@
 	     * // => [1, 2]
 	     */
 	    function property(path) {
-	      return isKey(path) ? baseProperty(path) : basePropertyDeep(path);
+	      return isKey(path) ? baseProperty(toKey(path)) : basePropertyDeep(path);
 	    }
 	
 	    /**
@@ -70181,7 +70501,7 @@
 	     * @since 3.0.0
 	     * @category Util
 	     * @param {Object} object The object to query.
-	     * @returns {Function} Returns the new function.
+	     * @returns {Function} Returns the new accessor function.
 	     * @example
 	     *
 	     * var array = [0, 1, 2],
@@ -70215,7 +70535,8 @@
 	     * @param {number} [start=0] The start of the range.
 	     * @param {number} end The end of the range.
 	     * @param {number} [step=1] The value to increment or decrement by.
-	     * @returns {Array} Returns the new array of numbers.
+	     * @returns {Array} Returns the range of numbers.
+	     * @see _.inRange, _.rangeRight
 	     * @example
 	     *
 	     * _.range(4);
@@ -70252,7 +70573,8 @@
 	     * @param {number} [start=0] The start of the range.
 	     * @param {number} end The end of the range.
 	     * @param {number} [step=1] The value to increment or decrement by.
-	     * @returns {Array} Returns the new array of numbers.
+	     * @returns {Array} Returns the range of numbers.
+	     * @see _.inRange, _.range
 	     * @example
 	     *
 	     * _.rangeRight(4);
@@ -70279,6 +70601,101 @@
 	    var rangeRight = createRange(true);
 	
 	    /**
+	     * A method that returns a new empty array.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @since 4.13.0
+	     * @category Util
+	     * @returns {Array} Returns the new empty array.
+	     * @example
+	     *
+	     * var arrays = _.times(2, _.stubArray);
+	     *
+	     * console.log(arrays);
+	     * // => [[], []]
+	     *
+	     * console.log(arrays[0] === arrays[1]);
+	     * // => false
+	     */
+	    function stubArray() {
+	      return [];
+	    }
+	
+	    /**
+	     * A method that returns `false`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @since 4.13.0
+	     * @category Util
+	     * @returns {boolean} Returns `false`.
+	     * @example
+	     *
+	     * _.times(2, _.stubFalse);
+	     * // => [false, false]
+	     */
+	    function stubFalse() {
+	      return false;
+	    }
+	
+	    /**
+	     * A method that returns a new empty object.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @since 4.13.0
+	     * @category Util
+	     * @returns {Object} Returns the new empty object.
+	     * @example
+	     *
+	     * var objects = _.times(2, _.stubObject);
+	     *
+	     * console.log(objects);
+	     * // => [{}, {}]
+	     *
+	     * console.log(objects[0] === objects[1]);
+	     * // => false
+	     */
+	    function stubObject() {
+	      return {};
+	    }
+	
+	    /**
+	     * A method that returns an empty string.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @since 4.13.0
+	     * @category Util
+	     * @returns {string} Returns the empty string.
+	     * @example
+	     *
+	     * _.times(2, _.stubString);
+	     * // => ['', '']
+	     */
+	    function stubString() {
+	      return '';
+	    }
+	
+	    /**
+	     * A method that returns `true`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @since 4.13.0
+	     * @category Util
+	     * @returns {boolean} Returns `true`.
+	     * @example
+	     *
+	     * _.times(2, _.stubTrue);
+	     * // => [true, true]
+	     */
+	    function stubTrue() {
+	      return true;
+	    }
+	
+	    /**
 	     * Invokes the iteratee `n` times, returning an array of the results of
 	     * each invocation. The iteratee is invoked with one argument; (index).
 	     *
@@ -70294,8 +70711,8 @@
 	     * _.times(3, String);
 	     * // => ['0', '1', '2']
 	     *
-	     *  _.times(4, _.constant(true));
-	     * // => [true, true, true, true]
+	     *  _.times(4, _.constant(0));
+	     * // => [0, 0, 0, 0]
 	     */
 	    function times(n, iteratee) {
 	      n = toInteger(n);
@@ -70331,15 +70748,6 @@
 	     *
 	     * _.toPath('a[0].b.c');
 	     * // => ['a', '0', 'b', 'c']
-	     *
-	     * var path = ['a', 'b', 'c'],
-	     *     newPath = _.toPath(path);
-	     *
-	     * console.log(newPath);
-	     * // => ['a', 'b', 'c']
-	     *
-	     * console.log(path === newPath);
-	     * // => false
 	     */
 	    function toPath(value) {
 	      if (isArray(value)) {
@@ -70476,7 +70884,7 @@
 	     */
 	    function max(array) {
 	      return (array && array.length)
-	        ? baseExtremum(array, identity, gt)
+	        ? baseExtremum(array, identity, baseGt)
 	        : undefined;
 	    }
 	
@@ -70506,7 +70914,7 @@
 	     */
 	    function maxBy(array, iteratee) {
 	      return (array && array.length)
-	        ? baseExtremum(array, getIteratee(iteratee), gt)
+	        ? baseExtremum(array, getIteratee(iteratee), baseGt)
 	        : undefined;
 	    }
 	
@@ -70576,7 +70984,7 @@
 	     */
 	    function min(array) {
 	      return (array && array.length)
-	        ? baseExtremum(array, identity, lt)
+	        ? baseExtremum(array, identity, baseLt)
 	        : undefined;
 	    }
 	
@@ -70606,7 +71014,7 @@
 	     */
 	    function minBy(array, iteratee) {
 	      return (array && array.length)
-	        ? baseExtremum(array, getIteratee(iteratee), lt)
+	        ? baseExtremum(array, getIteratee(iteratee), baseLt)
 	        : undefined;
 	    }
 	
@@ -70978,6 +71386,11 @@
 	    lodash.meanBy = meanBy;
 	    lodash.min = min;
 	    lodash.minBy = minBy;
+	    lodash.stubArray = stubArray;
+	    lodash.stubFalse = stubFalse;
+	    lodash.stubObject = stubObject;
+	    lodash.stubString = stubString;
+	    lodash.stubTrue = stubTrue;
 	    lodash.multiply = multiply;
 	    lodash.nth = nth;
 	    lodash.noConflict = noConflict;
@@ -71012,6 +71425,7 @@
 	    lodash.sumBy = sumBy;
 	    lodash.template = template;
 	    lodash.times = times;
+	    lodash.toFinite = toFinite;
 	    lodash.toInteger = toInteger;
 	    lodash.toLength = toLength;
 	    lodash.toLower = toLower;
@@ -71278,10 +71692,12 @@
 	  // Export lodash.
 	  var _ = runInContext();
 	
-	  // Expose lodash on the free variable `window` or `self` when available. This
-	  // prevents errors in cases where lodash is loaded by a script tag in the presence
-	  // of an AMD loader. See http://requirejs.org/docs/errors.html#mismatch for more details.
-	  (freeWindow || freeSelf || {})._ = _;
+	  // Expose Lodash on the free variable `window` or `self` when available so it's
+	  // globally accessible, even when bundled with Browserify, Webpack, etc. This
+	  // also prevents errors in cases where Lodash is loaded by a script tag in the
+	  // presence of an AMD loader. See http://requirejs.org/docs/errors.html#mismatch
+	  // for more details. Use `_.noConflict` to remove Lodash from the global object.
+	  (freeSelf || {})._ = _;
 	
 	  // Some AMD build optimizers like r.js check for condition patterns like the following:
 	  if (true) {
@@ -71292,11 +71708,9 @@
 	    }.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	  }
 	  // Check for `exports` after `define` in case a build optimizer adds an `exports` object.
-	  else if (freeExports && freeModule) {
+	  else if (freeModule) {
 	    // Export for Node.js.
-	    if (moduleExports) {
-	      (freeModule.exports = _)._ = _;
-	    }
+	    (freeModule.exports = _)._ = _;
 	    // Export for CommonJS support.
 	    freeExports._ = _;
 	  }
@@ -71334,7 +71748,7 @@
   \***********************************************************/
 /***/ function(module, exports) {
 
-	/*! angular-google-maps 2.3.2 2016-02-11
+	/*! angular-google-maps 2.3.3 2016-05-13
 	 *  AngularJS directives for Google Maps
 	 *  git: https://github.com/angular-ui/angular-google-maps.git
 	 */
@@ -72372,7 +72786,7 @@
 	}).call(this);
 	;(function() {
 	  angular.module('uiGmapgoogle-maps.directives.api.utils').service('uiGmapFitHelper', [
-	    'uiGmapLogger', function($log) {
+	    'uiGmapLogger', '$timeout', function($log, $timeout) {
 	      return {
 	        fit: function(markersOrPoints, gMap) {
 	          var bounds, everSet, key, markerOrPoint, point;
@@ -72390,7 +72804,9 @@
 	              bounds.extend(point);
 	            }
 	            if (everSet) {
-	              return gMap.fitBounds(bounds);
+	              return $timeout(function() {
+	                return gMap.fitBounds(bounds);
+	              });
 	            }
 	          }
 	        }
@@ -72434,7 +72850,9 @@
 	        if (!value) {
 	          return;
 	        }
-	        if (Array.isArray(value) && value.length === 2) {
+	        if (value instanceof google.maps.LatLng) {
+	          return value;
+	        } else if (Array.isArray(value) && value.length === 2) {
 	          return new google.maps.LatLng(value[1], value[0]);
 	        } else if (angular.isDefined(value.type) && value.type === 'Point') {
 	          return new google.maps.LatLng(value.coordinates[1], value.coordinates[0]);
@@ -77406,12 +77824,16 @@
 	          Control.__super__.constructor.call(this);
 	        }
 	
-	        Control.prototype.link = function(scope, element, attrs, ctrl) {
+	        Control.prototype.transclude = true;
+	
+	        Control.prototype.link = function(scope, element, attrs, ctrl, transclude) {
 	          return GoogleMapApi.then((function(_this) {
 	            return function(maps) {
-	              var index, position;
-	              if (angular.isUndefined(scope.template)) {
-	                _this.$log.error('mapControl: could not find a valid template property');
+	              var hasTranscludedContent, index, position, transcludedContent;
+	              transcludedContent = transclude();
+	              hasTranscludedContent = transclude().length > 0;
+	              if (!hasTranscludedContent && angular.isUndefined(scope.template)) {
+	                _this.$log.error('mapControl: could not find a valid template property or elements for transclusion');
 	                return;
 	              }
 	              index = angular.isDefined(scope.index && !isNaN(parseInt(scope.index))) ? parseInt(scope.index) : void 0;
@@ -77421,30 +77843,40 @@
 	                return;
 	              }
 	              return IControl.mapPromise(scope, ctrl).then(function(map) {
-	                var control, controlDiv;
+	                var control, controlDiv, pushControl;
 	                control = void 0;
 	                controlDiv = angular.element('<div></div>');
-	                return $http.get(scope.template, {
-	                  cache: $templateCache
-	                }).success(function(template) {
-	                  var templateCtrl, templateScope;
-	                  templateScope = scope.$new();
-	                  controlDiv.append(template);
-	                  if (angular.isDefined(scope.controller)) {
-	                    templateCtrl = $controller(scope.controller, {
-	                      $scope: templateScope
-	                    });
-	                    controlDiv.children().data('$ngControllerController', templateCtrl);
-	                  }
-	                  control = $compile(controlDiv.children())(templateScope);
+	                pushControl = function(map, control, index) {
 	                  if (index) {
-	                    return control[0].index = index;
+	                    control[0].index = index;
 	                  }
-	                }).error(function(error) {
-	                  return _this.$log.error('mapControl: template could not be found');
-	                }).then(function() {
 	                  return map.controls[google.maps.ControlPosition[position]].push(control[0]);
-	                });
+	                };
+	                if (hasTranscludedContent) {
+	                  return transclude(function(transcludeEl) {
+	                    controlDiv.append(transcludeEl);
+	                    return pushControl(map, controlDiv, index);
+	                  });
+	                } else {
+	                  return $http.get(scope.template, {
+	                    cache: $templateCache
+	                  }).success(function(template) {
+	                    var templateCtrl, templateScope;
+	                    templateScope = scope.$new();
+	                    controlDiv.append(template);
+	                    if (angular.isDefined(scope.controller)) {
+	                      templateCtrl = $controller(scope.controller, {
+	                        $scope: templateScope
+	                      });
+	                      controlDiv.children().data('$ngControllerController', templateCtrl);
+	                    }
+	                    return control = $compile(controlDiv.children())(templateScope);
+	                  }).error(function(error) {
+	                    return _this.$log.error('mapControl: template could not be found');
+	                  }).then(function() {
+	                    return pushControl(map, control, index);
+	                  });
+	                }
 	              });
 	            };
 	          })(this));
@@ -77980,7 +78412,7 @@
 	      };
 	
 	      Map.prototype.link = function(scope, element, attrs) {
-	        var listeners, unbindCenterWatch;
+	        var listeners;
 	        listeners = [];
 	        scope.$on('$destroy', function() {
 	          uiGmapEventsHelper.removeEvents(listeners);
@@ -77990,18 +78422,6 @@
 	          }
 	        });
 	        scope.idleAndZoomChanged = false;
-	        if (scope.center == null) {
-	          unbindCenterWatch = scope.$watch('center', (function(_this) {
-	            return function() {
-	              if (!scope.center) {
-	                return;
-	              }
-	              unbindCenterWatch();
-	              return _this.link(scope, element, attrs);
-	            };
-	          })(this));
-	          return;
-	        }
 	        return uiGmapGoogleMapApi.then((function(_this) {
 	          return function(maps) {
 	            var _gMap, customListeners, disabledEvents, dragging, el, eventName, getEventHandler, mapOptions, maybeHookToEvent, opts, ref, resolveSpawned, settingFromDirective, spawned, type, updateCenter, zoomPromise;
@@ -78015,13 +78435,15 @@
 	                map: _gMap
 	              });
 	            };
-	            if (!_this.validateCoords(scope.center)) {
-	              $log.error('angular-google-maps: could not find a valid center property');
+	            if (!angular.isDefined(scope.center) && !angular.isDefined(scope.bounds)) {
+	              $log.error('angular-google-maps: a center or bounds property is required');
 	              return;
 	            }
+	            if (!angular.isDefined(scope.center)) {
+	              scope.center = new google.maps.LatLngBounds(_this.getCoords(scope.bounds.southwest), _this.getCoords(scope.bounds.northeast)).getCenter();
+	            }
 	            if (!angular.isDefined(scope.zoom)) {
-	              $log.error('angular-google-maps: map zoom property not set');
-	              return;
+	              scope.zoom = 10;
 	            }
 	            el = angular.element(element);
 	            el.addClass('angular-google-map');
@@ -78100,16 +78522,6 @@
 	                  s = scope;
 	                }
 	                if (_.includes(disabledEvents, 'center')) {
-	                  return;
-	                }
-	                if (angular.isDefined(s.center.type)) {
-	                  if (s.center.coordinates[1] !== c.lat()) {
-	                    s.center.coordinates[1] = c.lat();
-	                  }
-	                  if (s.center.coordinates[0] !== c.lng()) {
-	                    return s.center.coordinates[0] = c.lng();
-	                  }
-	                } else {
 	                  if (s.center.latitude !== c.lat()) {
 	                    s.center.latitude = c.lat();
 	                  }
@@ -79527,32 +79939,23 @@
 	      //BEGIN REPLACE
 	      /* istanbul ignore next */
 	      +function(){
-	      /**
-	 * @name InfoBox
-	 * @version 1.1.13 [March 19, 2014]
-	 * @author Gary Little (inspired by proof-of-concept code from Pamela Fox of Google)
-	 * @copyright Copyright 2010 Gary Little [gary at luxcentral.com]
+	      function ClusterIcon(cluster,styles){cluster.getMarkerClusterer().extend(ClusterIcon,google.maps.OverlayView),this.cluster_=cluster,this.className_=cluster.getMarkerClusterer().getClusterClass(),this.styles_=styles,this.center_=null,this.div_=null,this.sums_=null,this.visible_=!1,this.setMap(cluster.getMap())}function Cluster(mc){this.markerClusterer_=mc,this.map_=mc.getMap(),this.gridSize_=mc.getGridSize(),this.minClusterSize_=mc.getMinimumClusterSize(),this.averageCenter_=mc.getAverageCenter(),this.hideLabel_=mc.getHideLabel(),this.markers_=[],this.center_=null,this.bounds_=null,this.clusterIcon_=new ClusterIcon(this,mc.getStyles())}function MarkerClusterer(map,opt_markers,opt_options){this.extend(MarkerClusterer,google.maps.OverlayView),opt_markers=opt_markers||[],opt_options=opt_options||{},this.markers_=[],this.clusters_=[],this.listeners_=[],this.activeMap_=null,this.ready_=!1,this.gridSize_=opt_options.gridSize||60,this.minClusterSize_=opt_options.minimumClusterSize||2,this.maxZoom_=opt_options.maxZoom||null,this.styles_=opt_options.styles||[],this.title_=opt_options.title||"",this.zoomOnClick_=!0,void 0!==opt_options.zoomOnClick&&(this.zoomOnClick_=opt_options.zoomOnClick),this.averageCenter_=!1,void 0!==opt_options.averageCenter&&(this.averageCenter_=opt_options.averageCenter),this.ignoreHidden_=!1,void 0!==opt_options.ignoreHidden&&(this.ignoreHidden_=opt_options.ignoreHidden),this.enableRetinaIcons_=!1,void 0!==opt_options.enableRetinaIcons&&(this.enableRetinaIcons_=opt_options.enableRetinaIcons),this.hideLabel_=!1,void 0!==opt_options.hideLabel&&(this.hideLabel_=opt_options.hideLabel),this.imagePath_=opt_options.imagePath||MarkerClusterer.IMAGE_PATH,this.imageExtension_=opt_options.imageExtension||MarkerClusterer.IMAGE_EXTENSION,this.imageSizes_=opt_options.imageSizes||MarkerClusterer.IMAGE_SIZES,this.calculator_=opt_options.calculator||MarkerClusterer.CALCULATOR,this.batchSize_=opt_options.batchSize||MarkerClusterer.BATCH_SIZE,this.batchSizeIE_=opt_options.batchSizeIE||MarkerClusterer.BATCH_SIZE_IE,this.clusterClass_=opt_options.clusterClass||"cluster",-1!==navigator.userAgent.toLowerCase().indexOf("msie")&&(this.batchSize_=this.batchSizeIE_),this.setupStyles_(),this.addMarkers(opt_markers,!0),this.setMap(map)}ClusterIcon.prototype.onAdd=function(){var cMouseDownInCluster,cDraggingMapByCluster,cClusterIcon=this;this.div_=document.createElement("div"),this.div_.className=this.className_,this.visible_&&this.show(),this.getPanes().overlayMouseTarget.appendChild(this.div_),this.boundsChangedListener_=google.maps.event.addListener(this.getMap(),"bounds_changed",function(){cDraggingMapByCluster=cMouseDownInCluster}),google.maps.event.addDomListener(this.div_,"mousedown",function(){cMouseDownInCluster=!0,cDraggingMapByCluster=!1}),google.maps.event.addDomListener(this.div_,"click",function(e){if(cMouseDownInCluster=!1,!cDraggingMapByCluster){var theBounds,mz,mc=cClusterIcon.cluster_.getMarkerClusterer();google.maps.event.trigger(mc,"click",cClusterIcon.cluster_),google.maps.event.trigger(mc,"clusterclick",cClusterIcon.cluster_),mc.getZoomOnClick()&&(mz=mc.getMaxZoom(),theBounds=cClusterIcon.cluster_.getBounds(),mc.getMap().fitBounds(theBounds),setTimeout(function(){mc.getMap().fitBounds(theBounds),null!==mz&&mc.getMap().getZoom()>mz&&mc.getMap().setZoom(mz+1)},100)),e.cancelBubble=!0,e.stopPropagation&&e.stopPropagation()}}),google.maps.event.addDomListener(this.div_,"mouseover",function(){var mc=cClusterIcon.cluster_.getMarkerClusterer();google.maps.event.trigger(mc,"mouseover",cClusterIcon.cluster_)}),google.maps.event.addDomListener(this.div_,"mouseout",function(){var mc=cClusterIcon.cluster_.getMarkerClusterer();google.maps.event.trigger(mc,"mouseout",cClusterIcon.cluster_)})},ClusterIcon.prototype.onRemove=function(){this.div_&&this.div_.parentNode&&(this.hide(),google.maps.event.removeListener(this.boundsChangedListener_),google.maps.event.clearInstanceListeners(this.div_),this.div_.parentNode.removeChild(this.div_),this.div_=null)},ClusterIcon.prototype.draw=function(){if(this.visible_){var pos=this.getPosFromLatLng_(this.center_);this.div_.style.top=pos.y+"px",this.div_.style.left=pos.x+"px"}},ClusterIcon.prototype.hide=function(){this.div_&&(this.div_.style.display="none"),this.visible_=!1},ClusterIcon.prototype.show=function(){if(this.div_){var img="",bp=this.backgroundPosition_.split(" "),spriteH=parseInt(bp[0].trim(),10),spriteV=parseInt(bp[1].trim(),10),pos=this.getPosFromLatLng_(this.center_);this.div_.style.cssText=this.createCss(pos),img="<img src='"+this.url_+"' style='position: absolute; top: "+spriteV+"px; left: "+spriteH+"px; ",img+=this.cluster_.getMarkerClusterer().enableRetinaIcons_?"width: "+this.width_+"px;height: "+this.height_+"px;":"clip: rect("+-1*spriteV+"px, "+(-1*spriteH+this.width_)+"px, "+(-1*spriteV+this.height_)+"px, "+-1*spriteH+"px);",img+="'>",this.div_.innerHTML=img+"<div style='position: absolute;top: "+this.anchorText_[0]+"px;left: "+this.anchorText_[1]+"px;color: "+this.textColor_+";font-size: "+this.textSize_+"px;font-family: "+this.fontFamily_+";font-weight: "+this.fontWeight_+";font-style: "+this.fontStyle_+";text-decoration: "+this.textDecoration_+";text-align: center;width: "+this.width_+"px;line-height:"+this.height_+"px;'>"+(this.cluster_.hideLabel_?" ":this.sums_.text)+"</div>",this.div_.title="undefined"==typeof this.sums_.title||""===this.sums_.title?this.cluster_.getMarkerClusterer().getTitle():this.sums_.title,this.div_.style.display=""}this.visible_=!0},ClusterIcon.prototype.useStyle=function(sums){this.sums_=sums;var index=Math.max(0,sums.index-1);index=Math.min(this.styles_.length-1,index);var style=this.styles_[index];this.url_=style.url,this.height_=style.height,this.width_=style.width,this.anchorText_=style.anchorText||[0,0],this.anchorIcon_=style.anchorIcon||[parseInt(this.height_/2,10),parseInt(this.width_/2,10)],this.textColor_=style.textColor||"black",this.textSize_=style.textSize||11,this.textDecoration_=style.textDecoration||"none",this.fontWeight_=style.fontWeight||"bold",this.fontStyle_=style.fontStyle||"normal",this.fontFamily_=style.fontFamily||"Arial,sans-serif",this.backgroundPosition_=style.backgroundPosition||"0 0"},ClusterIcon.prototype.setCenter=function(center){this.center_=center},ClusterIcon.prototype.createCss=function(pos){var style=[];return style.push("cursor: pointer;"),style.push("position: absolute; top: "+pos.y+"px; left: "+pos.x+"px;"),style.push("width: "+this.width_+"px; height: "+this.height_+"px;"),style.join("")},ClusterIcon.prototype.getPosFromLatLng_=function(latlng){var pos=this.getProjection().fromLatLngToDivPixel(latlng);return pos.x-=this.anchorIcon_[1],pos.y-=this.anchorIcon_[0],pos.x=parseInt(pos.x,10),pos.y=parseInt(pos.y,10),pos},Cluster.prototype.getSize=function(){return this.markers_.length},Cluster.prototype.getMarkers=function(){return this.markers_},Cluster.prototype.getCenter=function(){return this.center_},Cluster.prototype.getMap=function(){return this.map_},Cluster.prototype.getMarkerClusterer=function(){return this.markerClusterer_},Cluster.prototype.getBounds=function(){var i,bounds=new google.maps.LatLngBounds(this.center_,this.center_),markers=this.getMarkers();for(i=0;i<markers.length;i++)bounds.extend(markers[i].getPosition());return bounds},Cluster.prototype.remove=function(){this.clusterIcon_.setMap(null),this.markers_=[],delete this.markers_},Cluster.prototype.addMarker=function(marker){var i,mCount,mz;if(this.isMarkerAlreadyAdded_(marker))return!1;if(this.center_){if(this.averageCenter_){var l=this.markers_.length+1,lat=(this.center_.lat()*(l-1)+marker.getPosition().lat())/l,lng=(this.center_.lng()*(l-1)+marker.getPosition().lng())/l;this.center_=new google.maps.LatLng(lat,lng),this.calculateBounds_()}}else this.center_=marker.getPosition(),this.calculateBounds_();if(marker.isAdded=!0,this.markers_.push(marker),mCount=this.markers_.length,mz=this.markerClusterer_.getMaxZoom(),null!==mz&&this.map_.getZoom()>mz)marker.getMap()!==this.map_&&marker.setMap(this.map_);else if(mCount<this.minClusterSize_)marker.getMap()!==this.map_&&marker.setMap(this.map_);else if(mCount===this.minClusterSize_)for(i=0;mCount>i;i++)this.markers_[i].setMap(null);else marker.setMap(null);return!0},Cluster.prototype.isMarkerInClusterBounds=function(marker){return this.bounds_.contains(marker.getPosition())},Cluster.prototype.calculateBounds_=function(){var bounds=new google.maps.LatLngBounds(this.center_,this.center_);this.bounds_=this.markerClusterer_.getExtendedBounds(bounds)},Cluster.prototype.updateIcon_=function(){var mCount=this.markers_.length,mz=this.markerClusterer_.getMaxZoom();if(null!==mz&&this.map_.getZoom()>mz)return void this.clusterIcon_.hide();if(mCount<this.minClusterSize_)return void this.clusterIcon_.hide();var numStyles=this.markerClusterer_.getStyles().length,sums=this.markerClusterer_.getCalculator()(this.markers_,numStyles);this.clusterIcon_.setCenter(this.center_),this.clusterIcon_.useStyle(sums),this.clusterIcon_.show()},Cluster.prototype.isMarkerAlreadyAdded_=function(marker){for(var i=0,n=this.markers_.length;n>i;i++)if(marker===this.markers_[i])return!0;return!1},MarkerClusterer.prototype.onAdd=function(){var cMarkerClusterer=this;this.activeMap_=this.getMap(),this.ready_=!0,this.repaint(),this.listeners_=[google.maps.event.addListener(this.getMap(),"zoom_changed",function(){cMarkerClusterer.resetViewport_(!1),(this.getZoom()===(this.get("minZoom")||0)||this.getZoom()===this.get("maxZoom"))&&google.maps.event.trigger(this,"idle")}),google.maps.event.addListener(this.getMap(),"idle",function(){cMarkerClusterer.redraw_()})]},MarkerClusterer.prototype.onRemove=function(){var i;for(i=0;i<this.markers_.length;i++)this.markers_[i].getMap()!==this.activeMap_&&this.markers_[i].setMap(this.activeMap_);for(i=0;i<this.clusters_.length;i++)this.clusters_[i].remove();for(this.clusters_=[],i=0;i<this.listeners_.length;i++)google.maps.event.removeListener(this.listeners_[i]);this.listeners_=[],this.activeMap_=null,this.ready_=!1},MarkerClusterer.prototype.draw=function(){},MarkerClusterer.prototype.setupStyles_=function(){var i,size;if(!(this.styles_.length>0))for(i=0;i<this.imageSizes_.length;i++)size=this.imageSizes_[i],this.styles_.push({url:this.imagePath_+(i+1)+"."+this.imageExtension_,height:size,width:size})},MarkerClusterer.prototype.fitMapToMarkers=function(){var i,markers=this.getMarkers(),bounds=new google.maps.LatLngBounds;for(i=0;i<markers.length;i++)bounds.extend(markers[i].getPosition());this.getMap().fitBounds(bounds)},MarkerClusterer.prototype.getGridSize=function(){return this.gridSize_},MarkerClusterer.prototype.setGridSize=function(gridSize){this.gridSize_=gridSize},MarkerClusterer.prototype.getMinimumClusterSize=function(){return this.minClusterSize_},MarkerClusterer.prototype.setMinimumClusterSize=function(minimumClusterSize){this.minClusterSize_=minimumClusterSize},MarkerClusterer.prototype.getMaxZoom=function(){return this.maxZoom_},MarkerClusterer.prototype.setMaxZoom=function(maxZoom){this.maxZoom_=maxZoom},MarkerClusterer.prototype.getStyles=function(){return this.styles_},MarkerClusterer.prototype.setStyles=function(styles){this.styles_=styles},MarkerClusterer.prototype.getTitle=function(){return this.title_},MarkerClusterer.prototype.setTitle=function(title){this.title_=title},MarkerClusterer.prototype.getZoomOnClick=function(){return this.zoomOnClick_},MarkerClusterer.prototype.setZoomOnClick=function(zoomOnClick){this.zoomOnClick_=zoomOnClick},MarkerClusterer.prototype.getAverageCenter=function(){return this.averageCenter_},MarkerClusterer.prototype.setAverageCenter=function(averageCenter){this.averageCenter_=averageCenter},MarkerClusterer.prototype.getIgnoreHidden=function(){return this.ignoreHidden_},MarkerClusterer.prototype.setIgnoreHidden=function(ignoreHidden){this.ignoreHidden_=ignoreHidden},MarkerClusterer.prototype.getEnableRetinaIcons=function(){return this.enableRetinaIcons_},MarkerClusterer.prototype.setEnableRetinaIcons=function(enableRetinaIcons){this.enableRetinaIcons_=enableRetinaIcons},MarkerClusterer.prototype.getImageExtension=function(){return this.imageExtension_},MarkerClusterer.prototype.setImageExtension=function(imageExtension){this.imageExtension_=imageExtension},MarkerClusterer.prototype.getImagePath=function(){return this.imagePath_},MarkerClusterer.prototype.setImagePath=function(imagePath){this.imagePath_=imagePath},MarkerClusterer.prototype.getImageSizes=function(){return this.imageSizes_},MarkerClusterer.prototype.setImageSizes=function(imageSizes){this.imageSizes_=imageSizes},MarkerClusterer.prototype.getCalculator=function(){return this.calculator_},MarkerClusterer.prototype.setCalculator=function(calculator){this.calculator_=calculator},MarkerClusterer.prototype.setHideLabel=function(hideLabel){this.hideLabel_=hideLabel},MarkerClusterer.prototype.getHideLabel=function(){return this.hideLabel_},MarkerClusterer.prototype.getBatchSizeIE=function(){return this.batchSizeIE_},MarkerClusterer.prototype.setBatchSizeIE=function(batchSizeIE){this.batchSizeIE_=batchSizeIE},MarkerClusterer.prototype.getClusterClass=function(){return this.clusterClass_},MarkerClusterer.prototype.setClusterClass=function(clusterClass){this.clusterClass_=clusterClass},MarkerClusterer.prototype.getMarkers=function(){return this.markers_},MarkerClusterer.prototype.getTotalMarkers=function(){return this.markers_.length},MarkerClusterer.prototype.getClusters=function(){return this.clusters_},MarkerClusterer.prototype.getTotalClusters=function(){return this.clusters_.length},MarkerClusterer.prototype.addMarker=function(marker,opt_nodraw){this.pushMarkerTo_(marker),opt_nodraw||this.redraw_()},MarkerClusterer.prototype.addMarkers=function(markers,opt_nodraw){var key;for(key in markers)markers.hasOwnProperty(key)&&this.pushMarkerTo_(markers[key]);opt_nodraw||this.redraw_()},MarkerClusterer.prototype.pushMarkerTo_=function(marker){if(marker.getDraggable()){var cMarkerClusterer=this;google.maps.event.addListener(marker,"dragend",function(){cMarkerClusterer.ready_&&(this.isAdded=!1,cMarkerClusterer.repaint())})}marker.isAdded=!1,this.markers_.push(marker)},MarkerClusterer.prototype.removeMarker=function(marker,opt_nodraw,opt_noMapRemove){var removeFromMap=!0&&!opt_noMapRemove,removed=this.removeMarker_(marker,removeFromMap);return!opt_nodraw&&removed&&this.repaint(),removed},MarkerClusterer.prototype.removeMarkers=function(markers,opt_nodraw,opt_noMapRemove){var i,r,removed=!1,removeFromMap=!0&&!opt_noMapRemove;for(i=0;i<markers.length;i++)r=this.removeMarker_(markers[i],removeFromMap),removed=removed||r;return!opt_nodraw&&removed&&this.repaint(),removed},MarkerClusterer.prototype.removeMarker_=function(marker,removeFromMap){var i,index=-1;if(this.markers_.indexOf)index=this.markers_.indexOf(marker);else for(i=0;i<this.markers_.length;i++)if(marker===this.markers_[i]){index=i;break}return-1===index?!1:(removeFromMap&&marker.setMap(null),this.markers_.splice(index,1),!0)},MarkerClusterer.prototype.clearMarkers=function(){this.resetViewport_(!0),this.markers_=[]},MarkerClusterer.prototype.repaint=function(){var oldClusters=this.clusters_.slice();this.clusters_=[],this.resetViewport_(!1),this.redraw_(),setTimeout(function(){var i;for(i=0;i<oldClusters.length;i++)oldClusters[i].remove()},0)},MarkerClusterer.prototype.getExtendedBounds=function(bounds){var projection=this.getProjection(),tr=new google.maps.LatLng(bounds.getNorthEast().lat(),bounds.getNorthEast().lng()),bl=new google.maps.LatLng(bounds.getSouthWest().lat(),bounds.getSouthWest().lng()),trPix=projection.fromLatLngToDivPixel(tr);trPix.x+=this.gridSize_,trPix.y-=this.gridSize_;var blPix=projection.fromLatLngToDivPixel(bl);blPix.x-=this.gridSize_,blPix.y+=this.gridSize_;var ne=projection.fromDivPixelToLatLng(trPix),sw=projection.fromDivPixelToLatLng(blPix);return bounds.extend(ne),bounds.extend(sw),bounds},MarkerClusterer.prototype.redraw_=function(){this.createClusters_(0)},MarkerClusterer.prototype.resetViewport_=function(opt_hide){var i,marker;for(i=0;i<this.clusters_.length;i++)this.clusters_[i].remove();for(this.clusters_=[],i=0;i<this.markers_.length;i++)marker=this.markers_[i],marker.isAdded=!1,opt_hide&&marker.setMap(null)},MarkerClusterer.prototype.distanceBetweenPoints_=function(p1,p2){var R=6371,dLat=(p2.lat()-p1.lat())*Math.PI/180,dLon=(p2.lng()-p1.lng())*Math.PI/180,a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(p1.lat()*Math.PI/180)*Math.cos(p2.lat()*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2),c=2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)),d=R*c;return d},MarkerClusterer.prototype.isMarkerInBounds_=function(marker,bounds){return bounds.contains(marker.getPosition())},MarkerClusterer.prototype.addToClosestCluster_=function(marker){var i,d,cluster,center,distance=4e4,clusterToAddTo=null;for(i=0;i<this.clusters_.length;i++)cluster=this.clusters_[i],center=cluster.getCenter(),center&&(d=this.distanceBetweenPoints_(center,marker.getPosition()),distance>d&&(distance=d,clusterToAddTo=cluster));clusterToAddTo&&clusterToAddTo.isMarkerInClusterBounds(marker)?clusterToAddTo.addMarker(marker):(cluster=new Cluster(this),cluster.addMarker(marker),this.clusters_.push(cluster))},MarkerClusterer.prototype.createClusters_=function(iFirst){var i,marker,mapBounds,cMarkerClusterer=this;if(this.ready_){0===iFirst&&(google.maps.event.trigger(this,"clusteringbegin",this),"undefined"!=typeof this.timerRefStatic&&(clearTimeout(this.timerRefStatic),delete this.timerRefStatic)),mapBounds=this.getMap().getZoom()>3?new google.maps.LatLngBounds(this.getMap().getBounds().getSouthWest(),this.getMap().getBounds().getNorthEast()):new google.maps.LatLngBounds(new google.maps.LatLng(85.02070771743472,-178.48388434375),new google.maps.LatLng(-85.08136444384544,178.00048865625));var bounds=this.getExtendedBounds(mapBounds),iLast=Math.min(iFirst+this.batchSize_,this.markers_.length);for(i=iFirst;iLast>i;i++)marker=this.markers_[i],!marker.isAdded&&this.isMarkerInBounds_(marker,bounds)&&(!this.ignoreHidden_||this.ignoreHidden_&&marker.getVisible())&&this.addToClosestCluster_(marker);if(iLast<this.markers_.length)this.timerRefStatic=setTimeout(function(){cMarkerClusterer.createClusters_(iLast)},0);else for(delete this.timerRefStatic,google.maps.event.trigger(this,"clusteringend",this),i=0;i<this.clusters_.length;i++)this.clusters_[i].updateIcon_()}},MarkerClusterer.prototype.extend=function(obj1,obj2){return function(object){var property;for(property in object.prototype)this.prototype[property]=object.prototype[property];return this}.apply(obj1,[obj2])},MarkerClusterer.CALCULATOR=function(markers,numStyles){for(var index=0,title="",count=markers.length.toString(),dv=count;0!==dv;)dv=parseInt(dv/10,10),index++;return index=Math.min(index,numStyles),{text:count,index:index,title:title}},MarkerClusterer.BATCH_SIZE=2e3,MarkerClusterer.BATCH_SIZE_IE=500,MarkerClusterer.IMAGE_PATH="//cdn.rawgit.com/mahnunchik/markerclustererplus/master/images/m",MarkerClusterer.IMAGE_EXTENSION="png",MarkerClusterer.IMAGE_SIZES=[53,56,66,78,90],"function"!=typeof String.prototype.trim&&(String.prototype.trim=function(){return this.replace(/^\s+|\s+$/g,"")});
+	/**
+	 *  google-maps-utility-library-v3-infobox
+	 *
+	 * @version: 1.1.14
+	 * @author: Gary Little (inspired by proof-of-concept code from Pamela Fox of Google)
+	 * @contributors: Nicholas McCready
+	 * @date: Fri May 13 2016 16:35:27 GMT-0400 (EDT)
+	 * @license: Apache License 2.0
+	 */
+	/**
 	 * @fileoverview InfoBox extends the Google Maps JavaScript API V3 <tt>OverlayView</tt> class.
 	 *  <p>
 	 *  An InfoBox behaves like a <tt>google.maps.InfoWindow</tt>, but it supports several
 	 *  additional properties for advanced styling. An InfoBox can also be used as a map label.
 	 *  <p>
 	 *  An InfoBox also fires the same events as a <tt>google.maps.InfoWindow</tt>.
-	 */
-	
-	/*!
-	 *
-	 * Licensed under the Apache License, Version 2.0 (the "License");
-	 * you may not use this file except in compliance with the License.
-	 * You may obtain a copy of the License at
-	 *
-	 *       http://www.apache.org/licenses/LICENSE-2.0
-	 *
-	 * Unless required by applicable law or agreed to in writing, software
-	 * distributed under the License is distributed on an "AS IS" BASIS,
-	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	 * See the License for the specific language governing permissions and
-	 * limitations under the License.
 	 */
 	
 	/*jslint browser:true */
@@ -79747,7 +80150,7 @@
 	
 	        this.eventListeners_.push(google.maps.event.addDomListener(this.div_, events[i], cancelHandler));
 	      }
-	      
+	
 	      // Workaround for Google bug that causes the cursor to change to a pointer
 	      // when the mouse moves over a marker underneath InfoBox.
 	      this.eventListeners_.push(google.maps.event.addDomListener(this.div_, "mouseover", function (e) {
@@ -80013,7 +80416,7 @@
 	  var pixPosition = this.getProjection().fromLatLngToDivPixel(this.position_);
 	
 	  this.div_.style.left = (pixPosition.x + this.pixelOffset_.width) + "px";
-	  
+	
 	  if (this.alignBottom_) {
 	    this.div_.style.bottom = -(pixPosition.y + this.pixelOffset_.height) + "px";
 	  } else {
@@ -80322,7 +80725,7 @@
 	  }
 	
 	  if (this.eventListeners_) {
-	    
+	
 	    for (i = 0; i < this.eventListeners_.length; i++) {
 	
 	      google.maps.event.removeListener(this.eventListeners_[i]);
@@ -80346,9 +80749,15 @@
 	};
 	
 	/**
-	 * @name KeyDragZoom for V3
-	 * @version 2.0.9 [December 17, 2012] NOT YET RELEASED
+	 *  google-maps-utility-library-v3-keydragzoom
+	 *
+	 * @version: 2.0.9
 	 * @author: Nianwei Liu [nianwei at gmail dot com] & Gary Little [gary at luxcentral dot com]
+	 * @contributors: undefined
+	 * @date: Fri May 13 2016 13:45:18 GMT-0400 (EDT)
+	 * @license: Apache License 2.0
+	 */
+	/**
 	 * @fileoverview This library adds a drag zoom capability to a V3 Google map.
 	 *  When drag zoom is enabled, holding down a designated hot key <code>(shift | ctrl | alt)</code>
 	 *  while dragging a box around an area of interest will zoom the map in to that area when
@@ -80365,20 +80774,6 @@
 	 *  <br>NL: 2009-11-02: added a temp fix for -moz-transform for FF3.5.x using code from Paul Kulchenko (http://notebook.kulchenko.com/maps/gridmove).
 	 *  <br>NL: 2010-02-02: added a fix for IE flickering on divs onmousemove, caused by scroll value when get mouse position.
 	 *  <br>GL: 2010-06-15: added a visual control option.
-	 */
-	/*!
-	 *
-	 * Licensed under the Apache License, Version 2.0 (the "License");
-	 * you may not use this file except in compliance with the License.
-	 * You may obtain a copy of the License at
-	 *
-	 *       http://www.apache.org/licenses/LICENSE-2.0
-	 *
-	 * Unless required by applicable law or agreed to in writing, software
-	 * distributed under the License is distributed on an "AS IS" BASIS,
-	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	 * See the License for the specific language governing permissions and
-	 * limitations under the License.
 	 */
 	(function () {
 	  /*jslint browser:true */
@@ -80759,7 +81154,7 @@
 	    var control;
 	    var image;
 	    var me = this;
-	    
+	
 	    control = document.createElement("div");
 	    control.className = this.visualClass_;
 	    control.style.position = "relative";
@@ -81214,1647 +81609,17 @@
 	    return this.dragZoom_;
 	  };
 	})();
-	/**
-	 * @name MarkerClustererPlus for Google Maps V3
-	 * @version 2.1.1 [November 4, 2013]
-	 * @author Gary Little
-	 * @fileoverview
-	 * The library creates and manages per-zoom-level clusters for large amounts of markers.
-	 * <p>
-	 * This is an enhanced V3 implementation of the
-	 * <a href="http://gmaps-utility-library-dev.googlecode.com/svn/tags/markerclusterer/"
-	 * >V2 MarkerClusterer</a> by Xiaoxi Wu. It is based on the
-	 * <a href="http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerclusterer/"
-	 * >V3 MarkerClusterer</a> port by Luke Mahe. MarkerClustererPlus was created by Gary Little.
-	 * <p>
-	 * v2.0 release: MarkerClustererPlus v2.0 is backward compatible with MarkerClusterer v1.0. It
-	 *  adds support for the <code>ignoreHidden</code>, <code>title</code>, <code>batchSizeIE</code>,
-	 *  and <code>calculator</code> properties as well as support for four more events. It also allows
-	 *  greater control over the styling of the text that appears on the cluster marker. The
-	 *  documentation has been significantly improved and the overall code has been simplified and
-	 *  polished. Very large numbers of markers can now be managed without causing Javascript timeout
-	 *  errors on Internet Explorer. Note that the name of the <code>clusterclick</code> event has been
-	 *  deprecated. The new name is <code>click</code>, so please change your application code now.
-	 */
-	
-	/**
-	 * Licensed under the Apache License, Version 2.0 (the "License");
-	 * you may not use this file except in compliance with the License.
-	 * You may obtain a copy of the License at
-	 *
-	 *     http://www.apache.org/licenses/LICENSE-2.0
-	 *
-	 * Unless required by applicable law or agreed to in writing, software
-	 * distributed under the License is distributed on an "AS IS" BASIS,
-	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	 * See the License for the specific language governing permissions and
-	 * limitations under the License.
-	 */
-	
-	
-	/**
-	 * @name ClusterIconStyle
-	 * @class This class represents the object for values in the <code>styles</code> array passed
-	 *  to the {@link MarkerClusterer} constructor. The element in this array that is used to
-	 *  style the cluster icon is determined by calling the <code>calculator</code> function.
-	 *
-	 * @property {string} url The URL of the cluster icon image file. Required.
-	 * @property {number} height The display height (in pixels) of the cluster icon. Required.
-	 * @property {number} width The display width (in pixels) of the cluster icon. Required.
-	 * @property {Array} [anchorText] The position (in pixels) from the center of the cluster icon to
-	 *  where the text label is to be centered and drawn. The format is <code>[yoffset, xoffset]</code>
-	 *  where <code>yoffset</code> increases as you go down from center and <code>xoffset</code>
-	 *  increases to the right of center. The default is <code>[0, 0]</code>.
-	 * @property {Array} [anchorIcon] The anchor position (in pixels) of the cluster icon. This is the
-	 *  spot on the cluster icon that is to be aligned with the cluster position. The format is
-	 *  <code>[yoffset, xoffset]</code> where <code>yoffset</code> increases as you go down and
-	 *  <code>xoffset</code> increases to the right of the top-left corner of the icon. The default
-	 *  anchor position is the center of the cluster icon.
-	 * @property {string} [textColor="black"] The color of the label text shown on the
-	 *  cluster icon.
-	 * @property {number} [textSize=11] The size (in pixels) of the label text shown on the
-	 *  cluster icon.
-	 * @property {string} [textDecoration="none"] The value of the CSS <code>text-decoration</code>
-	 *  property for the label text shown on the cluster icon.
-	 * @property {string} [fontWeight="bold"] The value of the CSS <code>font-weight</code>
-	 *  property for the label text shown on the cluster icon.
-	 * @property {string} [fontStyle="normal"] The value of the CSS <code>font-style</code>
-	 *  property for the label text shown on the cluster icon.
-	 * @property {string} [fontFamily="Arial,sans-serif"] The value of the CSS <code>font-family</code>
-	 *  property for the label text shown on the cluster icon.
-	 * @property {string} [backgroundPosition="0 0"] The position of the cluster icon image
-	 *  within the image defined by <code>url</code>. The format is <code>"xpos ypos"</code>
-	 *  (the same format as for the CSS <code>background-position</code> property). You must set
-	 *  this property appropriately when the image defined by <code>url</code> represents a sprite
-	 *  containing multiple images. Note that the position <i>must</i> be specified in px units.
-	 */
-	/**
-	 * @name ClusterIconInfo
-	 * @class This class is an object containing general information about a cluster icon. This is
-	 *  the object that a <code>calculator</code> function returns.
-	 *
-	 * @property {string} text The text of the label to be shown on the cluster icon.
-	 * @property {number} index The index plus 1 of the element in the <code>styles</code>
-	 *  array to be used to style the cluster icon.
-	 * @property {string} title The tooltip to display when the mouse moves over the cluster icon.
-	 *  If this value is <code>undefined</code> or <code>""</code>, <code>title</code> is set to the
-	 *  value of the <code>title</code> property passed to the MarkerClusterer.
-	 */
-	/**
-	 * A cluster icon.
-	 *
-	 * @constructor
-	 * @extends google.maps.OverlayView
-	 * @param {Cluster} cluster The cluster with which the icon is to be associated.
-	 * @param {Array} [styles] An array of {@link ClusterIconStyle} defining the cluster icons
-	 *  to use for various cluster sizes.
-	 * @private
-	 */
-	function ClusterIcon(cluster, styles) {
-	  cluster.getMarkerClusterer().extend(ClusterIcon, google.maps.OverlayView);
-	
-	  this.cluster_ = cluster;
-	  this.className_ = cluster.getMarkerClusterer().getClusterClass();
-	  this.styles_ = styles;
-	  this.center_ = null;
-	  this.div_ = null;
-	  this.sums_ = null;
-	  this.visible_ = false;
-	
-	  this.setMap(cluster.getMap()); // Note: this causes onAdd to be called
-	}
-	
-	
-	/**
-	 * Adds the icon to the DOM.
-	 */
-	ClusterIcon.prototype.onAdd = function () {
-	  var cClusterIcon = this;
-	  var cMouseDownInCluster;
-	  var cDraggingMapByCluster;
-	
-	  this.div_ = document.createElement("div");
-	  this.div_.className = this.className_;
-	  if (this.visible_) {
-	    this.show();
-	  }
-	
-	  this.getPanes().overlayMouseTarget.appendChild(this.div_);
-	
-	  // Fix for Issue 157
-	  this.boundsChangedListener_ = google.maps.event.addListener(this.getMap(), "bounds_changed", function () {
-	    cDraggingMapByCluster = cMouseDownInCluster;
-	  });
-	
-	  google.maps.event.addDomListener(this.div_, "mousedown", function () {
-	    cMouseDownInCluster = true;
-	    cDraggingMapByCluster = false;
-	  });
-	
-	  google.maps.event.addDomListener(this.div_, "click", function (e) {
-	    cMouseDownInCluster = false;
-	    if (!cDraggingMapByCluster) {
-	      var theBounds;
-	      var mz;
-	      var mc = cClusterIcon.cluster_.getMarkerClusterer();
-	      /**
-	       * This event is fired when a cluster marker is clicked.
-	       * @name MarkerClusterer#click
-	       * @param {Cluster} c The cluster that was clicked.
-	       * @event
-	       */
-	      google.maps.event.trigger(mc, "click", cClusterIcon.cluster_);
-	      google.maps.event.trigger(mc, "clusterclick", cClusterIcon.cluster_); // deprecated name
-	
-	      // The default click handler follows. Disable it by setting
-	      // the zoomOnClick property to false.
-	      if (mc.getZoomOnClick()) {
-	        // Zoom into the cluster.
-	        mz = mc.getMaxZoom();
-	        theBounds = cClusterIcon.cluster_.getBounds();
-	        mc.getMap().fitBounds(theBounds);
-	        // There is a fix for Issue 170 here:
-	        setTimeout(function () {
-	          mc.getMap().fitBounds(theBounds);
-	          // Don't zoom beyond the max zoom level
-	          if (mz !== null && (mc.getMap().getZoom() > mz)) {
-	            mc.getMap().setZoom(mz + 1);
-	          }
-	        }, 100);
-	      }
-	
-	      // Prevent event propagation to the map:
-	      e.cancelBubble = true;
-	      if (e.stopPropagation) {
-	        e.stopPropagation();
-	      }
-	    }
-	  });
-	
-	  google.maps.event.addDomListener(this.div_, "mouseover", function () {
-	    var mc = cClusterIcon.cluster_.getMarkerClusterer();
-	    /**
-	     * This event is fired when the mouse moves over a cluster marker.
-	     * @name MarkerClusterer#mouseover
-	     * @param {Cluster} c The cluster that the mouse moved over.
-	     * @event
-	     */
-	    google.maps.event.trigger(mc, "mouseover", cClusterIcon.cluster_);
-	  });
-	
-	  google.maps.event.addDomListener(this.div_, "mouseout", function () {
-	    var mc = cClusterIcon.cluster_.getMarkerClusterer();
-	    /**
-	     * This event is fired when the mouse moves out of a cluster marker.
-	     * @name MarkerClusterer#mouseout
-	     * @param {Cluster} c The cluster that the mouse moved out of.
-	     * @event
-	     */
-	    google.maps.event.trigger(mc, "mouseout", cClusterIcon.cluster_);
-	  });
-	};
-	
-	
-	/**
-	 * Removes the icon from the DOM.
-	 */
-	ClusterIcon.prototype.onRemove = function () {
-	  if (this.div_ && this.div_.parentNode) {
-	    this.hide();
-	    google.maps.event.removeListener(this.boundsChangedListener_);
-	    google.maps.event.clearInstanceListeners(this.div_);
-	    this.div_.parentNode.removeChild(this.div_);
-	    this.div_ = null;
-	  }
-	};
-	
-	
-	/**
-	 * Draws the icon.
-	 */
-	ClusterIcon.prototype.draw = function () {
-	  if (this.visible_) {
-	    var pos = this.getPosFromLatLng_(this.center_);
-	    this.div_.style.top = pos.y + "px";
-	    this.div_.style.left = pos.x + "px";
-	  }
-	};
-	
-	
-	/**
-	 * Hides the icon.
-	 */
-	ClusterIcon.prototype.hide = function () {
-	  if (this.div_) {
-	    this.div_.style.display = "none";
-	  }
-	  this.visible_ = false;
-	};
-	
-	
-	/**
-	 * Positions and shows the icon.
-	 */
-	ClusterIcon.prototype.show = function () {
-	  if (this.div_) {
-	    var img = "";
-	    // NOTE: values must be specified in px units
-	    var bp = this.backgroundPosition_.split(" ");
-	    var spriteH = parseInt(bp[0].trim(), 10);
-	    var spriteV = parseInt(bp[1].trim(), 10);
-	    var pos = this.getPosFromLatLng_(this.center_);
-	    this.div_.style.cssText = this.createCss(pos);
-	    img = "<img src='" + this.url_ + "' style='position: absolute; top: " + spriteV + "px; left: " + spriteH + "px; ";
-	    if (!this.cluster_.getMarkerClusterer().enableRetinaIcons_) {
-	      img += "clip: rect(" + (-1 * spriteV) + "px, " + ((-1 * spriteH) + this.width_) + "px, " +
-	          ((-1 * spriteV) + this.height_) + "px, " + (-1 * spriteH) + "px);";
-	    }
-	    img += "'>";
-	    this.div_.innerHTML = img + "<div style='" +
-	        "position: absolute;" +
-	        "top: " + this.anchorText_[0] + "px;" +
-	        "left: " + this.anchorText_[1] + "px;" +
-	        "color: " + this.textColor_ + ";" +
-	        "font-size: " + this.textSize_ + "px;" +
-	        "font-family: " + this.fontFamily_ + ";" +
-	        "font-weight: " + this.fontWeight_ + ";" +
-	        "font-style: " + this.fontStyle_ + ";" +
-	        "text-decoration: " + this.textDecoration_ + ";" +
-	        "text-align: center;" +
-	        "width: " + this.width_ + "px;" +
-	        "line-height:" + this.height_ + "px;" +
-	        "'>" + this.sums_.text + "</div>";
-	    if (typeof this.sums_.title === "undefined" || this.sums_.title === "") {
-	      this.div_.title = this.cluster_.getMarkerClusterer().getTitle();
-	    } else {
-	      this.div_.title = this.sums_.title;
-	    }
-	    this.div_.style.display = "";
-	  }
-	  this.visible_ = true;
-	};
-	
-	
-	/**
-	 * Sets the icon styles to the appropriate element in the styles array.
-	 *
-	 * @param {ClusterIconInfo} sums The icon label text and styles index.
-	 */
-	ClusterIcon.prototype.useStyle = function (sums) {
-	  this.sums_ = sums;
-	  var index = Math.max(0, sums.index - 1);
-	  index = Math.min(this.styles_.length - 1, index);
-	  var style = this.styles_[index];
-	  this.url_ = style.url;
-	  this.height_ = style.height;
-	  this.width_ = style.width;
-	  this.anchorText_ = style.anchorText || [0, 0];
-	  this.anchorIcon_ = style.anchorIcon || [parseInt(this.height_ / 2, 10), parseInt(this.width_ / 2, 10)];
-	  this.textColor_ = style.textColor || "black";
-	  this.textSize_ = style.textSize || 11;
-	  this.textDecoration_ = style.textDecoration || "none";
-	  this.fontWeight_ = style.fontWeight || "bold";
-	  this.fontStyle_ = style.fontStyle || "normal";
-	  this.fontFamily_ = style.fontFamily || "Arial,sans-serif";
-	  this.backgroundPosition_ = style.backgroundPosition || "0 0";
-	};
-	
-	
-	/**
-	 * Sets the position at which to center the icon.
-	 *
-	 * @param {google.maps.LatLng} center The latlng to set as the center.
-	 */
-	ClusterIcon.prototype.setCenter = function (center) {
-	  this.center_ = center;
-	};
-	
-	
-	/**
-	 * Creates the cssText style parameter based on the position of the icon.
-	 *
-	 * @param {google.maps.Point} pos The position of the icon.
-	 * @return {string} The CSS style text.
-	 */
-	ClusterIcon.prototype.createCss = function (pos) {
-	  var style = [];
-	  style.push("cursor: pointer;");
-	  style.push("position: absolute; top: " + pos.y + "px; left: " + pos.x + "px;");
-	  style.push("width: " + this.width_ + "px; height: " + this.height_ + "px;");
-	  return style.join("");
-	};
-	
-	
-	/**
-	 * Returns the position at which to place the DIV depending on the latlng.
-	 *
-	 * @param {google.maps.LatLng} latlng The position in latlng.
-	 * @return {google.maps.Point} The position in pixels.
-	 */
-	ClusterIcon.prototype.getPosFromLatLng_ = function (latlng) {
-	  var pos = this.getProjection().fromLatLngToDivPixel(latlng);
-	  pos.x -= this.anchorIcon_[1];
-	  pos.y -= this.anchorIcon_[0];
-	  pos.x = parseInt(pos.x, 10);
-	  pos.y = parseInt(pos.y, 10);
-	  return pos;
-	};
-	
-	
-	/**
-	 * Creates a single cluster that manages a group of proximate markers.
-	 *  Used internally, do not call this constructor directly.
-	 * @constructor
-	 * @param {MarkerClusterer} mc The <code>MarkerClusterer</code> object with which this
-	 *  cluster is associated.
-	 */
-	function Cluster(mc) {
-	  this.markerClusterer_ = mc;
-	  this.map_ = mc.getMap();
-	  this.gridSize_ = mc.getGridSize();
-	  this.minClusterSize_ = mc.getMinimumClusterSize();
-	  this.averageCenter_ = mc.getAverageCenter();
-	  this.markers_ = [];
-	  this.center_ = null;
-	  this.bounds_ = null;
-	  this.clusterIcon_ = new ClusterIcon(this, mc.getStyles());
-	}
-	
-	
-	/**
-	 * Returns the number of markers managed by the cluster. You can call this from
-	 * a <code>click</code>, <code>mouseover</code>, or <code>mouseout</code> event handler
-	 * for the <code>MarkerClusterer</code> object.
-	 *
-	 * @return {number} The number of markers in the cluster.
-	 */
-	Cluster.prototype.getSize = function () {
-	  return this.markers_.length;
-	};
-	
-	
-	/**
-	 * Returns the array of markers managed by the cluster. You can call this from
-	 * a <code>click</code>, <code>mouseover</code>, or <code>mouseout</code> event handler
-	 * for the <code>MarkerClusterer</code> object.
-	 *
-	 * @return {Array} The array of markers in the cluster.
-	 */
-	Cluster.prototype.getMarkers = function () {
-	  return this.markers_;
-	};
-	
-	
-	/**
-	 * Returns the center of the cluster. You can call this from
-	 * a <code>click</code>, <code>mouseover</code>, or <code>mouseout</code> event handler
-	 * for the <code>MarkerClusterer</code> object.
-	 *
-	 * @return {google.maps.LatLng} The center of the cluster.
-	 */
-	Cluster.prototype.getCenter = function () {
-	  return this.center_;
-	};
-	
-	
-	/**
-	 * Returns the map with which the cluster is associated.
-	 *
-	 * @return {google.maps.Map} The map.
-	 * @ignore
-	 */
-	Cluster.prototype.getMap = function () {
-	  return this.map_;
-	};
-	
-	
-	/**
-	 * Returns the <code>MarkerClusterer</code> object with which the cluster is associated.
-	 *
-	 * @return {MarkerClusterer} The associated marker clusterer.
-	 * @ignore
-	 */
-	Cluster.prototype.getMarkerClusterer = function () {
-	  return this.markerClusterer_;
-	};
-	
-	
-	/**
-	 * Returns the bounds of the cluster.
-	 *
-	 * @return {google.maps.LatLngBounds} the cluster bounds.
-	 * @ignore
-	 */
-	Cluster.prototype.getBounds = function () {
-	  var i;
-	  var bounds = new google.maps.LatLngBounds(this.center_, this.center_);
-	  var markers = this.getMarkers();
-	  for (i = 0; i < markers.length; i++) {
-	    bounds.extend(markers[i].getPosition());
-	  }
-	  return bounds;
-	};
-	
-	
-	/**
-	 * Removes the cluster from the map.
-	 *
-	 * @ignore
-	 */
-	Cluster.prototype.remove = function () {
-	  this.clusterIcon_.setMap(null);
-	  this.markers_ = [];
-	  delete this.markers_;
-	};
-	
-	
-	/**
-	 * Adds a marker to the cluster.
-	 *
-	 * @param {google.maps.Marker} marker The marker to be added.
-	 * @return {boolean} True if the marker was added.
-	 * @ignore
-	 */
-	Cluster.prototype.addMarker = function (marker) {
-	  var i;
-	  var mCount;
-	  var mz;
-	
-	  if (this.isMarkerAlreadyAdded_(marker)) {
-	    return false;
-	  }
-	
-	  if (!this.center_) {
-	    this.center_ = marker.getPosition();
-	    this.calculateBounds_();
-	  } else {
-	    if (this.averageCenter_) {
-	      var l = this.markers_.length + 1;
-	      var lat = (this.center_.lat() * (l - 1) + marker.getPosition().lat()) / l;
-	      var lng = (this.center_.lng() * (l - 1) + marker.getPosition().lng()) / l;
-	      this.center_ = new google.maps.LatLng(lat, lng);
-	      this.calculateBounds_();
-	    }
-	  }
-	
-	  marker.isAdded = true;
-	  this.markers_.push(marker);
-	
-	  mCount = this.markers_.length;
-	  mz = this.markerClusterer_.getMaxZoom();
-	  if (mz !== null && this.map_.getZoom() > mz) {
-	    // Zoomed in past max zoom, so show the marker.
-	    if (marker.getMap() !== this.map_) {
-	      marker.setMap(this.map_);
-	    }
-	  } else if (mCount < this.minClusterSize_) {
-	    // Min cluster size not reached so show the marker.
-	    if (marker.getMap() !== this.map_) {
-	      marker.setMap(this.map_);
-	    }
-	  } else if (mCount === this.minClusterSize_) {
-	    // Hide the markers that were showing.
-	    for (i = 0; i < mCount; i++) {
-	      this.markers_[i].setMap(null);
-	    }
-	  } else {
-	    marker.setMap(null);
-	  }
-	
-	  this.updateIcon_();
-	  return true;
-	};
-	
-	
-	/**
-	 * Determines if a marker lies within the cluster's bounds.
-	 *
-	 * @param {google.maps.Marker} marker The marker to check.
-	 * @return {boolean} True if the marker lies in the bounds.
-	 * @ignore
-	 */
-	Cluster.prototype.isMarkerInClusterBounds = function (marker) {
-	  return this.bounds_.contains(marker.getPosition());
-	};
-	
-	
-	/**
-	 * Calculates the extended bounds of the cluster with the grid.
-	 */
-	Cluster.prototype.calculateBounds_ = function () {
-	  var bounds = new google.maps.LatLngBounds(this.center_, this.center_);
-	  this.bounds_ = this.markerClusterer_.getExtendedBounds(bounds);
-	};
-	
-	
-	/**
-	 * Updates the cluster icon.
-	 */
-	Cluster.prototype.updateIcon_ = function () {
-	  var mCount = this.markers_.length;
-	  var mz = this.markerClusterer_.getMaxZoom();
-	
-	  if (mz !== null && this.map_.getZoom() > mz) {
-	    this.clusterIcon_.hide();
-	    return;
-	  }
-	
-	  if (mCount < this.minClusterSize_) {
-	    // Min cluster size not yet reached.
-	    this.clusterIcon_.hide();
-	    return;
-	  }
-	
-	  var numStyles = this.markerClusterer_.getStyles().length;
-	  var sums = this.markerClusterer_.getCalculator()(this.markers_, numStyles);
-	  this.clusterIcon_.setCenter(this.center_);
-	  this.clusterIcon_.useStyle(sums);
-	  this.clusterIcon_.show();
-	};
-	
-	
-	/**
-	 * Determines if a marker has already been added to the cluster.
-	 *
-	 * @param {google.maps.Marker} marker The marker to check.
-	 * @return {boolean} True if the marker has already been added.
-	 */
-	Cluster.prototype.isMarkerAlreadyAdded_ = function (marker) {
-	  var i;
-	  if (this.markers_.indexOf) {
-	    return this.markers_.indexOf(marker) !== -1;
-	  } else {
-	    for (i = 0; i < this.markers_.length; i++) {
-	      if (marker === this.markers_[i]) {
-	        return true;
-	      }
-	    }
-	  }
-	  return false;
-	};
-	
-	
-	/**
-	 * @name MarkerClustererOptions
-	 * @class This class represents the optional parameter passed to
-	 *  the {@link MarkerClusterer} constructor.
-	 * @property {number} [gridSize=60] The grid size of a cluster in pixels. The grid is a square.
-	 * @property {number} [maxZoom=null] The maximum zoom level at which clustering is enabled or
-	 *  <code>null</code> if clustering is to be enabled at all zoom levels.
-	 * @property {boolean} [zoomOnClick=true] Whether to zoom the map when a cluster marker is
-	 *  clicked. You may want to set this to <code>false</code> if you have installed a handler
-	 *  for the <code>click</code> event and it deals with zooming on its own.
-	 * @property {boolean} [averageCenter=false] Whether the position of a cluster marker should be
-	 *  the average position of all markers in the cluster. If set to <code>false</code>, the
-	 *  cluster marker is positioned at the location of the first marker added to the cluster.
-	 * @property {number} [minimumClusterSize=2] The minimum number of markers needed in a cluster
-	 *  before the markers are hidden and a cluster marker appears.
-	 * @property {boolean} [ignoreHidden=false] Whether to ignore hidden markers in clusters. You
-	 *  may want to set this to <code>true</code> to ensure that hidden markers are not included
-	 *  in the marker count that appears on a cluster marker (this count is the value of the
-	 *  <code>text</code> property of the result returned by the default <code>calculator</code>).
-	 *  If set to <code>true</code> and you change the visibility of a marker being clustered, be
-	 *  sure to also call <code>MarkerClusterer.repaint()</code>.
-	 * @property {string} [title=""] The tooltip to display when the mouse moves over a cluster
-	 *  marker. (Alternatively, you can use a custom <code>calculator</code> function to specify a
-	 *  different tooltip for each cluster marker.)
-	 * @property {function} [calculator=MarkerClusterer.CALCULATOR] The function used to determine
-	 *  the text to be displayed on a cluster marker and the index indicating which style to use
-	 *  for the cluster marker. The input parameters for the function are (1) the array of markers
-	 *  represented by a cluster marker and (2) the number of cluster icon styles. It returns a
-	 *  {@link ClusterIconInfo} object. The default <code>calculator</code> returns a
-	 *  <code>text</code> property which is the number of markers in the cluster and an
-	 *  <code>index</code> property which is one higher than the lowest integer such that
-	 *  <code>10^i</code> exceeds the number of markers in the cluster, or the size of the styles
-	 *  array, whichever is less. The <code>styles</code> array element used has an index of
-	 *  <code>index</code> minus 1. For example, the default <code>calculator</code> returns a
-	 *  <code>text</code> value of <code>"125"</code> and an <code>index</code> of <code>3</code>
-	 *  for a cluster icon representing 125 markers so the element used in the <code>styles</code>
-	 *  array is <code>2</code>. A <code>calculator</code> may also return a <code>title</code>
-	 *  property that contains the text of the tooltip to be used for the cluster marker. If
-	 *   <code>title</code> is not defined, the tooltip is set to the value of the <code>title</code>
-	 *   property for the MarkerClusterer.
-	 * @property {string} [clusterClass="cluster"] The name of the CSS class defining general styles
-	 *  for the cluster markers. Use this class to define CSS styles that are not set up by the code
-	 *  that processes the <code>styles</code> array.
-	 * @property {Array} [styles] An array of {@link ClusterIconStyle} elements defining the styles
-	 *  of the cluster markers to be used. The element to be used to style a given cluster marker
-	 *  is determined by the function defined by the <code>calculator</code> property.
-	 *  The default is an array of {@link ClusterIconStyle} elements whose properties are derived
-	 *  from the values for <code>imagePath</code>, <code>imageExtension</code>, and
-	 *  <code>imageSizes</code>.
-	 * @property {boolean} [enableRetinaIcons=false] Whether to allow the use of cluster icons that
-	 * have sizes that are some multiple (typically double) of their actual display size. Icons such
-	 * as these look better when viewed on high-resolution monitors such as Apple's Retina displays.
-	 * Note: if this property is <code>true</code>, sprites cannot be used as cluster icons.
-	 * @property {number} [batchSize=MarkerClusterer.BATCH_SIZE] Set this property to the
-	 *  number of markers to be processed in a single batch when using a browser other than
-	 *  Internet Explorer (for Internet Explorer, use the batchSizeIE property instead).
-	 * @property {number} [batchSizeIE=MarkerClusterer.BATCH_SIZE_IE] When Internet Explorer is
-	 *  being used, markers are processed in several batches with a small delay inserted between
-	 *  each batch in an attempt to avoid Javascript timeout errors. Set this property to the
-	 *  number of markers to be processed in a single batch; select as high a number as you can
-	 *  without causing a timeout error in the browser. This number might need to be as low as 100
-	 *  if 15,000 markers are being managed, for example.
-	 * @property {string} [imagePath=MarkerClusterer.IMAGE_PATH]
-	 *  The full URL of the root name of the group of image files to use for cluster icons.
-	 *  The complete file name is of the form <code>imagePath</code>n.<code>imageExtension</code>
-	 *  where n is the image file number (1, 2, etc.).
-	 * @property {string} [imageExtension=MarkerClusterer.IMAGE_EXTENSION]
-	 *  The extension name for the cluster icon image files (e.g., <code>"png"</code> or
-	 *  <code>"jpg"</code>).
-	 * @property {Array} [imageSizes=MarkerClusterer.IMAGE_SIZES]
-	 *  An array of numbers containing the widths of the group of
-	 *  <code>imagePath</code>n.<code>imageExtension</code> image files.
-	 *  (The images are assumed to be square.)
-	 */
-	/**
-	 * Creates a MarkerClusterer object with the options specified in {@link MarkerClustererOptions}.
-	 * @constructor
-	 * @extends google.maps.OverlayView
-	 * @param {google.maps.Map} map The Google map to attach to.
-	 * @param {Array.<google.maps.Marker>} [opt_markers] The markers to be added to the cluster.
-	 * @param {MarkerClustererOptions} [opt_options] The optional parameters.
-	 */
-	function MarkerClusterer(map, opt_markers, opt_options) {
-	  // MarkerClusterer implements google.maps.OverlayView interface. We use the
-	  // extend function to extend MarkerClusterer with google.maps.OverlayView
-	  // because it might not always be available when the code is defined so we
-	  // look for it at the last possible moment. If it doesn't exist now then
-	  // there is no point going ahead :)
-	  this.extend(MarkerClusterer, google.maps.OverlayView);
-	
-	  opt_markers = opt_markers || [];
-	  opt_options = opt_options || {};
-	
-	  this.markers_ = [];
-	  this.clusters_ = [];
-	  this.listeners_ = [];
-	  this.activeMap_ = null;
-	  this.ready_ = false;
-	
-	  this.gridSize_ = opt_options.gridSize || 60;
-	  this.minClusterSize_ = opt_options.minimumClusterSize || 2;
-	  this.maxZoom_ = opt_options.maxZoom || null;
-	  this.styles_ = opt_options.styles || [];
-	  this.title_ = opt_options.title || "";
-	  this.zoomOnClick_ = true;
-	  if (opt_options.zoomOnClick !== undefined) {
-	    this.zoomOnClick_ = opt_options.zoomOnClick;
-	  }
-	  this.averageCenter_ = false;
-	  if (opt_options.averageCenter !== undefined) {
-	    this.averageCenter_ = opt_options.averageCenter;
-	  }
-	  this.ignoreHidden_ = false;
-	  if (opt_options.ignoreHidden !== undefined) {
-	    this.ignoreHidden_ = opt_options.ignoreHidden;
-	  }
-	  this.enableRetinaIcons_ = false;
-	  if (opt_options.enableRetinaIcons !== undefined) {
-	    this.enableRetinaIcons_ = opt_options.enableRetinaIcons;
-	  }
-	  this.imagePath_ = opt_options.imagePath || MarkerClusterer.IMAGE_PATH;
-	  this.imageExtension_ = opt_options.imageExtension || MarkerClusterer.IMAGE_EXTENSION;
-	  this.imageSizes_ = opt_options.imageSizes || MarkerClusterer.IMAGE_SIZES;
-	  this.calculator_ = opt_options.calculator || MarkerClusterer.CALCULATOR;
-	  this.batchSize_ = opt_options.batchSize || MarkerClusterer.BATCH_SIZE;
-	  this.batchSizeIE_ = opt_options.batchSizeIE || MarkerClusterer.BATCH_SIZE_IE;
-	  this.clusterClass_ = opt_options.clusterClass || "cluster";
-	
-	  if (navigator.userAgent.toLowerCase().indexOf("msie") !== -1) {
-	    // Try to avoid IE timeout when processing a huge number of markers:
-	    this.batchSize_ = this.batchSizeIE_;
-	  }
-	
-	  this.setupStyles_();
-	
-	  this.addMarkers(opt_markers, true);
-	  this.setMap(map); // Note: this causes onAdd to be called
-	}
-	
-	
-	/**
-	 * Implementation of the onAdd interface method.
-	 * @ignore
-	 */
-	MarkerClusterer.prototype.onAdd = function () {
-	  var cMarkerClusterer = this;
-	
-	  this.activeMap_ = this.getMap();
-	  this.ready_ = true;
-	
-	  this.repaint();
-	
-	  // Add the map event listeners
-	  this.listeners_ = [
-	    google.maps.event.addListener(this.getMap(), "zoom_changed", function () {
-	      cMarkerClusterer.resetViewport_(false);
-	      // Workaround for this Google bug: when map is at level 0 and "-" of
-	      // zoom slider is clicked, a "zoom_changed" event is fired even though
-	      // the map doesn't zoom out any further. In this situation, no "idle"
-	      // event is triggered so the cluster markers that have been removed
-	      // do not get redrawn. Same goes for a zoom in at maxZoom.
-	      if (this.getZoom() === (this.get("minZoom") || 0) || this.getZoom() === this.get("maxZoom")) {
-	        google.maps.event.trigger(this, "idle");
-	      }
-	    }),
-	    google.maps.event.addListener(this.getMap(), "idle", function () {
-	      cMarkerClusterer.redraw_();
-	    })
-	  ];
-	};
-	
-	
-	/**
-	 * Implementation of the onRemove interface method.
-	 * Removes map event listeners and all cluster icons from the DOM.
-	 * All managed markers are also put back on the map.
-	 * @ignore
-	 */
-	MarkerClusterer.prototype.onRemove = function () {
-	  var i;
-	
-	  // Put all the managed markers back on the map:
-	  for (i = 0; i < this.markers_.length; i++) {
-	    if (this.markers_[i].getMap() !== this.activeMap_) {
-	      this.markers_[i].setMap(this.activeMap_);
-	    }
-	  }
-	
-	  // Remove all clusters:
-	  for (i = 0; i < this.clusters_.length; i++) {
-	    this.clusters_[i].remove();
-	  }
-	  this.clusters_ = [];
-	
-	  // Remove map event listeners:
-	  for (i = 0; i < this.listeners_.length; i++) {
-	    google.maps.event.removeListener(this.listeners_[i]);
-	  }
-	  this.listeners_ = [];
-	
-	  this.activeMap_ = null;
-	  this.ready_ = false;
-	};
-	
-	
-	/**
-	 * Implementation of the draw interface method.
-	 * @ignore
-	 */
-	MarkerClusterer.prototype.draw = function () {};
-	
-	
-	/**
-	 * Sets up the styles object.
-	 */
-	MarkerClusterer.prototype.setupStyles_ = function () {
-	  var i, size;
-	  if (this.styles_.length > 0) {
-	    return;
-	  }
-	
-	  for (i = 0; i < this.imageSizes_.length; i++) {
-	    size = this.imageSizes_[i];
-	    this.styles_.push({
-	      url: this.imagePath_ + (i + 1) + "." + this.imageExtension_,
-	      height: size,
-	      width: size
-	    });
-	  }
-	};
-	
-	
-	/**
-	 *  Fits the map to the bounds of the markers managed by the clusterer.
-	 */
-	MarkerClusterer.prototype.fitMapToMarkers = function () {
-	  var i;
-	  var markers = this.getMarkers();
-	  var bounds = new google.maps.LatLngBounds();
-	  for (i = 0; i < markers.length; i++) {
-	    bounds.extend(markers[i].getPosition());
-	  }
-	
-	  this.getMap().fitBounds(bounds);
-	};
-	
-	
-	/**
-	 * Returns the value of the <code>gridSize</code> property.
-	 *
-	 * @return {number} The grid size.
-	 */
-	MarkerClusterer.prototype.getGridSize = function () {
-	  return this.gridSize_;
-	};
-	
-	
-	/**
-	 * Sets the value of the <code>gridSize</code> property.
-	 *
-	 * @param {number} gridSize The grid size.
-	 */
-	MarkerClusterer.prototype.setGridSize = function (gridSize) {
-	  this.gridSize_ = gridSize;
-	};
-	
-	
-	/**
-	 * Returns the value of the <code>minimumClusterSize</code> property.
-	 *
-	 * @return {number} The minimum cluster size.
-	 */
-	MarkerClusterer.prototype.getMinimumClusterSize = function () {
-	  return this.minClusterSize_;
-	};
-	
-	/**
-	 * Sets the value of the <code>minimumClusterSize</code> property.
-	 *
-	 * @param {number} minimumClusterSize The minimum cluster size.
-	 */
-	MarkerClusterer.prototype.setMinimumClusterSize = function (minimumClusterSize) {
-	  this.minClusterSize_ = minimumClusterSize;
-	};
-	
-	
-	/**
-	 *  Returns the value of the <code>maxZoom</code> property.
-	 *
-	 *  @return {number} The maximum zoom level.
-	 */
-	MarkerClusterer.prototype.getMaxZoom = function () {
-	  return this.maxZoom_;
-	};
-	
-	
-	/**
-	 *  Sets the value of the <code>maxZoom</code> property.
-	 *
-	 *  @param {number} maxZoom The maximum zoom level.
-	 */
-	MarkerClusterer.prototype.setMaxZoom = function (maxZoom) {
-	  this.maxZoom_ = maxZoom;
-	};
-	
-	
-	/**
-	 *  Returns the value of the <code>styles</code> property.
-	 *
-	 *  @return {Array} The array of styles defining the cluster markers to be used.
-	 */
-	MarkerClusterer.prototype.getStyles = function () {
-	  return this.styles_;
-	};
-	
-	
-	/**
-	 *  Sets the value of the <code>styles</code> property.
-	 *
-	 *  @param {Array.<ClusterIconStyle>} styles The array of styles to use.
-	 */
-	MarkerClusterer.prototype.setStyles = function (styles) {
-	  this.styles_ = styles;
-	};
-	
-	
-	/**
-	 * Returns the value of the <code>title</code> property.
-	 *
-	 * @return {string} The content of the title text.
-	 */
-	MarkerClusterer.prototype.getTitle = function () {
-	  return this.title_;
-	};
-	
-	
-	/**
-	 *  Sets the value of the <code>title</code> property.
-	 *
-	 *  @param {string} title The value of the title property.
-	 */
-	MarkerClusterer.prototype.setTitle = function (title) {
-	  this.title_ = title;
-	};
-	
-	
-	/**
-	 * Returns the value of the <code>zoomOnClick</code> property.
-	 *
-	 * @return {boolean} True if zoomOnClick property is set.
-	 */
-	MarkerClusterer.prototype.getZoomOnClick = function () {
-	  return this.zoomOnClick_;
-	};
-	
-	
-	/**
-	 *  Sets the value of the <code>zoomOnClick</code> property.
-	 *
-	 *  @param {boolean} zoomOnClick The value of the zoomOnClick property.
-	 */
-	MarkerClusterer.prototype.setZoomOnClick = function (zoomOnClick) {
-	  this.zoomOnClick_ = zoomOnClick;
-	};
-	
-	
-	/**
-	 * Returns the value of the <code>averageCenter</code> property.
-	 *
-	 * @return {boolean} True if averageCenter property is set.
-	 */
-	MarkerClusterer.prototype.getAverageCenter = function () {
-	  return this.averageCenter_;
-	};
-	
-	
-	/**
-	 *  Sets the value of the <code>averageCenter</code> property.
-	 *
-	 *  @param {boolean} averageCenter The value of the averageCenter property.
-	 */
-	MarkerClusterer.prototype.setAverageCenter = function (averageCenter) {
-	  this.averageCenter_ = averageCenter;
-	};
-	
-	
-	/**
-	 * Returns the value of the <code>ignoreHidden</code> property.
-	 *
-	 * @return {boolean} True if ignoreHidden property is set.
-	 */
-	MarkerClusterer.prototype.getIgnoreHidden = function () {
-	  return this.ignoreHidden_;
-	};
-	
-	
-	/**
-	 *  Sets the value of the <code>ignoreHidden</code> property.
-	 *
-	 *  @param {boolean} ignoreHidden The value of the ignoreHidden property.
-	 */
-	MarkerClusterer.prototype.setIgnoreHidden = function (ignoreHidden) {
-	  this.ignoreHidden_ = ignoreHidden;
-	};
-	
-	
-	/**
-	 * Returns the value of the <code>enableRetinaIcons</code> property.
-	 *
-	 * @return {boolean} True if enableRetinaIcons property is set.
-	 */
-	MarkerClusterer.prototype.getEnableRetinaIcons = function () {
-	  return this.enableRetinaIcons_;
-	};
-	
-	
-	/**
-	 *  Sets the value of the <code>enableRetinaIcons</code> property.
-	 *
-	 *  @param {boolean} enableRetinaIcons The value of the enableRetinaIcons property.
-	 */
-	MarkerClusterer.prototype.setEnableRetinaIcons = function (enableRetinaIcons) {
-	  this.enableRetinaIcons_ = enableRetinaIcons;
-	};
-	
-	
-	/**
-	 * Returns the value of the <code>imageExtension</code> property.
-	 *
-	 * @return {string} The value of the imageExtension property.
-	 */
-	MarkerClusterer.prototype.getImageExtension = function () {
-	  return this.imageExtension_;
-	};
-	
-	
-	/**
-	 *  Sets the value of the <code>imageExtension</code> property.
-	 *
-	 *  @param {string} imageExtension The value of the imageExtension property.
-	 */
-	MarkerClusterer.prototype.setImageExtension = function (imageExtension) {
-	  this.imageExtension_ = imageExtension;
-	};
-	
-	
-	/**
-	 * Returns the value of the <code>imagePath</code> property.
-	 *
-	 * @return {string} The value of the imagePath property.
-	 */
-	MarkerClusterer.prototype.getImagePath = function () {
-	  return this.imagePath_;
-	};
-	
-	
-	/**
-	 *  Sets the value of the <code>imagePath</code> property.
-	 *
-	 *  @param {string} imagePath The value of the imagePath property.
-	 */
-	MarkerClusterer.prototype.setImagePath = function (imagePath) {
-	  this.imagePath_ = imagePath;
-	};
-	
-	
-	/**
-	 * Returns the value of the <code>imageSizes</code> property.
-	 *
-	 * @return {Array} The value of the imageSizes property.
-	 */
-	MarkerClusterer.prototype.getImageSizes = function () {
-	  return this.imageSizes_;
-	};
-	
-	
-	/**
-	 *  Sets the value of the <code>imageSizes</code> property.
-	 *
-	 *  @param {Array} imageSizes The value of the imageSizes property.
-	 */
-	MarkerClusterer.prototype.setImageSizes = function (imageSizes) {
-	  this.imageSizes_ = imageSizes;
-	};
-	
-	
-	/**
-	 * Returns the value of the <code>calculator</code> property.
-	 *
-	 * @return {function} the value of the calculator property.
-	 */
-	MarkerClusterer.prototype.getCalculator = function () {
-	  return this.calculator_;
-	};
-	
-	
-	/**
-	 * Sets the value of the <code>calculator</code> property.
-	 *
-	 * @param {function(Array.<google.maps.Marker>, number)} calculator The value
-	 *  of the calculator property.
-	 */
-	MarkerClusterer.prototype.setCalculator = function (calculator) {
-	  this.calculator_ = calculator;
-	};
-	
-	
-	/**
-	 * Returns the value of the <code>batchSizeIE</code> property.
-	 *
-	 * @return {number} the value of the batchSizeIE property.
-	 */
-	MarkerClusterer.prototype.getBatchSizeIE = function () {
-	  return this.batchSizeIE_;
-	};
-	
-	
-	/**
-	 * Sets the value of the <code>batchSizeIE</code> property.
-	 *
-	 *  @param {number} batchSizeIE The value of the batchSizeIE property.
-	 */
-	MarkerClusterer.prototype.setBatchSizeIE = function (batchSizeIE) {
-	  this.batchSizeIE_ = batchSizeIE;
-	};
-	
-	
-	/**
-	 * Returns the value of the <code>clusterClass</code> property.
-	 *
-	 * @return {string} the value of the clusterClass property.
-	 */
-	MarkerClusterer.prototype.getClusterClass = function () {
-	  return this.clusterClass_;
-	};
-	
-	
-	/**
-	 * Sets the value of the <code>clusterClass</code> property.
-	 *
-	 *  @param {string} clusterClass The value of the clusterClass property.
-	 */
-	MarkerClusterer.prototype.setClusterClass = function (clusterClass) {
-	  this.clusterClass_ = clusterClass;
-	};
-	
-	
-	/**
-	 *  Returns the array of markers managed by the clusterer.
-	 *
-	 *  @return {Array} The array of markers managed by the clusterer.
-	 */
-	MarkerClusterer.prototype.getMarkers = function () {
-	  return this.markers_;
-	};
-	
-	
-	/**
-	 *  Returns the number of markers managed by the clusterer.
-	 *
-	 *  @return {number} The number of markers.
-	 */
-	MarkerClusterer.prototype.getTotalMarkers = function () {
-	  return this.markers_.length;
-	};
-	
-	
-	/**
-	 * Returns the current array of clusters formed by the clusterer.
-	 *
-	 * @return {Array} The array of clusters formed by the clusterer.
-	 */
-	MarkerClusterer.prototype.getClusters = function () {
-	  return this.clusters_;
-	};
-	
-	
-	/**
-	 * Returns the number of clusters formed by the clusterer.
-	 *
-	 * @return {number} The number of clusters formed by the clusterer.
-	 */
-	MarkerClusterer.prototype.getTotalClusters = function () {
-	  return this.clusters_.length;
-	};
-	
-	
-	/**
-	 * Adds a marker to the clusterer. The clusters are redrawn unless
-	 *  <code>opt_nodraw</code> is set to <code>true</code>.
-	 *
-	 * @param {google.maps.Marker} marker The marker to add.
-	 * @param {boolean} [opt_nodraw] Set to <code>true</code> to prevent redrawing.
-	 */
-	MarkerClusterer.prototype.addMarker = function (marker, opt_nodraw) {
-	  this.pushMarkerTo_(marker);
-	  if (!opt_nodraw) {
-	    this.redraw_();
-	  }
-	};
-	
-	
-	/**
-	 * Adds an array of markers to the clusterer. The clusters are redrawn unless
-	 *  <code>opt_nodraw</code> is set to <code>true</code>.
-	 *
-	 * @param {Array.<google.maps.Marker>} markers The markers to add.
-	 * @param {boolean} [opt_nodraw] Set to <code>true</code> to prevent redrawing.
-	 */
-	MarkerClusterer.prototype.addMarkers = function (markers, opt_nodraw) {
-	  var key;
-	  for (key in markers) {
-	    if (markers.hasOwnProperty(key)) {
-	      this.pushMarkerTo_(markers[key]);
-	    }
-	  }  
-	  if (!opt_nodraw) {
-	    this.redraw_();
-	  }
-	};
-	
-	
-	/**
-	 * Pushes a marker to the clusterer.
-	 *
-	 * @param {google.maps.Marker} marker The marker to add.
-	 */
-	MarkerClusterer.prototype.pushMarkerTo_ = function (marker) {
-	  // If the marker is draggable add a listener so we can update the clusters on the dragend:
-	  if (marker.getDraggable()) {
-	    var cMarkerClusterer = this;
-	    google.maps.event.addListener(marker, "dragend", function () {
-	      if (cMarkerClusterer.ready_) {
-	        this.isAdded = false;
-	        cMarkerClusterer.repaint();
-	      }
-	    });
-	  }
-	  marker.isAdded = false;
-	  this.markers_.push(marker);
-	};
-	
-	
-	/**
-	 * Removes a marker from the cluster.  The clusters are redrawn unless
-	 *  <code>opt_nodraw</code> is set to <code>true</code>. Returns <code>true</code> if the
-	 *  marker was removed from the clusterer.
-	 *
-	 * @param {google.maps.Marker} marker The marker to remove.
-	 * @param {boolean} [opt_nodraw] Set to <code>true</code> to prevent redrawing.
-	 * @return {boolean} True if the marker was removed from the clusterer.
-	 */
-	MarkerClusterer.prototype.removeMarker = function (marker, opt_nodraw) {
-	  var removed = this.removeMarker_(marker);
-	
-	  if (!opt_nodraw && removed) {
-	    this.repaint();
-	  }
-	
-	  return removed;
-	};
-	
-	
-	/**
-	 * Removes an array of markers from the cluster. The clusters are redrawn unless
-	 *  <code>opt_nodraw</code> is set to <code>true</code>. Returns <code>true</code> if markers
-	 *  were removed from the clusterer.
-	 *
-	 * @param {Array.<google.maps.Marker>} markers The markers to remove.
-	 * @param {boolean} [opt_nodraw] Set to <code>true</code> to prevent redrawing.
-	 * @return {boolean} True if markers were removed from the clusterer.
-	 */
-	MarkerClusterer.prototype.removeMarkers = function (markers, opt_nodraw) {
-	  var i, r;
-	  var removed = false;
-	
-	  for (i = 0; i < markers.length; i++) {
-	    r = this.removeMarker_(markers[i]);
-	    removed = removed || r;
-	  }
-	
-	  if (!opt_nodraw && removed) {
-	    this.repaint();
-	  }
-	
-	  return removed;
-	};
-	
-	
-	/**
-	 * Removes a marker and returns true if removed, false if not.
-	 *
-	 * @param {google.maps.Marker} marker The marker to remove
-	 * @return {boolean} Whether the marker was removed or not
-	 */
-	MarkerClusterer.prototype.removeMarker_ = function (marker) {
-	  var i;
-	  var index = -1;
-	  if (this.markers_.indexOf) {
-	    index = this.markers_.indexOf(marker);
-	  } else {
-	    for (i = 0; i < this.markers_.length; i++) {
-	      if (marker === this.markers_[i]) {
-	        index = i;
-	        break;
-	      }
-	    }
-	  }
-	
-	  if (index === -1) {
-	    // Marker is not in our list of markers, so do nothing:
-	    return false;
-	  }
-	
-	  marker.setMap(null);
-	  this.markers_.splice(index, 1); // Remove the marker from the list of managed markers
-	  return true;
-	};
-	
-	
-	/**
-	 * Removes all clusters and markers from the map and also removes all markers
-	 *  managed by the clusterer.
-	 */
-	MarkerClusterer.prototype.clearMarkers = function () {
-	  this.resetViewport_(true);
-	  this.markers_ = [];
-	};
-	
-	
-	/**
-	 * Recalculates and redraws all the marker clusters from scratch.
-	 *  Call this after changing any properties.
-	 */
-	MarkerClusterer.prototype.repaint = function () {
-	  var oldClusters = this.clusters_.slice();
-	  this.clusters_ = [];
-	  this.resetViewport_(false);
-	  this.redraw_();
-	
-	  // Remove the old clusters.
-	  // Do it in a timeout to prevent blinking effect.
-	  setTimeout(function () {
-	    var i;
-	    for (i = 0; i < oldClusters.length; i++) {
-	      oldClusters[i].remove();
-	    }
-	  }, 0);
-	};
-	
-	
-	/**
-	 * Returns the current bounds extended by the grid size.
-	 *
-	 * @param {google.maps.LatLngBounds} bounds The bounds to extend.
-	 * @return {google.maps.LatLngBounds} The extended bounds.
-	 * @ignore
-	 */
-	MarkerClusterer.prototype.getExtendedBounds = function (bounds) {
-	  var projection = this.getProjection();
-	
-	  // Turn the bounds into latlng.
-	  var tr = new google.maps.LatLng(bounds.getNorthEast().lat(),
-	      bounds.getNorthEast().lng());
-	  var bl = new google.maps.LatLng(bounds.getSouthWest().lat(),
-	      bounds.getSouthWest().lng());
-	
-	  // Convert the points to pixels and the extend out by the grid size.
-	  var trPix = projection.fromLatLngToDivPixel(tr);
-	  trPix.x += this.gridSize_;
-	  trPix.y -= this.gridSize_;
-	
-	  var blPix = projection.fromLatLngToDivPixel(bl);
-	  blPix.x -= this.gridSize_;
-	  blPix.y += this.gridSize_;
-	
-	  // Convert the pixel points back to LatLng
-	  var ne = projection.fromDivPixelToLatLng(trPix);
-	  var sw = projection.fromDivPixelToLatLng(blPix);
-	
-	  // Extend the bounds to contain the new bounds.
-	  bounds.extend(ne);
-	  bounds.extend(sw);
-	
-	  return bounds;
-	};
-	
-	
-	/**
-	 * Redraws all the clusters.
-	 */
-	MarkerClusterer.prototype.redraw_ = function () {
-	  this.createClusters_(0);
-	};
-	
-	
-	/**
-	 * Removes all clusters from the map. The markers are also removed from the map
-	 *  if <code>opt_hide</code> is set to <code>true</code>.
-	 *
-	 * @param {boolean} [opt_hide] Set to <code>true</code> to also remove the markers
-	 *  from the map.
-	 */
-	MarkerClusterer.prototype.resetViewport_ = function (opt_hide) {
-	  var i, marker;
-	  // Remove all the clusters
-	  for (i = 0; i < this.clusters_.length; i++) {
-	    this.clusters_[i].remove();
-	  }
-	  this.clusters_ = [];
-	
-	  // Reset the markers to not be added and to be removed from the map.
-	  for (i = 0; i < this.markers_.length; i++) {
-	    marker = this.markers_[i];
-	    marker.isAdded = false;
-	    if (opt_hide) {
-	      marker.setMap(null);
-	    }
-	  }
-	};
-	
 	
 	/**
-	 * Calculates the distance between two latlng locations in km.
+	 *  google-maps-utility-library-v3-markerwithlabel
 	 *
-	 * @param {google.maps.LatLng} p1 The first lat lng point.
-	 * @param {google.maps.LatLng} p2 The second lat lng point.
-	 * @return {number} The distance between the two points in km.
-	 * @see http://www.movable-type.co.uk/scripts/latlong.html
-	*/
-	MarkerClusterer.prototype.distanceBetweenPoints_ = function (p1, p2) {
-	  var R = 6371; // Radius of the Earth in km
-	  var dLat = (p2.lat() - p1.lat()) * Math.PI / 180;
-	  var dLon = (p2.lng() - p1.lng()) * Math.PI / 180;
-	  var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-	    Math.cos(p1.lat() * Math.PI / 180) * Math.cos(p2.lat() * Math.PI / 180) *
-	    Math.sin(dLon / 2) * Math.sin(dLon / 2);
-	  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-	  var d = R * c;
-	  return d;
-	};
-	
-	
-	/**
-	 * Determines if a marker is contained in a bounds.
-	 *
-	 * @param {google.maps.Marker} marker The marker to check.
-	 * @param {google.maps.LatLngBounds} bounds The bounds to check against.
-	 * @return {boolean} True if the marker is in the bounds.
-	 */
-	MarkerClusterer.prototype.isMarkerInBounds_ = function (marker, bounds) {
-	  return bounds.contains(marker.getPosition());
-	};
-	
-	
-	/**
-	 * Adds a marker to a cluster, or creates a new cluster.
-	 *
-	 * @param {google.maps.Marker} marker The marker to add.
-	 */
-	MarkerClusterer.prototype.addToClosestCluster_ = function (marker) {
-	  var i, d, cluster, center;
-	  var distance = 40000; // Some large number
-	  var clusterToAddTo = null;
-	  for (i = 0; i < this.clusters_.length; i++) {
-	    cluster = this.clusters_[i];
-	    center = cluster.getCenter();
-	    if (center) {
-	      d = this.distanceBetweenPoints_(center, marker.getPosition());
-	      if (d < distance) {
-	        distance = d;
-	        clusterToAddTo = cluster;
-	      }
-	    }
-	  }
-	
-	  if (clusterToAddTo && clusterToAddTo.isMarkerInClusterBounds(marker)) {
-	    clusterToAddTo.addMarker(marker);
-	  } else {
-	    cluster = new Cluster(this);
-	    cluster.addMarker(marker);
-	    this.clusters_.push(cluster);
-	  }
-	};
-	
-	
-	/**
-	 * Creates the clusters. This is done in batches to avoid timeout errors
-	 *  in some browsers when there is a huge number of markers.
-	 *
-	 * @param {number} iFirst The index of the first marker in the batch of
-	 *  markers to be added to clusters.
-	 */
-	MarkerClusterer.prototype.createClusters_ = function (iFirst) {
-	  var i, marker;
-	  var mapBounds;
-	  var cMarkerClusterer = this;
-	  if (!this.ready_) {
-	    return;
-	  }
-	
-	  // Cancel previous batch processing if we're working on the first batch:
-	  if (iFirst === 0) {
-	    /**
-	     * This event is fired when the <code>MarkerClusterer</code> begins
-	     *  clustering markers.
-	     * @name MarkerClusterer#clusteringbegin
-	     * @param {MarkerClusterer} mc The MarkerClusterer whose markers are being clustered.
-	     * @event
-	     */
-	    google.maps.event.trigger(this, "clusteringbegin", this);
-	
-	    if (typeof this.timerRefStatic !== "undefined") {
-	      clearTimeout(this.timerRefStatic);
-	      delete this.timerRefStatic;
-	    }
-	  }
-	
-	  // Get our current map view bounds.
-	  // Create a new bounds object so we don't affect the map.
-	  //
-	  // See Comments 9 & 11 on Issue 3651 relating to this workaround for a Google Maps bug:
-	  if (this.getMap().getZoom() > 3) {
-	    mapBounds = new google.maps.LatLngBounds(this.getMap().getBounds().getSouthWest(),
-	      this.getMap().getBounds().getNorthEast());
-	  } else {
-	    mapBounds = new google.maps.LatLngBounds(new google.maps.LatLng(85.02070771743472, -178.48388434375), new google.maps.LatLng(-85.08136444384544, 178.00048865625));
-	  }
-	  var bounds = this.getExtendedBounds(mapBounds);
-	
-	  var iLast = Math.min(iFirst + this.batchSize_, this.markers_.length);
-	
-	  for (i = iFirst; i < iLast; i++) {
-	    marker = this.markers_[i];
-	    if (!marker.isAdded && this.isMarkerInBounds_(marker, bounds)) {
-	      if (!this.ignoreHidden_ || (this.ignoreHidden_ && marker.getVisible())) {
-	        this.addToClosestCluster_(marker);
-	      }
-	    }
-	  }
-	
-	  if (iLast < this.markers_.length) {
-	    this.timerRefStatic = setTimeout(function () {
-	      cMarkerClusterer.createClusters_(iLast);
-	    }, 0);
-	  } else {
-	    delete this.timerRefStatic;
-	
-	    /**
-	     * This event is fired when the <code>MarkerClusterer</code> stops
-	     *  clustering markers.
-	     * @name MarkerClusterer#clusteringend
-	     * @param {MarkerClusterer} mc The MarkerClusterer whose markers are being clustered.
-	     * @event
-	     */
-	    google.maps.event.trigger(this, "clusteringend", this);
-	  }
-	};
-	
-	
-	/**
-	 * Extends an object's prototype by another's.
-	 *
-	 * @param {Object} obj1 The object to be extended.
-	 * @param {Object} obj2 The object to extend with.
-	 * @return {Object} The new extended object.
-	 * @ignore
-	 */
-	MarkerClusterer.prototype.extend = function (obj1, obj2) {
-	  return (function (object) {
-	    var property;
-	    for (property in object.prototype) {
-	      this.prototype[property] = object.prototype[property];
-	    }
-	    return this;
-	  }).apply(obj1, [obj2]);
-	};
-	
-	
-	/**
-	 * The default function for determining the label text and style
-	 * for a cluster icon.
-	 *
-	 * @param {Array.<google.maps.Marker>} markers The array of markers represented by the cluster.
-	 * @param {number} numStyles The number of marker styles available.
-	 * @return {ClusterIconInfo} The information resource for the cluster.
-	 * @constant
-	 * @ignore
-	 */
-	MarkerClusterer.CALCULATOR = function (markers, numStyles) {
-	  var index = 0;
-	  var title = "";
-	  var count = markers.length.toString();
-	
-	  var dv = count;
-	  while (dv !== 0) {
-	    dv = parseInt(dv / 10, 10);
-	    index++;
-	  }
-	
-	  index = Math.min(index, numStyles);
-	  return {
-	    text: count,
-	    index: index,
-	    title: title
-	  };
-	};
-	
-	
-	/**
-	 * The number of markers to process in one batch.
-	 *
-	 * @type {number}
-	 * @constant
-	 */
-	MarkerClusterer.BATCH_SIZE = 2000;
-	
-	
-	/**
-	 * The number of markers to process in one batch (IE only).
-	 *
-	 * @type {number}
-	 * @constant
-	 */
-	MarkerClusterer.BATCH_SIZE_IE = 500;
-	
-	
-	/**
-	 * The default root name for the marker cluster images.
-	 *
-	 * @type {string}
-	 * @constant
-	 */
-	MarkerClusterer.IMAGE_PATH = "http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclustererplus/images/m";
-	
-	
-	/**
-	 * The default extension name for the marker cluster images.
-	 *
-	 * @type {string}
-	 * @constant
-	 */
-	MarkerClusterer.IMAGE_EXTENSION = "png";
-	
-	
-	/**
-	 * The default array of sizes for the marker cluster images.
-	 *
-	 * @type {Array.<number>}
-	 * @constant
+	 * @version: 1.1.10
+	 * @author: Gary Little (inspired by code from Marc Ridey of Google).
+	 * @contributors: Nicholas McCready
+	 * @date: Fri May 13 2016 16:29:58 GMT-0400 (EDT)
+	 * @license: Apache License 2.0
 	 */
-	MarkerClusterer.IMAGE_SIZES = [53, 56, 66, 78, 90];
-	
 	/**
-	 * @name MarkerWithLabel for V3
-	 * @version 1.1.10 [April 8, 2014]
-	 * @author Gary Little (inspired by code from Marc Ridey of Google).
-	 * @copyright Copyright 2012 Gary Little [gary at luxcentral.com]
-	 * @fileoverview MarkerWithLabel extends the Google Maps JavaScript API V3
-	 *  <code>google.maps.Marker</code> class.
-	 *  <p>
 	 *  MarkerWithLabel allows you to define markers with associated labels. As you would expect,
 	 *  if the marker is draggable, so too will be the label. In addition, a marker with a label
 	 *  responds to all mouse events in the same manner as a regular marker. It also fires mouse
@@ -82864,21 +81629,6 @@
 	 *  If you drag a marker by its label, you can cancel the drag and return the marker to its
 	 *  original position by pressing the <code>Esc</code> key. This doesn't work if you drag the marker
 	 *  itself because this feature is not (yet) supported in the <code>google.maps.Marker</code> class.
-	 */
-	
-	/*!
-	 *
-	 * Licensed under the Apache License, Version 2.0 (the "License");
-	 * you may not use this file except in compliance with the License.
-	 * You may obtain a copy of the License at
-	 *
-	 *       http://www.apache.org/licenses/LICENSE-2.0
-	 *
-	 * Unless required by applicable law or agreed to in writing, software
-	 * distributed under the License is distributed on an "AS IS" BASIS,
-	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	 * See the License for the specific language governing permissions and
-	 * limitations under the License.
 	 */
 	
 	/*jslint browser:true */
@@ -87042,12 +85792,12 @@
 	// the 2nd parameter is an array of 'requires'
 	// 'starter.services' is found in services.js
 	// 'starter.controllers' is found in controllers.js
-	angular.module('beeline-admin', ['uiGmapgoogle-maps', 'ui.router', 'ui.bootstrap', 'beeline.calendar', 'auth0', 'angular-storage', 'angular-jwt']).config(__webpack_require__(/*! ./router */ 59).default).config(configureGoogleMaps).config(configureLoginPage).directive('adminNav', __webpack_require__(/*! ./directives/adminNav/adminNav */ 60).default).directive('accountView', __webpack_require__(/*! ./directives/accountView/accountView */ 62).default).directive('paymentView', __webpack_require__(/*! ./directives/paymentView/paymentView */ 63).default).directive('ticketView', __webpack_require__(/*! ./directives/ticketView/ticketView */ 74).default).directive('routeSelector', __webpack_require__(/*! ./directives/routeSelector/routeSelector */ 76).default).directive('routeEditor', __webpack_require__(/*! ./directives/routeEditor/routeEditor */ 78).default).directive('pathEditor', __webpack_require__(/*! ./directives/pathEditor/pathEditor */ 80).default).directive('tripsEditor', __webpack_require__(/*! ./directives/tripsEditor/tripsEditor */ 82).default).directive('companySelector', __webpack_require__(/*! ./directives/companySelector/companySelector */ 112).default).directive('tripSelector', __webpack_require__(/*! ./directives/tripSelector/tripSelector */ 113).default).directive('stopSelector', __webpack_require__(/*! ./directives/stopSelector/stopSelector */ 125).default).directive('superAdminCompanySelector', __webpack_require__(/*! ./directives/companySelector/superAdminCompanySelector */ 126).default).service('AdminService', __webpack_require__(/*! ./services/adminService */ 127).default).service('RoutesService', __webpack_require__(/*! ./services/routesService */ 132).default).service('StopsPopup', __webpack_require__(/*! ./services/stopsPopup */ 136).default).service('mapService', __webpack_require__(/*! ./services/mapService */ 138).default).service('DriverService', __webpack_require__(/*! ./services/driverService */ 139).default).service('LoadingSpinner', __webpack_require__(/*! ./services/loadingSpinner */ 142).default).controller('transactions', __webpack_require__(/*! ./controllers/transactionsController.js */ 143).default).controller('routes', __webpack_require__(/*! ./controllers/routesController.js */ 144).default).controller('summary', __webpack_require__(/*! ./controllers/summaryController.js */ 145).default).controller('bookings', __webpack_require__(/*! ./controllers/bookingsController.js */ 146).default).controller('bookingsWrs', __webpack_require__(/*! ./controllers/bookingsControllerWrs.js */ 147).default).controller('login', __webpack_require__(/*! ./controllers/loginController.js */ 153).default).filter('makeRoutePath', __webpack_require__(/*! ./shared/filters.js */ 154).makeRoutePath).run(function (auth, $rootScope, store, jwtHelper) {
+	angular.module('beeline-admin', ['uiGmapgoogle-maps', 'ui.router', 'ui.bootstrap', 'beeline.calendar', 'auth0', 'angular-storage', 'angular-jwt']).config(__webpack_require__(/*! ./router */ 59).default).config(configureGoogleMaps).config(configureLoginPage).directive('adminNav', __webpack_require__(/*! ./directives/adminNav/adminNav */ 60).default).directive('accountView', __webpack_require__(/*! ./directives/accountView/accountView */ 62).default).directive('paymentView', __webpack_require__(/*! ./directives/paymentView/paymentView */ 63).default).directive('ticketView', __webpack_require__(/*! ./directives/ticketView/ticketView */ 74).default).directive('routeSelector', __webpack_require__(/*! ./directives/routeSelector/routeSelector */ 76).default).directive('routeEditor', __webpack_require__(/*! ./directives/routeEditor/routeEditor */ 78).default).directive('pathEditor', __webpack_require__(/*! ./directives/pathEditor/pathEditor */ 80).default).directive('tripsEditor', __webpack_require__(/*! ./directives/tripsEditor/tripsEditor */ 82).default).directive('companySelector', __webpack_require__(/*! ./directives/companySelector/companySelector */ 112).default).directive('tripSelector', __webpack_require__(/*! ./directives/tripSelector/tripSelector */ 113).default).directive('stopSelector', __webpack_require__(/*! ./directives/stopSelector/stopSelector */ 125).default).directive('superAdminCompanySelector', __webpack_require__(/*! ./directives/companySelector/superAdminCompanySelector */ 126).default).service('AdminService', __webpack_require__(/*! ./services/adminService */ 127).default).service('RoutesService', __webpack_require__(/*! ./services/routesService */ 132).default).service('StopsPopup', __webpack_require__(/*! ./services/stopsPopup */ 136).default).service('mapService', __webpack_require__(/*! ./services/mapService */ 138).default).service('DriverService', __webpack_require__(/*! ./services/driverService */ 139).default).service('LoadingSpinner', __webpack_require__(/*! ./services/loadingSpinner */ 142).default).controller('transactions', __webpack_require__(/*! ./controllers/transactionsController.js */ 143).default).controller('routes', __webpack_require__(/*! ./controllers/routesController.js */ 144).default).controller('summary', __webpack_require__(/*! ./controllers/summaryController.js */ 145).default).controller('bookings', __webpack_require__(/*! ./controllers/bookingsController.js */ 146).default).controller('bookingsWrs', __webpack_require__(/*! ./controllers/bookingsControllerWrs.js */ 147).default).controller('login', __webpack_require__(/*! ./controllers/loginController.js */ 153).default).filter('makeRoutePath', __webpack_require__(/*! ./shared/filters.js */ 154).makeRoutePath).run(function (auth, $rootScope, store, jwtHelper, $window) {
 	  auth.hookEvents();
 	
 	  // This events gets triggered on refresh or URL change
 	  $rootScope.$on('$locationChangeStart', function () {
-	    var token = store.get('token');
+	    var token = store.get('sessionToken');
 	    if (token) {
 	      if (!jwtHelper.isTokenExpired(token)) {
 	        if (!auth.isAuthenticated) {
@@ -87058,6 +85808,43 @@
 	      }
 	    }
 	  });
+	
+	  // Unfortunately the auth0 library does not handle redirect errors!
+	  // WTF!
+	  // For redirect mode
+	  var notifiedLoginError = false;
+	  $rootScope.$on('$locationChangeStart', function () {
+	    if (notifiedLoginError) return;
+	
+	    console.log($window.location.hash);
+	    // decode and try to trap authentication errors
+	    try {
+	      var hash = $window.location.hash.substr(1);
+	      if (hash.startsWith('/')) {
+	        hash = hash.substr(1);
+	      }
+	      if (!hash) return;
+	
+	      var bits = hash.split('&').map(function (b) {
+	        return b.split('=');
+	      });
+	      bits = _.keyBy(bits, function (b) {
+	        return b[0];
+	      });
+	      bits = _.mapValues(bits, function (v) {
+	        return decodeURIComponent(v[1]);
+	      });
+	
+	      if (bits.error) {
+	        alert(bits.error + '\n\n' + bits.error_description);
+	      }
+	
+	      // Because we only need this handler when there's
+	      // a failure after redirect, after checking at the start
+	      // of page load, we don't need this handler any more.
+	      notifiedLoginError = true;
+	    } catch (error) {}
+	  });
 	});
 	
 	function configureGoogleMaps(uiGmapGoogleMapApiProvider) {
@@ -87067,46 +85854,26 @@
 	}
 	
 	function configureLoginPage(authProvider) {
-	  authProvider.init({
-	    domain: env.AUTH0_DOMAIN,
-	    clientId: env.AUTH0_CID,
-	    loginState: 'login'
+	  authProvider.on('loginFailure', function (error) {
+	    alert(error.error + '\n\n' + error.error_description);
+	    console.log(error);
+	    // $location.path('/login');
 	  });
 	
-	  authProvider.on('authenticated', function ($location) {
+	  authProvider.on('authenticated', function ($location, idToken, profilePromise, jwtHelper) {
 	    console.log('I am authenticated');
+	    console.log(jwtHelper.decodeToken(idToken));
 	  });
 	
-	  authProvider.on('loginSuccess', function ($location, profilePromise, idToken, store, AdminService, auth) {
+	  authProvider.on('loginSuccess', function ($location, profilePromise, jwtHelper, idToken, store, AdminService, auth) {
 	    console.log("Login Success");
-	    store.set('token', idToken);
-	    AdminService.beeline({
-	      method: 'POST',
-	      url: '/admins/auth/login',
-	      data: {
-	        token: idToken
-	      }
-	    }).then(function (response) {
-	      console.log(response);
-	      store.set('sessionToken', response.data.sessionToken);
-	    }).then(null, function (error) {
-	      auth.signout();
-	      store.remove('sessionToken');
-	      store.remove('profile');
-	      console.log(error);
-	      alert(error.data.error + ' ' + error.data.message);
-	    });
+	    console.log(jwtHelper.decodeToken(idToken));
+	    store.set('sessionToken', idToken);
 	
 	    profilePromise.then(function (p) {
 	      console.log(p);
 	      store.set('profile', p);
 	    });
-	    $location.path('/');
-	  });
-	
-	  authProvider.on('loginFailure', function () {
-	    console.log("Error logging in");
-	    $location.path('/login');
 	  });
 	}
 
@@ -88993,7 +87760,7 @@
 /***/ function(module, exports) {
 
 	module.exports = {
-		"BACKEND_URL": "https://api.beeline.sg",
+		"BACKEND_URL": "http://localhost:8080",
 		"AUTH0_CID": "BslsfnrdKMedsmr9GYkTv7ejJPReMgcE",
 		"AUTH0_DOMAIN": "beeline.au.auth0.com"
 	};
@@ -89003,7 +87770,7 @@
 /*!*********************************!*\
   !*** ./beeline-admin/router.js ***!
   \*********************************/
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -89011,7 +87778,7 @@
 	  value: true
 	});
 	
-	exports.default = function ($stateProvider, $urlRouterProvider) {
+	exports.default = function ($stateProvider, $urlRouterProvider, authProvider) {
 	
 	  // Ionic uses AngularUI Router which uses the concept of states
 	  // Learn more here: https://github.com/angular-ui/ui-router
@@ -89066,9 +87833,17 @@
 	      requiresLogin: true
 	    }
 	  });
+	
+	  authProvider.init({
+	    domain: env.AUTH0_DOMAIN,
+	    clientId: env.AUTH0_CID,
+	    loginUrl: '/login'
+	  });
 	  // if none of the above states are matched, use this as the fallback
 	  $urlRouterProvider.otherwise('/');
 	};
+	
+	var env = __webpack_require__(/*! ./env */ 58);
 
 /***/ },
 /* 60 */
@@ -95152,6 +93927,7 @@
 	
 	  this.logout = function () {
 	    auth.signout();
+	    store.remove('token');
 	    store.remove('sessionToken');
 	    store.remove('profile');
 	    $location.path('/login');
@@ -95159,11 +93935,14 @@
 	
 	  var lastSessionToken = null;
 	  var lastSession;
+	
 	  this.session = function () {
 	    if (lastSessionToken == store.get('sessionToken')) {
 	      return lastSession;
 	    } else {
 	      lastSession = jwtHelper.decodeToken(store.get('sessionToken'));
+	      // Shortcut so that the components know user's role. FIXME?
+	      lastSession.role = lastSession.app_metadata.roles.indexOf('superadmin') != -1 ? 'superadmin' : lastSession.app_metadata.roles.indexOf('admin') != -1 ? 'admin' : null;
 	      return lastSession;
 	    }
 	  };
@@ -96255,15 +95034,22 @@
 	
 	exports.default = function () {
 	  var spinnerElem = document.createElement('DIV');
+	  var count = 0;
 	  spinnerElem.id = 'spinner-elem';
 	
 	  window.document.body.appendChild(spinnerElem);
 	
 	  function hide() {
-	    spinnerElem.style.display = 'none';
+	    count = Math.max(0, count - 1);
+	    if (count == 0) {
+	      spinnerElem.style.display = 'none';
+	    }
 	  }
 	  function show() {
-	    spinnerElem.style.display = 'block';
+	    count = count + 1;
+	    if (count != 0) {
+	      spinnerElem.style.display = 'block';
+	    }
 	  }
 	
 	  this.watchPromise = function (p) {
@@ -96867,7 +95653,7 @@
   \******************************************************/
 /***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -96875,6 +95661,20 @@
 	
 	exports.default = function ($scope, auth) {
 	  $scope.auth = auth;
+	  $scope.signin = function () {
+	    auth.signin({
+	      authParams: {
+	        scope: 'openid name email app_metadata user_id'
+	      }
+	    });
+	  };
+	  $scope.signup = function () {
+	    auth.signup({
+	      authParams: {
+	        scope: 'openid name email app_metadata user_id'
+	      }
+	    });
+	  };
 	};
 
 /***/ },

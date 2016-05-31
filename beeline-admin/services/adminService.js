@@ -28,6 +28,7 @@ export default function ($http, $location, store, jwtHelper, auth) {
 
   this.logout = function() {
     auth.signout();
+    store.remove('token');
     store.remove('sessionToken');
     store.remove('profile');
     $location.path('/login');
@@ -35,12 +36,17 @@ export default function ($http, $location, store, jwtHelper, auth) {
 
   var lastSessionToken = null;
   var lastSession;
+
   this.session = function() {
     if (lastSessionToken == store.get('sessionToken')) {
       return lastSession;
     }
     else {
       lastSession = jwtHelper.decodeToken(store.get('sessionToken'))
+      // Shortcut so that the components know user's role. FIXME?
+      lastSession.role = lastSession.app_metadata.roles.indexOf('superadmin') != -1 ? 'superadmin' :
+            lastSession.app_metadata.roles.indexOf('admin') != -1 ? 'admin'
+            : null;
       return lastSession;
     }
   }
