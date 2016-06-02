@@ -160,11 +160,6 @@ trips-editor section.add-trips {
 .bookings-page tr.refunded {
   color: #888; }
 
-.trip-selector {
-  border: solid 1px black; }
-  .trip-selector label {
-    display: block; }
-
 #spinner-elem {
   position: fixed;
   top: 0;
