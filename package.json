@@ -5,7 +5,7 @@
   "dependencies": {
     "angular": "^1.5.6",
     "angular-animate": "^1.5.5",
-    "angular-cookies": "^1.5.5",
+    "angular-cookies": "^1.5.6",
     "angular-google-maps": "^2.3.2",
     "angular-jwt": "0.0.9",
     "angular-simple-logger": "^0.1.7",
@@ -35,6 +35,7 @@
     "html-loader": "^0.4.3",
     "json-loader": "^0.5.4",
     "jsonwebtoken": "^6.2.0",
+    "left-pad": "^1.1.0",
     "lodash": "^4.11.1",
     "node-sass": "^3.7.0",
     "sass-loader": "^3.2.0",

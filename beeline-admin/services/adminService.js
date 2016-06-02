@@ -12,6 +12,9 @@ function decodeToken(tk) {
 }
 
 export default function ($http, $location, store, jwtHelper, auth) {
+
+  this.serverUrl = () => env.BACKEND_URL;
+
   this.beeline = function(options) {
     options.url = env.BACKEND_URL + options.url
 
@@ -25,19 +28,41 @@ export default function ($http, $location, store, jwtHelper, auth) {
 
   this.logout = function() {
     auth.signout();
+    store.remove('token');
     store.remove('sessionToken');
     store.remove('profile');
     $location.path('/login');
   }
 
+  this.login = function() {
+    auth.signin({
+      authParams: {
+        scope: 'openid name email app_metadata user_id'
+      }
+    })
+  }
+
+  this.signup = function() {
+    auth.signup({
+      authParams: {
+        scope: 'openid name email app_metadata user_id'
+      }
+    })
+  }
+  
   var lastSessionToken = null;
   var lastSession;
+
   this.session = function() {
     if (lastSessionToken == store.get('sessionToken')) {
       return lastSession;
     }
     else {
       lastSession = jwtHelper.decodeToken(store.get('sessionToken'))
+      // Shortcut so that the components know user's role. FIXME?
+      lastSession.role = lastSession.app_metadata.roles.indexOf('superadmin') != -1 ? 'superadmin' :
+            lastSession.app_metadata.roles.indexOf('admin') != -1 ? 'admin'
+            : null;
       return lastSession;
     }
   }

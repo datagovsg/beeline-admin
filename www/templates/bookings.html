@@ -89,7 +89,16 @@
             {{ticket.createdAt | date:'yyyy-MM-dd HH:mm:ss'}}
           </td>
           <td>
-            {{ticket.user.name}}: {{ticket.user.email}}, {{ticket.user.telephone}}
+            <span ng-if="!ticket.user.json">
+              {{ticket.user.name}}: {{ticket.user.email}}, {{ticket.user.telephone}}
+            </span>
+
+            <payment-view ng-if="ticket.user.json"
+              pv-data="ticket.user.json"
+              pv-title="ticket.user.json.name"
+              collapsed="false"
+              >
+            </payment-view>
           </td>
           <td>
             {{ticket.status}}

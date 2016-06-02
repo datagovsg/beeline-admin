@@ -26,15 +26,23 @@
     <li>
       <a class="tab-item"
          ui-sref="summary"
+         title="See the list of bookings for each month"
          >
       	 <span class="tab-title">Summary</span>
       </a>
     </li>
-    <li>
+    <li ng-if="auth.isAuthenticated">
       <a class="tab-item"
         ng-click="adminService.logout()"
         >
         Logout
+      </a>
+    </li>
+    <li ng-if="!auth.isAuthenticated">
+      <a class="tab-item"
+        ng-click="adminService.login()"
+        >
+        Login
       </a>
     </li>
   </ul>

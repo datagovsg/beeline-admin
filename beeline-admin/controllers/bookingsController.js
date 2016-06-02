@@ -1,6 +1,6 @@
 import querystring from 'querystring'
 
-export default function($scope, AdminService, RoutesService) {
+export default function($scope, AdminService, RoutesService, LoadingSpinner) {
   $scope.tickets = [];
   $scope.currentPage = 1;
 
@@ -50,17 +50,28 @@ export default function($scope, AdminService, RoutesService) {
     if ($scope.filter.statuses.length) {
       queryOptions.statuses = JSON.stringify($scope.filter.statuses)
     }
-    AdminService.beeline({
+    var queryPromise = AdminService.beeline({
       method: 'GET',
-      url: `/tickets/full?` + querystring.stringify(queryOptions),
+      url: `/custom/wrs/report?` + querystring.stringify(queryOptions),
     })
     .then((result) => {
-      $scope.tickets = result.data.tickets;
-      $scope.pageCount = result.data.pageCount;
+      $scope.tickets = result.data.rows;
+      $scope.pageCount = Math.ceil(result.data.count / result.data.perPage);
+
+      for (let ticket of $scope.tickets) {
+        try {
+          ticket.user.json = JSON.parse(ticket.user.name)
+        }
+        catch (err) {
+        }
+      }
     })
     .catch((err) => {
       console.error(err.stack);
     });
+
+
+    LoadingSpinner.watchPromise(queryPromise)
   }
 
   function queryRoutes() {

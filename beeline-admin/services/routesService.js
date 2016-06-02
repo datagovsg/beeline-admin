@@ -8,6 +8,23 @@ export default function (AdminService, DriverService) {
   var routesById = null;
   var routesCache;
 
+  function makeRouteQuery(options) {
+    var query = {};
+
+    if (options) {
+      if (options.startDate)
+        query.start_date = options.startDate;
+      if (options.endDate)
+        query.end_date = options.endDate;
+      if (options.includeTrips)
+        query.include_trips = options.includeTrips;
+      if (options.includeAvailability)
+        query.include_availability = options.includeAvailability;
+    }
+    query = querystring.stringify(query)
+    return query
+  }
+
   /**
     @param options -- options to pass in query string to /routes
       @prop startDate : string | int
@@ -20,16 +37,11 @@ export default function (AdminService, DriverService) {
       return routesPromise;
     }
     else {
-      var query = options ? {
-        start_date: options.startDate,
-        end_date: options.endDate,
-        include_trips: options.includeTrips,
-        include_availability: options.includeAvailability
-      } : {}
+      var query = makeRouteQuery(options);
+
       if (AdminService.session().role == 'admin') {
         query.transportCompanyId = AdminService.session().transportCompanyId
       }
-      query = querystring.stringify(query)
 
       var promise = AdminService.beeline({
         method: 'GET',
@@ -52,7 +64,21 @@ export default function (AdminService, DriverService) {
     }
   }
 
-  this.getRoute = function(id) {
+  this.getRoute = function(id, options) {
+    if (options) {
+      var query = makeRouteQuery(options);
+
+      return AdminService.beeline({
+        method: 'GET',
+        url: `/routes/${id}?${query}`,
+      })
+      .then((response) => {
+        for (let trip of response.data.trips) {
+          trip.date = new Date(trip.date)
+        }
+        return response.data;
+      })
+    }
     return this.getRoutes()
     .then((response) => {
       return routesById[id]

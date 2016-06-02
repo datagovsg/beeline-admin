@@ -81,7 +81,7 @@ module.exports = {
   ],
   output: {
     path: path.resolve('www/lib/beeline-admin'),
-    filename: 'bundle.js',
+    filename: process.env.OUTPUT_FILENAME || 'bundle.js',
     pathinfo: true,
   },
   plugins: [

@@ -1,5 +1,7 @@
 
-export default function($stateProvider, $urlRouterProvider) {
+const env = require('./env')
+
+export default function($stateProvider, $urlRouterProvider, authProvider) {
 
   // Ionic uses AngularUI Router which uses the concept of states
   // Learn more here: https://github.com/angular-ui/ui-router
@@ -53,13 +55,29 @@ export default function($stateProvider, $urlRouterProvider) {
 
   .state('bookings', {
     url: '/bookings',
-    templateUrl: 'templates/bookings.html',
-    controller: 'bookings',
+    templateUrl: 'templates/bookings-wrs.html',
+    controller: 'bookingsWrs',
     data: {
       requiresLogin: true,
     }
   })
+
+
+  .state('test', {
+    url: '/test',
+    templateUrl: 'templates/test.html',
+    controller: function ($scope) {
+    },
+    data: {
+      requiresLogin: true,
+    }
+  })
+
+  authProvider.init({
+    domain: env.AUTH0_DOMAIN,
+    clientId: env.AUTH0_CID,
+    loginState: 'login',
+  })
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/');
-
 }

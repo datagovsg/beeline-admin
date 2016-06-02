@@ -34,6 +34,7 @@ $selected: #CCC;
 @import 'scss/stopsPopup';
 @import 'scss/summary';
 @import 'scss/bookings';
+@import 'scss/loadingSpinner';
 
 html, body {
   height: 100%;
@@ -87,7 +88,7 @@ li.active {
   flex-direction: row;
   align-items: center;
   margin: 0 0 1em 0;
-  
+
   ul {
     flex: 0 0 auto;
 
@@ -118,4 +119,8 @@ li.active {
   super-admin-company-selector {
     flex: 0 0 auto;
   }
+}
+
+.datepicker-wrap {
+  display: inline-block;
 }
