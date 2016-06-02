@@ -4,7 +4,7 @@
   "description": "beeline-admin: An Ionic project",
   "dependencies": {
     "angular-animate": "^1.5.5",
-    "angular-cookies": "^1.5.5",
+    "angular-cookies": "^1.5.6",
     "angular-google-maps": "^2.3.2",
     "angular-jwt": "0.0.9",
     "angular-simple-logger": "^0.1.7",
@@ -45,7 +45,7 @@
   },
   "main": "gulpfile.js",
   "scripts": {
-    "deploy": "./build-stg.sh && ./build-wrs.sh && git add www && git commit && git subtree push --prefix www/ origin gh-pages",
+    "deploy": "./build-wrs.sh && git add www && git commit && git subtree push --prefix www/ origin gh-pages",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server",
     "heroku-postbuild": "gulp"

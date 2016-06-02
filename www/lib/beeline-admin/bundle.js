@@ -85816,7 +85816,6 @@
 	  $rootScope.$on('$locationChangeStart', function () {
 	    if (notifiedLoginError) return;
 	
-	    console.log($window.location.hash);
 	    // decode and try to trap authentication errors
 	    try {
 	      var hash = $window.location.hash.substr(1);

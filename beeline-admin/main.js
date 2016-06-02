@@ -1,6 +1,7 @@
 
 require('beeline-calendar')
 require('angular-storage')
+require('angular-cookies')
 require('angular-jwt')
 require('auth0-angular')
 
@@ -14,7 +15,7 @@ const env = require('./env')
 // 'starter.controllers' is found in controllers.js
 angular.module('beeline-admin', [
   'uiGmapgoogle-maps', 'ui.router', 'ui.bootstrap', 'beeline.calendar',
-  'auth0', 'angular-storage', 'angular-jwt'])
+  'auth0', 'angular-storage', 'angular-jwt', 'ngCookies'])
 .config(require('./router').default)
 .config(configureGoogleMaps)
 .config(configureLoginPage)
@@ -116,15 +117,19 @@ ${error.error_description}`
     // $location.path('/login');
   });
 
-  authProvider.on('authenticated', function($location, idToken, profilePromise, jwtHelper) {
+  authProvider.on('authenticated', function($location, idToken, profilePromise,
+    jwtHelper, $cookies) {
     console.log('I am authenticated')
     console.log(jwtHelper.decodeToken(idToken))
+    $cookies.put('sessionToken', idToken)
   })
 
-  authProvider.on('loginSuccess', function($location, profilePromise, jwtHelper, idToken, store, AdminService, auth) {
+  authProvider.on('loginSuccess', function($location, profilePromise,
+    jwtHelper, idToken, store, AdminService, auth, $cookies) {
     console.log("Login Success");
     console.log(jwtHelper.decodeToken(idToken))
     store.set('sessionToken', idToken)
+    $cookies.put('sessionToken', idToken)
 
     profilePromise.then((p) =>{
       console.log(p)
