@@ -50,7 +50,7 @@ module.exports = {
         loader: 'json-loader'
       },
       // Load SCSS
-      { test: /\.scss$/,loader: ExtractTextPlugin.extract("style-loader", "css-loader!autoprefixer-loader!sass-loader") },
+      { test: /\.scss$/,loader: ExtractTextPlugin.extract("style-loader", "css!postcss!sass") },
       { test: /\.css$/, loader: ExtractTextPlugin.extract("style-loader", "css-loader") },
       { test: /\.svg$/, loader: 'url?limit=65000&mimetype=image/svg+xml&name=../fonts/[name].[ext]' },
       { test: /\.woff$/, loader: 'url?limit=65000&mimetype=application/font-woff&name=../fonts/[name].[ext]' },
@@ -86,5 +86,8 @@ module.exports = {
   },
   plugins: [
     new ExtractTextPlugin("../../css/styles.css")
-  ]
+  ],
+  postcss: function () {
+    return [autoprefixer];
+  }
 };

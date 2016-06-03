@@ -1,6 +1,7 @@
 import _ from 'lodash'
 
-export default function(RoutesService, AdminService, DriverService, StopsPopup) {
+export default function(RoutesService, AdminService, DriverService, StopsPopup,
+LoadingSpinner) {
 
   return {
     scope: {
@@ -36,7 +37,7 @@ export default function(RoutesService, AdminService, DriverService, StopsPopup) 
         }
       }
       scope.refreshTrips = function() {
-        RoutesService.getTrips({
+        var promise = RoutesService.getTrips({
           routeId: scope.routeId,
           startDate: new Date(scope.filter.startDate),
           endDate: new Date(new Date(scope.filter.startDate).getTime() + 60 * 24 * 60 * 60 * 1000),
@@ -69,6 +70,8 @@ export default function(RoutesService, AdminService, DriverService, StopsPopup) 
           scope.disp.stopsList = stopsList;
 
         });
+
+        LoadingSpinner.watchPromise(promise)
       }
       scope.resetTrips = function() {
         scope.disp.newDates = [];

@@ -31,6 +31,7 @@ angular.module('beeline-admin', [
 .directive('pathEditor', require('./directives/pathEditor/pathEditor').default)
 .directive('tripsEditor', require('./directives/tripsEditor/tripsEditor').default)
 .directive('companySelector', require('./directives/companySelector/companySelector').default)
+.directive('tripSelector', require('./directives/tripSelector/tripSelector').default)
 .directive('stopSelector', require('./directives/stopSelector/stopSelector').default)
 .directive('superAdminCompanySelector', require('./directives/companySelector/superAdminCompanySelector').default)
 .service('AdminService', require('./services/adminService').default)
@@ -70,7 +71,6 @@ angular.module('beeline-admin', [
   $rootScope.$on('$locationChangeStart', function() {
     if (notifiedLoginError) return;
 
-    console.log($window.location.hash);
     // decode and try to trap authentication errors
     try {
       var hash = $window.location.hash.substr(1);

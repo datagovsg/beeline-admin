@@ -1,6 +1,6 @@
 import _ from 'lodash'
 
-export default function(RoutesService) {
+export default function(RoutesService, LoadingSpinner) {
 
   return {
     template: require('./routeSelector.html'),
@@ -25,10 +25,10 @@ export default function(RoutesService) {
         }
       }
       scope.refreshList = function() {
-        RoutesService.getRoutes()
+        LoadingSpinner.watchPromise(RoutesService.getRoutes()
         .then((routes) => {
           scope.availableRoutes = routes;
-        })
+        }))
       }
 
       scope.$watchGroup(['selectedRouteId', 'availableRoutes'], () => {

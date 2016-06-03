@@ -21,7 +21,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner) {
 
   $scope.filter = {
     showPartial: false,
-    filterBy: 'boardStop.time',
+    orderBy: 'createdAt',
     order: 'desc',
     routeId: false,
     status: {
@@ -31,6 +31,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner) {
     },
     startDate: startOfMonth,
     endDate: endOfMonth,
+    userQuery: null,
   }
 
   $scope.disp = {
@@ -39,6 +40,8 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner) {
     datesBetween: [],
     counts: {},
   }
+
+  $scope.selectedTickets = {};
 
   $scope.$watch('disp.month', () => {
     $scope.filter.startDate = new Date(
@@ -53,31 +56,57 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner) {
     )
   })
 
-  function query() {
+  $scope.downloadCsv = function() {
+    AdminService.beeline({
+      method: 'POST',
+      url: '/makeDownloadLink',
+      data: {
+        uri: $scope.csvUrl
+      }
+    })
+    .then((result) => {
+      window.location.href = AdminService.serverUrl() + '/downloadLink?token=' + result.data.token;
+    })
+  }
+
+  function buildQuery(override) {
     // update the request and CSV url
     var queryOptions = {
       page: $scope.currentPage || 1,
       perPage: $scope.perPage,
 
       order: $scope.filter.order,
-      filterBy: $scope.filter.filterBy,
-      startDate: $scope.filter.startDate.getTime(),
-      endDate: $scope.filter.endDate.getTime() + 24*60*60*1000,
+      orderBy: $scope.filter.orderBy,
+      tripStartDate: $scope.filter.startDate.getTime(),
+      tripEndDate: $scope.filter.endDate.getTime() + 24*60*60*1000,
       statuses: JSON.stringify(Object.keys($scope.filter.status)
         .filter(key => $scope.filter.status[key]))
     }
-    var requestUrl = `/custom/wrs/report?` + querystring.stringify(queryOptions)
-    $scope.csvUrl = AdminService.serverUrl()
-      + `/custom/wrs/report?`
-      + querystring.stringify(_.assign(queryOptions, {
-        page: 1,
-        perPage: 10000000, // it's a happy problem
-        format: 'csv',
-      }))
-
     if ($scope.filter.routeId) {
       queryOptions.routeId = $scope.filter.routeId
     }
+    if ($scope.filter.userQuery) {
+      queryOptions.userQuery = $scope.filter.userQuery
+    }
+    if ($scope.filter.stopQuery) {
+      queryOptions.stopQuery = $scope.filter.stopQuery
+    }
+
+    _.assign(queryOptions, override);
+
+    var requestUrl = `/custom/wrs/report?` + querystring.stringify(queryOptions)
+
+    return requestUrl;
+  }
+
+  function query() {
+    var requestUrl = buildQuery();
+    $scope.csvUrl = buildQuery({
+                      page: 1,
+                      perPage: 10000000, // it's a happy problem
+                      format: 'csv',
+                    })
+
     var queryPromise = AdminService.beeline({
       method: 'GET',
       url: requestUrl,
@@ -86,7 +115,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner) {
       $scope.tickets = result.data.rows;
       $scope.pageCount = Math.ceil(result.data.count / result.data.perPage);
 
-      $scope.disp.counts = _.keyBy(result.data.countByDate, r => new Date(r.date).getTime())
+      $scope.disp.counts = result.data.countByDate;
       for (let ticket of $scope.tickets) {
         try {
           ticket.user.json = JSON.parse(ticket.user.name)

@@ -1,0 +1,61 @@
+<div class="trip-selector">
+  <label>
+    Route
+    <select ng-options="route.id as displayRoute(route) for route in info.routes | orderBy:'label'"
+            ng-model="query.routeId"
+    >
+    </select>
+  </label>
+
+  <label >
+    Date
+    <div  style="display: inline-block; width: 300px;">
+      <div class="input-group">
+        <input type="text"
+          class="form-control"
+          uib-datepicker-popup
+          is-open="disp.popupOpen"
+
+          ng-model="query.tripDate"
+          ng-model-options="{timezone: 'UTC'}"
+          datepicker-options="disp.datepickerOptions"
+          close-text="Close"
+          >
+
+        <span class="input-group-btn">
+          <button type="button" class="btn btn-default" ng-click="disp.popupOpen = !disp.popupOpen">
+            <i class="glyphicon glyphicon-calendar"></i>
+          </button>
+        </span>
+      </div>
+    </div>
+  </label>
+
+  {{info.trip.availability.seatsAvailable}} seats available
+
+  <label>
+    Boarding Stop
+    <select ng-options="tripStop.id as displayStop(tripStop) for tripStop in info.tripStops | filter:isBoardStop"
+      ng-model="boardStopId"
+    >
+    </select>
+  </label>
+
+  <label>
+    Alighting Stop
+    <select ng-options="tripStop.id as displayStop(tripStop) for tripStop in info.tripStops | filter:isAlightStop"
+      ng-model="alightStopId"
+    >
+    </select>
+  </label>
+  <dl>
+    <dt>Trip ID</dt>
+    <dd>{{tripId}}</dd>
+
+    <dt>Board Stop ID</dt>
+    <dd>{{boardStopId}}</dd>
+
+    <dt>Alight Stop ID</dt>
+    <dd>{{alightStopId}}</dd>
+  </dl>
+</div>

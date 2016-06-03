@@ -34,7 +34,7 @@
         </tr>
         <tr>
           <td ng-repeat="day in disp.datesBetween">
-            {{disp.counts[day].count}}
+            {{disp.counts[day]}}
           </td>
         </tr>
       </table>
@@ -78,18 +78,26 @@
         Sort
         <label>
           <input type="radio"
-          ng-model="filter.filterBy"
-          value="transaction.createdAt"
+          ng-model="filter.orderBy"
+          value="createdAt"
           />
           Transaction date
         </label>
 
         <label>
           <input type="radio"
-          ng-model="filter.filterBy"
-          value="boardStop.time"
+          ng-model="filter.orderBy"
+          value="boardingTime"
           />
           Trip time
+        </label>
+
+        <label>
+          <input type="radio"
+          ng-model="filter.orderBy"
+          value="route"
+          />
+          Route
         </label>
       </div>
 
@@ -111,9 +119,32 @@
         </label>
       </div>
 
-      <a href="{{ csvUrl }}">
+      <!-- user query -->
+      <div>
+        <label>
+          User search
+          <input type="text"
+          ng-model="filter.userQuery"
+          ng-model-options="{ updateOn: 'blur' }"
+          />
+        </label>
+      </div>
+
+      <!-- stop query -->
+      <div>
+        <label>
+          Stop search
+          <input type="text"
+          ng-model="filter.stopQuery"
+          ng-model-options="{ updateOn: 'blur' }"
+          />
+        </label>
+      </div>
+
+
+      <button ng-click="downloadCsv()">
         Download CSV
-      </a>
+      </button>
     </nav>
 
 
@@ -127,16 +158,15 @@
     <table class="table table-striped transactions-view">
       <thead>
         <tr>
-          <th>Booking Id</th>
-          <th>Charge Id</th>
-          <th>Timestamp</th>
+          <th></th>
+          <th>Txn Id</th>
+          <!-- <th>Charge Id</th> -->
+          <th>Trip date</th>
           <th>User name</th>
-          <th>Passenger No.</th>
           <th>User phone </th>
           <th>User email</th>
           <th>Ticket id</th>
           <th>Trip id</th>
-          <th>Trip date</th>
           <th>Route Id</th>
           <th>Route Label</th>
           <th>Route description</th>
@@ -144,6 +174,7 @@
           <th>Drop-off stop</th>
           <th>Price per trip</th>
           <th>Status</th>
+          <th>Timestamp</th>
           <th>Refund</th>
         </tr>
       </thead>
@@ -157,19 +188,20 @@
             }"
         >
           <td>
-            {{ticket.transactionId}}
+            <input type="checkbox" ng-model="selectedTickets[ticket.id]"
+            />
           </td>
           <td>
+            {{ticket.ticketSale.transactionId}}
+          </td>
+          <!-- <td>
             {{ticket.paymentResource}}
+          </td> -->
+          <td>
+            {{ticket.boardStop.trip.date | date:'dd-MMM-yy':'UTC'}}
           </td>
           <td>
-            {{ticket.transaction.createdAt | date:'dd MMM yy HH:mm:ss'}}
-          </td>
-          <td>
-            {{ticket.user.json.name || ticket.user.name}}
-          </td>
-          <td>
-            {{ticket.user.json.index == undefined ? '' : ticket.user.json.index + 1}}
+            {{ticket.user.json.name ? (ticket.user.json.name + ' #' + ticket.user.json.index) : ticket.user.name}}
           </td>
           <td>
             {{ticket.user.json.telephone || ticket.user.telephone}}
@@ -181,19 +213,16 @@
             {{ticket.id}}
           </td>
           <td>
-            {{ticket.trip.id}}
+            {{ticket.boardStop.trip.id}}
           </td>
           <td>
-            {{ticket.trip.date | date:'dd MMM yy':'UTC'}}
+            {{ticket.boardStop.trip.routeId}}
           </td>
           <td>
-            {{ticket.trip.routeId}}
+            {{ticket.boardStop.trip.route.label}}
           </td>
           <td>
-            {{ticket.route.label}}
-          </td>
-          <td>
-            {{ticket.route.from}} &mdash; {{ticket.route.to}}
+            {{ticket.boardStop.trip.route.from}} &mdash; {{ticket.boardStop.trip.route.to}}
           </td>
           <td>
             {{ticket.boardStop.time | date:'HH:mm'}},
@@ -204,10 +233,13 @@
             {{ticket.alightStop.stop.description}}
           </td>
           <td>
-            {{ticket.trip.price}}
+            {{ticket.boardStop.trip.price}}
           </td>
           <td>
             {{ticket.status}}
+          </td>
+          <td>
+            {{ticket.createdAt | date:'dd-MMM-yy HH:mm:ss'}}
           </td>
           <td>
             <button class="btn btn-danger">
