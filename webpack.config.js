@@ -1,6 +1,7 @@
 var path = require('path');
 var fs = require('fs');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var autoprefixer = require('autoprefixer')
 
 var env = {
     BACKEND_URL: process.env.BACKEND_URL || 'https://api.beeline.sg',
