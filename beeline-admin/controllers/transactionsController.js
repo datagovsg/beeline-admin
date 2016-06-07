@@ -1,6 +1,6 @@
 import querystring from 'querystring'
 
-export default function($scope, $http, AdminService, LoadingSpinner) {
+export default function($scope, $state, $stateParams, $http, AdminService, LoadingSpinner) {
   $scope.transactions = [];
 
   $scope.filter = {
@@ -17,7 +17,7 @@ export default function($scope, $http, AdminService, LoadingSpinner) {
       ticketExpense: true,
       payment: true,
       transfer: true,
-      payment: true,
+      refundPayment: true,
       account: true,
     },
     startDate: new Date(),
@@ -44,6 +44,17 @@ export default function($scope, $http, AdminService, LoadingSpinner) {
       $scope.disp.month.getMonth() + 1,
       1
     )
+  })
+
+  // URL handling
+  $scope.$watch(() => $stateParams.id, () => {
+    $scope.filter.transactionId = $stateParams.id;
+  })
+  var myState = $state.current.name;
+  $scope.$watch('filter.transactionId', () => {
+    $state.go(myState, {
+      id: $scope.filter.transactionId
+    }, {notify: false, reload: false})
   })
 
   function buildQuery() {

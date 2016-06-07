@@ -1,0 +1,88 @@
+
+
+<div class="modal-header">
+  <h3 class="modal-title">Refunds / Replacement Trips</h3>
+</div>
+
+<div class="modal-body" class='booking-refund'>
+
+  <div class="cancel-panel">
+    <!-- list of tickets to cancel -->
+    <h2>Tickets to Cancel</h2>
+    <ol class="ticket-list">
+      <li ng-repeat="ticket in cancelledTickets"
+          ng-class="{
+            active: disp.selectedCancelled == ticket
+          }"
+          ng-click="disp.selectedCancelled = ticket"
+      >
+          {{ticket.user.json.name ? ticket.user.json.name  + ' #' + ticket.user.json.index : ticket.user.name}}
+          <br/>
+          <b>{{ticket.boardStop.trip.route.label}}:
+              {{ticket.boardStop.trip.route.from}} &mdash;
+              {{ticket.boardStop.trip.route.to}}</b>
+          <br/>
+          <b>{{ticket.boardStop.trip.date | date:'dd MMM yy':'UTC'}}</b><br/>
+          {{ticket.boardStop.stop.description}}<br/>
+          {{ticket.alightStop.stop.description}}<br/>
+      </li>
+    </ol>
+  </div>
+
+  <!-- list of tickets to issue -->
+  <div class="issue-panel">
+    <h2>Replacement Tickets</h2>
+    <button class="btn btn-default" type="button" ng-click="issuedTickets.push({})"
+      >
+      Add
+    </button>
+    <ol class="ticket-list">
+      <li ng-repeat="ticket in issuedTickets"
+      >
+        <div>
+          User:
+          <select ng-options="user.id as (user.json.name ? user.json.name + ' #' + user.json.index : user.name) for user in availableUsers"
+            ng-model="ticket.userId">
+          </select>
+        </div>
+        <div>
+          Select Trip:
+          <trip-selector
+            trip-id="ticket.tripId"
+            board-stop-id="ticket.boardStopId"
+            alight-stop-id="ticket.alightStopId"
+            route-id="ticket.routeId"
+          ></trip-selector>
+        </div>
+        <button class="btn btn-danger" type="button" ng-click="issuedTickets.splice($index, 1)"
+          >
+          Remove
+        </button>
+      </li>
+    </ol>
+    <button class="btn btn-default" type="button" ng-click="issuedTickets.push({})"
+      >
+      Add
+    </button>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button
+      ng-disabled="issuedTickets.length == 0"
+      class="btn btn-primary" type="button" ng-click="issueFreeTickets()">
+    Issue Free Tickets
+  </button>
+
+  <button
+      ng-disabled="issuedTickets.length == 0"
+      class="btn btn-primary" type="button" ng-click="replaceTickets()">
+    Replace Tickets
+  </button>
+
+
+  <button
+      class="btn btn-default" type="button" ng-click="$dismiss()">
+    Cancel
+  </button>
+</div>

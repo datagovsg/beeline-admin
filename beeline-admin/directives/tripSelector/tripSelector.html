@@ -2,7 +2,7 @@
   <label>
     Route
     <select ng-options="route.id as displayRoute(route) for route in info.routes | orderBy:'label'"
-            ng-model="query.routeId"
+            ng-model="routeId"
     >
     </select>
   </label>
@@ -48,7 +48,7 @@
     >
     </select>
   </label>
-  <dl>
+  <!-- <dl>
     <dt>Trip ID</dt>
     <dd>{{tripId}}</dd>
 
@@ -57,5 +57,5 @@
 
     <dt>Alight Stop ID</dt>
     <dd>{{alightStopId}}</dd>
-  </dl>
+  </dl> -->
 </div>

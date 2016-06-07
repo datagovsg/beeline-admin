@@ -1,6 +1,7 @@
 import querystring from 'querystring'
 
-export default function($scope, AdminService, RoutesService, LoadingSpinner) {
+export default function($scope, AdminService, RoutesService, LoadingSpinner,
+BookingRefund) {
   $scope.tickets = [];
   $scope.currentPage = 1;
 
@@ -69,6 +70,42 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner) {
     })
   }
 
+  $scope.showRefundModal = function() {
+    var ticketsById = _.keyBy($scope.tickets, t => t.id)
+    var ticketsToCancel = Object.keys($scope.selectedTickets)
+      .filter(ticketId => $scope.selectedTickets[ticketId])
+      .map(ticketId => ticketsById[ticketId])
+
+    BookingRefund.open({
+      cancelledTickets: ticketsToCancel,
+    })
+  }
+
+  $scope.refund = function (ticket) {
+    if (confirm("Confirm refund?")) {
+      AdminService.beeline({
+        method: 'POST',
+        url: '/transactions/refund',
+        data: {
+          ticketId: ticket.id,
+          // dryRun: true,
+        }
+      })
+      .then((response) => {
+        var txn = response.data;
+        var payment = txn.transactionItems.find(ts => ts.itemType == 'refundPayment' && ts.refundPayment)
+
+        console.log(txn)
+
+        alert( parseFloat(payment.credit).toFixed(2) + " refunded.")
+      })
+      .then(null, (response) => {
+        console.log(response);
+        alert("Failed...")
+      })
+    }
+  }
+
   function buildQuery(override) {
     // update the request and CSV url
     var queryOptions = {
@@ -123,6 +160,8 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner) {
         catch (err) {
         }
       }
+
+      $scope.selectedTickets = {};
     })
     .catch((err) => {
       console.error(err.stack);

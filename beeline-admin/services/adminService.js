@@ -49,7 +49,7 @@ export default function ($http, $location, store, jwtHelper, auth) {
       }
     })
   }
-  
+
   var lastSessionToken = null;
   var lastSession;
 
@@ -70,11 +70,14 @@ export default function ($http, $location, store, jwtHelper, auth) {
   this.getCompanyId = function() {
     var profile = store.get('profile')
 
-    if (profile.indexOf('admin') != -1) {
-      return profile.transportCompanyId;
-    }
-    else if (profile.role == 'superadmin') {
+      console.log(this);
+    if (profile.app_metadata.roles.indexOf('superadmin') != -1) {
+      console.log(this.actingCompany);
+      if (!this.actingCompany) console.log("You need to choose the company you're acting on behalf of")
       return this.actingCompany;
+    }
+    else if (profile.app_metadata.roles.indexOf('admin') != -1) {
+      return profile.app_metadata.transportCompanyId;
     }
     else {
       assert(false);

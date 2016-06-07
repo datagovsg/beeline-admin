@@ -27,11 +27,14 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
   })
 
   .state('transactions', {
-    url: '/transactions',
+    url: '/transactions?id',
     templateUrl: 'templates/transactions.html',
     controller: 'transactions',
     data: {
       requiresLogin: true,
+    },
+    params: {
+
     }
   })
 
@@ -54,7 +57,7 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
   })
 
   .state('bookings', {
-    url: '/bookings',
+    url: '/bookings?id',
     templateUrl: 'templates/bookings-wrs.html',
     controller: 'bookingsWrs',
     data: {
@@ -62,6 +65,14 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
     }
   })
 
+  .state('driver', {
+    url: '/drivers',
+    templateUrl: 'templates/drivers.html',
+    controller: 'drivers',
+    data: {
+      requiresLogin: true,
+    }
+  })
 
   .state('test', {
     url: '/test',

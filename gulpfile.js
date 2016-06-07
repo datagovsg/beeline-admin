@@ -24,16 +24,18 @@ gulp.task('js-libraries', function() {
 });
 
 gulp.task('sass', function(done) {
-  gulp.src(['./scss/ionic.app.scss'])
-    .pipe(sass())
-    .on('error', sass.logError)
-    .pipe(gulp.dest('./www/css/'))
-    .pipe(minifyCss({
-      keepSpecialComments: 0
-    }))
-    .pipe(rename({ extname: '.min.css' }))
-    .pipe(gulp.dest('./www/css/'))
-    .on('end', done);
+  // gulp.src(['./scss/ionic.app.scss'])
+  //   .pipe(sass())
+  //   .on('error', sass.logError)
+  //   .pipe(rename({ basename: 'styles' }))
+  //   .pipe(gulp.dest('./www/css/'))
+  //   .pipe(minifyCss({
+  //     keepSpecialComments: 0
+  //   }))
+  //   .pipe(rename({ extname: '.min.css' }))
+  //   .pipe(gulp.dest('./www/css/'))
+  //   .on('end', done);
+  done();
 });
 
 gulp.task('webpack', function() {
@@ -48,7 +50,7 @@ gulp.task('webpack', function() {
 
 gulp.task('watch', ['sass', 'webpack', 'js-libraries'], function() {
   gulp.watch(paths.sass, ['sass']);
-  gulp.watch(['beeline-admin/**/*.js', 'beeline-admin/**/*.html'], ['webpack']);
+  gulp.watch(['beeline-admin/**/*.js', 'beeline-admin/**/*.html', 'scss/*.scss'], ['webpack']);
 });
 
 //gulp.task('install', ['git-check'], function() {

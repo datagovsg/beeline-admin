@@ -8,6 +8,7 @@ export default function(AdminService, RoutesService, $rootScope) {
       tripId: '=',
       alightStopId: '=?',
       boardStopId: '=?',
+      routeId: '=?',
     },
     link(scope, elem, attr) {
       var todayUTC = new Date()
@@ -22,7 +23,6 @@ export default function(AdminService, RoutesService, $rootScope) {
         trip: null,
       }
       scope.query = {
-        routeId: undefined,
         tripDate: todayUTC,
       }
       scope.disp = {
@@ -41,9 +41,23 @@ export default function(AdminService, RoutesService, $rootScope) {
         scope.info.routes = routes;
       })
 
+      // If tripId changes (due to external force)
+      // need to ensure that the route & the stops are valid
+      scope.$watch('tripId', (tripId) => {
+        if (!tripId) return;
+        
+        // FIXME: use caching here
+        RoutesService.getTrip(scope.tripId)
+        .then((trip) => {
+          if (scope.routeId != trip.routeId) {
+            scope.routeId = trip.routeId;
+          }
+        })
+      })
+
       // Get trip dates
-      scope.$watch('query.routeId', () => {
-        if (!scope.query.routeId) {
+      scope.$watch('routeId', () => {
+        if (!scope.routeId) {
           return null;
         }
 
@@ -52,7 +66,7 @@ export default function(AdminService, RoutesService, $rootScope) {
 
         scope.info.tripDates = []
         scope.info.trips = []
-        RoutesService.getRoute(scope.query.routeId, {
+        RoutesService.getRoute(scope.routeId, {
           includeTrips: true,
           includeAvailability: true,
         })
@@ -92,10 +106,28 @@ export default function(AdminService, RoutesService, $rootScope) {
           return;
         }
 
+        // Find the previous stops
+        if (scope.info.tripStops) {
+          var previousBoardStop = scope.info.tripStops
+            .find(ts => ts.id == scope.boardStopId)
+          previousBoardStop = previousBoardStop ? previousBoardStop.stop.id : null;
+
+          var previousAlightStop = scope.info.tripStops
+            .find(ts => ts.id == scope.alightStopId)
+          previousAlightStop = previousAlightStop ? previousAlightStop.stop.id : null;
+
+          // Update the board stop id, alight stop id
+          scope.boardStopId = theTrip.tripStops.find(ts => ts.stop.id == previousBoardStop)
+          scope.alightStopId = theTrip.tripStops.find(ts => ts.stop.id == previousAlightStop)
+
+          scope.boardStopId = scope.boardStopId ? scope.boardStopId.id : null;
+          scope.alightStopId = scope.alightStopId ? scope.alightStopId.id : null;
+        }
+        // update trip ID, trip stops
         scope.tripId = theTrip.id
         scope.info.tripStops = theTrip.tripStops
-      })
 
+      })
     },
   }
 

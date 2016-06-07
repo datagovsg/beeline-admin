@@ -2,7 +2,7 @@ import _ from 'lodash'
 import querystring from 'querystring'
 import assert from 'assert'
 
-export default function (AdminService, DriverService) {
+export default function (AdminService, DriverService, $q) {
 
   var routesPromise = null;
   var routesById = null;
@@ -90,6 +90,7 @@ export default function (AdminService, DriverService) {
       @prop routeId
       @prop startDate
     **/
+  var tripCache = [];
   this.getTrips = function(options) {
     return AdminService.beeline({
       method: 'GET',
@@ -101,9 +102,27 @@ export default function (AdminService, DriverService) {
       })
     })
     .then((response) => {
+      tripCache = tripCache.concat(response.data.trips);
+      tripCache = tripCache.slice(Math.max(0, tripCache.length - 100))
       return response.data.trips;
     })
   }
+  this.getTrip = function(tripId) {
+    var trip;
+    if (trip = tripCache.find(t => t.id == tripId)) {
+      return $q((resolve) => resolve(trip));
+    }
+    return AdminService.beeline({
+      method: 'GET',
+      url: `/trips/${tripId}`,
+    })
+    .then((response) => {
+      tripCache = tripCache.concat([response.data]);
+      tripCache.slice(Math.max(0, tripCache.length - 100));
+      return response.data;
+    })
+  }
+
   this.deleteTrip = function(trip) {
     return AdminService.beeline({
       method: 'DELETE',
