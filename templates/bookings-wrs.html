@@ -9,15 +9,41 @@
     </div>
 
     <div class="datepicker-wrap">
-    Select Start Date:<br clear="both">
-    <uib-datepicker ng-model="filter.startDate"
-        datepicker-options="{minMode: 'day'}"></uib-datepicker>
+      Select Start Date:<br clear="both">
+      <div class="input-group">
+        <input type="text"
+            datepicker-options="{minMode: 'day'}"
+            uib-datepicker-popup="{{format}}"
+            ng-model="filter.startDate"
+
+            class="form-control"
+            is-open="disp.startDatePopup"
+            />
+        <span class="input-group-btn">
+          <button type="button" class="btn btn-default" ng-click="disp.startDatePopup = !disp.startDatePopup">
+            <i class="glyphicon glyphicon-calendar"></i>
+          </button>
+        </span>
+      </div>
     </div>
 
     <div class="datepicker-wrap">
-    Select End Date:<br clear="both">
-    <uib-datepicker ng-model="filter.endDate"
-        datepicker-options="{minMode: 'day'}"></uib-datepicker>
+      Select End Date:<br clear="both">
+      <div class="input-group">
+        <input type="text"
+            datepicker-options="{minMode: 'day'}"
+            uib-datepicker-popup="{{format}}"
+            ng-model="filter.endDate"
+
+            class="form-control"
+            is-open="disp.startDatePopup"
+            />
+        <span class="input-group-btn">
+          <button type="button" class="btn btn-default" ng-click="disp.startDatePopup = !disp.startDatePopup">
+            <i class="glyphicon glyphicon-calendar"></i>
+          </button>
+        </span>
+      </div>
     </div>
 
     <br clear="both" />
@@ -27,13 +53,15 @@
         Bookings by date
       </caption>
       <tr>
-        <th ng-repeat="day in disp.datesBetween">
+        <th ng-repeat="day in disp.datesBetween"
+        >
           {{day | date:'dd'}}<br/>
           {{day | date:'M'}}
         </th>
       </tr>
       <tr>
-        <td ng-repeat="day in disp.datesBetween">
+        <td ng-repeat="day in disp.datesBetween"
+        >
           {{disp.counts[day]}}
         </td>
       </tr>
@@ -47,6 +75,14 @@
           ng-required="false">
           <option value="">(All)</option>
         </select>
+      </label>
+
+      <label>
+        Trip:
+        <input type="number"
+          ng-model="filter.tripId"
+          ng-model-options="{ updateOn: 'blur' }"
+          />
       </label>
     </div>
 
@@ -224,7 +260,9 @@
           {{ticket.user.json.email || ticket.user.email}}
         </td>
         <td>
-          {{ticket.id}}
+          <a ui-sref="transactions({ticketId: ticket.ticketId})">
+            {{ticket.id}}
+          </a>
         </td>
         <td>
           {{ticket.boardStop.trip.id}}

@@ -134,6 +134,17 @@
         </label>
       </div>
 
+      <!-- ticket id -->
+      <div>
+        <label>
+        Ticket ID
+          <input type="text"
+          ng-model="filter.ticketId"
+          ng-model-options="{ updateOn: 'blur default', debounce: { 'default': 500, 'blur': 0 } }"
+          />
+        </label>
+      </div>
+
       <!-- user search -->
       <div>
         <label>
@@ -149,24 +160,26 @@
     <table class="table table-striped transactions-view">
       <thead>
         <tr>
-          <th class="id">Actions</th>
+          <th class="id" ng-if="adminService.isSuperAdmin()">Actions</th>
           <th class="id">Txn ID</th>
           <th class="id">Txn Date</th>
           <th class="id">Txn Description</th>
           <th class="id">Txn Item ID</th>
           <th class="item-type">Item type</th>
-          <th class="item-description">Item D1</th>
-          <th class="item-description">Item D2</th>
-          <th class="item-description">Item D3</th>
-          <th class="item-description">Item D4</th>
-          <th class="item-description">Item D5</th>
+          <th class="item-type">Item ID</th>
+          <th class="item-description">Description 1</th>
+          <th class="item-description">Description 2</th>
+          <th class="item-description">Description 3</th>
+          <th class="item-description">Description 4</th>
+          <th class="item-description">Description 5</th>
+          <th class="item-description">Description 6</th>
           <th class="debit-credit">Debit</th>
           <th class="debit-credit">Credit</th>
         </tr>
       </thead>
 
       <tr ng-repeat="item in transactionItems track by $index">
-        <td>
+        <td ng-if="adminService.isSuperAdmin()">
           <a href="https://api.beeline.sg/custom/wrs/email/{{item.transaction.id}}">
             Send to feedback@beeline.sg
           </a>
@@ -177,6 +190,7 @@
         <td>{{item.transaction.description}}</td>
         <td>{{item.id}}</td>
         <td>{{item.itemType}}</td>
+        <td>{{item.itemId}}</td>
 
         <!-- for each ticket type -->
         <td ng-if="item.itemType == 'ticketSale'">{{item.ticketSale.user.json.name || item.ticketSale.boardStop.user.name}}
@@ -186,6 +200,15 @@
         <td ng-if="item.itemType == 'ticketSale'">{{item.ticketSale.user.json.email || item.ticketSale.boardStop.user.email}}</td>
         <td ng-if="item.itemType == 'ticketSale'">{{item.ticketSale.boardStop.stop.description}}</td>
         <td ng-if="item.itemType == 'ticketSale'">{{item.ticketSale.alightStop.stop.description}}</td>
+        <td ng-if="item.itemType == 'ticketSale'">
+          <a ui-sref="bookings({routeId: item.ticketSale.boardStop.trip.routeId})">
+            {{item.ticketSale.boardStop.trip.route.label}}
+          </a>
+          -
+          <a ui-sref="bookings({tripId: item.ticketSale.boardStop.tripId})">
+            Trip #{{item.ticketSale.boardStop.tripId}}
+          </a>
+        </td>
 
         <!-- for each ticket type -->
         <td ng-if="item.itemType == 'ticketRefund'">{{item.ticketRefund.user.json.name || item.ticketSale.boardStop.user.name}}</td>
@@ -193,6 +216,15 @@
         <td ng-if="item.itemType == 'ticketRefund'">{{item.ticketRefund.user.json.email || item.ticketSale.boardStop.user.email}}</td>
         <td ng-if="item.itemType == 'ticketRefund'">{{item.ticketRefund.boardStop.stop.description}}</td>
         <td ng-if="item.itemType == 'ticketRefund'">{{item.ticketRefund.alightStop.stop.description}}</td>
+        <td ng-if="item.itemType == 'ticketRefund'">
+          <a ui-sref="bookings({routeId: item.ticketRefund.boardStop.trip.routeId})">
+            {{item.ticketRefund.boardStop.trip.route.label}}
+          </a>
+          -
+          <a ui-sref="bookings({tripId: item.ticketRefund.boardStop.tripId})">
+            Trip #{{item.ticketRefund.boardStop.tripId}}
+          </a>
+        </td>
 
         <!-- for each ticket type -->
         <td ng-if="item.itemType == 'ticketExpense'">{{item.ticketExpense.user.json.name || item.ticketSale.boardStop.user.name}}</td>
@@ -200,9 +232,19 @@
         <td ng-if="item.itemType == 'ticketExpense'">{{item.ticketExpense.user.json.email || item.ticketSale.boardStop.user.email}}</td>
         <td ng-if="item.itemType == 'ticketExpense'">{{item.ticketExpense.boardStop.stop.description}}</td>
         <td ng-if="item.itemType == 'ticketExpense'">{{item.ticketExpense.alightStop.stop.description}}</td>
+        <td ng-if="item.itemType == 'ticketExpense'">
+          <a ui-sref="bookings({routeId: item.ticketExpense.boardStop.trip.routeId})">
+            {{item.ticketExpense.boardStop.trip.route.label}}
+          </a>
+          -
+          <a ui-sref="bookings({tripId: item.ticketExpense.boardStop.tripId})">
+            Trip #{{item.ticketExpense.boardStop.tripId}}
+          </a>
+        </td>
 
         <!-- payment -->
         <td ng-if="item.itemType == 'payment'">{{item.payment.paymentResource}}</td>
+        <td ng-if="item.itemType == 'payment'"></td>
         <td ng-if="item.itemType == 'payment'"></td>
         <td ng-if="item.itemType == 'payment'"></td>
         <td ng-if="item.itemType == 'payment'"></td>
@@ -214,6 +256,7 @@
         <td ng-if="item.itemType == 'refundPayment'"></td>
         <td ng-if="item.itemType == 'refundPayment'"></td>
         <td ng-if="item.itemType == 'refundPayment'"></td>
+        <td ng-if="item.itemType == 'refundPayment'"></td>
 
         <!-- revenue/expense accounts -->
         <td ng-if="item.itemType == 'account'">{{item.account.name}}</td>
@@ -221,9 +264,11 @@
         <td ng-if="item.itemType == 'account'"></td>
         <td ng-if="item.itemType == 'account'"></td>
         <td ng-if="item.itemType == 'account'"></td>
+        <td ng-if="item.itemType == 'account'"></td>
 
         <!-- transfers -->
         <td ng-if="item.itemType == 'transfer'">{{item.transfer.transportCompanyId}}</td>
+        <td ng-if="item.itemType == 'transfer'"></td>
         <td ng-if="item.itemType == 'transfer'"></td>
         <td ng-if="item.itemType == 'transfer'"></td>
         <td ng-if="item.itemType == 'transfer'"></td>
