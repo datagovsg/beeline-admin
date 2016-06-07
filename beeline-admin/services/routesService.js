@@ -37,11 +37,11 @@ export default function (AdminService, DriverService, $q) {
       return routesPromise;
     }
     else {
-      var query = makeRouteQuery(options);
-
       if (AdminService.session().role == 'admin') {
-        query.transportCompanyId = AdminService.session().transportCompanyId
+        options = options || {}
+        options.transportCompanyId = AdminService.session().transportCompanyId
       }
+      var query = makeRouteQuery(options);
 
       var promise = AdminService.beeline({
         method: 'GET',

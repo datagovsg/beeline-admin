@@ -63,6 +63,8 @@ export default function ($http, $location, store, jwtHelper, auth) {
       lastSession.role = lastSession.app_metadata.roles.indexOf('superadmin') != -1 ? 'superadmin' :
             lastSession.app_metadata.roles.indexOf('admin') != -1 ? 'admin'
             : null;
+      lastSession.transportCompanyId = lastSession.app_metadata.transportCompanyId;
+      
       return lastSession;
     }
   }
