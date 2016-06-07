@@ -209,6 +209,7 @@
         </td>
         <td>
           {{ticket.paymentResource}}
+          <span ng-if="ticket.refundResource"><br/>{{ticket.refundResource}}</span>
         </td>
         <td>
           {{ticket.boardStop.trip.date | date:'dd-MMM-yy':'UTC'}}
