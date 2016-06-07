@@ -33,9 +33,6 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
     data: {
       requiresLogin: true,
     },
-    params: {
-
-    }
   })
 
   .state('routes', {
