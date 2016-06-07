@@ -88659,8 +88659,7 @@
 	    controller: 'transactions',
 	    data: {
 	      requiresLogin: true
-	    },
-	    params: {}
+	    }
 	  }).state('routes', {
 	    url: '/routes/{routeId:int}/{action}',
 	    templateUrl: 'templates/routes.html',
