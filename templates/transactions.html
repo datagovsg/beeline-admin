@@ -59,6 +59,12 @@
         </label>
         <label>
           <input type="checkbox"
+            ng-model="filter.itemTypes.refundPayment"
+            />
+            Payments
+        </label>
+        <label>
+          <input type="checkbox"
             ng-model="filter.itemTypes.transfer"
             />
             Beeline <-> Operator Funds Transfer
@@ -203,6 +209,13 @@
         <td ng-if="item.itemType == 'payment'"></td>
 
         <!-- payment -->
+        <td ng-if="item.itemType == 'refundPayment'">{{item.refundPayment.paymentResource}}</td>
+        <td ng-if="item.itemType == 'refundPayment'"></td>
+        <td ng-if="item.itemType == 'refundPayment'"></td>
+        <td ng-if="item.itemType == 'refundPayment'"></td>
+        <td ng-if="item.itemType == 'refundPayment'"></td>
+
+        <!-- revenue/expense accounts -->
         <td ng-if="item.itemType == 'account'">{{item.account.name}}</td>
         <td ng-if="item.itemType == 'account'"></td>
         <td ng-if="item.itemType == 'account'"></td>
@@ -215,6 +228,7 @@
         <td ng-if="item.itemType == 'transfer'"></td>
         <td ng-if="item.itemType == 'transfer'"></td>
         <td ng-if="item.itemType == 'transfer'"></td>
+
         <!-- debit/credit -->
         <td>{{item.debit >= 0 ? item.debit : ''}}</td>
         <td>{{item.credit >= 0 ? item.credit : ''}}</td>
