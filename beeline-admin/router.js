@@ -27,7 +27,7 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
   })
 
   .state('transactions', {
-    url: '/transactions?id',
+    url: '/transactions?id&ticketId',
     templateUrl: 'templates/transactions.html',
     controller: 'transactions',
     data: {
@@ -57,7 +57,7 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
   })
 
   .state('bookings', {
-    url: '/bookings?id',
+    url: '/bookings?routeId&tripId',
     templateUrl: 'templates/bookings-wrs.html',
     controller: 'bookingsWrs',
     data: {

@@ -1,7 +1,7 @@
 import querystring from 'querystring'
 
 export default function($scope, AdminService, RoutesService, LoadingSpinner,
-BookingRefund) {
+BookingRefund, $state, $stateParams) {
   $scope.tickets = [];
   $scope.currentPage = 1;
 
@@ -43,6 +43,24 @@ BookingRefund) {
   }
 
   $scope.selectedTickets = {};
+
+  // URL handling
+  $scope.$watch(() => $stateParams.id, () => {
+    $scope.filter.routeId = parseInt($stateParams.routeId);
+    $scope.filter.tripId = parseInt($stateParams.tripId);
+  })
+  var myState = $state.current.name;
+  $scope.$watchGroup(['filter.routeId', 'filter.tripId'], () => {
+    var params = {}
+
+    if ($scope.filter.routeId)
+      params.routeId = $scope.filter.routeId;
+
+    if ($scope.filter.tripId)
+      params.tripId = $scope.filter.tripId;
+
+    $state.go(myState, params, {notify: false, reload: false})
+  })
 
   $scope.$watch('disp.month', () => {
     $scope.filter.startDate = new Date(
@@ -121,6 +139,9 @@ BookingRefund) {
     }
     if ($scope.filter.routeId) {
       queryOptions.routeId = $scope.filter.routeId
+    }
+    if ($scope.filter.tripId) {
+      queryOptions.tripId = $scope.filter.tripId
     }
     if ($scope.filter.userQuery) {
       queryOptions.userQuery = $scope.filter.userQuery

@@ -25,6 +25,7 @@ export default function($scope, $state, $stateParams, $http, AdminService, Loadi
 
     userQuery: null,
     transactionId: null,
+    ticketId: null,
   };
   $scope.disp = {
     month: new Date()
@@ -49,12 +50,19 @@ export default function($scope, $state, $stateParams, $http, AdminService, Loadi
   // URL handling
   $scope.$watch(() => $stateParams.id, () => {
     $scope.filter.transactionId = $stateParams.id;
+    $scope.filter.ticketId = $stateParams.ticketId;
   })
   var myState = $state.current.name;
-  $scope.$watch('filter.transactionId', () => {
-    $state.go(myState, {
-      id: $scope.filter.transactionId
-    }, {notify: false, reload: false})
+  $scope.$watchGroup(['filter.transactionId', 'filter.ticketId'], () => {
+    var params = {}
+
+    if ($scope.filter.transactionId)
+      params.id = $scope.filter.transactionId;
+
+    if ($scope.filter.ticketId)
+      params.ticketId = $scope.filter.ticketId;
+
+    $state.go(myState, params, {notify: false, reload: false})
   })
 
   function buildQuery() {
@@ -68,6 +76,9 @@ export default function($scope, $state, $stateParams, $http, AdminService, Loadi
         .filter(k => $scope.filter.itemTypes[k]))
     if ($scope.filter.transactionId) {
       queryOpts.transactionId = $scope.filter.transactionId;
+    }
+    else if ($scope.filter.ticketId) {
+      queryOpts.ticketId = $scope.filter.ticketId;
     }
     else {
       if ($scope.filter.userQuery) {

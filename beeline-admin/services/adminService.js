@@ -67,10 +67,15 @@ export default function ($http, $location, store, jwtHelper, auth) {
     }
   }
 
+  this.isSuperAdmin = function () {
+    var profile = store.get('profile')
+
+    return (profile.app_metadata.roles.indexOf('superadmin') != -1);
+  }
+
   this.getCompanyId = function() {
     var profile = store.get('profile')
 
-      console.log(this);
     if (profile.app_metadata.roles.indexOf('superadmin') != -1) {
       console.log(this.actingCompany);
       if (!this.actingCompany) console.log("You need to choose the company you're acting on behalf of")
