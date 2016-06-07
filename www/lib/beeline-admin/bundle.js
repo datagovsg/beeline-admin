@@ -85952,7 +85952,7 @@
 	// the 2nd parameter is an array of 'requires'
 	// 'starter.services' is found in services.js
 	// 'starter.controllers' is found in controllers.js
-	angular.module('beeline-admin', ['uiGmapgoogle-maps', 'ui.router', 'ui.bootstrap', 'beeline.calendar', 'auth0', 'angular-storage', 'angular-jwt', 'ngCookies']).config(__webpack_require__(/*! ./router */ 88).default).config(configureGoogleMaps).config(configureLoginPage).directive('adminNav', __webpack_require__(/*! ./directives/adminNav/adminNav */ 89).default).directive('accountView', __webpack_require__(/*! ./directives/accountView/accountView */ 91).default).directive('paymentView', __webpack_require__(/*! ./directives/paymentView/paymentView */ 92).default).directive('ticketView', __webpack_require__(/*! ./directives/ticketView/ticketView */ 114).default).directive('routeSelector', __webpack_require__(/*! ./directives/routeSelector/routeSelector */ 116).default).directive('routeEditor', __webpack_require__(/*! ./directives/routeEditor/routeEditor */ 118).default).directive('pathEditor', __webpack_require__(/*! ./directives/pathEditor/pathEditor */ 120).default).directive('tripsEditor', __webpack_require__(/*! ./directives/tripsEditor/tripsEditor */ 122).default).directive('companySelector', __webpack_require__(/*! ./directives/companySelector/companySelector */ 144).default).directive('stopSelector', __webpack_require__(/*! ./directives/stopSelector/stopSelector */ 145).default).directive('superAdminCompanySelector', __webpack_require__(/*! ./directives/companySelector/superAdminCompanySelector */ 146).default).service('AdminService', __webpack_require__(/*! ./services/adminService */ 147).default).service('RoutesService', __webpack_require__(/*! ./services/routesService */ 161).default).service('StopsPopup', __webpack_require__(/*! ./services/stopsPopup */ 165).default).service('mapService', __webpack_require__(/*! ./services/mapService */ 167).default).service('DriverService', __webpack_require__(/*! ./services/driverService */ 168).default).service('LoadingSpinner', __webpack_require__(/*! ./services/loadingSpinner */ 171).default).controller('transactions', __webpack_require__(/*! ./controllers/transactionsController.js */ 172).default).controller('routes', __webpack_require__(/*! ./controllers/routesController.js */ 173).default).controller('summary', __webpack_require__(/*! ./controllers/summaryController.js */ 174).default).controller('bookings', __webpack_require__(/*! ./controllers/bookingsController.js */ 175).default).controller('bookingsWrs', __webpack_require__(/*! ./controllers/bookingsControllerWrs.js */ 176).default).controller('login', __webpack_require__(/*! ./controllers/loginController.js */ 181).default).filter('makeRoutePath', __webpack_require__(/*! ./shared/filters.js */ 182).makeRoutePath).run(function (auth, $rootScope, store, jwtHelper, $window) {
+	angular.module('beeline-admin', ['uiGmapgoogle-maps', 'ui.router', 'ui.bootstrap', 'beeline.calendar', 'auth0', 'angular-storage', 'angular-jwt', 'ngCookies']).config(__webpack_require__(/*! ./router */ 88).default).config(configureGoogleMaps).config(configureLoginPage).directive('adminNav', __webpack_require__(/*! ./directives/adminNav/adminNav */ 89).default).directive('accountView', __webpack_require__(/*! ./directives/accountView/accountView */ 91).default).directive('paymentView', __webpack_require__(/*! ./directives/paymentView/paymentView */ 92).default).directive('ticketView', __webpack_require__(/*! ./directives/ticketView/ticketView */ 114).default).directive('routeSelector', __webpack_require__(/*! ./directives/routeSelector/routeSelector */ 116).default).directive('routeEditor', __webpack_require__(/*! ./directives/routeEditor/routeEditor */ 118).default).directive('pathEditor', __webpack_require__(/*! ./directives/pathEditor/pathEditor */ 120).default).directive('tripsEditor', __webpack_require__(/*! ./directives/tripsEditor/tripsEditor */ 122).default).directive('companySelector', __webpack_require__(/*! ./directives/companySelector/companySelector */ 144).default).directive('tripSelector', __webpack_require__(/*! ./directives/tripSelector/tripSelector */ 145).default).directive('stopSelector', __webpack_require__(/*! ./directives/stopSelector/stopSelector */ 157).default).directive('superAdminCompanySelector', __webpack_require__(/*! ./directives/companySelector/superAdminCompanySelector */ 158).default).service('AdminService', __webpack_require__(/*! ./services/adminService */ 159).default).service('RoutesService', __webpack_require__(/*! ./services/routesService */ 164).default).service('StopsPopup', __webpack_require__(/*! ./services/stopsPopup */ 168).default).service('mapService', __webpack_require__(/*! ./services/mapService */ 170).default).service('DriverService', __webpack_require__(/*! ./services/driverService */ 171).default).service('BookingRefund', __webpack_require__(/*! ./services/bookingRefund */ 174).default).service('LoadingSpinner', __webpack_require__(/*! ./services/loadingSpinner */ 176).default).controller('transactions', __webpack_require__(/*! ./controllers/transactionsController.js */ 177).default).controller('routes', __webpack_require__(/*! ./controllers/routesController.js */ 182).default).controller('summary', __webpack_require__(/*! ./controllers/summaryController.js */ 183).default).controller('bookings', __webpack_require__(/*! ./controllers/bookingsController.js */ 184).default).controller('bookingsWrs', __webpack_require__(/*! ./controllers/bookingsControllerWrs.js */ 185).default).controller('drivers', __webpack_require__(/*! ./controllers/driversController.js */ 186).default).controller('login', __webpack_require__(/*! ./controllers/loginController.js */ 187).default).filter('makeRoutePath', __webpack_require__(/*! ./shared/filters.js */ 188).makeRoutePath).run(function (auth, $rootScope, store, jwtHelper, $window) {
 	  auth.hookEvents();
 	
 	  // This events gets triggered on refresh or URL change
@@ -85976,7 +85976,6 @@
 	  $rootScope.$on('$locationChangeStart', function () {
 	    if (notifiedLoginError) return;
 	
-	    console.log($window.location.hash);
 	    // decode and try to trap authentication errors
 	    try {
 	      var hash = $window.location.hash.substr(1);
@@ -88655,12 +88654,13 @@
 	    },
 	    controller: 'login'
 	  }).state('transactions', {
-	    url: '/transactions',
+	    url: '/transactions?id&ticketId',
 	    templateUrl: 'templates/transactions.html',
 	    controller: 'transactions',
 	    data: {
 	      requiresLogin: true
-	    }
+	    },
+	    params: {}
 	  }).state('routes', {
 	    url: '/routes/{routeId:int}/{action}',
 	    templateUrl: 'templates/routes.html',
@@ -88676,9 +88676,16 @@
 	      requiresLogin: true
 	    }
 	  }).state('bookings', {
-	    url: '/bookings',
+	    url: '/bookings?routeId&tripId',
 	    templateUrl: 'templates/bookings-wrs.html',
 	    controller: 'bookingsWrs',
+	    data: {
+	      requiresLogin: true
+	    }
+	  }).state('driver', {
+	    url: '/drivers',
+	    templateUrl: 'templates/drivers.html',
+	    controller: 'drivers',
 	    data: {
 	      requiresLogin: true
 	    }
@@ -88733,7 +88740,7 @@
   \*********************************************************/
 /***/ function(module, exports) {
 
-	module.exports = "\n<nav class=\"tabs tabs-top tabs-icon-left tabs-light tabs-striped admin-nav\">\n  <ul>\n    <li>\n      <!-- The tabs at the top of the page -->\n      <a class=\"tab-item\"\n         ui-sref=\"transactions\"\n         >\n      \t <span class=\"tab-title\">Transactions</span>\n      </a>\n    </li>\n    <li>\n      <a class=\"tab-item\"\n         ui-sref=\"routes({routeId: 0, action: 'route'})\"\n         >\n      \t <span class=\"tab-title\">Routes</span>\n      </a>\n    </li>\n    <li>\n      <a class=\"tab-item\"\n         ui-sref=\"bookings\"\n         >\n      \t <span class=\"tab-title\">Bookings</span>\n      </a>\n    </li>\n    <li>\n      <a class=\"tab-item\"\n         ui-sref=\"summary\"\n         title=\"See the list of bookings for each month\"\n         >\n      \t <span class=\"tab-title\">Summary</span>\n      </a>\n    </li>\n    <li ng-if=\"auth.isAuthenticated\">\n      <a class=\"tab-item\"\n        ng-click=\"adminService.logout()\"\n        >\n        Logout\n      </a>\n    </li>\n    <li ng-if=\"!auth.isAuthenticated\">\n      <a class=\"tab-item\"\n        ng-click=\"adminService.login()\"\n        >\n        Login\n      </a>\n    </li>\n  </ul>\n  <super-admin-company-selector></super-admin-company-selector>\n</nav>\n";
+	module.exports = "\n<nav class=\"tabs tabs-top tabs-icon-left tabs-light tabs-striped admin-nav\">\n  <ul>\n    <li>\n      <!-- The tabs at the top of the page -->\n      <a class=\"tab-item\"\n         ui-sref=\"transactions\"\n         >\n      \t <span class=\"tab-title\">Transactions</span>\n      </a>\n    </li>\n    <li>\n      <a class=\"tab-item\"\n         ui-sref=\"routes({routeId: 0, action: 'route'})\"\n         >\n      \t <span class=\"tab-title\">Routes</span>\n      </a>\n    </li>\n    <li>\n      <a class=\"tab-item\"\n         ui-sref=\"bookings\"\n         >\n      \t <span class=\"tab-title\">Bookings</span>\n      </a>\n    </li>\n    <li>\n      <a class=\"tab-item\"\n         ui-sref=\"summary\"\n         title=\"See the list of bookings for each month\"\n         >\n      \t <span class=\"tab-title\">Summary</span>\n      </a>\n    </li>\n    <li>\n      <a class=\"tab-item\"\n         ui-sref=\"driver\"\n         >\n      \t <span class=\"tab-title\">Drivers</span>\n      </a>\n    </li>\n    <li ng-if=\"auth.isAuthenticated\">\n      <a class=\"tab-item\"\n        ng-click=\"adminService.logout()\"\n        >\n        Logout\n      </a>\n    </li>\n    <li ng-if=\"!auth.isAuthenticated\">\n      <a class=\"tab-item\"\n        ng-click=\"adminService.login()\"\n        >\n        Login\n      </a>\n    </li>\n  </ul>\n  <super-admin-company-selector></super-admin-company-selector>\n</nav>\n";
 
 /***/ },
 /* 91 */
@@ -89426,7 +89433,7 @@
 	  value: true
 	});
 	
-	exports.default = function (RoutesService) {
+	exports.default = function (RoutesService, LoadingSpinner) {
 	
 	  return {
 	    template: __webpack_require__(/*! ./routeSelector.html */ 117),
@@ -89451,9 +89458,9 @@
 	        }
 	      };
 	      scope.refreshList = function () {
-	        RoutesService.getRoutes().then(function (routes) {
+	        LoadingSpinner.watchPromise(RoutesService.getRoutes().then(function (routes) {
 	          scope.availableRoutes = routes;
-	        });
+	        }));
 	      };
 	
 	      scope.$watchGroup(['selectedRouteId', 'availableRoutes'], function () {
@@ -89651,7 +89658,7 @@
 	
 	var _getIterator3 = _interopRequireDefault(_getIterator2);
 	
-	exports.default = function (RoutesService, AdminService, DriverService, StopsPopup) {
+	exports.default = function (RoutesService, AdminService, DriverService, StopsPopup, LoadingSpinner) {
 	
 	  return {
 	    scope: {
@@ -89687,7 +89694,7 @@
 	        }
 	      };
 	      scope.refreshTrips = function () {
-	        RoutesService.getTrips({
+	        var promise = RoutesService.getTrips({
 	          routeId: scope.routeId,
 	          startDate: new Date(scope.filter.startDate),
 	          endDate: new Date(new Date(scope.filter.startDate).getTime() + 60 * 24 * 60 * 60 * 1000),
@@ -89763,6 +89770,8 @@
 	          });
 	          scope.disp.stopsList = stopsList;
 	        });
+	
+	        LoadingSpinner.watchPromise(promise);
 	      };
 	      scope.resetTrips = function () {
 	        scope.disp.newDates = [];
@@ -91615,79 +91624,8 @@
 /***/ },
 /* 145 */
 /*!***************************************************************!*\
-  !*** ./beeline-admin/directives/stopSelector/stopSelector.js ***!
+  !*** ./beeline-admin/directives/tripSelector/tripSelector.js ***!
   \***************************************************************/
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	exports.default = function (RoutesService) {
-	  return {
-	    template: '\n<select\n    ng-model="selectedStop"\n    ng-options="stop.description for stop in stops | orderBy:stop.name track by stop.id"\n    >\n</select>\n    ',
-	    scope: {
-	      ngModel: '='
-	    },
-	    link: function link(scope, elem, attr) {
-	      scope.stops = [];
-	      scope.selectedStop = null;
-	
-	      // Some bug in ngSelect??
-	      scope.$watchGroup(['ngModel', 'stops'], function () {
-	        scope.selectedStop = scope.stops.find(function (x) {
-	          return x.id == scope.ngModel;
-	        });
-	      });
-	      scope.$watch('selectedStop', function () {
-	        if (scope.selectedStop) {
-	          scope.ngModel = scope.selectedStop.id;
-	        } else {}
-	      });
-	
-	      RoutesService.getStops();
-	
-	      scope.$watch(function () {
-	        return RoutesService.stopsPromise;
-	      }, function () {
-	        RoutesService.stopsPromise.then(function (stops) {
-	          scope.stops = stops;
-	        });
-	      });
-	    }
-	  };
-	};
-
-/***/ },
-/* 146 */
-/*!*******************************************************************************!*\
-  !*** ./beeline-admin/directives/companySelector/superAdminCompanySelector.js ***!
-  \*******************************************************************************/
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	exports.default = function ($http, AdminService) {
-	  return {
-	    replace: true,
-	    template: "\n<label ng-if=\"adminService.session().role == 'superadmin'\">\n  You are SuperAdmin! Choose the company you're acting on behalf of:\n  <company-selector\n  ng-model=\"adminService.actingCompany\"></company-selector>\n</label>\n    ",
-	    link: function link(scope, elem, attr) {
-	      scope.adminService = AdminService;
-	    }
-	  };
-	};
-
-/***/ },
-/* 147 */
-/*!************************************************!*\
-  !*** ./beeline-admin/services/adminService.js ***!
-  \************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -91696,201 +91634,177 @@
 	  value: true
 	});
 	
-	var _slicedToArray2 = __webpack_require__(/*! babel-runtime/helpers/slicedToArray */ 148);
+	exports.default = function (AdminService, RoutesService, $rootScope) {
+	  return {
+	    template: __webpack_require__(/*! ./tripSelector.html */ 146),
+	    scope: {
+	      tripId: '=',
+	      alightStopId: '=?',
+	      boardStopId: '=?',
+	      routeId: '=?'
+	    },
+	    link: function link(scope, elem, attr) {
+	      var todayUTC = new Date();
+	      todayUTC = new Date(Date.UTC(todayUTC.getFullYear(), todayUTC.getMonth(), todayUTC.getDate()));
 	
-	var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
+	      // The options for the select
+	      scope.info = {
+	        routes: [],
+	        tripDates: [],
+	        trips: [],
+	        tripStops: [],
+	        trip: null
+	      };
+	      scope.query = {
+	        tripDate: todayUTC
+	      };
+	      scope.disp = {
+	        datepickerOptions: {
+	          dateDisabled: function dateDisabled(_ref) {
+	            var date = _ref.date;
+	            var mode = _ref.mode;
 	
-	exports.default = function ($http, $location, store, jwtHelper, auth) {
+	            return true;
+	          }
+	        },
+	        popupOpen: false
+	      };
 	
-	  this.serverUrl = function () {
-	    return env.BACKEND_URL;
-	  };
+	      // Get routess
+	      scope.displayRoute = function (route) {
+	        return route.label + ': ' + route.from + ' -- ' + route.to;
+	      };
+	      RoutesService.getRoutes().then(function (routes) {
+	        scope.info.routes = routes;
+	      });
 	
-	  this.beeline = function (options) {
-	    options.url = env.BACKEND_URL + options.url;
+	      // If tripId changes (due to external force)
+	      // need to ensure that the route & the stops are valid
+	      scope.$watch('tripId', function (tripId) {
+	        if (!tripId) return;
 	
-	    if (store.get('sessionToken')) {
-	      options.headers = options.headers || {};
-	      options.headers.authorization = 'Bearer ' + store.get('sessionToken');
-	    }
+	        // FIXME: use caching here
+	        RoutesService.getTrip(scope.tripId).then(function (trip) {
+	          if (scope.routeId != trip.routeId) {
+	            scope.routeId = trip.routeId;
+	          }
+	        });
+	      });
 	
-	    return $http(options);
-	  };
+	      // Get trip dates
+	      scope.$watch('routeId', function () {
+	        if (!scope.routeId) {
+	          return null;
+	        }
 	
-	  this.logout = function () {
-	    auth.signout();
-	    store.remove('token');
-	    store.remove('sessionToken');
-	    store.remove('profile');
-	    $location.path('/login');
-	  };
+	        scope.disp.datepickerOptions.dateDisabled = function () {
+	          return true;
+	        };
+	        scope.$broadcast('refreshDatepickers');
 	
-	  this.login = function () {
-	    auth.signin({
-	      authParams: {
-	        scope: 'openid name email app_metadata user_id'
+	        scope.info.tripDates = [];
+	        scope.info.trips = [];
+	        RoutesService.getRoute(scope.routeId, {
+	          includeTrips: true,
+	          includeAvailability: true
+	        }).then(function (route) {
+	          scope.info.trips = route.trips;
+	
+	          var tripDatesObj = _.keyBy(scope.info.trips, function (t) {
+	            return t.date.getTime();
+	          });
+	          scope.disp.datepickerOptions.dateDisabled = function (_ref2) {
+	            var date = _ref2.date;
+	            var mode = _ref2.mode;
+	
+	            var dateInUtc = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+	            return !(dateInUtc.getTime() in tripDatesObj);
+	          };
+	          scope.$broadcast('refreshDatepickers');
+	        });
+	      });
+	
+	      // Get the board stops / alight stops
+	      function formatTime(tm) {
+	        var dt = new Date(tm);
+	        return dt.getHours() + ':' + (0, _leftPad2.default)(dt.getMinutes(), 2, '0');
 	      }
-	    });
-	  };
+	      scope.isBoardStop = function (ts) {
+	        return ts.canBoard;
+	      };
+	      scope.isAlightStop = function (ts) {
+	        return ts.canAlight;
+	      };
+	      scope.displayStop = function (ts) {
+	        return formatTime(ts.time) + ': ' + ts.stop.description;
+	      };
 	
-	  this.signup = function () {
-	    auth.signup({
-	      authParams: {
-	        scope: 'openid name email app_metadata user_id'
-	      }
-	    });
-	  };
+	      // When date changes, update trip stops
+	      scope.$watchGroup(['info.trips', 'query.tripDate'], function () {
+	        var theTrip = scope.info.trips.find(function (tr) {
+	          return tr.date.getTime() == scope.query.tripDate.getTime();
+	        });
 	
-	  var lastSessionToken = null;
-	  var lastSession;
+	        scope.info.trip = theTrip;
 	
-	  this.session = function () {
-	    if (lastSessionToken == store.get('sessionToken')) {
-	      return lastSession;
-	    } else {
-	      lastSession = jwtHelper.decodeToken(store.get('sessionToken'));
-	      // Shortcut so that the components know user's role. FIXME?
-	      lastSession.role = lastSession.app_metadata.roles.indexOf('superadmin') != -1 ? 'superadmin' : lastSession.app_metadata.roles.indexOf('admin') != -1 ? 'admin' : null;
-	      return lastSession;
-	    }
-	  };
+	        if (!theTrip) {
+	          scope.info.tripId = null;
+	          scope.info.tripStops = null;
+	          return;
+	        }
 	
-	  this.getCompanyId = function () {
-	    var profile = store.get('profile');
+	        // Find the previous stops
+	        if (scope.info.tripStops) {
+	          var previousBoardStop = scope.info.tripStops.find(function (ts) {
+	            return ts.id == scope.boardStopId;
+	          });
+	          previousBoardStop = previousBoardStop ? previousBoardStop.stop.id : null;
 	
-	    if (profile.indexOf('admin') != -1) {
-	      return profile.transportCompanyId;
-	    } else if (profile.role == 'superadmin') {
-	      return this.actingCompany;
-	    } else {
-	      (0, _assert2.default)(false);
+	          var previousAlightStop = scope.info.tripStops.find(function (ts) {
+	            return ts.id == scope.alightStopId;
+	          });
+	          previousAlightStop = previousAlightStop ? previousAlightStop.stop.id : null;
+	
+	          // Update the board stop id, alight stop id
+	          scope.boardStopId = theTrip.tripStops.find(function (ts) {
+	            return ts.stop.id == previousBoardStop;
+	          });
+	          scope.alightStopId = theTrip.tripStops.find(function (ts) {
+	            return ts.stop.id == previousAlightStop;
+	          });
+	
+	          scope.boardStopId = scope.boardStopId ? scope.boardStopId.id : null;
+	          scope.alightStopId = scope.alightStopId ? scope.alightStopId.id : null;
+	        }
+	        // update trip ID, trip stops
+	        scope.tripId = theTrip.id;
+	        scope.info.tripStops = theTrip.tripStops;
+	      });
 	    }
 	  };
 	};
 	
-	var _assert = __webpack_require__(/*! assert */ 152);
+	var _assert = __webpack_require__(/*! assert */ 147);
 	
 	var _assert2 = _interopRequireDefault(_assert);
 	
+	var _leftPad = __webpack_require__(/*! left-pad */ 156);
+	
+	var _leftPad2 = _interopRequireDefault(_leftPad);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var env = __webpack_require__(/*! ../env.json */ 87);
-	
-	function b64_to_utf8(str) {
-	  return decodeURIComponent(unescape(window.atob(str)));
-	}
-	
-	function decodeToken(tk) {
-	  var _tk$split = tk.split('.');
-	
-	  var _tk$split2 = (0, _slicedToArray3.default)(_tk$split, 3);
-	
-	  var a = _tk$split2[0];
-	  var b = _tk$split2[1];
-	  var c = _tk$split2[2];
-	
-	
-	  return b64_to_utf8(b);
-	}
 
 /***/ },
-/* 148 */
-/*!**************************************************!*\
-  !*** ./~/babel-runtime/helpers/slicedToArray.js ***!
-  \**************************************************/
-/***/ function(module, exports, __webpack_require__) {
+/* 146 */
+/*!*****************************************************************!*\
+  !*** ./beeline-admin/directives/tripSelector/tripSelector.html ***!
+  \*****************************************************************/
+/***/ function(module, exports) {
 
-	"use strict";
-	
-	exports.__esModule = true;
-	
-	var _isIterable2 = __webpack_require__(/*! ../core-js/is-iterable */ 149);
-	
-	var _isIterable3 = _interopRequireDefault(_isIterable2);
-	
-	var _getIterator2 = __webpack_require__(/*! ../core-js/get-iterator */ 26);
-	
-	var _getIterator3 = _interopRequireDefault(_getIterator2);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	exports.default = function () {
-	  function sliceIterator(arr, i) {
-	    var _arr = [];
-	    var _n = true;
-	    var _d = false;
-	    var _e = undefined;
-	
-	    try {
-	      for (var _i = (0, _getIterator3.default)(arr), _s; !(_n = (_s = _i.next()).done); _n = true) {
-	        _arr.push(_s.value);
-	
-	        if (i && _arr.length === i) break;
-	      }
-	    } catch (err) {
-	      _d = true;
-	      _e = err;
-	    } finally {
-	      try {
-	        if (!_n && _i["return"]) _i["return"]();
-	      } finally {
-	        if (_d) throw _e;
-	      }
-	    }
-	
-	    return _arr;
-	  }
-	
-	  return function (arr, i) {
-	    if (Array.isArray(arr)) {
-	      return arr;
-	    } else if ((0, _isIterable3.default)(Object(arr))) {
-	      return sliceIterator(arr, i);
-	    } else {
-	      throw new TypeError("Invalid attempt to destructure non-iterable instance");
-	    }
-	  };
-	}();
+	module.exports = "<div class=\"trip-selector\">\n  <label>\n    Route\n    <select ng-options=\"route.id as displayRoute(route) for route in info.routes | orderBy:'label'\"\n            ng-model=\"routeId\"\n    >\n    </select>\n  </label>\n\n  <label >\n    Date\n    <div  style=\"display: inline-block; width: 300px;\">\n      <div class=\"input-group\">\n        <input type=\"text\"\n          class=\"form-control\"\n          uib-datepicker-popup\n          is-open=\"disp.popupOpen\"\n\n          ng-model=\"query.tripDate\"\n          ng-model-options=\"{timezone: 'UTC'}\"\n          datepicker-options=\"disp.datepickerOptions\"\n          close-text=\"Close\"\n          >\n\n        <span class=\"input-group-btn\">\n          <button type=\"button\" class=\"btn btn-default\" ng-click=\"disp.popupOpen = !disp.popupOpen\">\n            <i class=\"glyphicon glyphicon-calendar\"></i>\n          </button>\n        </span>\n      </div>\n    </div>\n  </label>\n\n  {{info.trip.availability.seatsAvailable}} seats available\n\n  <label>\n    Boarding Stop\n    <select ng-options=\"tripStop.id as displayStop(tripStop) for tripStop in info.tripStops | filter:isBoardStop\"\n      ng-model=\"boardStopId\"\n    >\n    </select>\n  </label>\n\n  <label>\n    Alighting Stop\n    <select ng-options=\"tripStop.id as displayStop(tripStop) for tripStop in info.tripStops | filter:isAlightStop\"\n      ng-model=\"alightStopId\"\n    >\n    </select>\n  </label>\n  <!-- <dl>\n    <dt>Trip ID</dt>\n    <dd>{{tripId}}</dd>\n\n    <dt>Board Stop ID</dt>\n    <dd>{{boardStopId}}</dd>\n\n    <dt>Alight Stop ID</dt>\n    <dd>{{alightStopId}}</dd>\n  </dl> -->\n</div>\n";
 
 /***/ },
-/* 149 */
-/*!************************************************!*\
-  !*** ./~/babel-runtime/core-js/is-iterable.js ***!
-  \************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/is-iterable */ 150), __esModule: true };
-
-/***/ },
-/* 150 */
-/*!*************************************************************!*\
-  !*** ./~/babel-runtime/~/core-js/library/fn/is-iterable.js ***!
-  \*************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	__webpack_require__(/*! ../modules/web.dom.iterable */ 28);
-	__webpack_require__(/*! ../modules/es6.string.iterator */ 74);
-	module.exports = __webpack_require__(/*! ../modules/core.is-iterable */ 151);
-
-/***/ },
-/* 151 */
-/*!***********************************************************************!*\
-  !*** ./~/babel-runtime/~/core-js/library/modules/core.is-iterable.js ***!
-  \***********************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	var classof   = __webpack_require__(/*! ./_classof */ 78)
-	  , ITERATOR  = __webpack_require__(/*! ./_wks */ 71)('iterator')
-	  , Iterators = __webpack_require__(/*! ./_iterators */ 32);
-	module.exports = __webpack_require__(/*! ./_core */ 41).isIterable = function(it){
-	  var O = Object(it);
-	  return O[ITERATOR] !== undefined
-	    || '@@iterator' in O
-	    || Iterators.hasOwnProperty(classof(O));
-	};
-
-/***/ },
-/* 152 */
+/* 147 */
 /*!****************************!*\
   !*** ./~/assert/assert.js ***!
   \****************************/
@@ -91941,9 +91855,9 @@
 	  }
 	  return 0;
 	}
-	var util = __webpack_require__(/*! util/ */ 153);
-	var Buffer = __webpack_require__(/*! buffer */ 156).Buffer;
-	var BufferShim = __webpack_require__(/*! buffer-shims */ 160);
+	var util = __webpack_require__(/*! util/ */ 148);
+	var Buffer = __webpack_require__(/*! buffer */ 151).Buffer;
+	var BufferShim = __webpack_require__(/*! buffer-shims */ 155);
 	var hasOwn = Object.prototype.hasOwnProperty;
 	var pSlice = Array.prototype.slice;
 	var functionsHaveNames = (function () {
@@ -92364,7 +92278,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 153 */
+/* 148 */
 /*!************************!*\
   !*** ./~/util/util.js ***!
   \************************/
@@ -92895,7 +92809,7 @@
 	}
 	exports.isPrimitive = isPrimitive;
 	
-	exports.isBuffer = __webpack_require__(/*! ./support/isBuffer */ 154);
+	exports.isBuffer = __webpack_require__(/*! ./support/isBuffer */ 149);
 	
 	function objectToString(o) {
 	  return Object.prototype.toString.call(o);
@@ -92939,7 +92853,7 @@
 	 *     prototype.
 	 * @param {function} superCtor Constructor function to inherit prototype from.
 	 */
-	exports.inherits = __webpack_require__(/*! inherits */ 155);
+	exports.inherits = __webpack_require__(/*! inherits */ 150);
 	
 	exports._extend = function(origin, add) {
 	  // Don't do anything if add isn't an object
@@ -92960,7 +92874,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(/*! ./~/process/browser.js */ 126)))
 
 /***/ },
-/* 154 */
+/* 149 */
 /*!*******************************************!*\
   !*** ./~/util/support/isBufferBrowser.js ***!
   \*******************************************/
@@ -92974,7 +92888,7 @@
 	}
 
 /***/ },
-/* 155 */
+/* 150 */
 /*!****************************************!*\
   !*** ./~/inherits/inherits_browser.js ***!
   \****************************************/
@@ -93006,7 +92920,7 @@
 
 
 /***/ },
-/* 156 */
+/* 151 */
 /*!***************************!*\
   !*** ./~/buffer/index.js ***!
   \***************************/
@@ -93022,9 +92936,9 @@
 	
 	'use strict'
 	
-	var base64 = __webpack_require__(/*! base64-js */ 157)
-	var ieee754 = __webpack_require__(/*! ieee754 */ 158)
-	var isArray = __webpack_require__(/*! isarray */ 159)
+	var base64 = __webpack_require__(/*! base64-js */ 152)
+	var ieee754 = __webpack_require__(/*! ieee754 */ 153)
+	var isArray = __webpack_require__(/*! isarray */ 154)
 	
 	exports.Buffer = Buffer
 	exports.SlowBuffer = SlowBuffer
@@ -94561,10 +94475,10 @@
 	  return i
 	}
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 156).Buffer, (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 151).Buffer, (function() { return this; }())))
 
 /***/ },
-/* 157 */
+/* 152 */
 /*!********************************!*\
   !*** ./~/base64-js/lib/b64.js ***!
   \********************************/
@@ -94697,7 +94611,7 @@
 
 
 /***/ },
-/* 158 */
+/* 153 */
 /*!****************************!*\
   !*** ./~/ieee754/index.js ***!
   \****************************/
@@ -94790,7 +94704,7 @@
 
 
 /***/ },
-/* 159 */
+/* 154 */
 /*!****************************!*\
   !*** ./~/isarray/index.js ***!
   \****************************/
@@ -94804,7 +94718,7 @@
 
 
 /***/ },
-/* 160 */
+/* 155 */
 /*!*********************************!*\
   !*** ./~/buffer-shims/index.js ***!
   \*********************************/
@@ -94812,7 +94726,7 @@
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
 	
-	var buffer = __webpack_require__(/*! buffer */ 156);
+	var buffer = __webpack_require__(/*! buffer */ 151);
 	var Buffer = buffer.Buffer;
 	var SlowBuffer = buffer.SlowBuffer;
 	var MAX_LEN = buffer.kMaxLength || 2147483647;
@@ -94922,7 +94836,340 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
+/* 156 */
+/*!*****************************!*\
+  !*** ./~/left-pad/index.js ***!
+  \*****************************/
+/***/ function(module, exports) {
+
+	'use strict';
+	module.exports = leftPad;
+	
+	var cache = [
+	  '',
+	  ' ',
+	  '  ',
+	  '   ',
+	  '    ',
+	  '     ',
+	  '      ',
+	  '       ',
+	  '        ',
+	  '         '
+	];
+	
+	function leftPad (str, len, ch) {
+	  // convert `str` to `string`
+	  str = str + '';
+	
+	  // doesn't need to pad
+	  len = len - str.length;
+	  if (len <= 0) return str;
+	
+	  // convert `ch` to `string`
+	  if (!ch && ch !== 0) ch = ' ';
+	  ch = ch + '';
+	  if(ch === ' ' && len < 10) return cache[len] + str;
+	  var pad = '';
+	  while (true) {
+	    if (len & 1) pad += ch;
+	    len >>= 1;
+	    if (len) ch += ch;
+	    else break;
+	  }
+	  return pad + str;
+	}
+
+
+/***/ },
+/* 157 */
+/*!***************************************************************!*\
+  !*** ./beeline-admin/directives/stopSelector/stopSelector.js ***!
+  \***************************************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	exports.default = function (RoutesService) {
+	  return {
+	    template: '\n<select\n    ng-model="selectedStop"\n    ng-options="stop.description for stop in stops | orderBy:stop.name track by stop.id"\n    >\n</select>\n    ',
+	    scope: {
+	      ngModel: '='
+	    },
+	    link: function link(scope, elem, attr) {
+	      scope.stops = [];
+	      scope.selectedStop = null;
+	
+	      // Some bug in ngSelect??
+	      scope.$watchGroup(['ngModel', 'stops'], function () {
+	        scope.selectedStop = scope.stops.find(function (x) {
+	          return x.id == scope.ngModel;
+	        });
+	      });
+	      scope.$watch('selectedStop', function () {
+	        if (scope.selectedStop) {
+	          scope.ngModel = scope.selectedStop.id;
+	        } else {}
+	      });
+	
+	      RoutesService.getStops();
+	
+	      scope.$watch(function () {
+	        return RoutesService.stopsPromise;
+	      }, function () {
+	        RoutesService.stopsPromise.then(function (stops) {
+	          scope.stops = stops;
+	        });
+	      });
+	    }
+	  };
+	};
+
+/***/ },
+/* 158 */
+/*!*******************************************************************************!*\
+  !*** ./beeline-admin/directives/companySelector/superAdminCompanySelector.js ***!
+  \*******************************************************************************/
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	exports.default = function ($http, AdminService) {
+	  return {
+	    replace: true,
+	    template: "\n<label ng-if=\"adminService.session().role == 'superadmin'\">\n  You are SuperAdmin! Choose the company you're acting on behalf of:\n  <company-selector\n  ng-model=\"adminService.actingCompany\"></company-selector>\n</label>\n    ",
+	    link: function link(scope, elem, attr) {
+	      scope.adminService = AdminService;
+	    }
+	  };
+	};
+
+/***/ },
+/* 159 */
+/*!************************************************!*\
+  !*** ./beeline-admin/services/adminService.js ***!
+  \************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _slicedToArray2 = __webpack_require__(/*! babel-runtime/helpers/slicedToArray */ 160);
+	
+	var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
+	
+	exports.default = function ($http, $location, store, jwtHelper, auth) {
+	
+	  this.serverUrl = function () {
+	    return env.BACKEND_URL;
+	  };
+	
+	  this.beeline = function (options) {
+	    options.url = env.BACKEND_URL + options.url;
+	
+	    if (store.get('sessionToken')) {
+	      options.headers = options.headers || {};
+	      options.headers.authorization = 'Bearer ' + store.get('sessionToken');
+	    }
+	
+	    return $http(options);
+	  };
+	
+	  this.logout = function () {
+	    auth.signout();
+	    store.remove('token');
+	    store.remove('sessionToken');
+	    store.remove('profile');
+	    $location.path('/login');
+	  };
+	
+	  this.login = function () {
+	    auth.signin({
+	      authParams: {
+	        scope: 'openid name email app_metadata user_id'
+	      }
+	    });
+	  };
+	
+	  this.signup = function () {
+	    auth.signup({
+	      authParams: {
+	        scope: 'openid name email app_metadata user_id'
+	      }
+	    });
+	  };
+	
+	  var lastSessionToken = null;
+	  var lastSession;
+	
+	  this.session = function () {
+	    if (lastSessionToken == store.get('sessionToken')) {
+	      return lastSession;
+	    } else {
+	      lastSession = jwtHelper.decodeToken(store.get('sessionToken'));
+	      // Shortcut so that the components know user's role. FIXME?
+	      lastSession.role = lastSession.app_metadata.roles.indexOf('superadmin') != -1 ? 'superadmin' : lastSession.app_metadata.roles.indexOf('admin') != -1 ? 'admin' : null;
+	      lastSession.transportCompanyId = lastSession.app_metadata.transportCompanyId;
+	
+	      return lastSession;
+	    }
+	  };
+	
+	  this.isSuperAdmin = function () {
+	    var profile = store.get('profile');
+	
+	    return profile.app_metadata.roles.indexOf('superadmin') != -1;
+	  };
+	
+	  this.getCompanyId = function () {
+	    var profile = store.get('profile');
+	
+	    if (profile.app_metadata.roles.indexOf('superadmin') != -1) {
+	      console.log(this.actingCompany);
+	      if (!this.actingCompany) console.log("You need to choose the company you're acting on behalf of");
+	      return this.actingCompany;
+	    } else if (profile.app_metadata.roles.indexOf('admin') != -1) {
+	      return profile.app_metadata.transportCompanyId;
+	    } else {
+	      (0, _assert2.default)(false);
+	    }
+	  };
+	};
+	
+	var _assert = __webpack_require__(/*! assert */ 147);
+	
+	var _assert2 = _interopRequireDefault(_assert);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var env = __webpack_require__(/*! ../env.json */ 87);
+	
+	function b64_to_utf8(str) {
+	  return decodeURIComponent(unescape(window.atob(str)));
+	}
+	
+	function decodeToken(tk) {
+	  var _tk$split = tk.split('.');
+	
+	  var _tk$split2 = (0, _slicedToArray3.default)(_tk$split, 3);
+	
+	  var a = _tk$split2[0];
+	  var b = _tk$split2[1];
+	  var c = _tk$split2[2];
+	
+	
+	  return b64_to_utf8(b);
+	}
+
+/***/ },
+/* 160 */
+/*!**************************************************!*\
+  !*** ./~/babel-runtime/helpers/slicedToArray.js ***!
+  \**************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	exports.__esModule = true;
+	
+	var _isIterable2 = __webpack_require__(/*! ../core-js/is-iterable */ 161);
+	
+	var _isIterable3 = _interopRequireDefault(_isIterable2);
+	
+	var _getIterator2 = __webpack_require__(/*! ../core-js/get-iterator */ 26);
+	
+	var _getIterator3 = _interopRequireDefault(_getIterator2);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	exports.default = function () {
+	  function sliceIterator(arr, i) {
+	    var _arr = [];
+	    var _n = true;
+	    var _d = false;
+	    var _e = undefined;
+	
+	    try {
+	      for (var _i = (0, _getIterator3.default)(arr), _s; !(_n = (_s = _i.next()).done); _n = true) {
+	        _arr.push(_s.value);
+	
+	        if (i && _arr.length === i) break;
+	      }
+	    } catch (err) {
+	      _d = true;
+	      _e = err;
+	    } finally {
+	      try {
+	        if (!_n && _i["return"]) _i["return"]();
+	      } finally {
+	        if (_d) throw _e;
+	      }
+	    }
+	
+	    return _arr;
+	  }
+	
+	  return function (arr, i) {
+	    if (Array.isArray(arr)) {
+	      return arr;
+	    } else if ((0, _isIterable3.default)(Object(arr))) {
+	      return sliceIterator(arr, i);
+	    } else {
+	      throw new TypeError("Invalid attempt to destructure non-iterable instance");
+	    }
+	  };
+	}();
+
+/***/ },
 /* 161 */
+/*!************************************************!*\
+  !*** ./~/babel-runtime/core-js/is-iterable.js ***!
+  \************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/is-iterable */ 162), __esModule: true };
+
+/***/ },
+/* 162 */
+/*!*************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/fn/is-iterable.js ***!
+  \*************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(/*! ../modules/web.dom.iterable */ 28);
+	__webpack_require__(/*! ../modules/es6.string.iterator */ 74);
+	module.exports = __webpack_require__(/*! ../modules/core.is-iterable */ 163);
+
+/***/ },
+/* 163 */
+/*!***********************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/core.is-iterable.js ***!
+  \***********************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	var classof   = __webpack_require__(/*! ./_classof */ 78)
+	  , ITERATOR  = __webpack_require__(/*! ./_wks */ 71)('iterator')
+	  , Iterators = __webpack_require__(/*! ./_iterators */ 32);
+	module.exports = __webpack_require__(/*! ./_core */ 41).isIterable = function(it){
+	  var O = Object(it);
+	  return O[ITERATOR] !== undefined
+	    || '@@iterator' in O
+	    || Iterators.hasOwnProperty(classof(O));
+	};
+
+/***/ },
+/* 164 */
 /*!*************************************************!*\
   !*** ./beeline-admin/services/routesService.js ***!
   \*************************************************/
@@ -94950,7 +95197,7 @@
 	
 	var _getIterator3 = _interopRequireDefault(_getIterator2);
 	
-	exports.default = function (AdminService, DriverService) {
+	exports.default = function (AdminService, DriverService, $q) {
 	  var _this = this;
 	
 	  var routesPromise = null;
@@ -94981,11 +95228,11 @@
 	    if (!options && routesPromise) {
 	      return routesPromise;
 	    } else {
-	      var query = makeRouteQuery(options);
-	
 	      if (AdminService.session().role == 'admin') {
-	        query.transportCompanyId = AdminService.session().transportCompanyId;
+	        options = options || {};
+	        options.transportCompanyId = AdminService.session().transportCompanyId;
 	      }
+	      var query = makeRouteQuery(options);
 	
 	      var promise = AdminService.beeline({
 	        method: 'GET',
@@ -95055,6 +95302,7 @@
 	      @prop routeId
 	      @prop startDate
 	    **/
+	  var tripCache = [];
 	  this.getTrips = function (options) {
 	    return AdminService.beeline({
 	      method: 'GET',
@@ -95065,9 +95313,30 @@
 	        include_availability: options.includeAvailability ? true : false
 	      })
 	    }).then(function (response) {
+	      tripCache = tripCache.concat(response.data.trips);
+	      tripCache = tripCache.slice(Math.max(0, tripCache.length - 100));
 	      return response.data.trips;
 	    });
 	  };
+	  this.getTrip = function (tripId) {
+	    var trip;
+	    if (trip = tripCache.find(function (t) {
+	      return t.id == tripId;
+	    })) {
+	      return $q(function (resolve) {
+	        return resolve(trip);
+	      });
+	    }
+	    return AdminService.beeline({
+	      method: 'GET',
+	      url: '/trips/' + tripId
+	    }).then(function (response) {
+	      tripCache = tripCache.concat([response.data]);
+	      tripCache.slice(Math.max(0, tripCache.length - 100));
+	      return response.data;
+	    });
+	  };
+	
 	  this.deleteTrip = function (trip) {
 	    return AdminService.beeline({
 	      method: 'DELETE',
@@ -95296,18 +95565,18 @@
 	
 	var _lodash2 = _interopRequireDefault(_lodash);
 	
-	var _querystring = __webpack_require__(/*! querystring */ 162);
+	var _querystring = __webpack_require__(/*! querystring */ 165);
 	
 	var _querystring2 = _interopRequireDefault(_querystring);
 	
-	var _assert = __webpack_require__(/*! assert */ 152);
+	var _assert = __webpack_require__(/*! assert */ 147);
 	
 	var _assert2 = _interopRequireDefault(_assert);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 162 */
+/* 165 */
 /*!********************************!*\
   !*** ./~/querystring/index.js ***!
   \********************************/
@@ -95315,12 +95584,12 @@
 
 	'use strict';
 	
-	exports.decode = exports.parse = __webpack_require__(/*! ./decode */ 163);
-	exports.encode = exports.stringify = __webpack_require__(/*! ./encode */ 164);
+	exports.decode = exports.parse = __webpack_require__(/*! ./decode */ 166);
+	exports.encode = exports.stringify = __webpack_require__(/*! ./encode */ 167);
 
 
 /***/ },
-/* 163 */
+/* 166 */
 /*!*********************************!*\
   !*** ./~/querystring/decode.js ***!
   \*********************************/
@@ -95409,7 +95678,7 @@
 
 
 /***/ },
-/* 164 */
+/* 167 */
 /*!*********************************!*\
   !*** ./~/querystring/encode.js ***!
   \*********************************/
@@ -95482,7 +95751,7 @@
 
 
 /***/ },
-/* 165 */
+/* 168 */
 /*!**********************************************!*\
   !*** ./beeline-admin/services/stopsPopup.js ***!
   \**********************************************/
@@ -95632,14 +95901,14 @@
 	  };
 	};
 	
-	var _stopsPopup = __webpack_require__(/*! ../templates/stopsPopup.html */ 166);
+	var _stopsPopup = __webpack_require__(/*! ../templates/stopsPopup.html */ 169);
 	
 	var _stopsPopup2 = _interopRequireDefault(_stopsPopup);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 166 */
+/* 169 */
 /*!*************************************************!*\
   !*** ./beeline-admin/templates/stopsPopup.html ***!
   \*************************************************/
@@ -95648,7 +95917,7 @@
 	module.exports = "\n<div class=\"stops-popup\">\n  <div class=\"modal-header\">\n    <h3>{{title}}</h3>\n  </div>\n\n  <div class=\"modal-body\">\n    <ui-gmap-google-map\n      center=\"map.center\"\n      zoom=\"map.zoom\"\n      control=\"map.control\"\n      options=\"map.options\"\n      events=\"map.events\"\n    >\n      <ui-gmap-markers\n        models=\"allStops\"\n        coords=\"'$latlng'\"\n        idKey=\"'id'\"\n        doCluster=\"true\"\n        click=\"stopClicked\"\n        dorebuildall=\"true\"\n        modelsbyref=\"true\"\n        control=\"map.markersControl\"\n        >\n      </ui-gmap-markers>\n\n      <ui-gmap-marker\n        idkey=\"'newstop'\"\n        coords=\"selectedStop.$latlng\"\n        ng-if=\"!selectedStop.id\"\n        options=\"map.newStopOptions\"\n      >\n      </ui-gmap-marker>\n    </ui-gmap-google-map>\n  </div>\n\n  <div class=\"modal-footer\">\n    <form name=\"stopForm\">\n      <div ng-show=\"selectedStop\">\n        <h3>\n          <i ng-if=\"!selectedStop.id\">New Stop</i>\n          <span ng-if=\"selectedStop.id\">{{selectedStop.description}}</span>\n        </h3>\n        <label>\n          Description:\n          <input type=\"text\" ng-model=\"selectedStop.description\"\n              ng-required\n              >\n        </label>\n        <label>\n          Road:\n          <input type=\"text\" ng-model=\"selectedStop.road\"\n              ng-required\n          >\n        </label>\n        <label>\n          Label:\n          <input type=\"text\" ng-model=\"selectedStop.label\"\n              ng-required\n          >\n        </label>\n      </div>\n\n      <span class=\"btn-group\">\n        <button class=\"btn btn-primary\"\n          ng-disabled=\"!selectedStop.id\"\n          ng-click=\"done()\">\n          OK\n        </button>\n        <button class=\"btn btn-default\"\n          ng-click=\"cancel()\">\n          Cancel\n        </button>\n      </span>\n\n      <span class=\"btn-group\">\n        <button class=\"btn btn-primary\"\n          ng-disabled=\"stopForm.$invalid || stopForm.$pristine\"\n          ng-click=\"saveStop(selectedStop)\"\n          >\n          Save Stop\n        </button>\n        <button class=\"btn btn-danger\"\n          ng-show=\"selectedStop.id\"\n          ng-click=\"deleteStop(selectedStop)\"\n          >\n          Delete Stop\n        </button>\n      </span>\n    </form>\n  </div>\n</div>\n";
 
 /***/ },
-/* 167 */
+/* 170 */
 /*!**********************************************!*\
   !*** ./beeline-admin/services/mapService.js ***!
   \**********************************************/
@@ -95694,7 +95963,7 @@
 	};
 
 /***/ },
-/* 168 */
+/* 171 */
 /*!*************************************************!*\
   !*** ./beeline-admin/services/driverService.js ***!
   \*************************************************/
@@ -95710,7 +95979,7 @@
 	
 	var _getIterator3 = _interopRequireDefault(_getIterator2);
 	
-	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 169);
+	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 172);
 	
 	var _stringify2 = _interopRequireDefault(_stringify);
 	
@@ -95832,23 +96101,23 @@
 	
 	var _lodash2 = _interopRequireDefault(_lodash);
 	
-	var _querystring = __webpack_require__(/*! querystring */ 162);
+	var _querystring = __webpack_require__(/*! querystring */ 165);
 	
 	var _querystring2 = _interopRequireDefault(_querystring);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 169 */
+/* 172 */
 /*!***************************************************!*\
   !*** ./~/babel-runtime/core-js/json/stringify.js ***!
   \***************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/json/stringify */ 170), __esModule: true };
+	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/json/stringify */ 173), __esModule: true };
 
 /***/ },
-/* 170 */
+/* 173 */
 /*!****************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/fn/json/stringify.js ***!
   \****************************************************************/
@@ -95861,7 +96130,146 @@
 	};
 
 /***/ },
-/* 171 */
+/* 174 */
+/*!*************************************************!*\
+  !*** ./beeline-admin/services/bookingRefund.js ***!
+  \*************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 172);
+	
+	var _stringify2 = _interopRequireDefault(_stringify);
+	
+	exports.default = function ($uibModal, $rootScope) {
+	  this.open = function (options) {
+	    var modalScope = $rootScope.$new();
+	    modalScope.cancelledTickets = options.cancelledTickets || [];
+	    modalScope.issuedTickets = options.issuedTickets || [];
+	    modalScope.selectedTicket = options.selectedTicket || {};
+	
+	    var modalOptions = {
+	      controller: BookingRefundController,
+	      template: bookingRefundTemplate,
+	      scope: modalScope,
+	      windowClass: 'full-width'
+	    };
+	
+	    $uibModal.open(modalOptions);
+	  };
+	};
+	
+	var _lodash = __webpack_require__(/*! lodash */ 8);
+	
+	var _lodash2 = _interopRequireDefault(_lodash);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var bookingRefundTemplate = __webpack_require__(/*! ./bookingRefund.html */ 175);
+	
+	function BookingRefundController($scope, LoadingSpinner, RoutesService, AdminService) {
+	  var lastId = 1;
+	
+	  // The selected ticket in the issue list
+	  $scope.disp = {};
+	  $scope.disp.selectedCancelled = [];
+	  $scope.disp.selectedIssued = [];
+	  $scope.disp.selectedTicket = {};
+	  $scope.availableUsers = [];
+	
+	  $scope.removeFromIssued = function () {
+	    var ticket = $scope.disp.selectedIssued;
+	    var index = $scope.issuedTickets.indexOf(ticket);
+	    if (index == -1) {
+	      return;
+	    }
+	    $scope.issuedTickets.splice(index, 1);
+	    $scope.disp.selectedIssued = null;
+	  };
+	
+	  $scope.editIssued = function () {
+	    var ticket = $scope.selectedIssued;
+	    $scope.disp.selectedTicket = ticket;
+	    $scope.disp.selectedIssued = null;
+	  };
+	
+	  $scope.$watchGroup(['disp.selectedTicket.trip', 'disp.selectedTicket.boardStopId', 'disp.selectedTicket.alightStopId', 'disp.selectedTicket.userId'], function () {
+	    if ($scope.disp.selectedTicket.id) {
+	      var renderTicket = $scope.disp.selectedTicket;
+	      var promise = RoutesService.getTrip(renderTicket.tripId).then(function (trip) {
+	        console.log((0, _stringify2.default)(trip, null, 2));
+	        console.log((0, _stringify2.default)(renderTicket, null, 2));
+	        renderTicket.trip = trip;
+	        renderTicket.boardStop = trip.tripStops.find(function (ts) {
+	          return ts.id == renderTicket.boardStopId;
+	        });
+	        renderTicket.alightStop = trip.tripStops.find(function (ts) {
+	          return ts.id == renderTicket.alightStopId;
+	        });
+	        renderTicket.user = $scope.availableUsers.find(function (u) {
+	          return u.id == renderTicket.userId;
+	        });
+	      });
+	    }
+	  });
+	  $scope.updateTicket = function (ticket) {
+	    if (ticket.id) {
+	      // it's been immediately updated -- since they are the same
+	      // object!
+	    } else {
+	        var renderTicket = {
+	          id: lastId++
+	        };
+	        $scope.issuedTickets.push(_lodash2.default.assign(renderTicket, ticket));
+	        console.log((0, _stringify2.default)(ticket, null, 2));
+	
+	        var promise = RoutesService.getTrip(renderTicket.tripId).then(function (trip) {
+	          renderTicket.trip = trip;
+	          renderTicket.boardStop = trip.tripStops.find(function (ts) {
+	            return ts.id == renderTicket.boardStopId;
+	          });
+	          renderTicket.alightStop = trip.tripStops.find(function (ts) {
+	            return ts.id == renderTicket.alightStopId;
+	          });
+	          renderTicket.user = $scope.availableUsers.find(function (u) {
+	            return u.id == renderTicket.userId;
+	          });
+	        });
+	
+	        LoadingSpinner.watchPromise(promise);
+	      }
+	  };
+	
+	  // watch the list of available users
+	  $scope.$watch($scope.cancelledTickets, function () {
+	    $scope.availableUsers = $scope.cancelledTickets.map(function (ticket) {
+	      return ticket.user;
+	    });
+	    $scope.availableUsers = _lodash2.default.uniqBy($scope.availableUsers, function (u) {
+	      return u.id;
+	    });
+	    $scope.availableUsersById = _lodash2.default.keyBy($scope.availableUsers, function (u) {
+	      return u.id;
+	    });
+	  });
+	}
+
+/***/ },
+/* 175 */
+/*!***************************************************!*\
+  !*** ./beeline-admin/services/bookingRefund.html ***!
+  \***************************************************/
+/***/ function(module, exports) {
+
+	module.exports = "\n\n<div class=\"modal-header\">\n  <h3 class=\"modal-title\">Refunds / Replacement Trips</h3>\n</div>\n\n<div class=\"modal-body\" class='booking-refund'>\n\n  <div class=\"cancel-panel\">\n    <!-- list of tickets to cancel -->\n    <h2>Tickets to Cancel</h2>\n    <ol class=\"ticket-list\">\n      <li ng-repeat=\"ticket in cancelledTickets\"\n          ng-class=\"{\n            active: disp.selectedCancelled == ticket\n          }\"\n          ng-click=\"disp.selectedCancelled = ticket\"\n      >\n          {{ticket.user.json.name ? ticket.user.json.name  + ' #' + ticket.user.json.index : ticket.user.name}}\n          <br/>\n          <b>{{ticket.boardStop.trip.route.label}}:\n              {{ticket.boardStop.trip.route.from}} &mdash;\n              {{ticket.boardStop.trip.route.to}}</b>\n          <br/>\n          <b>{{ticket.boardStop.trip.date | date:'dd MMM yy':'UTC'}}</b><br/>\n          {{ticket.boardStop.stop.description}}<br/>\n          {{ticket.alightStop.stop.description}}<br/>\n      </li>\n    </ol>\n  </div>\n\n  <!-- list of tickets to issue -->\n  <div class=\"issue-panel\">\n    <h2>Replacement Tickets</h2>\n    <button class=\"btn btn-default\" type=\"button\" ng-click=\"issuedTickets.push({})\"\n      >\n      Add\n    </button>\n    <ol class=\"ticket-list\">\n      <li ng-repeat=\"ticket in issuedTickets\"\n      >\n        <div>\n          User:\n          <select ng-options=\"user.id as (user.json.name ? user.json.name + ' #' + user.json.index : user.name) for user in availableUsers\"\n            ng-model=\"ticket.userId\">\n          </select>\n        </div>\n        <div>\n          Select Trip:\n          <trip-selector\n            trip-id=\"ticket.tripId\"\n            board-stop-id=\"ticket.boardStopId\"\n            alight-stop-id=\"ticket.alightStopId\"\n            route-id=\"ticket.routeId\"\n          ></trip-selector>\n        </div>\n        <button class=\"btn btn-danger\" type=\"button\" ng-click=\"issuedTickets.splice($index, 1)\"\n          >\n          Remove\n        </button>\n      </li>\n    </ol>\n    <button class=\"btn btn-default\" type=\"button\" ng-click=\"issuedTickets.push({})\"\n      >\n      Add\n    </button>\n  </div>\n</div>\n\n<div class=\"modal-footer\">\n  <button\n      ng-disabled=\"issuedTickets.length == 0\"\n      class=\"btn btn-primary\" type=\"button\" ng-click=\"issueFreeTickets()\">\n    Issue Free Tickets\n  </button>\n\n  <button\n      ng-disabled=\"issuedTickets.length == 0\"\n      class=\"btn btn-primary\" type=\"button\" ng-click=\"replaceTickets()\">\n    Replace Tickets\n  </button>\n\n\n  <button\n      class=\"btn btn-default\" type=\"button\" ng-click=\"$dismiss()\">\n    Cancel\n  </button>\n</div>\n";
+
+/***/ },
+/* 176 */
 /*!**************************************************!*\
   !*** ./beeline-admin/services/loadingSpinner.js ***!
   \**************************************************/
@@ -95903,7 +96311,7 @@
 	};
 
 /***/ },
-/* 172 */
+/* 177 */
 /*!*************************************************************!*\
   !*** ./beeline-admin/controllers/transactionsController.js ***!
   \*************************************************************/
@@ -95919,57 +96327,119 @@
 	
 	var _getIterator3 = _interopRequireDefault(_getIterator2);
 	
-	exports.default = function ($scope, $http, AdminService, LoadingSpinner) {
+	var _keys = __webpack_require__(/*! babel-runtime/core-js/object/keys */ 178);
+	
+	var _keys2 = _interopRequireDefault(_keys);
+	
+	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 172);
+	
+	var _stringify2 = _interopRequireDefault(_stringify);
+	
+	exports.default = function ($scope, $state, $stateParams, $http, AdminService, LoadingSpinner) {
 	  $scope.transactions = [];
-	  $scope.currentPage = 1;
-	  $scope.perPage = 20;
-	  $scope.pageCount = 1;
+	
+	  $scope.filter = {
+	    currentPage: 1,
+	    perPage: 20,
+	    pageCount: 1,
+	
+	    orderBy: 'createdAt',
+	    order: 'desc',
+	
+	    itemTypes: {
+	      ticketSale: true,
+	      ticketRefund: true,
+	      ticketExpense: true,
+	      payment: true,
+	      transfer: true,
+	      refundPayment: true,
+	      account: true
+	    },
+	    startDate: new Date(),
+	    endDate: new Date(),
+	
+	    userQuery: null,
+	    transactionId: null,
+	    ticketId: null
+	  };
+	  $scope.disp = {
+	    month: new Date()
+	  };
+	  $scope.filter.startDate.setDate(1);
+	  $scope.filter.endDate.setDate(1);
+	  $scope.filter.endDate.setMonth($scope.filter.endDate.getMonth() + 1);
+	
+	  $scope.$watch('disp.month', function () {
+	    $scope.filter.startDate = new Date($scope.disp.month.getFullYear(), $scope.disp.month.getMonth(), 1);
+	    $scope.filter.endDate = new Date($scope.disp.month.getFullYear(), $scope.disp.month.getMonth() + 1, 1);
+	  });
+	
+	  // URL handling
+	  $scope.$watch(function () {
+	    return $stateParams.id;
+	  }, function () {
+	    $scope.filter.transactionId = $stateParams.id;
+	    $scope.filter.ticketId = $stateParams.ticketId;
+	  });
+	  var myState = $state.current.name;
+	  $scope.$watchGroup(['filter.transactionId', 'filter.ticketId'], function () {
+	    var params = {};
+	
+	    if ($scope.filter.transactionId) params.id = $scope.filter.transactionId;
+	
+	    if ($scope.filter.ticketId) params.ticketId = $scope.filter.ticketId;
+	
+	    $state.go(myState, params, { notify: false, reload: false });
+	  });
+	
+	  function buildQuery() {
+	    var queryOpts = {};
+	
+	    queryOpts.order = $scope.filter.order;
+	    queryOpts.orderBy = $scope.filter.orderBy;
+	    queryOpts.perPage = $scope.filter.perPage;
+	    queryOpts.page = $scope.filter.currentPage;
+	    queryOpts.itemTypes = (0, _stringify2.default)((0, _keys2.default)($scope.filter.itemTypes).filter(function (k) {
+	      return $scope.filter.itemTypes[k];
+	    }));
+	    if ($scope.filter.transactionId) {
+	      queryOpts.transactionId = $scope.filter.transactionId;
+	    } else if ($scope.filter.ticketId) {
+	      queryOpts.ticketId = $scope.filter.ticketId;
+	    } else {
+	      if ($scope.filter.userQuery) {
+	        queryOpts.userQuery = $scope.filter.userQuery;
+	      }
+	
+	      queryOpts.startDate = new Date($scope.filter.startDate.getFullYear(), $scope.filter.startDate.getMonth(), $scope.filter.startDate.getDate()).getTime();
+	
+	      queryOpts.endDate = new Date($scope.filter.endDate.getFullYear(), $scope.filter.endDate.getMonth(), $scope.filter.endDate.getDate()).getTime();
+	    }
+	
+	    return '/transactionItems?' + _querystring2.default.stringify(queryOpts);
+	  }
 	
 	  function query() {
 	    var queryPromise = AdminService.beeline({
 	      method: 'GET',
-	      url: '/transactions?' + _querystring2.default.stringify({
-	        page: $scope.currentPage || 1,
-	        perPage: $scope.perPage
-	      })
+	      url: buildQuery()
 	    }).then(function (result) {
-	      $scope.transactions = result.data.transactions;
-	      $scope.pageCount = result.data.pageCount;
+	
+	      $scope.filter.pageCount = result.data.pageCount;
+	      $scope.transactionItems = result.data.rows;
 	
 	      var _iteratorNormalCompletion = true;
 	      var _didIteratorError = false;
 	      var _iteratorError = undefined;
 	
 	      try {
-	        for (var _iterator = (0, _getIterator3.default)($scope.transactions), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	          var transaction = _step.value;
-	          var _iteratorNormalCompletion2 = true;
-	          var _didIteratorError2 = false;
-	          var _iteratorError2 = undefined;
+	        for (var _iterator = (0, _getIterator3.default)(result.data.rows), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	          var ti = _step.value;
 	
-	          try {
-	            for (var _iterator2 = (0, _getIterator3.default)(transaction.transactionItems), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-	              var ti = _step2.value;
-	
-	              if (ti.itemType.startsWith('ticket') && ti[ti.itemType]) {
-	                try {
-	                  ti[ti.itemType].user.json = JSON.parse(ti[ti.itemType].user.name);
-	                } catch (err) {}
-	              }
-	            }
-	          } catch (err) {
-	            _didIteratorError2 = true;
-	            _iteratorError2 = err;
-	          } finally {
+	          if (ti.itemType.startsWith('ticket') && ti[ti.itemType]) {
 	            try {
-	              if (!_iteratorNormalCompletion2 && _iterator2.return) {
-	                _iterator2.return();
-	              }
-	            } finally {
-	              if (_didIteratorError2) {
-	                throw _iteratorError2;
-	              }
-	            }
+	              ti[ti.itemType].user.json = JSON.parse(ti[ti.itemType].user.name);
+	            } catch (err) {}
 	          }
 	        }
 	      } catch (err) {
@@ -95993,19 +96463,71 @@
 	    LoadingSpinner.watchPromise(queryPromise);
 	  }
 	
-	  query();
-	
-	  $scope.$watchGroup(['currentPage', 'perPage'], query);
+	  $scope.$watch('filter', query, true);
 	};
 	
-	var _querystring = __webpack_require__(/*! querystring */ 162);
+	var _querystring = __webpack_require__(/*! querystring */ 165);
 	
 	var _querystring2 = _interopRequireDefault(_querystring);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 173 */
+/* 178 */
+/*!************************************************!*\
+  !*** ./~/babel-runtime/core-js/object/keys.js ***!
+  \************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/keys */ 179), __esModule: true };
+
+/***/ },
+/* 179 */
+/*!*************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/fn/object/keys.js ***!
+  \*************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(/*! ../../modules/es6.object.keys */ 180);
+	module.exports = __webpack_require__(/*! ../../modules/_core */ 41).Object.keys;
+
+/***/ },
+/* 180 */
+/*!**********************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/es6.object.keys.js ***!
+  \**********************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	// 19.1.2.14 Object.keys(O)
+	var toObject = __webpack_require__(/*! ./_to-object */ 73)
+	  , $keys    = __webpack_require__(/*! ./_object-keys */ 59);
+	
+	__webpack_require__(/*! ./_object-sap */ 181)('keys', function(){
+	  return function keys(it){
+	    return $keys(toObject(it));
+	  };
+	});
+
+/***/ },
+/* 181 */
+/*!******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_object-sap.js ***!
+  \******************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	// most Object methods by ES6 should accept primitives
+	var $export = __webpack_require__(/*! ./_export */ 39)
+	  , core    = __webpack_require__(/*! ./_core */ 41)
+	  , fails   = __webpack_require__(/*! ./_fails */ 50);
+	module.exports = function(KEY, exec){
+	  var fn  = (core.Object || {})[KEY] || Object[KEY]
+	    , exp = {};
+	  exp[KEY] = exec(fn);
+	  $export($export.S + $export.F * fails(function(){ fn(1); }), 'Object', exp);
+	};
+
+/***/ },
+/* 182 */
 /*!*******************************************************!*\
   !*** ./beeline-admin/controllers/routesController.js ***!
   \*******************************************************/
@@ -96017,7 +96539,7 @@
 	  value: true
 	});
 	
-	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 169);
+	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 172);
 	
 	var _stringify2 = _interopRequireDefault(_stringify);
 	
@@ -96038,7 +96560,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 174 */
+/* 183 */
 /*!********************************************************!*\
   !*** ./beeline-admin/controllers/summaryController.js ***!
   \********************************************************/
@@ -96135,7 +96657,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 175 */
+/* 184 */
 /*!*********************************************************!*\
   !*** ./beeline-admin/controllers/bookingsController.js ***!
   \*********************************************************/
@@ -96151,7 +96673,7 @@
 	
 	var _getIterator3 = _interopRequireDefault(_getIterator2);
 	
-	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 169);
+	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 172);
 	
 	var _stringify2 = _interopRequireDefault(_stringify);
 	
@@ -96254,14 +96776,14 @@
 	  $scope.$watch('filter.date', queryRoutes, true);
 	};
 	
-	var _querystring = __webpack_require__(/*! querystring */ 162);
+	var _querystring = __webpack_require__(/*! querystring */ 165);
 	
 	var _querystring2 = _interopRequireDefault(_querystring);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 176 */
+/* 185 */
 /*!************************************************************!*\
   !*** ./beeline-admin/controllers/bookingsControllerWrs.js ***!
   \************************************************************/
@@ -96277,15 +96799,15 @@
 	
 	var _getIterator3 = _interopRequireDefault(_getIterator2);
 	
-	var _keys = __webpack_require__(/*! babel-runtime/core-js/object/keys */ 177);
-	
-	var _keys2 = _interopRequireDefault(_keys);
-	
-	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 169);
+	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 172);
 	
 	var _stringify2 = _interopRequireDefault(_stringify);
 	
-	exports.default = function ($scope, AdminService, RoutesService, LoadingSpinner) {
+	var _keys = __webpack_require__(/*! babel-runtime/core-js/object/keys */ 178);
+	
+	var _keys2 = _interopRequireDefault(_keys);
+	
+	exports.default = function ($scope, AdminService, RoutesService, LoadingSpinner, BookingRefund, $state, $stateParams) {
 	  $scope.tickets = [];
 	  $scope.currentPage = 1;
 	
@@ -96298,7 +96820,7 @@
 	
 	  $scope.filter = {
 	    showPartial: false,
-	    filterBy: 'boardStop.time',
+	    orderBy: 'createdAt',
 	    order: 'desc',
 	    routeId: false,
 	    status: {
@@ -96307,7 +96829,8 @@
 	      failed: false
 	    },
 	    startDate: startOfMonth,
-	    endDate: endOfMonth
+	    endDate: endOfMonth,
+	    userQuery: null
 	  };
 	
 	  $scope.disp = {
@@ -96317,35 +96840,125 @@
 	    counts: {}
 	  };
 	
+	  $scope.selectedTickets = {};
+	
+	  // URL handling
+	  $scope.$watch(function () {
+	    return $stateParams.id;
+	  }, function () {
+	    $scope.filter.routeId = parseInt($stateParams.routeId);
+	    $scope.filter.tripId = parseInt($stateParams.tripId);
+	  });
+	  var myState = $state.current.name;
+	  $scope.$watchGroup(['filter.routeId', 'filter.tripId'], function () {
+	    var params = {};
+	
+	    if ($scope.filter.routeId) params.routeId = $scope.filter.routeId;
+	
+	    if ($scope.filter.tripId) params.tripId = $scope.filter.tripId;
+	
+	    $state.go(myState, params, { notify: false, reload: false });
+	  });
+	
 	  $scope.$watch('disp.month', function () {
 	    $scope.filter.startDate = new Date($scope.disp.month.getFullYear(), $scope.disp.month.getMonth(), 1);
 	    $scope.filter.endDate = new Date($scope.disp.month.getFullYear(), $scope.disp.month.getMonth() + 1, 0);
 	  });
 	
-	  function query() {
+	  $scope.downloadCsv = function () {
+	    AdminService.beeline({
+	      method: 'POST',
+	      url: '/makeDownloadLink',
+	      data: {
+	        uri: $scope.csvUrl
+	      }
+	    }).then(function (result) {
+	      window.location.href = AdminService.serverUrl() + '/downloadLink?token=' + result.data.token;
+	    });
+	  };
+	
+	  $scope.showRefundModal = function () {
+	    var ticketsById = _.keyBy($scope.tickets, function (t) {
+	      return t.id;
+	    });
+	    var ticketsToCancel = (0, _keys2.default)($scope.selectedTickets).filter(function (ticketId) {
+	      return $scope.selectedTickets[ticketId];
+	    }).map(function (ticketId) {
+	      return ticketsById[ticketId];
+	    });
+	
+	    BookingRefund.open({
+	      cancelledTickets: ticketsToCancel
+	    });
+	  };
+	
+	  $scope.refund = function (ticket) {
+	    if (confirm("Confirm refund?")) {
+	      AdminService.beeline({
+	        method: 'POST',
+	        url: '/transactions/refund',
+	        data: {
+	          ticketId: ticket.id
+	        }
+	      }). // dryRun: true,
+	      then(function (response) {
+	        var txn = response.data;
+	        var payment = txn.transactionItems.find(function (ts) {
+	          return ts.itemType == 'refundPayment' && ts.refundPayment;
+	        });
+	
+	        console.log(txn);
+	
+	        alert(parseFloat(payment.credit).toFixed(2) + " refunded.");
+	      }).then(null, function (response) {
+	        console.log(response);
+	        alert("Failed...");
+	      });
+	    }
+	  };
+	
+	  function buildQuery(override) {
 	    // update the request and CSV url
 	    var queryOptions = {
 	      page: $scope.currentPage || 1,
 	      perPage: $scope.perPage,
 	
 	      order: $scope.filter.order,
-	      filterBy: $scope.filter.filterBy,
-	      startDate: $scope.filter.startDate.getTime(),
-	      endDate: $scope.filter.endDate.getTime() + 24 * 60 * 60 * 1000,
+	      orderBy: $scope.filter.orderBy,
+	      tripStartDate: $scope.filter.startDate.getTime(),
+	      tripEndDate: $scope.filter.endDate.getTime() + 24 * 60 * 60 * 1000,
 	      statuses: (0, _stringify2.default)((0, _keys2.default)($scope.filter.status).filter(function (key) {
 	        return $scope.filter.status[key];
 	      }))
 	    };
-	    var requestUrl = '/custom/wrs/report?' + _querystring2.default.stringify(queryOptions);
-	    $scope.csvUrl = AdminService.serverUrl() + '/custom/wrs/report?' + _querystring2.default.stringify(_.assign(queryOptions, {
-	      page: 1,
-	      perPage: 10000000, // it's a happy problem
-	      format: 'csv'
-	    }));
-	
 	    if ($scope.filter.routeId) {
 	      queryOptions.routeId = $scope.filter.routeId;
 	    }
+	    if ($scope.filter.tripId) {
+	      queryOptions.tripId = $scope.filter.tripId;
+	    }
+	    if ($scope.filter.userQuery) {
+	      queryOptions.userQuery = $scope.filter.userQuery;
+	    }
+	    if ($scope.filter.stopQuery) {
+	      queryOptions.stopQuery = $scope.filter.stopQuery;
+	    }
+	
+	    _.assign(queryOptions, override);
+	
+	    var requestUrl = '/custom/wrs/report?' + _querystring2.default.stringify(queryOptions);
+	
+	    return requestUrl;
+	  }
+	
+	  function query() {
+	    var requestUrl = buildQuery();
+	    $scope.csvUrl = buildQuery({
+	      page: 1,
+	      perPage: 10000000, // it's a happy problem
+	      format: 'csv'
+	    });
+	
 	    var queryPromise = AdminService.beeline({
 	      method: 'GET',
 	      url: requestUrl
@@ -96353,9 +96966,7 @@
 	      $scope.tickets = result.data.rows;
 	      $scope.pageCount = Math.ceil(result.data.count / result.data.perPage);
 	
-	      $scope.disp.counts = _.keyBy(result.data.countByDate, function (r) {
-	        return new Date(r.date).getTime();
-	      });
+	      $scope.disp.counts = result.data.countByDate;
 	      var _iteratorNormalCompletion = true;
 	      var _didIteratorError = false;
 	      var _iteratorError = undefined;
@@ -96382,6 +96993,8 @@
 	          }
 	        }
 	      }
+	
+	      $scope.selectedTickets = {};
 	    }).catch(function (err) {
 	      console.error(err.stack);
 	      console.log(err);
@@ -96415,68 +97028,106 @@
 	  $scope.$watch('filter', query, true);
 	};
 	
-	var _querystring = __webpack_require__(/*! querystring */ 162);
+	var _querystring = __webpack_require__(/*! querystring */ 165);
 	
 	var _querystring2 = _interopRequireDefault(_querystring);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 177 */
-/*!************************************************!*\
-  !*** ./~/babel-runtime/core-js/object/keys.js ***!
-  \************************************************/
+/* 186 */
+/*!********************************************************!*\
+  !*** ./beeline-admin/controllers/driversController.js ***!
+  \********************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/keys */ 178), __esModule: true };
-
-/***/ },
-/* 178 */
-/*!*************************************************************!*\
-  !*** ./~/babel-runtime/~/core-js/library/fn/object/keys.js ***!
-  \*************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	__webpack_require__(/*! ../../modules/es6.object.keys */ 179);
-	module.exports = __webpack_require__(/*! ../../modules/_core */ 41).Object.keys;
-
-/***/ },
-/* 179 */
-/*!**********************************************************************!*\
-  !*** ./~/babel-runtime/~/core-js/library/modules/es6.object.keys.js ***!
-  \**********************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	// 19.1.2.14 Object.keys(O)
-	var toObject = __webpack_require__(/*! ./_to-object */ 73)
-	  , $keys    = __webpack_require__(/*! ./_object-keys */ 59);
+	'use strict';
 	
-	__webpack_require__(/*! ./_object-sap */ 180)('keys', function(){
-	  return function keys(it){
-	    return $keys(toObject(it));
-	  };
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
 	});
-
-/***/ },
-/* 180 */
-/*!******************************************************************!*\
-  !*** ./~/babel-runtime/~/core-js/library/modules/_object-sap.js ***!
-  \******************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	// most Object methods by ES6 should accept primitives
-	var $export = __webpack_require__(/*! ./_export */ 39)
-	  , core    = __webpack_require__(/*! ./_core */ 41)
-	  , fails   = __webpack_require__(/*! ./_fails */ 50);
-	module.exports = function(KEY, exec){
-	  var fn  = (core.Object || {})[KEY] || Object[KEY]
-	    , exp = {};
-	  exp[KEY] = exec(fn);
-	  $export($export.S + $export.F * fails(function(){ fn(1); }), 'Object', exp);
+	
+	exports.default = function ($scope, AdminService) {
+	  $scope.drivers = [];
+	
+	  function query() {
+	    if (!AdminService.getCompanyId()) {
+	      return;
+	    }
+	    AdminService.beeline({
+	      method: 'GET',
+	      url: '/drivers?' + _querystring2.default.stringify({
+	        transportCompanyId: AdminService.getCompanyId()
+	      })
+	    }).then(function (response) {
+	      $scope.drivers = response.data;
+	    });
+	  }
+	
+	  $scope.deleteDriver = function (did) {
+	    console.log(did);
+	    AdminService.beeline({
+	      method: 'DELETE',
+	      url: '/drivers/' + did + '?' + _querystring2.default.stringify({
+	        transportCompanyId: AdminService.getCompanyId()
+	      })
+	    }).then(query).then(null, function (err) {
+	      console.log(err);
+	    });
+	  };
+	
+	  $scope.updateDriverName = function (did) {
+	    var newName = prompt('Name?');
+	
+	    if (!newName) return;
+	
+	    AdminService.beeline({
+	      method: 'PUT',
+	      url: '/drivers/' + did,
+	      data: {
+	        name: newName,
+	        transportCompanyId: AdminService.getCompanyId()
+	      }
+	    }).then(query).then(null, function (err) {
+	      console.log(err);
+	    });
+	  };
+	
+	  $scope.addDriver = function (did) {
+	    var phoneNumber = prompt("Phone number?");
+	
+	    if (!phoneNumber) return;
+	
+	    var name = prompt("Name?");
+	
+	    if (!name) return;
+	
+	    AdminService.beeline({
+	      method: 'POST',
+	      url: '/drivers',
+	      data: {
+	        telephone: phoneNumber,
+	        name: name,
+	        transportCompanyId: AdminService.getCompanyId()
+	      }
+	    }).then(query).then(null, function (err) {
+	      console.log(err);
+	    });
+	  };
+	
+	  $scope.$watch(function () {
+	    return AdminService.actingCompany;
+	  }, query);
 	};
+	
+	var _querystring = __webpack_require__(/*! querystring */ 165);
+	
+	var _querystring2 = _interopRequireDefault(_querystring);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 181 */
+/* 187 */
 /*!******************************************************!*\
   !*** ./beeline-admin/controllers/loginController.js ***!
   \******************************************************/
@@ -96493,7 +97144,7 @@
 	};
 
 /***/ },
-/* 182 */
+/* 188 */
 /*!*****************************************!*\
   !*** ./beeline-admin/shared/filters.js ***!
   \*****************************************/
