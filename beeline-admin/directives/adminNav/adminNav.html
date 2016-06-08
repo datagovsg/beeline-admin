@@ -25,6 +25,13 @@
                 <li>
                     <a><super-admin-company-selector></super-admin-company-selector></a>
                 </li>
+
+                  <li ng-if="!auth.isAuthenticated">
+                    <a ng-click="adminService.login()">
+                      Login
+                    </a>
+                  </li>
+
                   <li ng-if="auth.isAuthenticated">
                       <a ng-click="adminService.logout()">Log out</a>
                   </li>

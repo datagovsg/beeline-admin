@@ -47,16 +47,16 @@
   \******************/
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(/*! /home/daniel/beeline-admin/node_modules/angular/angular */1);
-	__webpack_require__(/*! /home/daniel/beeline-admin/node_modules/angular-ui-router/release/angular-ui-router */2);
-	__webpack_require__(/*! /home/daniel/beeline-admin/node_modules/angular-ui-bootstrap/dist/ui-bootstrap */3);
-	__webpack_require__(/*! /home/daniel/beeline-admin/node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls */4);
-	__webpack_require__(/*! /home/daniel/beeline-admin/node_modules/angular-animate/angular-animate */5);
-	__webpack_require__(/*! /home/daniel/beeline-admin/node_modules/angular-touch/angular-touch */6);
-	__webpack_require__(/*! /home/daniel/beeline-admin/node_modules/angular-simple-logger/dist/angular-simple-logger */7);
-	__webpack_require__(/*! /home/daniel/beeline-admin/node_modules/lodash/lodash */8);
-	__webpack_require__(/*! /home/daniel/beeline-admin/node_modules/angular-google-maps/dist/angular-google-maps */10);
-	module.exports = __webpack_require__(/*! /home/daniel/beeline-admin/beeline-admin/main.js */11);
+	__webpack_require__(/*! /Users/yixin/repo/bee/beeline-admin/node_modules/angular/angular */1);
+	__webpack_require__(/*! /Users/yixin/repo/bee/beeline-admin/node_modules/angular-ui-router/release/angular-ui-router */2);
+	__webpack_require__(/*! /Users/yixin/repo/bee/beeline-admin/node_modules/angular-ui-bootstrap/dist/ui-bootstrap */3);
+	__webpack_require__(/*! /Users/yixin/repo/bee/beeline-admin/node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls */4);
+	__webpack_require__(/*! /Users/yixin/repo/bee/beeline-admin/node_modules/angular-animate/angular-animate */5);
+	__webpack_require__(/*! /Users/yixin/repo/bee/beeline-admin/node_modules/angular-touch/angular-touch */6);
+	__webpack_require__(/*! /Users/yixin/repo/bee/beeline-admin/node_modules/angular-simple-logger/dist/angular-simple-logger */7);
+	__webpack_require__(/*! /Users/yixin/repo/bee/beeline-admin/node_modules/lodash/lodash */8);
+	__webpack_require__(/*! /Users/yixin/repo/bee/beeline-admin/node_modules/angular-google-maps/dist/angular-google-maps */10);
+	module.exports = __webpack_require__(/*! /Users/yixin/repo/bee/beeline-admin/beeline-admin/main.js */11);
 
 
 /***/ },
@@ -35648,7 +35648,7 @@
 	 * angular-ui-bootstrap
 	 * http://angular-ui.github.io/bootstrap/
 	
-	 * Version: 1.3.3 - 2016-05-22
+	 * Version: 1.3.2 - 2016-04-14
 	 * License: MIT
 	 */angular.module("ui.bootstrap", ["ui.bootstrap.collapse","ui.bootstrap.accordion","ui.bootstrap.alert","ui.bootstrap.buttons","ui.bootstrap.carousel","ui.bootstrap.dateparser","ui.bootstrap.isClass","ui.bootstrap.datepicker","ui.bootstrap.position","ui.bootstrap.datepickerPopup","ui.bootstrap.debounce","ui.bootstrap.dropdown","ui.bootstrap.stackedMap","ui.bootstrap.modal","ui.bootstrap.paging","ui.bootstrap.pager","ui.bootstrap.pagination","ui.bootstrap.tooltip","ui.bootstrap.popover","ui.bootstrap.progressbar","ui.bootstrap.rating","ui.bootstrap.tabs","ui.bootstrap.timepicker","ui.bootstrap.typeahead"]);
 	angular.module('ui.bootstrap.collapse', [])
@@ -35879,23 +35879,13 @@
 	    link: function(scope, element, attrs, controller) {
 	      scope.$watch(function() { return controller[attrs.uibAccordionTransclude]; }, function(heading) {
 	        if (heading) {
-	          var elem = angular.element(element[0].querySelector(getHeaderSelectors()));
+	          var elem = angular.element(element[0].querySelector('[uib-accordion-header]'));
 	          elem.html('');
 	          elem.append(heading);
 	        }
 	      });
 	    }
 	  };
-	
-	  function getHeaderSelectors() {
-	      return 'uib-accordion-header,' +
-	          'data-uib-accordion-header,' +
-	          'x-uib-accordion-header,' +
-	          'uib\\:accordion-header,' +
-	          '[uib-accordion-header],' +
-	          '[data-uib-accordion-header],' +
-	          '[x-uib-accordion-header]';
-	  }
 	});
 	
 	angular.module('ui.bootstrap.alert', [])
@@ -36839,9 +36829,8 @@
 	    return date && timezone ? convertTimezoneToLocal(date, timezone, true) : date;
 	  }
 	
-	  //https://github.com/angular/angular.js/blob/622c42169699ec07fc6daaa19fe6d224e5d2f70e/src/Angular.js#L1207
+	  //https://github.com/angular/angular.js/blob/4daafd3dbe6a80d578f5a31df1bb99c77559543e/src/Angular.js#L1207
 	  function timezoneToOffset(timezone, fallback) {
-	    timezone = timezone.replace(/:/g, '');
 	    var requestedTimezoneOffset = Date.parse('Jan 01, 1970 00:00:00 ' + timezone) / 60000;
 	    return isNaN(requestedTimezoneOffset) ? fallback : requestedTimezoneOffset;
 	  }
@@ -36854,9 +36843,8 @@
 	
 	  function convertTimezoneToLocal(date, timezone, reverse) {
 	    reverse = reverse ? -1 : 1;
-	    var dateTimezoneOffset = date.getTimezoneOffset();
-	    var timezoneOffset = timezoneToOffset(timezone, dateTimezoneOffset);
-	    return addDateMinutes(date, reverse * (timezoneOffset - dateTimezoneOffset));
+	    var timezoneOffset = timezoneToOffset(timezone, date.getTimezoneOffset());
+	    return addDateMinutes(date, reverse * (timezoneOffset - date.getTimezoneOffset()));
 	  }
 	}]);
 	
@@ -37128,9 +37116,8 @@
 	      self.activeDate = new Date();
 	    }
 	
-	    var date = ngModelCtrl.$modelValue ? new Date(ngModelCtrl.$modelValue) : new Date();
-	    this.activeDate = !isNaN(date) ?
-	      dateParser.fromTimezone(date, ngModelOptions.timezone) :
+	    this.activeDate = ngModelCtrl.$modelValue ?
+	      dateParser.fromTimezone(new Date(ngModelCtrl.$modelValue), ngModelOptions.timezone) :
 	      dateParser.fromTimezone(new Date(), ngModelOptions.timezone);
 	
 	    ngModelCtrl.$render = function() {
@@ -38335,11 +38322,11 @@
 	          return value;
 	        }
 	
-	        if (angular.isNumber(value)) {
-	          value = new Date(value);
-	        }
-	
 	        $scope.date = dateParser.fromTimezone(value, timezone);
+	
+	        if (angular.isNumber($scope.date)) {
+	          $scope.date = new Date($scope.date);
+	        }
 	
 	        return dateParser.filter($scope.date, dateFormat);
 	      });
@@ -38875,8 +38862,7 @@
 	    if (appendTo && self.dropdownMenu) {
 	      var pos = $position.positionElements($element, self.dropdownMenu, 'bottom-left', true),
 	        css,
-	        rightalign,
-	        scrollbarWidth;
+	        rightalign;
 	
 	      css = {
 	        top: pos.top + 'px',
@@ -38889,8 +38875,7 @@
 	        css.right = 'auto';
 	      } else {
 	        css.left = 'auto';
-	        scrollbarWidth = $position.scrollbarWidth(true);
-	        css.right = window.innerWidth - scrollbarWidth -
+	        css.right = window.innerWidth -
 	          (pos.left + $element.prop('offsetWidth')) + 'px';
 	      }
 	
@@ -39777,26 +39762,29 @@
 	                //controllers
 	                if (modalOptions.controller) {
 	                  ctrlLocals.$scope = modalScope;
-	                  ctrlLocals.$scope.$resolve = {};
 	                  ctrlLocals.$uibModalInstance = modalInstance;
 	                  angular.forEach(tplAndVars[1], function(value, key) {
 	                    ctrlLocals[key] = value;
-	                    ctrlLocals.$scope.$resolve[key] = value;
 	                  });
 	
 	                  // the third param will make the controller instantiate later,private api
 	                  // @see https://github.com/angular/angular.js/blob/master/src/ng/controller.js#L126
-	                  ctrlInstantiate = $controller(modalOptions.controller, ctrlLocals, true, modalOptions.controllerAs);
-	                  if (modalOptions.controllerAs && modalOptions.bindToController) {
+	                  ctrlInstantiate = $controller(modalOptions.controller, ctrlLocals, true);
+	                  if (modalOptions.controllerAs) {
 	                    ctrlInstance = ctrlInstantiate.instance;
-	                    ctrlInstance.$close = modalScope.$close;
-	                    ctrlInstance.$dismiss = modalScope.$dismiss;
-	                    angular.extend(ctrlInstance, {
-	                      $resolve: ctrlLocals.$scope.$resolve
-	                    }, providedScope);
-	                  }
 	
-	                  ctrlInstance = ctrlInstantiate();
+	                    if (modalOptions.bindToController) {
+	                      ctrlInstance.$close = modalScope.$close;
+	                      ctrlInstance.$dismiss = modalScope.$dismiss;
+	                      angular.extend(ctrlInstance, providedScope);
+	                    }
+	
+	                    ctrlInstance = ctrlInstantiate();
+	
+	                    modalScope[modalOptions.controllerAs] = ctrlInstance;
+	                  } else {
+	                    ctrlInstance = ctrlInstantiate();
+	                  }
 	
 	                  if (angular.isFunction(ctrlInstance.$onInit)) {
 	                    ctrlInstance.$onInit();
@@ -41102,8 +41090,7 @@
 	      var previousSelected = ctrl.tabs[previousIndex];
 	      if (previousSelected) {
 	        previousSelected.tab.onDeselect({
-	          $event: evt,
-	          $selectedIndex: index
+	          $event: evt
 	        });
 	        if (evt && evt.isDefaultPrevented()) {
 	          return;
@@ -41119,7 +41106,7 @@
 	        selected.tab.active = true;
 	        ctrl.active = selected.index;
 	        oldIndex = selected.index;
-	      } else if (!selected && angular.isDefined(oldIndex)) {
+	      } else if (!selected && angular.isNumber(oldIndex)) {
 	        ctrl.active = null;
 	        oldIndex = null;
 	      }
@@ -41143,7 +41130,7 @@
 	      return 0;
 	    });
 	
-	    if (tab.index === ctrl.active || !angular.isDefined(ctrl.active) && ctrl.tabs.length === 1) {
+	    if (tab.index === ctrl.active || !angular.isNumber(ctrl.active) && ctrl.tabs.length === 1) {
 	      var newActiveIndex = findTabIndex(tab.index);
 	      ctrl.select(newActiveIndex);
 	    }
@@ -41168,7 +41155,7 @@
 	  };
 	
 	  $scope.$watch('tabset.active', function(val) {
-	    if (angular.isDefined(val) && val !== oldIndex) {
+	    if (angular.isNumber(val) && val !== oldIndex) {
 	      ctrl.select(findTabIndex(val));
 	    }
 	  });
@@ -41206,6 +41193,9 @@
 	        scope.$parent.$eval(attrs.vertical) : false;
 	      scope.justified = angular.isDefined(attrs.justified) ?
 	        scope.$parent.$eval(attrs.justified) : false;
+	      if (angular.isUndefined(attrs.active)) {
+	        scope.active = 0;
+	      }
 	    }
 	  };
 	})
@@ -41936,7 +41926,7 @@
 	    originalScope.$watch(attrs.typeaheadMinLength, function (newVal) {
 	        minLength = !newVal && newVal !== 0 ? 1 : newVal;
 	    });
-	
+	    
 	    //minimal wait time after last character typed before typeahead kicks-in
 	    var waitTime = originalScope.$eval(attrs.typeaheadWaitMs) || 0;
 	
@@ -41948,12 +41938,6 @@
 	
 	    //binding to a variable that indicates if matches are being retrieved asynchronously
 	    var isLoadingSetter = $parse(attrs.typeaheadLoading).assign || angular.noop;
-	
-	    //a function to determine if an event should cause selection
-	    var isSelectEvent = attrs.typeaheadShouldSelect ? $parse(attrs.typeaheadShouldSelect) : function(scope, vals) {
-	      var evt = vals.$event;
-	      return evt.which === 13 || evt.which === 9;
-	    };
 	
 	    //a callback executed when a match is selected
 	    var onSelectCallback = $parse(attrs.typeaheadOnSelect);
@@ -42270,15 +42254,13 @@
 	        return;
 	      }
 	
-	      var shouldSelect = isSelectEvent(originalScope, {$event: evt});
-	
 	      /**
 	       * if there's nothing selected (i.e. focusFirst) and enter or tab is hit
 	       * or
 	       * shift + tab is pressed to bring focus to the previous element
 	       * then clear the results
 	       */
-	      if (scope.activeIdx === -1 && shouldSelect || evt.which === 9 && !!evt.shiftKey) {
+	      if (scope.activeIdx === -1 && (evt.which === 9 || evt.which === 13) || evt.which === 9 && !!evt.shiftKey) {
 	        resetMatches();
 	        scope.$digest();
 	        return;
@@ -42287,36 +42269,36 @@
 	      evt.preventDefault();
 	      var target;
 	      switch (evt.which) {
-	        case 27: // escape
+	        case 9:
+	        case 13:
+	          scope.$apply(function () {
+	            if (angular.isNumber(scope.debounceUpdate) || angular.isObject(scope.debounceUpdate)) {
+	              $$debounce(function() {
+	                scope.select(scope.activeIdx, evt);
+	              }, angular.isNumber(scope.debounceUpdate) ? scope.debounceUpdate : scope.debounceUpdate['default']);
+	            } else {
+	              scope.select(scope.activeIdx, evt);
+	            }
+	          });
+	          break;
+	        case 27:
 	          evt.stopPropagation();
 	
 	          resetMatches();
 	          originalScope.$digest();
 	          break;
-	        case 38: // up arrow
+	        case 38:
 	          scope.activeIdx = (scope.activeIdx > 0 ? scope.activeIdx : scope.matches.length) - 1;
 	          scope.$digest();
 	          target = popUpEl.find('li')[scope.activeIdx];
 	          target.parentNode.scrollTop = target.offsetTop;
 	          break;
-	        case 40: // down arrow
+	        case 40:
 	          scope.activeIdx = (scope.activeIdx + 1) % scope.matches.length;
 	          scope.$digest();
 	          target = popUpEl.find('li')[scope.activeIdx];
 	          target.parentNode.scrollTop = target.offsetTop;
 	          break;
-	        default:
-	          if (shouldSelect) {
-	            scope.$apply(function() {
-	              if (angular.isNumber(scope.debounceUpdate) || angular.isObject(scope.debounceUpdate)) {
-	                $$debounce(function() {
-	                  scope.select(scope.activeIdx, evt);
-	                }, angular.isNumber(scope.debounceUpdate) ? scope.debounceUpdate : scope.debounceUpdate['default']);
-	              } else {
-	                scope.select(scope.activeIdx, evt);
-	              }
-	            });
-	          }
 	      }
 	    });
 	
@@ -42580,7 +42562,7 @@
 	 * angular-ui-bootstrap
 	 * http://angular-ui.github.io/bootstrap/
 	
-	 * Version: 1.3.3 - 2016-05-22
+	 * Version: 1.3.2 - 2016-04-14
 	 * License: MIT
 	 */angular.module("ui.bootstrap", ["ui.bootstrap.tpls", "ui.bootstrap.collapse","ui.bootstrap.accordion","ui.bootstrap.alert","ui.bootstrap.buttons","ui.bootstrap.carousel","ui.bootstrap.dateparser","ui.bootstrap.isClass","ui.bootstrap.datepicker","ui.bootstrap.position","ui.bootstrap.datepickerPopup","ui.bootstrap.debounce","ui.bootstrap.dropdown","ui.bootstrap.stackedMap","ui.bootstrap.modal","ui.bootstrap.paging","ui.bootstrap.pager","ui.bootstrap.pagination","ui.bootstrap.tooltip","ui.bootstrap.popover","ui.bootstrap.progressbar","ui.bootstrap.rating","ui.bootstrap.tabs","ui.bootstrap.timepicker","ui.bootstrap.typeahead"]);
 	angular.module("ui.bootstrap.tpls", ["uib/template/accordion/accordion-group.html","uib/template/accordion/accordion.html","uib/template/alert/alert.html","uib/template/carousel/carousel.html","uib/template/carousel/slide.html","uib/template/datepicker/datepicker.html","uib/template/datepicker/day.html","uib/template/datepicker/month.html","uib/template/datepicker/year.html","uib/template/datepickerPopup/popup.html","uib/template/modal/backdrop.html","uib/template/modal/window.html","uib/template/pager/pager.html","uib/template/pagination/pagination.html","uib/template/tooltip/tooltip-html-popup.html","uib/template/tooltip/tooltip-popup.html","uib/template/tooltip/tooltip-template-popup.html","uib/template/popover/popover-html.html","uib/template/popover/popover-template.html","uib/template/popover/popover.html","uib/template/progressbar/bar.html","uib/template/progressbar/progress.html","uib/template/progressbar/progressbar.html","uib/template/rating/rating.html","uib/template/tabs/tab.html","uib/template/tabs/tabset.html","uib/template/timepicker/timepicker.html","uib/template/typeahead/typeahead-match.html","uib/template/typeahead/typeahead-popup.html"]);
@@ -42812,23 +42794,13 @@
 	    link: function(scope, element, attrs, controller) {
 	      scope.$watch(function() { return controller[attrs.uibAccordionTransclude]; }, function(heading) {
 	        if (heading) {
-	          var elem = angular.element(element[0].querySelector(getHeaderSelectors()));
+	          var elem = angular.element(element[0].querySelector('[uib-accordion-header]'));
 	          elem.html('');
 	          elem.append(heading);
 	        }
 	      });
 	    }
 	  };
-	
-	  function getHeaderSelectors() {
-	      return 'uib-accordion-header,' +
-	          'data-uib-accordion-header,' +
-	          'x-uib-accordion-header,' +
-	          'uib\\:accordion-header,' +
-	          '[uib-accordion-header],' +
-	          '[data-uib-accordion-header],' +
-	          '[x-uib-accordion-header]';
-	  }
 	});
 	
 	angular.module('ui.bootstrap.alert', [])
@@ -43772,9 +43744,8 @@
 	    return date && timezone ? convertTimezoneToLocal(date, timezone, true) : date;
 	  }
 	
-	  //https://github.com/angular/angular.js/blob/622c42169699ec07fc6daaa19fe6d224e5d2f70e/src/Angular.js#L1207
+	  //https://github.com/angular/angular.js/blob/4daafd3dbe6a80d578f5a31df1bb99c77559543e/src/Angular.js#L1207
 	  function timezoneToOffset(timezone, fallback) {
-	    timezone = timezone.replace(/:/g, '');
 	    var requestedTimezoneOffset = Date.parse('Jan 01, 1970 00:00:00 ' + timezone) / 60000;
 	    return isNaN(requestedTimezoneOffset) ? fallback : requestedTimezoneOffset;
 	  }
@@ -43787,9 +43758,8 @@
 	
 	  function convertTimezoneToLocal(date, timezone, reverse) {
 	    reverse = reverse ? -1 : 1;
-	    var dateTimezoneOffset = date.getTimezoneOffset();
-	    var timezoneOffset = timezoneToOffset(timezone, dateTimezoneOffset);
-	    return addDateMinutes(date, reverse * (timezoneOffset - dateTimezoneOffset));
+	    var timezoneOffset = timezoneToOffset(timezone, date.getTimezoneOffset());
+	    return addDateMinutes(date, reverse * (timezoneOffset - date.getTimezoneOffset()));
 	  }
 	}]);
 	
@@ -44061,9 +44031,8 @@
 	      self.activeDate = new Date();
 	    }
 	
-	    var date = ngModelCtrl.$modelValue ? new Date(ngModelCtrl.$modelValue) : new Date();
-	    this.activeDate = !isNaN(date) ?
-	      dateParser.fromTimezone(date, ngModelOptions.timezone) :
+	    this.activeDate = ngModelCtrl.$modelValue ?
+	      dateParser.fromTimezone(new Date(ngModelCtrl.$modelValue), ngModelOptions.timezone) :
 	      dateParser.fromTimezone(new Date(), ngModelOptions.timezone);
 	
 	    ngModelCtrl.$render = function() {
@@ -45268,11 +45237,11 @@
 	          return value;
 	        }
 	
-	        if (angular.isNumber(value)) {
-	          value = new Date(value);
-	        }
-	
 	        $scope.date = dateParser.fromTimezone(value, timezone);
+	
+	        if (angular.isNumber($scope.date)) {
+	          $scope.date = new Date($scope.date);
+	        }
 	
 	        return dateParser.filter($scope.date, dateFormat);
 	      });
@@ -45808,8 +45777,7 @@
 	    if (appendTo && self.dropdownMenu) {
 	      var pos = $position.positionElements($element, self.dropdownMenu, 'bottom-left', true),
 	        css,
-	        rightalign,
-	        scrollbarWidth;
+	        rightalign;
 	
 	      css = {
 	        top: pos.top + 'px',
@@ -45822,8 +45790,7 @@
 	        css.right = 'auto';
 	      } else {
 	        css.left = 'auto';
-	        scrollbarWidth = $position.scrollbarWidth(true);
-	        css.right = window.innerWidth - scrollbarWidth -
+	        css.right = window.innerWidth -
 	          (pos.left + $element.prop('offsetWidth')) + 'px';
 	      }
 	
@@ -46710,26 +46677,29 @@
 	                //controllers
 	                if (modalOptions.controller) {
 	                  ctrlLocals.$scope = modalScope;
-	                  ctrlLocals.$scope.$resolve = {};
 	                  ctrlLocals.$uibModalInstance = modalInstance;
 	                  angular.forEach(tplAndVars[1], function(value, key) {
 	                    ctrlLocals[key] = value;
-	                    ctrlLocals.$scope.$resolve[key] = value;
 	                  });
 	
 	                  // the third param will make the controller instantiate later,private api
 	                  // @see https://github.com/angular/angular.js/blob/master/src/ng/controller.js#L126
-	                  ctrlInstantiate = $controller(modalOptions.controller, ctrlLocals, true, modalOptions.controllerAs);
-	                  if (modalOptions.controllerAs && modalOptions.bindToController) {
+	                  ctrlInstantiate = $controller(modalOptions.controller, ctrlLocals, true);
+	                  if (modalOptions.controllerAs) {
 	                    ctrlInstance = ctrlInstantiate.instance;
-	                    ctrlInstance.$close = modalScope.$close;
-	                    ctrlInstance.$dismiss = modalScope.$dismiss;
-	                    angular.extend(ctrlInstance, {
-	                      $resolve: ctrlLocals.$scope.$resolve
-	                    }, providedScope);
-	                  }
 	
-	                  ctrlInstance = ctrlInstantiate();
+	                    if (modalOptions.bindToController) {
+	                      ctrlInstance.$close = modalScope.$close;
+	                      ctrlInstance.$dismiss = modalScope.$dismiss;
+	                      angular.extend(ctrlInstance, providedScope);
+	                    }
+	
+	                    ctrlInstance = ctrlInstantiate();
+	
+	                    modalScope[modalOptions.controllerAs] = ctrlInstance;
+	                  } else {
+	                    ctrlInstance = ctrlInstantiate();
+	                  }
 	
 	                  if (angular.isFunction(ctrlInstance.$onInit)) {
 	                    ctrlInstance.$onInit();
@@ -48035,8 +48005,7 @@
 	      var previousSelected = ctrl.tabs[previousIndex];
 	      if (previousSelected) {
 	        previousSelected.tab.onDeselect({
-	          $event: evt,
-	          $selectedIndex: index
+	          $event: evt
 	        });
 	        if (evt && evt.isDefaultPrevented()) {
 	          return;
@@ -48052,7 +48021,7 @@
 	        selected.tab.active = true;
 	        ctrl.active = selected.index;
 	        oldIndex = selected.index;
-	      } else if (!selected && angular.isDefined(oldIndex)) {
+	      } else if (!selected && angular.isNumber(oldIndex)) {
 	        ctrl.active = null;
 	        oldIndex = null;
 	      }
@@ -48076,7 +48045,7 @@
 	      return 0;
 	    });
 	
-	    if (tab.index === ctrl.active || !angular.isDefined(ctrl.active) && ctrl.tabs.length === 1) {
+	    if (tab.index === ctrl.active || !angular.isNumber(ctrl.active) && ctrl.tabs.length === 1) {
 	      var newActiveIndex = findTabIndex(tab.index);
 	      ctrl.select(newActiveIndex);
 	    }
@@ -48101,7 +48070,7 @@
 	  };
 	
 	  $scope.$watch('tabset.active', function(val) {
-	    if (angular.isDefined(val) && val !== oldIndex) {
+	    if (angular.isNumber(val) && val !== oldIndex) {
 	      ctrl.select(findTabIndex(val));
 	    }
 	  });
@@ -48139,6 +48108,9 @@
 	        scope.$parent.$eval(attrs.vertical) : false;
 	      scope.justified = angular.isDefined(attrs.justified) ?
 	        scope.$parent.$eval(attrs.justified) : false;
+	      if (angular.isUndefined(attrs.active)) {
+	        scope.active = 0;
+	      }
 	    }
 	  };
 	})
@@ -48869,7 +48841,7 @@
 	    originalScope.$watch(attrs.typeaheadMinLength, function (newVal) {
 	        minLength = !newVal && newVal !== 0 ? 1 : newVal;
 	    });
-	
+	    
 	    //minimal wait time after last character typed before typeahead kicks-in
 	    var waitTime = originalScope.$eval(attrs.typeaheadWaitMs) || 0;
 	
@@ -48881,12 +48853,6 @@
 	
 	    //binding to a variable that indicates if matches are being retrieved asynchronously
 	    var isLoadingSetter = $parse(attrs.typeaheadLoading).assign || angular.noop;
-	
-	    //a function to determine if an event should cause selection
-	    var isSelectEvent = attrs.typeaheadShouldSelect ? $parse(attrs.typeaheadShouldSelect) : function(scope, vals) {
-	      var evt = vals.$event;
-	      return evt.which === 13 || evt.which === 9;
-	    };
 	
 	    //a callback executed when a match is selected
 	    var onSelectCallback = $parse(attrs.typeaheadOnSelect);
@@ -49203,15 +49169,13 @@
 	        return;
 	      }
 	
-	      var shouldSelect = isSelectEvent(originalScope, {$event: evt});
-	
 	      /**
 	       * if there's nothing selected (i.e. focusFirst) and enter or tab is hit
 	       * or
 	       * shift + tab is pressed to bring focus to the previous element
 	       * then clear the results
 	       */
-	      if (scope.activeIdx === -1 && shouldSelect || evt.which === 9 && !!evt.shiftKey) {
+	      if (scope.activeIdx === -1 && (evt.which === 9 || evt.which === 13) || evt.which === 9 && !!evt.shiftKey) {
 	        resetMatches();
 	        scope.$digest();
 	        return;
@@ -49220,36 +49184,36 @@
 	      evt.preventDefault();
 	      var target;
 	      switch (evt.which) {
-	        case 27: // escape
+	        case 9:
+	        case 13:
+	          scope.$apply(function () {
+	            if (angular.isNumber(scope.debounceUpdate) || angular.isObject(scope.debounceUpdate)) {
+	              $$debounce(function() {
+	                scope.select(scope.activeIdx, evt);
+	              }, angular.isNumber(scope.debounceUpdate) ? scope.debounceUpdate : scope.debounceUpdate['default']);
+	            } else {
+	              scope.select(scope.activeIdx, evt);
+	            }
+	          });
+	          break;
+	        case 27:
 	          evt.stopPropagation();
 	
 	          resetMatches();
 	          originalScope.$digest();
 	          break;
-	        case 38: // up arrow
+	        case 38:
 	          scope.activeIdx = (scope.activeIdx > 0 ? scope.activeIdx : scope.matches.length) - 1;
 	          scope.$digest();
 	          target = popUpEl.find('li')[scope.activeIdx];
 	          target.parentNode.scrollTop = target.offsetTop;
 	          break;
-	        case 40: // down arrow
+	        case 40:
 	          scope.activeIdx = (scope.activeIdx + 1) % scope.matches.length;
 	          scope.$digest();
 	          target = popUpEl.find('li')[scope.activeIdx];
 	          target.parentNode.scrollTop = target.offsetTop;
 	          break;
-	        default:
-	          if (shouldSelect) {
-	            scope.$apply(function() {
-	              if (angular.isNumber(scope.debounceUpdate) || angular.isObject(scope.debounceUpdate)) {
-	                $$debounce(function() {
-	                  scope.select(scope.activeIdx, evt);
-	                }, angular.isNumber(scope.debounceUpdate) ? scope.debounceUpdate : scope.debounceUpdate['default']);
-	              } else {
-	                scope.select(scope.activeIdx, evt);
-	              }
-	            });
-	          }
 	      }
 	    });
 	
@@ -49932,7 +49896,7 @@
 /***/ function(module, exports) {
 
 	/**
-	 * @license AngularJS v1.5.6
+	 * @license AngularJS v1.5.5
 	 * (c) 2010-2016 Google, Inc. http://angularjs.org
 	 * License: MIT
 	 */
@@ -50065,7 +50029,7 @@
 	  if (element instanceof jqLite) {
 	    switch (element.length) {
 	      case 0:
-	        return element;
+	        return [];
 	        break;
 	
 	      case 1:
@@ -53176,8 +53140,7 @@
 	        }
 	
 	        function update(element) {
-	          var runner = getRunner(element);
-	          if (runner) runner.setHost(newRunner);
+	          getRunner(element).setHost(newRunner);
 	        }
 	      }
 	
@@ -54089,7 +54052,7 @@
 /***/ function(module, exports) {
 
 	/**
-	 * @license AngularJS v1.5.6
+	 * @license AngularJS v1.5.5
 	 * (c) 2010-2016 Google, Inc. http://angularjs.org
 	 * License: MIT
 	 */
@@ -55472,7 +55435,8 @@
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/**
 	 * @license
-	 * lodash <https://lodash.com/>
+	 * lodash 4.11.2 (Custom Build) <https://lodash.com/>
+	 * Build: `lodash -d -o ./foo/lodash.js`
 	 * Copyright jQuery Foundation and other contributors <https://jquery.org/>
 	 * Released under MIT license <https://lodash.com/license>
 	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
@@ -55484,7 +55448,7 @@
 	  var undefined;
 	
 	  /** Used as the semantic version number. */
-	  var VERSION = '4.13.1';
+	  var VERSION = '4.11.2';
 	
 	  /** Used as the size to enable large array optimizations. */
 	  var LARGE_ARRAY_SIZE = 200;
@@ -55588,7 +55552,7 @@
 	  /** Used to match property names within property paths. */
 	  var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/,
 	      reIsPlainProp = /^\w*$/,
-	      rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(\.|\[\])(?:\4|$))/g;
+	      rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]/g;
 	
 	  /**
 	   * Used to match `RegExp`
@@ -55721,7 +55685,7 @@
 	    'Function', 'Int8Array', 'Int16Array', 'Int32Array', 'Map', 'Math', 'Object',
 	    'Promise', 'Reflect', 'RegExp', 'Set', 'String', 'Symbol', 'TypeError',
 	    'Uint8Array', 'Uint8ClampedArray', 'Uint16Array', 'Uint32Array', 'WeakMap',
-	    '_', 'isFinite', 'parseInt', 'setTimeout'
+	    '_', 'clearTimeout', 'isFinite', 'parseInt', 'setTimeout'
 	  ];
 	
 	  /** Used to make template sourceURLs easier to identify. */
@@ -55800,6 +55764,12 @@
 	    '&#96;': '`'
 	  };
 	
+	  /** Used to determine if values are of the language type `Object`. */
+	  var objectTypes = {
+	    'function': true,
+	    'object': true
+	  };
+	
 	  /** Used to escape characters for inclusion in compiled string literals. */
 	  var stringEscapes = {
 	    '\\': '\\',
@@ -55815,25 +55785,41 @@
 	      freeParseInt = parseInt;
 	
 	  /** Detect free variable `exports`. */
-	  var freeExports = typeof exports == 'object' && exports;
+	  var freeExports = (objectTypes[typeof exports] && exports && !exports.nodeType)
+	    ? exports
+	    : undefined;
 	
 	  /** Detect free variable `module`. */
-	  var freeModule = freeExports && typeof module == 'object' && module;
+	  var freeModule = (objectTypes[typeof module] && module && !module.nodeType)
+	    ? module
+	    : undefined;
 	
 	  /** Detect the popular CommonJS extension `module.exports`. */
-	  var moduleExports = freeModule && freeModule.exports === freeExports;
+	  var moduleExports = (freeModule && freeModule.exports === freeExports)
+	    ? freeExports
+	    : undefined;
 	
 	  /** Detect free variable `global` from Node.js. */
-	  var freeGlobal = checkGlobal(typeof global == 'object' && global);
+	  var freeGlobal = checkGlobal(freeExports && freeModule && typeof global == 'object' && global);
 	
 	  /** Detect free variable `self`. */
-	  var freeSelf = checkGlobal(typeof self == 'object' && self);
+	  var freeSelf = checkGlobal(objectTypes[typeof self] && self);
+	
+	  /** Detect free variable `window`. */
+	  var freeWindow = checkGlobal(objectTypes[typeof window] && window);
 	
 	  /** Detect `this` as the global object. */
-	  var thisGlobal = checkGlobal(typeof this == 'object' && this);
+	  var thisGlobal = checkGlobal(objectTypes[typeof this] && this);
 	
-	  /** Used as a reference to the global object. */
-	  var root = freeGlobal || freeSelf || thisGlobal || Function('return this')();
+	  /**
+	   * Used as a reference to the global object.
+	   *
+	   * The `this` value is used if it's the global object to avoid Greasemonkey's
+	   * restricted `window` object, otherwise the `window` object is used.
+	   */
+	  var root = freeGlobal ||
+	    ((freeWindow !== (thisGlobal && thisGlobal.window)) && freeWindow) ||
+	      freeSelf || thisGlobal || Function('return this')();
 	
 	  /*--------------------------------------------------------------------------*/
 	
@@ -55889,7 +55875,7 @@
 	   * A specialized version of `baseAggregator` for arrays.
 	   *
 	   * @private
-	   * @param {Array} [array] The array to iterate over.
+	   * @param {Array} array The array to iterate over.
 	   * @param {Function} setter The function to set `accumulator` values.
 	   * @param {Function} iteratee The iteratee to transform keys.
 	   * @param {Object} accumulator The initial aggregated object.
@@ -55897,7 +55883,7 @@
 	   */
 	  function arrayAggregator(array, setter, iteratee, accumulator) {
 	    var index = -1,
-	        length = array ? array.length : 0;
+	        length = array.length;
 	
 	    while (++index < length) {
 	      var value = array[index];
@@ -55907,17 +55893,41 @@
 	  }
 	
 	  /**
+	   * Creates a new array concatenating `array` with `other`.
+	   *
+	   * @private
+	   * @param {Array} array The first array to concatenate.
+	   * @param {Array} other The second array to concatenate.
+	   * @returns {Array} Returns the new concatenated array.
+	   */
+	  function arrayConcat(array, other) {
+	    var index = -1,
+	        length = array.length,
+	        othIndex = -1,
+	        othLength = other.length,
+	        result = Array(length + othLength);
+	
+	    while (++index < length) {
+	      result[index] = array[index];
+	    }
+	    while (++othIndex < othLength) {
+	      result[index++] = other[othIndex];
+	    }
+	    return result;
+	  }
+	
+	  /**
 	   * A specialized version of `_.forEach` for arrays without support for
 	   * iteratee shorthands.
 	   *
 	   * @private
-	   * @param {Array} [array] The array to iterate over.
+	   * @param {Array} array The array to iterate over.
 	   * @param {Function} iteratee The function invoked per iteration.
 	   * @returns {Array} Returns `array`.
 	   */
 	  function arrayEach(array, iteratee) {
 	    var index = -1,
-	        length = array ? array.length : 0;
+	        length = array.length;
 	
 	    while (++index < length) {
 	      if (iteratee(array[index], index, array) === false) {
@@ -55932,12 +55942,12 @@
 	   * iteratee shorthands.
 	   *
 	   * @private
-	   * @param {Array} [array] The array to iterate over.
+	   * @param {Array} array The array to iterate over.
 	   * @param {Function} iteratee The function invoked per iteration.
 	   * @returns {Array} Returns `array`.
 	   */
 	  function arrayEachRight(array, iteratee) {
-	    var length = array ? array.length : 0;
+	    var length = array.length;
 	
 	    while (length--) {
 	      if (iteratee(array[length], length, array) === false) {
@@ -55952,14 +55962,14 @@
 	   * iteratee shorthands.
 	   *
 	   * @private
-	   * @param {Array} [array] The array to iterate over.
+	   * @param {Array} array The array to iterate over.
 	   * @param {Function} predicate The function invoked per iteration.
 	   * @returns {boolean} Returns `true` if all elements pass the predicate check,
 	   *  else `false`.
 	   */
 	  function arrayEvery(array, predicate) {
 	    var index = -1,
-	        length = array ? array.length : 0;
+	        length = array.length;
 	
 	    while (++index < length) {
 	      if (!predicate(array[index], index, array)) {
@@ -55974,13 +55984,13 @@
 	   * iteratee shorthands.
 	   *
 	   * @private
-	   * @param {Array} [array] The array to iterate over.
+	   * @param {Array} array The array to iterate over.
 	   * @param {Function} predicate The function invoked per iteration.
 	   * @returns {Array} Returns the new filtered array.
 	   */
 	  function arrayFilter(array, predicate) {
 	    var index = -1,
-	        length = array ? array.length : 0,
+	        length = array.length,
 	        resIndex = 0,
 	        result = [];
 	
@@ -55998,27 +56008,26 @@
 	   * specifying an index to search from.
 	   *
 	   * @private
-	   * @param {Array} [array] The array to search.
+	   * @param {Array} array The array to search.
 	   * @param {*} target The value to search for.
 	   * @returns {boolean} Returns `true` if `target` is found, else `false`.
 	   */
 	  function arrayIncludes(array, value) {
-	    var length = array ? array.length : 0;
-	    return !!length && baseIndexOf(array, value, 0) > -1;
+	    return !!array.length && baseIndexOf(array, value, 0) > -1;
 	  }
 	
 	  /**
 	   * This function is like `arrayIncludes` except that it accepts a comparator.
 	   *
 	   * @private
-	   * @param {Array} [array] The array to search.
+	   * @param {Array} array The array to search.
 	   * @param {*} target The value to search for.
 	   * @param {Function} comparator The comparator invoked per element.
 	   * @returns {boolean} Returns `true` if `target` is found, else `false`.
 	   */
 	  function arrayIncludesWith(array, value, comparator) {
 	    var index = -1,
-	        length = array ? array.length : 0;
+	        length = array.length;
 	
 	    while (++index < length) {
 	      if (comparator(value, array[index])) {
@@ -56033,13 +56042,13 @@
 	   * shorthands.
 	   *
 	   * @private
-	   * @param {Array} [array] The array to iterate over.
+	   * @param {Array} array The array to iterate over.
 	   * @param {Function} iteratee The function invoked per iteration.
 	   * @returns {Array} Returns the new mapped array.
 	   */
 	  function arrayMap(array, iteratee) {
 	    var index = -1,
-	        length = array ? array.length : 0,
+	        length = array.length,
 	        result = Array(length);
 	
 	    while (++index < length) {
@@ -56072,7 +56081,7 @@
 	   * iteratee shorthands.
 	   *
 	   * @private
-	   * @param {Array} [array] The array to iterate over.
+	   * @param {Array} array The array to iterate over.
 	   * @param {Function} iteratee The function invoked per iteration.
 	   * @param {*} [accumulator] The initial value.
 	   * @param {boolean} [initAccum] Specify using the first element of `array` as
@@ -56081,7 +56090,7 @@
 	   */
 	  function arrayReduce(array, iteratee, accumulator, initAccum) {
 	    var index = -1,
-	        length = array ? array.length : 0;
+	        length = array.length;
 	
 	    if (initAccum && length) {
 	      accumulator = array[++index];
@@ -56097,7 +56106,7 @@
 	   * iteratee shorthands.
 	   *
 	   * @private
-	   * @param {Array} [array] The array to iterate over.
+	   * @param {Array} array The array to iterate over.
 	   * @param {Function} iteratee The function invoked per iteration.
 	   * @param {*} [accumulator] The initial value.
 	   * @param {boolean} [initAccum] Specify using the last element of `array` as
@@ -56105,7 +56114,7 @@
 	   * @returns {*} Returns the accumulated value.
 	   */
 	  function arrayReduceRight(array, iteratee, accumulator, initAccum) {
-	    var length = array ? array.length : 0;
+	    var length = array.length;
 	    if (initAccum && length) {
 	      accumulator = array[--length];
 	    }
@@ -56120,14 +56129,14 @@
 	   * shorthands.
 	   *
 	   * @private
-	   * @param {Array} [array] The array to iterate over.
+	   * @param {Array} array The array to iterate over.
 	   * @param {Function} predicate The function invoked per iteration.
 	   * @returns {boolean} Returns `true` if any element passes the predicate check,
 	   *  else `false`.
 	   */
 	  function arraySome(array, predicate) {
 	    var index = -1,
-	        length = array ? array.length : 0;
+	        length = array.length;
 	
 	    while (++index < length) {
 	      if (predicate(array[index], index, array)) {
@@ -56138,21 +56147,23 @@
 	  }
 	
 	  /**
-	   * The base implementation of methods like `_.findKey` and `_.findLastKey`,
-	   * without support for iteratee shorthands, which iterates over `collection`
-	   * using `eachFunc`.
+	   * The base implementation of methods like `_.find` and `_.findKey`, without
+	   * support for iteratee shorthands, which iterates over `collection` using
+	   * `eachFunc`.
 	   *
 	   * @private
 	   * @param {Array|Object} collection The collection to search.
 	   * @param {Function} predicate The function invoked per iteration.
 	   * @param {Function} eachFunc The function to iterate over `collection`.
+	   * @param {boolean} [retKey] Specify returning the key of the found element
+	   *  instead of the element itself.
 	   * @returns {*} Returns the found element or its key, else `undefined`.
 	   */
-	  function baseFindKey(collection, predicate, eachFunc) {
+	  function baseFind(collection, predicate, eachFunc, retKey) {
 	    var result;
 	    eachFunc(collection, function(value, key, collection) {
 	      if (predicate(value, key, collection)) {
-	        result = key;
+	        result = retKey ? key : value;
 	        return false;
 	      }
 	    });
@@ -56166,13 +56177,12 @@
 	   * @private
 	   * @param {Array} array The array to search.
 	   * @param {Function} predicate The function invoked per iteration.
-	   * @param {number} fromIndex The index to search from.
 	   * @param {boolean} [fromRight] Specify iterating from right to left.
 	   * @returns {number} Returns the index of the matched value, else `-1`.
 	   */
-	  function baseFindIndex(array, predicate, fromIndex, fromRight) {
+	  function baseFindIndex(array, predicate, fromRight) {
 	    var length = array.length,
-	        index = fromIndex + (fromRight ? 1 : -1);
+	        index = fromRight ? length : -1;
 	
 	    while ((fromRight ? index-- : ++index < length)) {
 	      if (predicate(array[index], index, array)) {
@@ -56333,7 +56343,7 @@
 	   * @private
 	   * @param {Object} object The object to query.
 	   * @param {Array} props The property names to get values for.
-	   * @returns {Object} Returns the key-value pairs.
+	   * @returns {Object} Returns the new array of key-value pairs.
 	   */
 	  function baseToPairs(object, props) {
 	    return arrayMap(props, function(key) {
@@ -56346,7 +56356,7 @@
 	   *
 	   * @private
 	   * @param {Function} func The function to cap arguments for.
-	   * @returns {Function} Returns the new capped function.
+	   * @returns {Function} Returns the new function.
 	   */
 	  function baseUnary(func) {
 	    return function(value) {
@@ -56368,18 +56378,6 @@
 	    return arrayMap(props, function(key) {
 	      return object[key];
 	    });
-	  }
-	
-	  /**
-	   * Checks if a cache value for `key` exists.
-	   *
-	   * @private
-	   * @param {Object} cache The cache to query.
-	   * @param {string} key The key of the entry to check.
-	   * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
-	   */
-	  function cacheHas(cache, key) {
-	    return cache.has(key);
 	  }
 	
 	  /**
@@ -56480,18 +56478,6 @@
 	  }
 	
 	  /**
-	   * Gets the value at `key` of `object`.
-	   *
-	   * @private
-	   * @param {Object} [object] The object to query.
-	   * @param {string} key The key of the property to get.
-	   * @returns {*} Returns the property value.
-	   */
-	  function getValue(object, key) {
-	    return object == null ? undefined : object[key];
-	  }
-	
-	  /**
 	   * Gets the index at which the first occurrence of `NaN` is found in `array`.
 	   *
 	   * @private
@@ -56502,7 +56488,7 @@
 	   */
 	  function indexOfNaN(array, fromIndex, fromRight) {
 	    var length = array.length,
-	        index = fromIndex + (fromRight ? 1 : -1);
+	        index = fromIndex + (fromRight ? 0 : -1);
 	
 	    while ((fromRight ? index-- : ++index < length)) {
 	      var other = array[index];
@@ -56550,11 +56536,11 @@
 	  }
 	
 	  /**
-	   * Converts `map` to its key-value pairs.
+	   * Converts `map` to an array.
 	   *
 	   * @private
 	   * @param {Object} map The map to convert.
-	   * @returns {Array} Returns the key-value pairs.
+	   * @returns {Array} Returns the converted array.
 	   */
 	  function mapToArray(map) {
 	    var index = -1,
@@ -56592,11 +56578,11 @@
 	  }
 	
 	  /**
-	   * Converts `set` to an array of its values.
+	   * Converts `set` to an array.
 	   *
 	   * @private
 	   * @param {Object} set The set to convert.
-	   * @returns {Array} Returns the values.
+	   * @returns {Array} Returns the converted array.
 	   */
 	  function setToArray(set) {
 	    var index = -1,
@@ -56604,23 +56590,6 @@
 	
 	    set.forEach(function(value) {
 	      result[++index] = value;
-	    });
-	    return result;
-	  }
-	
-	  /**
-	   * Converts `set` to its value-value pairs.
-	   *
-	   * @private
-	   * @param {Object} set The set to convert.
-	   * @returns {Array} Returns the value-value pairs.
-	   */
-	  function setToPairs(set) {
-	    var index = -1,
-	        result = Array(set.size);
-	
-	    set.forEach(function(value) {
-	      result[++index] = [value, value];
 	    });
 	    return result;
 	  }
@@ -56693,10 +56662,10 @@
 	   * lodash.isFunction(lodash.bar);
 	   * // => true
 	   *
-	   * // Use `context` to stub `Date#getTime` use in `_.now`.
-	   * var stubbed = _.runInContext({
+	   * // Use `context` to mock `Date#getTime` use in `_.now`.
+	   * var mock = _.runInContext({
 	   *   'Date': function() {
-	   *     return { 'getTime': stubGetTime };
+	   *     return { 'getTime': getTimeMock };
 	   *   }
 	   * });
 	   *
@@ -56717,15 +56686,6 @@
 	    var arrayProto = context.Array.prototype,
 	        objectProto = context.Object.prototype,
 	        stringProto = context.String.prototype;
-	
-	    /** Used to detect overreaching core-js shims. */
-	    var coreJsData = context['__core-js_shared__'];
-	
-	    /** Used to detect methods masquerading as native. */
-	    var maskSrcKey = (function() {
-	      var uid = /[^.]+$/.exec(coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO || '');
-	      return uid ? ('Symbol(src)_1.' + uid) : '';
-	    }());
 	
 	    /** Used to resolve the decompiled source of functions. */
 	    var funcToString = context.Function.prototype.toString;
@@ -56760,15 +56720,14 @@
 	        Reflect = context.Reflect,
 	        Symbol = context.Symbol,
 	        Uint8Array = context.Uint8Array,
+	        clearTimeout = context.clearTimeout,
 	        enumerate = Reflect ? Reflect.enumerate : undefined,
 	        getOwnPropertySymbols = Object.getOwnPropertySymbols,
 	        iteratorSymbol = typeof (iteratorSymbol = Symbol && Symbol.iterator) == 'symbol' ? iteratorSymbol : undefined,
 	        objectCreate = Object.create,
 	        propertyIsEnumerable = objectProto.propertyIsEnumerable,
+	        setTimeout = context.setTimeout,
 	        splice = arrayProto.splice;
-	
-	    /** Built-in method references that are mockable. */
-	    var setTimeout = function(func, wait) { return context.setTimeout.call(root, func, wait); };
 	
 	    /* Built-in method references for those with the same name as other `lodash` methods. */
 	    var nativeCeil = Math.ceil,
@@ -56888,24 +56847,22 @@
 	     * `floor`, `forEach`, `forEachRight`, `forIn`, `forInRight`, `forOwn`,
 	     * `forOwnRight`, `get`, `gt`, `gte`, `has`, `hasIn`, `head`, `identity`,
 	     * `includes`, `indexOf`, `inRange`, `invoke`, `isArguments`, `isArray`,
-	     * `isArrayBuffer`, `isArrayLike`, `isArrayLikeObject`, `isBoolean`,
-	     * `isBuffer`, `isDate`, `isElement`, `isEmpty`, `isEqual`, `isEqualWith`,
-	     * `isError`, `isFinite`, `isFunction`, `isInteger`, `isLength`, `isMap`,
-	     * `isMatch`, `isMatchWith`, `isNaN`, `isNative`, `isNil`, `isNull`,
-	     * `isNumber`, `isObject`, `isObjectLike`, `isPlainObject`, `isRegExp`,
-	     * `isSafeInteger`, `isSet`, `isString`, `isUndefined`, `isTypedArray`,
-	     * `isWeakMap`, `isWeakSet`, `join`, `kebabCase`, `last`, `lastIndexOf`,
-	     * `lowerCase`, `lowerFirst`, `lt`, `lte`, `max`, `maxBy`, `mean`, `meanBy`,
-	     * `min`, `minBy`, `multiply`, `noConflict`, `noop`, `now`, `nth`, `pad`,
-	     * `padEnd`, `padStart`, `parseInt`, `pop`, `random`, `reduce`, `reduceRight`,
-	     * `repeat`, `result`, `round`, `runInContext`, `sample`, `shift`, `size`,
-	     * `snakeCase`, `some`, `sortedIndex`, `sortedIndexBy`, `sortedLastIndex`,
-	     * `sortedLastIndexBy`, `startCase`, `startsWith`, `stubArray`, `stubFalse`,
-	     * `stubObject`, `stubString`, `stubTrue`, `subtract`, `sum`, `sumBy`,
-	     * `template`, `times`, `toFinite`, `toInteger`, `toJSON`, `toLength`,
-	     * `toLower`, `toNumber`, `toSafeInteger`, `toString`, `toUpper`, `trim`,
-	     * `trimEnd`, `trimStart`, `truncate`, `unescape`, `uniqueId`, `upperCase`,
-	     * `upperFirst`, `value`, and `words`
+	     * `isArrayBuffer`, `isArrayLike`, `isArrayLikeObject`, `isBoolean`, `isBuffer`,
+	     * `isDate`, `isElement`, `isEmpty`, `isEqual`, `isEqualWith`, `isError`,
+	     * `isFinite`, `isFunction`, `isInteger`, `isLength`, `isMap`, `isMatch`,
+	     * `isMatchWith`, `isNaN`, `isNative`, `isNil`, `isNull`, `isNumber`,
+	     * `isObject`, `isObjectLike`, `isPlainObject`, `isRegExp`, `isSafeInteger`,
+	     * `isSet`, `isString`, `isUndefined`, `isTypedArray`, `isWeakMap`, `isWeakSet`,
+	     * `join`, `kebabCase`, `last`, `lastIndexOf`, `lowerCase`, `lowerFirst`,
+	     * `lt`, `lte`, `max`, `maxBy`, `mean`, `meanBy`, `min`, `minBy`, `multiply`,
+	     * `noConflict`, `noop`, `now`, `nth`, `pad`, `padEnd`, `padStart`, `parseInt`,
+	     * `pop`, `random`, `reduce`, `reduceRight`, `repeat`, `result`, `round`,
+	     * `runInContext`, `sample`, `shift`, `size`, `snakeCase`, `some`, `sortedIndex`,
+	     * `sortedIndexBy`, `sortedLastIndex`, `sortedLastIndexBy`, `startCase`,
+	     * `startsWith`, `subtract`, `sum`, `sumBy`, `template`, `times`, `toInteger`,
+	     * `toJSON`, `toLength`, `toLower`, `toNumber`, `toSafeInteger`, `toString`,
+	     * `toUpper`, `trim`, `trimEnd`, `trimStart`, `truncate`, `unescape`,
+	     * `uniqueId`, `upperCase`, `upperFirst`, `value`, and `words`
 	     *
 	     * @name _
 	     * @constructor
@@ -57164,212 +57121,64 @@
 	     *
 	     * @private
 	     * @constructor
-	     * @param {Array} [entries] The key-value pairs to cache.
+	     * @returns {Object} Returns the new hash object.
 	     */
-	    function Hash(entries) {
-	      var index = -1,
-	          length = entries ? entries.length : 0;
-	
-	      this.clear();
-	      while (++index < length) {
-	        var entry = entries[index];
-	        this.set(entry[0], entry[1]);
-	      }
-	    }
-	
-	    /**
-	     * Removes all key-value entries from the hash.
-	     *
-	     * @private
-	     * @name clear
-	     * @memberOf Hash
-	     */
-	    function hashClear() {
-	      this.__data__ = nativeCreate ? nativeCreate(null) : {};
-	    }
+	    function Hash() {}
 	
 	    /**
 	     * Removes `key` and its value from the hash.
 	     *
 	     * @private
-	     * @name delete
-	     * @memberOf Hash
 	     * @param {Object} hash The hash to modify.
 	     * @param {string} key The key of the value to remove.
 	     * @returns {boolean} Returns `true` if the entry was removed, else `false`.
 	     */
-	    function hashDelete(key) {
-	      return this.has(key) && delete this.__data__[key];
+	    function hashDelete(hash, key) {
+	      return hashHas(hash, key) && delete hash[key];
 	    }
 	
 	    /**
 	     * Gets the hash value for `key`.
 	     *
 	     * @private
-	     * @name get
-	     * @memberOf Hash
+	     * @param {Object} hash The hash to query.
 	     * @param {string} key The key of the value to get.
 	     * @returns {*} Returns the entry value.
 	     */
-	    function hashGet(key) {
-	      var data = this.__data__;
+	    function hashGet(hash, key) {
 	      if (nativeCreate) {
-	        var result = data[key];
+	        var result = hash[key];
 	        return result === HASH_UNDEFINED ? undefined : result;
 	      }
-	      return hasOwnProperty.call(data, key) ? data[key] : undefined;
+	      return hasOwnProperty.call(hash, key) ? hash[key] : undefined;
 	    }
 	
 	    /**
 	     * Checks if a hash value for `key` exists.
 	     *
 	     * @private
-	     * @name has
-	     * @memberOf Hash
+	     * @param {Object} hash The hash to query.
 	     * @param {string} key The key of the entry to check.
 	     * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
 	     */
-	    function hashHas(key) {
-	      var data = this.__data__;
-	      return nativeCreate ? data[key] !== undefined : hasOwnProperty.call(data, key);
+	    function hashHas(hash, key) {
+	      return nativeCreate ? hash[key] !== undefined : hasOwnProperty.call(hash, key);
 	    }
 	
 	    /**
 	     * Sets the hash `key` to `value`.
 	     *
 	     * @private
-	     * @name set
-	     * @memberOf Hash
+	     * @param {Object} hash The hash to modify.
 	     * @param {string} key The key of the value to set.
 	     * @param {*} value The value to set.
-	     * @returns {Object} Returns the hash instance.
 	     */
-	    function hashSet(key, value) {
-	      var data = this.__data__;
-	      data[key] = (nativeCreate && value === undefined) ? HASH_UNDEFINED : value;
-	      return this;
+	    function hashSet(hash, key, value) {
+	      hash[key] = (nativeCreate && value === undefined) ? HASH_UNDEFINED : value;
 	    }
 	
-	    // Add methods to `Hash`.
-	    Hash.prototype.clear = hashClear;
-	    Hash.prototype['delete'] = hashDelete;
-	    Hash.prototype.get = hashGet;
-	    Hash.prototype.has = hashHas;
-	    Hash.prototype.set = hashSet;
-	
-	    /*------------------------------------------------------------------------*/
-	
-	    /**
-	     * Creates an list cache object.
-	     *
-	     * @private
-	     * @constructor
-	     * @param {Array} [entries] The key-value pairs to cache.
-	     */
-	    function ListCache(entries) {
-	      var index = -1,
-	          length = entries ? entries.length : 0;
-	
-	      this.clear();
-	      while (++index < length) {
-	        var entry = entries[index];
-	        this.set(entry[0], entry[1]);
-	      }
-	    }
-	
-	    /**
-	     * Removes all key-value entries from the list cache.
-	     *
-	     * @private
-	     * @name clear
-	     * @memberOf ListCache
-	     */
-	    function listCacheClear() {
-	      this.__data__ = [];
-	    }
-	
-	    /**
-	     * Removes `key` and its value from the list cache.
-	     *
-	     * @private
-	     * @name delete
-	     * @memberOf ListCache
-	     * @param {string} key The key of the value to remove.
-	     * @returns {boolean} Returns `true` if the entry was removed, else `false`.
-	     */
-	    function listCacheDelete(key) {
-	      var data = this.__data__,
-	          index = assocIndexOf(data, key);
-	
-	      if (index < 0) {
-	        return false;
-	      }
-	      var lastIndex = data.length - 1;
-	      if (index == lastIndex) {
-	        data.pop();
-	      } else {
-	        splice.call(data, index, 1);
-	      }
-	      return true;
-	    }
-	
-	    /**
-	     * Gets the list cache value for `key`.
-	     *
-	     * @private
-	     * @name get
-	     * @memberOf ListCache
-	     * @param {string} key The key of the value to get.
-	     * @returns {*} Returns the entry value.
-	     */
-	    function listCacheGet(key) {
-	      var data = this.__data__,
-	          index = assocIndexOf(data, key);
-	
-	      return index < 0 ? undefined : data[index][1];
-	    }
-	
-	    /**
-	     * Checks if a list cache value for `key` exists.
-	     *
-	     * @private
-	     * @name has
-	     * @memberOf ListCache
-	     * @param {string} key The key of the entry to check.
-	     * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
-	     */
-	    function listCacheHas(key) {
-	      return assocIndexOf(this.__data__, key) > -1;
-	    }
-	
-	    /**
-	     * Sets the list cache `key` to `value`.
-	     *
-	     * @private
-	     * @name set
-	     * @memberOf ListCache
-	     * @param {string} key The key of the value to set.
-	     * @param {*} value The value to set.
-	     * @returns {Object} Returns the list cache instance.
-	     */
-	    function listCacheSet(key, value) {
-	      var data = this.__data__,
-	          index = assocIndexOf(data, key);
-	
-	      if (index < 0) {
-	        data.push([key, value]);
-	      } else {
-	        data[index][1] = value;
-	      }
-	      return this;
-	    }
-	
-	    // Add methods to `ListCache`.
-	    ListCache.prototype.clear = listCacheClear;
-	    ListCache.prototype['delete'] = listCacheDelete;
-	    ListCache.prototype.get = listCacheGet;
-	    ListCache.prototype.has = listCacheHas;
-	    ListCache.prototype.set = listCacheSet;
+	    // Avoid inheriting from `Object.prototype` when possible.
+	    Hash.prototype = nativeCreate ? nativeCreate(null) : objectProto;
 	
 	    /*------------------------------------------------------------------------*/
 	
@@ -57378,15 +57187,15 @@
 	     *
 	     * @private
 	     * @constructor
-	     * @param {Array} [entries] The key-value pairs to cache.
+	     * @param {Array} [values] The values to cache.
 	     */
-	    function MapCache(entries) {
+	    function MapCache(values) {
 	      var index = -1,
-	          length = entries ? entries.length : 0;
+	          length = values ? values.length : 0;
 	
 	      this.clear();
 	      while (++index < length) {
-	        var entry = entries[index];
+	        var entry = values[index];
 	        this.set(entry[0], entry[1]);
 	      }
 	    }
@@ -57398,10 +57207,10 @@
 	     * @name clear
 	     * @memberOf MapCache
 	     */
-	    function mapCacheClear() {
+	    function mapClear() {
 	      this.__data__ = {
 	        'hash': new Hash,
-	        'map': new (Map || ListCache),
+	        'map': Map ? new Map : [],
 	        'string': new Hash
 	      };
 	    }
@@ -57415,8 +57224,12 @@
 	     * @param {string} key The key of the value to remove.
 	     * @returns {boolean} Returns `true` if the entry was removed, else `false`.
 	     */
-	    function mapCacheDelete(key) {
-	      return getMapData(this, key)['delete'](key);
+	    function mapDelete(key) {
+	      var data = this.__data__;
+	      if (isKeyable(key)) {
+	        return hashDelete(typeof key == 'string' ? data.string : data.hash, key);
+	      }
+	      return Map ? data.map['delete'](key) : assocDelete(data.map, key);
 	    }
 	
 	    /**
@@ -57428,8 +57241,12 @@
 	     * @param {string} key The key of the value to get.
 	     * @returns {*} Returns the entry value.
 	     */
-	    function mapCacheGet(key) {
-	      return getMapData(this, key).get(key);
+	    function mapGet(key) {
+	      var data = this.__data__;
+	      if (isKeyable(key)) {
+	        return hashGet(typeof key == 'string' ? data.string : data.hash, key);
+	      }
+	      return Map ? data.map.get(key) : assocGet(data.map, key);
 	    }
 	
 	    /**
@@ -57441,8 +57258,12 @@
 	     * @param {string} key The key of the entry to check.
 	     * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
 	     */
-	    function mapCacheHas(key) {
-	      return getMapData(this, key).has(key);
+	    function mapHas(key) {
+	      var data = this.__data__;
+	      if (isKeyable(key)) {
+	        return hashHas(typeof key == 'string' ? data.string : data.hash, key);
+	      }
+	      return Map ? data.map.has(key) : assocHas(data.map, key);
 	    }
 	
 	    /**
@@ -57455,23 +57276,30 @@
 	     * @param {*} value The value to set.
 	     * @returns {Object} Returns the map cache instance.
 	     */
-	    function mapCacheSet(key, value) {
-	      getMapData(this, key).set(key, value);
+	    function mapSet(key, value) {
+	      var data = this.__data__;
+	      if (isKeyable(key)) {
+	        hashSet(typeof key == 'string' ? data.string : data.hash, key, value);
+	      } else if (Map) {
+	        data.map.set(key, value);
+	      } else {
+	        assocSet(data.map, key, value);
+	      }
 	      return this;
 	    }
 	
 	    // Add methods to `MapCache`.
-	    MapCache.prototype.clear = mapCacheClear;
-	    MapCache.prototype['delete'] = mapCacheDelete;
-	    MapCache.prototype.get = mapCacheGet;
-	    MapCache.prototype.has = mapCacheHas;
-	    MapCache.prototype.set = mapCacheSet;
+	    MapCache.prototype.clear = mapClear;
+	    MapCache.prototype['delete'] = mapDelete;
+	    MapCache.prototype.get = mapGet;
+	    MapCache.prototype.has = mapHas;
+	    MapCache.prototype.set = mapSet;
 	
 	    /*------------------------------------------------------------------------*/
 	
 	    /**
 	     *
-	     * Creates an array cache object to store unique values.
+	     * Creates a set cache object to store unique values.
 	     *
 	     * @private
 	     * @constructor
@@ -57483,41 +57311,52 @@
 	
 	      this.__data__ = new MapCache;
 	      while (++index < length) {
-	        this.add(values[index]);
+	        this.push(values[index]);
 	      }
 	    }
 	
 	    /**
-	     * Adds `value` to the array cache.
+	     * Checks if `value` is in `cache`.
 	     *
 	     * @private
-	     * @name add
-	     * @memberOf SetCache
-	     * @alias push
-	     * @param {*} value The value to cache.
-	     * @returns {Object} Returns the cache instance.
-	     */
-	    function setCacheAdd(value) {
-	      this.__data__.set(value, HASH_UNDEFINED);
-	      return this;
-	    }
-	
-	    /**
-	     * Checks if `value` is in the array cache.
-	     *
-	     * @private
-	     * @name has
-	     * @memberOf SetCache
+	     * @param {Object} cache The set cache to search.
 	     * @param {*} value The value to search for.
 	     * @returns {number} Returns `true` if `value` is found, else `false`.
 	     */
-	    function setCacheHas(value) {
-	      return this.__data__.has(value);
+	    function cacheHas(cache, value) {
+	      var map = cache.__data__;
+	      if (isKeyable(value)) {
+	        var data = map.__data__,
+	            hash = typeof value == 'string' ? data.string : data.hash;
+	
+	        return hash[value] === HASH_UNDEFINED;
+	      }
+	      return map.has(value);
+	    }
+	
+	    /**
+	     * Adds `value` to the set cache.
+	     *
+	     * @private
+	     * @name push
+	     * @memberOf SetCache
+	     * @param {*} value The value to cache.
+	     */
+	    function cachePush(value) {
+	      var map = this.__data__;
+	      if (isKeyable(value)) {
+	        var data = map.__data__,
+	            hash = typeof value == 'string' ? data.string : data.hash;
+	
+	        hash[value] = HASH_UNDEFINED;
+	      }
+	      else {
+	        map.set(value, HASH_UNDEFINED);
+	      }
 	    }
 	
 	    // Add methods to `SetCache`.
-	    SetCache.prototype.add = SetCache.prototype.push = setCacheAdd;
-	    SetCache.prototype.has = setCacheHas;
+	    SetCache.prototype.push = cachePush;
 	
 	    /*------------------------------------------------------------------------*/
 	
@@ -57526,10 +57365,17 @@
 	     *
 	     * @private
 	     * @constructor
-	     * @param {Array} [entries] The key-value pairs to cache.
+	     * @param {Array} [values] The values to cache.
 	     */
-	    function Stack(entries) {
-	      this.__data__ = new ListCache(entries);
+	    function Stack(values) {
+	      var index = -1,
+	          length = values ? values.length : 0;
+	
+	      this.clear();
+	      while (++index < length) {
+	        var entry = values[index];
+	        this.set(entry[0], entry[1]);
+	      }
 	    }
 	
 	    /**
@@ -57540,7 +57386,7 @@
 	     * @memberOf Stack
 	     */
 	    function stackClear() {
-	      this.__data__ = new ListCache;
+	      this.__data__ = { 'array': [], 'map': null };
 	    }
 	
 	    /**
@@ -57553,7 +57399,10 @@
 	     * @returns {boolean} Returns `true` if the entry was removed, else `false`.
 	     */
 	    function stackDelete(key) {
-	      return this.__data__['delete'](key);
+	      var data = this.__data__,
+	          array = data.array;
+	
+	      return array ? assocDelete(array, key) : data.map['delete'](key);
 	    }
 	
 	    /**
@@ -57566,7 +57415,10 @@
 	     * @returns {*} Returns the entry value.
 	     */
 	    function stackGet(key) {
-	      return this.__data__.get(key);
+	      var data = this.__data__,
+	          array = data.array;
+	
+	      return array ? assocGet(array, key) : data.map.get(key);
 	    }
 	
 	    /**
@@ -57579,7 +57431,10 @@
 	     * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
 	     */
 	    function stackHas(key) {
-	      return this.__data__.has(key);
+	      var data = this.__data__,
+	          array = data.array;
+	
+	      return array ? assocHas(array, key) : data.map.has(key);
 	    }
 	
 	    /**
@@ -57593,11 +57448,21 @@
 	     * @returns {Object} Returns the stack cache instance.
 	     */
 	    function stackSet(key, value) {
-	      var cache = this.__data__;
-	      if (cache instanceof ListCache && cache.__data__.length == LARGE_ARRAY_SIZE) {
-	        cache = this.__data__ = new MapCache(cache.__data__);
+	      var data = this.__data__,
+	          array = data.array;
+	
+	      if (array) {
+	        if (array.length < (LARGE_ARRAY_SIZE - 1)) {
+	          assocSet(array, key, value);
+	        } else {
+	          data.array = null;
+	          data.map = new MapCache(array);
+	        }
 	      }
-	      cache.set(key, value);
+	      var map = data.map;
+	      if (map) {
+	        map.set(key, value);
+	      }
 	      return this;
 	    }
 	
@@ -57607,6 +57472,90 @@
 	    Stack.prototype.get = stackGet;
 	    Stack.prototype.has = stackHas;
 	    Stack.prototype.set = stackSet;
+	
+	    /*------------------------------------------------------------------------*/
+	
+	    /**
+	     * Removes `key` and its value from the associative array.
+	     *
+	     * @private
+	     * @param {Array} array The array to modify.
+	     * @param {string} key The key of the value to remove.
+	     * @returns {boolean} Returns `true` if the entry was removed, else `false`.
+	     */
+	    function assocDelete(array, key) {
+	      var index = assocIndexOf(array, key);
+	      if (index < 0) {
+	        return false;
+	      }
+	      var lastIndex = array.length - 1;
+	      if (index == lastIndex) {
+	        array.pop();
+	      } else {
+	        splice.call(array, index, 1);
+	      }
+	      return true;
+	    }
+	
+	    /**
+	     * Gets the associative array value for `key`.
+	     *
+	     * @private
+	     * @param {Array} array The array to query.
+	     * @param {string} key The key of the value to get.
+	     * @returns {*} Returns the entry value.
+	     */
+	    function assocGet(array, key) {
+	      var index = assocIndexOf(array, key);
+	      return index < 0 ? undefined : array[index][1];
+	    }
+	
+	    /**
+	     * Checks if an associative array value for `key` exists.
+	     *
+	     * @private
+	     * @param {Array} array The array to query.
+	     * @param {string} key The key of the entry to check.
+	     * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
+	     */
+	    function assocHas(array, key) {
+	      return assocIndexOf(array, key) > -1;
+	    }
+	
+	    /**
+	     * Gets the index at which the `key` is found in `array` of key-value pairs.
+	     *
+	     * @private
+	     * @param {Array} array The array to search.
+	     * @param {*} key The key to search for.
+	     * @returns {number} Returns the index of the matched value, else `-1`.
+	     */
+	    function assocIndexOf(array, key) {
+	      var length = array.length;
+	      while (length--) {
+	        if (eq(array[length][0], key)) {
+	          return length;
+	        }
+	      }
+	      return -1;
+	    }
+	
+	    /**
+	     * Sets the associative array `key` to `value`.
+	     *
+	     * @private
+	     * @param {Array} array The array to modify.
+	     * @param {string} key The key of the value to set.
+	     * @param {*} value The value to set.
+	     */
+	    function assocSet(array, key, value) {
+	      var index = assocIndexOf(array, key);
+	      if (index < 0) {
+	        array.push([key, value]);
+	      } else {
+	        array[index][1] = value;
+	      }
+	    }
 	
 	    /*------------------------------------------------------------------------*/
 	
@@ -57663,24 +57612,6 @@
 	    }
 	
 	    /**
-	     * Gets the index at which the `key` is found in `array` of key-value pairs.
-	     *
-	     * @private
-	     * @param {Array} array The array to search.
-	     * @param {*} key The key to search for.
-	     * @returns {number} Returns the index of the matched value, else `-1`.
-	     */
-	    function assocIndexOf(array, key) {
-	      var length = array.length;
-	      while (length--) {
-	        if (eq(array[length][0], key)) {
-	          return length;
-	        }
-	      }
-	      return -1;
-	    }
-	
-	    /**
 	     * Aggregates elements of `collection` on `accumulator` with keys transformed
 	     * by `iteratee` and values set by `setter`.
 	     *
@@ -57717,7 +57648,7 @@
 	     * @private
 	     * @param {Object} object The object to iterate over.
 	     * @param {string[]} paths The property paths of elements to pick.
-	     * @returns {Array} Returns the picked elements.
+	     * @returns {Array} Returns the new array of picked elements.
 	     */
 	    function baseAt(object, paths) {
 	      var index = -1,
@@ -57832,7 +57763,7 @@
 	     *
 	     * @private
 	     * @param {Object} source The object of property predicates to conform to.
-	     * @returns {Function} Returns the new spec function.
+	     * @returns {Function} Returns the new function.
 	     */
 	    function baseConforms(source) {
 	      var props = keys(source),
@@ -58145,7 +58076,7 @@
 	     * @private
 	     * @param {Object} object The object to inspect.
 	     * @param {Array} props The property names to filter.
-	     * @returns {Array} Returns the function names.
+	     * @returns {Array} Returns the new array of filtered property names.
 	     */
 	    function baseFunctions(object, props) {
 	      return arrayFilter(props, function(key) {
@@ -58186,7 +58117,9 @@
 	     */
 	    function baseGetAllKeys(object, keysFunc, symbolsFunc) {
 	      var result = keysFunc(object);
-	      return isArray(object) ? result : arrayPush(result, symbolsFunc(object));
+	      return isArray(object)
+	        ? result
+	        : arrayPush(result, symbolsFunc(object));
 	    }
 	
 	    /**
@@ -58206,7 +58139,7 @@
 	     * The base implementation of `_.has` without support for deep paths.
 	     *
 	     * @private
-	     * @param {Object} [object] The object to query.
+	     * @param {Object} object The object to query.
 	     * @param {Array|string} key The key to check.
 	     * @returns {boolean} Returns `true` if `key` exists, else `false`.
 	     */
@@ -58214,21 +58147,20 @@
 	      // Avoid a bug in IE 10-11 where objects with a [[Prototype]] of `null`,
 	      // that are composed entirely of index properties, return `false` for
 	      // `hasOwnProperty` checks of them.
-	      return object != null &&
-	        (hasOwnProperty.call(object, key) ||
-	          (typeof object == 'object' && key in object && getPrototype(object) === null));
+	      return hasOwnProperty.call(object, key) ||
+	        (typeof object == 'object' && key in object && getPrototype(object) === null);
 	    }
 	
 	    /**
 	     * The base implementation of `_.hasIn` without support for deep paths.
 	     *
 	     * @private
-	     * @param {Object} [object] The object to query.
+	     * @param {Object} object The object to query.
 	     * @param {Array|string} key The key to check.
 	     * @returns {boolean} Returns `true` if `key` exists, else `false`.
 	     */
 	    function baseHasIn(object, key) {
-	      return object != null && key in Object(object);
+	      return key in Object(object);
 	    }
 	
 	    /**
@@ -58483,22 +58415,6 @@
 	    }
 	
 	    /**
-	     * The base implementation of `_.isNative` without bad shim checks.
-	     *
-	     * @private
-	     * @param {*} value The value to check.
-	     * @returns {boolean} Returns `true` if `value` is a native function,
-	     *  else `false`.
-	     */
-	    function baseIsNative(value) {
-	      if (!isObject(value) || isMasked(value)) {
-	        return false;
-	      }
-	      var pattern = (isFunction(value) || isHostObject(value)) ? reIsNative : reIsHostCtor;
-	      return pattern.test(toSource(value));
-	    }
-	
-	    /**
 	     * The base implementation of `_.iteratee`.
 	     *
 	     * @private
@@ -58595,7 +58511,7 @@
 	     *
 	     * @private
 	     * @param {Object} source The object of property values to match.
-	     * @returns {Function} Returns the new spec function.
+	     * @returns {Function} Returns the new function.
 	     */
 	    function baseMatches(source) {
 	      var matchData = getMatchData(source);
@@ -58613,7 +58529,7 @@
 	     * @private
 	     * @param {string} path The path of the property to get.
 	     * @param {*} srcValue The value to match.
-	     * @returns {Function} Returns the new spec function.
+	     * @returns {Function} Returns the new function.
 	     */
 	    function baseMatchesProperty(path, srcValue) {
 	      if (isKey(path) && isStrictComparable(srcValue)) {
@@ -58828,7 +58744,7 @@
 	     *
 	     * @private
 	     * @param {string} key The key of the property to get.
-	     * @returns {Function} Returns the new accessor function.
+	     * @returns {Function} Returns the new function.
 	     */
 	    function baseProperty(key) {
 	      return function(object) {
@@ -58841,7 +58757,7 @@
 	     *
 	     * @private
 	     * @param {Array|string} path The path of the property to get.
-	     * @returns {Function} Returns the new accessor function.
+	     * @returns {Function} Returns the new function.
 	     */
 	    function basePropertyDeep(path) {
 	      return function(object) {
@@ -58866,9 +58782,6 @@
 	          length = values.length,
 	          seen = array;
 	
-	      if (array === values) {
-	        values = copyArray(values);
-	      }
 	      if (iteratee) {
 	        seen = arrayMap(array, baseUnary(iteratee));
 	      }
@@ -58945,7 +58858,7 @@
 	     * @param {number} end The end of the range.
 	     * @param {number} step The value to increment or decrement by.
 	     * @param {boolean} [fromRight] Specify iterating from right to left.
-	     * @returns {Array} Returns the range of numbers.
+	     * @returns {Array} Returns the new array of numbers.
 	     */
 	    function baseRange(start, end, step, fromRight) {
 	      var index = -1,
@@ -59659,7 +59572,7 @@
 	     * placeholders, and provided arguments into a single array of arguments.
 	     *
 	     * @private
-	     * @param {Array} args The provided arguments.
+	     * @param {Array|Object} args The provided arguments.
 	     * @param {Array} partials The arguments to prepend to those provided.
 	     * @param {Array} holders The `partials` placeholder indexes.
 	     * @params {boolean} [isCurried] Specify composing for a curried function.
@@ -59694,7 +59607,7 @@
 	     * is tailored for `_.partialRight`.
 	     *
 	     * @private
-	     * @param {Array} args The provided arguments.
+	     * @param {Array|Object} args The provided arguments.
 	     * @param {Array} partials The arguments to append to those provided.
 	     * @param {Array} holders The `partials` placeholder indexes.
 	     * @params {boolean} [isCurried] Specify composing for a curried function.
@@ -59816,7 +59729,7 @@
 	            customizer = length > 1 ? sources[length - 1] : undefined,
 	            guard = length > 2 ? sources[2] : undefined;
 	
-	        customizer = (assigner.length > 3 && typeof customizer == 'function')
+	        customizer = typeof customizer == 'function'
 	          ? (length--, customizer)
 	          : undefined;
 	
@@ -59915,7 +59828,7 @@
 	     *
 	     * @private
 	     * @param {string} methodName The name of the `String` case method to use.
-	     * @returns {Function} Returns the new case function.
+	     * @returns {Function} Returns the new function.
 	     */
 	    function createCaseFirst(methodName) {
 	      return function(string) {
@@ -60000,7 +59913,7 @@
 	        var length = arguments.length,
 	            args = Array(length),
 	            index = length,
-	            placeholder = getHolder(wrapper);
+	            placeholder = getPlaceholder(wrapper);
 	
 	        while (index--) {
 	          args[index] = arguments[index];
@@ -60019,31 +59932,6 @@
 	        return apply(fn, this, args);
 	      }
 	      return wrapper;
-	    }
-	
-	    /**
-	     * Creates a `_.find` or `_.findLast` function.
-	     *
-	     * @private
-	     * @param {Function} findIndexFunc The function to find the collection index.
-	     * @returns {Function} Returns the new find function.
-	     */
-	    function createFind(findIndexFunc) {
-	      return function(collection, predicate, fromIndex) {
-	        var iterable = Object(collection);
-	        predicate = getIteratee(predicate, 3);
-	        if (!isArrayLike(collection)) {
-	          var props = keys(collection);
-	        }
-	        var index = findIndexFunc(props || collection, function(value, key) {
-	          if (props) {
-	            key = value;
-	            value = iterable[key];
-	          }
-	          return predicate(value, key, iterable);
-	        }, fromIndex);
-	        return index > -1 ? collection[props ? props[index] : index] : undefined;
-	      };
 	    }
 	
 	    /**
@@ -60140,14 +60028,14 @@
 	
 	      function wrapper() {
 	        var length = arguments.length,
-	            args = Array(length),
-	            index = length;
+	            index = length,
+	            args = Array(length);
 	
 	        while (index--) {
 	          args[index] = arguments[index];
 	        }
 	        if (isCurried) {
-	          var placeholder = getHolder(wrapper),
+	          var placeholder = getPlaceholder(wrapper),
 	              holdersCount = countHolders(args, placeholder);
 	        }
 	        if (partials) {
@@ -60236,7 +60124,7 @@
 	     *
 	     * @private
 	     * @param {Function} arrayFunc The function to iterate over iteratees.
-	     * @returns {Function} Returns the new over function.
+	     * @returns {Function} Returns the new invoker function.
 	     */
 	    function createOver(arrayFunc) {
 	      return rest(function(iteratees) {
@@ -60409,7 +60297,7 @@
 	      var func = Math[methodName];
 	      return function(number, precision) {
 	        number = toNumber(number);
-	        precision = nativeMin(toInteger(precision), 292);
+	        precision = toInteger(precision);
 	        if (precision) {
 	          // Shift with exponential notation to avoid floating-point issues.
 	          // See [MDN](https://mdn.io/round#Examples) for more details.
@@ -60435,26 +60323,6 @@
 	    };
 	
 	    /**
-	     * Creates a `_.toPairs` or `_.toPairsIn` function.
-	     *
-	     * @private
-	     * @param {Function} keysFunc The function to get the keys of a given object.
-	     * @returns {Function} Returns the new pairs function.
-	     */
-	    function createToPairs(keysFunc) {
-	      return function(object) {
-	        var tag = getTag(object);
-	        if (tag == mapTag) {
-	          return mapToArray(object);
-	        }
-	        if (tag == setTag) {
-	          return setToPairs(object);
-	        }
-	        return baseToPairs(object, keysFunc(object));
-	      };
-	    }
-	
-	    /**
 	     * Creates a function that either curries or invokes `func` with optional
 	     * `this` binding and partially applied arguments.
 	     *
@@ -60471,7 +60339,6 @@
 	     *    64 - `_.partialRight`
 	     *   128 - `_.rearg`
 	     *   256 - `_.ary`
-	     *   512 - `_.flip`
 	     * @param {*} [thisArg] The `this` binding of `func`.
 	     * @param {Array} [partials] The arguments to be partially applied.
 	     * @param {Array} [holders] The `partials` placeholder indexes.
@@ -60550,7 +60417,9 @@
 	     * @returns {boolean} Returns `true` if the arrays are equivalent, else `false`.
 	     */
 	    function equalArrays(array, other, equalFunc, customizer, bitmask, stack) {
-	      var isPartial = bitmask & PARTIAL_COMPARE_FLAG,
+	      var index = -1,
+	          isPartial = bitmask & PARTIAL_COMPARE_FLAG,
+	          isUnordered = bitmask & UNORDERED_COMPARE_FLAG,
 	          arrLength = array.length,
 	          othLength = other.length;
 	
@@ -60562,10 +60431,7 @@
 	      if (stacked) {
 	        return stacked == other;
 	      }
-	      var index = -1,
-	          result = true,
-	          seen = (bitmask & UNORDERED_COMPARE_FLAG) ? new SetCache : undefined;
-	
+	      var result = true;
 	      stack.set(array, other);
 	
 	      // Ignore non-index properties.
@@ -60586,12 +60452,10 @@
 	          break;
 	        }
 	        // Recursively compare arrays (susceptible to call stack limits).
-	        if (seen) {
-	          if (!arraySome(other, function(othValue, othIndex) {
-	                if (!seen.has(othIndex) &&
-	                    (arrValue === othValue || equalFunc(arrValue, othValue, customizer, bitmask, stack))) {
-	                  return seen.add(othIndex);
-	                }
+	        if (isUnordered) {
+	          if (!arraySome(other, function(othValue) {
+	                return arrValue === othValue ||
+	                  equalFunc(arrValue, othValue, customizer, bitmask, stack);
 	              })) {
 	            result = false;
 	            break;
@@ -60826,18 +60690,6 @@
 	    }
 	
 	    /**
-	     * Gets the argument placeholder value for `func`.
-	     *
-	     * @private
-	     * @param {Function} func The function to inspect.
-	     * @returns {*} Returns the placeholder value.
-	     */
-	    function getHolder(func) {
-	      var object = hasOwnProperty.call(lodash, 'placeholder') ? lodash : func;
-	      return object.placeholder;
-	    }
-	
-	    /**
 	     * Gets the appropriate "iteratee" function. If `_.iteratee` is customized,
 	     * this function returns the custom method, otherwise it returns `baseIteratee`.
 	     * If arguments are provided, the chosen function is invoked with them and
@@ -60868,21 +60720,6 @@
 	    var getLength = baseProperty('length');
 	
 	    /**
-	     * Gets the data for `map`.
-	     *
-	     * @private
-	     * @param {Object} map The map to query.
-	     * @param {string} key The reference key.
-	     * @returns {*} Returns the map data.
-	     */
-	    function getMapData(map, key) {
-	      var data = map.__data__;
-	      return isKeyable(key)
-	        ? data[typeof key == 'string' ? 'string' : 'hash']
-	        : data.map;
-	    }
-	
-	    /**
 	     * Gets the property names, values, and compare flags of `object`.
 	     *
 	     * @private
@@ -60890,14 +60727,11 @@
 	     * @returns {Array} Returns the match data of `object`.
 	     */
 	    function getMatchData(object) {
-	      var result = keys(object),
+	      var result = toPairs(object),
 	          length = result.length;
 	
 	      while (length--) {
-	        var key = result[length],
-	            value = object[key];
-	
-	        result[length] = [key, value, isStrictComparable(value)];
+	        result[length][2] = isStrictComparable(result[length][1]);
 	      }
 	      return result;
 	    }
@@ -60911,8 +60745,20 @@
 	     * @returns {*} Returns the function if it's native, else `undefined`.
 	     */
 	    function getNative(object, key) {
-	      var value = getValue(object, key);
-	      return baseIsNative(value) ? value : undefined;
+	      var value = object[key];
+	      return isNative(value) ? value : undefined;
+	    }
+	
+	    /**
+	     * Gets the argument placeholder value for `func`.
+	     *
+	     * @private
+	     * @param {Function} func The function to inspect.
+	     * @returns {*} Returns the placeholder value.
+	     */
+	    function getPlaceholder(func) {
+	      var object = hasOwnProperty.call(lodash, 'placeholder') ? lodash : func;
+	      return object.placeholder;
 	    }
 	
 	    /**
@@ -60941,7 +60787,9 @@
 	
 	    // Fallback for IE < 11.
 	    if (!getOwnPropertySymbols) {
-	      getSymbols = stubArray;
+	      getSymbols = function() {
+	        return [];
+	      };
 	    }
 	
 	    /**
@@ -61162,7 +61010,7 @@
 	     * @returns {boolean} Returns `true` if `value` is flattenable, else `false`.
 	     */
 	    function isFlattenable(value) {
-	      return isArray(value) || isArguments(value);
+	      return isArrayLikeObject(value) && (isArray(value) || isArguments(value));
 	    }
 	
 	    /**
@@ -61274,26 +61122,6 @@
 	    }
 	
 	    /**
-	     * Checks if `func` has its source masked.
-	     *
-	     * @private
-	     * @param {Function} func The function to check.
-	     * @returns {boolean} Returns `true` if `func` is masked, else `false`.
-	     */
-	    function isMasked(func) {
-	      return !!maskSrcKey && (maskSrcKey in func);
-	    }
-	
-	    /**
-	     * Checks if `func` is capable of being masked.
-	     *
-	     * @private
-	     * @param {*} value The value to check.
-	     * @returns {boolean} Returns `true` if `func` is maskable, else `false`.
-	     */
-	    var isMaskable = coreJsData ? isFunction : stubFalse;
-	
-	    /**
 	     * Checks if `value` is likely a prototype object.
 	     *
 	     * @private
@@ -61326,7 +61154,7 @@
 	     * @private
 	     * @param {string} key The key of the property to get.
 	     * @param {*} srcValue The value to match.
-	     * @returns {Function} Returns the new spec function.
+	     * @returns {Function} Returns the new function.
 	     */
 	    function matchesStrictComparable(key, srcValue) {
 	      return function(object) {
@@ -61578,7 +61406,7 @@
 	     * @param {Array} array The array to process.
 	     * @param {number} [size=1] The length of each chunk
 	     * @param- {Object} [guard] Enables use as an iteratee for methods like `_.map`.
-	     * @returns {Array} Returns the new array of chunks.
+	     * @returns {Array} Returns the new array containing chunks.
 	     * @example
 	     *
 	     * _.chunk(['a', 'b', 'c', 'd'], 2);
@@ -61661,16 +61489,16 @@
 	     */
 	    function concat() {
 	      var length = arguments.length,
-	          args = Array(length ? length - 1 : 0),
-	          array = arguments[0],
-	          index = length;
+	          array = castArray(arguments[0]);
 	
-	      while (index--) {
-	        args[index - 1] = arguments[index];
+	      if (length < 2) {
+	        return length ? copyArray(array) : [];
 	      }
-	      return length
-	        ? arrayPush(isArray(array) ? copyArray(array) : [array], baseFlatten(args, 1))
-	        : [];
+	      var args = Array(length - 1);
+	      while (length--) {
+	        args[length - 1] = arguments[length];
+	      }
+	      return arrayConcat(array, baseFlatten(args, 1));
 	    }
 	
 	    /**
@@ -61689,8 +61517,8 @@
 	     * @see _.without, _.xor
 	     * @example
 	     *
-	     * _.difference([2, 1], [2, 3]);
-	     * // => [1]
+	     * _.difference([3, 2, 1], [4, 2]);
+	     * // => [3, 1]
 	     */
 	    var difference = rest(function(array, values) {
 	      return isArrayLikeObject(array)
@@ -61715,8 +61543,8 @@
 	     * @returns {Array} Returns the new array of filtered values.
 	     * @example
 	     *
-	     * _.differenceBy([2.1, 1.2], [2.3, 3.4], Math.floor);
-	     * // => [1.2]
+	     * _.differenceBy([3.1, 2.2, 1.3], [4.4, 2.5], Math.floor);
+	     * // => [3.1, 1.3]
 	     *
 	     * // The `_.property` iteratee shorthand.
 	     * _.differenceBy([{ 'x': 2 }, { 'x': 1 }], [{ 'x': 1 }], 'x');
@@ -61968,7 +61796,6 @@
 	     * @param {Array} array The array to search.
 	     * @param {Array|Function|Object|string} [predicate=_.identity]
 	     *  The function invoked per iteration.
-	     * @param {number} [fromIndex=0] The index to search from.
 	     * @returns {number} Returns the index of the found element, else `-1`.
 	     * @example
 	     *
@@ -61993,16 +61820,10 @@
 	     * _.findIndex(users, 'active');
 	     * // => 2
 	     */
-	    function findIndex(array, predicate, fromIndex) {
-	      var length = array ? array.length : 0;
-	      if (!length) {
-	        return -1;
-	      }
-	      var index = fromIndex == null ? 0 : toInteger(fromIndex);
-	      if (index < 0) {
-	        index = nativeMax(length + index, 0);
-	      }
-	      return baseFindIndex(array, getIteratee(predicate, 3), index);
+	    function findIndex(array, predicate) {
+	      return (array && array.length)
+	        ? baseFindIndex(array, getIteratee(predicate, 3))
+	        : -1;
 	    }
 	
 	    /**
@@ -62016,7 +61837,6 @@
 	     * @param {Array} array The array to search.
 	     * @param {Array|Function|Object|string} [predicate=_.identity]
 	     *  The function invoked per iteration.
-	     * @param {number} [fromIndex=array.length-1] The index to search from.
 	     * @returns {number} Returns the index of the found element, else `-1`.
 	     * @example
 	     *
@@ -62041,19 +61861,10 @@
 	     * _.findLastIndex(users, 'active');
 	     * // => 0
 	     */
-	    function findLastIndex(array, predicate, fromIndex) {
-	      var length = array ? array.length : 0;
-	      if (!length) {
-	        return -1;
-	      }
-	      var index = length - 1;
-	      if (fromIndex !== undefined) {
-	        index = toInteger(fromIndex);
-	        index = fromIndex < 0
-	          ? nativeMax(length + index, 0)
-	          : nativeMin(index, length - 1);
-	      }
-	      return baseFindIndex(array, getIteratee(predicate, 3), index, true);
+	    function findLastIndex(array, predicate) {
+	      return (array && array.length)
+	        ? baseFindIndex(array, getIteratee(predicate, 3), true)
+	        : -1;
 	    }
 	
 	    /**
@@ -62200,11 +62011,11 @@
 	      if (!length) {
 	        return -1;
 	      }
-	      var index = fromIndex == null ? 0 : toInteger(fromIndex);
-	      if (index < 0) {
-	        index = nativeMax(length + index, 0);
+	      fromIndex = toInteger(fromIndex);
+	      if (fromIndex < 0) {
+	        fromIndex = nativeMax(length + fromIndex, 0);
 	      }
-	      return baseIndexOf(array, value, index);
+	      return baseIndexOf(array, value, fromIndex);
 	    }
 	
 	    /**
@@ -62239,7 +62050,7 @@
 	     * @returns {Array} Returns the new array of intersecting values.
 	     * @example
 	     *
-	     * _.intersection([2, 1], [2, 3]);
+	     * _.intersection([2, 1], [4, 2], [1, 2]);
 	     * // => [2]
 	     */
 	    var intersection = rest(function(arrays) {
@@ -62265,7 +62076,7 @@
 	     * @returns {Array} Returns the new array of intersecting values.
 	     * @example
 	     *
-	     * _.intersectionBy([2.1, 1.2], [2.3, 3.4], Math.floor);
+	     * _.intersectionBy([2.1, 1.2], [4.3, 2.4], Math.floor);
 	     * // => [2.1]
 	     *
 	     * // The `_.property` iteratee shorthand.
@@ -62395,7 +62206,7 @@
 	        ) + 1;
 	      }
 	      if (value !== value) {
-	        return indexOfNaN(array, index - 1, true);
+	        return indexOfNaN(array, index, true);
 	      }
 	      while (index--) {
 	        if (array[index] === value) {
@@ -62406,8 +62217,8 @@
 	    }
 	
 	    /**
-	     * Gets the element at index `n` of `array`. If `n` is negative, the nth
-	     * element from the end is returned.
+	     * Gets the nth element of `array`. If `n` is negative, the nth element
+	     * from the end is returned.
 	     *
 	     * @static
 	     * @memberOf _
@@ -62447,11 +62258,11 @@
 	     * @returns {Array} Returns `array`.
 	     * @example
 	     *
-	     * var array = ['a', 'b', 'c', 'a', 'b', 'c'];
+	     * var array = [1, 2, 3, 1, 2, 3];
 	     *
-	     * _.pull(array, 'a', 'c');
+	     * _.pull(array, 2, 3);
 	     * console.log(array);
-	     * // => ['b', 'b']
+	     * // => [1, 1]
 	     */
 	    var pull = rest(pullAll);
 	
@@ -62469,11 +62280,11 @@
 	     * @returns {Array} Returns `array`.
 	     * @example
 	     *
-	     * var array = ['a', 'b', 'c', 'a', 'b', 'c'];
+	     * var array = [1, 2, 3, 1, 2, 3];
 	     *
-	     * _.pullAll(array, ['a', 'c']);
+	     * _.pullAll(array, [2, 3]);
 	     * console.log(array);
-	     * // => ['b', 'b']
+	     * // => [1, 1]
 	     */
 	    function pullAll(array, values) {
 	      return (array && array.length && values && values.length)
@@ -62555,14 +62366,14 @@
 	     * @returns {Array} Returns the new array of removed elements.
 	     * @example
 	     *
-	     * var array = ['a', 'b', 'c', 'd'];
-	     * var pulled = _.pullAt(array, [1, 3]);
+	     * var array = [5, 10, 15, 20];
+	     * var evens = _.pullAt(array, 1, 3);
 	     *
 	     * console.log(array);
-	     * // => ['a', 'c']
+	     * // => [5, 15]
 	     *
-	     * console.log(pulled);
-	     * // => ['b', 'd']
+	     * console.log(evens);
+	     * // => [10, 20]
 	     */
 	    var pullAt = rest(function(array, indexes) {
 	      indexes = baseFlatten(indexes, 1);
@@ -62702,6 +62513,9 @@
 	     *
 	     * _.sortedIndex([30, 50], 40);
 	     * // => 1
+	     *
+	     * _.sortedIndex([4, 5], 4);
+	     * // => 0
 	     */
 	    function sortedIndex(array, value) {
 	      return baseSortedIndex(array, value);
@@ -62724,13 +62538,13 @@
 	     *  into `array`.
 	     * @example
 	     *
-	     * var objects = [{ 'x': 4 }, { 'x': 5 }];
+	     * var dict = { 'thirty': 30, 'forty': 40, 'fifty': 50 };
 	     *
-	     * _.sortedIndexBy(objects, { 'x': 4 }, function(o) { return o.x; });
-	     * // => 0
+	     * _.sortedIndexBy(['thirty', 'fifty'], 'forty', _.propertyOf(dict));
+	     * // => 1
 	     *
 	     * // The `_.property` iteratee shorthand.
-	     * _.sortedIndexBy(objects, { 'x': 4 }, 'x');
+	     * _.sortedIndexBy([{ 'x': 4 }, { 'x': 5 }], { 'x': 4 }, 'x');
 	     * // => 0
 	     */
 	    function sortedIndexBy(array, value, iteratee) {
@@ -62750,8 +62564,8 @@
 	     * @returns {number} Returns the index of the matched value, else `-1`.
 	     * @example
 	     *
-	     * _.sortedIndexOf([4, 5, 5, 5, 6], 5);
-	     * // => 1
+	     * _.sortedIndexOf([1, 1, 2, 2], 2);
+	     * // => 2
 	     */
 	    function sortedIndexOf(array, value) {
 	      var length = array ? array.length : 0;
@@ -62779,8 +62593,8 @@
 	     *  into `array`.
 	     * @example
 	     *
-	     * _.sortedLastIndex([4, 5, 5, 5, 6], 5);
-	     * // => 4
+	     * _.sortedLastIndex([4, 5], 4);
+	     * // => 1
 	     */
 	    function sortedLastIndex(array, value) {
 	      return baseSortedIndex(array, value, true);
@@ -62803,13 +62617,8 @@
 	     *  into `array`.
 	     * @example
 	     *
-	     * var objects = [{ 'x': 4 }, { 'x': 5 }];
-	     *
-	     * _.sortedLastIndexBy(objects, { 'x': 4 }, function(o) { return o.x; });
-	     * // => 1
-	     *
 	     * // The `_.property` iteratee shorthand.
-	     * _.sortedLastIndexBy(objects, { 'x': 4 }, 'x');
+	     * _.sortedLastIndexBy([{ 'x': 4 }, { 'x': 5 }], { 'x': 4 }, 'x');
 	     * // => 1
 	     */
 	    function sortedLastIndexBy(array, value, iteratee) {
@@ -62829,7 +62638,7 @@
 	     * @returns {number} Returns the index of the matched value, else `-1`.
 	     * @example
 	     *
-	     * _.sortedLastIndexOf([4, 5, 5, 5, 6], 5);
+	     * _.sortedLastIndexOf([1, 1, 2, 2], 2);
 	     * // => 3
 	     */
 	    function sortedLastIndexOf(array, value) {
@@ -63069,8 +62878,8 @@
 	     * @returns {Array} Returns the new array of combined values.
 	     * @example
 	     *
-	     * _.union([2], [1, 2]);
-	     * // => [2, 1]
+	     * _.union([2, 1], [4, 2], [1, 2]);
+	     * // => [2, 1, 4]
 	     */
 	    var union = rest(function(arrays) {
 	      return baseUniq(baseFlatten(arrays, 1, isArrayLikeObject, true));
@@ -63092,8 +62901,8 @@
 	     * @returns {Array} Returns the new array of combined values.
 	     * @example
 	     *
-	     * _.unionBy([2.1], [1.2, 2.3], Math.floor);
-	     * // => [2.1, 1.2]
+	     * _.unionBy([2.1, 1.2], [4.3, 2.4], Math.floor);
+	     * // => [2.1, 1.2, 4.3]
 	     *
 	     * // The `_.property` iteratee shorthand.
 	     * _.unionBy([{ 'x': 1 }], [{ 'x': 2 }, { 'x': 1 }], 'x');
@@ -63200,7 +63009,7 @@
 	     * @returns {Array} Returns the new duplicate free array.
 	     * @example
 	     *
-	     * var objects = [{ 'x': 1, 'y': 2 }, { 'x': 2, 'y': 1 }, { 'x': 1, 'y': 2 }];
+	     * var objects = [{ 'x': 1, 'y': 2 }, { 'x': 2, 'y': 1 },  { 'x': 1, 'y': 2 }];
 	     *
 	     * _.uniqWith(objects, _.isEqual);
 	     * // => [{ 'x': 1, 'y': 2 }, { 'x': 2, 'y': 1 }]
@@ -63289,13 +63098,13 @@
 	     * @memberOf _
 	     * @since 0.1.0
 	     * @category Array
-	     * @param {Array} array The array to inspect.
+	     * @param {Array} array The array to filter.
 	     * @param {...*} [values] The values to exclude.
 	     * @returns {Array} Returns the new array of filtered values.
 	     * @see _.difference, _.xor
 	     * @example
 	     *
-	     * _.without([2, 1, 2, 3], 1, 2);
+	     * _.without([1, 2, 1, 3], 1, 2);
 	     * // => [3]
 	     */
 	    var without = rest(function(array, values) {
@@ -63315,12 +63124,12 @@
 	     * @since 2.4.0
 	     * @category Array
 	     * @param {...Array} [arrays] The arrays to inspect.
-	     * @returns {Array} Returns the new array of filtered values.
+	     * @returns {Array} Returns the new array of values.
 	     * @see _.difference, _.without
 	     * @example
 	     *
-	     * _.xor([2, 1], [2, 3]);
-	     * // => [1, 3]
+	     * _.xor([2, 1], [4, 2]);
+	     * // => [1, 4]
 	     */
 	    var xor = rest(function(arrays) {
 	      return baseXor(arrayFilter(arrays, isArrayLikeObject));
@@ -63339,11 +63148,11 @@
 	     * @param {...Array} [arrays] The arrays to inspect.
 	     * @param {Array|Function|Object|string} [iteratee=_.identity]
 	     *  The iteratee invoked per element.
-	     * @returns {Array} Returns the new array of filtered values.
+	     * @returns {Array} Returns the new array of values.
 	     * @example
 	     *
-	     * _.xorBy([2.1, 1.2], [2.3, 3.4], Math.floor);
-	     * // => [1.2, 3.4]
+	     * _.xorBy([2.1, 1.2], [4.3, 2.4], Math.floor);
+	     * // => [1.2, 4.3]
 	     *
 	     * // The `_.property` iteratee shorthand.
 	     * _.xorBy([{ 'x': 1 }], [{ 'x': 2 }, { 'x': 1 }], 'x');
@@ -63368,7 +63177,7 @@
 	     * @category Array
 	     * @param {...Array} [arrays] The arrays to inspect.
 	     * @param {Function} [comparator] The comparator invoked per element.
-	     * @returns {Array} Returns the new array of filtered values.
+	     * @returns {Array} Returns the new array of values.
 	     * @example
 	     *
 	     * var objects = [{ 'x': 1, 'y': 2 }, { 'x': 2, 'y': 1 }];
@@ -63576,6 +63385,9 @@
 	     *
 	     * _(object).at(['a[0].b.c', 'a[1]']).value();
 	     * // => [3, 4]
+	     *
+	     * _(['a', 'b', 'c']).at(0, 2).value();
+	     * // => ['a', 'c']
 	     */
 	    var wrapperAt = rest(function(paths) {
 	      paths = baseFlatten(paths, 1);
@@ -63838,7 +63650,6 @@
 	     * _.countBy([6.1, 4.2, 6.3], Math.floor);
 	     * // => { '4': 1, '6': 2 }
 	     *
-	     * // The `_.property` iteratee shorthand.
 	     * _.countBy(['one', 'two', 'three'], 'length');
 	     * // => { '3': 2, '5': 1 }
 	     */
@@ -63944,7 +63755,6 @@
 	     * @param {Array|Object} collection The collection to search.
 	     * @param {Array|Function|Object|string} [predicate=_.identity]
 	     *  The function invoked per iteration.
-	     * @param {number} [fromIndex=0] The index to search from.
 	     * @returns {*} Returns the matched element, else `undefined`.
 	     * @example
 	     *
@@ -63969,7 +63779,14 @@
 	     * _.find(users, 'active');
 	     * // => object for 'barney'
 	     */
-	    var find = createFind(findIndex);
+	    function find(collection, predicate) {
+	      predicate = getIteratee(predicate, 3);
+	      if (isArray(collection)) {
+	        var index = baseFindIndex(collection, predicate);
+	        return index > -1 ? collection[index] : undefined;
+	      }
+	      return baseFind(collection, predicate, baseEach);
+	    }
 	
 	    /**
 	     * This method is like `_.find` except that it iterates over elements of
@@ -63982,7 +63799,6 @@
 	     * @param {Array|Object} collection The collection to search.
 	     * @param {Array|Function|Object|string} [predicate=_.identity]
 	     *  The function invoked per iteration.
-	     * @param {number} [fromIndex=collection.length-1] The index to search from.
 	     * @returns {*} Returns the matched element, else `undefined`.
 	     * @example
 	     *
@@ -63991,7 +63807,14 @@
 	     * });
 	     * // => 3
 	     */
-	    var findLast = createFind(findLastIndex);
+	    function findLast(collection, predicate) {
+	      predicate = getIteratee(predicate, 3);
+	      if (isArray(collection)) {
+	        var index = baseFindIndex(collection, predicate, true);
+	        return index > -1 ? collection[index] : undefined;
+	      }
+	      return baseFind(collection, predicate, baseEachRight);
+	    }
 	
 	    /**
 	     * Creates a flattened array of values by running each element in `collection`
@@ -64102,8 +63925,9 @@
 	     * // => Logs 'a' then 'b' (iteration order is not guaranteed).
 	     */
 	    function forEach(collection, iteratee) {
-	      var func = isArray(collection) ? arrayEach : baseEach;
-	      return func(collection, getIteratee(iteratee, 3));
+	      return (typeof iteratee == 'function' && isArray(collection))
+	        ? arrayEach(collection, iteratee)
+	        : baseEach(collection, getIteratee(iteratee));
 	    }
 	
 	    /**
@@ -64127,8 +63951,9 @@
 	     * // => Logs `2` then `1`.
 	     */
 	    function forEachRight(collection, iteratee) {
-	      var func = isArray(collection) ? arrayEachRight : baseEachRight;
-	      return func(collection, getIteratee(iteratee, 3));
+	      return (typeof iteratee == 'function' && isArray(collection))
+	        ? arrayEachRight(collection, iteratee)
+	        : baseEachRight(collection, getIteratee(iteratee));
 	    }
 	
 	    /**
@@ -64748,6 +64573,7 @@
 	     * @static
 	     * @memberOf _
 	     * @since 2.4.0
+	     * @type {Function}
 	     * @category Date
 	     * @returns {number} Returns the timestamp.
 	     * @example
@@ -64755,11 +64581,9 @@
 	     * _.defer(function(stamp) {
 	     *   console.log(_.now() - stamp);
 	     * }, _.now());
-	     * // => Logs the number of milliseconds it took for the deferred invocation.
+	     * // => Logs the number of milliseconds it took for the deferred function to be invoked.
 	     */
-	    function now() {
-	      return Date.now();
-	    }
+	    var now = Date.now;
 	
 	    /*------------------------------------------------------------------------*/
 	
@@ -64810,7 +64634,7 @@
 	     * @param {Function} func The function to cap arguments for.
 	     * @param {number} [n=func.length] The arity cap.
 	     * @param- {Object} [guard] Enables use as an iteratee for methods like `_.map`.
-	     * @returns {Function} Returns the new capped function.
+	     * @returns {Function} Returns the new function.
 	     * @example
 	     *
 	     * _.map(['6', '8', '10'], _.ary(parseInt, 1));
@@ -64863,7 +64687,7 @@
 	     * The `_.bind.placeholder` value, which defaults to `_` in monolithic builds,
 	     * may be used as a placeholder for partially applied arguments.
 	     *
-	     * **Note:** Unlike native `Function#bind`, this method doesn't set the "length"
+	     * **Note:** Unlike native `Function#bind` this method doesn't set the "length"
 	     * property of bound functions.
 	     *
 	     * @static
@@ -64894,7 +64718,7 @@
 	    var bind = rest(function(func, thisArg, partials) {
 	      var bitmask = BIND_FLAG;
 	      if (partials.length) {
-	        var holders = replaceHolders(partials, getHolder(bind));
+	        var holders = replaceHolders(partials, getPlaceholder(bind));
 	        bitmask |= PARTIAL_FLAG;
 	      }
 	      return createWrapper(func, bitmask, thisArg, partials, holders);
@@ -64948,7 +64772,7 @@
 	    var bindKey = rest(function(object, key, partials) {
 	      var bitmask = BIND_FLAG | BIND_KEY_FLAG;
 	      if (partials.length) {
-	        var holders = replaceHolders(partials, getHolder(bindKey));
+	        var holders = replaceHolders(partials, getPlaceholder(bindKey));
 	        bitmask |= PARTIAL_FLAG;
 	      }
 	      return createWrapper(key, bitmask, object, partials, holders);
@@ -65103,7 +64927,7 @@
 	          maxWait,
 	          result,
 	          timerId,
-	          lastCallTime,
+	          lastCallTime = 0,
 	          lastInvokeTime = 0,
 	          leading = false,
 	          maxing = false,
@@ -65154,7 +64978,7 @@
 	        // Either this is the first call, activity has stopped and we're at the
 	        // trailing edge, the system time has gone backwards and we're treating
 	        // it as the trailing edge, or we've hit the `maxWait` limit.
-	        return (lastCallTime === undefined || (timeSinceLastCall >= wait) ||
+	        return (!lastCallTime || (timeSinceLastCall >= wait) ||
 	          (timeSinceLastCall < 0) || (maxing && timeSinceLastInvoke >= maxWait));
 	      }
 	
@@ -65168,6 +64992,7 @@
 	      }
 	
 	      function trailingEdge(time) {
+	        clearTimeout(timerId);
 	        timerId = undefined;
 	
 	        // Only invoke if we have `lastArgs` which means `func` has been
@@ -65180,8 +65005,11 @@
 	      }
 	
 	      function cancel() {
-	        lastInvokeTime = 0;
-	        lastArgs = lastCallTime = lastThis = timerId = undefined;
+	        if (timerId !== undefined) {
+	          clearTimeout(timerId);
+	        }
+	        lastCallTime = lastInvokeTime = 0;
+	        lastArgs = lastThis = timerId = undefined;
 	      }
 	
 	      function flush() {
@@ -65202,6 +65030,7 @@
 	          }
 	          if (maxing) {
 	            // Handle invocations in a tight loop.
+	            clearTimeout(timerId);
 	            timerId = setTimeout(timerExpired, wait);
 	            return invokeFunc(lastCallTime);
 	          }
@@ -65269,7 +65098,7 @@
 	     * @since 4.0.0
 	     * @category Function
 	     * @param {Function} func The function to flip arguments for.
-	     * @returns {Function} Returns the new flipped function.
+	     * @returns {Function} Returns the new function.
 	     * @example
 	     *
 	     * var flipped = _.flip(function() {
@@ -65302,7 +65131,7 @@
 	     * @category Function
 	     * @param {Function} func The function to have its output memoized.
 	     * @param {Function} [resolver] The function to resolve the cache key.
-	     * @returns {Function} Returns the new memoized function.
+	     * @returns {Function} Returns the new memoizing function.
 	     * @example
 	     *
 	     * var object = { 'a': 1, 'b': 2 };
@@ -65360,7 +65189,7 @@
 	     * @since 3.0.0
 	     * @category Function
 	     * @param {Function} predicate The predicate to negate.
-	     * @returns {Function} Returns the new negated function.
+	     * @returns {Function} Returns the new function.
 	     * @example
 	     *
 	     * function isEven(n) {
@@ -65425,7 +65254,7 @@
 	     *
 	     * var func = _.overArgs(function(x, y) {
 	     *   return [x, y];
-	     * }, [square, doubled]);
+	     * }, square, doubled);
 	     *
 	     * func(9, 3);
 	     * // => [81, 6]
@@ -65484,7 +65313,7 @@
 	     * // => 'hi fred'
 	     */
 	    var partial = rest(function(func, partials) {
-	      var holders = replaceHolders(partials, getHolder(partial));
+	      var holders = replaceHolders(partials, getPlaceholder(partial));
 	      return createWrapper(func, PARTIAL_FLAG, undefined, partials, holders);
 	    });
 	
@@ -65521,7 +65350,7 @@
 	     * // => 'hello fred'
 	     */
 	    var partialRight = rest(function(func, partials) {
-	      var holders = replaceHolders(partials, getHolder(partialRight));
+	      var holders = replaceHolders(partials, getPlaceholder(partialRight));
 	      return createWrapper(func, PARTIAL_RIGHT_FLAG, undefined, partials, holders);
 	    });
 	
@@ -65542,7 +65371,7 @@
 	     *
 	     * var rearged = _.rearg(function(a, b, c) {
 	     *   return [a, b, c];
-	     * }, [2, 0, 1]);
+	     * }, 2, 0, 1);
 	     *
 	     * rearged('b', 'c', 'a')
 	     * // => ['a', 'b', 'c']
@@ -65723,7 +65552,7 @@
 	     * @since 4.0.0
 	     * @category Function
 	     * @param {Function} func The function to cap arguments for.
-	     * @returns {Function} Returns the new capped function.
+	     * @returns {Function} Returns the new function.
 	     * @example
 	     *
 	     * _.map(['6', '8', '10'], _.unary(parseInt));
@@ -66181,7 +66010,7 @@
 	     * _.isBuffer(new Uint8Array(2));
 	     * // => false
 	     */
-	    var isBuffer = !Buffer ? stubFalse : function(value) {
+	    var isBuffer = !Buffer ? constant(false) : function(value) {
 	      return value instanceof Buffer;
 	    };
 	
@@ -66399,13 +66228,13 @@
 	     * _.isFinite(3);
 	     * // => true
 	     *
-	     * _.isFinite(Number.MIN_VALUE);
+	     * _.isFinite(Number.MAX_VALUE);
+	     * // => true
+	     *
+	     * _.isFinite(3.14);
 	     * // => true
 	     *
 	     * _.isFinite(Infinity);
-	     * // => false
-	     *
-	     * _.isFinite('3');
 	     * // => false
 	     */
 	    function isFinite(value) {
@@ -66681,15 +66510,7 @@
 	    }
 	
 	    /**
-	     * Checks if `value` is a pristine native function.
-	     *
-	     * **Note:** This method can't reliably detect native functions in the
-	     * presence of the `core-js` package because `core-js` circumvents this kind
-	     * of detection. Despite multiple requests, the `core-js` maintainer has made
-	     * it clear: any attempt to fix the detection will be obstructed. As a result,
-	     * we're left with little choice but to throw an error. Unfortunately, this
-	     * also affects packages, like [babel-polyfill](https://www.npmjs.com/package/babel-polyfill),
-	     * which rely on `core-js`.
+	     * Checks if `value` is a native function.
 	     *
 	     * @static
 	     * @memberOf _
@@ -66707,10 +66528,11 @@
 	     * // => false
 	     */
 	    function isNative(value) {
-	      if (isMaskable(value)) {
-	        throw new Error('This method is not supported with `core-js`. Try https://github.com/es-shims.');
+	      if (!isObject(value)) {
+	        return false;
 	      }
-	      return baseIsNative(value);
+	      var pattern = (isFunction(value) || isHostObject(value)) ? reIsNative : reIsHostCtor;
+	      return pattern.test(toSource(value));
 	    }
 	
 	    /**
@@ -67135,44 +66957,9 @@
 	    }
 	
 	    /**
-	     * Converts `value` to a finite number.
-	     *
-	     * @static
-	     * @memberOf _
-	     * @since 4.12.0
-	     * @category Lang
-	     * @param {*} value The value to convert.
-	     * @returns {number} Returns the converted number.
-	     * @example
-	     *
-	     * _.toFinite(3.2);
-	     * // => 3.2
-	     *
-	     * _.toFinite(Number.MIN_VALUE);
-	     * // => 5e-324
-	     *
-	     * _.toFinite(Infinity);
-	     * // => 1.7976931348623157e+308
-	     *
-	     * _.toFinite('3.2');
-	     * // => 3.2
-	     */
-	    function toFinite(value) {
-	      if (!value) {
-	        return value === 0 ? value : 0;
-	      }
-	      value = toNumber(value);
-	      if (value === INFINITY || value === -INFINITY) {
-	        var sign = (value < 0 ? -1 : 1);
-	        return sign * MAX_INTEGER;
-	      }
-	      return value === value ? value : 0;
-	    }
-	
-	    /**
 	     * Converts `value` to an integer.
 	     *
-	     * **Note:** This method is loosely based on
+	     * **Note:** This function is loosely based on
 	     * [`ToInteger`](http://www.ecma-international.org/ecma-262/6.0/#sec-tointeger).
 	     *
 	     * @static
@@ -67183,7 +66970,7 @@
 	     * @returns {number} Returns the converted integer.
 	     * @example
 	     *
-	     * _.toInteger(3.2);
+	     * _.toInteger(3);
 	     * // => 3
 	     *
 	     * _.toInteger(Number.MIN_VALUE);
@@ -67192,14 +66979,20 @@
 	     * _.toInteger(Infinity);
 	     * // => 1.7976931348623157e+308
 	     *
-	     * _.toInteger('3.2');
+	     * _.toInteger('3');
 	     * // => 3
 	     */
 	    function toInteger(value) {
-	      var result = toFinite(value),
-	          remainder = result % 1;
-	
-	      return result === result ? (remainder ? result - remainder : result) : 0;
+	      if (!value) {
+	        return value === 0 ? value : 0;
+	      }
+	      value = toNumber(value);
+	      if (value === INFINITY || value === -INFINITY) {
+	        var sign = (value < 0 ? -1 : 1);
+	        return sign * MAX_INTEGER;
+	      }
+	      var remainder = value % 1;
+	      return value === value ? (remainder ? value - remainder : value) : 0;
 	    }
 	
 	    /**
@@ -67217,7 +67010,7 @@
 	     * @returns {number} Returns the converted integer.
 	     * @example
 	     *
-	     * _.toLength(3.2);
+	     * _.toLength(3);
 	     * // => 3
 	     *
 	     * _.toLength(Number.MIN_VALUE);
@@ -67226,7 +67019,7 @@
 	     * _.toLength(Infinity);
 	     * // => 4294967295
 	     *
-	     * _.toLength('3.2');
+	     * _.toLength('3');
 	     * // => 3
 	     */
 	    function toLength(value) {
@@ -67244,8 +67037,8 @@
 	     * @returns {number} Returns the number.
 	     * @example
 	     *
-	     * _.toNumber(3.2);
-	     * // => 3.2
+	     * _.toNumber(3);
+	     * // => 3
 	     *
 	     * _.toNumber(Number.MIN_VALUE);
 	     * // => 5e-324
@@ -67253,8 +67046,8 @@
 	     * _.toNumber(Infinity);
 	     * // => Infinity
 	     *
-	     * _.toNumber('3.2');
-	     * // => 3.2
+	     * _.toNumber('3');
+	     * // => 3
 	     */
 	    function toNumber(value) {
 	      if (typeof value == 'number') {
@@ -67317,7 +67110,7 @@
 	     * @returns {number} Returns the converted integer.
 	     * @example
 	     *
-	     * _.toSafeInteger(3.2);
+	     * _.toSafeInteger(3);
 	     * // => 3
 	     *
 	     * _.toSafeInteger(Number.MIN_VALUE);
@@ -67326,7 +67119,7 @@
 	     * _.toSafeInteger(Infinity);
 	     * // => 9007199254740991
 	     *
-	     * _.toSafeInteger('3.2');
+	     * _.toSafeInteger('3');
 	     * // => 3
 	     */
 	    function toSafeInteger(value) {
@@ -67519,13 +67312,16 @@
 	     * @category Object
 	     * @param {Object} object The object to iterate over.
 	     * @param {...(string|string[])} [paths] The property paths of elements to pick.
-	     * @returns {Array} Returns the picked values.
+	     * @returns {Array} Returns the new array of picked elements.
 	     * @example
 	     *
 	     * var object = { 'a': [{ 'b': { 'c': 3 } }, 4] };
 	     *
 	     * _.at(object, ['a[0].b.c', 'a[1]']);
 	     * // => [3, 4]
+	     *
+	     * _.at(['a', 'b', 'c'], 0, 2);
+	     * // => ['a', 'c']
 	     */
 	    var at = rest(function(object, paths) {
 	      return baseAt(object, baseFlatten(paths, 1));
@@ -67658,7 +67454,7 @@
 	     * // => 'barney'
 	     */
 	    function findKey(object, predicate) {
-	      return baseFindKey(object, getIteratee(predicate, 3), baseForOwn);
+	      return baseFind(object, getIteratee(predicate, 3), baseForOwn, true);
 	    }
 	
 	    /**
@@ -67698,7 +67494,7 @@
 	     * // => 'pebbles'
 	     */
 	    function findLastKey(object, predicate) {
-	      return baseFindKey(object, getIteratee(predicate, 3), baseForOwnRight);
+	      return baseFind(object, getIteratee(predicate, 3), baseForOwnRight, true);
 	    }
 	
 	    /**
@@ -67732,7 +67528,7 @@
 	    function forIn(object, iteratee) {
 	      return object == null
 	        ? object
-	        : baseFor(object, getIteratee(iteratee, 3), keysIn);
+	        : baseFor(object, getIteratee(iteratee), keysIn);
 	    }
 	
 	    /**
@@ -67764,7 +67560,7 @@
 	    function forInRight(object, iteratee) {
 	      return object == null
 	        ? object
-	        : baseForRight(object, getIteratee(iteratee, 3), keysIn);
+	        : baseForRight(object, getIteratee(iteratee), keysIn);
 	    }
 	
 	    /**
@@ -67796,7 +67592,7 @@
 	     * // => Logs 'a' then 'b' (iteration order is not guaranteed).
 	     */
 	    function forOwn(object, iteratee) {
-	      return object && baseForOwn(object, getIteratee(iteratee, 3));
+	      return object && baseForOwn(object, getIteratee(iteratee));
 	    }
 	
 	    /**
@@ -67826,7 +67622,7 @@
 	     * // => Logs 'b' then 'a' assuming `_.forOwn` logs 'a' then 'b'.
 	     */
 	    function forOwnRight(object, iteratee) {
-	      return object && baseForOwnRight(object, getIteratee(iteratee, 3));
+	      return object && baseForOwnRight(object, getIteratee(iteratee));
 	    }
 	
 	    /**
@@ -67838,7 +67634,7 @@
 	     * @memberOf _
 	     * @category Object
 	     * @param {Object} object The object to inspect.
-	     * @returns {Array} Returns the function names.
+	     * @returns {Array} Returns the new array of property names.
 	     * @see _.functionsIn
 	     * @example
 	     *
@@ -67865,7 +67661,7 @@
 	     * @since 4.0.0
 	     * @category Object
 	     * @param {Object} object The object to inspect.
-	     * @returns {Array} Returns the function names.
+	     * @returns {Array} Returns the new array of property names.
 	     * @see _.functions
 	     * @example
 	     *
@@ -68218,7 +68014,7 @@
 	     * inherited enumerable string keyed properties of source objects into the
 	     * destination object. Source properties that resolve to `undefined` are
 	     * skipped if a destination value exists. Array and plain object properties
-	     * are merged recursively. Other objects and value types are overridden by
+	     * are merged recursively.Other objects and value types are overridden by
 	     * assignment. Source objects are applied from left to right. Subsequent
 	     * sources overwrite property assignments of previous sources.
 	     *
@@ -68503,8 +68299,7 @@
 	
 	    /**
 	     * Creates an array of own enumerable string keyed-value pairs for `object`
-	     * which can be consumed by `_.fromPairs`. If `object` is a map or set, its
-	     * entries are returned.
+	     * which can be consumed by `_.fromPairs`.
 	     *
 	     * @static
 	     * @memberOf _
@@ -68512,7 +68307,7 @@
 	     * @alias entries
 	     * @category Object
 	     * @param {Object} object The object to query.
-	     * @returns {Array} Returns the key-value pairs.
+	     * @returns {Array} Returns the new array of key-value pairs.
 	     * @example
 	     *
 	     * function Foo() {
@@ -68525,12 +68320,13 @@
 	     * _.toPairs(new Foo);
 	     * // => [['a', 1], ['b', 2]] (iteration order is not guaranteed)
 	     */
-	    var toPairs = createToPairs(keys);
+	    function toPairs(object) {
+	      return baseToPairs(object, keys(object));
+	    }
 	
 	    /**
 	     * Creates an array of own and inherited enumerable string keyed-value pairs
-	     * for `object` which can be consumed by `_.fromPairs`. If `object` is a map
-	     * or set, its entries are returned.
+	     * for `object` which can be consumed by `_.fromPairs`.
 	     *
 	     * @static
 	     * @memberOf _
@@ -68538,7 +68334,7 @@
 	     * @alias entriesIn
 	     * @category Object
 	     * @param {Object} object The object to query.
-	     * @returns {Array} Returns the key-value pairs.
+	     * @returns {Array} Returns the new array of key-value pairs.
 	     * @example
 	     *
 	     * function Foo() {
@@ -68549,24 +68345,25 @@
 	     * Foo.prototype.c = 3;
 	     *
 	     * _.toPairsIn(new Foo);
-	     * // => [['a', 1], ['b', 2], ['c', 3]] (iteration order is not guaranteed)
+	     * // => [['a', 1], ['b', 2], ['c', 1]] (iteration order is not guaranteed)
 	     */
-	    var toPairsIn = createToPairs(keysIn);
+	    function toPairsIn(object) {
+	      return baseToPairs(object, keysIn(object));
+	    }
 	
 	    /**
 	     * An alternative to `_.reduce`; this method transforms `object` to a new
 	     * `accumulator` object which is the result of running each of its own
 	     * enumerable string keyed properties thru `iteratee`, with each invocation
-	     * potentially mutating the `accumulator` object. If `accumulator` is not
-	     * provided, a new object with the same `[[Prototype]]` will be used. The
-	     * iteratee is invoked with four arguments: (accumulator, value, key, object).
-	     * Iteratee functions may exit iteration early by explicitly returning `false`.
+	     * potentially mutating the `accumulator` object. The iteratee is invoked
+	     * with four arguments: (accumulator, value, key, object). Iteratee functions
+	     * may exit iteration early by explicitly returning `false`.
 	     *
 	     * @static
 	     * @memberOf _
 	     * @since 1.3.0
 	     * @category Object
-	     * @param {Object} object The object to iterate over.
+	     * @param {Array|Object} object The object to iterate over.
 	     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
 	     * @param {*} [accumulator] The custom accumulator value.
 	     * @returns {*} Returns the accumulated value.
@@ -68988,7 +68785,7 @@
 	     * @category String
 	     * @param {string} [string=''] The string to search.
 	     * @param {string} [target] The string to search for.
-	     * @param {number} [position=string.length] The position to search up to.
+	     * @param {number} [position=string.length] The position to search from.
 	     * @returns {boolean} Returns `true` if `string` ends with `target`,
 	     *  else `false`.
 	     * @example
@@ -69382,7 +69179,7 @@
 	     * @param {string} [string=''] The string to split.
 	     * @param {RegExp|string} separator The separator pattern to split by.
 	     * @param {number} [limit] The length to truncate results to.
-	     * @returns {Array} Returns the string segments.
+	     * @returns {Array} Returns the new array of string segments.
 	     * @example
 	     *
 	     * _.split('a-b-c', '-', 2);
@@ -69527,6 +69324,12 @@
 	     * compiled({ 'user': 'pebbles' });
 	     * // => 'hello pebbles!'
 	     *
+	     * // Use custom template delimiters.
+	     * _.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
+	     * var compiled = _.template('hello {{ user }}!');
+	     * compiled({ 'user': 'mustache' });
+	     * // => 'hello mustache!'
+	     *
 	     * // Use backslashes to treat delimiters as plain text.
 	     * var compiled = _.template('<%= "\\<%- value %\\>" %>');
 	     * compiled({ 'value': 'ignored' });
@@ -69552,15 +69355,9 @@
 	     * //   return __p;
 	     * // }
 	     *
-	     * // Use custom template delimiters.
-	     * _.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
-	     * var compiled = _.template('hello {{ user }}!');
-	     * compiled({ 'user': 'mustache' });
-	     * // => 'hello mustache!'
-	     *
 	     * // Use the `source` property to inline compiled templates for meaningful
 	     * // line numbers in error messages and stack traces.
-	     * fs.writeFileSync(path.join(process.cwd(), 'jst.js'), '\
+	     * fs.writeFileSync(path.join(cwd, 'jst.js'), '\
 	     *   var JST = {\
 	     *     "main": ' + _.template(mainText).source + '\
 	     *   };\
@@ -70073,7 +69870,7 @@
 	     *   }
 	     * };
 	     *
-	     * _.bindAll(view, ['onClick']);
+	     * _.bindAll(view, 'onClick');
 	     * jQuery(element).on('click', view.onClick);
 	     * // => Logs 'clicked docs' when clicked.
 	     */
@@ -70096,7 +69893,7 @@
 	     * @since 4.0.0
 	     * @category Util
 	     * @param {Array} pairs The predicate-function pairs.
-	     * @returns {Function} Returns the new composite function.
+	     * @returns {Function} Returns the new function.
 	     * @example
 	     *
 	     * var func = _.cond([
@@ -70146,7 +69943,7 @@
 	     * @since 4.0.0
 	     * @category Util
 	     * @param {Object} source The object of property predicates to conform to.
-	     * @returns {Function} Returns the new spec function.
+	     * @returns {Function} Returns the new function.
 	     * @example
 	     *
 	     * var users = [
@@ -70154,7 +69951,7 @@
 	     *   { 'user': 'fred',   'age': 40 }
 	     * ];
 	     *
-	     * _.filter(users, _.conforms({ 'age': function(n) { return n > 38; } }));
+	     * _.filter(users, _.conforms({ 'age': _.partial(_.gt, _, 38) }));
 	     * // => [{ 'user': 'fred', 'age': 40 }]
 	     */
 	    function conforms(source) {
@@ -70169,15 +69966,13 @@
 	     * @since 2.4.0
 	     * @category Util
 	     * @param {*} value The value to return from the new function.
-	     * @returns {Function} Returns the new constant function.
+	     * @returns {Function} Returns the new function.
 	     * @example
 	     *
-	     * var objects = _.times(2, _.constant({ 'a': 1 }));
+	     * var object = { 'user': 'fred' };
+	     * var getter = _.constant(object);
 	     *
-	     * console.log(objects);
-	     * // => [{ 'a': 1 }, { 'a': 1 }]
-	     *
-	     * console.log(objects[0] === objects[1]);
+	     * getter() === object;
 	     * // => true
 	     */
 	    function constant(value) {
@@ -70196,7 +69991,7 @@
 	     * @since 3.0.0
 	     * @category Util
 	     * @param {...(Function|Function[])} [funcs] Functions to invoke.
-	     * @returns {Function} Returns the new composite function.
+	     * @returns {Function} Returns the new function.
 	     * @see _.flowRight
 	     * @example
 	     *
@@ -70204,7 +69999,7 @@
 	     *   return n * n;
 	     * }
 	     *
-	     * var addSquare = _.flow([_.add, square]);
+	     * var addSquare = _.flow(_.add, square);
 	     * addSquare(1, 2);
 	     * // => 9
 	     */
@@ -70219,7 +70014,7 @@
 	     * @memberOf _
 	     * @category Util
 	     * @param {...(Function|Function[])} [funcs] Functions to invoke.
-	     * @returns {Function} Returns the new composite function.
+	     * @returns {Function} Returns the new function.
 	     * @see _.flow
 	     * @example
 	     *
@@ -70227,7 +70022,7 @@
 	     *   return n * n;
 	     * }
 	     *
-	     * var addSquare = _.flowRight([square, _.add]);
+	     * var addSquare = _.flowRight(square, _.add);
 	     * addSquare(1, 2);
 	     * // => 9
 	     */
@@ -70246,7 +70041,7 @@
 	     *
 	     * var object = { 'user': 'fred' };
 	     *
-	     * console.log(_.identity(object) === object);
+	     * _.identity(object) === object;
 	     * // => true
 	     */
 	    function identity(value) {
@@ -70312,7 +70107,7 @@
 	     * @since 3.0.0
 	     * @category Util
 	     * @param {Object} source The object of property values to match.
-	     * @returns {Function} Returns the new spec function.
+	     * @returns {Function} Returns the new function.
 	     * @example
 	     *
 	     * var users = [
@@ -70340,7 +70135,7 @@
 	     * @category Util
 	     * @param {Array|string} path The path of the property to get.
 	     * @param {*} srcValue The value to match.
-	     * @returns {Function} Returns the new spec function.
+	     * @returns {Function} Returns the new function.
 	     * @example
 	     *
 	     * var users = [
@@ -70365,7 +70160,7 @@
 	     * @category Util
 	     * @param {Array|string} path The path of the method to invoke.
 	     * @param {...*} [args] The arguments to invoke the method with.
-	     * @returns {Function} Returns the new invoker function.
+	     * @returns {Function} Returns the new function.
 	     * @example
 	     *
 	     * var objects = [
@@ -70396,7 +70191,7 @@
 	     * @category Util
 	     * @param {Object} object The object to query.
 	     * @param {...*} [args] The arguments to invoke the method with.
-	     * @returns {Function} Returns the new invoker function.
+	     * @returns {Function} Returns the new function.
 	     * @example
 	     *
 	     * var array = _.times(3, _.constant),
@@ -70507,7 +70302,8 @@
 	    }
 	
 	    /**
-	     * A method that returns `undefined`.
+	     * A no-operation function that returns `undefined` regardless of the
+	     * arguments it receives.
 	     *
 	     * @static
 	     * @memberOf _
@@ -70515,15 +70311,17 @@
 	     * @category Util
 	     * @example
 	     *
-	     * _.times(2, _.noop);
-	     * // => [undefined, undefined]
+	     * var object = { 'user': 'fred' };
+	     *
+	     * _.noop(object) === undefined;
+	     * // => true
 	     */
 	    function noop() {
 	      // No operation performed.
 	    }
 	
 	    /**
-	     * Creates a function that gets the argument at index `n`. If `n` is negative,
+	     * Creates a function that returns its nth argument. If `n` is negative,
 	     * the nth argument from the end is returned.
 	     *
 	     * @static
@@ -70531,7 +70329,7 @@
 	     * @since 4.0.0
 	     * @category Util
 	     * @param {number} [n=0] The index of the argument to return.
-	     * @returns {Function} Returns the new pass-thru function.
+	     * @returns {Function} Returns the new function.
 	     * @example
 	     *
 	     * var func = _.nthArg(1);
@@ -70562,7 +70360,7 @@
 	     * @returns {Function} Returns the new function.
 	     * @example
 	     *
-	     * var func = _.over([Math.max, Math.min]);
+	     * var func = _.over(Math.max, Math.min);
 	     *
 	     * func(1, 2, 3, 4);
 	     * // => [4, 1]
@@ -70582,7 +70380,7 @@
 	     * @returns {Function} Returns the new function.
 	     * @example
 	     *
-	     * var func = _.overEvery([Boolean, isFinite]);
+	     * var func = _.overEvery(Boolean, isFinite);
 	     *
 	     * func('1');
 	     * // => true
@@ -70608,7 +70406,7 @@
 	     * @returns {Function} Returns the new function.
 	     * @example
 	     *
-	     * var func = _.overSome([Boolean, isFinite]);
+	     * var func = _.overSome(Boolean, isFinite);
 	     *
 	     * func('1');
 	     * // => true
@@ -70629,7 +70427,7 @@
 	     * @since 2.4.0
 	     * @category Util
 	     * @param {Array|string} path The path of the property to get.
-	     * @returns {Function} Returns the new accessor function.
+	     * @returns {Function} Returns the new function.
 	     * @example
 	     *
 	     * var objects = [
@@ -70656,7 +70454,7 @@
 	     * @since 3.0.0
 	     * @category Util
 	     * @param {Object} object The object to query.
-	     * @returns {Function} Returns the new accessor function.
+	     * @returns {Function} Returns the new function.
 	     * @example
 	     *
 	     * var array = [0, 1, 2],
@@ -70690,7 +70488,7 @@
 	     * @param {number} [start=0] The start of the range.
 	     * @param {number} end The end of the range.
 	     * @param {number} [step=1] The value to increment or decrement by.
-	     * @returns {Array} Returns the range of numbers.
+	     * @returns {Array} Returns the new array of numbers.
 	     * @see _.inRange, _.rangeRight
 	     * @example
 	     *
@@ -70728,7 +70526,7 @@
 	     * @param {number} [start=0] The start of the range.
 	     * @param {number} end The end of the range.
 	     * @param {number} [step=1] The value to increment or decrement by.
-	     * @returns {Array} Returns the range of numbers.
+	     * @returns {Array} Returns the new array of numbers.
 	     * @see _.inRange, _.range
 	     * @example
 	     *
@@ -70756,101 +70554,6 @@
 	    var rangeRight = createRange(true);
 	
 	    /**
-	     * A method that returns a new empty array.
-	     *
-	     * @static
-	     * @memberOf _
-	     * @since 4.13.0
-	     * @category Util
-	     * @returns {Array} Returns the new empty array.
-	     * @example
-	     *
-	     * var arrays = _.times(2, _.stubArray);
-	     *
-	     * console.log(arrays);
-	     * // => [[], []]
-	     *
-	     * console.log(arrays[0] === arrays[1]);
-	     * // => false
-	     */
-	    function stubArray() {
-	      return [];
-	    }
-	
-	    /**
-	     * A method that returns `false`.
-	     *
-	     * @static
-	     * @memberOf _
-	     * @since 4.13.0
-	     * @category Util
-	     * @returns {boolean} Returns `false`.
-	     * @example
-	     *
-	     * _.times(2, _.stubFalse);
-	     * // => [false, false]
-	     */
-	    function stubFalse() {
-	      return false;
-	    }
-	
-	    /**
-	     * A method that returns a new empty object.
-	     *
-	     * @static
-	     * @memberOf _
-	     * @since 4.13.0
-	     * @category Util
-	     * @returns {Object} Returns the new empty object.
-	     * @example
-	     *
-	     * var objects = _.times(2, _.stubObject);
-	     *
-	     * console.log(objects);
-	     * // => [{}, {}]
-	     *
-	     * console.log(objects[0] === objects[1]);
-	     * // => false
-	     */
-	    function stubObject() {
-	      return {};
-	    }
-	
-	    /**
-	     * A method that returns an empty string.
-	     *
-	     * @static
-	     * @memberOf _
-	     * @since 4.13.0
-	     * @category Util
-	     * @returns {string} Returns the empty string.
-	     * @example
-	     *
-	     * _.times(2, _.stubString);
-	     * // => ['', '']
-	     */
-	    function stubString() {
-	      return '';
-	    }
-	
-	    /**
-	     * A method that returns `true`.
-	     *
-	     * @static
-	     * @memberOf _
-	     * @since 4.13.0
-	     * @category Util
-	     * @returns {boolean} Returns `true`.
-	     * @example
-	     *
-	     * _.times(2, _.stubTrue);
-	     * // => [true, true]
-	     */
-	    function stubTrue() {
-	      return true;
-	    }
-	
-	    /**
 	     * Invokes the iteratee `n` times, returning an array of the results of
 	     * each invocation. The iteratee is invoked with one argument; (index).
 	     *
@@ -70866,8 +70569,8 @@
 	     * _.times(3, String);
 	     * // => ['0', '1', '2']
 	     *
-	     *  _.times(4, _.constant(0));
-	     * // => [0, 0, 0, 0]
+	     *  _.times(4, _.constant(true));
+	     * // => [true, true, true, true]
 	     */
 	    function times(n, iteratee) {
 	      n = toInteger(n);
@@ -70903,6 +70606,15 @@
 	     *
 	     * _.toPath('a[0].b.c');
 	     * // => ['a', '0', 'b', 'c']
+	     *
+	     * var path = ['a', 'b', 'c'],
+	     *     newPath = _.toPath(path);
+	     *
+	     * console.log(newPath);
+	     * // => ['a', 'b', 'c']
+	     *
+	     * console.log(path === newPath);
+	     * // => false
 	     */
 	    function toPath(value) {
 	      if (isArray(value)) {
@@ -71541,11 +71253,6 @@
 	    lodash.meanBy = meanBy;
 	    lodash.min = min;
 	    lodash.minBy = minBy;
-	    lodash.stubArray = stubArray;
-	    lodash.stubFalse = stubFalse;
-	    lodash.stubObject = stubObject;
-	    lodash.stubString = stubString;
-	    lodash.stubTrue = stubTrue;
 	    lodash.multiply = multiply;
 	    lodash.nth = nth;
 	    lodash.noConflict = noConflict;
@@ -71580,7 +71287,6 @@
 	    lodash.sumBy = sumBy;
 	    lodash.template = template;
 	    lodash.times = times;
-	    lodash.toFinite = toFinite;
 	    lodash.toInteger = toInteger;
 	    lodash.toLength = toLength;
 	    lodash.toLower = toLower;
@@ -71852,7 +71558,7 @@
 	  // also prevents errors in cases where Lodash is loaded by a script tag in the
 	  // presence of an AMD loader. See http://requirejs.org/docs/errors.html#mismatch
 	  // for more details. Use `_.noConflict` to remove Lodash from the global object.
-	  (freeSelf || {})._ = _;
+	  (freeWindow || freeSelf || {})._ = _;
 	
 	  // Some AMD build optimizers like r.js check for condition patterns like the following:
 	  if (true) {
@@ -71863,9 +71569,11 @@
 	    }.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	  }
 	  // Check for `exports` after `define` in case a build optimizer adds an `exports` object.
-	  else if (freeModule) {
+	  else if (freeExports && freeModule) {
 	    // Export for Node.js.
-	    (freeModule.exports = _)._ = _;
+	    if (moduleExports) {
+	      (freeModule.exports = _)._ = _;
+	    }
 	    // Export for CommonJS support.
 	    freeExports._ = _;
 	  }
@@ -71903,7 +71611,7 @@
   \***********************************************************/
 /***/ function(module, exports) {
 
-	/*! angular-google-maps 2.3.3 2016-05-13
+	/*! angular-google-maps 2.3.2 2016-02-11
 	 *  AngularJS directives for Google Maps
 	 *  git: https://github.com/angular-ui/angular-google-maps.git
 	 */
@@ -72941,7 +72649,7 @@
 	}).call(this);
 	;(function() {
 	  angular.module('uiGmapgoogle-maps.directives.api.utils').service('uiGmapFitHelper', [
-	    'uiGmapLogger', '$timeout', function($log, $timeout) {
+	    'uiGmapLogger', function($log) {
 	      return {
 	        fit: function(markersOrPoints, gMap) {
 	          var bounds, everSet, key, markerOrPoint, point;
@@ -72959,9 +72667,7 @@
 	              bounds.extend(point);
 	            }
 	            if (everSet) {
-	              return $timeout(function() {
-	                return gMap.fitBounds(bounds);
-	              });
+	              return gMap.fitBounds(bounds);
 	            }
 	          }
 	        }
@@ -73005,9 +72711,7 @@
 	        if (!value) {
 	          return;
 	        }
-	        if (value instanceof google.maps.LatLng) {
-	          return value;
-	        } else if (Array.isArray(value) && value.length === 2) {
+	        if (Array.isArray(value) && value.length === 2) {
 	          return new google.maps.LatLng(value[1], value[0]);
 	        } else if (angular.isDefined(value.type) && value.type === 'Point') {
 	          return new google.maps.LatLng(value.coordinates[1], value.coordinates[0]);
@@ -77979,16 +77683,12 @@
 	          Control.__super__.constructor.call(this);
 	        }
 	
-	        Control.prototype.transclude = true;
-	
-	        Control.prototype.link = function(scope, element, attrs, ctrl, transclude) {
+	        Control.prototype.link = function(scope, element, attrs, ctrl) {
 	          return GoogleMapApi.then((function(_this) {
 	            return function(maps) {
-	              var hasTranscludedContent, index, position, transcludedContent;
-	              transcludedContent = transclude();
-	              hasTranscludedContent = transclude().length > 0;
-	              if (!hasTranscludedContent && angular.isUndefined(scope.template)) {
-	                _this.$log.error('mapControl: could not find a valid template property or elements for transclusion');
+	              var index, position;
+	              if (angular.isUndefined(scope.template)) {
+	                _this.$log.error('mapControl: could not find a valid template property');
 	                return;
 	              }
 	              index = angular.isDefined(scope.index && !isNaN(parseInt(scope.index))) ? parseInt(scope.index) : void 0;
@@ -77998,40 +77698,30 @@
 	                return;
 	              }
 	              return IControl.mapPromise(scope, ctrl).then(function(map) {
-	                var control, controlDiv, pushControl;
+	                var control, controlDiv;
 	                control = void 0;
 	                controlDiv = angular.element('<div></div>');
-	                pushControl = function(map, control, index) {
-	                  if (index) {
-	                    control[0].index = index;
+	                return $http.get(scope.template, {
+	                  cache: $templateCache
+	                }).success(function(template) {
+	                  var templateCtrl, templateScope;
+	                  templateScope = scope.$new();
+	                  controlDiv.append(template);
+	                  if (angular.isDefined(scope.controller)) {
+	                    templateCtrl = $controller(scope.controller, {
+	                      $scope: templateScope
+	                    });
+	                    controlDiv.children().data('$ngControllerController', templateCtrl);
 	                  }
+	                  control = $compile(controlDiv.children())(templateScope);
+	                  if (index) {
+	                    return control[0].index = index;
+	                  }
+	                }).error(function(error) {
+	                  return _this.$log.error('mapControl: template could not be found');
+	                }).then(function() {
 	                  return map.controls[google.maps.ControlPosition[position]].push(control[0]);
-	                };
-	                if (hasTranscludedContent) {
-	                  return transclude(function(transcludeEl) {
-	                    controlDiv.append(transcludeEl);
-	                    return pushControl(map, controlDiv, index);
-	                  });
-	                } else {
-	                  return $http.get(scope.template, {
-	                    cache: $templateCache
-	                  }).success(function(template) {
-	                    var templateCtrl, templateScope;
-	                    templateScope = scope.$new();
-	                    controlDiv.append(template);
-	                    if (angular.isDefined(scope.controller)) {
-	                      templateCtrl = $controller(scope.controller, {
-	                        $scope: templateScope
-	                      });
-	                      controlDiv.children().data('$ngControllerController', templateCtrl);
-	                    }
-	                    return control = $compile(controlDiv.children())(templateScope);
-	                  }).error(function(error) {
-	                    return _this.$log.error('mapControl: template could not be found');
-	                  }).then(function() {
-	                    return pushControl(map, control, index);
-	                  });
-	                }
+	                });
 	              });
 	            };
 	          })(this));
@@ -78567,7 +78257,7 @@
 	      };
 	
 	      Map.prototype.link = function(scope, element, attrs) {
-	        var listeners;
+	        var listeners, unbindCenterWatch;
 	        listeners = [];
 	        scope.$on('$destroy', function() {
 	          uiGmapEventsHelper.removeEvents(listeners);
@@ -78577,6 +78267,18 @@
 	          }
 	        });
 	        scope.idleAndZoomChanged = false;
+	        if (scope.center == null) {
+	          unbindCenterWatch = scope.$watch('center', (function(_this) {
+	            return function() {
+	              if (!scope.center) {
+	                return;
+	              }
+	              unbindCenterWatch();
+	              return _this.link(scope, element, attrs);
+	            };
+	          })(this));
+	          return;
+	        }
 	        return uiGmapGoogleMapApi.then((function(_this) {
 	          return function(maps) {
 	            var _gMap, customListeners, disabledEvents, dragging, el, eventName, getEventHandler, mapOptions, maybeHookToEvent, opts, ref, resolveSpawned, settingFromDirective, spawned, type, updateCenter, zoomPromise;
@@ -78590,15 +78292,13 @@
 	                map: _gMap
 	              });
 	            };
-	            if (!angular.isDefined(scope.center) && !angular.isDefined(scope.bounds)) {
-	              $log.error('angular-google-maps: a center or bounds property is required');
+	            if (!_this.validateCoords(scope.center)) {
+	              $log.error('angular-google-maps: could not find a valid center property');
 	              return;
 	            }
-	            if (!angular.isDefined(scope.center)) {
-	              scope.center = new google.maps.LatLngBounds(_this.getCoords(scope.bounds.southwest), _this.getCoords(scope.bounds.northeast)).getCenter();
-	            }
 	            if (!angular.isDefined(scope.zoom)) {
-	              scope.zoom = 10;
+	              $log.error('angular-google-maps: map zoom property not set');
+	              return;
 	            }
 	            el = angular.element(element);
 	            el.addClass('angular-google-map');
@@ -78677,6 +78377,16 @@
 	                  s = scope;
 	                }
 	                if (_.includes(disabledEvents, 'center')) {
+	                  return;
+	                }
+	                if (angular.isDefined(s.center.type)) {
+	                  if (s.center.coordinates[1] !== c.lat()) {
+	                    s.center.coordinates[1] = c.lat();
+	                  }
+	                  if (s.center.coordinates[0] !== c.lng()) {
+	                    return s.center.coordinates[0] = c.lng();
+	                  }
+	                } else {
 	                  if (s.center.latitude !== c.lat()) {
 	                    s.center.latitude = c.lat();
 	                  }
@@ -80094,23 +79804,32 @@
 	      //BEGIN REPLACE
 	      /* istanbul ignore next */
 	      +function(){
-	      function ClusterIcon(cluster,styles){cluster.getMarkerClusterer().extend(ClusterIcon,google.maps.OverlayView),this.cluster_=cluster,this.className_=cluster.getMarkerClusterer().getClusterClass(),this.styles_=styles,this.center_=null,this.div_=null,this.sums_=null,this.visible_=!1,this.setMap(cluster.getMap())}function Cluster(mc){this.markerClusterer_=mc,this.map_=mc.getMap(),this.gridSize_=mc.getGridSize(),this.minClusterSize_=mc.getMinimumClusterSize(),this.averageCenter_=mc.getAverageCenter(),this.hideLabel_=mc.getHideLabel(),this.markers_=[],this.center_=null,this.bounds_=null,this.clusterIcon_=new ClusterIcon(this,mc.getStyles())}function MarkerClusterer(map,opt_markers,opt_options){this.extend(MarkerClusterer,google.maps.OverlayView),opt_markers=opt_markers||[],opt_options=opt_options||{},this.markers_=[],this.clusters_=[],this.listeners_=[],this.activeMap_=null,this.ready_=!1,this.gridSize_=opt_options.gridSize||60,this.minClusterSize_=opt_options.minimumClusterSize||2,this.maxZoom_=opt_options.maxZoom||null,this.styles_=opt_options.styles||[],this.title_=opt_options.title||"",this.zoomOnClick_=!0,void 0!==opt_options.zoomOnClick&&(this.zoomOnClick_=opt_options.zoomOnClick),this.averageCenter_=!1,void 0!==opt_options.averageCenter&&(this.averageCenter_=opt_options.averageCenter),this.ignoreHidden_=!1,void 0!==opt_options.ignoreHidden&&(this.ignoreHidden_=opt_options.ignoreHidden),this.enableRetinaIcons_=!1,void 0!==opt_options.enableRetinaIcons&&(this.enableRetinaIcons_=opt_options.enableRetinaIcons),this.hideLabel_=!1,void 0!==opt_options.hideLabel&&(this.hideLabel_=opt_options.hideLabel),this.imagePath_=opt_options.imagePath||MarkerClusterer.IMAGE_PATH,this.imageExtension_=opt_options.imageExtension||MarkerClusterer.IMAGE_EXTENSION,this.imageSizes_=opt_options.imageSizes||MarkerClusterer.IMAGE_SIZES,this.calculator_=opt_options.calculator||MarkerClusterer.CALCULATOR,this.batchSize_=opt_options.batchSize||MarkerClusterer.BATCH_SIZE,this.batchSizeIE_=opt_options.batchSizeIE||MarkerClusterer.BATCH_SIZE_IE,this.clusterClass_=opt_options.clusterClass||"cluster",-1!==navigator.userAgent.toLowerCase().indexOf("msie")&&(this.batchSize_=this.batchSizeIE_),this.setupStyles_(),this.addMarkers(opt_markers,!0),this.setMap(map)}ClusterIcon.prototype.onAdd=function(){var cMouseDownInCluster,cDraggingMapByCluster,cClusterIcon=this;this.div_=document.createElement("div"),this.div_.className=this.className_,this.visible_&&this.show(),this.getPanes().overlayMouseTarget.appendChild(this.div_),this.boundsChangedListener_=google.maps.event.addListener(this.getMap(),"bounds_changed",function(){cDraggingMapByCluster=cMouseDownInCluster}),google.maps.event.addDomListener(this.div_,"mousedown",function(){cMouseDownInCluster=!0,cDraggingMapByCluster=!1}),google.maps.event.addDomListener(this.div_,"click",function(e){if(cMouseDownInCluster=!1,!cDraggingMapByCluster){var theBounds,mz,mc=cClusterIcon.cluster_.getMarkerClusterer();google.maps.event.trigger(mc,"click",cClusterIcon.cluster_),google.maps.event.trigger(mc,"clusterclick",cClusterIcon.cluster_),mc.getZoomOnClick()&&(mz=mc.getMaxZoom(),theBounds=cClusterIcon.cluster_.getBounds(),mc.getMap().fitBounds(theBounds),setTimeout(function(){mc.getMap().fitBounds(theBounds),null!==mz&&mc.getMap().getZoom()>mz&&mc.getMap().setZoom(mz+1)},100)),e.cancelBubble=!0,e.stopPropagation&&e.stopPropagation()}}),google.maps.event.addDomListener(this.div_,"mouseover",function(){var mc=cClusterIcon.cluster_.getMarkerClusterer();google.maps.event.trigger(mc,"mouseover",cClusterIcon.cluster_)}),google.maps.event.addDomListener(this.div_,"mouseout",function(){var mc=cClusterIcon.cluster_.getMarkerClusterer();google.maps.event.trigger(mc,"mouseout",cClusterIcon.cluster_)})},ClusterIcon.prototype.onRemove=function(){this.div_&&this.div_.parentNode&&(this.hide(),google.maps.event.removeListener(this.boundsChangedListener_),google.maps.event.clearInstanceListeners(this.div_),this.div_.parentNode.removeChild(this.div_),this.div_=null)},ClusterIcon.prototype.draw=function(){if(this.visible_){var pos=this.getPosFromLatLng_(this.center_);this.div_.style.top=pos.y+"px",this.div_.style.left=pos.x+"px"}},ClusterIcon.prototype.hide=function(){this.div_&&(this.div_.style.display="none"),this.visible_=!1},ClusterIcon.prototype.show=function(){if(this.div_){var img="",bp=this.backgroundPosition_.split(" "),spriteH=parseInt(bp[0].trim(),10),spriteV=parseInt(bp[1].trim(),10),pos=this.getPosFromLatLng_(this.center_);this.div_.style.cssText=this.createCss(pos),img="<img src='"+this.url_+"' style='position: absolute; top: "+spriteV+"px; left: "+spriteH+"px; ",img+=this.cluster_.getMarkerClusterer().enableRetinaIcons_?"width: "+this.width_+"px;height: "+this.height_+"px;":"clip: rect("+-1*spriteV+"px, "+(-1*spriteH+this.width_)+"px, "+(-1*spriteV+this.height_)+"px, "+-1*spriteH+"px);",img+="'>",this.div_.innerHTML=img+"<div style='position: absolute;top: "+this.anchorText_[0]+"px;left: "+this.anchorText_[1]+"px;color: "+this.textColor_+";font-size: "+this.textSize_+"px;font-family: "+this.fontFamily_+";font-weight: "+this.fontWeight_+";font-style: "+this.fontStyle_+";text-decoration: "+this.textDecoration_+";text-align: center;width: "+this.width_+"px;line-height:"+this.height_+"px;'>"+(this.cluster_.hideLabel_?" ":this.sums_.text)+"</div>",this.div_.title="undefined"==typeof this.sums_.title||""===this.sums_.title?this.cluster_.getMarkerClusterer().getTitle():this.sums_.title,this.div_.style.display=""}this.visible_=!0},ClusterIcon.prototype.useStyle=function(sums){this.sums_=sums;var index=Math.max(0,sums.index-1);index=Math.min(this.styles_.length-1,index);var style=this.styles_[index];this.url_=style.url,this.height_=style.height,this.width_=style.width,this.anchorText_=style.anchorText||[0,0],this.anchorIcon_=style.anchorIcon||[parseInt(this.height_/2,10),parseInt(this.width_/2,10)],this.textColor_=style.textColor||"black",this.textSize_=style.textSize||11,this.textDecoration_=style.textDecoration||"none",this.fontWeight_=style.fontWeight||"bold",this.fontStyle_=style.fontStyle||"normal",this.fontFamily_=style.fontFamily||"Arial,sans-serif",this.backgroundPosition_=style.backgroundPosition||"0 0"},ClusterIcon.prototype.setCenter=function(center){this.center_=center},ClusterIcon.prototype.createCss=function(pos){var style=[];return style.push("cursor: pointer;"),style.push("position: absolute; top: "+pos.y+"px; left: "+pos.x+"px;"),style.push("width: "+this.width_+"px; height: "+this.height_+"px;"),style.join("")},ClusterIcon.prototype.getPosFromLatLng_=function(latlng){var pos=this.getProjection().fromLatLngToDivPixel(latlng);return pos.x-=this.anchorIcon_[1],pos.y-=this.anchorIcon_[0],pos.x=parseInt(pos.x,10),pos.y=parseInt(pos.y,10),pos},Cluster.prototype.getSize=function(){return this.markers_.length},Cluster.prototype.getMarkers=function(){return this.markers_},Cluster.prototype.getCenter=function(){return this.center_},Cluster.prototype.getMap=function(){return this.map_},Cluster.prototype.getMarkerClusterer=function(){return this.markerClusterer_},Cluster.prototype.getBounds=function(){var i,bounds=new google.maps.LatLngBounds(this.center_,this.center_),markers=this.getMarkers();for(i=0;i<markers.length;i++)bounds.extend(markers[i].getPosition());return bounds},Cluster.prototype.remove=function(){this.clusterIcon_.setMap(null),this.markers_=[],delete this.markers_},Cluster.prototype.addMarker=function(marker){var i,mCount,mz;if(this.isMarkerAlreadyAdded_(marker))return!1;if(this.center_){if(this.averageCenter_){var l=this.markers_.length+1,lat=(this.center_.lat()*(l-1)+marker.getPosition().lat())/l,lng=(this.center_.lng()*(l-1)+marker.getPosition().lng())/l;this.center_=new google.maps.LatLng(lat,lng),this.calculateBounds_()}}else this.center_=marker.getPosition(),this.calculateBounds_();if(marker.isAdded=!0,this.markers_.push(marker),mCount=this.markers_.length,mz=this.markerClusterer_.getMaxZoom(),null!==mz&&this.map_.getZoom()>mz)marker.getMap()!==this.map_&&marker.setMap(this.map_);else if(mCount<this.minClusterSize_)marker.getMap()!==this.map_&&marker.setMap(this.map_);else if(mCount===this.minClusterSize_)for(i=0;mCount>i;i++)this.markers_[i].setMap(null);else marker.setMap(null);return!0},Cluster.prototype.isMarkerInClusterBounds=function(marker){return this.bounds_.contains(marker.getPosition())},Cluster.prototype.calculateBounds_=function(){var bounds=new google.maps.LatLngBounds(this.center_,this.center_);this.bounds_=this.markerClusterer_.getExtendedBounds(bounds)},Cluster.prototype.updateIcon_=function(){var mCount=this.markers_.length,mz=this.markerClusterer_.getMaxZoom();if(null!==mz&&this.map_.getZoom()>mz)return void this.clusterIcon_.hide();if(mCount<this.minClusterSize_)return void this.clusterIcon_.hide();var numStyles=this.markerClusterer_.getStyles().length,sums=this.markerClusterer_.getCalculator()(this.markers_,numStyles);this.clusterIcon_.setCenter(this.center_),this.clusterIcon_.useStyle(sums),this.clusterIcon_.show()},Cluster.prototype.isMarkerAlreadyAdded_=function(marker){for(var i=0,n=this.markers_.length;n>i;i++)if(marker===this.markers_[i])return!0;return!1},MarkerClusterer.prototype.onAdd=function(){var cMarkerClusterer=this;this.activeMap_=this.getMap(),this.ready_=!0,this.repaint(),this.listeners_=[google.maps.event.addListener(this.getMap(),"zoom_changed",function(){cMarkerClusterer.resetViewport_(!1),(this.getZoom()===(this.get("minZoom")||0)||this.getZoom()===this.get("maxZoom"))&&google.maps.event.trigger(this,"idle")}),google.maps.event.addListener(this.getMap(),"idle",function(){cMarkerClusterer.redraw_()})]},MarkerClusterer.prototype.onRemove=function(){var i;for(i=0;i<this.markers_.length;i++)this.markers_[i].getMap()!==this.activeMap_&&this.markers_[i].setMap(this.activeMap_);for(i=0;i<this.clusters_.length;i++)this.clusters_[i].remove();for(this.clusters_=[],i=0;i<this.listeners_.length;i++)google.maps.event.removeListener(this.listeners_[i]);this.listeners_=[],this.activeMap_=null,this.ready_=!1},MarkerClusterer.prototype.draw=function(){},MarkerClusterer.prototype.setupStyles_=function(){var i,size;if(!(this.styles_.length>0))for(i=0;i<this.imageSizes_.length;i++)size=this.imageSizes_[i],this.styles_.push({url:this.imagePath_+(i+1)+"."+this.imageExtension_,height:size,width:size})},MarkerClusterer.prototype.fitMapToMarkers=function(){var i,markers=this.getMarkers(),bounds=new google.maps.LatLngBounds;for(i=0;i<markers.length;i++)bounds.extend(markers[i].getPosition());this.getMap().fitBounds(bounds)},MarkerClusterer.prototype.getGridSize=function(){return this.gridSize_},MarkerClusterer.prototype.setGridSize=function(gridSize){this.gridSize_=gridSize},MarkerClusterer.prototype.getMinimumClusterSize=function(){return this.minClusterSize_},MarkerClusterer.prototype.setMinimumClusterSize=function(minimumClusterSize){this.minClusterSize_=minimumClusterSize},MarkerClusterer.prototype.getMaxZoom=function(){return this.maxZoom_},MarkerClusterer.prototype.setMaxZoom=function(maxZoom){this.maxZoom_=maxZoom},MarkerClusterer.prototype.getStyles=function(){return this.styles_},MarkerClusterer.prototype.setStyles=function(styles){this.styles_=styles},MarkerClusterer.prototype.getTitle=function(){return this.title_},MarkerClusterer.prototype.setTitle=function(title){this.title_=title},MarkerClusterer.prototype.getZoomOnClick=function(){return this.zoomOnClick_},MarkerClusterer.prototype.setZoomOnClick=function(zoomOnClick){this.zoomOnClick_=zoomOnClick},MarkerClusterer.prototype.getAverageCenter=function(){return this.averageCenter_},MarkerClusterer.prototype.setAverageCenter=function(averageCenter){this.averageCenter_=averageCenter},MarkerClusterer.prototype.getIgnoreHidden=function(){return this.ignoreHidden_},MarkerClusterer.prototype.setIgnoreHidden=function(ignoreHidden){this.ignoreHidden_=ignoreHidden},MarkerClusterer.prototype.getEnableRetinaIcons=function(){return this.enableRetinaIcons_},MarkerClusterer.prototype.setEnableRetinaIcons=function(enableRetinaIcons){this.enableRetinaIcons_=enableRetinaIcons},MarkerClusterer.prototype.getImageExtension=function(){return this.imageExtension_},MarkerClusterer.prototype.setImageExtension=function(imageExtension){this.imageExtension_=imageExtension},MarkerClusterer.prototype.getImagePath=function(){return this.imagePath_},MarkerClusterer.prototype.setImagePath=function(imagePath){this.imagePath_=imagePath},MarkerClusterer.prototype.getImageSizes=function(){return this.imageSizes_},MarkerClusterer.prototype.setImageSizes=function(imageSizes){this.imageSizes_=imageSizes},MarkerClusterer.prototype.getCalculator=function(){return this.calculator_},MarkerClusterer.prototype.setCalculator=function(calculator){this.calculator_=calculator},MarkerClusterer.prototype.setHideLabel=function(hideLabel){this.hideLabel_=hideLabel},MarkerClusterer.prototype.getHideLabel=function(){return this.hideLabel_},MarkerClusterer.prototype.getBatchSizeIE=function(){return this.batchSizeIE_},MarkerClusterer.prototype.setBatchSizeIE=function(batchSizeIE){this.batchSizeIE_=batchSizeIE},MarkerClusterer.prototype.getClusterClass=function(){return this.clusterClass_},MarkerClusterer.prototype.setClusterClass=function(clusterClass){this.clusterClass_=clusterClass},MarkerClusterer.prototype.getMarkers=function(){return this.markers_},MarkerClusterer.prototype.getTotalMarkers=function(){return this.markers_.length},MarkerClusterer.prototype.getClusters=function(){return this.clusters_},MarkerClusterer.prototype.getTotalClusters=function(){return this.clusters_.length},MarkerClusterer.prototype.addMarker=function(marker,opt_nodraw){this.pushMarkerTo_(marker),opt_nodraw||this.redraw_()},MarkerClusterer.prototype.addMarkers=function(markers,opt_nodraw){var key;for(key in markers)markers.hasOwnProperty(key)&&this.pushMarkerTo_(markers[key]);opt_nodraw||this.redraw_()},MarkerClusterer.prototype.pushMarkerTo_=function(marker){if(marker.getDraggable()){var cMarkerClusterer=this;google.maps.event.addListener(marker,"dragend",function(){cMarkerClusterer.ready_&&(this.isAdded=!1,cMarkerClusterer.repaint())})}marker.isAdded=!1,this.markers_.push(marker)},MarkerClusterer.prototype.removeMarker=function(marker,opt_nodraw,opt_noMapRemove){var removeFromMap=!0&&!opt_noMapRemove,removed=this.removeMarker_(marker,removeFromMap);return!opt_nodraw&&removed&&this.repaint(),removed},MarkerClusterer.prototype.removeMarkers=function(markers,opt_nodraw,opt_noMapRemove){var i,r,removed=!1,removeFromMap=!0&&!opt_noMapRemove;for(i=0;i<markers.length;i++)r=this.removeMarker_(markers[i],removeFromMap),removed=removed||r;return!opt_nodraw&&removed&&this.repaint(),removed},MarkerClusterer.prototype.removeMarker_=function(marker,removeFromMap){var i,index=-1;if(this.markers_.indexOf)index=this.markers_.indexOf(marker);else for(i=0;i<this.markers_.length;i++)if(marker===this.markers_[i]){index=i;break}return-1===index?!1:(removeFromMap&&marker.setMap(null),this.markers_.splice(index,1),!0)},MarkerClusterer.prototype.clearMarkers=function(){this.resetViewport_(!0),this.markers_=[]},MarkerClusterer.prototype.repaint=function(){var oldClusters=this.clusters_.slice();this.clusters_=[],this.resetViewport_(!1),this.redraw_(),setTimeout(function(){var i;for(i=0;i<oldClusters.length;i++)oldClusters[i].remove()},0)},MarkerClusterer.prototype.getExtendedBounds=function(bounds){var projection=this.getProjection(),tr=new google.maps.LatLng(bounds.getNorthEast().lat(),bounds.getNorthEast().lng()),bl=new google.maps.LatLng(bounds.getSouthWest().lat(),bounds.getSouthWest().lng()),trPix=projection.fromLatLngToDivPixel(tr);trPix.x+=this.gridSize_,trPix.y-=this.gridSize_;var blPix=projection.fromLatLngToDivPixel(bl);blPix.x-=this.gridSize_,blPix.y+=this.gridSize_;var ne=projection.fromDivPixelToLatLng(trPix),sw=projection.fromDivPixelToLatLng(blPix);return bounds.extend(ne),bounds.extend(sw),bounds},MarkerClusterer.prototype.redraw_=function(){this.createClusters_(0)},MarkerClusterer.prototype.resetViewport_=function(opt_hide){var i,marker;for(i=0;i<this.clusters_.length;i++)this.clusters_[i].remove();for(this.clusters_=[],i=0;i<this.markers_.length;i++)marker=this.markers_[i],marker.isAdded=!1,opt_hide&&marker.setMap(null)},MarkerClusterer.prototype.distanceBetweenPoints_=function(p1,p2){var R=6371,dLat=(p2.lat()-p1.lat())*Math.PI/180,dLon=(p2.lng()-p1.lng())*Math.PI/180,a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(p1.lat()*Math.PI/180)*Math.cos(p2.lat()*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2),c=2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)),d=R*c;return d},MarkerClusterer.prototype.isMarkerInBounds_=function(marker,bounds){return bounds.contains(marker.getPosition())},MarkerClusterer.prototype.addToClosestCluster_=function(marker){var i,d,cluster,center,distance=4e4,clusterToAddTo=null;for(i=0;i<this.clusters_.length;i++)cluster=this.clusters_[i],center=cluster.getCenter(),center&&(d=this.distanceBetweenPoints_(center,marker.getPosition()),distance>d&&(distance=d,clusterToAddTo=cluster));clusterToAddTo&&clusterToAddTo.isMarkerInClusterBounds(marker)?clusterToAddTo.addMarker(marker):(cluster=new Cluster(this),cluster.addMarker(marker),this.clusters_.push(cluster))},MarkerClusterer.prototype.createClusters_=function(iFirst){var i,marker,mapBounds,cMarkerClusterer=this;if(this.ready_){0===iFirst&&(google.maps.event.trigger(this,"clusteringbegin",this),"undefined"!=typeof this.timerRefStatic&&(clearTimeout(this.timerRefStatic),delete this.timerRefStatic)),mapBounds=this.getMap().getZoom()>3?new google.maps.LatLngBounds(this.getMap().getBounds().getSouthWest(),this.getMap().getBounds().getNorthEast()):new google.maps.LatLngBounds(new google.maps.LatLng(85.02070771743472,-178.48388434375),new google.maps.LatLng(-85.08136444384544,178.00048865625));var bounds=this.getExtendedBounds(mapBounds),iLast=Math.min(iFirst+this.batchSize_,this.markers_.length);for(i=iFirst;iLast>i;i++)marker=this.markers_[i],!marker.isAdded&&this.isMarkerInBounds_(marker,bounds)&&(!this.ignoreHidden_||this.ignoreHidden_&&marker.getVisible())&&this.addToClosestCluster_(marker);if(iLast<this.markers_.length)this.timerRefStatic=setTimeout(function(){cMarkerClusterer.createClusters_(iLast)},0);else for(delete this.timerRefStatic,google.maps.event.trigger(this,"clusteringend",this),i=0;i<this.clusters_.length;i++)this.clusters_[i].updateIcon_()}},MarkerClusterer.prototype.extend=function(obj1,obj2){return function(object){var property;for(property in object.prototype)this.prototype[property]=object.prototype[property];return this}.apply(obj1,[obj2])},MarkerClusterer.CALCULATOR=function(markers,numStyles){for(var index=0,title="",count=markers.length.toString(),dv=count;0!==dv;)dv=parseInt(dv/10,10),index++;return index=Math.min(index,numStyles),{text:count,index:index,title:title}},MarkerClusterer.BATCH_SIZE=2e3,MarkerClusterer.BATCH_SIZE_IE=500,MarkerClusterer.IMAGE_PATH="//cdn.rawgit.com/mahnunchik/markerclustererplus/master/images/m",MarkerClusterer.IMAGE_EXTENSION="png",MarkerClusterer.IMAGE_SIZES=[53,56,66,78,90],"function"!=typeof String.prototype.trim&&(String.prototype.trim=function(){return this.replace(/^\s+|\s+$/g,"")});
-	/**
-	 *  google-maps-utility-library-v3-infobox
-	 *
-	 * @version: 1.1.14
-	 * @author: Gary Little (inspired by proof-of-concept code from Pamela Fox of Google)
-	 * @contributors: Nicholas McCready
-	 * @date: Fri May 13 2016 16:35:27 GMT-0400 (EDT)
-	 * @license: Apache License 2.0
-	 */
-	/**
+	      /**
+	 * @name InfoBox
+	 * @version 1.1.13 [March 19, 2014]
+	 * @author Gary Little (inspired by proof-of-concept code from Pamela Fox of Google)
+	 * @copyright Copyright 2010 Gary Little [gary at luxcentral.com]
 	 * @fileoverview InfoBox extends the Google Maps JavaScript API V3 <tt>OverlayView</tt> class.
 	 *  <p>
 	 *  An InfoBox behaves like a <tt>google.maps.InfoWindow</tt>, but it supports several
 	 *  additional properties for advanced styling. An InfoBox can also be used as a map label.
 	 *  <p>
 	 *  An InfoBox also fires the same events as a <tt>google.maps.InfoWindow</tt>.
+	 */
+	
+	/*!
+	 *
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 *       http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
 	 */
 	
 	/*jslint browser:true */
@@ -80305,7 +80024,7 @@
 	
 	        this.eventListeners_.push(google.maps.event.addDomListener(this.div_, events[i], cancelHandler));
 	      }
-	
+	      
 	      // Workaround for Google bug that causes the cursor to change to a pointer
 	      // when the mouse moves over a marker underneath InfoBox.
 	      this.eventListeners_.push(google.maps.event.addDomListener(this.div_, "mouseover", function (e) {
@@ -80571,7 +80290,7 @@
 	  var pixPosition = this.getProjection().fromLatLngToDivPixel(this.position_);
 	
 	  this.div_.style.left = (pixPosition.x + this.pixelOffset_.width) + "px";
-	
+	  
 	  if (this.alignBottom_) {
 	    this.div_.style.bottom = -(pixPosition.y + this.pixelOffset_.height) + "px";
 	  } else {
@@ -80880,7 +80599,7 @@
 	  }
 	
 	  if (this.eventListeners_) {
-	
+	    
 	    for (i = 0; i < this.eventListeners_.length; i++) {
 	
 	      google.maps.event.removeListener(this.eventListeners_[i]);
@@ -80904,15 +80623,9 @@
 	};
 	
 	/**
-	 *  google-maps-utility-library-v3-keydragzoom
-	 *
-	 * @version: 2.0.9
+	 * @name KeyDragZoom for V3
+	 * @version 2.0.9 [December 17, 2012] NOT YET RELEASED
 	 * @author: Nianwei Liu [nianwei at gmail dot com] & Gary Little [gary at luxcentral dot com]
-	 * @contributors: undefined
-	 * @date: Fri May 13 2016 13:45:18 GMT-0400 (EDT)
-	 * @license: Apache License 2.0
-	 */
-	/**
 	 * @fileoverview This library adds a drag zoom capability to a V3 Google map.
 	 *  When drag zoom is enabled, holding down a designated hot key <code>(shift | ctrl | alt)</code>
 	 *  while dragging a box around an area of interest will zoom the map in to that area when
@@ -80929,6 +80642,20 @@
 	 *  <br>NL: 2009-11-02: added a temp fix for -moz-transform for FF3.5.x using code from Paul Kulchenko (http://notebook.kulchenko.com/maps/gridmove).
 	 *  <br>NL: 2010-02-02: added a fix for IE flickering on divs onmousemove, caused by scroll value when get mouse position.
 	 *  <br>GL: 2010-06-15: added a visual control option.
+	 */
+	/*!
+	 *
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 *       http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
 	 */
 	(function () {
 	  /*jslint browser:true */
@@ -81309,7 +81036,7 @@
 	    var control;
 	    var image;
 	    var me = this;
-	
+	    
 	    control = document.createElement("div");
 	    control.className = this.visualClass_;
 	    control.style.position = "relative";
@@ -81764,17 +81491,1647 @@
 	    return this.dragZoom_;
 	  };
 	})();
+	/**
+	 * @name MarkerClustererPlus for Google Maps V3
+	 * @version 2.1.1 [November 4, 2013]
+	 * @author Gary Little
+	 * @fileoverview
+	 * The library creates and manages per-zoom-level clusters for large amounts of markers.
+	 * <p>
+	 * This is an enhanced V3 implementation of the
+	 * <a href="http://gmaps-utility-library-dev.googlecode.com/svn/tags/markerclusterer/"
+	 * >V2 MarkerClusterer</a> by Xiaoxi Wu. It is based on the
+	 * <a href="http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerclusterer/"
+	 * >V3 MarkerClusterer</a> port by Luke Mahe. MarkerClustererPlus was created by Gary Little.
+	 * <p>
+	 * v2.0 release: MarkerClustererPlus v2.0 is backward compatible with MarkerClusterer v1.0. It
+	 *  adds support for the <code>ignoreHidden</code>, <code>title</code>, <code>batchSizeIE</code>,
+	 *  and <code>calculator</code> properties as well as support for four more events. It also allows
+	 *  greater control over the styling of the text that appears on the cluster marker. The
+	 *  documentation has been significantly improved and the overall code has been simplified and
+	 *  polished. Very large numbers of markers can now be managed without causing Javascript timeout
+	 *  errors on Internet Explorer. Note that the name of the <code>clusterclick</code> event has been
+	 *  deprecated. The new name is <code>click</code>, so please change your application code now.
+	 */
 	
 	/**
-	 *  google-maps-utility-library-v3-markerwithlabel
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
 	 *
-	 * @version: 1.1.10
-	 * @author: Gary Little (inspired by code from Marc Ridey of Google).
-	 * @contributors: Nicholas McCready
-	 * @date: Fri May 13 2016 16:29:58 GMT-0400 (EDT)
-	 * @license: Apache License 2.0
+	 *     http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 */
+	
+	
+	/**
+	 * @name ClusterIconStyle
+	 * @class This class represents the object for values in the <code>styles</code> array passed
+	 *  to the {@link MarkerClusterer} constructor. The element in this array that is used to
+	 *  style the cluster icon is determined by calling the <code>calculator</code> function.
+	 *
+	 * @property {string} url The URL of the cluster icon image file. Required.
+	 * @property {number} height The display height (in pixels) of the cluster icon. Required.
+	 * @property {number} width The display width (in pixels) of the cluster icon. Required.
+	 * @property {Array} [anchorText] The position (in pixels) from the center of the cluster icon to
+	 *  where the text label is to be centered and drawn. The format is <code>[yoffset, xoffset]</code>
+	 *  where <code>yoffset</code> increases as you go down from center and <code>xoffset</code>
+	 *  increases to the right of center. The default is <code>[0, 0]</code>.
+	 * @property {Array} [anchorIcon] The anchor position (in pixels) of the cluster icon. This is the
+	 *  spot on the cluster icon that is to be aligned with the cluster position. The format is
+	 *  <code>[yoffset, xoffset]</code> where <code>yoffset</code> increases as you go down and
+	 *  <code>xoffset</code> increases to the right of the top-left corner of the icon. The default
+	 *  anchor position is the center of the cluster icon.
+	 * @property {string} [textColor="black"] The color of the label text shown on the
+	 *  cluster icon.
+	 * @property {number} [textSize=11] The size (in pixels) of the label text shown on the
+	 *  cluster icon.
+	 * @property {string} [textDecoration="none"] The value of the CSS <code>text-decoration</code>
+	 *  property for the label text shown on the cluster icon.
+	 * @property {string} [fontWeight="bold"] The value of the CSS <code>font-weight</code>
+	 *  property for the label text shown on the cluster icon.
+	 * @property {string} [fontStyle="normal"] The value of the CSS <code>font-style</code>
+	 *  property for the label text shown on the cluster icon.
+	 * @property {string} [fontFamily="Arial,sans-serif"] The value of the CSS <code>font-family</code>
+	 *  property for the label text shown on the cluster icon.
+	 * @property {string} [backgroundPosition="0 0"] The position of the cluster icon image
+	 *  within the image defined by <code>url</code>. The format is <code>"xpos ypos"</code>
+	 *  (the same format as for the CSS <code>background-position</code> property). You must set
+	 *  this property appropriately when the image defined by <code>url</code> represents a sprite
+	 *  containing multiple images. Note that the position <i>must</i> be specified in px units.
 	 */
 	/**
+	 * @name ClusterIconInfo
+	 * @class This class is an object containing general information about a cluster icon. This is
+	 *  the object that a <code>calculator</code> function returns.
+	 *
+	 * @property {string} text The text of the label to be shown on the cluster icon.
+	 * @property {number} index The index plus 1 of the element in the <code>styles</code>
+	 *  array to be used to style the cluster icon.
+	 * @property {string} title The tooltip to display when the mouse moves over the cluster icon.
+	 *  If this value is <code>undefined</code> or <code>""</code>, <code>title</code> is set to the
+	 *  value of the <code>title</code> property passed to the MarkerClusterer.
+	 */
+	/**
+	 * A cluster icon.
+	 *
+	 * @constructor
+	 * @extends google.maps.OverlayView
+	 * @param {Cluster} cluster The cluster with which the icon is to be associated.
+	 * @param {Array} [styles] An array of {@link ClusterIconStyle} defining the cluster icons
+	 *  to use for various cluster sizes.
+	 * @private
+	 */
+	function ClusterIcon(cluster, styles) {
+	  cluster.getMarkerClusterer().extend(ClusterIcon, google.maps.OverlayView);
+	
+	  this.cluster_ = cluster;
+	  this.className_ = cluster.getMarkerClusterer().getClusterClass();
+	  this.styles_ = styles;
+	  this.center_ = null;
+	  this.div_ = null;
+	  this.sums_ = null;
+	  this.visible_ = false;
+	
+	  this.setMap(cluster.getMap()); // Note: this causes onAdd to be called
+	}
+	
+	
+	/**
+	 * Adds the icon to the DOM.
+	 */
+	ClusterIcon.prototype.onAdd = function () {
+	  var cClusterIcon = this;
+	  var cMouseDownInCluster;
+	  var cDraggingMapByCluster;
+	
+	  this.div_ = document.createElement("div");
+	  this.div_.className = this.className_;
+	  if (this.visible_) {
+	    this.show();
+	  }
+	
+	  this.getPanes().overlayMouseTarget.appendChild(this.div_);
+	
+	  // Fix for Issue 157
+	  this.boundsChangedListener_ = google.maps.event.addListener(this.getMap(), "bounds_changed", function () {
+	    cDraggingMapByCluster = cMouseDownInCluster;
+	  });
+	
+	  google.maps.event.addDomListener(this.div_, "mousedown", function () {
+	    cMouseDownInCluster = true;
+	    cDraggingMapByCluster = false;
+	  });
+	
+	  google.maps.event.addDomListener(this.div_, "click", function (e) {
+	    cMouseDownInCluster = false;
+	    if (!cDraggingMapByCluster) {
+	      var theBounds;
+	      var mz;
+	      var mc = cClusterIcon.cluster_.getMarkerClusterer();
+	      /**
+	       * This event is fired when a cluster marker is clicked.
+	       * @name MarkerClusterer#click
+	       * @param {Cluster} c The cluster that was clicked.
+	       * @event
+	       */
+	      google.maps.event.trigger(mc, "click", cClusterIcon.cluster_);
+	      google.maps.event.trigger(mc, "clusterclick", cClusterIcon.cluster_); // deprecated name
+	
+	      // The default click handler follows. Disable it by setting
+	      // the zoomOnClick property to false.
+	      if (mc.getZoomOnClick()) {
+	        // Zoom into the cluster.
+	        mz = mc.getMaxZoom();
+	        theBounds = cClusterIcon.cluster_.getBounds();
+	        mc.getMap().fitBounds(theBounds);
+	        // There is a fix for Issue 170 here:
+	        setTimeout(function () {
+	          mc.getMap().fitBounds(theBounds);
+	          // Don't zoom beyond the max zoom level
+	          if (mz !== null && (mc.getMap().getZoom() > mz)) {
+	            mc.getMap().setZoom(mz + 1);
+	          }
+	        }, 100);
+	      }
+	
+	      // Prevent event propagation to the map:
+	      e.cancelBubble = true;
+	      if (e.stopPropagation) {
+	        e.stopPropagation();
+	      }
+	    }
+	  });
+	
+	  google.maps.event.addDomListener(this.div_, "mouseover", function () {
+	    var mc = cClusterIcon.cluster_.getMarkerClusterer();
+	    /**
+	     * This event is fired when the mouse moves over a cluster marker.
+	     * @name MarkerClusterer#mouseover
+	     * @param {Cluster} c The cluster that the mouse moved over.
+	     * @event
+	     */
+	    google.maps.event.trigger(mc, "mouseover", cClusterIcon.cluster_);
+	  });
+	
+	  google.maps.event.addDomListener(this.div_, "mouseout", function () {
+	    var mc = cClusterIcon.cluster_.getMarkerClusterer();
+	    /**
+	     * This event is fired when the mouse moves out of a cluster marker.
+	     * @name MarkerClusterer#mouseout
+	     * @param {Cluster} c The cluster that the mouse moved out of.
+	     * @event
+	     */
+	    google.maps.event.trigger(mc, "mouseout", cClusterIcon.cluster_);
+	  });
+	};
+	
+	
+	/**
+	 * Removes the icon from the DOM.
+	 */
+	ClusterIcon.prototype.onRemove = function () {
+	  if (this.div_ && this.div_.parentNode) {
+	    this.hide();
+	    google.maps.event.removeListener(this.boundsChangedListener_);
+	    google.maps.event.clearInstanceListeners(this.div_);
+	    this.div_.parentNode.removeChild(this.div_);
+	    this.div_ = null;
+	  }
+	};
+	
+	
+	/**
+	 * Draws the icon.
+	 */
+	ClusterIcon.prototype.draw = function () {
+	  if (this.visible_) {
+	    var pos = this.getPosFromLatLng_(this.center_);
+	    this.div_.style.top = pos.y + "px";
+	    this.div_.style.left = pos.x + "px";
+	  }
+	};
+	
+	
+	/**
+	 * Hides the icon.
+	 */
+	ClusterIcon.prototype.hide = function () {
+	  if (this.div_) {
+	    this.div_.style.display = "none";
+	  }
+	  this.visible_ = false;
+	};
+	
+	
+	/**
+	 * Positions and shows the icon.
+	 */
+	ClusterIcon.prototype.show = function () {
+	  if (this.div_) {
+	    var img = "";
+	    // NOTE: values must be specified in px units
+	    var bp = this.backgroundPosition_.split(" ");
+	    var spriteH = parseInt(bp[0].trim(), 10);
+	    var spriteV = parseInt(bp[1].trim(), 10);
+	    var pos = this.getPosFromLatLng_(this.center_);
+	    this.div_.style.cssText = this.createCss(pos);
+	    img = "<img src='" + this.url_ + "' style='position: absolute; top: " + spriteV + "px; left: " + spriteH + "px; ";
+	    if (!this.cluster_.getMarkerClusterer().enableRetinaIcons_) {
+	      img += "clip: rect(" + (-1 * spriteV) + "px, " + ((-1 * spriteH) + this.width_) + "px, " +
+	          ((-1 * spriteV) + this.height_) + "px, " + (-1 * spriteH) + "px);";
+	    }
+	    img += "'>";
+	    this.div_.innerHTML = img + "<div style='" +
+	        "position: absolute;" +
+	        "top: " + this.anchorText_[0] + "px;" +
+	        "left: " + this.anchorText_[1] + "px;" +
+	        "color: " + this.textColor_ + ";" +
+	        "font-size: " + this.textSize_ + "px;" +
+	        "font-family: " + this.fontFamily_ + ";" +
+	        "font-weight: " + this.fontWeight_ + ";" +
+	        "font-style: " + this.fontStyle_ + ";" +
+	        "text-decoration: " + this.textDecoration_ + ";" +
+	        "text-align: center;" +
+	        "width: " + this.width_ + "px;" +
+	        "line-height:" + this.height_ + "px;" +
+	        "'>" + this.sums_.text + "</div>";
+	    if (typeof this.sums_.title === "undefined" || this.sums_.title === "") {
+	      this.div_.title = this.cluster_.getMarkerClusterer().getTitle();
+	    } else {
+	      this.div_.title = this.sums_.title;
+	    }
+	    this.div_.style.display = "";
+	  }
+	  this.visible_ = true;
+	};
+	
+	
+	/**
+	 * Sets the icon styles to the appropriate element in the styles array.
+	 *
+	 * @param {ClusterIconInfo} sums The icon label text and styles index.
+	 */
+	ClusterIcon.prototype.useStyle = function (sums) {
+	  this.sums_ = sums;
+	  var index = Math.max(0, sums.index - 1);
+	  index = Math.min(this.styles_.length - 1, index);
+	  var style = this.styles_[index];
+	  this.url_ = style.url;
+	  this.height_ = style.height;
+	  this.width_ = style.width;
+	  this.anchorText_ = style.anchorText || [0, 0];
+	  this.anchorIcon_ = style.anchorIcon || [parseInt(this.height_ / 2, 10), parseInt(this.width_ / 2, 10)];
+	  this.textColor_ = style.textColor || "black";
+	  this.textSize_ = style.textSize || 11;
+	  this.textDecoration_ = style.textDecoration || "none";
+	  this.fontWeight_ = style.fontWeight || "bold";
+	  this.fontStyle_ = style.fontStyle || "normal";
+	  this.fontFamily_ = style.fontFamily || "Arial,sans-serif";
+	  this.backgroundPosition_ = style.backgroundPosition || "0 0";
+	};
+	
+	
+	/**
+	 * Sets the position at which to center the icon.
+	 *
+	 * @param {google.maps.LatLng} center The latlng to set as the center.
+	 */
+	ClusterIcon.prototype.setCenter = function (center) {
+	  this.center_ = center;
+	};
+	
+	
+	/**
+	 * Creates the cssText style parameter based on the position of the icon.
+	 *
+	 * @param {google.maps.Point} pos The position of the icon.
+	 * @return {string} The CSS style text.
+	 */
+	ClusterIcon.prototype.createCss = function (pos) {
+	  var style = [];
+	  style.push("cursor: pointer;");
+	  style.push("position: absolute; top: " + pos.y + "px; left: " + pos.x + "px;");
+	  style.push("width: " + this.width_ + "px; height: " + this.height_ + "px;");
+	  return style.join("");
+	};
+	
+	
+	/**
+	 * Returns the position at which to place the DIV depending on the latlng.
+	 *
+	 * @param {google.maps.LatLng} latlng The position in latlng.
+	 * @return {google.maps.Point} The position in pixels.
+	 */
+	ClusterIcon.prototype.getPosFromLatLng_ = function (latlng) {
+	  var pos = this.getProjection().fromLatLngToDivPixel(latlng);
+	  pos.x -= this.anchorIcon_[1];
+	  pos.y -= this.anchorIcon_[0];
+	  pos.x = parseInt(pos.x, 10);
+	  pos.y = parseInt(pos.y, 10);
+	  return pos;
+	};
+	
+	
+	/**
+	 * Creates a single cluster that manages a group of proximate markers.
+	 *  Used internally, do not call this constructor directly.
+	 * @constructor
+	 * @param {MarkerClusterer} mc The <code>MarkerClusterer</code> object with which this
+	 *  cluster is associated.
+	 */
+	function Cluster(mc) {
+	  this.markerClusterer_ = mc;
+	  this.map_ = mc.getMap();
+	  this.gridSize_ = mc.getGridSize();
+	  this.minClusterSize_ = mc.getMinimumClusterSize();
+	  this.averageCenter_ = mc.getAverageCenter();
+	  this.markers_ = [];
+	  this.center_ = null;
+	  this.bounds_ = null;
+	  this.clusterIcon_ = new ClusterIcon(this, mc.getStyles());
+	}
+	
+	
+	/**
+	 * Returns the number of markers managed by the cluster. You can call this from
+	 * a <code>click</code>, <code>mouseover</code>, or <code>mouseout</code> event handler
+	 * for the <code>MarkerClusterer</code> object.
+	 *
+	 * @return {number} The number of markers in the cluster.
+	 */
+	Cluster.prototype.getSize = function () {
+	  return this.markers_.length;
+	};
+	
+	
+	/**
+	 * Returns the array of markers managed by the cluster. You can call this from
+	 * a <code>click</code>, <code>mouseover</code>, or <code>mouseout</code> event handler
+	 * for the <code>MarkerClusterer</code> object.
+	 *
+	 * @return {Array} The array of markers in the cluster.
+	 */
+	Cluster.prototype.getMarkers = function () {
+	  return this.markers_;
+	};
+	
+	
+	/**
+	 * Returns the center of the cluster. You can call this from
+	 * a <code>click</code>, <code>mouseover</code>, or <code>mouseout</code> event handler
+	 * for the <code>MarkerClusterer</code> object.
+	 *
+	 * @return {google.maps.LatLng} The center of the cluster.
+	 */
+	Cluster.prototype.getCenter = function () {
+	  return this.center_;
+	};
+	
+	
+	/**
+	 * Returns the map with which the cluster is associated.
+	 *
+	 * @return {google.maps.Map} The map.
+	 * @ignore
+	 */
+	Cluster.prototype.getMap = function () {
+	  return this.map_;
+	};
+	
+	
+	/**
+	 * Returns the <code>MarkerClusterer</code> object with which the cluster is associated.
+	 *
+	 * @return {MarkerClusterer} The associated marker clusterer.
+	 * @ignore
+	 */
+	Cluster.prototype.getMarkerClusterer = function () {
+	  return this.markerClusterer_;
+	};
+	
+	
+	/**
+	 * Returns the bounds of the cluster.
+	 *
+	 * @return {google.maps.LatLngBounds} the cluster bounds.
+	 * @ignore
+	 */
+	Cluster.prototype.getBounds = function () {
+	  var i;
+	  var bounds = new google.maps.LatLngBounds(this.center_, this.center_);
+	  var markers = this.getMarkers();
+	  for (i = 0; i < markers.length; i++) {
+	    bounds.extend(markers[i].getPosition());
+	  }
+	  return bounds;
+	};
+	
+	
+	/**
+	 * Removes the cluster from the map.
+	 *
+	 * @ignore
+	 */
+	Cluster.prototype.remove = function () {
+	  this.clusterIcon_.setMap(null);
+	  this.markers_ = [];
+	  delete this.markers_;
+	};
+	
+	
+	/**
+	 * Adds a marker to the cluster.
+	 *
+	 * @param {google.maps.Marker} marker The marker to be added.
+	 * @return {boolean} True if the marker was added.
+	 * @ignore
+	 */
+	Cluster.prototype.addMarker = function (marker) {
+	  var i;
+	  var mCount;
+	  var mz;
+	
+	  if (this.isMarkerAlreadyAdded_(marker)) {
+	    return false;
+	  }
+	
+	  if (!this.center_) {
+	    this.center_ = marker.getPosition();
+	    this.calculateBounds_();
+	  } else {
+	    if (this.averageCenter_) {
+	      var l = this.markers_.length + 1;
+	      var lat = (this.center_.lat() * (l - 1) + marker.getPosition().lat()) / l;
+	      var lng = (this.center_.lng() * (l - 1) + marker.getPosition().lng()) / l;
+	      this.center_ = new google.maps.LatLng(lat, lng);
+	      this.calculateBounds_();
+	    }
+	  }
+	
+	  marker.isAdded = true;
+	  this.markers_.push(marker);
+	
+	  mCount = this.markers_.length;
+	  mz = this.markerClusterer_.getMaxZoom();
+	  if (mz !== null && this.map_.getZoom() > mz) {
+	    // Zoomed in past max zoom, so show the marker.
+	    if (marker.getMap() !== this.map_) {
+	      marker.setMap(this.map_);
+	    }
+	  } else if (mCount < this.minClusterSize_) {
+	    // Min cluster size not reached so show the marker.
+	    if (marker.getMap() !== this.map_) {
+	      marker.setMap(this.map_);
+	    }
+	  } else if (mCount === this.minClusterSize_) {
+	    // Hide the markers that were showing.
+	    for (i = 0; i < mCount; i++) {
+	      this.markers_[i].setMap(null);
+	    }
+	  } else {
+	    marker.setMap(null);
+	  }
+	
+	  this.updateIcon_();
+	  return true;
+	};
+	
+	
+	/**
+	 * Determines if a marker lies within the cluster's bounds.
+	 *
+	 * @param {google.maps.Marker} marker The marker to check.
+	 * @return {boolean} True if the marker lies in the bounds.
+	 * @ignore
+	 */
+	Cluster.prototype.isMarkerInClusterBounds = function (marker) {
+	  return this.bounds_.contains(marker.getPosition());
+	};
+	
+	
+	/**
+	 * Calculates the extended bounds of the cluster with the grid.
+	 */
+	Cluster.prototype.calculateBounds_ = function () {
+	  var bounds = new google.maps.LatLngBounds(this.center_, this.center_);
+	  this.bounds_ = this.markerClusterer_.getExtendedBounds(bounds);
+	};
+	
+	
+	/**
+	 * Updates the cluster icon.
+	 */
+	Cluster.prototype.updateIcon_ = function () {
+	  var mCount = this.markers_.length;
+	  var mz = this.markerClusterer_.getMaxZoom();
+	
+	  if (mz !== null && this.map_.getZoom() > mz) {
+	    this.clusterIcon_.hide();
+	    return;
+	  }
+	
+	  if (mCount < this.minClusterSize_) {
+	    // Min cluster size not yet reached.
+	    this.clusterIcon_.hide();
+	    return;
+	  }
+	
+	  var numStyles = this.markerClusterer_.getStyles().length;
+	  var sums = this.markerClusterer_.getCalculator()(this.markers_, numStyles);
+	  this.clusterIcon_.setCenter(this.center_);
+	  this.clusterIcon_.useStyle(sums);
+	  this.clusterIcon_.show();
+	};
+	
+	
+	/**
+	 * Determines if a marker has already been added to the cluster.
+	 *
+	 * @param {google.maps.Marker} marker The marker to check.
+	 * @return {boolean} True if the marker has already been added.
+	 */
+	Cluster.prototype.isMarkerAlreadyAdded_ = function (marker) {
+	  var i;
+	  if (this.markers_.indexOf) {
+	    return this.markers_.indexOf(marker) !== -1;
+	  } else {
+	    for (i = 0; i < this.markers_.length; i++) {
+	      if (marker === this.markers_[i]) {
+	        return true;
+	      }
+	    }
+	  }
+	  return false;
+	};
+	
+	
+	/**
+	 * @name MarkerClustererOptions
+	 * @class This class represents the optional parameter passed to
+	 *  the {@link MarkerClusterer} constructor.
+	 * @property {number} [gridSize=60] The grid size of a cluster in pixels. The grid is a square.
+	 * @property {number} [maxZoom=null] The maximum zoom level at which clustering is enabled or
+	 *  <code>null</code> if clustering is to be enabled at all zoom levels.
+	 * @property {boolean} [zoomOnClick=true] Whether to zoom the map when a cluster marker is
+	 *  clicked. You may want to set this to <code>false</code> if you have installed a handler
+	 *  for the <code>click</code> event and it deals with zooming on its own.
+	 * @property {boolean} [averageCenter=false] Whether the position of a cluster marker should be
+	 *  the average position of all markers in the cluster. If set to <code>false</code>, the
+	 *  cluster marker is positioned at the location of the first marker added to the cluster.
+	 * @property {number} [minimumClusterSize=2] The minimum number of markers needed in a cluster
+	 *  before the markers are hidden and a cluster marker appears.
+	 * @property {boolean} [ignoreHidden=false] Whether to ignore hidden markers in clusters. You
+	 *  may want to set this to <code>true</code> to ensure that hidden markers are not included
+	 *  in the marker count that appears on a cluster marker (this count is the value of the
+	 *  <code>text</code> property of the result returned by the default <code>calculator</code>).
+	 *  If set to <code>true</code> and you change the visibility of a marker being clustered, be
+	 *  sure to also call <code>MarkerClusterer.repaint()</code>.
+	 * @property {string} [title=""] The tooltip to display when the mouse moves over a cluster
+	 *  marker. (Alternatively, you can use a custom <code>calculator</code> function to specify a
+	 *  different tooltip for each cluster marker.)
+	 * @property {function} [calculator=MarkerClusterer.CALCULATOR] The function used to determine
+	 *  the text to be displayed on a cluster marker and the index indicating which style to use
+	 *  for the cluster marker. The input parameters for the function are (1) the array of markers
+	 *  represented by a cluster marker and (2) the number of cluster icon styles. It returns a
+	 *  {@link ClusterIconInfo} object. The default <code>calculator</code> returns a
+	 *  <code>text</code> property which is the number of markers in the cluster and an
+	 *  <code>index</code> property which is one higher than the lowest integer such that
+	 *  <code>10^i</code> exceeds the number of markers in the cluster, or the size of the styles
+	 *  array, whichever is less. The <code>styles</code> array element used has an index of
+	 *  <code>index</code> minus 1. For example, the default <code>calculator</code> returns a
+	 *  <code>text</code> value of <code>"125"</code> and an <code>index</code> of <code>3</code>
+	 *  for a cluster icon representing 125 markers so the element used in the <code>styles</code>
+	 *  array is <code>2</code>. A <code>calculator</code> may also return a <code>title</code>
+	 *  property that contains the text of the tooltip to be used for the cluster marker. If
+	 *   <code>title</code> is not defined, the tooltip is set to the value of the <code>title</code>
+	 *   property for the MarkerClusterer.
+	 * @property {string} [clusterClass="cluster"] The name of the CSS class defining general styles
+	 *  for the cluster markers. Use this class to define CSS styles that are not set up by the code
+	 *  that processes the <code>styles</code> array.
+	 * @property {Array} [styles] An array of {@link ClusterIconStyle} elements defining the styles
+	 *  of the cluster markers to be used. The element to be used to style a given cluster marker
+	 *  is determined by the function defined by the <code>calculator</code> property.
+	 *  The default is an array of {@link ClusterIconStyle} elements whose properties are derived
+	 *  from the values for <code>imagePath</code>, <code>imageExtension</code>, and
+	 *  <code>imageSizes</code>.
+	 * @property {boolean} [enableRetinaIcons=false] Whether to allow the use of cluster icons that
+	 * have sizes that are some multiple (typically double) of their actual display size. Icons such
+	 * as these look better when viewed on high-resolution monitors such as Apple's Retina displays.
+	 * Note: if this property is <code>true</code>, sprites cannot be used as cluster icons.
+	 * @property {number} [batchSize=MarkerClusterer.BATCH_SIZE] Set this property to the
+	 *  number of markers to be processed in a single batch when using a browser other than
+	 *  Internet Explorer (for Internet Explorer, use the batchSizeIE property instead).
+	 * @property {number} [batchSizeIE=MarkerClusterer.BATCH_SIZE_IE] When Internet Explorer is
+	 *  being used, markers are processed in several batches with a small delay inserted between
+	 *  each batch in an attempt to avoid Javascript timeout errors. Set this property to the
+	 *  number of markers to be processed in a single batch; select as high a number as you can
+	 *  without causing a timeout error in the browser. This number might need to be as low as 100
+	 *  if 15,000 markers are being managed, for example.
+	 * @property {string} [imagePath=MarkerClusterer.IMAGE_PATH]
+	 *  The full URL of the root name of the group of image files to use for cluster icons.
+	 *  The complete file name is of the form <code>imagePath</code>n.<code>imageExtension</code>
+	 *  where n is the image file number (1, 2, etc.).
+	 * @property {string} [imageExtension=MarkerClusterer.IMAGE_EXTENSION]
+	 *  The extension name for the cluster icon image files (e.g., <code>"png"</code> or
+	 *  <code>"jpg"</code>).
+	 * @property {Array} [imageSizes=MarkerClusterer.IMAGE_SIZES]
+	 *  An array of numbers containing the widths of the group of
+	 *  <code>imagePath</code>n.<code>imageExtension</code> image files.
+	 *  (The images are assumed to be square.)
+	 */
+	/**
+	 * Creates a MarkerClusterer object with the options specified in {@link MarkerClustererOptions}.
+	 * @constructor
+	 * @extends google.maps.OverlayView
+	 * @param {google.maps.Map} map The Google map to attach to.
+	 * @param {Array.<google.maps.Marker>} [opt_markers] The markers to be added to the cluster.
+	 * @param {MarkerClustererOptions} [opt_options] The optional parameters.
+	 */
+	function MarkerClusterer(map, opt_markers, opt_options) {
+	  // MarkerClusterer implements google.maps.OverlayView interface. We use the
+	  // extend function to extend MarkerClusterer with google.maps.OverlayView
+	  // because it might not always be available when the code is defined so we
+	  // look for it at the last possible moment. If it doesn't exist now then
+	  // there is no point going ahead :)
+	  this.extend(MarkerClusterer, google.maps.OverlayView);
+	
+	  opt_markers = opt_markers || [];
+	  opt_options = opt_options || {};
+	
+	  this.markers_ = [];
+	  this.clusters_ = [];
+	  this.listeners_ = [];
+	  this.activeMap_ = null;
+	  this.ready_ = false;
+	
+	  this.gridSize_ = opt_options.gridSize || 60;
+	  this.minClusterSize_ = opt_options.minimumClusterSize || 2;
+	  this.maxZoom_ = opt_options.maxZoom || null;
+	  this.styles_ = opt_options.styles || [];
+	  this.title_ = opt_options.title || "";
+	  this.zoomOnClick_ = true;
+	  if (opt_options.zoomOnClick !== undefined) {
+	    this.zoomOnClick_ = opt_options.zoomOnClick;
+	  }
+	  this.averageCenter_ = false;
+	  if (opt_options.averageCenter !== undefined) {
+	    this.averageCenter_ = opt_options.averageCenter;
+	  }
+	  this.ignoreHidden_ = false;
+	  if (opt_options.ignoreHidden !== undefined) {
+	    this.ignoreHidden_ = opt_options.ignoreHidden;
+	  }
+	  this.enableRetinaIcons_ = false;
+	  if (opt_options.enableRetinaIcons !== undefined) {
+	    this.enableRetinaIcons_ = opt_options.enableRetinaIcons;
+	  }
+	  this.imagePath_ = opt_options.imagePath || MarkerClusterer.IMAGE_PATH;
+	  this.imageExtension_ = opt_options.imageExtension || MarkerClusterer.IMAGE_EXTENSION;
+	  this.imageSizes_ = opt_options.imageSizes || MarkerClusterer.IMAGE_SIZES;
+	  this.calculator_ = opt_options.calculator || MarkerClusterer.CALCULATOR;
+	  this.batchSize_ = opt_options.batchSize || MarkerClusterer.BATCH_SIZE;
+	  this.batchSizeIE_ = opt_options.batchSizeIE || MarkerClusterer.BATCH_SIZE_IE;
+	  this.clusterClass_ = opt_options.clusterClass || "cluster";
+	
+	  if (navigator.userAgent.toLowerCase().indexOf("msie") !== -1) {
+	    // Try to avoid IE timeout when processing a huge number of markers:
+	    this.batchSize_ = this.batchSizeIE_;
+	  }
+	
+	  this.setupStyles_();
+	
+	  this.addMarkers(opt_markers, true);
+	  this.setMap(map); // Note: this causes onAdd to be called
+	}
+	
+	
+	/**
+	 * Implementation of the onAdd interface method.
+	 * @ignore
+	 */
+	MarkerClusterer.prototype.onAdd = function () {
+	  var cMarkerClusterer = this;
+	
+	  this.activeMap_ = this.getMap();
+	  this.ready_ = true;
+	
+	  this.repaint();
+	
+	  // Add the map event listeners
+	  this.listeners_ = [
+	    google.maps.event.addListener(this.getMap(), "zoom_changed", function () {
+	      cMarkerClusterer.resetViewport_(false);
+	      // Workaround for this Google bug: when map is at level 0 and "-" of
+	      // zoom slider is clicked, a "zoom_changed" event is fired even though
+	      // the map doesn't zoom out any further. In this situation, no "idle"
+	      // event is triggered so the cluster markers that have been removed
+	      // do not get redrawn. Same goes for a zoom in at maxZoom.
+	      if (this.getZoom() === (this.get("minZoom") || 0) || this.getZoom() === this.get("maxZoom")) {
+	        google.maps.event.trigger(this, "idle");
+	      }
+	    }),
+	    google.maps.event.addListener(this.getMap(), "idle", function () {
+	      cMarkerClusterer.redraw_();
+	    })
+	  ];
+	};
+	
+	
+	/**
+	 * Implementation of the onRemove interface method.
+	 * Removes map event listeners and all cluster icons from the DOM.
+	 * All managed markers are also put back on the map.
+	 * @ignore
+	 */
+	MarkerClusterer.prototype.onRemove = function () {
+	  var i;
+	
+	  // Put all the managed markers back on the map:
+	  for (i = 0; i < this.markers_.length; i++) {
+	    if (this.markers_[i].getMap() !== this.activeMap_) {
+	      this.markers_[i].setMap(this.activeMap_);
+	    }
+	  }
+	
+	  // Remove all clusters:
+	  for (i = 0; i < this.clusters_.length; i++) {
+	    this.clusters_[i].remove();
+	  }
+	  this.clusters_ = [];
+	
+	  // Remove map event listeners:
+	  for (i = 0; i < this.listeners_.length; i++) {
+	    google.maps.event.removeListener(this.listeners_[i]);
+	  }
+	  this.listeners_ = [];
+	
+	  this.activeMap_ = null;
+	  this.ready_ = false;
+	};
+	
+	
+	/**
+	 * Implementation of the draw interface method.
+	 * @ignore
+	 */
+	MarkerClusterer.prototype.draw = function () {};
+	
+	
+	/**
+	 * Sets up the styles object.
+	 */
+	MarkerClusterer.prototype.setupStyles_ = function () {
+	  var i, size;
+	  if (this.styles_.length > 0) {
+	    return;
+	  }
+	
+	  for (i = 0; i < this.imageSizes_.length; i++) {
+	    size = this.imageSizes_[i];
+	    this.styles_.push({
+	      url: this.imagePath_ + (i + 1) + "." + this.imageExtension_,
+	      height: size,
+	      width: size
+	    });
+	  }
+	};
+	
+	
+	/**
+	 *  Fits the map to the bounds of the markers managed by the clusterer.
+	 */
+	MarkerClusterer.prototype.fitMapToMarkers = function () {
+	  var i;
+	  var markers = this.getMarkers();
+	  var bounds = new google.maps.LatLngBounds();
+	  for (i = 0; i < markers.length; i++) {
+	    bounds.extend(markers[i].getPosition());
+	  }
+	
+	  this.getMap().fitBounds(bounds);
+	};
+	
+	
+	/**
+	 * Returns the value of the <code>gridSize</code> property.
+	 *
+	 * @return {number} The grid size.
+	 */
+	MarkerClusterer.prototype.getGridSize = function () {
+	  return this.gridSize_;
+	};
+	
+	
+	/**
+	 * Sets the value of the <code>gridSize</code> property.
+	 *
+	 * @param {number} gridSize The grid size.
+	 */
+	MarkerClusterer.prototype.setGridSize = function (gridSize) {
+	  this.gridSize_ = gridSize;
+	};
+	
+	
+	/**
+	 * Returns the value of the <code>minimumClusterSize</code> property.
+	 *
+	 * @return {number} The minimum cluster size.
+	 */
+	MarkerClusterer.prototype.getMinimumClusterSize = function () {
+	  return this.minClusterSize_;
+	};
+	
+	/**
+	 * Sets the value of the <code>minimumClusterSize</code> property.
+	 *
+	 * @param {number} minimumClusterSize The minimum cluster size.
+	 */
+	MarkerClusterer.prototype.setMinimumClusterSize = function (minimumClusterSize) {
+	  this.minClusterSize_ = minimumClusterSize;
+	};
+	
+	
+	/**
+	 *  Returns the value of the <code>maxZoom</code> property.
+	 *
+	 *  @return {number} The maximum zoom level.
+	 */
+	MarkerClusterer.prototype.getMaxZoom = function () {
+	  return this.maxZoom_;
+	};
+	
+	
+	/**
+	 *  Sets the value of the <code>maxZoom</code> property.
+	 *
+	 *  @param {number} maxZoom The maximum zoom level.
+	 */
+	MarkerClusterer.prototype.setMaxZoom = function (maxZoom) {
+	  this.maxZoom_ = maxZoom;
+	};
+	
+	
+	/**
+	 *  Returns the value of the <code>styles</code> property.
+	 *
+	 *  @return {Array} The array of styles defining the cluster markers to be used.
+	 */
+	MarkerClusterer.prototype.getStyles = function () {
+	  return this.styles_;
+	};
+	
+	
+	/**
+	 *  Sets the value of the <code>styles</code> property.
+	 *
+	 *  @param {Array.<ClusterIconStyle>} styles The array of styles to use.
+	 */
+	MarkerClusterer.prototype.setStyles = function (styles) {
+	  this.styles_ = styles;
+	};
+	
+	
+	/**
+	 * Returns the value of the <code>title</code> property.
+	 *
+	 * @return {string} The content of the title text.
+	 */
+	MarkerClusterer.prototype.getTitle = function () {
+	  return this.title_;
+	};
+	
+	
+	/**
+	 *  Sets the value of the <code>title</code> property.
+	 *
+	 *  @param {string} title The value of the title property.
+	 */
+	MarkerClusterer.prototype.setTitle = function (title) {
+	  this.title_ = title;
+	};
+	
+	
+	/**
+	 * Returns the value of the <code>zoomOnClick</code> property.
+	 *
+	 * @return {boolean} True if zoomOnClick property is set.
+	 */
+	MarkerClusterer.prototype.getZoomOnClick = function () {
+	  return this.zoomOnClick_;
+	};
+	
+	
+	/**
+	 *  Sets the value of the <code>zoomOnClick</code> property.
+	 *
+	 *  @param {boolean} zoomOnClick The value of the zoomOnClick property.
+	 */
+	MarkerClusterer.prototype.setZoomOnClick = function (zoomOnClick) {
+	  this.zoomOnClick_ = zoomOnClick;
+	};
+	
+	
+	/**
+	 * Returns the value of the <code>averageCenter</code> property.
+	 *
+	 * @return {boolean} True if averageCenter property is set.
+	 */
+	MarkerClusterer.prototype.getAverageCenter = function () {
+	  return this.averageCenter_;
+	};
+	
+	
+	/**
+	 *  Sets the value of the <code>averageCenter</code> property.
+	 *
+	 *  @param {boolean} averageCenter The value of the averageCenter property.
+	 */
+	MarkerClusterer.prototype.setAverageCenter = function (averageCenter) {
+	  this.averageCenter_ = averageCenter;
+	};
+	
+	
+	/**
+	 * Returns the value of the <code>ignoreHidden</code> property.
+	 *
+	 * @return {boolean} True if ignoreHidden property is set.
+	 */
+	MarkerClusterer.prototype.getIgnoreHidden = function () {
+	  return this.ignoreHidden_;
+	};
+	
+	
+	/**
+	 *  Sets the value of the <code>ignoreHidden</code> property.
+	 *
+	 *  @param {boolean} ignoreHidden The value of the ignoreHidden property.
+	 */
+	MarkerClusterer.prototype.setIgnoreHidden = function (ignoreHidden) {
+	  this.ignoreHidden_ = ignoreHidden;
+	};
+	
+	
+	/**
+	 * Returns the value of the <code>enableRetinaIcons</code> property.
+	 *
+	 * @return {boolean} True if enableRetinaIcons property is set.
+	 */
+	MarkerClusterer.prototype.getEnableRetinaIcons = function () {
+	  return this.enableRetinaIcons_;
+	};
+	
+	
+	/**
+	 *  Sets the value of the <code>enableRetinaIcons</code> property.
+	 *
+	 *  @param {boolean} enableRetinaIcons The value of the enableRetinaIcons property.
+	 */
+	MarkerClusterer.prototype.setEnableRetinaIcons = function (enableRetinaIcons) {
+	  this.enableRetinaIcons_ = enableRetinaIcons;
+	};
+	
+	
+	/**
+	 * Returns the value of the <code>imageExtension</code> property.
+	 *
+	 * @return {string} The value of the imageExtension property.
+	 */
+	MarkerClusterer.prototype.getImageExtension = function () {
+	  return this.imageExtension_;
+	};
+	
+	
+	/**
+	 *  Sets the value of the <code>imageExtension</code> property.
+	 *
+	 *  @param {string} imageExtension The value of the imageExtension property.
+	 */
+	MarkerClusterer.prototype.setImageExtension = function (imageExtension) {
+	  this.imageExtension_ = imageExtension;
+	};
+	
+	
+	/**
+	 * Returns the value of the <code>imagePath</code> property.
+	 *
+	 * @return {string} The value of the imagePath property.
+	 */
+	MarkerClusterer.prototype.getImagePath = function () {
+	  return this.imagePath_;
+	};
+	
+	
+	/**
+	 *  Sets the value of the <code>imagePath</code> property.
+	 *
+	 *  @param {string} imagePath The value of the imagePath property.
+	 */
+	MarkerClusterer.prototype.setImagePath = function (imagePath) {
+	  this.imagePath_ = imagePath;
+	};
+	
+	
+	/**
+	 * Returns the value of the <code>imageSizes</code> property.
+	 *
+	 * @return {Array} The value of the imageSizes property.
+	 */
+	MarkerClusterer.prototype.getImageSizes = function () {
+	  return this.imageSizes_;
+	};
+	
+	
+	/**
+	 *  Sets the value of the <code>imageSizes</code> property.
+	 *
+	 *  @param {Array} imageSizes The value of the imageSizes property.
+	 */
+	MarkerClusterer.prototype.setImageSizes = function (imageSizes) {
+	  this.imageSizes_ = imageSizes;
+	};
+	
+	
+	/**
+	 * Returns the value of the <code>calculator</code> property.
+	 *
+	 * @return {function} the value of the calculator property.
+	 */
+	MarkerClusterer.prototype.getCalculator = function () {
+	  return this.calculator_;
+	};
+	
+	
+	/**
+	 * Sets the value of the <code>calculator</code> property.
+	 *
+	 * @param {function(Array.<google.maps.Marker>, number)} calculator The value
+	 *  of the calculator property.
+	 */
+	MarkerClusterer.prototype.setCalculator = function (calculator) {
+	  this.calculator_ = calculator;
+	};
+	
+	
+	/**
+	 * Returns the value of the <code>batchSizeIE</code> property.
+	 *
+	 * @return {number} the value of the batchSizeIE property.
+	 */
+	MarkerClusterer.prototype.getBatchSizeIE = function () {
+	  return this.batchSizeIE_;
+	};
+	
+	
+	/**
+	 * Sets the value of the <code>batchSizeIE</code> property.
+	 *
+	 *  @param {number} batchSizeIE The value of the batchSizeIE property.
+	 */
+	MarkerClusterer.prototype.setBatchSizeIE = function (batchSizeIE) {
+	  this.batchSizeIE_ = batchSizeIE;
+	};
+	
+	
+	/**
+	 * Returns the value of the <code>clusterClass</code> property.
+	 *
+	 * @return {string} the value of the clusterClass property.
+	 */
+	MarkerClusterer.prototype.getClusterClass = function () {
+	  return this.clusterClass_;
+	};
+	
+	
+	/**
+	 * Sets the value of the <code>clusterClass</code> property.
+	 *
+	 *  @param {string} clusterClass The value of the clusterClass property.
+	 */
+	MarkerClusterer.prototype.setClusterClass = function (clusterClass) {
+	  this.clusterClass_ = clusterClass;
+	};
+	
+	
+	/**
+	 *  Returns the array of markers managed by the clusterer.
+	 *
+	 *  @return {Array} The array of markers managed by the clusterer.
+	 */
+	MarkerClusterer.prototype.getMarkers = function () {
+	  return this.markers_;
+	};
+	
+	
+	/**
+	 *  Returns the number of markers managed by the clusterer.
+	 *
+	 *  @return {number} The number of markers.
+	 */
+	MarkerClusterer.prototype.getTotalMarkers = function () {
+	  return this.markers_.length;
+	};
+	
+	
+	/**
+	 * Returns the current array of clusters formed by the clusterer.
+	 *
+	 * @return {Array} The array of clusters formed by the clusterer.
+	 */
+	MarkerClusterer.prototype.getClusters = function () {
+	  return this.clusters_;
+	};
+	
+	
+	/**
+	 * Returns the number of clusters formed by the clusterer.
+	 *
+	 * @return {number} The number of clusters formed by the clusterer.
+	 */
+	MarkerClusterer.prototype.getTotalClusters = function () {
+	  return this.clusters_.length;
+	};
+	
+	
+	/**
+	 * Adds a marker to the clusterer. The clusters are redrawn unless
+	 *  <code>opt_nodraw</code> is set to <code>true</code>.
+	 *
+	 * @param {google.maps.Marker} marker The marker to add.
+	 * @param {boolean} [opt_nodraw] Set to <code>true</code> to prevent redrawing.
+	 */
+	MarkerClusterer.prototype.addMarker = function (marker, opt_nodraw) {
+	  this.pushMarkerTo_(marker);
+	  if (!opt_nodraw) {
+	    this.redraw_();
+	  }
+	};
+	
+	
+	/**
+	 * Adds an array of markers to the clusterer. The clusters are redrawn unless
+	 *  <code>opt_nodraw</code> is set to <code>true</code>.
+	 *
+	 * @param {Array.<google.maps.Marker>} markers The markers to add.
+	 * @param {boolean} [opt_nodraw] Set to <code>true</code> to prevent redrawing.
+	 */
+	MarkerClusterer.prototype.addMarkers = function (markers, opt_nodraw) {
+	  var key;
+	  for (key in markers) {
+	    if (markers.hasOwnProperty(key)) {
+	      this.pushMarkerTo_(markers[key]);
+	    }
+	  }  
+	  if (!opt_nodraw) {
+	    this.redraw_();
+	  }
+	};
+	
+	
+	/**
+	 * Pushes a marker to the clusterer.
+	 *
+	 * @param {google.maps.Marker} marker The marker to add.
+	 */
+	MarkerClusterer.prototype.pushMarkerTo_ = function (marker) {
+	  // If the marker is draggable add a listener so we can update the clusters on the dragend:
+	  if (marker.getDraggable()) {
+	    var cMarkerClusterer = this;
+	    google.maps.event.addListener(marker, "dragend", function () {
+	      if (cMarkerClusterer.ready_) {
+	        this.isAdded = false;
+	        cMarkerClusterer.repaint();
+	      }
+	    });
+	  }
+	  marker.isAdded = false;
+	  this.markers_.push(marker);
+	};
+	
+	
+	/**
+	 * Removes a marker from the cluster.  The clusters are redrawn unless
+	 *  <code>opt_nodraw</code> is set to <code>true</code>. Returns <code>true</code> if the
+	 *  marker was removed from the clusterer.
+	 *
+	 * @param {google.maps.Marker} marker The marker to remove.
+	 * @param {boolean} [opt_nodraw] Set to <code>true</code> to prevent redrawing.
+	 * @return {boolean} True if the marker was removed from the clusterer.
+	 */
+	MarkerClusterer.prototype.removeMarker = function (marker, opt_nodraw) {
+	  var removed = this.removeMarker_(marker);
+	
+	  if (!opt_nodraw && removed) {
+	    this.repaint();
+	  }
+	
+	  return removed;
+	};
+	
+	
+	/**
+	 * Removes an array of markers from the cluster. The clusters are redrawn unless
+	 *  <code>opt_nodraw</code> is set to <code>true</code>. Returns <code>true</code> if markers
+	 *  were removed from the clusterer.
+	 *
+	 * @param {Array.<google.maps.Marker>} markers The markers to remove.
+	 * @param {boolean} [opt_nodraw] Set to <code>true</code> to prevent redrawing.
+	 * @return {boolean} True if markers were removed from the clusterer.
+	 */
+	MarkerClusterer.prototype.removeMarkers = function (markers, opt_nodraw) {
+	  var i, r;
+	  var removed = false;
+	
+	  for (i = 0; i < markers.length; i++) {
+	    r = this.removeMarker_(markers[i]);
+	    removed = removed || r;
+	  }
+	
+	  if (!opt_nodraw && removed) {
+	    this.repaint();
+	  }
+	
+	  return removed;
+	};
+	
+	
+	/**
+	 * Removes a marker and returns true if removed, false if not.
+	 *
+	 * @param {google.maps.Marker} marker The marker to remove
+	 * @return {boolean} Whether the marker was removed or not
+	 */
+	MarkerClusterer.prototype.removeMarker_ = function (marker) {
+	  var i;
+	  var index = -1;
+	  if (this.markers_.indexOf) {
+	    index = this.markers_.indexOf(marker);
+	  } else {
+	    for (i = 0; i < this.markers_.length; i++) {
+	      if (marker === this.markers_[i]) {
+	        index = i;
+	        break;
+	      }
+	    }
+	  }
+	
+	  if (index === -1) {
+	    // Marker is not in our list of markers, so do nothing:
+	    return false;
+	  }
+	
+	  marker.setMap(null);
+	  this.markers_.splice(index, 1); // Remove the marker from the list of managed markers
+	  return true;
+	};
+	
+	
+	/**
+	 * Removes all clusters and markers from the map and also removes all markers
+	 *  managed by the clusterer.
+	 */
+	MarkerClusterer.prototype.clearMarkers = function () {
+	  this.resetViewport_(true);
+	  this.markers_ = [];
+	};
+	
+	
+	/**
+	 * Recalculates and redraws all the marker clusters from scratch.
+	 *  Call this after changing any properties.
+	 */
+	MarkerClusterer.prototype.repaint = function () {
+	  var oldClusters = this.clusters_.slice();
+	  this.clusters_ = [];
+	  this.resetViewport_(false);
+	  this.redraw_();
+	
+	  // Remove the old clusters.
+	  // Do it in a timeout to prevent blinking effect.
+	  setTimeout(function () {
+	    var i;
+	    for (i = 0; i < oldClusters.length; i++) {
+	      oldClusters[i].remove();
+	    }
+	  }, 0);
+	};
+	
+	
+	/**
+	 * Returns the current bounds extended by the grid size.
+	 *
+	 * @param {google.maps.LatLngBounds} bounds The bounds to extend.
+	 * @return {google.maps.LatLngBounds} The extended bounds.
+	 * @ignore
+	 */
+	MarkerClusterer.prototype.getExtendedBounds = function (bounds) {
+	  var projection = this.getProjection();
+	
+	  // Turn the bounds into latlng.
+	  var tr = new google.maps.LatLng(bounds.getNorthEast().lat(),
+	      bounds.getNorthEast().lng());
+	  var bl = new google.maps.LatLng(bounds.getSouthWest().lat(),
+	      bounds.getSouthWest().lng());
+	
+	  // Convert the points to pixels and the extend out by the grid size.
+	  var trPix = projection.fromLatLngToDivPixel(tr);
+	  trPix.x += this.gridSize_;
+	  trPix.y -= this.gridSize_;
+	
+	  var blPix = projection.fromLatLngToDivPixel(bl);
+	  blPix.x -= this.gridSize_;
+	  blPix.y += this.gridSize_;
+	
+	  // Convert the pixel points back to LatLng
+	  var ne = projection.fromDivPixelToLatLng(trPix);
+	  var sw = projection.fromDivPixelToLatLng(blPix);
+	
+	  // Extend the bounds to contain the new bounds.
+	  bounds.extend(ne);
+	  bounds.extend(sw);
+	
+	  return bounds;
+	};
+	
+	
+	/**
+	 * Redraws all the clusters.
+	 */
+	MarkerClusterer.prototype.redraw_ = function () {
+	  this.createClusters_(0);
+	};
+	
+	
+	/**
+	 * Removes all clusters from the map. The markers are also removed from the map
+	 *  if <code>opt_hide</code> is set to <code>true</code>.
+	 *
+	 * @param {boolean} [opt_hide] Set to <code>true</code> to also remove the markers
+	 *  from the map.
+	 */
+	MarkerClusterer.prototype.resetViewport_ = function (opt_hide) {
+	  var i, marker;
+	  // Remove all the clusters
+	  for (i = 0; i < this.clusters_.length; i++) {
+	    this.clusters_[i].remove();
+	  }
+	  this.clusters_ = [];
+	
+	  // Reset the markers to not be added and to be removed from the map.
+	  for (i = 0; i < this.markers_.length; i++) {
+	    marker = this.markers_[i];
+	    marker.isAdded = false;
+	    if (opt_hide) {
+	      marker.setMap(null);
+	    }
+	  }
+	};
+	
+	
+	/**
+	 * Calculates the distance between two latlng locations in km.
+	 *
+	 * @param {google.maps.LatLng} p1 The first lat lng point.
+	 * @param {google.maps.LatLng} p2 The second lat lng point.
+	 * @return {number} The distance between the two points in km.
+	 * @see http://www.movable-type.co.uk/scripts/latlong.html
+	*/
+	MarkerClusterer.prototype.distanceBetweenPoints_ = function (p1, p2) {
+	  var R = 6371; // Radius of the Earth in km
+	  var dLat = (p2.lat() - p1.lat()) * Math.PI / 180;
+	  var dLon = (p2.lng() - p1.lng()) * Math.PI / 180;
+	  var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+	    Math.cos(p1.lat() * Math.PI / 180) * Math.cos(p2.lat() * Math.PI / 180) *
+	    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+	  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+	  var d = R * c;
+	  return d;
+	};
+	
+	
+	/**
+	 * Determines if a marker is contained in a bounds.
+	 *
+	 * @param {google.maps.Marker} marker The marker to check.
+	 * @param {google.maps.LatLngBounds} bounds The bounds to check against.
+	 * @return {boolean} True if the marker is in the bounds.
+	 */
+	MarkerClusterer.prototype.isMarkerInBounds_ = function (marker, bounds) {
+	  return bounds.contains(marker.getPosition());
+	};
+	
+	
+	/**
+	 * Adds a marker to a cluster, or creates a new cluster.
+	 *
+	 * @param {google.maps.Marker} marker The marker to add.
+	 */
+	MarkerClusterer.prototype.addToClosestCluster_ = function (marker) {
+	  var i, d, cluster, center;
+	  var distance = 40000; // Some large number
+	  var clusterToAddTo = null;
+	  for (i = 0; i < this.clusters_.length; i++) {
+	    cluster = this.clusters_[i];
+	    center = cluster.getCenter();
+	    if (center) {
+	      d = this.distanceBetweenPoints_(center, marker.getPosition());
+	      if (d < distance) {
+	        distance = d;
+	        clusterToAddTo = cluster;
+	      }
+	    }
+	  }
+	
+	  if (clusterToAddTo && clusterToAddTo.isMarkerInClusterBounds(marker)) {
+	    clusterToAddTo.addMarker(marker);
+	  } else {
+	    cluster = new Cluster(this);
+	    cluster.addMarker(marker);
+	    this.clusters_.push(cluster);
+	  }
+	};
+	
+	
+	/**
+	 * Creates the clusters. This is done in batches to avoid timeout errors
+	 *  in some browsers when there is a huge number of markers.
+	 *
+	 * @param {number} iFirst The index of the first marker in the batch of
+	 *  markers to be added to clusters.
+	 */
+	MarkerClusterer.prototype.createClusters_ = function (iFirst) {
+	  var i, marker;
+	  var mapBounds;
+	  var cMarkerClusterer = this;
+	  if (!this.ready_) {
+	    return;
+	  }
+	
+	  // Cancel previous batch processing if we're working on the first batch:
+	  if (iFirst === 0) {
+	    /**
+	     * This event is fired when the <code>MarkerClusterer</code> begins
+	     *  clustering markers.
+	     * @name MarkerClusterer#clusteringbegin
+	     * @param {MarkerClusterer} mc The MarkerClusterer whose markers are being clustered.
+	     * @event
+	     */
+	    google.maps.event.trigger(this, "clusteringbegin", this);
+	
+	    if (typeof this.timerRefStatic !== "undefined") {
+	      clearTimeout(this.timerRefStatic);
+	      delete this.timerRefStatic;
+	    }
+	  }
+	
+	  // Get our current map view bounds.
+	  // Create a new bounds object so we don't affect the map.
+	  //
+	  // See Comments 9 & 11 on Issue 3651 relating to this workaround for a Google Maps bug:
+	  if (this.getMap().getZoom() > 3) {
+	    mapBounds = new google.maps.LatLngBounds(this.getMap().getBounds().getSouthWest(),
+	      this.getMap().getBounds().getNorthEast());
+	  } else {
+	    mapBounds = new google.maps.LatLngBounds(new google.maps.LatLng(85.02070771743472, -178.48388434375), new google.maps.LatLng(-85.08136444384544, 178.00048865625));
+	  }
+	  var bounds = this.getExtendedBounds(mapBounds);
+	
+	  var iLast = Math.min(iFirst + this.batchSize_, this.markers_.length);
+	
+	  for (i = iFirst; i < iLast; i++) {
+	    marker = this.markers_[i];
+	    if (!marker.isAdded && this.isMarkerInBounds_(marker, bounds)) {
+	      if (!this.ignoreHidden_ || (this.ignoreHidden_ && marker.getVisible())) {
+	        this.addToClosestCluster_(marker);
+	      }
+	    }
+	  }
+	
+	  if (iLast < this.markers_.length) {
+	    this.timerRefStatic = setTimeout(function () {
+	      cMarkerClusterer.createClusters_(iLast);
+	    }, 0);
+	  } else {
+	    delete this.timerRefStatic;
+	
+	    /**
+	     * This event is fired when the <code>MarkerClusterer</code> stops
+	     *  clustering markers.
+	     * @name MarkerClusterer#clusteringend
+	     * @param {MarkerClusterer} mc The MarkerClusterer whose markers are being clustered.
+	     * @event
+	     */
+	    google.maps.event.trigger(this, "clusteringend", this);
+	  }
+	};
+	
+	
+	/**
+	 * Extends an object's prototype by another's.
+	 *
+	 * @param {Object} obj1 The object to be extended.
+	 * @param {Object} obj2 The object to extend with.
+	 * @return {Object} The new extended object.
+	 * @ignore
+	 */
+	MarkerClusterer.prototype.extend = function (obj1, obj2) {
+	  return (function (object) {
+	    var property;
+	    for (property in object.prototype) {
+	      this.prototype[property] = object.prototype[property];
+	    }
+	    return this;
+	  }).apply(obj1, [obj2]);
+	};
+	
+	
+	/**
+	 * The default function for determining the label text and style
+	 * for a cluster icon.
+	 *
+	 * @param {Array.<google.maps.Marker>} markers The array of markers represented by the cluster.
+	 * @param {number} numStyles The number of marker styles available.
+	 * @return {ClusterIconInfo} The information resource for the cluster.
+	 * @constant
+	 * @ignore
+	 */
+	MarkerClusterer.CALCULATOR = function (markers, numStyles) {
+	  var index = 0;
+	  var title = "";
+	  var count = markers.length.toString();
+	
+	  var dv = count;
+	  while (dv !== 0) {
+	    dv = parseInt(dv / 10, 10);
+	    index++;
+	  }
+	
+	  index = Math.min(index, numStyles);
+	  return {
+	    text: count,
+	    index: index,
+	    title: title
+	  };
+	};
+	
+	
+	/**
+	 * The number of markers to process in one batch.
+	 *
+	 * @type {number}
+	 * @constant
+	 */
+	MarkerClusterer.BATCH_SIZE = 2000;
+	
+	
+	/**
+	 * The number of markers to process in one batch (IE only).
+	 *
+	 * @type {number}
+	 * @constant
+	 */
+	MarkerClusterer.BATCH_SIZE_IE = 500;
+	
+	
+	/**
+	 * The default root name for the marker cluster images.
+	 *
+	 * @type {string}
+	 * @constant
+	 */
+	MarkerClusterer.IMAGE_PATH = "http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclustererplus/images/m";
+	
+	
+	/**
+	 * The default extension name for the marker cluster images.
+	 *
+	 * @type {string}
+	 * @constant
+	 */
+	MarkerClusterer.IMAGE_EXTENSION = "png";
+	
+	
+	/**
+	 * The default array of sizes for the marker cluster images.
+	 *
+	 * @type {Array.<number>}
+	 * @constant
+	 */
+	MarkerClusterer.IMAGE_SIZES = [53, 56, 66, 78, 90];
+	
+	/**
+	 * @name MarkerWithLabel for V3
+	 * @version 1.1.10 [April 8, 2014]
+	 * @author Gary Little (inspired by code from Marc Ridey of Google).
+	 * @copyright Copyright 2012 Gary Little [gary at luxcentral.com]
+	 * @fileoverview MarkerWithLabel extends the Google Maps JavaScript API V3
+	 *  <code>google.maps.Marker</code> class.
+	 *  <p>
 	 *  MarkerWithLabel allows you to define markers with associated labels. As you would expect,
 	 *  if the marker is draggable, so too will be the label. In addition, a marker with a label
 	 *  responds to all mouse events in the same manner as a regular marker. It also fires mouse
@@ -81784,6 +83141,21 @@
 	 *  If you drag a marker by its label, you can cancel the drag and return the marker to its
 	 *  original position by pressing the <code>Esc</code> key. This doesn't work if you drag the marker
 	 *  itself because this feature is not (yet) supported in the <code>google.maps.Marker</code> class.
+	 */
+	
+	/*!
+	 *
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 *       http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
 	 */
 	
 	/*jslint browser:true */
@@ -85945,14 +87317,14 @@
 	__webpack_require__(/*! angular-jwt */ 84);
 	__webpack_require__(/*! auth0-angular */ 86);
 	
-	var env = __webpack_require__(/*! ./env */ 87);
+	var env = __webpack_require__(/*! ./env */ 88);
 	
 	// angular.module is a global place for creating, registering and retrieving Angular modules
 	// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 	// the 2nd parameter is an array of 'requires'
 	// 'starter.services' is found in services.js
 	// 'starter.controllers' is found in controllers.js
-	angular.module('beeline-admin', ['uiGmapgoogle-maps', 'ui.router', 'ui.bootstrap', 'beeline.calendar', 'auth0', 'angular-storage', 'angular-jwt', 'ngCookies']).config(__webpack_require__(/*! ./router */ 88).default).config(configureGoogleMaps).config(configureLoginPage).directive('adminNav', __webpack_require__(/*! ./directives/adminNav/adminNav */ 89).default).directive('accountView', __webpack_require__(/*! ./directives/accountView/accountView */ 91).default).directive('paymentView', __webpack_require__(/*! ./directives/paymentView/paymentView */ 92).default).directive('ticketView', __webpack_require__(/*! ./directives/ticketView/ticketView */ 114).default).directive('routeSelector', __webpack_require__(/*! ./directives/routeSelector/routeSelector */ 116).default).directive('routeEditor', __webpack_require__(/*! ./directives/routeEditor/routeEditor */ 118).default).directive('pathEditor', __webpack_require__(/*! ./directives/pathEditor/pathEditor */ 120).default).directive('tripsEditor', __webpack_require__(/*! ./directives/tripsEditor/tripsEditor */ 122).default).directive('companySelector', __webpack_require__(/*! ./directives/companySelector/companySelector */ 144).default).directive('tripSelector', __webpack_require__(/*! ./directives/tripSelector/tripSelector */ 145).default).directive('stopSelector', __webpack_require__(/*! ./directives/stopSelector/stopSelector */ 157).default).directive('superAdminCompanySelector', __webpack_require__(/*! ./directives/companySelector/superAdminCompanySelector */ 158).default).service('AdminService', __webpack_require__(/*! ./services/adminService */ 159).default).service('RoutesService', __webpack_require__(/*! ./services/routesService */ 164).default).service('StopsPopup', __webpack_require__(/*! ./services/stopsPopup */ 168).default).service('mapService', __webpack_require__(/*! ./services/mapService */ 170).default).service('DriverService', __webpack_require__(/*! ./services/driverService */ 171).default).service('BookingRefund', __webpack_require__(/*! ./services/bookingRefund */ 174).default).service('LoadingSpinner', __webpack_require__(/*! ./services/loadingSpinner */ 176).default).controller('transactions', __webpack_require__(/*! ./controllers/transactionsController.js */ 177).default).controller('routes', __webpack_require__(/*! ./controllers/routesController.js */ 182).default).controller('summary', __webpack_require__(/*! ./controllers/summaryController.js */ 183).default).controller('bookings', __webpack_require__(/*! ./controllers/bookingsController.js */ 184).default).controller('bookingsWrs', __webpack_require__(/*! ./controllers/bookingsControllerWrs.js */ 185).default).controller('drivers', __webpack_require__(/*! ./controllers/driversController.js */ 186).default).controller('login', __webpack_require__(/*! ./controllers/loginController.js */ 187).default).filter('makeRoutePath', __webpack_require__(/*! ./shared/filters.js */ 188).makeRoutePath).run(function (auth, $rootScope, store, jwtHelper, $window) {
+	angular.module('beeline-admin', ['uiGmapgoogle-maps', 'ui.router', 'ui.bootstrap', 'beeline.calendar', 'auth0', 'angular-storage', 'angular-jwt', 'ngCookies']).config(__webpack_require__(/*! ./router */ 89).default).config(configureGoogleMaps).config(configureLoginPage).directive('adminNav', __webpack_require__(/*! ./directives/adminNav/adminNav */ 90).default).directive('accountView', __webpack_require__(/*! ./directives/accountView/accountView */ 92).default).directive('paymentView', __webpack_require__(/*! ./directives/paymentView/paymentView */ 93).default).directive('ticketView', __webpack_require__(/*! ./directives/ticketView/ticketView */ 115).default).directive('routeSelector', __webpack_require__(/*! ./directives/routeSelector/routeSelector */ 117).default).directive('routeEditor', __webpack_require__(/*! ./directives/routeEditor/routeEditor */ 119).default).directive('pathEditor', __webpack_require__(/*! ./directives/pathEditor/pathEditor */ 121).default).directive('tripsEditor', __webpack_require__(/*! ./directives/tripsEditor/tripsEditor */ 123).default).directive('companySelector', __webpack_require__(/*! ./directives/companySelector/companySelector */ 145).default).directive('tripSelector', __webpack_require__(/*! ./directives/tripSelector/tripSelector */ 146).default).directive('stopSelector', __webpack_require__(/*! ./directives/stopSelector/stopSelector */ 153).default).directive('superAdminCompanySelector', __webpack_require__(/*! ./directives/companySelector/superAdminCompanySelector */ 154).default).service('AdminService', __webpack_require__(/*! ./services/adminService */ 155).default).service('RoutesService', __webpack_require__(/*! ./services/routesService */ 160).default).service('StopsPopup', __webpack_require__(/*! ./services/stopsPopup */ 164).default).service('mapService', __webpack_require__(/*! ./services/mapService */ 166).default).service('DriverService', __webpack_require__(/*! ./services/driverService */ 167).default).service('BookingRefund', __webpack_require__(/*! ./services/bookingRefund */ 170).default).service('LoadingSpinner', __webpack_require__(/*! ./services/loadingSpinner */ 172).default).controller('transactions', __webpack_require__(/*! ./controllers/transactionsController.js */ 173).default).controller('routes', __webpack_require__(/*! ./controllers/routesController.js */ 178).default).controller('summary', __webpack_require__(/*! ./controllers/summaryController.js */ 179).default).controller('bookings', __webpack_require__(/*! ./controllers/bookingsController.js */ 180).default).controller('bookingsWrs', __webpack_require__(/*! ./controllers/bookingsControllerWrs.js */ 181).default).controller('drivers', __webpack_require__(/*! ./controllers/driversController.js */ 182).default).controller('login', __webpack_require__(/*! ./controllers/loginController.js */ 183).default).filter('makeRoutePath', __webpack_require__(/*! ./shared/filters.js */ 184).makeRoutePath).run(function (auth, $rootScope, store, jwtHelper, $window) {
 	  auth.hookEvents();
 	
 	  // This events gets triggered on refresh or URL change
@@ -88163,6 +89535,17 @@
 
 /***/ },
 /* 86 */
+/*!**********************************!*\
+  !*** ./~/auth0-angular/index.js ***!
+  \**********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(/*! ./build/auth0-angular.js */ 87);
+	module.exports = 'auth0';
+
+
+/***/ },
+/* 87 */
 /*!************************************************!*\
   !*** ./~/auth0-angular/build/auth0-angular.js ***!
   \************************************************/
@@ -88170,459 +89553,838 @@
 
 	/**
 	 * Angular SDK to use with Auth0
-	 * @version v4.0.5 - 2015-12-21
+	 * @version v4.2.0 - 2016-05-31
 	 * @link https://auth0.com
 	 * @author Martin Gontovnikas
 	 * @license MIT License, http://www.opensource.org/licenses/MIT
 	 */
-	(function () {
-	  angular.module('auth0', [
-	    'auth0.service',
-	    'auth0.utils'
-	  ]).run([
-	    'auth',
-	    function (auth) {
-	      auth.hookEvents();
-	    }
-	  ]);
-	  angular.module('auth0.utils', []).provider('authUtils', function () {
-	    var Utils = {
-	        capitalize: function (string) {
-	          return string ? string.charAt(0).toUpperCase() + string.substring(1).toLowerCase() : null;
-	        },
-	        fnName: function (fun) {
-	          var ret = fun.toString();
-	          ret = ret.substr('function '.length);
-	          ret = ret.substr(0, ret.indexOf('('));
-	          return ret ? ret.trim() : ret;
-	        }
-	      };
-	    angular.extend(this, Utils);
-	    this.$get = [
-	      '$rootScope',
-	      '$q',
-	      function ($rootScope, $q) {
-	        var authUtils = {};
-	        angular.extend(authUtils, Utils);
-	        authUtils.safeApply = function (fn) {
-	          var phase = $rootScope.$root.$$phase;
-	          if (phase === '$apply' || phase === '$digest') {
-	            if (fn && typeof fn === 'function') {
-	              fn();
-	            }
-	          } else {
-	            $rootScope.$apply(fn);
-	          }
-	        };
-	        authUtils.callbackify = function (nodeback, success, error, self) {
-	          if (angular.isFunction(nodeback)) {
-	            return function (args) {
-	              args = Array.prototype.slice.call(arguments);
-	              var callback = function (err, response, etc) {
-	                if (err) {
-	                  error && error(err);
-	                  return;
+	
+	    angular.module('auth0', ['auth0.service', 'auth0.utils', 'auth0.directives'])
+	        .run(["auth", function(auth) {
+	            auth.hookEvents();
+	        }]);
+	
+	
+	/*
+	*
+	* Utility service to assist with:
+	 * 1. Capitalization
+	 * 2. Retrieve function name
+	 * 3. Angular's $rootScope.$apply
+	 * 4. Creates an 'applied' callback
+	 * 5. Convert callbacks to promises
+	 *
+	 * */
+	    angular.module('auth0.utils', [])
+	        .provider('authUtils', function() {
+	            var Utils = {
+	                /*
+	                *
+	                * DESCRIPTION: Capitalize strings
+	                * INPUT: string
+	                * OUTPUT: string
+	                *
+	                * */
+	                capitalize: function(string) {
+	                    return string ? string.charAt(0).toUpperCase() + string.substring(1).toLowerCase() : null;
+	                },
+	
+	                /*
+	                 *
+	                 * DESCRIPTION: Retrieve the name of a supplied function
+	                 * INPUT: function
+	                 * OUTPUT: string
+	                 *
+	                 * */
+	                fnName : function(fun) {
+	                    var ret = fun.toString();
+	                    ret = ret.substr('function '.length);
+	                    ret = ret.substr(0, ret.indexOf('('));
+	                    return ret ? ret.trim() : ret;
 	                }
-	                // if more arguments then turn into an array for .spread()
-	                etc = Array.prototype.slice.call(arguments, 1);
-	                success && success.apply(null, etc);
-	              };
-	              if (success || error) {
-	                args.push(authUtils.applied(callback));
-	              }
-	              nodeback.apply(self, args);
 	            };
-	          }
-	        };
-	        authUtils.promisify = function (nodeback, self) {
-	          if (angular.isFunction(nodeback)) {
-	            return function (args) {
-	              args = Array.prototype.slice.call(arguments);
-	              var dfd = $q.defer();
-	              var callback = function (err, response, etc) {
-	                if (err) {
-	                  dfd.reject(err);
-	                  return;
-	                }
-	                // if more arguments then turn into an array for .spread()
-	                etc = Array.prototype.slice.call(arguments, 1);
-	                dfd.resolve(etc.length > 1 ? etc : response);
-	              };
-	              args.push(authUtils.applied(callback));
-	              nodeback.apply(self, args);
-	              // spread polyfill only for promisify
-	              dfd.promise.spread = dfd.promise.spread || function (fulfilled, rejected) {
-	                return dfd.promise.then(function (array) {
-	                  return Array.isArray(array) ? fulfilled.apply(null, array) : fulfilled(array);
-	                }, rejected);
-	              };
-	              return dfd.promise;
+	
+	            angular.extend(this, Utils);
+	
+	            this.$get = ["$rootScope", "$q", function($rootScope, $q) {
+	                var authUtils = {};
+	                angular.extend(authUtils, Utils);
+	
+	                /*
+	                 *
+	                 * DESCRIPTION: Checks if Angular is in the $apply or $digest phase
+	                 * before calling $rootScope.$apply on a fn passed to it
+	                 *
+	                 * INPUT: function
+	                 *
+	                 * */
+	
+	                authUtils.safeApply = function(fn) {
+	                    var phase = $rootScope.$root.$$phase;
+	                    if(phase === '$apply' || phase === '$digest') {
+	                        if(fn && (typeof(fn) === 'function')) {
+	                            fn();
+	                        }
+	                    } else {
+	                        $rootScope.$apply(fn);
+	                    }
+	                };
+	
+	                /*
+	                 *
+	                 * DESCRIPTION: Creates an 'applied callback using Angular's $apply()
+	                 * INPUT: function
+	                 * OUTPUT: function
+	                 *
+	                 * */
+	
+	                authUtils.callbackify = function (nodeback, success, error, self) {
+	                    if (angular.isFunction(nodeback)) {
+	                        return function (args) {
+	                            args = Array.prototype.slice.call(arguments);
+	                            var callback = function (err, response, etc) {
+	                                if (err) {
+	                                    error && error(err);
+	                                    return;
+	                                }
+	                                // if more arguments then turn into an array for .spread()
+	                                etc = Array.prototype.slice.call(arguments, 1);
+	                                success && success.apply(null, etc);
+	                            };
+	                            if (success || error) {
+	                                args.push(authUtils.applied(callback));
+	                            }
+	                            nodeback.apply(self, args);
+	                        };
+	                    }
+	                };
+	
+	                /*
+	                 *
+	                 * DESCRIPTION: Creates a promise from where a callback is expected
+	                 * INPUT: function
+	                 * OUTPUT: function
+	                 *
+	                 * */
+	
+	                authUtils.promisify = function (nodeback, self) {
+	                    if (angular.isFunction(nodeback)) {
+	                        return function (args) {
+	                            args = Array.prototype.slice.call(arguments);
+	                            var dfd = $q.defer();
+	                            var callback = function (err, response, etc) {
+	                                if (err) {
+	                                    dfd.reject(err);
+	                                    return;
+	                                }
+	                                // if more arguments then turn into an array for .spread()
+	                                etc = Array.prototype.slice.call(arguments, 1);
+	                                dfd.resolve(etc.length > 1 ? etc : response);
+	                            };
+	
+	                            args.push(authUtils.applied(callback));
+	                            nodeback.apply(self, args);
+	                            // spread polyfill only for promisify
+	                            dfd.promise.spread = dfd.promise.spread || function (fulfilled, rejected) {
+	                                    return dfd.promise.then(function (array) {
+	                                        return Array.isArray(array) ? fulfilled.apply(null, array) : fulfilled(array);
+	                                    }, rejected);
+	                                };
+	                            return dfd.promise;
+	                        };
+	                    }
+	                };
+	
+	                /*
+	                 *
+	                 * DESCRIPTION: Uses safeApply() on a callback after passing in the callback arguments
+	                 * INPUT: function
+	                 * OUTPUT: function
+	                 *
+	                 * */
+	
+	                authUtils.applied = function(fn) {
+	                    // Adding arguments just due to a bug in Auth0.js.
+	                    return function (err, response) {
+	                        // Using variables so that they don't get deleted by UglifyJS
+	                        err = err;
+	                        response = response;
+	                        var argsCall = arguments;
+	                        authUtils.safeApply(function() {
+	                            fn.apply(null, argsCall);
+	                        });
+	                    };
+	                };
+	
+	                return authUtils;
+	            }];
+	
+	
+	
+	        });
+	
+	
+	    angular.module('auth0.service', ['auth0.utils'])
+	        .provider('auth', ["authUtilsProvider", function(authUtilsProvider) {
+	            var defaultOptions = {
+	                callbackOnLocationHash: true
 	            };
-	          }
-	        };
-	        authUtils.applied = function (fn) {
-	          // Adding arguments just due to a bug in Auth0.js.
-	          return function (err, response) {
-	            // Using variables so that they don't get deleted by UglifyJS
-	            err = err;
-	            response = response;
-	            var argsCall = arguments;
-	            authUtils.safeApply(function () {
-	              fn.apply(null, argsCall);
-	            });
-	          };
-	        };
-	        return authUtils;
-	      }
-	    ];
-	  });
-	  angular.module('auth0.service', ['auth0.utils']).provider('auth', [
-	    'authUtilsProvider',
-	    function (authUtilsProvider) {
-	      var defaultOptions = { callbackOnLocationHash: true };
-	      var config = this;
-	      var innerAuth0libraryConfiguration = {
-	          'Auth0': {
-	            signin: 'login',
-	            signup: 'signup',
-	            reset: 'changePassword',
-	            validateUser: 'validateUser',
-	            library: function () {
-	              return config.auth0js;
-	            },
-	            parseOptions: function (options) {
-	              var retOptions = angular.copy(options);
-	              if (retOptions.authParams) {
-	                angular.extend(retOptions, retOptions.authParams);
-	                delete retOptions.authParams;
-	              }
-	              return retOptions;
-	            }
-	          },
-	          'Auth0Lock': {
-	            signin: 'show',
-	            signup: 'showSignup',
-	            reset: 'showReset',
-	            library: function () {
-	              return config.auth0lib;
-	            },
-	            parseOptions: function (options) {
-	              return angular.copy(options);
-	            }
-	          }
-	        };
-	      function getInnerLibraryMethod(name, libName) {
-	        libName = libName || config.lib;
-	        var library = innerAuth0libraryConfiguration[libName].library();
-	        return library[innerAuth0libraryConfiguration[libName][name]];
-	      }
-	      function getInnerLibraryConfigField(name, libName) {
-	        libName = libName || config.lib;
-	        return innerAuth0libraryConfiguration[libName][name];
-	      }
-	      function constructorName(fun) {
-	        if (fun) {
-	          return {
-	            lib: authUtilsProvider.fnName(fun),
-	            constructor: fun
-	          };
-	        }
-	        /* jshint ignore:start */
-	        if (null != window.Auth0Lock) {
-	          return {
-	            lib: 'Auth0Lock',
-	            constructor: window.Auth0Lock
-	          };
-	        }
-	        if (null != window.Auth0) {
-	          return {
-	            lib: 'Auth0',
-	            constructor: window.Auth0
-	          };
-	        }
-	        if (null != Auth0Widget) {
-	          throw new Error('Auth0Widget is not supported with this version of auth0-angular' + 'anymore. Please try with an older one');
-	        }
-	        throw new Error('Cannott initialize Auth0Angular. Auth0Lock or Auth0 must be available');  /* jshint ignore:end */
-	      }
-	      this.init = function (options, Auth0Constructor) {
-	        if (!options) {
-	          throw new Error('You must set options when calling init');
-	        }
-	        this.loginUrl = options.loginUrl;
-	        this.loginState = options.loginState;
-	        this.clientID = options.clientID || options.clientId;
-	        var domain = options.domain;
-	        this.sso = options.sso;
-	        var constructorInfo = constructorName(Auth0Constructor);
-	        this.lib = constructorInfo.lib;
-	        if (constructorInfo.lib === 'Auth0Lock') {
-	          this.auth0lib = new constructorInfo.constructor(this.clientID, domain, angular.extend(defaultOptions, options));
-	          this.auth0js = this.auth0lib.getClient();
-	          this.isLock = true;
-	        } else {
-	          this.auth0lib = new constructorInfo.constructor(angular.extend(defaultOptions, options));
-	          this.auth0js = this.auth0lib;
-	          this.isLock = false;
-	        }
-	        this.initialized = true;
-	      };
-	      this.eventHandlers = {};
-	      this.on = function (anEvent, handler) {
-	        if (!this.eventHandlers[anEvent]) {
-	          this.eventHandlers[anEvent] = [];
-	        }
-	        this.eventHandlers[anEvent].push(handler);
-	      };
-	      var events = [
-	          'loginSuccess',
-	          'loginFailure',
-	          'logout',
-	          'forbidden',
-	          'authenticated'
-	        ];
-	      angular.forEach(events, function (anEvent) {
-	        config['add' + authUtilsProvider.capitalize(anEvent) + 'Handler'] = function (handler) {
-	          config.on(anEvent, handler);
-	        };
-	      });
-	      this.$get = [
-	        '$rootScope',
-	        '$q',
-	        '$injector',
-	        '$window',
-	        '$location',
-	        'authUtils',
-	        function ($rootScope, $q, $injector, $window, $location, authUtils) {
-	          var auth = { isAuthenticated: false };
-	          var getHandlers = function (anEvent) {
-	            return config.eventHandlers[anEvent];
-	          };
-	          var callHandler = function (anEvent, locals) {
-	            $rootScope.$broadcast('auth0.' + anEvent, locals);
-	            angular.forEach(getHandlers(anEvent) || [], function (handler) {
-	              $injector.invoke(handler, auth, locals);
-	            });
-	          };
-	          // SignIn
-	          var onSigninOk = function (idToken, accessToken, state, refreshToken, profile, isRefresh) {
-	            var profilePromise = auth.getProfile(idToken);
-	            var response = {
-	                idToken: idToken,
-	                accessToken: accessToken,
-	                state: state,
-	                refreshToken: refreshToken,
-	                profile: profile,
-	                isAuthenticated: true
-	              };
-	            angular.extend(auth, response);
-	            callHandler(!isRefresh ? 'loginSuccess' : 'authenticated', angular.extend({ profilePromise: profilePromise }, response));
-	            return profilePromise;
-	          };
-	          function forbidden() {
-	            if (config.loginUrl) {
-	              $location.path(config.loginUrl);
-	            } else if (config.loginState) {
-	              $injector.get('$state').go(config.loginState);
-	            } else {
-	              callHandler('forbidden');
-	            }
-	          }
-	          // Redirect mode
-	          $rootScope.$on('$locationChangeStart', function () {
-	            if (!config.initialized) {
-	              return;
-	            }
-	            var hashResult = config.auth0lib.parseHash($window.location.hash);
-	            if (!auth.isAuthenticated) {
-	              if (hashResult && hashResult.id_token) {
-	                onSigninOk(hashResult.id_token, hashResult.access_token, hashResult.state, hashResult.refresh_token);
-	                return;
-	              }
-	              if (config.sso) {
-	                config.auth0js.getSSOData(authUtils.applied(function (err, ssoData) {
-	                  if (ssoData.sso) {
-	                    var loginOptions = {
-	                        popup: false,
-	                        callbackOnLocationHash: true,
-	                        connection: ssoData.lastUsedConnection.name
-	                      };
-	                    callHandler('ssoLogin', { loginOptions: loginOptions });
-	                    auth.signin(loginOptions, null, null, 'Auth0');
-	                  }
-	                }));
-	              }
-	            }
-	          });
-	          $rootScope.$on('auth0.forbiddenRequest', function () {
-	            forbidden();
-	          });
-	          if (config.loginUrl) {
-	            $rootScope.$on('$routeChangeStart', function (e, nextRoute) {
-	              if (!config.initialized) {
-	                return;
-	              }
-	              if (nextRoute.$$route && nextRoute.$$route.requiresLogin) {
-	                if (!auth.isAuthenticated && !auth.refreshTokenPromise) {
-	                  $location.path(config.loginUrl);
-	                }
-	              }
-	            });
-	          }
-	          if (config.loginState) {
-	            $rootScope.$on('$stateChangeStart', function (e, to) {
-	              if (!config.initialized) {
-	                return;
-	              }
-	              if (to.data && to.data.requiresLogin) {
-	                if (!auth.isAuthenticated && !auth.refreshTokenPromise) {
-	                  e.preventDefault();
-	                  $injector.get('$state').go(config.loginState);
-	                }
-	              }
-	            });
-	          }
-	          // Start auth service
-	          auth.config = config;
-	          var checkHandlers = function (options, successCallback) {
-	            var successHandlers = getHandlers('loginSuccess');
-	            if (!successCallback && !options.username && !options.email && (!successHandlers || successHandlers.length === 0)) {
-	              throw new Error('You must define a loginSuccess handler ' + 'if not using popup mode or not doing ro call because that means you are doing a redirect');
-	            }
-	          };
-	          auth.hookEvents = function () {
-	          };
-	          auth.init = angular.bind(config, config.init);
-	          auth.getToken = function (options) {
-	            options = options || { scope: 'openid' };
-	            if (!options.id_token && !options.refresh_token) {
-	              options.id_token = auth.idToken;
-	            }
-	            var getDelegationTokenAsync = authUtils.promisify(config.auth0js.getDelegationToken, config.auth0js);
-	            return getDelegationTokenAsync(options);
-	          };
-	          auth.refreshIdToken = function (refresh_token) {
-	            var refreshTokenAsync = authUtils.promisify(config.auth0js.refreshToken, config.auth0js);
-	            auth.refreshTokenPromise = refreshTokenAsync(refresh_token || auth.refreshToken).then(function (delegationResult) {
-	              return delegationResult.id_token;
-	            })['finally'](function () {
-	              auth.refreshTokenPromise = null;
-	            });
-	            return auth.refreshTokenPromise;
-	          };
-	          auth.renewIdToken = function (id_token) {
-	            var renewIdTokenAsync = authUtils.promisify(config.auth0js.renewIdToken, config.auth0js);
-	            return renewIdTokenAsync(id_token || auth.idToken).then(function (delegationResult) {
-	              return delegationResult.id_token;
-	            });
-	          };
-	          auth.signin = function (options, successCallback, errorCallback, libName) {
-	            options = options || {};
-	            checkHandlers(options, successCallback, errorCallback);
-	            options = getInnerLibraryConfigField('parseOptions', libName)(options);
-	            var signinMethod = getInnerLibraryMethod('signin', libName);
-	            var successFn = !successCallback ? null : function (profile, idToken, accessToken, state, refreshToken) {
-	                if (!idToken && !angular.isUndefined(options.loginAfterSignup) && !options.loginAfterSignup) {
-	                  successCallback();
-	                } else {
-	                  onSigninOk(idToken, accessToken, state, refreshToken, profile).then(function (profile) {
-	                    if (successCallback) {
-	                      successCallback(profile, idToken, accessToken, state, refreshToken);
+	            var config = this;
+	
+	            var innerAuth0libraryConfiguration = {
+	                'Auth0': {
+	                    signin: 'login',
+	                    signup: 'signup',
+	                    reset: 'changePassword',
+	                    validateUser: 'validateUser',
+	                    library: function() {
+	                        return config.auth0js;
+	                    },
+	                    parseOptions: function(options) {
+	                        var retOptions = angular.copy(options);
+	                        if (retOptions.authParams) {
+	                            angular.extend(retOptions, retOptions.authParams);
+	                            delete retOptions.authParams;
+	                        }
+	                        return retOptions;
 	                    }
-	                  });
-	                }
-	              };
-	            var errorFn = !errorCallback ? null : function (err) {
-	                callHandler('loginFailure', { error: err });
-	                if (errorCallback) {
-	                  errorCallback(err);
-	                }
-	              };
-	            var signinCall = authUtils.callbackify(signinMethod, successFn, errorFn, innerAuth0libraryConfiguration[libName || config.lib].library());
-	            signinCall(options);
-	          };
-	          auth.signup = function (options, successCallback, errorCallback) {
-	            options = options || {};
-	            checkHandlers(options, successCallback, errorCallback);
-	            options = getInnerLibraryConfigField('parseOptions')(options);
-	            var successFn = !successCallback ? null : function (profile, idToken, accessToken, state, refreshToken) {
-	                if (!angular.isUndefined(options.auto_login) && !options.auto_login) {
-	                  successCallback();
-	                } else {
-	                  onSigninOk(idToken, accessToken, state, refreshToken, profile).then(function (profile) {
-	                    if (successCallback) {
-	                      successCallback(profile, idToken, accessToken, state, refreshToken);
+	                },
+	                'Auth0Lock': {
+	                    signin: 'show',
+	                    signup: 'showSignup',
+	                    reset: 'showReset',
+	                    library: function() {
+	                        return config.auth0lib;
+	                    },
+	                    parseOptions: function(options) {
+	                        return angular.copy(options);
 	                    }
-	                  });
 	                }
-	              };
-	            var errorFn = !errorCallback ? null : function (err) {
-	                callHandler('loginFailure', { error: err });
-	                if (errorCallback) {
-	                  errorCallback(err);
+	            };
+	
+	            /*
+	             *
+	             * DESCRIPTION: Get a method from the libraries
+	             * 
+	             * INPUT: method name (string), library name (string)
+	             * OUTPUT: String
+	             *
+	             * */
+	
+	            function getInnerLibraryMethod(name, libName) {
+	                libName = libName || config.lib;
+	                var library = innerAuth0libraryConfiguration[libName].library();
+	                return library[innerAuth0libraryConfiguration[libName][name]];
+	            }
+	
+	            /*
+	             *
+	             * DESCRIPTION: Get a config from the libraries
+	             * 
+	             * INPUT: config name (string), library name (string)
+	             * OUTPUT: String
+	             *
+	             * */
+	            function getInnerLibraryConfigField(name, libName) {
+	                libName = libName || config.lib;
+	                return innerAuth0libraryConfiguration[libName][name];
+	            }
+	
+	            /*
+	             *
+	             * DESCRIPTION: Returns a constructor: Defaults to a function if provided. 
+	             * Defaults to a Lock if library is included and function is not provided
+	             * 
+	             * INPUT: function
+	             * OUTPUT: object
+	             *
+	             * */
+	            function constructorName(fun) {
+	                if (fun) {
+	                    return {
+	                        lib: authUtilsProvider.fnName(fun),
+	                        constructor: fun
+	                    };
 	                }
-	              };
-	            var auth0lib = config.auth0lib;
-	            var signupCall = authUtils.callbackify(getInnerLibraryMethod('signup'), successFn, errorFn, auth0lib);
-	            signupCall(options);
-	          };
-	          auth.reset = function (options, successCallback, errorCallback) {
-	            options = options || {};
-	            options = getInnerLibraryConfigField('parseOptions')(options);
-	            var auth0lib = config.auth0lib;
-	            var resetCall = authUtils.callbackify(getInnerLibraryMethod('reset'), successCallback, errorCallback, auth0lib);
-	            resetCall(options);
-	          };
-	          auth.validateUser = function (options, successCallback, errorCallback) {
-	            options = options || {};
-	            options = getInnerLibraryConfigField('parseOptions')(options);
-	            var auth0lib = config.auth0lib;
-	            var validateUserCall = authUtils.callbackify(getInnerLibraryMethod('validateUser'), successCallback, errorCallback, auth0lib);
-	            validateUserCall(options);
-	          };
-	          auth.signout = function () {
-	            auth.isAuthenticated = false;
-	            auth.profile = null;
-	            auth.profilePromise = null;
-	            auth.idToken = null;
-	            auth.state = null;
-	            auth.accessToken = null;
-	            auth.tokenPayload = null;
-	            callHandler('logout');
-	          };
-	          auth.authenticate = function (profile, idToken, accessToken, state, refreshToken) {
-	            return onSigninOk(idToken, accessToken, state, refreshToken, profile, true);
-	          };
-	          auth.getProfile = function (idToken) {
-	            var getProfilePromisify = authUtils.promisify(config.auth0lib.getProfile, config.auth0lib);
-	            auth.profilePromise = getProfilePromisify(idToken || auth.idToken);
-	            return auth.profilePromise.then(function (profile) {
-	              auth.profile = profile;
-	              return profile;
+	
+	                /* jshint ignore:start */
+	                if (null != window.Auth0Lock) {
+	                    return {
+	                        lib: 'Auth0Lock',
+	                        constructor: window.Auth0Lock
+	                    };
+	                }
+	
+	                if (null != window.Auth0) {
+	                    return {
+	                        lib: 'Auth0',
+	                        constructor: window.Auth0
+	                    };
+	                }
+	
+	                if (typeof Auth0Widget !== 'undefined') {
+	                    throw new Error('Auth0Widget is not supported with this version of auth0-angular' +
+	                        'anymore. Please try with an older one');
+	                }
+	
+	                throw new Error('Cannot initialize Auth0Angular. Auth0Lock or Auth0 must be available');
+	                /* jshint ignore:end */
+	            }
+	
+	            /*
+	             *
+	             * DESCRIPTION: Configures provider with provided options
+	             * 
+	             * INPUT: option (object) and constructor
+	             *
+	             * */
+	            this.init = function(options, Auth0Constructor) {
+	                if (!options) {
+	                    throw new Error('You must set options when calling init');
+	                }
+	                this.loginUrl = options.loginUrl;
+	                this.loginState = options.loginState;
+	                this.clientID = options.clientID || options.clientId;
+	                var domain = options.domain;
+	                this.domain = domain;
+	                this.sso = options.sso;
+	
+	                var constructorInfo = constructorName(Auth0Constructor);
+	                this.lib = constructorInfo.lib;
+	                if (constructorInfo.lib === 'Auth0Lock') {
+	                    this.auth0lib = new constructorInfo.constructor(this.clientID, domain, angular.extend(defaultOptions, options));
+	                    this.auth0js = this.auth0lib.getClient();
+	                    this.isLock = true;
+	                } else {
+	                    this.auth0lib = new constructorInfo.constructor(angular.extend(defaultOptions, options));
+	                    this.auth0js = this.auth0lib;
+	                    this.isLock = false;
+	                }
+	
+	                this.initialized = true;
+	            };
+	
+	
+	            this.eventHandlers = {};
+	
+	            this.on = function(anEvent, handler) {
+	                if (!this.eventHandlers[anEvent]) {
+	                    this.eventHandlers[anEvent] = [];
+	                }
+	                this.eventHandlers[anEvent].push(handler);
+	            };
+	
+	            var events = ['loginSuccess', 'loginFailure', 'logout', 'forbidden', 'authenticated'];
+	            angular.forEach(events, function(anEvent) {
+	                config['add' + authUtilsProvider.capitalize(anEvent) + 'Handler'] = function(handler) {
+	                    config.on(anEvent, handler);
+	                };
 	            });
-	          };
-	          return auth;
-	        }
-	      ];
-	    }
-	  ]);
-	}());
+	
+	            this.$get = ["$rootScope", "$q", "$injector", "$window", "$location", "authUtils", "$http",
+	                function($rootScope, $q, $injector, $window, $location, authUtils, $http) {
+	                var auth = {
+	                    isAuthenticated: false
+	                };
+	
+	                $rootScope.isAuthenticated = false;
+	
+	                var getHandlers = function(anEvent) {
+	                    return config.eventHandlers[anEvent];
+	                };
+	
+	                var callHandler = function(anEvent, locals) {
+	                    $rootScope.$broadcast('auth0.' + anEvent, locals);
+	                    angular.forEach(getHandlers(anEvent) || [], function(handler) {
+	                        $injector.invoke(handler, auth, locals);
+	                    });
+	                };
+	
+	                // SignIn
+	
+	                var onSigninOk = function(idToken, accessToken, state, refreshToken, profile, isRefresh) {
+	                    var profilePromise = auth.getProfile(idToken);
+	
+	                    var response = {
+	                        idToken: idToken,
+	                        accessToken: accessToken,
+	                        state: state,
+	                        refreshToken: refreshToken,
+	                        profile: profile,
+	                        isAuthenticated: true
+	                    };
+	
+	                    $rootScope.isAuthenticated = true;
+	
+	                    angular.extend(auth, response);
+	                    callHandler(!isRefresh ? 'loginSuccess' : 'authenticated', angular.extend({
+	                        profilePromise: profilePromise
+	                    }, response));
+	
+	                    return profilePromise;
+	                };
+	
+	                function forbidden() {
+	                    if (config.loginUrl) {
+	                        $location.path(config.loginUrl);
+	                    } else if (config.loginState) {
+	                        $injector.get('$state').go(config.loginState);
+	                    } else {
+	                        callHandler('forbidden');
+	                    }
+	                }
+	
+	                // Redirect mode
+	                $rootScope.$on('$locationChangeStart', function() {
+	                    if (!config.initialized) {
+	                        return;
+	                    }
+	
+	                    var hashResult = config.auth0lib.parseHash($window.location.hash);
+	                    if (!auth.isAuthenticated) {
+	                        if (hashResult && (hashResult.idToken || hashResult.id_token)) {
+	                            onSigninOk(hashResult.idToken || hashResult.id_token, hashResult.accessToken || hashResult.access_token, hashResult.state, hashResult.refreshToken || hashResult.refresh_token);
+	                            return;
+	                        }
+	                    }
+	                });
+	
+	                $rootScope.$on('auth0.forbiddenRequest', function() {
+	                    forbidden();
+	                });
+	
+	                if (config.loginUrl) {
+	                    $rootScope.$on('$routeChangeStart', function(e, nextRoute) {
+	                        if (!config.initialized) {
+	                            return;
+	                        }
+	
+	                        verifyRoute(
+	                            (nextRoute.$$route && nextRoute.$$route.requiresLogin),
+	                            e,
+	                            function(){
+	                                return JSON.stringify({
+	                                    redirect_to: {
+	                                        path: $location.path()
+	                                    }
+	                                });
+	                            },
+	                            function(){
+	                                $location.path(config.loginUrl);
+	                            }
+	                        );
+	                    });
+	                }
+	
+	
+	                if (config.loginState) {
+	                    $rootScope.$on('$stateChangeStart', function(e, to, toParams) {
+	                        if (!config.initialized) {
+	                            return;
+	                        }
+	
+	                        verifyRoute(
+	                            (to.data && to.data.requiresLogin),
+	                            e,
+	                            function() {
+	                                return JSON.stringify({
+	                                    redirect_to: {
+	                                        state: to.name,
+	                                        params: toParams
+	                                    }
+	                                });
+	                            },
+	                            function() {
+	                                $injector.get('$state').go(config.loginState);
+	                            }
+	                        );
+	                    });
+	                }
+	
+	                function verifyRoute(requiresLogin, e, getState, redirectToLogin) {
+	                    if (!auth.isAuthenticated && !auth.refreshTokenPromise) {
+	                        if (config.sso) {
+	                            if (requiresLogin) {e.preventDefault();}
+	                            config.auth0js.getSSOData(authUtils.applied(function(err, ssoData) {
+	                                if (ssoData.sso) {
+	                                    var loginOptions = {
+	                                        popup: false,
+	                                        callbackOnLocationHash: true,
+	                                        connection: ssoData.lastUsedConnection.name,
+	                                        authParams: {
+	                                            state: getState()
+	                                        }
+	                                    };
+	                                    callHandler('ssoLogin', { loginOptions: loginOptions });
+	                                    auth.signin(loginOptions, null, null, 'Auth0');
+	                                } else if (requiresLogin) {
+	                                    e.preventDefault();
+	                                    redirectToLogin();
+	                                }
+	                            }));
+	                        } else if (requiresLogin) {
+	                            e.preventDefault();
+	                            redirectToLogin();
+	                        }
+	                    }
+	                }
+	
+	                // Start auth service
+	
+	                auth.config = config;
+	
+	                var checkHandlers = function(options, successCallback) {
+	                    var successHandlers = getHandlers('loginSuccess');
+	                    if (!successCallback && !options.username && !options.email && (!successHandlers || successHandlers.length === 0)) {
+	                        throw new Error('You must define a loginSuccess handler ' +
+	                            'if not using popup mode or not doing ro call because that means you are doing a redirect');
+	                    }
+	                };
+	
+	                var linkAccount = function(primaryJWT, secondaryJWT, profile){
+	                    var user_id = profile.user_id;
+	                    return $http(
+	                        {
+	                            method: 'POST',
+	                            url: 'https://' + config.domain + '/api/v2/users/' + user_id + '/identities',
+	                            headers: {
+	                                Authorization: 'Bearer ' + primaryJWT
+	                            },
+	                            data:{
+	                                link_with: secondaryJWT
+	                            }
+	                        }
+	                    )
+	                }
+	
+	                var unLinkAccount = function(primaryJWT, user_id, secondaryProvider, secondaryUserId){
+	                    return $http(
+	                        {
+	                            method: 'DELETE',
+	                            url: 'https://' + config.domain + '/api/v2/users/' + user_id + '/identities/' + secondaryProvider + '/' + secondaryUserId,
+	                            headers: {
+	                                Authorization: 'Bearer ' + primaryJWT
+	                            }
+	                        }
+	                    )
+	                }
+	
+	                auth.hookEvents = function() {
+	                    // Does nothing. Hook events on application's run
+	                };
+	
+	                auth.init = angular.bind(config, config.init);
+	
+	
+	                /*
+	                 *
+	                 * DESCRIPTION: Fetch a delegation token
+	                 * INPUT: Config object
+	                 * OUTPUT: Promise
+	                 *
+	                 * */
+	                auth.getToken = function(options) {
+	                    options = options || { scope: 'openid' };
+	
+	                    if (!options.id_token && !options.refresh_token) {
+	                        options.id_token = auth.idToken;
+	                    }
+	
+	                    var getDelegationTokenAsync = authUtils.promisify(config.auth0js.getDelegationToken, config.auth0js);
+	
+	                    return getDelegationTokenAsync(options);
+	                };
+	
+	                /*
+	                 *
+	                 * DESCRIPTION: Refresh Token
+	                 * INPUT: token (string)
+	                 * OUTPUT: Promise
+	                 *
+	                 * */
+	                auth.refreshIdToken = function(refresh_token) {
+	                    var refreshTokenAsync = authUtils.promisify(config.auth0js.refreshToken, config.auth0js);
+	
+	                    auth.refreshTokenPromise = refreshTokenAsync(refresh_token || auth.refreshToken).then(function (delegationResult) {
+	                        return delegationResult.id_token;
+	                    })['finally'](function() {
+	                        auth.refreshTokenPromise = null;
+	                    });
+	
+	                    return auth.refreshTokenPromise;
+	                };
+	
+	                /*
+	                 *
+	                 * DESCRIPTION: Renew user's token
+	                 * INPUT: token (string)
+	                 * OUTPUT: Promise
+	                 *
+	                 * */
+	                auth.renewIdToken = function(id_token) {
+	                    var renewIdTokenAsync = authUtils.promisify(config.auth0js.renewIdToken, config.auth0js);
+	
+	                    return renewIdTokenAsync(id_token || auth.idToken).then(function (delegationResult) {
+	                        return delegationResult.id_token;
+	                    });
+	                };
+	
+	                /*
+	                 *
+	                 * DESCRIPTION: Sign a user in
+	                 * INPUT: config options, success callback fxn, err callback fxn, library name
+	                 * The Library name is either 'Auth0' or 'Auth0Lock'
+	                 *
+	                 * */
+	                auth.signin = function(options, successCallback, errorCallback, libName) {
+	                    options = options || {};
+	                    checkHandlers(options, successCallback, errorCallback);
+	                    options = getInnerLibraryConfigField('parseOptions', libName)(options);
+	
+	                    var signinMethod = getInnerLibraryMethod('signin', libName);
+	                    var successFn = !successCallback ? null : function(profile, idToken, accessToken, state, refreshToken) {
+	                        if (!idToken && !angular.isUndefined(options.loginAfterSignup) && !options.loginAfterSignup) {
+	                            successCallback();
+	                        } else {
+	                            onSigninOk(idToken, accessToken, state, refreshToken, profile).then(function(profile) {
+	                                if (successCallback) {
+	                                    successCallback(profile, idToken, accessToken, state, refreshToken);
+	                                }
+	                            });
+	                        }
+	                    };
+	
+	                    var errorFn = !errorCallback ? null : function(err) {
+	                        callHandler('loginFailure', { error: err });
+	                        if (errorCallback) {
+	                            errorCallback(err);
+	                        }
+	                    };
+	
+	                    var signinCall = authUtils.callbackify(signinMethod, successFn, errorFn , innerAuth0libraryConfiguration[libName || config.lib].library());
+	
+	                    signinCall(options);
+	                };
+	
+	                /*
+	                 *
+	                 * DESCRIPTION: Sign's up a user
+	                 * INPUT: config options, success callback fxn, err callback fxn
+	                 *
+	                 * */
+	
+	                auth.signup = function(options, successCallback, errorCallback) {
+	                    options = options || {};
+	                    checkHandlers(options, successCallback, errorCallback);
+	                    options = getInnerLibraryConfigField('parseOptions')(options);
+	
+	                    var successFn = !successCallback ? null : function(profile, idToken, accessToken, state, refreshToken) {
+	                        if (!angular.isUndefined(options.auto_login) && !options.auto_login) {
+	                            successCallback();
+	                        } else {
+	                            onSigninOk(idToken, accessToken, state, refreshToken, profile).then(function(profile) {
+	                                if (successCallback) {
+	                                    successCallback(profile, idToken, accessToken, state, refreshToken);
+	                                }
+	                            });
+	                        }
+	                    };
+	
+	                    var errorFn = !errorCallback ? null : function(err) {
+	                        callHandler('loginFailure', { error: err });
+	                        if (errorCallback) {
+	                            errorCallback(err);
+	                        }
+	                    };
+	
+	                    var auth0lib = config.auth0lib;
+	                    var signupCall = authUtils.callbackify(getInnerLibraryMethod('signup'),successFn , errorFn, auth0lib);
+	
+	                    signupCall(options);
+	                };
+	
+	                /*
+	                 *
+	                 * DESCRIPTION: Link multiple accounts (e.g: FB, Twitter, Google)
+	                 * 
+	                 * INPUT: primaryJWT (string): Initial JWT assigned to User,
+	                 * primaryProfile (object): Primary account user profile,
+	                 * options (object): Auth options
+	                 * Success Callback fxn, Err Callback fxn and Library Name
+	                 *
+	                 * */
+	                auth.linkAccount = function (primaryJWT, primaryProfile, options, successCallback, errorCallback, libName) {
+	                    var defaultConfig = {popup: true};
+	                    if (!primaryJWT || !primaryProfile){
+	                        throw new Error('Available token and profile is needed to link to another');
+	                    }
+	
+	                    if(!options.connection){
+	                        throw new Error('Connection type (eg: facebook, github) is required to link account');
+	                    }
+	
+	                    options = options || {};
+	
+	                    checkHandlers(options, successCallback, errorCallback);
+	                    angular.extend(options, defaultConfig);
+	                    options = getInnerLibraryConfigField('parseOptions', libName)(options);
+	
+	                    var signinMethod = getInnerLibraryMethod('signin', libName);
+	
+	                    var successFn = function(profile, idToken) {
+	                       linkAccount(primaryJWT, idToken, primaryProfile).then(function(response){
+	
+	                           successCallback(response);
+	
+	                       }, function(err) {
+	                               errorCallback(err);
+	                       });
+	                    };
+	
+	                    var errorFn = function(err) {
+	                        if (errorCallback) {
+	                            errorCallback(err);
+	                        }
+	                    };
+	
+	
+	                    var linkAccountCall = authUtils.callbackify(signinMethod, successFn, errorFn , innerAuth0libraryConfiguration[libName || config.lib].library());
+	
+	                    linkAccountCall(options);
+	
+	                };
+	
+	                /*
+	                 *
+	                 * DESCRIPTION: Unlink linked accounts
+	                 * 
+	                 * INPUT: primaryJWT (string): Initial JWT assigned to User,
+	                 * user_id (string): Primary account user id,
+	                 * secondaryProvider (string): Provider of account to unlink (eg: Facebook),
+	                 * secondaryUserId: Secondary account user id
+	                 * 
+	                 * OUTPUT: Promise
+	                 *
+	                 * */
+	                auth.unLinkAccount = function (primaryJWT, user_id, secondaryProvider, secondaryUserId) {
+	                    if (!primaryJWT || !user_id || !secondaryProvider || !secondaryUserId){
+	                        throw new Error('All the arguments are required to unlink. Please refer to documentation for the arguments');
+	                    }
+	
+	                    return unLinkAccount(primaryJWT,  user_id, secondaryProvider, secondaryUserId);
+	
+	                };
+	
+	                /*
+	                 *
+	                 * DESCRIPTION: Performs forgot your password flow
+	                 * 
+	                 * INPUT: config options (object), Callbacks
+	                 *
+	                 *
+	                 * */
+	
+	                auth.reset = function(options, successCallback, errorCallback) {
+	                    options = options || {};
+	
+	                    options = getInnerLibraryConfigField('parseOptions')(options);
+	                    var auth0lib = config.auth0lib;
+	                    var resetCall = authUtils.callbackify(getInnerLibraryMethod('reset'), successCallback, errorCallback, auth0lib);
+	
+	                    resetCall(options);
+	                };
+	
+	                auth.validateUser = function(options, successCallback, errorCallback) {
+	                    options = options || {};
+	
+	                    options = getInnerLibraryConfigField('parseOptions')(options);
+	                    var auth0lib = config.auth0lib;
+	                    var validateUserCall = authUtils.callbackify(getInnerLibraryMethod('validateUser'), successCallback, errorCallback, auth0lib);
+	
+	                    validateUserCall(options);
+	                };
+	
+	                /*
+	                 *
+	                 * DESCRIPTION: Sign user out
+	                 *
+	                 *
+	                 * */
+	                auth.signout = function() {
+	                    auth.isAuthenticated = false;
+	                    auth.profile = null;
+	                    auth.profilePromise = null;
+	                    auth.idToken = null;
+	                    auth.state = null;
+	                    auth.accessToken = null;
+	                    auth.tokenPayload = null;
+	                    $rootScope.isAuthenticated = false;
+	                    callHandler('logout');
+	                };
+	
+	                auth.authenticate = function(profile, idToken, accessToken, state, refreshToken) {
+	                    return onSigninOk(idToken, accessToken, state, refreshToken, profile, true);
+	                };
+	
+	                /*
+	                 *
+	                 * DESCRIPTION: Fetch user profile
+	                 *
+	                 * INPUT: token (string)
+	                 * OUTPUT: Promise
+	                 *
+	                 * */
+	                auth.getProfile = function(idToken) {
+	                    var getProfilePromisify = authUtils.promisify(config.auth0lib.getProfile, config.auth0lib);
+	                    auth.profilePromise = getProfilePromisify(idToken || auth.idToken);
+	                    return auth.profilePromise.then(function(profile) {
+	                        auth.profile = profile;
+	                        return profile;
+	                    });
+	                };
+	
+	                auth.hide = function(callback) {
+	                    config.auth0lib.hide(callback);
+	                };
+	
+	                return auth;
+	            }];
+	        }]);
+	
+	angular.module('auth0.directives', ['auth0.service']);
+	
+	angular.module('auth0.directives')
+	    .directive('ifUser', ["$rootScope", function($rootScope){
+	        return {
+	            link: function(scope, element){
+	                $rootScope.$watch('isAuthenticated',function(isAuth){
+	                    if(isAuth){
+	                        element.removeClass('ng-hide');
+	                    }else{
+	                        element.addClass('ng-hide');
+	                    }
+	                });
+	            }
+	        };
+	    }]);
+	
+
 
 /***/ },
-/* 87 */
+/* 88 */
 /*!********************************!*\
   !*** ./beeline-admin/env.json ***!
   \********************************/
 /***/ function(module, exports) {
 
 	module.exports = {
-		"BACKEND_URL": "https://api.beeline.sg",
+		"BACKEND_URL": "https://beeline-server-dev.herokuapp.com",
 		"AUTH0_CID": "BslsfnrdKMedsmr9GYkTv7ejJPReMgcE",
 		"AUTH0_DOMAIN": "beeline.au.auth0.com"
 	};
 
 /***/ },
-/* 88 */
+/* 89 */
 /*!*********************************!*\
   !*** ./beeline-admin/router.js ***!
   \*********************************/
@@ -88706,10 +90468,10 @@
 	  $urlRouterProvider.otherwise('/');
 	};
 	
-	var env = __webpack_require__(/*! ./env */ 87);
+	var env = __webpack_require__(/*! ./env */ 88);
 
 /***/ },
-/* 89 */
+/* 90 */
 /*!*******************************************************!*\
   !*** ./beeline-admin/directives/adminNav/adminNav.js ***!
   \*******************************************************/
@@ -88724,7 +90486,7 @@
 	exports.default = function (AdminService, auth) {
 	  return {
 	    replace: true,
-	    template: __webpack_require__(/*! ./adminNav.html */ 90),
+	    template: __webpack_require__(/*! ./adminNav.html */ 91),
 	    link: function link(scope, elem, attr) {
 	      scope.adminService = AdminService;
 	      scope.auth = auth;
@@ -88733,16 +90495,16 @@
 	};
 
 /***/ },
-/* 90 */
+/* 91 */
 /*!*********************************************************!*\
   !*** ./beeline-admin/directives/adminNav/adminNav.html ***!
   \*********************************************************/
 /***/ function(module, exports) {
 
-	module.exports = "\n<nav class=\"tabs tabs-top tabs-icon-left tabs-light tabs-striped admin-nav\">\n  <ul>\n    <li>\n      <!-- The tabs at the top of the page -->\n      <a class=\"tab-item\"\n         ui-sref=\"transactions\"\n         >\n      \t <span class=\"tab-title\">Transactions</span>\n      </a>\n    </li>\n    <li>\n      <a class=\"tab-item\"\n         ui-sref=\"routes({routeId: 0, action: 'route'})\"\n         >\n      \t <span class=\"tab-title\">Routes</span>\n      </a>\n    </li>\n    <li>\n      <a class=\"tab-item\"\n         ui-sref=\"bookings\"\n         >\n      \t <span class=\"tab-title\">Bookings</span>\n      </a>\n    </li>\n    <li>\n      <a class=\"tab-item\"\n         ui-sref=\"summary\"\n         title=\"See the list of bookings for each month\"\n         >\n      \t <span class=\"tab-title\">Summary</span>\n      </a>\n    </li>\n    <li>\n      <a class=\"tab-item\"\n         ui-sref=\"driver\"\n         >\n      \t <span class=\"tab-title\">Drivers</span>\n      </a>\n    </li>\n    <li ng-if=\"auth.isAuthenticated\">\n      <a class=\"tab-item\"\n        ng-click=\"adminService.logout()\"\n        >\n        Logout\n      </a>\n    </li>\n    <li ng-if=\"!auth.isAuthenticated\">\n      <a class=\"tab-item\"\n        ng-click=\"adminService.login()\"\n        >\n        Login\n      </a>\n    </li>\n  </ul>\n  <super-admin-company-selector></super-admin-company-selector>\n</nav>\n";
+	module.exports = "\n  <nav class=\"navbar navbar-inverse navbar-fixed-top\">\n    <!-- Fixed navbar -->\n      <div class=\"container-fluid\">\n          <div class=\"navbar-header\">\n              <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#navbar\" aria-expanded=\"false\" aria-controls=\"navbar\">\n                  <span class=\"sr-only\">Toggle navigation</span>\n                  <span class=\"icon-bar\"></span>\n                  <span class=\"icon-bar\"></span>\n                  <span class=\"icon-bar\"></span>\n              </button>\n          </div>\n          <div id=\"navbar\" class=\"navbar-collapse collapse\">\n              <a class=\"navbar-brand\" href=\"#\">Beeline Admin</a>\n              <ul class=\"nav navbar-nav\">\n                  <li><a ui-sref=\"bookings\">Tickets</a></li>\n                  <li><a ui-sref=\"transactions\">Transactions</a></li>\n                  <li><a ui-sref=\"routes({routeId: 0, action: 'route'})\">Routes</a></li>\n                  <li><a ui-sref=\"summary\">Summary</a></li>\n                  <li><a ui-sref=\"driver\">Drivers</a></li>\n                  <li><a href=\"#\">Incidents</a></li>\n              </ul>\n\n              <ul class=\"nav navbar-nav pull-right\">\n                <li>\n                    <a><super-admin-company-selector></super-admin-company-selector></a>\n                </li>\n\n                  <li ng-if=\"!auth.isAuthenticated\">\n                    <a ng-click=\"adminService.login()\">\n                      Login\n                    </a>\n                  </li>\n\n                  <li ng-if=\"auth.isAuthenticated\">\n                      <a ng-click=\"adminService.logout()\">Log out</a>\n                  </li>\n              </ul>\n          </div>\n          <!--/.nav-collapse -->\n      </div>\n\n  </nav>\n";
 
 /***/ },
-/* 91 */
+/* 92 */
 /*!*************************************************************!*\
   !*** ./beeline-admin/directives/accountView/accountView.js ***!
   \*************************************************************/
@@ -88764,7 +90526,7 @@
 	};
 
 /***/ },
-/* 92 */
+/* 93 */
 /*!*************************************************************!*\
   !*** ./beeline-admin/directives/paymentView/paymentView.js ***!
   \*************************************************************/
@@ -88776,13 +90538,13 @@
 	  value: true
 	});
 	
-	var _typeof2 = __webpack_require__(/*! babel-runtime/helpers/typeof */ 93);
+	var _typeof2 = __webpack_require__(/*! babel-runtime/helpers/typeof */ 94);
 	
 	var _typeof3 = _interopRequireDefault(_typeof2);
 	
 	exports.default = function () {
 	  return {
-	    template: __webpack_require__(/*! ./paymentView.html */ 113),
+	    template: __webpack_require__(/*! ./paymentView.html */ 114),
 	    scope: {
 	      pvData: '=',
 	      pvTitle: '=',
@@ -88800,7 +90562,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 93 */
+/* 94 */
 /*!*******************************************!*\
   !*** ./~/babel-runtime/helpers/typeof.js ***!
   \*******************************************/
@@ -88810,11 +90572,11 @@
 	
 	exports.__esModule = true;
 	
-	var _iterator = __webpack_require__(/*! ../core-js/symbol/iterator */ 94);
+	var _iterator = __webpack_require__(/*! ../core-js/symbol/iterator */ 95);
 	
 	var _iterator2 = _interopRequireDefault(_iterator);
 	
-	var _symbol = __webpack_require__(/*! ../core-js/symbol */ 97);
+	var _symbol = __webpack_require__(/*! ../core-js/symbol */ 98);
 	
 	var _symbol2 = _interopRequireDefault(_symbol);
 	
@@ -88829,16 +90591,16 @@
 	};
 
 /***/ },
-/* 94 */
+/* 95 */
 /*!****************************************************!*\
   !*** ./~/babel-runtime/core-js/symbol/iterator.js ***!
   \****************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/symbol/iterator */ 95), __esModule: true };
+	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/symbol/iterator */ 96), __esModule: true };
 
 /***/ },
-/* 95 */
+/* 96 */
 /*!*****************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/fn/symbol/iterator.js ***!
   \*****************************************************************/
@@ -88846,10 +90608,10 @@
 
 	__webpack_require__(/*! ../../modules/es6.string.iterator */ 74);
 	__webpack_require__(/*! ../../modules/web.dom.iterable */ 28);
-	module.exports = __webpack_require__(/*! ../../modules/_wks-ext */ 96).f('iterator');
+	module.exports = __webpack_require__(/*! ../../modules/_wks-ext */ 97).f('iterator');
 
 /***/ },
-/* 96 */
+/* 97 */
 /*!***************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_wks-ext.js ***!
   \***************************************************************/
@@ -88858,29 +90620,29 @@
 	exports.f = __webpack_require__(/*! ./_wks */ 71);
 
 /***/ },
-/* 97 */
+/* 98 */
 /*!*******************************************!*\
   !*** ./~/babel-runtime/core-js/symbol.js ***!
   \*******************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/symbol */ 98), __esModule: true };
+	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/symbol */ 99), __esModule: true };
 
 /***/ },
-/* 98 */
+/* 99 */
 /*!**************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/fn/symbol/index.js ***!
   \**************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(/*! ../../modules/es6.symbol */ 99);
-	__webpack_require__(/*! ../../modules/es6.object.to-string */ 110);
-	__webpack_require__(/*! ../../modules/es7.symbol.async-iterator */ 111);
-	__webpack_require__(/*! ../../modules/es7.symbol.observable */ 112);
+	__webpack_require__(/*! ../../modules/es6.symbol */ 100);
+	__webpack_require__(/*! ../../modules/es6.object.to-string */ 111);
+	__webpack_require__(/*! ../../modules/es7.symbol.async-iterator */ 112);
+	__webpack_require__(/*! ../../modules/es7.symbol.observable */ 113);
 	module.exports = __webpack_require__(/*! ../../modules/_core */ 41).Symbol;
 
 /***/ },
-/* 99 */
+/* 100 */
 /*!*****************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/es6.symbol.js ***!
   \*****************************************************************/
@@ -88893,24 +90655,24 @@
 	  , DESCRIPTORS    = __webpack_require__(/*! ./_descriptors */ 49)
 	  , $export        = __webpack_require__(/*! ./_export */ 39)
 	  , redefine       = __webpack_require__(/*! ./_redefine */ 54)
-	  , META           = __webpack_require__(/*! ./_meta */ 100).KEY
+	  , META           = __webpack_require__(/*! ./_meta */ 101).KEY
 	  , $fails         = __webpack_require__(/*! ./_fails */ 50)
 	  , shared         = __webpack_require__(/*! ./_shared */ 66)
 	  , setToStringTag = __webpack_require__(/*! ./_set-to-string-tag */ 70)
 	  , uid            = __webpack_require__(/*! ./_uid */ 67)
 	  , wks            = __webpack_require__(/*! ./_wks */ 71)
-	  , wksExt         = __webpack_require__(/*! ./_wks-ext */ 96)
-	  , wksDefine      = __webpack_require__(/*! ./_wks-define */ 101)
-	  , keyOf          = __webpack_require__(/*! ./_keyof */ 102)
-	  , enumKeys       = __webpack_require__(/*! ./_enum-keys */ 103)
-	  , isArray        = __webpack_require__(/*! ./_is-array */ 106)
+	  , wksExt         = __webpack_require__(/*! ./_wks-ext */ 97)
+	  , wksDefine      = __webpack_require__(/*! ./_wks-define */ 102)
+	  , keyOf          = __webpack_require__(/*! ./_keyof */ 103)
+	  , enumKeys       = __webpack_require__(/*! ./_enum-keys */ 104)
+	  , isArray        = __webpack_require__(/*! ./_is-array */ 107)
 	  , anObject       = __webpack_require__(/*! ./_an-object */ 46)
 	  , toIObject      = __webpack_require__(/*! ./_to-iobject */ 33)
 	  , toPrimitive    = __webpack_require__(/*! ./_to-primitive */ 52)
 	  , createDesc     = __webpack_require__(/*! ./_property-desc */ 53)
 	  , _create        = __webpack_require__(/*! ./_object-create */ 57)
-	  , gOPNExt        = __webpack_require__(/*! ./_object-gopn-ext */ 107)
-	  , $GOPD          = __webpack_require__(/*! ./_object-gopd */ 109)
+	  , gOPNExt        = __webpack_require__(/*! ./_object-gopn-ext */ 108)
+	  , $GOPD          = __webpack_require__(/*! ./_object-gopd */ 110)
 	  , $DP            = __webpack_require__(/*! ./_object-dp */ 45)
 	  , $keys          = __webpack_require__(/*! ./_object-keys */ 59)
 	  , gOPD           = $GOPD.f
@@ -89035,9 +90797,9 @@
 	
 	  $GOPD.f = $getOwnPropertyDescriptor;
 	  $DP.f   = $defineProperty;
-	  __webpack_require__(/*! ./_object-gopn */ 108).f = gOPNExt.f = $getOwnPropertyNames;
-	  __webpack_require__(/*! ./_object-pie */ 105).f  = $propertyIsEnumerable;
-	  __webpack_require__(/*! ./_object-gops */ 104).f = $getOwnPropertySymbols;
+	  __webpack_require__(/*! ./_object-gopn */ 109).f = gOPNExt.f = $getOwnPropertyNames;
+	  __webpack_require__(/*! ./_object-pie */ 106).f  = $propertyIsEnumerable;
+	  __webpack_require__(/*! ./_object-gops */ 105).f = $getOwnPropertySymbols;
 	
 	  if(DESCRIPTORS && !__webpack_require__(/*! ./_library */ 38)){
 	    redefine(ObjectProto, 'propertyIsEnumerable', $propertyIsEnumerable, true);
@@ -89123,7 +90885,7 @@
 	setToStringTag(global.JSON, 'JSON', true);
 
 /***/ },
-/* 100 */
+/* 101 */
 /*!************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_meta.js ***!
   \************************************************************/
@@ -89184,7 +90946,7 @@
 	};
 
 /***/ },
-/* 101 */
+/* 102 */
 /*!******************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_wks-define.js ***!
   \******************************************************************/
@@ -89193,7 +90955,7 @@
 	var global         = __webpack_require__(/*! ./_global */ 40)
 	  , core           = __webpack_require__(/*! ./_core */ 41)
 	  , LIBRARY        = __webpack_require__(/*! ./_library */ 38)
-	  , wksExt         = __webpack_require__(/*! ./_wks-ext */ 96)
+	  , wksExt         = __webpack_require__(/*! ./_wks-ext */ 97)
 	  , defineProperty = __webpack_require__(/*! ./_object-dp */ 45).f;
 	module.exports = function(name){
 	  var $Symbol = core.Symbol || (core.Symbol = LIBRARY ? {} : global.Symbol || {});
@@ -89201,7 +90963,7 @@
 	};
 
 /***/ },
-/* 102 */
+/* 103 */
 /*!*************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_keyof.js ***!
   \*************************************************************/
@@ -89219,7 +90981,7 @@
 	};
 
 /***/ },
-/* 103 */
+/* 104 */
 /*!*****************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_enum-keys.js ***!
   \*****************************************************************/
@@ -89227,8 +90989,8 @@
 
 	// all enumerable object keys, includes symbols
 	var getKeys = __webpack_require__(/*! ./_object-keys */ 59)
-	  , gOPS    = __webpack_require__(/*! ./_object-gops */ 104)
-	  , pIE     = __webpack_require__(/*! ./_object-pie */ 105);
+	  , gOPS    = __webpack_require__(/*! ./_object-gops */ 105)
+	  , pIE     = __webpack_require__(/*! ./_object-pie */ 106);
 	module.exports = function(it){
 	  var result     = getKeys(it)
 	    , getSymbols = gOPS.f;
@@ -89242,7 +91004,7 @@
 	};
 
 /***/ },
-/* 104 */
+/* 105 */
 /*!*******************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_object-gops.js ***!
   \*******************************************************************/
@@ -89251,7 +91013,7 @@
 	exports.f = Object.getOwnPropertySymbols;
 
 /***/ },
-/* 105 */
+/* 106 */
 /*!******************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_object-pie.js ***!
   \******************************************************************/
@@ -89260,7 +91022,7 @@
 	exports.f = {}.propertyIsEnumerable;
 
 /***/ },
-/* 106 */
+/* 107 */
 /*!****************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_is-array.js ***!
   \****************************************************************/
@@ -89273,7 +91035,7 @@
 	};
 
 /***/ },
-/* 107 */
+/* 108 */
 /*!***********************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_object-gopn-ext.js ***!
   \***********************************************************************/
@@ -89281,7 +91043,7 @@
 
 	// fallback for IE11 buggy Object.getOwnPropertyNames with iframe and window
 	var toIObject = __webpack_require__(/*! ./_to-iobject */ 33)
-	  , gOPN      = __webpack_require__(/*! ./_object-gopn */ 108).f
+	  , gOPN      = __webpack_require__(/*! ./_object-gopn */ 109).f
 	  , toString  = {}.toString;
 	
 	var windowNames = typeof window == 'object' && window && Object.getOwnPropertyNames
@@ -89301,7 +91063,7 @@
 
 
 /***/ },
-/* 108 */
+/* 109 */
 /*!*******************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_object-gopn.js ***!
   \*******************************************************************/
@@ -89316,13 +91078,13 @@
 	};
 
 /***/ },
-/* 109 */
+/* 110 */
 /*!*******************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_object-gopd.js ***!
   \*******************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var pIE            = __webpack_require__(/*! ./_object-pie */ 105)
+	var pIE            = __webpack_require__(/*! ./_object-pie */ 106)
 	  , createDesc     = __webpack_require__(/*! ./_property-desc */ 53)
 	  , toIObject      = __webpack_require__(/*! ./_to-iobject */ 33)
 	  , toPrimitive    = __webpack_require__(/*! ./_to-primitive */ 52)
@@ -89340,7 +91102,7 @@
 	};
 
 /***/ },
-/* 110 */
+/* 111 */
 /*!***************************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/es6.object.to-string.js ***!
   \***************************************************************************/
@@ -89349,25 +91111,25 @@
 
 
 /***/ },
-/* 111 */
+/* 112 */
 /*!********************************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/es7.symbol.async-iterator.js ***!
   \********************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(/*! ./_wks-define */ 101)('asyncIterator');
+	__webpack_require__(/*! ./_wks-define */ 102)('asyncIterator');
 
 /***/ },
-/* 112 */
+/* 113 */
 /*!****************************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/es7.symbol.observable.js ***!
   \****************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(/*! ./_wks-define */ 101)('observable');
+	__webpack_require__(/*! ./_wks-define */ 102)('observable');
 
 /***/ },
-/* 113 */
+/* 114 */
 /*!***************************************************************!*\
   !*** ./beeline-admin/directives/paymentView/paymentView.html ***!
   \***************************************************************/
@@ -89376,7 +91138,7 @@
 	module.exports = "<div>\n  <button class=\"btn btn-default\"\n    ng-click=\"collapsed = !collapsed\">\n    {{pvTitle}}\n  </button>\n  <dl class=\"dl-compact\"\n      ng-repeat=\"(key, val) in pvData\"\n      ng-hide=\"collapsed\">\n    <dt>{{key}}</dt>\n    <dd ng-if=\"!isObject(val)\">{{val}}</dd>\n    <dd ng-if=\"isObject(val)\">\n      <payment-view ng-if=\"val != null\" pv-data=\"val\" pv-title=\"\"></payment-view>\n      <span ng-if=\"val == null\"><i>null</i></span>\n    </dd>\n  </dl>\n</div>\n";
 
 /***/ },
-/* 114 */
+/* 115 */
 /*!***********************************************************!*\
   !*** ./beeline-admin/directives/ticketView/ticketView.js ***!
   \***********************************************************/
@@ -89388,13 +91150,13 @@
 	  value: true
 	});
 	
-	var _typeof2 = __webpack_require__(/*! babel-runtime/helpers/typeof */ 93);
+	var _typeof2 = __webpack_require__(/*! babel-runtime/helpers/typeof */ 94);
 	
 	var _typeof3 = _interopRequireDefault(_typeof2);
 	
 	exports.default = function () {
 	  return {
-	    template: __webpack_require__(/*! ./ticketView.html */ 115),
+	    template: __webpack_require__(/*! ./ticketView.html */ 116),
 	    scope: {
 	      data: '=',
 	      collapse: '='
@@ -89411,7 +91173,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 115 */
+/* 116 */
 /*!*************************************************************!*\
   !*** ./beeline-admin/directives/ticketView/ticketView.html ***!
   \*************************************************************/
@@ -89420,7 +91182,7 @@
 	module.exports = "<div>\n<b>{{data.trips[0].route.label}}</b>\n{{data.trips[0].date | date: 'EEE dd MMM yy':'UTC'}}\n  <dl class=\"dl-compact\">\n    <dt>Board Stop</dt>\n    <dd>\n        {{data.boardStop.stop.description}}\n        ({{data.boardStop.time | date:'HH:mm'}})\n    </dd>\n\n\n    <dt>Alight Stop</dt>\n    <dd>\n        {{data.alightStop.stop.description}}\n        ({{data.alightStop.time | date:'HH:mm'}})\n    </dd>\n\n    <dt>User</dt>\n    <dd>\n      <payment-view ng-if=\"data.user.json\"\n        pv-data=\"data.user.json\"\n        pv-title=\"data.user.json.name\"\n        collapsed=\"false\"\n        >\n      </payment-view>\n      <span ng-if=\"!data.user.json\">\n        {{data.user.name}} /\n        {{data.user.email}} /\n        {{data.user.telephone}}\n      </span>\n    </dd>\n\n    <dt>Id</dt>\n    <dd>{{data.id}}</dd>\n  </dl>\n</div>\n";
 
 /***/ },
-/* 116 */
+/* 117 */
 /*!*****************************************************************!*\
   !*** ./beeline-admin/directives/routeSelector/routeSelector.js ***!
   \*****************************************************************/
@@ -89435,7 +91197,7 @@
 	exports.default = function (RoutesService, LoadingSpinner) {
 	
 	  return {
-	    template: __webpack_require__(/*! ./routeSelector.html */ 117),
+	    template: __webpack_require__(/*! ./routeSelector.html */ 118),
 	    scope: {
 	      selectedRoute: '=',
 	      selectedRouteId: '=?'
@@ -89482,16 +91244,16 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 117 */
+/* 118 */
 /*!*******************************************************************!*\
   !*** ./beeline-admin/directives/routeSelector/routeSelector.html ***!
   \*******************************************************************/
 /***/ function(module, exports) {
 
-	module.exports = "<div>\n  <button class=\"glyphicon glyphicon-duplicate btn btn-default\"\n    title=\"copy\"\n    ng-click=\"copySelected()\"\n    ng-disabled=\"!selectedRoute\">\n  </button>\n  <ul>\n    <li ng-repeat=\"route in availableRoutes | orderBy:'label' track by route.id\"\n    ng-click=\"selectRoute(route)\"\n    ng-class=\"{\n      active: selectedRoute == route\n    }\"\n    >\n        {{route.label}}:\n        {{route.from}} to {{route.to}}\n    </li>\n    <li ng-click=\"selectRoute({})\">\n      <em>New route!</em>\n    </li>\n  </ul>\n</div>\n";
+	module.exports = "<div>\n  <button class=\"glyphicon glyphicon-duplicate btn btn-default\"\n    title=\"copy\"\n    ng-click=\"copySelected()\"\n    ng-disabled=\"!selectedRoute\">\n  </button>\n  <ul class=\"nav nav-sidebar\">\n    <li ng-repeat=\"route in availableRoutes | orderBy:'label' track by route.id\"\n    ng-click=\"selectRoute(route)\"\n    ng-class=\"{\n      active: selectedRoute == route\n    }\"\n    > <a>\n        {{route.label}}:\n        {{route.from}} to {{route.to}}</a>\n    </li>\n    <li ng-click=\"selectRoute({})\"> <a><em>New route!</em></a>\n\n    </li>\n  </ul>\n</div>\n";
 
 /***/ },
-/* 118 */
+/* 119 */
 /*!*************************************************************!*\
   !*** ./beeline-admin/directives/routeEditor/routeEditor.js ***!
   \*************************************************************/
@@ -89505,7 +91267,7 @@
 	
 	exports.default = function (AdminService, RoutesService, $rootScope) {
 	  return {
-	    template: __webpack_require__(/*! ./routeEditor.html */ 119),
+	    template: __webpack_require__(/*! ./routeEditor.html */ 120),
 	    scope: {
 	      route: '=',
 	      edit: '=?'
@@ -89544,7 +91306,7 @@
 	};
 
 /***/ },
-/* 119 */
+/* 120 */
 /*!***************************************************************!*\
   !*** ./beeline-admin/directives/routeEditor/routeEditor.html ***!
   \***************************************************************/
@@ -89553,7 +91315,7 @@
 	module.exports = "<div>\n  <span class=\"btn-group\">\n    <button class=\"btn btn-default\"\n      ng-click=\"edit = 'route'\">\n      Edit Route Description\n    </button>\n    <button class=\"btn btn-default\"\n      ng-click=\"edit = 'trips'\"\n      >\n      Edit Trips\n    </button>\n  </span>\n</div>\n\n<div ng-show=\"route\">\n  <div ng-show=\"edit == 'route'\">\n    <h2>{{route.label}}</h2>\n\n    <label>\n      Label:\n      <input type=\"text\" ng-model=\"route.label\">\n    </label>\n\n    <label>\n      Name:\n      <input type=\"text\" ng-model=\"route.name\">\n    </label>\n\n    <label>\n      From:\n      <input type=\"text\" ng-model=\"route.from\">\n    </label>\n\n    <label>\n      To:\n      <input type=\"text\" ng-model=\"route.to\">\n    </label>\n\n    <!-- ng-if creates a scope -->\n    <label ng-if=\"adminService.session().role == 'superadmin'\">\n      Company:\n      <company-selector ng-model=\"$parent.route.transportCompanyId\">\n      </company-selector>\n    </label>\n\n    <label>Path:</label>\n    <path-editor path=\"route.path\">\n    </path-editor>\n\n    <div class=\"btn-group\">\n      <button class=\"btn btn-primary\" ng-click=\"saveRoute()\"\n        ng-disabled=\"!route\">\n        Save\n      </button>\n      <button class=\"btn btn-default\" ng-click=\"resetRoute()\">\n        Reset\n      </button>\n    </div>\n    <button class=\"btn btn-danger\" ng-click=\"deleteRoute()\"\n      ng-disabled=\"!route || !route.id\">\n      Delete\n    </button>\n  </div>\n\n  <div ng-show=\"edit == 'trips'\">\n    <trips-editor route-id=\"route.id\" ng-if=\"route.id\">\n    </trips-editor>\n  </div>\n</div>\n";
 
 /***/ },
-/* 120 */
+/* 121 */
 /*!***********************************************************!*\
   !*** ./beeline-admin/directives/pathEditor/pathEditor.js ***!
   \***********************************************************/
@@ -89567,7 +91329,7 @@
 	
 	exports.default = function ($rootScope, $location) {
 	  return {
-	    template: __webpack_require__(/*! ./pathEditor.html */ 121),
+	    template: __webpack_require__(/*! ./pathEditor.html */ 122),
 	    scope: {
 	      path: '='
 	    },
@@ -89624,7 +91386,7 @@
 	};
 
 /***/ },
-/* 121 */
+/* 122 */
 /*!*************************************************************!*\
   !*** ./beeline-admin/directives/pathEditor/pathEditor.html ***!
   \*************************************************************/
@@ -89633,7 +91395,7 @@
 	module.exports = "\n<div>\n  <button class=\"btn btn-default\"\n    ng-click=\"clearPath\"\n  >\n    Clear path\n  </button>\n\n  <span class=\"btn-group\">\n    <button class=\"btn btn-primary\"\n      uib-btn-radio=\"'start'\"\n      ng-model=\"addToWhere\"\n      >\n      Add to start\n    </button>\n\n    <button class=\"btn btn-primary\"\n      uib-btn-radio=\"'end'\"\n      ng-model=\"addToWhere\"\n      >\n      Add to end\n    </button>\n  </span>\n</div>\n\n<div class=\"main\">\n  <ui-gmap-google-map\n    center=\"{latitude: 1.38, longitude: 103.8}\"\n    zoom=\"12\"\n    events=\"events\"\n    options=\"{ draggableCursor: 'crosshair' }\"\n    control=\"mapControl\"\n  >\n    <ui-gmap-polyline\n      path=\"pathX\"\n      stroke=\"{\n        color: '#4b3863',\n        weight: 3.0,\n      }\"\n    >\n    </ui-gmap-polyline>\n  </ui-gmap-google-map>\n\n  <ul class=\"point-list\">\n    <li ng-repeat=\"p in path\"\n      ng-click=\"path.splice($index, 1)\"\n    >\n      {{p.lat | number:5}}, {{p.lng | number:5}}\n    </li>\n  </ul>\n</div>\n";
 
 /***/ },
-/* 122 */
+/* 123 */
 /*!*************************************************************!*\
   !*** ./beeline-admin/directives/tripsEditor/tripsEditor.js ***!
   \*************************************************************/
@@ -89645,11 +91407,11 @@
 	  value: true
 	});
 	
-	var _regenerator = __webpack_require__(/*! babel-runtime/regenerator */ 123);
+	var _regenerator = __webpack_require__(/*! babel-runtime/regenerator */ 124);
 	
 	var _regenerator2 = _interopRequireDefault(_regenerator);
 	
-	var _asyncToGenerator2 = __webpack_require__(/*! babel-runtime/helpers/asyncToGenerator */ 127);
+	var _asyncToGenerator2 = __webpack_require__(/*! babel-runtime/helpers/asyncToGenerator */ 128);
 	
 	var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 	
@@ -89663,7 +91425,7 @@
 	    scope: {
 	      routeId: '='
 	    },
-	    template: __webpack_require__(/*! ./tripsEditor.html */ 143),
+	    template: __webpack_require__(/*! ./tripsEditor.html */ 144),
 	    link: function link(scope, elem, attr) {
 	      scope.adminService = AdminService;
 	
@@ -89976,17 +91738,17 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 123 */
+/* 124 */
 /*!**********************************************!*\
   !*** ./~/babel-runtime/regenerator/index.js ***!
   \**********************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(/*! regenerator-runtime */ 124);
+	module.exports = __webpack_require__(/*! regenerator-runtime */ 125);
 
 
 /***/ },
-/* 124 */
+/* 125 */
 /*!*************************************************!*\
   !*** ./~/regenerator-runtime/runtime-module.js ***!
   \*************************************************/
@@ -90010,7 +91772,7 @@
 	// Force reevalutation of runtime.js.
 	g.regeneratorRuntime = undefined;
 	
-	module.exports = __webpack_require__(/*! ./runtime */ 125);
+	module.exports = __webpack_require__(/*! ./runtime */ 126);
 	
 	if (hadRuntime) {
 	  // Restore the original runtime.
@@ -90027,7 +91789,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 125 */
+/* 126 */
 /*!******************************************!*\
   !*** ./~/regenerator-runtime/runtime.js ***!
   \******************************************/
@@ -90702,10 +92464,10 @@
 	  typeof self === "object" ? self : this
 	);
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(/*! ./~/process/browser.js */ 126)))
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(/*! ./~/process/browser.js */ 127)))
 
 /***/ },
-/* 126 */
+/* 127 */
 /*!******************************!*\
   !*** ./~/process/browser.js ***!
   \******************************/
@@ -90720,9 +92482,6 @@
 	var queueIndex = -1;
 	
 	function cleanUpNextTick() {
-	    if (!draining || !currentQueue) {
-	        return;
-	    }
 	    draining = false;
 	    if (currentQueue.length) {
 	        queue = currentQueue.concat(queue);
@@ -90808,7 +92567,7 @@
 
 
 /***/ },
-/* 127 */
+/* 128 */
 /*!*****************************************************!*\
   !*** ./~/babel-runtime/helpers/asyncToGenerator.js ***!
   \*****************************************************/
@@ -90818,7 +92577,7 @@
 	
 	exports.__esModule = true;
 	
-	var _promise = __webpack_require__(/*! ../core-js/promise */ 128);
+	var _promise = __webpack_require__(/*! ../core-js/promise */ 129);
 	
 	var _promise2 = _interopRequireDefault(_promise);
 	
@@ -90854,29 +92613,29 @@
 	};
 
 /***/ },
-/* 128 */
+/* 129 */
 /*!********************************************!*\
   !*** ./~/babel-runtime/core-js/promise.js ***!
   \********************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/promise */ 129), __esModule: true };
+	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/promise */ 130), __esModule: true };
 
 /***/ },
-/* 129 */
+/* 130 */
 /*!*********************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/fn/promise.js ***!
   \*********************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(/*! ../modules/es6.object.to-string */ 110);
+	__webpack_require__(/*! ../modules/es6.object.to-string */ 111);
 	__webpack_require__(/*! ../modules/es6.string.iterator */ 74);
 	__webpack_require__(/*! ../modules/web.dom.iterable */ 28);
-	__webpack_require__(/*! ../modules/es6.promise */ 130);
+	__webpack_require__(/*! ../modules/es6.promise */ 131);
 	module.exports = __webpack_require__(/*! ../modules/_core */ 41).Promise;
 
 /***/ },
-/* 130 */
+/* 131 */
 /*!******************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/es6.promise.js ***!
   \******************************************************************/
@@ -90891,12 +92650,12 @@
 	  , isObject           = __webpack_require__(/*! ./_is-object */ 47)
 	  , anObject           = __webpack_require__(/*! ./_an-object */ 46)
 	  , aFunction          = __webpack_require__(/*! ./_a-function */ 43)
-	  , anInstance         = __webpack_require__(/*! ./_an-instance */ 131)
-	  , forOf              = __webpack_require__(/*! ./_for-of */ 132)
-	  , setProto           = __webpack_require__(/*! ./_set-proto */ 135).set
-	  , speciesConstructor = __webpack_require__(/*! ./_species-constructor */ 136)
-	  , task               = __webpack_require__(/*! ./_task */ 137).set
-	  , microtask          = __webpack_require__(/*! ./_microtask */ 139)()
+	  , anInstance         = __webpack_require__(/*! ./_an-instance */ 132)
+	  , forOf              = __webpack_require__(/*! ./_for-of */ 133)
+	  , setProto           = __webpack_require__(/*! ./_set-proto */ 136).set
+	  , speciesConstructor = __webpack_require__(/*! ./_species-constructor */ 137)
+	  , task               = __webpack_require__(/*! ./_task */ 138).set
+	  , microtask          = __webpack_require__(/*! ./_microtask */ 140)()
 	  , PROMISE            = 'Promise'
 	  , TypeError          = global.TypeError
 	  , process            = global.process
@@ -91088,7 +92847,7 @@
 	    this._h = 0;              // <- rejection state, 0 - default, 1 - handled, 2 - unhandled
 	    this._n = false;          // <- notify
 	  };
-	  Internal.prototype = __webpack_require__(/*! ./_redefine-all */ 140)($Promise.prototype, {
+	  Internal.prototype = __webpack_require__(/*! ./_redefine-all */ 141)($Promise.prototype, {
 	    // 25.4.5.3 Promise.prototype.then(onFulfilled, onRejected)
 	    then: function then(onFulfilled, onRejected){
 	      var reaction    = newPromiseCapability(speciesConstructor(this, $Promise));
@@ -91115,7 +92874,7 @@
 	
 	$export($export.G + $export.W + $export.F * !USE_NATIVE, {Promise: $Promise});
 	__webpack_require__(/*! ./_set-to-string-tag */ 70)($Promise, PROMISE);
-	__webpack_require__(/*! ./_set-species */ 141)(PROMISE);
+	__webpack_require__(/*! ./_set-species */ 142)(PROMISE);
 	Wrapper = __webpack_require__(/*! ./_core */ 41)[PROMISE];
 	
 	// statics
@@ -91139,7 +92898,7 @@
 	    return capability.promise;
 	  }
 	});
-	$export($export.S + $export.F * !(USE_NATIVE && __webpack_require__(/*! ./_iter-detect */ 142)(function(iter){
+	$export($export.S + $export.F * !(USE_NATIVE && __webpack_require__(/*! ./_iter-detect */ 143)(function(iter){
 	  $Promise.all(iter)['catch'](empty);
 	})), PROMISE, {
 	  // 25.4.4.1 Promise.all(iterable)
@@ -91185,7 +92944,7 @@
 	});
 
 /***/ },
-/* 131 */
+/* 132 */
 /*!*******************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_an-instance.js ***!
   \*******************************************************************/
@@ -91198,15 +92957,15 @@
 	};
 
 /***/ },
-/* 132 */
+/* 133 */
 /*!**************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_for-of.js ***!
   \**************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	var ctx         = __webpack_require__(/*! ./_ctx */ 42)
-	  , call        = __webpack_require__(/*! ./_iter-call */ 133)
-	  , isArrayIter = __webpack_require__(/*! ./_is-array-iter */ 134)
+	  , call        = __webpack_require__(/*! ./_iter-call */ 134)
+	  , isArrayIter = __webpack_require__(/*! ./_is-array-iter */ 135)
 	  , anObject    = __webpack_require__(/*! ./_an-object */ 46)
 	  , toLength    = __webpack_require__(/*! ./_to-length */ 62)
 	  , getIterFn   = __webpack_require__(/*! ./core.get-iterator-method */ 77)
@@ -91231,7 +92990,7 @@
 	exports.RETURN = RETURN;
 
 /***/ },
-/* 133 */
+/* 134 */
 /*!*****************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_iter-call.js ***!
   \*****************************************************************/
@@ -91251,7 +93010,7 @@
 	};
 
 /***/ },
-/* 134 */
+/* 135 */
 /*!*********************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_is-array-iter.js ***!
   \*********************************************************************/
@@ -91267,7 +93026,7 @@
 	};
 
 /***/ },
-/* 135 */
+/* 136 */
 /*!*****************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_set-proto.js ***!
   \*****************************************************************/
@@ -91285,7 +93044,7 @@
 	  set: Object.setPrototypeOf || ('__proto__' in {} ? // eslint-disable-line
 	    function(test, buggy, set){
 	      try {
-	        set = __webpack_require__(/*! ./_ctx */ 42)(Function.call, __webpack_require__(/*! ./_object-gopd */ 109).f(Object.prototype, '__proto__').set, 2);
+	        set = __webpack_require__(/*! ./_ctx */ 42)(Function.call, __webpack_require__(/*! ./_object-gopd */ 110).f(Object.prototype, '__proto__').set, 2);
 	        set(test, []);
 	        buggy = !(test instanceof Array);
 	      } catch(e){ buggy = true; }
@@ -91300,7 +93059,7 @@
 	};
 
 /***/ },
-/* 136 */
+/* 137 */
 /*!***************************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_species-constructor.js ***!
   \***************************************************************************/
@@ -91316,14 +93075,14 @@
 	};
 
 /***/ },
-/* 137 */
+/* 138 */
 /*!************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_task.js ***!
   \************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	var ctx                = __webpack_require__(/*! ./_ctx */ 42)
-	  , invoke             = __webpack_require__(/*! ./_invoke */ 138)
+	  , invoke             = __webpack_require__(/*! ./_invoke */ 139)
 	  , html               = __webpack_require__(/*! ./_html */ 69)
 	  , cel                = __webpack_require__(/*! ./_dom-create */ 51)
 	  , global             = __webpack_require__(/*! ./_global */ 40)
@@ -91399,7 +93158,7 @@
 	};
 
 /***/ },
-/* 138 */
+/* 139 */
 /*!**************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_invoke.js ***!
   \**************************************************************/
@@ -91423,14 +93182,14 @@
 	};
 
 /***/ },
-/* 139 */
+/* 140 */
 /*!*****************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_microtask.js ***!
   \*****************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	var global    = __webpack_require__(/*! ./_global */ 40)
-	  , macrotask = __webpack_require__(/*! ./_task */ 137).set
+	  , macrotask = __webpack_require__(/*! ./_task */ 138).set
 	  , Observer  = global.MutationObserver || global.WebKitMutationObserver
 	  , process   = global.process
 	  , Promise   = global.Promise
@@ -91499,7 +93258,7 @@
 	};
 
 /***/ },
-/* 140 */
+/* 141 */
 /*!********************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_redefine-all.js ***!
   \********************************************************************/
@@ -91514,7 +93273,7 @@
 	};
 
 /***/ },
-/* 141 */
+/* 142 */
 /*!*******************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_set-species.js ***!
   \*******************************************************************/
@@ -91536,7 +93295,7 @@
 	};
 
 /***/ },
-/* 142 */
+/* 143 */
 /*!*******************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_iter-detect.js ***!
   \*******************************************************************/
@@ -91565,7 +93324,7 @@
 	};
 
 /***/ },
-/* 143 */
+/* 144 */
 /*!***************************************************************!*\
   !*** ./beeline-admin/directives/tripsEditor/tripsEditor.html ***!
   \***************************************************************/
@@ -91574,7 +93333,7 @@
 	module.exports = "\n<section class=\"filter\">\n  <label>\n    Start Date:\n    <button class=\"glyphicon glyphicon-calendar\"\n      ng-click=\"filter.$startDatePopupIsOpen = !filter.$startDatePopupIsOpen\">\n    </button>\n    <input type=\"text\" uib-datepicker-popup=\"dd-MMM-yyyy\"\n      ng-model=\"filter.startDate\"\n      is-open=\"filter.$startDatePopupIsOpen\">\n  </label>\n  <label ng-if=\"false\">\n    End Date:\n    <button class=\"glyphicon glyphicon-calendar\"\n      ng-click=\"filter.$startDatePopupIsOpen = !filter.$startDatePopupIsOpen\">\n    </button>\n    <input type=\"text\" uib-datepicker-popup=\"dd-MMM-yyyy\"\n      ng-model=\"filter.endDate\">\n  </label>\n</section>\n\n<section class=\"add-trips\">\n  <h2>Add Trips</h2>\n  <div class=\"add-trips-components flex-row\">\n    <beeline-datepicker\n      ng-if=\"!disp.trip.id\"\n      class=\"flex-shrink\"\n      dates=\"disp.newDates\"\n      booked-dates=\"disp.existingDates\"\n      valid-dates=\"disp.validDates\"\n      show-legend=\"false\"\n      start-date=\"filter.startDate\"\n    >\n    </beeline-datepicker>\n    <div class=\"flex-shrink overflow-scroll selected-dates\"\n      ng-if=\"!disp.trip.id\"\n    >\n      <h3>{{disp.newDates.length}} dates selected</h3>\n      <ul>\n        <li ng-repeat=\"date in disp.newDates | orderBy:date.getTime() track by $index\">\n          {{date | date:'dd-MMM-yy (EEE)':'UTC'}}\n        </li>\n      </ul>\n    </div>\n\n    <div class=\"flex-grow overflow-scroll\">\n      <h3 ng-if=\"!disp.trip.id\">Stops</h3>\n      <!-- <h3 ng-if=\"disp.trip\">Editing trip on {{disp.trip.date | date:'dd-MMM-yy':'UTC'}}</h3> -->\n\n      <h3 ng-if=\"disp.trip.id\">Editing trip on\n        <ng-repeat ng-repeat=\"(key, value) in selection.selected\">\n          {{value.date | date:'dd MMM yy'}},\n        </ng-repeat>\n      </h3>\n\n      <label>\n        Telephone number of driver: +65 <input type=\"tel\" ng-model=\"disp.trip.driverTelephone\" />\n\n        <span ng-if=\"disp.trip.driverName\">\n          ~{{disp.driver.name}}\n        </span>\n      </label>\n\n      <label>\n        Trip capacity: <input type=\"number\" ng-model=\"disp.trip.capacity\" />\n      </label>\n\n      <label ng-if=\"adminService.session().role == 'superadmin'\">\n        Company:\n        <company-selector ng-model=\"disp.trip.transportCompanyId\">\n        </company-selector>\n      </label>\n\n      <table>\n        <thead>\n          <tr>\n            <th>Time</th>\n            <th>Stop</th>\n          </tr>\n        </thead>\n        <tbody>\n          <tr ng-repeat=\"tripStop in disp.tripStops\">\n            <td>\n              <uib-timepicker ng-model=\"tripStop.time\"\n              show-spinners=\"false\" show-meridian=\"false\">\n            </td>\n            <td>\n              <!-- <input type=\"text\" ng-model=\"tripStop.stopId\"> -->\n              <stop-selector\n                ng-model=\"tripStop.stopId\"\n              ></stop-selector>\n              <button ng-click=\"showPopupFor(tripStop)\">\n                ?\n              </button>\n            </td>\n            <td>\n              <label>\n                <input type=\"checkbox\" ng-model=\"tripStop.canBoard\" />\n                Boarding\n              </label>\n            </td>\n            <td>\n              <label>\n                <input type=\"checkbox\" ng-model=\"tripStop.canAlight\" />\n                Alighting\n              </label>\n            </td>\n            <td>\n              <button class=\"btn btn-default glyphicon glyphicon-trash\"\n                ng-click=\"disp.deleteTripStop($index)\"\n              ></button>\n            </td>\n          </tr>\n        </tbody>\n        <tfoot>\n          <tr>\n            <td>\n              <button class=\"btn btn-default glyphicon glyphicon-plus\"\n                ng-click=\"disp.addTripStop()\"\n              ></button>\n            </td>\n          </tr>\n        </tfoot>\n      </table>\n    </div>\n  </div>\n\n  <span class=\"btn-group\">\n    <button class=\"btn btn-primary\" ng-click=\"saveTrips()\"\n      >\n      Save\n    </button>\n    <button class=\"btn btn-default\" ng-click=\"clearEdit()\"\n      ng-if=\"disp.trip\">\n      Clear\n    </button>\n  </span>\n</section>\n\n<div>\n  <table class=\"table table-striped\">\n    <thead>\n      <tr>\n        <th></th> <!-- selection button -->\n        <th></th> <!-- actions (delete, use) -->\n        <th></th> <!-- pax -->\n        <th></th> <!-- booked -->\n        <th></th> <!--date -->\n        <th></th> <!-- driver -->\n        <th colspan=\"{{disp.stopsList.length}}\">Stops</th>\n      </tr>\n      <tr>\n        <th></th>\n        <th></th>\n        <th>Cap</th>\n        <th>Booked</th>\n        <th>Date</th>\n        <th>Driver</th>\n        <th ng-repeat=\"stop in disp.stopsList track by $index\">\n          {{stop.stop.label}} /\n          {{stop.stop.postcode}}\n        </th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr ng-repeat=\"trip in (sorted_trips = trips | orderBy:'date') track by trip.id\"\n        class=\"{\n          active: selection.selected[trip.id]\n        }\"\n      >\n        <td\n          ng-mousedown=\"selectTrips(sorted_trips, $index, $event)\"\n          >\n          <small>{{trip.id}}</small>\n          <i ng-hide=\"!selection.selected[trip.id]\"\n            class=\"glyphicon glyphicon-ok\">\n          </i>\n        </td>\n        <td>\n          <span class=\"btn-group\">\n            <button class=\"btn btn-default glyphicon glyphicon-copy\"\n              ng-click='referenceTrip(trip)'\n            >\n            </button>\n            <button class=\"btn btn-default glyphicon glyphicon-trash\"\n              ng-click='deleteTrip(trip)'\n            >\n            </button>\n          </span>\n        </td>\n        <td>\n          {{trip.capacity}}\n          <i class=\"glyphicon glyphicon-user\"></i>\n        </td>\n        <td>\n          {{trip.availability.seatsBooked}}\n          <i class=\"glyphicon glyphicon-user\"></i>\n        </td>\n        <td>\n          {{trip.date | date:'dd/MM/yy EEE'}}\n        </td>\n        <td>\n          {{trip.driverTelephone }}\n        </td>\n        <td ng-repeat=\"stop in disp.stopsList\">\n          {{ findStop(trip, stop.stop.id).time | date:'HH:mm'}}\n        </td>\n      </tr>\n    </tbody>\n  </table>\n</div>\n";
 
 /***/ },
-/* 144 */
+/* 145 */
 /*!*********************************************************************!*\
   !*** ./beeline-admin/directives/companySelector/companySelector.js ***!
   \*********************************************************************/
@@ -91621,7 +93380,7 @@
 	};
 
 /***/ },
-/* 145 */
+/* 146 */
 /*!***************************************************************!*\
   !*** ./beeline-admin/directives/tripSelector/tripSelector.js ***!
   \***************************************************************/
@@ -91635,7 +93394,7 @@
 	
 	exports.default = function (AdminService, RoutesService, $rootScope) {
 	  return {
-	    template: __webpack_require__(/*! ./tripSelector.html */ 146),
+	    template: __webpack_require__(/*! ./tripSelector.html */ 147),
 	    scope: {
 	      tripId: '=',
 	      alightStopId: '=?',
@@ -91783,18 +93542,18 @@
 	  };
 	};
 	
-	var _assert = __webpack_require__(/*! assert */ 147);
+	var _assert = __webpack_require__(/*! assert */ 148);
 	
 	var _assert2 = _interopRequireDefault(_assert);
 	
-	var _leftPad = __webpack_require__(/*! left-pad */ 156);
+	var _leftPad = __webpack_require__(/*! left-pad */ 152);
 	
 	var _leftPad2 = _interopRequireDefault(_leftPad);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 146 */
+/* 147 */
 /*!*****************************************************************!*\
   !*** ./beeline-admin/directives/tripSelector/tripSelector.html ***!
   \*****************************************************************/
@@ -91803,13 +93562,13 @@
 	module.exports = "<div class=\"trip-selector\">\n  <label>\n    Route\n    <select ng-options=\"route.id as displayRoute(route) for route in info.routes | orderBy:'label'\"\n            ng-model=\"routeId\"\n    >\n    </select>\n  </label>\n\n  <label >\n    Date\n    <div  style=\"display: inline-block; width: 300px;\">\n      <div class=\"input-group\">\n        <input type=\"text\"\n          class=\"form-control\"\n          uib-datepicker-popup\n          is-open=\"disp.popupOpen\"\n\n          ng-model=\"query.tripDate\"\n          ng-model-options=\"{timezone: 'UTC'}\"\n          datepicker-options=\"disp.datepickerOptions\"\n          close-text=\"Close\"\n          >\n\n        <span class=\"input-group-btn\">\n          <button type=\"button\" class=\"btn btn-default\" ng-click=\"disp.popupOpen = !disp.popupOpen\">\n            <i class=\"glyphicon glyphicon-calendar\"></i>\n          </button>\n        </span>\n      </div>\n    </div>\n  </label>\n\n  {{info.trip.availability.seatsAvailable}} seats available\n\n  <label>\n    Boarding Stop\n    <select ng-options=\"tripStop.id as displayStop(tripStop) for tripStop in info.tripStops | filter:isBoardStop\"\n      ng-model=\"boardStopId\"\n    >\n    </select>\n  </label>\n\n  <label>\n    Alighting Stop\n    <select ng-options=\"tripStop.id as displayStop(tripStop) for tripStop in info.tripStops | filter:isAlightStop\"\n      ng-model=\"alightStopId\"\n    >\n    </select>\n  </label>\n  <!-- <dl>\n    <dt>Trip ID</dt>\n    <dd>{{tripId}}</dd>\n\n    <dt>Board Stop ID</dt>\n    <dd>{{boardStopId}}</dd>\n\n    <dt>Alight Stop ID</dt>\n    <dd>{{alightStopId}}</dd>\n  </dl> -->\n</div>\n";
 
 /***/ },
-/* 147 */
+/* 148 */
 /*!****************************!*\
   !*** ./~/assert/assert.js ***!
   \****************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {// http://wiki.commonjs.org/wiki/Unit_Testing/1.0
+	// http://wiki.commonjs.org/wiki/Unit_Testing/1.0
 	//
 	// THIS IS NOT TESTED NOR LIKELY TO WORK OUTSIDE V8!
 	//
@@ -91833,56 +93592,14 @@
 	// ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 	// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	
-	'use strict';
+	// when used in node, this will actually load the util module we depend on
+	// versus loading the builtin util module as happens otherwise
+	// this is a bug in node module loading as far as I am concerned
+	var util = __webpack_require__(/*! util/ */ 149);
 	
-	// UTILITY
-	function compare(bufa, bufb) {
-	  var cmpLen = Math.min(bufa, bufb);
-	  if (cmpLen <= 0) {
-	    return 0;
-	  }
-	  var i = -1;
-	  var a,b;
-	  while (++i < cmpLen) {
-	    a = bufa[i];
-	    b = bufb[i];
-	    if (a < b) {
-	      return -1;
-	    } else if (a > b) {
-	      return 1;
-	    }
-	  }
-	  return 0;
-	}
-	var util = __webpack_require__(/*! util/ */ 148);
-	var Buffer = __webpack_require__(/*! buffer */ 151).Buffer;
-	var BufferShim = __webpack_require__(/*! buffer-shims */ 155);
-	var hasOwn = Object.prototype.hasOwnProperty;
 	var pSlice = Array.prototype.slice;
-	var functionsHaveNames = (function () {
-	  return function foo() {}.name === 'foo';
-	}());
-	function pToString (obj) {
-	  return Object.prototype.toString.call(obj);
-	}
-	function isView(arrbuf) {
-	  if (typeof global.ArrayBuffer !== 'function') {
-	    return false;
-	  }
-	  if (typeof ArrayBuffer.isView === 'function') {
-	    return ArrayBuffer.isView(arrbuf);
-	  }
-	  if (!arrbuf) {
-	    return false;
-	  }
-	  if (arrbuf instanceof DataView) {
-	    return true;
-	  }
-	  if (arrbuf.buffer && arrbuf.buffer instanceof ArrayBuffer) {
-	    return true;
-	  }
-	  return false;
-	}
+	var hasOwn = Object.prototype.hasOwnProperty;
+	
 	// 1. The assert module provides functions that throw
 	// AssertionError's when particular conditions are not met. The
 	// assert module must conform to the following interface.
@@ -91894,19 +93611,6 @@
 	//                             actual: actual,
 	//                             expected: expected })
 	
-	var regex = /\s*function\s+([^\(\s]*)\s*/;
-	// based on https://github.com/ljharb/function.prototype.name/blob/adeeeec8bfcc6068b187d7d9fb3d5bb1d3a30899/implementation.js
-	function getName(func) {
-	  if (!util.isFunction(func)) {
-	    return;
-	  }
-	  if (functionsHaveNames) {
-	    return func.name;
-	  }
-	  var str = func.toString();
-	  var match = str.match(regex);
-	  return match && match[1];
-	}
 	assert.AssertionError = function AssertionError(options) {
 	  this.name = 'AssertionError';
 	  this.actual = options.actual;
@@ -91920,51 +93624,59 @@
 	    this.generatedMessage = true;
 	  }
 	  var stackStartFunction = options.stackStartFunction || fail;
+	
 	  if (Error.captureStackTrace) {
-	   Error.captureStackTrace(this, stackStartFunction);
-	 } else {
-	   // non v8 browsers so we can have a stacktrace
-	   var err = new Error();
-	   if (err.stack) {
-	     var out = err.stack;
+	    Error.captureStackTrace(this, stackStartFunction);
+	  }
+	  else {
+	    // non v8 browsers so we can have a stacktrace
+	    var err = new Error();
+	    if (err.stack) {
+	      var out = err.stack;
 	
-	     // try to strip useless frames
-	     var fn_name = getName(stackStartFunction);
-	     var idx = out.indexOf('\n' + fn_name);
-	     if (idx >= 0) {
-	       // once we have located the function frame
-	       // we need to strip out everything before it (and its line)
-	       var next_line = out.indexOf('\n', idx + 1);
-	       out = out.substring(next_line + 1);
-	     }
+	      // try to strip useless frames
+	      var fn_name = stackStartFunction.name;
+	      var idx = out.indexOf('\n' + fn_name);
+	      if (idx >= 0) {
+	        // once we have located the function frame
+	        // we need to strip out everything before it (and its line)
+	        var next_line = out.indexOf('\n', idx + 1);
+	        out = out.substring(next_line + 1);
+	      }
 	
-	     this.stack = out;
-	   }
+	      this.stack = out;
+	    }
 	  }
 	};
 	
 	// assert.AssertionError instanceof Error
 	util.inherits(assert.AssertionError, Error);
 	
+	function replacer(key, value) {
+	  if (util.isUndefined(value)) {
+	    return '' + value;
+	  }
+	  if (util.isNumber(value) && !isFinite(value)) {
+	    return value.toString();
+	  }
+	  if (util.isFunction(value) || util.isRegExp(value)) {
+	    return value.toString();
+	  }
+	  return value;
+	}
+	
 	function truncate(s, n) {
-	  if (typeof s === 'string') {
+	  if (util.isString(s)) {
 	    return s.length < n ? s : s.slice(0, n);
 	  } else {
 	    return s;
 	  }
 	}
-	function inspect(something) {
-	  if (functionsHaveNames || !util.isFunction(something)) {
-	    return util.inspect(something);
-	  }
-	  var rawname = getName(something);
-	  var name = rawname ? ': ' + rawname : '';
-	  return '[Function' +  name + ']';
-	}
+	
 	function getMessage(self) {
-	  return truncate(inspect(self.actual), 128) + ' ' +
+	  return truncate(JSON.stringify(self.actual, replacer), 128) + ' ' +
 	         self.operator + ' ' +
-	         truncate(inspect(self.expected), 128);
+	         truncate(JSON.stringify(self.expected, replacer), 128);
 	}
 	
 	// At present only the three keys mentioned above are used and
@@ -92024,23 +93736,24 @@
 	// assert.deepEqual(actual, expected, message_opt);
 	
 	assert.deepEqual = function deepEqual(actual, expected, message) {
-	  if (!_deepEqual(actual, expected, false)) {
+	  if (!_deepEqual(actual, expected)) {
 	    fail(actual, expected, message, 'deepEqual', assert.deepEqual);
 	  }
 	};
 	
-	assert.deepStrictEqual = function deepStrictEqual(actual, expected, message) {
-	  if (!_deepEqual(actual, expected, true)) {
-	    fail(actual, expected, message, 'deepStrictEqual', assert.deepStrictEqual);
-	  }
-	};
-	
-	function _deepEqual(actual, expected, strict, memos) {
+	function _deepEqual(actual, expected) {
 	  // 7.1. All identical values are equivalent, as determined by ===.
 	  if (actual === expected) {
 	    return true;
-	  } else if (Buffer.isBuffer(actual) && Buffer.isBuffer(expected)) {
-	    return compare(actual, expected) === 0;
+	
+	  } else if (util.isBuffer(actual) && util.isBuffer(expected)) {
+	    if (actual.length != expected.length) return false;
+	
+	    for (var i = 0; i < actual.length; i++) {
+	      if (actual[i] !== expected[i]) return false;
+	    }
+	
+	    return true;
 	
 	  // 7.2. If the expected value is a Date object, the actual value is
 	  // equivalent if it is also a Date object that refers to the same time.
@@ -92059,22 +93772,8 @@
 	
 	  // 7.4. Other pairs that do not both pass typeof value == 'object',
 	  // equivalence is determined by ==.
-	  } else if ((actual === null || typeof actual !== 'object') &&
-	             (expected === null || typeof expected !== 'object')) {
-	    return strict ? actual === expected : actual == expected;
-	
-	  // If both values are instances of typed arrays, wrap their underlying
-	  // ArrayBuffers in a Buffer each to increase performance
-	  // This optimization requires the arrays to have the same type as checked by
-	  // Object.prototype.toString (aka pToString). Never perform binary
-	  // comparisons for Float*Arrays, though, since e.g. +0 === -0 but their
-	  // bit patterns are not identical.
-	  } else if (isView(actual) && isView(expected) &&
-	             pToString(actual) === pToString(expected) &&
-	             !(actual instanceof Float32Array ||
-	               actual instanceof Float64Array)) {
-	    return compare(BufferShim.from(actual.buffer),
-	                   BufferShim.from(expected.buffer)) === 0;
+	  } else if (!util.isObject(actual) && !util.isObject(expected)) {
+	    return actual == expected;
 	
 	  // 7.5 For all other Object pairs, including Array objects, equivalence is
 	  // determined by having the same number of owned properties (as verified
@@ -92083,19 +93782,7 @@
 	  // corresponding key, and an identical 'prototype' property. Note: this
 	  // accounts for both named and indexed properties on Arrays.
 	  } else {
-	    memos = memos || {actual: [], expected: []};
-	
-	    var actualIndex = memos.actual.indexOf(actual);
-	    if (actualIndex !== -1) {
-	      if (actualIndex === memos.expected.indexOf(expected)) {
-	        return true;
-	      }
-	    }
-	
-	    memos.actual.push(actual);
-	    memos.expected.push(expected);
-	
-	    return objEquiv(actual, expected, strict, memos);
+	    return objEquiv(actual, expected);
 	  }
 	}
 	
@@ -92103,44 +93790,44 @@
 	  return Object.prototype.toString.call(object) == '[object Arguments]';
 	}
 	
-	function objEquiv(a, b, strict, actualVisitedObjects) {
-	  if (a === null || a === undefined || b === null || b === undefined)
+	function objEquiv(a, b) {
+	  if (util.isNullOrUndefined(a) || util.isNullOrUndefined(b))
 	    return false;
+	  // an identical 'prototype' property.
+	  if (a.prototype !== b.prototype) return false;
 	  // if one is a primitive, the other must be same
-	  if (util.isPrimitive(a) || util.isPrimitive(b))
+	  if (util.isPrimitive(a) || util.isPrimitive(b)) {
 	    return a === b;
-	  if (strict && Object.getPrototypeOf(a) !== Object.getPrototypeOf(b))
-	    return false;
-	  var aIsArgs = isArguments(a);
-	  var bIsArgs = isArguments(b);
+	  }
+	  var aIsArgs = isArguments(a),
+	      bIsArgs = isArguments(b);
 	  if ((aIsArgs && !bIsArgs) || (!aIsArgs && bIsArgs))
 	    return false;
 	  if (aIsArgs) {
 	    a = pSlice.call(a);
 	    b = pSlice.call(b);
-	    return _deepEqual(a, b, strict);
+	    return _deepEqual(a, b);
 	  }
-	  var ka = objectKeys(a);
-	  var kb = objectKeys(b);
-	  var key, i;
+	  var ka = objectKeys(a),
+	      kb = objectKeys(b),
+	      key, i;
 	  // having the same number of owned properties (keys incorporates
 	  // hasOwnProperty)
-	  if (ka.length !== kb.length)
+	  if (ka.length != kb.length)
 	    return false;
 	  //the same set of keys (although not necessarily the same order),
 	  ka.sort();
 	  kb.sort();
 	  //~~~cheap key test
 	  for (i = ka.length - 1; i >= 0; i--) {
-	    if (ka[i] !== kb[i])
+	    if (ka[i] != kb[i])
 	      return false;
 	  }
 	  //equivalent values for every corresponding key, and
 	  //~~~possibly expensive deep test
 	  for (i = ka.length - 1; i >= 0; i--) {
 	    key = ka[i];
-	    if (!_deepEqual(a[key], b[key], strict, actualVisitedObjects))
-	      return false;
+	    if (!_deepEqual(a[key], b[key])) return false;
 	  }
 	  return true;
 	}
@@ -92149,18 +93836,10 @@
 	// assert.notDeepEqual(actual, expected, message_opt);
 	
 	assert.notDeepEqual = function notDeepEqual(actual, expected, message) {
-	  if (_deepEqual(actual, expected, false)) {
+	  if (_deepEqual(actual, expected)) {
 	    fail(actual, expected, message, 'notDeepEqual', assert.notDeepEqual);
 	  }
 	};
-	
-	assert.notDeepStrictEqual = notDeepStrictEqual;
-	function notDeepStrictEqual(actual, expected, message) {
-	  if (_deepEqual(actual, expected, true)) {
-	    fail(actual, expected, message, 'notDeepStrictEqual', notDeepStrictEqual);
-	  }
-	}
-	
 	
 	// 9. The strict equality assertion tests strict equality, as determined by ===.
 	// assert.strictEqual(actual, expected, message_opt);
@@ -92187,46 +93866,28 @@
 	
 	  if (Object.prototype.toString.call(expected) == '[object RegExp]') {
 	    return expected.test(actual);
+	  } else if (actual instanceof expected) {
+	    return true;
+	  } else if (expected.call({}, actual) === true) {
+	    return true;
 	  }
 	
-	  try {
-	    if (actual instanceof expected) {
-	      return true;
-	    }
-	  } catch (e) {
-	    // Ignore.  The instanceof check doesn't work for arrow functions.
-	  }
-	
-	  if (Error.isPrototypeOf(expected)) {
-	    return false;
-	  }
-	
-	  return expected.call({}, actual) === true;
-	}
-	
-	function _tryBlock(block) {
-	  var error;
-	  try {
-	    block();
-	  } catch (e) {
-	    error = e;
-	  }
-	  return error;
+	  return false;
 	}
 	
 	function _throws(shouldThrow, block, expected, message) {
 	  var actual;
 	
-	  if (typeof block !== 'function') {
-	    throw new TypeError('"block" argument must be a function');
-	  }
-	
-	  if (typeof expected === 'string') {
+	  if (util.isString(expected)) {
 	    message = expected;
 	    expected = null;
 	  }
 	
-	  actual = _tryBlock(block);
+	  try {
+	    block();
+	  } catch (e) {
+	    actual = e;
+	  }
 	
 	  message = (expected && expected.name ? ' (' + expected.name + ').' : '.') +
 	            (message ? ' ' + message : '.');
@@ -92235,14 +93896,7 @@
 	    fail(actual, expected, 'Missing expected exception' + message);
 	  }
 	
-	  var userProvidedMessage = typeof message === 'string';
-	  var isUnwantedException = !shouldThrow && util.isError(actual);
-	  var isUnexpectedException = !shouldThrow && actual && !expected;
-	
-	  if ((isUnwantedException &&
-	      userProvidedMessage &&
-	      expectedException(actual, expected)) ||
-	      isUnexpectedException) {
+	  if (!shouldThrow && expectedException(actual, expected)) {
 	    fail(actual, expected, 'Got unwanted exception' + message);
 	  }
 	
@@ -92256,15 +93910,15 @@
 	// assert.throws(block, Error_opt, message_opt);
 	
 	assert.throws = function(block, /*optional*/error, /*optional*/message) {
-	  _throws(true, block, error, message);
+	  _throws.apply(this, [true].concat(pSlice.call(arguments)));
 	};
 	
 	// EXTENSION! This is annoying to write outside this module.
-	assert.doesNotThrow = function(block, /*optional*/error, /*optional*/message) {
-	  _throws(false, block, error, message);
+	assert.doesNotThrow = function(block, /*optional*/message) {
+	  _throws.apply(this, [false].concat(pSlice.call(arguments)));
 	};
 	
-	assert.ifError = function(err) { if (err) throw err; };
+	assert.ifError = function(err) { if (err) {throw err;}};
 	
 	var objectKeys = Object.keys || function (obj) {
 	  var keys = [];
@@ -92273,11 +93927,10 @@
 	  }
 	  return keys;
 	};
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
-/* 148 */
+/* 149 */
 /*!************************!*\
   !*** ./~/util/util.js ***!
   \************************/
@@ -92808,7 +94461,7 @@
 	}
 	exports.isPrimitive = isPrimitive;
 	
-	exports.isBuffer = __webpack_require__(/*! ./support/isBuffer */ 149);
+	exports.isBuffer = __webpack_require__(/*! ./support/isBuffer */ 150);
 	
 	function objectToString(o) {
 	  return Object.prototype.toString.call(o);
@@ -92852,7 +94505,7 @@
 	 *     prototype.
 	 * @param {function} superCtor Constructor function to inherit prototype from.
 	 */
-	exports.inherits = __webpack_require__(/*! inherits */ 150);
+	exports.inherits = __webpack_require__(/*! inherits */ 151);
 	
 	exports._extend = function(origin, add) {
 	  // Don't do anything if add isn't an object
@@ -92870,10 +94523,10 @@
 	  return Object.prototype.hasOwnProperty.call(obj, prop);
 	}
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(/*! ./~/process/browser.js */ 126)))
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(/*! ./~/process/browser.js */ 127)))
 
 /***/ },
-/* 149 */
+/* 150 */
 /*!*******************************************!*\
   !*** ./~/util/support/isBufferBrowser.js ***!
   \*******************************************/
@@ -92887,7 +94540,7 @@
 	}
 
 /***/ },
-/* 150 */
+/* 151 */
 /*!****************************************!*\
   !*** ./~/inherits/inherits_browser.js ***!
   \****************************************/
@@ -92919,1923 +94572,7 @@
 
 
 /***/ },
-/* 151 */
-/*!***************************!*\
-  !*** ./~/buffer/index.js ***!
-  \***************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(Buffer, global) {/*!
-	 * The buffer module from node.js, for the browser.
-	 *
-	 * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
-	 * @license  MIT
-	 */
-	/* eslint-disable no-proto */
-	
-	'use strict'
-	
-	var base64 = __webpack_require__(/*! base64-js */ 152)
-	var ieee754 = __webpack_require__(/*! ieee754 */ 153)
-	var isArray = __webpack_require__(/*! isarray */ 154)
-	
-	exports.Buffer = Buffer
-	exports.SlowBuffer = SlowBuffer
-	exports.INSPECT_MAX_BYTES = 50
-	Buffer.poolSize = 8192 // not used by this implementation
-	
-	var rootParent = {}
-	
-	/**
-	 * If `Buffer.TYPED_ARRAY_SUPPORT`:
-	 *   === true    Use Uint8Array implementation (fastest)
-	 *   === false   Use Object implementation (most compatible, even IE6)
-	 *
-	 * Browsers that support typed arrays are IE 10+, Firefox 4+, Chrome 7+, Safari 5.1+,
-	 * Opera 11.6+, iOS 4.2+.
-	 *
-	 * Due to various browser bugs, sometimes the Object implementation will be used even
-	 * when the browser supports typed arrays.
-	 *
-	 * Note:
-	 *
-	 *   - Firefox 4-29 lacks support for adding new properties to `Uint8Array` instances,
-	 *     See: https://bugzilla.mozilla.org/show_bug.cgi?id=695438.
-	 *
-	 *   - Safari 5-7 lacks support for changing the `Object.prototype.constructor` property
-	 *     on objects.
-	 *
-	 *   - Chrome 9-10 is missing the `TypedArray.prototype.subarray` function.
-	 *
-	 *   - IE10 has a broken `TypedArray.prototype.subarray` function which returns arrays of
-	 *     incorrect length in some situations.
-	
-	 * We detect these buggy browsers and set `Buffer.TYPED_ARRAY_SUPPORT` to `false` so they
-	 * get the Object implementation, which is slower but behaves correctly.
-	 */
-	Buffer.TYPED_ARRAY_SUPPORT = global.TYPED_ARRAY_SUPPORT !== undefined
-	  ? global.TYPED_ARRAY_SUPPORT
-	  : typedArraySupport()
-	
-	function typedArraySupport () {
-	  function Bar () {}
-	  try {
-	    var arr = new Uint8Array(1)
-	    arr.foo = function () { return 42 }
-	    arr.constructor = Bar
-	    return arr.foo() === 42 && // typed array instances can be augmented
-	        arr.constructor === Bar && // constructor can be set
-	        typeof arr.subarray === 'function' && // chrome 9-10 lack `subarray`
-	        arr.subarray(1, 1).byteLength === 0 // ie10 has broken `subarray`
-	  } catch (e) {
-	    return false
-	  }
-	}
-	
-	function kMaxLength () {
-	  return Buffer.TYPED_ARRAY_SUPPORT
-	    ? 0x7fffffff
-	    : 0x3fffffff
-	}
-	
-	/**
-	 * Class: Buffer
-	 * =============
-	 *
-	 * The Buffer constructor returns instances of `Uint8Array` that are augmented
-	 * with function properties for all the node `Buffer` API functions. We use
-	 * `Uint8Array` so that square bracket notation works as expected -- it returns
-	 * a single octet.
-	 *
-	 * By augmenting the instances, we can avoid modifying the `Uint8Array`
-	 * prototype.
-	 */
-	function Buffer (arg) {
-	  if (!(this instanceof Buffer)) {
-	    // Avoid going through an ArgumentsAdaptorTrampoline in the common case.
-	    if (arguments.length > 1) return new Buffer(arg, arguments[1])
-	    return new Buffer(arg)
-	  }
-	
-	  if (!Buffer.TYPED_ARRAY_SUPPORT) {
-	    this.length = 0
-	    this.parent = undefined
-	  }
-	
-	  // Common case.
-	  if (typeof arg === 'number') {
-	    return fromNumber(this, arg)
-	  }
-	
-	  // Slightly less common case.
-	  if (typeof arg === 'string') {
-	    return fromString(this, arg, arguments.length > 1 ? arguments[1] : 'utf8')
-	  }
-	
-	  // Unusual.
-	  return fromObject(this, arg)
-	}
-	
-	function fromNumber (that, length) {
-	  that = allocate(that, length < 0 ? 0 : checked(length) | 0)
-	  if (!Buffer.TYPED_ARRAY_SUPPORT) {
-	    for (var i = 0; i < length; i++) {
-	      that[i] = 0
-	    }
-	  }
-	  return that
-	}
-	
-	function fromString (that, string, encoding) {
-	  if (typeof encoding !== 'string' || encoding === '') encoding = 'utf8'
-	
-	  // Assumption: byteLength() return value is always < kMaxLength.
-	  var length = byteLength(string, encoding) | 0
-	  that = allocate(that, length)
-	
-	  that.write(string, encoding)
-	  return that
-	}
-	
-	function fromObject (that, object) {
-	  if (Buffer.isBuffer(object)) return fromBuffer(that, object)
-	
-	  if (isArray(object)) return fromArray(that, object)
-	
-	  if (object == null) {
-	    throw new TypeError('must start with number, buffer, array or string')
-	  }
-	
-	  if (typeof ArrayBuffer !== 'undefined') {
-	    if (object.buffer instanceof ArrayBuffer) {
-	      return fromTypedArray(that, object)
-	    }
-	    if (object instanceof ArrayBuffer) {
-	      return fromArrayBuffer(that, object)
-	    }
-	  }
-	
-	  if (object.length) return fromArrayLike(that, object)
-	
-	  return fromJsonObject(that, object)
-	}
-	
-	function fromBuffer (that, buffer) {
-	  var length = checked(buffer.length) | 0
-	  that = allocate(that, length)
-	  buffer.copy(that, 0, 0, length)
-	  return that
-	}
-	
-	function fromArray (that, array) {
-	  var length = checked(array.length) | 0
-	  that = allocate(that, length)
-	  for (var i = 0; i < length; i += 1) {
-	    that[i] = array[i] & 255
-	  }
-	  return that
-	}
-	
-	// Duplicate of fromArray() to keep fromArray() monomorphic.
-	function fromTypedArray (that, array) {
-	  var length = checked(array.length) | 0
-	  that = allocate(that, length)
-	  // Truncating the elements is probably not what people expect from typed
-	  // arrays with BYTES_PER_ELEMENT > 1 but it's compatible with the behavior
-	  // of the old Buffer constructor.
-	  for (var i = 0; i < length; i += 1) {
-	    that[i] = array[i] & 255
-	  }
-	  return that
-	}
-	
-	function fromArrayBuffer (that, array) {
-	  if (Buffer.TYPED_ARRAY_SUPPORT) {
-	    // Return an augmented `Uint8Array` instance, for best performance
-	    array.byteLength
-	    that = Buffer._augment(new Uint8Array(array))
-	  } else {
-	    // Fallback: Return an object instance of the Buffer class
-	    that = fromTypedArray(that, new Uint8Array(array))
-	  }
-	  return that
-	}
-	
-	function fromArrayLike (that, array) {
-	  var length = checked(array.length) | 0
-	  that = allocate(that, length)
-	  for (var i = 0; i < length; i += 1) {
-	    that[i] = array[i] & 255
-	  }
-	  return that
-	}
-	
-	// Deserialize { type: 'Buffer', data: [1,2,3,...] } into a Buffer object.
-	// Returns a zero-length buffer for inputs that don't conform to the spec.
-	function fromJsonObject (that, object) {
-	  var array
-	  var length = 0
-	
-	  if (object.type === 'Buffer' && isArray(object.data)) {
-	    array = object.data
-	    length = checked(array.length) | 0
-	  }
-	  that = allocate(that, length)
-	
-	  for (var i = 0; i < length; i += 1) {
-	    that[i] = array[i] & 255
-	  }
-	  return that
-	}
-	
-	if (Buffer.TYPED_ARRAY_SUPPORT) {
-	  Buffer.prototype.__proto__ = Uint8Array.prototype
-	  Buffer.__proto__ = Uint8Array
-	} else {
-	  // pre-set for values that may exist in the future
-	  Buffer.prototype.length = undefined
-	  Buffer.prototype.parent = undefined
-	}
-	
-	function allocate (that, length) {
-	  if (Buffer.TYPED_ARRAY_SUPPORT) {
-	    // Return an augmented `Uint8Array` instance, for best performance
-	    that = Buffer._augment(new Uint8Array(length))
-	    that.__proto__ = Buffer.prototype
-	  } else {
-	    // Fallback: Return an object instance of the Buffer class
-	    that.length = length
-	    that._isBuffer = true
-	  }
-	
-	  var fromPool = length !== 0 && length <= Buffer.poolSize >>> 1
-	  if (fromPool) that.parent = rootParent
-	
-	  return that
-	}
-	
-	function checked (length) {
-	  // Note: cannot use `length < kMaxLength` here because that fails when
-	  // length is NaN (which is otherwise coerced to zero.)
-	  if (length >= kMaxLength()) {
-	    throw new RangeError('Attempt to allocate Buffer larger than maximum ' +
-	                         'size: 0x' + kMaxLength().toString(16) + ' bytes')
-	  }
-	  return length | 0
-	}
-	
-	function SlowBuffer (subject, encoding) {
-	  if (!(this instanceof SlowBuffer)) return new SlowBuffer(subject, encoding)
-	
-	  var buf = new Buffer(subject, encoding)
-	  delete buf.parent
-	  return buf
-	}
-	
-	Buffer.isBuffer = function isBuffer (b) {
-	  return !!(b != null && b._isBuffer)
-	}
-	
-	Buffer.compare = function compare (a, b) {
-	  if (!Buffer.isBuffer(a) || !Buffer.isBuffer(b)) {
-	    throw new TypeError('Arguments must be Buffers')
-	  }
-	
-	  if (a === b) return 0
-	
-	  var x = a.length
-	  var y = b.length
-	
-	  var i = 0
-	  var len = Math.min(x, y)
-	  while (i < len) {
-	    if (a[i] !== b[i]) break
-	
-	    ++i
-	  }
-	
-	  if (i !== len) {
-	    x = a[i]
-	    y = b[i]
-	  }
-	
-	  if (x < y) return -1
-	  if (y < x) return 1
-	  return 0
-	}
-	
-	Buffer.isEncoding = function isEncoding (encoding) {
-	  switch (String(encoding).toLowerCase()) {
-	    case 'hex':
-	    case 'utf8':
-	    case 'utf-8':
-	    case 'ascii':
-	    case 'binary':
-	    case 'base64':
-	    case 'raw':
-	    case 'ucs2':
-	    case 'ucs-2':
-	    case 'utf16le':
-	    case 'utf-16le':
-	      return true
-	    default:
-	      return false
-	  }
-	}
-	
-	Buffer.concat = function concat (list, length) {
-	  if (!isArray(list)) throw new TypeError('list argument must be an Array of Buffers.')
-	
-	  if (list.length === 0) {
-	    return new Buffer(0)
-	  }
-	
-	  var i
-	  if (length === undefined) {
-	    length = 0
-	    for (i = 0; i < list.length; i++) {
-	      length += list[i].length
-	    }
-	  }
-	
-	  var buf = new Buffer(length)
-	  var pos = 0
-	  for (i = 0; i < list.length; i++) {
-	    var item = list[i]
-	    item.copy(buf, pos)
-	    pos += item.length
-	  }
-	  return buf
-	}
-	
-	function byteLength (string, encoding) {
-	  if (typeof string !== 'string') string = '' + string
-	
-	  var len = string.length
-	  if (len === 0) return 0
-	
-	  // Use a for loop to avoid recursion
-	  var loweredCase = false
-	  for (;;) {
-	    switch (encoding) {
-	      case 'ascii':
-	      case 'binary':
-	      // Deprecated
-	      case 'raw':
-	      case 'raws':
-	        return len
-	      case 'utf8':
-	      case 'utf-8':
-	        return utf8ToBytes(string).length
-	      case 'ucs2':
-	      case 'ucs-2':
-	      case 'utf16le':
-	      case 'utf-16le':
-	        return len * 2
-	      case 'hex':
-	        return len >>> 1
-	      case 'base64':
-	        return base64ToBytes(string).length
-	      default:
-	        if (loweredCase) return utf8ToBytes(string).length // assume utf8
-	        encoding = ('' + encoding).toLowerCase()
-	        loweredCase = true
-	    }
-	  }
-	}
-	Buffer.byteLength = byteLength
-	
-	function slowToString (encoding, start, end) {
-	  var loweredCase = false
-	
-	  start = start | 0
-	  end = end === undefined || end === Infinity ? this.length : end | 0
-	
-	  if (!encoding) encoding = 'utf8'
-	  if (start < 0) start = 0
-	  if (end > this.length) end = this.length
-	  if (end <= start) return ''
-	
-	  while (true) {
-	    switch (encoding) {
-	      case 'hex':
-	        return hexSlice(this, start, end)
-	
-	      case 'utf8':
-	      case 'utf-8':
-	        return utf8Slice(this, start, end)
-	
-	      case 'ascii':
-	        return asciiSlice(this, start, end)
-	
-	      case 'binary':
-	        return binarySlice(this, start, end)
-	
-	      case 'base64':
-	        return base64Slice(this, start, end)
-	
-	      case 'ucs2':
-	      case 'ucs-2':
-	      case 'utf16le':
-	      case 'utf-16le':
-	        return utf16leSlice(this, start, end)
-	
-	      default:
-	        if (loweredCase) throw new TypeError('Unknown encoding: ' + encoding)
-	        encoding = (encoding + '').toLowerCase()
-	        loweredCase = true
-	    }
-	  }
-	}
-	
-	Buffer.prototype.toString = function toString () {
-	  var length = this.length | 0
-	  if (length === 0) return ''
-	  if (arguments.length === 0) return utf8Slice(this, 0, length)
-	  return slowToString.apply(this, arguments)
-	}
-	
-	Buffer.prototype.equals = function equals (b) {
-	  if (!Buffer.isBuffer(b)) throw new TypeError('Argument must be a Buffer')
-	  if (this === b) return true
-	  return Buffer.compare(this, b) === 0
-	}
-	
-	Buffer.prototype.inspect = function inspect () {
-	  var str = ''
-	  var max = exports.INSPECT_MAX_BYTES
-	  if (this.length > 0) {
-	    str = this.toString('hex', 0, max).match(/.{2}/g).join(' ')
-	    if (this.length > max) str += ' ... '
-	  }
-	  return '<Buffer ' + str + '>'
-	}
-	
-	Buffer.prototype.compare = function compare (b) {
-	  if (!Buffer.isBuffer(b)) throw new TypeError('Argument must be a Buffer')
-	  if (this === b) return 0
-	  return Buffer.compare(this, b)
-	}
-	
-	Buffer.prototype.indexOf = function indexOf (val, byteOffset) {
-	  if (byteOffset > 0x7fffffff) byteOffset = 0x7fffffff
-	  else if (byteOffset < -0x80000000) byteOffset = -0x80000000
-	  byteOffset >>= 0
-	
-	  if (this.length === 0) return -1
-	  if (byteOffset >= this.length) return -1
-	
-	  // Negative offsets start from the end of the buffer
-	  if (byteOffset < 0) byteOffset = Math.max(this.length + byteOffset, 0)
-	
-	  if (typeof val === 'string') {
-	    if (val.length === 0) return -1 // special case: looking for empty string always fails
-	    return String.prototype.indexOf.call(this, val, byteOffset)
-	  }
-	  if (Buffer.isBuffer(val)) {
-	    return arrayIndexOf(this, val, byteOffset)
-	  }
-	  if (typeof val === 'number') {
-	    if (Buffer.TYPED_ARRAY_SUPPORT && Uint8Array.prototype.indexOf === 'function') {
-	      return Uint8Array.prototype.indexOf.call(this, val, byteOffset)
-	    }
-	    return arrayIndexOf(this, [ val ], byteOffset)
-	  }
-	
-	  function arrayIndexOf (arr, val, byteOffset) {
-	    var foundIndex = -1
-	    for (var i = 0; byteOffset + i < arr.length; i++) {
-	      if (arr[byteOffset + i] === val[foundIndex === -1 ? 0 : i - foundIndex]) {
-	        if (foundIndex === -1) foundIndex = i
-	        if (i - foundIndex + 1 === val.length) return byteOffset + foundIndex
-	      } else {
-	        foundIndex = -1
-	      }
-	    }
-	    return -1
-	  }
-	
-	  throw new TypeError('val must be string, number or Buffer')
-	}
-	
-	// `get` is deprecated
-	Buffer.prototype.get = function get (offset) {
-	  console.log('.get() is deprecated. Access using array indexes instead.')
-	  return this.readUInt8(offset)
-	}
-	
-	// `set` is deprecated
-	Buffer.prototype.set = function set (v, offset) {
-	  console.log('.set() is deprecated. Access using array indexes instead.')
-	  return this.writeUInt8(v, offset)
-	}
-	
-	function hexWrite (buf, string, offset, length) {
-	  offset = Number(offset) || 0
-	  var remaining = buf.length - offset
-	  if (!length) {
-	    length = remaining
-	  } else {
-	    length = Number(length)
-	    if (length > remaining) {
-	      length = remaining
-	    }
-	  }
-	
-	  // must be an even number of digits
-	  var strLen = string.length
-	  if (strLen % 2 !== 0) throw new Error('Invalid hex string')
-	
-	  if (length > strLen / 2) {
-	    length = strLen / 2
-	  }
-	  for (var i = 0; i < length; i++) {
-	    var parsed = parseInt(string.substr(i * 2, 2), 16)
-	    if (isNaN(parsed)) throw new Error('Invalid hex string')
-	    buf[offset + i] = parsed
-	  }
-	  return i
-	}
-	
-	function utf8Write (buf, string, offset, length) {
-	  return blitBuffer(utf8ToBytes(string, buf.length - offset), buf, offset, length)
-	}
-	
-	function asciiWrite (buf, string, offset, length) {
-	  return blitBuffer(asciiToBytes(string), buf, offset, length)
-	}
-	
-	function binaryWrite (buf, string, offset, length) {
-	  return asciiWrite(buf, string, offset, length)
-	}
-	
-	function base64Write (buf, string, offset, length) {
-	  return blitBuffer(base64ToBytes(string), buf, offset, length)
-	}
-	
-	function ucs2Write (buf, string, offset, length) {
-	  return blitBuffer(utf16leToBytes(string, buf.length - offset), buf, offset, length)
-	}
-	
-	Buffer.prototype.write = function write (string, offset, length, encoding) {
-	  // Buffer#write(string)
-	  if (offset === undefined) {
-	    encoding = 'utf8'
-	    length = this.length
-	    offset = 0
-	  // Buffer#write(string, encoding)
-	  } else if (length === undefined && typeof offset === 'string') {
-	    encoding = offset
-	    length = this.length
-	    offset = 0
-	  // Buffer#write(string, offset[, length][, encoding])
-	  } else if (isFinite(offset)) {
-	    offset = offset | 0
-	    if (isFinite(length)) {
-	      length = length | 0
-	      if (encoding === undefined) encoding = 'utf8'
-	    } else {
-	      encoding = length
-	      length = undefined
-	    }
-	  // legacy write(string, encoding, offset, length) - remove in v0.13
-	  } else {
-	    var swap = encoding
-	    encoding = offset
-	    offset = length | 0
-	    length = swap
-	  }
-	
-	  var remaining = this.length - offset
-	  if (length === undefined || length > remaining) length = remaining
-	
-	  if ((string.length > 0 && (length < 0 || offset < 0)) || offset > this.length) {
-	    throw new RangeError('attempt to write outside buffer bounds')
-	  }
-	
-	  if (!encoding) encoding = 'utf8'
-	
-	  var loweredCase = false
-	  for (;;) {
-	    switch (encoding) {
-	      case 'hex':
-	        return hexWrite(this, string, offset, length)
-	
-	      case 'utf8':
-	      case 'utf-8':
-	        return utf8Write(this, string, offset, length)
-	
-	      case 'ascii':
-	        return asciiWrite(this, string, offset, length)
-	
-	      case 'binary':
-	        return binaryWrite(this, string, offset, length)
-	
-	      case 'base64':
-	        // Warning: maxLength not taken into account in base64Write
-	        return base64Write(this, string, offset, length)
-	
-	      case 'ucs2':
-	      case 'ucs-2':
-	      case 'utf16le':
-	      case 'utf-16le':
-	        return ucs2Write(this, string, offset, length)
-	
-	      default:
-	        if (loweredCase) throw new TypeError('Unknown encoding: ' + encoding)
-	        encoding = ('' + encoding).toLowerCase()
-	        loweredCase = true
-	    }
-	  }
-	}
-	
-	Buffer.prototype.toJSON = function toJSON () {
-	  return {
-	    type: 'Buffer',
-	    data: Array.prototype.slice.call(this._arr || this, 0)
-	  }
-	}
-	
-	function base64Slice (buf, start, end) {
-	  if (start === 0 && end === buf.length) {
-	    return base64.fromByteArray(buf)
-	  } else {
-	    return base64.fromByteArray(buf.slice(start, end))
-	  }
-	}
-	
-	function utf8Slice (buf, start, end) {
-	  end = Math.min(buf.length, end)
-	  var res = []
-	
-	  var i = start
-	  while (i < end) {
-	    var firstByte = buf[i]
-	    var codePoint = null
-	    var bytesPerSequence = (firstByte > 0xEF) ? 4
-	      : (firstByte > 0xDF) ? 3
-	      : (firstByte > 0xBF) ? 2
-	      : 1
-	
-	    if (i + bytesPerSequence <= end) {
-	      var secondByte, thirdByte, fourthByte, tempCodePoint
-	
-	      switch (bytesPerSequence) {
-	        case 1:
-	          if (firstByte < 0x80) {
-	            codePoint = firstByte
-	          }
-	          break
-	        case 2:
-	          secondByte = buf[i + 1]
-	          if ((secondByte & 0xC0) === 0x80) {
-	            tempCodePoint = (firstByte & 0x1F) << 0x6 | (secondByte & 0x3F)
-	            if (tempCodePoint > 0x7F) {
-	              codePoint = tempCodePoint
-	            }
-	          }
-	          break
-	        case 3:
-	          secondByte = buf[i + 1]
-	          thirdByte = buf[i + 2]
-	          if ((secondByte & 0xC0) === 0x80 && (thirdByte & 0xC0) === 0x80) {
-	            tempCodePoint = (firstByte & 0xF) << 0xC | (secondByte & 0x3F) << 0x6 | (thirdByte & 0x3F)
-	            if (tempCodePoint > 0x7FF && (tempCodePoint < 0xD800 || tempCodePoint > 0xDFFF)) {
-	              codePoint = tempCodePoint
-	            }
-	          }
-	          break
-	        case 4:
-	          secondByte = buf[i + 1]
-	          thirdByte = buf[i + 2]
-	          fourthByte = buf[i + 3]
-	          if ((secondByte & 0xC0) === 0x80 && (thirdByte & 0xC0) === 0x80 && (fourthByte & 0xC0) === 0x80) {
-	            tempCodePoint = (firstByte & 0xF) << 0x12 | (secondByte & 0x3F) << 0xC | (thirdByte & 0x3F) << 0x6 | (fourthByte & 0x3F)
-	            if (tempCodePoint > 0xFFFF && tempCodePoint < 0x110000) {
-	              codePoint = tempCodePoint
-	            }
-	          }
-	      }
-	    }
-	
-	    if (codePoint === null) {
-	      // we did not generate a valid codePoint so insert a
-	      // replacement char (U+FFFD) and advance only 1 byte
-	      codePoint = 0xFFFD
-	      bytesPerSequence = 1
-	    } else if (codePoint > 0xFFFF) {
-	      // encode to utf16 (surrogate pair dance)
-	      codePoint -= 0x10000
-	      res.push(codePoint >>> 10 & 0x3FF | 0xD800)
-	      codePoint = 0xDC00 | codePoint & 0x3FF
-	    }
-	
-	    res.push(codePoint)
-	    i += bytesPerSequence
-	  }
-	
-	  return decodeCodePointsArray(res)
-	}
-	
-	// Based on http://stackoverflow.com/a/22747272/680742, the browser with
-	// the lowest limit is Chrome, with 0x10000 args.
-	// We go 1 magnitude less, for safety
-	var MAX_ARGUMENTS_LENGTH = 0x1000
-	
-	function decodeCodePointsArray (codePoints) {
-	  var len = codePoints.length
-	  if (len <= MAX_ARGUMENTS_LENGTH) {
-	    return String.fromCharCode.apply(String, codePoints) // avoid extra slice()
-	  }
-	
-	  // Decode in chunks to avoid "call stack size exceeded".
-	  var res = ''
-	  var i = 0
-	  while (i < len) {
-	    res += String.fromCharCode.apply(
-	      String,
-	      codePoints.slice(i, i += MAX_ARGUMENTS_LENGTH)
-	    )
-	  }
-	  return res
-	}
-	
-	function asciiSlice (buf, start, end) {
-	  var ret = ''
-	  end = Math.min(buf.length, end)
-	
-	  for (var i = start; i < end; i++) {
-	    ret += String.fromCharCode(buf[i] & 0x7F)
-	  }
-	  return ret
-	}
-	
-	function binarySlice (buf, start, end) {
-	  var ret = ''
-	  end = Math.min(buf.length, end)
-	
-	  for (var i = start; i < end; i++) {
-	    ret += String.fromCharCode(buf[i])
-	  }
-	  return ret
-	}
-	
-	function hexSlice (buf, start, end) {
-	  var len = buf.length
-	
-	  if (!start || start < 0) start = 0
-	  if (!end || end < 0 || end > len) end = len
-	
-	  var out = ''
-	  for (var i = start; i < end; i++) {
-	    out += toHex(buf[i])
-	  }
-	  return out
-	}
-	
-	function utf16leSlice (buf, start, end) {
-	  var bytes = buf.slice(start, end)
-	  var res = ''
-	  for (var i = 0; i < bytes.length; i += 2) {
-	    res += String.fromCharCode(bytes[i] + bytes[i + 1] * 256)
-	  }
-	  return res
-	}
-	
-	Buffer.prototype.slice = function slice (start, end) {
-	  var len = this.length
-	  start = ~~start
-	  end = end === undefined ? len : ~~end
-	
-	  if (start < 0) {
-	    start += len
-	    if (start < 0) start = 0
-	  } else if (start > len) {
-	    start = len
-	  }
-	
-	  if (end < 0) {
-	    end += len
-	    if (end < 0) end = 0
-	  } else if (end > len) {
-	    end = len
-	  }
-	
-	  if (end < start) end = start
-	
-	  var newBuf
-	  if (Buffer.TYPED_ARRAY_SUPPORT) {
-	    newBuf = Buffer._augment(this.subarray(start, end))
-	  } else {
-	    var sliceLen = end - start
-	    newBuf = new Buffer(sliceLen, undefined)
-	    for (var i = 0; i < sliceLen; i++) {
-	      newBuf[i] = this[i + start]
-	    }
-	  }
-	
-	  if (newBuf.length) newBuf.parent = this.parent || this
-	
-	  return newBuf
-	}
-	
-	/*
-	 * Need to make sure that buffer isn't trying to write out of bounds.
-	 */
-	function checkOffset (offset, ext, length) {
-	  if ((offset % 1) !== 0 || offset < 0) throw new RangeError('offset is not uint')
-	  if (offset + ext > length) throw new RangeError('Trying to access beyond buffer length')
-	}
-	
-	Buffer.prototype.readUIntLE = function readUIntLE (offset, byteLength, noAssert) {
-	  offset = offset | 0
-	  byteLength = byteLength | 0
-	  if (!noAssert) checkOffset(offset, byteLength, this.length)
-	
-	  var val = this[offset]
-	  var mul = 1
-	  var i = 0
-	  while (++i < byteLength && (mul *= 0x100)) {
-	    val += this[offset + i] * mul
-	  }
-	
-	  return val
-	}
-	
-	Buffer.prototype.readUIntBE = function readUIntBE (offset, byteLength, noAssert) {
-	  offset = offset | 0
-	  byteLength = byteLength | 0
-	  if (!noAssert) {
-	    checkOffset(offset, byteLength, this.length)
-	  }
-	
-	  var val = this[offset + --byteLength]
-	  var mul = 1
-	  while (byteLength > 0 && (mul *= 0x100)) {
-	    val += this[offset + --byteLength] * mul
-	  }
-	
-	  return val
-	}
-	
-	Buffer.prototype.readUInt8 = function readUInt8 (offset, noAssert) {
-	  if (!noAssert) checkOffset(offset, 1, this.length)
-	  return this[offset]
-	}
-	
-	Buffer.prototype.readUInt16LE = function readUInt16LE (offset, noAssert) {
-	  if (!noAssert) checkOffset(offset, 2, this.length)
-	  return this[offset] | (this[offset + 1] << 8)
-	}
-	
-	Buffer.prototype.readUInt16BE = function readUInt16BE (offset, noAssert) {
-	  if (!noAssert) checkOffset(offset, 2, this.length)
-	  return (this[offset] << 8) | this[offset + 1]
-	}
-	
-	Buffer.prototype.readUInt32LE = function readUInt32LE (offset, noAssert) {
-	  if (!noAssert) checkOffset(offset, 4, this.length)
-	
-	  return ((this[offset]) |
-	      (this[offset + 1] << 8) |
-	      (this[offset + 2] << 16)) +
-	      (this[offset + 3] * 0x1000000)
-	}
-	
-	Buffer.prototype.readUInt32BE = function readUInt32BE (offset, noAssert) {
-	  if (!noAssert) checkOffset(offset, 4, this.length)
-	
-	  return (this[offset] * 0x1000000) +
-	    ((this[offset + 1] << 16) |
-	    (this[offset + 2] << 8) |
-	    this[offset + 3])
-	}
-	
-	Buffer.prototype.readIntLE = function readIntLE (offset, byteLength, noAssert) {
-	  offset = offset | 0
-	  byteLength = byteLength | 0
-	  if (!noAssert) checkOffset(offset, byteLength, this.length)
-	
-	  var val = this[offset]
-	  var mul = 1
-	  var i = 0
-	  while (++i < byteLength && (mul *= 0x100)) {
-	    val += this[offset + i] * mul
-	  }
-	  mul *= 0x80
-	
-	  if (val >= mul) val -= Math.pow(2, 8 * byteLength)
-	
-	  return val
-	}
-	
-	Buffer.prototype.readIntBE = function readIntBE (offset, byteLength, noAssert) {
-	  offset = offset | 0
-	  byteLength = byteLength | 0
-	  if (!noAssert) checkOffset(offset, byteLength, this.length)
-	
-	  var i = byteLength
-	  var mul = 1
-	  var val = this[offset + --i]
-	  while (i > 0 && (mul *= 0x100)) {
-	    val += this[offset + --i] * mul
-	  }
-	  mul *= 0x80
-	
-	  if (val >= mul) val -= Math.pow(2, 8 * byteLength)
-	
-	  return val
-	}
-	
-	Buffer.prototype.readInt8 = function readInt8 (offset, noAssert) {
-	  if (!noAssert) checkOffset(offset, 1, this.length)
-	  if (!(this[offset] & 0x80)) return (this[offset])
-	  return ((0xff - this[offset] + 1) * -1)
-	}
-	
-	Buffer.prototype.readInt16LE = function readInt16LE (offset, noAssert) {
-	  if (!noAssert) checkOffset(offset, 2, this.length)
-	  var val = this[offset] | (this[offset + 1] << 8)
-	  return (val & 0x8000) ? val | 0xFFFF0000 : val
-	}
-	
-	Buffer.prototype.readInt16BE = function readInt16BE (offset, noAssert) {
-	  if (!noAssert) checkOffset(offset, 2, this.length)
-	  var val = this[offset + 1] | (this[offset] << 8)
-	  return (val & 0x8000) ? val | 0xFFFF0000 : val
-	}
-	
-	Buffer.prototype.readInt32LE = function readInt32LE (offset, noAssert) {
-	  if (!noAssert) checkOffset(offset, 4, this.length)
-	
-	  return (this[offset]) |
-	    (this[offset + 1] << 8) |
-	    (this[offset + 2] << 16) |
-	    (this[offset + 3] << 24)
-	}
-	
-	Buffer.prototype.readInt32BE = function readInt32BE (offset, noAssert) {
-	  if (!noAssert) checkOffset(offset, 4, this.length)
-	
-	  return (this[offset] << 24) |
-	    (this[offset + 1] << 16) |
-	    (this[offset + 2] << 8) |
-	    (this[offset + 3])
-	}
-	
-	Buffer.prototype.readFloatLE = function readFloatLE (offset, noAssert) {
-	  if (!noAssert) checkOffset(offset, 4, this.length)
-	  return ieee754.read(this, offset, true, 23, 4)
-	}
-	
-	Buffer.prototype.readFloatBE = function readFloatBE (offset, noAssert) {
-	  if (!noAssert) checkOffset(offset, 4, this.length)
-	  return ieee754.read(this, offset, false, 23, 4)
-	}
-	
-	Buffer.prototype.readDoubleLE = function readDoubleLE (offset, noAssert) {
-	  if (!noAssert) checkOffset(offset, 8, this.length)
-	  return ieee754.read(this, offset, true, 52, 8)
-	}
-	
-	Buffer.prototype.readDoubleBE = function readDoubleBE (offset, noAssert) {
-	  if (!noAssert) checkOffset(offset, 8, this.length)
-	  return ieee754.read(this, offset, false, 52, 8)
-	}
-	
-	function checkInt (buf, value, offset, ext, max, min) {
-	  if (!Buffer.isBuffer(buf)) throw new TypeError('buffer must be a Buffer instance')
-	  if (value > max || value < min) throw new RangeError('value is out of bounds')
-	  if (offset + ext > buf.length) throw new RangeError('index out of range')
-	}
-	
-	Buffer.prototype.writeUIntLE = function writeUIntLE (value, offset, byteLength, noAssert) {
-	  value = +value
-	  offset = offset | 0
-	  byteLength = byteLength | 0
-	  if (!noAssert) checkInt(this, value, offset, byteLength, Math.pow(2, 8 * byteLength), 0)
-	
-	  var mul = 1
-	  var i = 0
-	  this[offset] = value & 0xFF
-	  while (++i < byteLength && (mul *= 0x100)) {
-	    this[offset + i] = (value / mul) & 0xFF
-	  }
-	
-	  return offset + byteLength
-	}
-	
-	Buffer.prototype.writeUIntBE = function writeUIntBE (value, offset, byteLength, noAssert) {
-	  value = +value
-	  offset = offset | 0
-	  byteLength = byteLength | 0
-	  if (!noAssert) checkInt(this, value, offset, byteLength, Math.pow(2, 8 * byteLength), 0)
-	
-	  var i = byteLength - 1
-	  var mul = 1
-	  this[offset + i] = value & 0xFF
-	  while (--i >= 0 && (mul *= 0x100)) {
-	    this[offset + i] = (value / mul) & 0xFF
-	  }
-	
-	  return offset + byteLength
-	}
-	
-	Buffer.prototype.writeUInt8 = function writeUInt8 (value, offset, noAssert) {
-	  value = +value
-	  offset = offset | 0
-	  if (!noAssert) checkInt(this, value, offset, 1, 0xff, 0)
-	  if (!Buffer.TYPED_ARRAY_SUPPORT) value = Math.floor(value)
-	  this[offset] = (value & 0xff)
-	  return offset + 1
-	}
-	
-	function objectWriteUInt16 (buf, value, offset, littleEndian) {
-	  if (value < 0) value = 0xffff + value + 1
-	  for (var i = 0, j = Math.min(buf.length - offset, 2); i < j; i++) {
-	    buf[offset + i] = (value & (0xff << (8 * (littleEndian ? i : 1 - i)))) >>>
-	      (littleEndian ? i : 1 - i) * 8
-	  }
-	}
-	
-	Buffer.prototype.writeUInt16LE = function writeUInt16LE (value, offset, noAssert) {
-	  value = +value
-	  offset = offset | 0
-	  if (!noAssert) checkInt(this, value, offset, 2, 0xffff, 0)
-	  if (Buffer.TYPED_ARRAY_SUPPORT) {
-	    this[offset] = (value & 0xff)
-	    this[offset + 1] = (value >>> 8)
-	  } else {
-	    objectWriteUInt16(this, value, offset, true)
-	  }
-	  return offset + 2
-	}
-	
-	Buffer.prototype.writeUInt16BE = function writeUInt16BE (value, offset, noAssert) {
-	  value = +value
-	  offset = offset | 0
-	  if (!noAssert) checkInt(this, value, offset, 2, 0xffff, 0)
-	  if (Buffer.TYPED_ARRAY_SUPPORT) {
-	    this[offset] = (value >>> 8)
-	    this[offset + 1] = (value & 0xff)
-	  } else {
-	    objectWriteUInt16(this, value, offset, false)
-	  }
-	  return offset + 2
-	}
-	
-	function objectWriteUInt32 (buf, value, offset, littleEndian) {
-	  if (value < 0) value = 0xffffffff + value + 1
-	  for (var i = 0, j = Math.min(buf.length - offset, 4); i < j; i++) {
-	    buf[offset + i] = (value >>> (littleEndian ? i : 3 - i) * 8) & 0xff
-	  }
-	}
-	
-	Buffer.prototype.writeUInt32LE = function writeUInt32LE (value, offset, noAssert) {
-	  value = +value
-	  offset = offset | 0
-	  if (!noAssert) checkInt(this, value, offset, 4, 0xffffffff, 0)
-	  if (Buffer.TYPED_ARRAY_SUPPORT) {
-	    this[offset + 3] = (value >>> 24)
-	    this[offset + 2] = (value >>> 16)
-	    this[offset + 1] = (value >>> 8)
-	    this[offset] = (value & 0xff)
-	  } else {
-	    objectWriteUInt32(this, value, offset, true)
-	  }
-	  return offset + 4
-	}
-	
-	Buffer.prototype.writeUInt32BE = function writeUInt32BE (value, offset, noAssert) {
-	  value = +value
-	  offset = offset | 0
-	  if (!noAssert) checkInt(this, value, offset, 4, 0xffffffff, 0)
-	  if (Buffer.TYPED_ARRAY_SUPPORT) {
-	    this[offset] = (value >>> 24)
-	    this[offset + 1] = (value >>> 16)
-	    this[offset + 2] = (value >>> 8)
-	    this[offset + 3] = (value & 0xff)
-	  } else {
-	    objectWriteUInt32(this, value, offset, false)
-	  }
-	  return offset + 4
-	}
-	
-	Buffer.prototype.writeIntLE = function writeIntLE (value, offset, byteLength, noAssert) {
-	  value = +value
-	  offset = offset | 0
-	  if (!noAssert) {
-	    var limit = Math.pow(2, 8 * byteLength - 1)
-	
-	    checkInt(this, value, offset, byteLength, limit - 1, -limit)
-	  }
-	
-	  var i = 0
-	  var mul = 1
-	  var sub = value < 0 ? 1 : 0
-	  this[offset] = value & 0xFF
-	  while (++i < byteLength && (mul *= 0x100)) {
-	    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF
-	  }
-	
-	  return offset + byteLength
-	}
-	
-	Buffer.prototype.writeIntBE = function writeIntBE (value, offset, byteLength, noAssert) {
-	  value = +value
-	  offset = offset | 0
-	  if (!noAssert) {
-	    var limit = Math.pow(2, 8 * byteLength - 1)
-	
-	    checkInt(this, value, offset, byteLength, limit - 1, -limit)
-	  }
-	
-	  var i = byteLength - 1
-	  var mul = 1
-	  var sub = value < 0 ? 1 : 0
-	  this[offset + i] = value & 0xFF
-	  while (--i >= 0 && (mul *= 0x100)) {
-	    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF
-	  }
-	
-	  return offset + byteLength
-	}
-	
-	Buffer.prototype.writeInt8 = function writeInt8 (value, offset, noAssert) {
-	  value = +value
-	  offset = offset | 0
-	  if (!noAssert) checkInt(this, value, offset, 1, 0x7f, -0x80)
-	  if (!Buffer.TYPED_ARRAY_SUPPORT) value = Math.floor(value)
-	  if (value < 0) value = 0xff + value + 1
-	  this[offset] = (value & 0xff)
-	  return offset + 1
-	}
-	
-	Buffer.prototype.writeInt16LE = function writeInt16LE (value, offset, noAssert) {
-	  value = +value
-	  offset = offset | 0
-	  if (!noAssert) checkInt(this, value, offset, 2, 0x7fff, -0x8000)
-	  if (Buffer.TYPED_ARRAY_SUPPORT) {
-	    this[offset] = (value & 0xff)
-	    this[offset + 1] = (value >>> 8)
-	  } else {
-	    objectWriteUInt16(this, value, offset, true)
-	  }
-	  return offset + 2
-	}
-	
-	Buffer.prototype.writeInt16BE = function writeInt16BE (value, offset, noAssert) {
-	  value = +value
-	  offset = offset | 0
-	  if (!noAssert) checkInt(this, value, offset, 2, 0x7fff, -0x8000)
-	  if (Buffer.TYPED_ARRAY_SUPPORT) {
-	    this[offset] = (value >>> 8)
-	    this[offset + 1] = (value & 0xff)
-	  } else {
-	    objectWriteUInt16(this, value, offset, false)
-	  }
-	  return offset + 2
-	}
-	
-	Buffer.prototype.writeInt32LE = function writeInt32LE (value, offset, noAssert) {
-	  value = +value
-	  offset = offset | 0
-	  if (!noAssert) checkInt(this, value, offset, 4, 0x7fffffff, -0x80000000)
-	  if (Buffer.TYPED_ARRAY_SUPPORT) {
-	    this[offset] = (value & 0xff)
-	    this[offset + 1] = (value >>> 8)
-	    this[offset + 2] = (value >>> 16)
-	    this[offset + 3] = (value >>> 24)
-	  } else {
-	    objectWriteUInt32(this, value, offset, true)
-	  }
-	  return offset + 4
-	}
-	
-	Buffer.prototype.writeInt32BE = function writeInt32BE (value, offset, noAssert) {
-	  value = +value
-	  offset = offset | 0
-	  if (!noAssert) checkInt(this, value, offset, 4, 0x7fffffff, -0x80000000)
-	  if (value < 0) value = 0xffffffff + value + 1
-	  if (Buffer.TYPED_ARRAY_SUPPORT) {
-	    this[offset] = (value >>> 24)
-	    this[offset + 1] = (value >>> 16)
-	    this[offset + 2] = (value >>> 8)
-	    this[offset + 3] = (value & 0xff)
-	  } else {
-	    objectWriteUInt32(this, value, offset, false)
-	  }
-	  return offset + 4
-	}
-	
-	function checkIEEE754 (buf, value, offset, ext, max, min) {
-	  if (value > max || value < min) throw new RangeError('value is out of bounds')
-	  if (offset + ext > buf.length) throw new RangeError('index out of range')
-	  if (offset < 0) throw new RangeError('index out of range')
-	}
-	
-	function writeFloat (buf, value, offset, littleEndian, noAssert) {
-	  if (!noAssert) {
-	    checkIEEE754(buf, value, offset, 4, 3.4028234663852886e+38, -3.4028234663852886e+38)
-	  }
-	  ieee754.write(buf, value, offset, littleEndian, 23, 4)
-	  return offset + 4
-	}
-	
-	Buffer.prototype.writeFloatLE = function writeFloatLE (value, offset, noAssert) {
-	  return writeFloat(this, value, offset, true, noAssert)
-	}
-	
-	Buffer.prototype.writeFloatBE = function writeFloatBE (value, offset, noAssert) {
-	  return writeFloat(this, value, offset, false, noAssert)
-	}
-	
-	function writeDouble (buf, value, offset, littleEndian, noAssert) {
-	  if (!noAssert) {
-	    checkIEEE754(buf, value, offset, 8, 1.7976931348623157E+308, -1.7976931348623157E+308)
-	  }
-	  ieee754.write(buf, value, offset, littleEndian, 52, 8)
-	  return offset + 8
-	}
-	
-	Buffer.prototype.writeDoubleLE = function writeDoubleLE (value, offset, noAssert) {
-	  return writeDouble(this, value, offset, true, noAssert)
-	}
-	
-	Buffer.prototype.writeDoubleBE = function writeDoubleBE (value, offset, noAssert) {
-	  return writeDouble(this, value, offset, false, noAssert)
-	}
-	
-	// copy(targetBuffer, targetStart=0, sourceStart=0, sourceEnd=buffer.length)
-	Buffer.prototype.copy = function copy (target, targetStart, start, end) {
-	  if (!start) start = 0
-	  if (!end && end !== 0) end = this.length
-	  if (targetStart >= target.length) targetStart = target.length
-	  if (!targetStart) targetStart = 0
-	  if (end > 0 && end < start) end = start
-	
-	  // Copy 0 bytes; we're done
-	  if (end === start) return 0
-	  if (target.length === 0 || this.length === 0) return 0
-	
-	  // Fatal error conditions
-	  if (targetStart < 0) {
-	    throw new RangeError('targetStart out of bounds')
-	  }
-	  if (start < 0 || start >= this.length) throw new RangeError('sourceStart out of bounds')
-	  if (end < 0) throw new RangeError('sourceEnd out of bounds')
-	
-	  // Are we oob?
-	  if (end > this.length) end = this.length
-	  if (target.length - targetStart < end - start) {
-	    end = target.length - targetStart + start
-	  }
-	
-	  var len = end - start
-	  var i
-	
-	  if (this === target && start < targetStart && targetStart < end) {
-	    // descending copy from end
-	    for (i = len - 1; i >= 0; i--) {
-	      target[i + targetStart] = this[i + start]
-	    }
-	  } else if (len < 1000 || !Buffer.TYPED_ARRAY_SUPPORT) {
-	    // ascending copy from start
-	    for (i = 0; i < len; i++) {
-	      target[i + targetStart] = this[i + start]
-	    }
-	  } else {
-	    target._set(this.subarray(start, start + len), targetStart)
-	  }
-	
-	  return len
-	}
-	
-	// fill(value, start=0, end=buffer.length)
-	Buffer.prototype.fill = function fill (value, start, end) {
-	  if (!value) value = 0
-	  if (!start) start = 0
-	  if (!end) end = this.length
-	
-	  if (end < start) throw new RangeError('end < start')
-	
-	  // Fill 0 bytes; we're done
-	  if (end === start) return
-	  if (this.length === 0) return
-	
-	  if (start < 0 || start >= this.length) throw new RangeError('start out of bounds')
-	  if (end < 0 || end > this.length) throw new RangeError('end out of bounds')
-	
-	  var i
-	  if (typeof value === 'number') {
-	    for (i = start; i < end; i++) {
-	      this[i] = value
-	    }
-	  } else {
-	    var bytes = utf8ToBytes(value.toString())
-	    var len = bytes.length
-	    for (i = start; i < end; i++) {
-	      this[i] = bytes[i % len]
-	    }
-	  }
-	
-	  return this
-	}
-	
-	/**
-	 * Creates a new `ArrayBuffer` with the *copied* memory of the buffer instance.
-	 * Added in Node 0.12. Only available in browsers that support ArrayBuffer.
-	 */
-	Buffer.prototype.toArrayBuffer = function toArrayBuffer () {
-	  if (typeof Uint8Array !== 'undefined') {
-	    if (Buffer.TYPED_ARRAY_SUPPORT) {
-	      return (new Buffer(this)).buffer
-	    } else {
-	      var buf = new Uint8Array(this.length)
-	      for (var i = 0, len = buf.length; i < len; i += 1) {
-	        buf[i] = this[i]
-	      }
-	      return buf.buffer
-	    }
-	  } else {
-	    throw new TypeError('Buffer.toArrayBuffer not supported in this browser')
-	  }
-	}
-	
-	// HELPER FUNCTIONS
-	// ================
-	
-	var BP = Buffer.prototype
-	
-	/**
-	 * Augment a Uint8Array *instance* (not the Uint8Array class!) with Buffer methods
-	 */
-	Buffer._augment = function _augment (arr) {
-	  arr.constructor = Buffer
-	  arr._isBuffer = true
-	
-	  // save reference to original Uint8Array set method before overwriting
-	  arr._set = arr.set
-	
-	  // deprecated
-	  arr.get = BP.get
-	  arr.set = BP.set
-	
-	  arr.write = BP.write
-	  arr.toString = BP.toString
-	  arr.toLocaleString = BP.toString
-	  arr.toJSON = BP.toJSON
-	  arr.equals = BP.equals
-	  arr.compare = BP.compare
-	  arr.indexOf = BP.indexOf
-	  arr.copy = BP.copy
-	  arr.slice = BP.slice
-	  arr.readUIntLE = BP.readUIntLE
-	  arr.readUIntBE = BP.readUIntBE
-	  arr.readUInt8 = BP.readUInt8
-	  arr.readUInt16LE = BP.readUInt16LE
-	  arr.readUInt16BE = BP.readUInt16BE
-	  arr.readUInt32LE = BP.readUInt32LE
-	  arr.readUInt32BE = BP.readUInt32BE
-	  arr.readIntLE = BP.readIntLE
-	  arr.readIntBE = BP.readIntBE
-	  arr.readInt8 = BP.readInt8
-	  arr.readInt16LE = BP.readInt16LE
-	  arr.readInt16BE = BP.readInt16BE
-	  arr.readInt32LE = BP.readInt32LE
-	  arr.readInt32BE = BP.readInt32BE
-	  arr.readFloatLE = BP.readFloatLE
-	  arr.readFloatBE = BP.readFloatBE
-	  arr.readDoubleLE = BP.readDoubleLE
-	  arr.readDoubleBE = BP.readDoubleBE
-	  arr.writeUInt8 = BP.writeUInt8
-	  arr.writeUIntLE = BP.writeUIntLE
-	  arr.writeUIntBE = BP.writeUIntBE
-	  arr.writeUInt16LE = BP.writeUInt16LE
-	  arr.writeUInt16BE = BP.writeUInt16BE
-	  arr.writeUInt32LE = BP.writeUInt32LE
-	  arr.writeUInt32BE = BP.writeUInt32BE
-	  arr.writeIntLE = BP.writeIntLE
-	  arr.writeIntBE = BP.writeIntBE
-	  arr.writeInt8 = BP.writeInt8
-	  arr.writeInt16LE = BP.writeInt16LE
-	  arr.writeInt16BE = BP.writeInt16BE
-	  arr.writeInt32LE = BP.writeInt32LE
-	  arr.writeInt32BE = BP.writeInt32BE
-	  arr.writeFloatLE = BP.writeFloatLE
-	  arr.writeFloatBE = BP.writeFloatBE
-	  arr.writeDoubleLE = BP.writeDoubleLE
-	  arr.writeDoubleBE = BP.writeDoubleBE
-	  arr.fill = BP.fill
-	  arr.inspect = BP.inspect
-	  arr.toArrayBuffer = BP.toArrayBuffer
-	
-	  return arr
-	}
-	
-	var INVALID_BASE64_RE = /[^+\/0-9A-Za-z-_]/g
-	
-	function base64clean (str) {
-	  // Node strips out invalid characters like \n and \t from the string, base64-js does not
-	  str = stringtrim(str).replace(INVALID_BASE64_RE, '')
-	  // Node converts strings with length < 2 to ''
-	  if (str.length < 2) return ''
-	  // Node allows for non-padded base64 strings (missing trailing ===), base64-js does not
-	  while (str.length % 4 !== 0) {
-	    str = str + '='
-	  }
-	  return str
-	}
-	
-	function stringtrim (str) {
-	  if (str.trim) return str.trim()
-	  return str.replace(/^\s+|\s+$/g, '')
-	}
-	
-	function toHex (n) {
-	  if (n < 16) return '0' + n.toString(16)
-	  return n.toString(16)
-	}
-	
-	function utf8ToBytes (string, units) {
-	  units = units || Infinity
-	  var codePoint
-	  var length = string.length
-	  var leadSurrogate = null
-	  var bytes = []
-	
-	  for (var i = 0; i < length; i++) {
-	    codePoint = string.charCodeAt(i)
-	
-	    // is surrogate component
-	    if (codePoint > 0xD7FF && codePoint < 0xE000) {
-	      // last char was a lead
-	      if (!leadSurrogate) {
-	        // no lead yet
-	        if (codePoint > 0xDBFF) {
-	          // unexpected trail
-	          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
-	          continue
-	        } else if (i + 1 === length) {
-	          // unpaired lead
-	          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
-	          continue
-	        }
-	
-	        // valid lead
-	        leadSurrogate = codePoint
-	
-	        continue
-	      }
-	
-	      // 2 leads in a row
-	      if (codePoint < 0xDC00) {
-	        if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
-	        leadSurrogate = codePoint
-	        continue
-	      }
-	
-	      // valid surrogate pair
-	      codePoint = (leadSurrogate - 0xD800 << 10 | codePoint - 0xDC00) + 0x10000
-	    } else if (leadSurrogate) {
-	      // valid bmp char, but last char was a lead
-	      if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
-	    }
-	
-	    leadSurrogate = null
-	
-	    // encode utf8
-	    if (codePoint < 0x80) {
-	      if ((units -= 1) < 0) break
-	      bytes.push(codePoint)
-	    } else if (codePoint < 0x800) {
-	      if ((units -= 2) < 0) break
-	      bytes.push(
-	        codePoint >> 0x6 | 0xC0,
-	        codePoint & 0x3F | 0x80
-	      )
-	    } else if (codePoint < 0x10000) {
-	      if ((units -= 3) < 0) break
-	      bytes.push(
-	        codePoint >> 0xC | 0xE0,
-	        codePoint >> 0x6 & 0x3F | 0x80,
-	        codePoint & 0x3F | 0x80
-	      )
-	    } else if (codePoint < 0x110000) {
-	      if ((units -= 4) < 0) break
-	      bytes.push(
-	        codePoint >> 0x12 | 0xF0,
-	        codePoint >> 0xC & 0x3F | 0x80,
-	        codePoint >> 0x6 & 0x3F | 0x80,
-	        codePoint & 0x3F | 0x80
-	      )
-	    } else {
-	      throw new Error('Invalid code point')
-	    }
-	  }
-	
-	  return bytes
-	}
-	
-	function asciiToBytes (str) {
-	  var byteArray = []
-	  for (var i = 0; i < str.length; i++) {
-	    // Node's code seems to be doing this and not & 0x7F..
-	    byteArray.push(str.charCodeAt(i) & 0xFF)
-	  }
-	  return byteArray
-	}
-	
-	function utf16leToBytes (str, units) {
-	  var c, hi, lo
-	  var byteArray = []
-	  for (var i = 0; i < str.length; i++) {
-	    if ((units -= 2) < 0) break
-	
-	    c = str.charCodeAt(i)
-	    hi = c >> 8
-	    lo = c % 256
-	    byteArray.push(lo)
-	    byteArray.push(hi)
-	  }
-	
-	  return byteArray
-	}
-	
-	function base64ToBytes (str) {
-	  return base64.toByteArray(base64clean(str))
-	}
-	
-	function blitBuffer (src, dst, offset, length) {
-	  for (var i = 0; i < length; i++) {
-	    if ((i + offset >= dst.length) || (i >= src.length)) break
-	    dst[i + offset] = src[i]
-	  }
-	  return i
-	}
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 151).Buffer, (function() { return this; }())))
-
-/***/ },
 /* 152 */
-/*!********************************!*\
-  !*** ./~/base64-js/lib/b64.js ***!
-  \********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-	
-	;(function (exports) {
-		'use strict';
-	
-	  var Arr = (typeof Uint8Array !== 'undefined')
-	    ? Uint8Array
-	    : Array
-	
-		var PLUS   = '+'.charCodeAt(0)
-		var SLASH  = '/'.charCodeAt(0)
-		var NUMBER = '0'.charCodeAt(0)
-		var LOWER  = 'a'.charCodeAt(0)
-		var UPPER  = 'A'.charCodeAt(0)
-		var PLUS_URL_SAFE = '-'.charCodeAt(0)
-		var SLASH_URL_SAFE = '_'.charCodeAt(0)
-	
-		function decode (elt) {
-			var code = elt.charCodeAt(0)
-			if (code === PLUS ||
-			    code === PLUS_URL_SAFE)
-				return 62 // '+'
-			if (code === SLASH ||
-			    code === SLASH_URL_SAFE)
-				return 63 // '/'
-			if (code < NUMBER)
-				return -1 //no match
-			if (code < NUMBER + 10)
-				return code - NUMBER + 26 + 26
-			if (code < UPPER + 26)
-				return code - UPPER
-			if (code < LOWER + 26)
-				return code - LOWER + 26
-		}
-	
-		function b64ToByteArray (b64) {
-			var i, j, l, tmp, placeHolders, arr
-	
-			if (b64.length % 4 > 0) {
-				throw new Error('Invalid string. Length must be a multiple of 4')
-			}
-	
-			// the number of equal signs (place holders)
-			// if there are two placeholders, than the two characters before it
-			// represent one byte
-			// if there is only one, then the three characters before it represent 2 bytes
-			// this is just a cheap hack to not do indexOf twice
-			var len = b64.length
-			placeHolders = '=' === b64.charAt(len - 2) ? 2 : '=' === b64.charAt(len - 1) ? 1 : 0
-	
-			// base64 is 4/3 + up to two characters of the original data
-			arr = new Arr(b64.length * 3 / 4 - placeHolders)
-	
-			// if there are placeholders, only get up to the last complete 4 chars
-			l = placeHolders > 0 ? b64.length - 4 : b64.length
-	
-			var L = 0
-	
-			function push (v) {
-				arr[L++] = v
-			}
-	
-			for (i = 0, j = 0; i < l; i += 4, j += 3) {
-				tmp = (decode(b64.charAt(i)) << 18) | (decode(b64.charAt(i + 1)) << 12) | (decode(b64.charAt(i + 2)) << 6) | decode(b64.charAt(i + 3))
-				push((tmp & 0xFF0000) >> 16)
-				push((tmp & 0xFF00) >> 8)
-				push(tmp & 0xFF)
-			}
-	
-			if (placeHolders === 2) {
-				tmp = (decode(b64.charAt(i)) << 2) | (decode(b64.charAt(i + 1)) >> 4)
-				push(tmp & 0xFF)
-			} else if (placeHolders === 1) {
-				tmp = (decode(b64.charAt(i)) << 10) | (decode(b64.charAt(i + 1)) << 4) | (decode(b64.charAt(i + 2)) >> 2)
-				push((tmp >> 8) & 0xFF)
-				push(tmp & 0xFF)
-			}
-	
-			return arr
-		}
-	
-		function uint8ToBase64 (uint8) {
-			var i,
-				extraBytes = uint8.length % 3, // if we have 1 byte left, pad 2 bytes
-				output = "",
-				temp, length
-	
-			function encode (num) {
-				return lookup.charAt(num)
-			}
-	
-			function tripletToBase64 (num) {
-				return encode(num >> 18 & 0x3F) + encode(num >> 12 & 0x3F) + encode(num >> 6 & 0x3F) + encode(num & 0x3F)
-			}
-	
-			// go through the array every three bytes, we'll deal with trailing stuff later
-			for (i = 0, length = uint8.length - extraBytes; i < length; i += 3) {
-				temp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2])
-				output += tripletToBase64(temp)
-			}
-	
-			// pad the end with zeros, but make sure to not forget the extra bytes
-			switch (extraBytes) {
-				case 1:
-					temp = uint8[uint8.length - 1]
-					output += encode(temp >> 2)
-					output += encode((temp << 4) & 0x3F)
-					output += '=='
-					break
-				case 2:
-					temp = (uint8[uint8.length - 2] << 8) + (uint8[uint8.length - 1])
-					output += encode(temp >> 10)
-					output += encode((temp >> 4) & 0x3F)
-					output += encode((temp << 2) & 0x3F)
-					output += '='
-					break
-			}
-	
-			return output
-		}
-	
-		exports.toByteArray = b64ToByteArray
-		exports.fromByteArray = uint8ToBase64
-	}( false ? (this.base64js = {}) : exports))
-
-
-/***/ },
-/* 153 */
-/*!****************************!*\
-  !*** ./~/ieee754/index.js ***!
-  \****************************/
-/***/ function(module, exports) {
-
-	exports.read = function (buffer, offset, isLE, mLen, nBytes) {
-	  var e, m
-	  var eLen = nBytes * 8 - mLen - 1
-	  var eMax = (1 << eLen) - 1
-	  var eBias = eMax >> 1
-	  var nBits = -7
-	  var i = isLE ? (nBytes - 1) : 0
-	  var d = isLE ? -1 : 1
-	  var s = buffer[offset + i]
-	
-	  i += d
-	
-	  e = s & ((1 << (-nBits)) - 1)
-	  s >>= (-nBits)
-	  nBits += eLen
-	  for (; nBits > 0; e = e * 256 + buffer[offset + i], i += d, nBits -= 8) {}
-	
-	  m = e & ((1 << (-nBits)) - 1)
-	  e >>= (-nBits)
-	  nBits += mLen
-	  for (; nBits > 0; m = m * 256 + buffer[offset + i], i += d, nBits -= 8) {}
-	
-	  if (e === 0) {
-	    e = 1 - eBias
-	  } else if (e === eMax) {
-	    return m ? NaN : ((s ? -1 : 1) * Infinity)
-	  } else {
-	    m = m + Math.pow(2, mLen)
-	    e = e - eBias
-	  }
-	  return (s ? -1 : 1) * m * Math.pow(2, e - mLen)
-	}
-	
-	exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
-	  var e, m, c
-	  var eLen = nBytes * 8 - mLen - 1
-	  var eMax = (1 << eLen) - 1
-	  var eBias = eMax >> 1
-	  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0)
-	  var i = isLE ? 0 : (nBytes - 1)
-	  var d = isLE ? 1 : -1
-	  var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
-	
-	  value = Math.abs(value)
-	
-	  if (isNaN(value) || value === Infinity) {
-	    m = isNaN(value) ? 1 : 0
-	    e = eMax
-	  } else {
-	    e = Math.floor(Math.log(value) / Math.LN2)
-	    if (value * (c = Math.pow(2, -e)) < 1) {
-	      e--
-	      c *= 2
-	    }
-	    if (e + eBias >= 1) {
-	      value += rt / c
-	    } else {
-	      value += rt * Math.pow(2, 1 - eBias)
-	    }
-	    if (value * c >= 2) {
-	      e++
-	      c /= 2
-	    }
-	
-	    if (e + eBias >= eMax) {
-	      m = 0
-	      e = eMax
-	    } else if (e + eBias >= 1) {
-	      m = (value * c - 1) * Math.pow(2, mLen)
-	      e = e + eBias
-	    } else {
-	      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen)
-	      e = 0
-	    }
-	  }
-	
-	  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8) {}
-	
-	  e = (e << mLen) | m
-	  eLen += mLen
-	  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8) {}
-	
-	  buffer[offset + i - d] |= s * 128
-	}
-
-
-/***/ },
-/* 154 */
-/*!****************************!*\
-  !*** ./~/isarray/index.js ***!
-  \****************************/
-/***/ function(module, exports) {
-
-	var toString = {}.toString;
-	
-	module.exports = Array.isArray || function (arr) {
-	  return toString.call(arr) == '[object Array]';
-	};
-
-
-/***/ },
-/* 155 */
-/*!*********************************!*\
-  !*** ./~/buffer-shims/index.js ***!
-  \*********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
-	
-	var buffer = __webpack_require__(/*! buffer */ 151);
-	var Buffer = buffer.Buffer;
-	var SlowBuffer = buffer.SlowBuffer;
-	var MAX_LEN = buffer.kMaxLength || 2147483647;
-	exports.alloc = function alloc(size, fill, encoding) {
-	  if (typeof Buffer.alloc === 'function') {
-	    return Buffer.alloc(size, fill, encoding);
-	  }
-	  if (typeof encoding === 'number') {
-	    throw new TypeError('encoding must not be number');
-	  }
-	  if (typeof size !== 'number') {
-	    throw new TypeError('size must be a number');
-	  }
-	  if (size > MAX_LEN) {
-	    throw new RangeError('size is too large');
-	  }
-	  var enc = encoding;
-	  var _fill = fill;
-	  if (_fill === undefined) {
-	    enc = undefined;
-	    _fill = 0;
-	  }
-	  var buf = new Buffer(size);
-	  if (typeof _fill === 'string') {
-	    var fillBuf = new Buffer(_fill, enc);
-	    var flen = fillBuf.length;
-	    var i = -1;
-	    while (++i < size) {
-	      buf[i] = fillBuf[i % flen];
-	    }
-	  } else {
-	    buf.fill(_fill);
-	  }
-	  return buf;
-	}
-	exports.allocUnsafe = function allocUnsafe(size) {
-	  if (typeof Buffer.allocUnsafe === 'function') {
-	    return Buffer.allocUnsafe(size);
-	  }
-	  if (typeof size !== 'number') {
-	    throw new TypeError('size must be a number');
-	  }
-	  if (size > MAX_LEN) {
-	    throw new RangeError('size is too large');
-	  }
-	  return new Buffer(size);
-	}
-	exports.from = function from(value, encodingOrOffset, length) {
-	  if (typeof Buffer.from === 'function' && (!global.Uint8Array || Uint8Array.from !== Buffer.from)) {
-	    return Buffer.from(value, encodingOrOffset, length);
-	  }
-	  if (typeof value === 'number') {
-	    throw new TypeError('"value" argument must not be a number');
-	  }
-	  if (typeof value === 'string') {
-	    return new Buffer(value, encodingOrOffset);
-	  }
-	  if (typeof ArrayBuffer !== 'undefined' && value instanceof ArrayBuffer) {
-	    var offset = encodingOrOffset;
-	    if (arguments.length === 1) {
-	      return new Buffer(value);
-	    }
-	    if (typeof offset === 'undefined') {
-	      offset = 0;
-	    }
-	    var len = length;
-	    if (typeof len === 'undefined') {
-	      len = value.byteLength - offset;
-	    }
-	    if (offset >= value.byteLength) {
-	      throw new RangeError('\'offset\' is out of bounds');
-	    }
-	    if (len > value.byteLength - offset) {
-	      throw new RangeError('\'length\' is out of bounds');
-	    }
-	    return new Buffer(value.slice(offset, offset + len));
-	  }
-	  if (Buffer.isBuffer(value)) {
-	    var out = new Buffer(value.length);
-	    value.copy(out, 0, 0, value.length);
-	    return out;
-	  }
-	  if (value) {
-	    if (Array.isArray(value) || (typeof ArrayBuffer !== 'undefined' && value.buffer instanceof ArrayBuffer) || 'length' in value) {
-	      return new Buffer(value);
-	    }
-	    if (value.type === 'Buffer' && Array.isArray(value.data)) {
-	      return new Buffer(value.data);
-	    }
-	  }
-	
-	  throw new TypeError('First argument must be a string, Buffer, ' + 'ArrayBuffer, Array, or array-like object.');
-	}
-	exports.allocUnsafeSlow = function allocUnsafeSlow(size) {
-	  if (typeof Buffer.allocUnsafeSlow === 'function') {
-	    return Buffer.allocUnsafeSlow(size);
-	  }
-	  if (typeof size !== 'number') {
-	    throw new TypeError('size must be a number');
-	  }
-	  if (size >= MAX_LEN) {
-	    throw new RangeError('size is too large');
-	  }
-	  return new SlowBuffer(size);
-	}
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 156 */
 /*!*****************************!*\
   !*** ./~/left-pad/index.js ***!
   \*****************************/
@@ -94881,7 +94618,7 @@
 
 
 /***/ },
-/* 157 */
+/* 153 */
 /*!***************************************************************!*\
   !*** ./beeline-admin/directives/stopSelector/stopSelector.js ***!
   \***************************************************************/
@@ -94929,7 +94666,7 @@
 	};
 
 /***/ },
-/* 158 */
+/* 154 */
 /*!*******************************************************************************!*\
   !*** ./beeline-admin/directives/companySelector/superAdminCompanySelector.js ***!
   \*******************************************************************************/
@@ -94944,7 +94681,7 @@
 	exports.default = function ($http, AdminService) {
 	  return {
 	    replace: true,
-	    template: "\n<label ng-if=\"adminService.session().role == 'superadmin'\">\n  You are SuperAdmin! Choose the company you're acting on behalf of:\n  <company-selector\n  ng-model=\"adminService.actingCompany\"></company-selector>\n</label>\n    ",
+	    template: "\n\n<label ng-if=\"adminService.session().role == 'superadmin'\">\n  Logged in as Super Admin\n  <company-selector\n  ng-model=\"adminService.actingCompany\"></company-selector>\n</label>\n    ",
 	    link: function link(scope, elem, attr) {
 	      scope.adminService = AdminService;
 	    }
@@ -94952,7 +94689,7 @@
 	};
 
 /***/ },
-/* 159 */
+/* 155 */
 /*!************************************************!*\
   !*** ./beeline-admin/services/adminService.js ***!
   \************************************************/
@@ -94964,7 +94701,7 @@
 	  value: true
 	});
 	
-	var _slicedToArray2 = __webpack_require__(/*! babel-runtime/helpers/slicedToArray */ 160);
+	var _slicedToArray2 = __webpack_require__(/*! babel-runtime/helpers/slicedToArray */ 156);
 	
 	var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 	
@@ -95046,13 +94783,13 @@
 	  };
 	};
 	
-	var _assert = __webpack_require__(/*! assert */ 147);
+	var _assert = __webpack_require__(/*! assert */ 148);
 	
 	var _assert2 = _interopRequireDefault(_assert);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var env = __webpack_require__(/*! ../env.json */ 87);
+	var env = __webpack_require__(/*! ../env.json */ 88);
 	
 	function b64_to_utf8(str) {
 	  return decodeURIComponent(unescape(window.atob(str)));
@@ -95072,7 +94809,7 @@
 	}
 
 /***/ },
-/* 160 */
+/* 156 */
 /*!**************************************************!*\
   !*** ./~/babel-runtime/helpers/slicedToArray.js ***!
   \**************************************************/
@@ -95082,7 +94819,7 @@
 	
 	exports.__esModule = true;
 	
-	var _isIterable2 = __webpack_require__(/*! ../core-js/is-iterable */ 161);
+	var _isIterable2 = __webpack_require__(/*! ../core-js/is-iterable */ 157);
 	
 	var _isIterable3 = _interopRequireDefault(_isIterable2);
 	
@@ -95131,16 +94868,16 @@
 	}();
 
 /***/ },
-/* 161 */
+/* 157 */
 /*!************************************************!*\
   !*** ./~/babel-runtime/core-js/is-iterable.js ***!
   \************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/is-iterable */ 162), __esModule: true };
+	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/is-iterable */ 158), __esModule: true };
 
 /***/ },
-/* 162 */
+/* 158 */
 /*!*************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/fn/is-iterable.js ***!
   \*************************************************************/
@@ -95148,10 +94885,10 @@
 
 	__webpack_require__(/*! ../modules/web.dom.iterable */ 28);
 	__webpack_require__(/*! ../modules/es6.string.iterator */ 74);
-	module.exports = __webpack_require__(/*! ../modules/core.is-iterable */ 163);
+	module.exports = __webpack_require__(/*! ../modules/core.is-iterable */ 159);
 
 /***/ },
-/* 163 */
+/* 159 */
 /*!***********************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/core.is-iterable.js ***!
   \***********************************************************************/
@@ -95168,7 +94905,7 @@
 	};
 
 /***/ },
-/* 164 */
+/* 160 */
 /*!*************************************************!*\
   !*** ./beeline-admin/services/routesService.js ***!
   \*************************************************/
@@ -95180,15 +94917,15 @@
 	  value: true
 	});
 	
-	var _regenerator = __webpack_require__(/*! babel-runtime/regenerator */ 123);
+	var _regenerator = __webpack_require__(/*! babel-runtime/regenerator */ 124);
 	
 	var _regenerator2 = _interopRequireDefault(_regenerator);
 	
-	var _promise = __webpack_require__(/*! babel-runtime/core-js/promise */ 128);
+	var _promise = __webpack_require__(/*! babel-runtime/core-js/promise */ 129);
 	
 	var _promise2 = _interopRequireDefault(_promise);
 	
-	var _asyncToGenerator2 = __webpack_require__(/*! babel-runtime/helpers/asyncToGenerator */ 127);
+	var _asyncToGenerator2 = __webpack_require__(/*! babel-runtime/helpers/asyncToGenerator */ 128);
 	
 	var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 	
@@ -95564,18 +95301,18 @@
 	
 	var _lodash2 = _interopRequireDefault(_lodash);
 	
-	var _querystring = __webpack_require__(/*! querystring */ 165);
+	var _querystring = __webpack_require__(/*! querystring */ 161);
 	
 	var _querystring2 = _interopRequireDefault(_querystring);
 	
-	var _assert = __webpack_require__(/*! assert */ 147);
+	var _assert = __webpack_require__(/*! assert */ 148);
 	
 	var _assert2 = _interopRequireDefault(_assert);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 165 */
+/* 161 */
 /*!********************************!*\
   !*** ./~/querystring/index.js ***!
   \********************************/
@@ -95583,12 +95320,12 @@
 
 	'use strict';
 	
-	exports.decode = exports.parse = __webpack_require__(/*! ./decode */ 166);
-	exports.encode = exports.stringify = __webpack_require__(/*! ./encode */ 167);
+	exports.decode = exports.parse = __webpack_require__(/*! ./decode */ 162);
+	exports.encode = exports.stringify = __webpack_require__(/*! ./encode */ 163);
 
 
 /***/ },
-/* 166 */
+/* 162 */
 /*!*********************************!*\
   !*** ./~/querystring/decode.js ***!
   \*********************************/
@@ -95677,7 +95414,7 @@
 
 
 /***/ },
-/* 167 */
+/* 163 */
 /*!*********************************!*\
   !*** ./~/querystring/encode.js ***!
   \*********************************/
@@ -95750,7 +95487,7 @@
 
 
 /***/ },
-/* 168 */
+/* 164 */
 /*!**********************************************!*\
   !*** ./beeline-admin/services/stopsPopup.js ***!
   \**********************************************/
@@ -95766,7 +95503,7 @@
 	
 	var _getIterator3 = _interopRequireDefault(_getIterator2);
 	
-	var _promise = __webpack_require__(/*! babel-runtime/core-js/promise */ 128);
+	var _promise = __webpack_require__(/*! babel-runtime/core-js/promise */ 129);
 	
 	var _promise2 = _interopRequireDefault(_promise);
 	
@@ -95900,14 +95637,14 @@
 	  };
 	};
 	
-	var _stopsPopup = __webpack_require__(/*! ../templates/stopsPopup.html */ 169);
+	var _stopsPopup = __webpack_require__(/*! ../templates/stopsPopup.html */ 165);
 	
 	var _stopsPopup2 = _interopRequireDefault(_stopsPopup);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 169 */
+/* 165 */
 /*!*************************************************!*\
   !*** ./beeline-admin/templates/stopsPopup.html ***!
   \*************************************************/
@@ -95916,7 +95653,7 @@
 	module.exports = "\n<div class=\"stops-popup\">\n  <div class=\"modal-header\">\n    <h3>{{title}}</h3>\n  </div>\n\n  <div class=\"modal-body\">\n    <ui-gmap-google-map\n      center=\"map.center\"\n      zoom=\"map.zoom\"\n      control=\"map.control\"\n      options=\"map.options\"\n      events=\"map.events\"\n    >\n      <ui-gmap-markers\n        models=\"allStops\"\n        coords=\"'$latlng'\"\n        idKey=\"'id'\"\n        doCluster=\"true\"\n        click=\"stopClicked\"\n        dorebuildall=\"true\"\n        modelsbyref=\"true\"\n        control=\"map.markersControl\"\n        >\n      </ui-gmap-markers>\n\n      <ui-gmap-marker\n        idkey=\"'newstop'\"\n        coords=\"selectedStop.$latlng\"\n        ng-if=\"!selectedStop.id\"\n        options=\"map.newStopOptions\"\n      >\n      </ui-gmap-marker>\n    </ui-gmap-google-map>\n  </div>\n\n  <div class=\"modal-footer\">\n    <form name=\"stopForm\">\n      <div ng-show=\"selectedStop\">\n        <h3>\n          <i ng-if=\"!selectedStop.id\">New Stop</i>\n          <span ng-if=\"selectedStop.id\">{{selectedStop.description}}</span>\n        </h3>\n        <label>\n          Description:\n          <input type=\"text\" ng-model=\"selectedStop.description\"\n              ng-required\n              >\n        </label>\n        <label>\n          Road:\n          <input type=\"text\" ng-model=\"selectedStop.road\"\n              ng-required\n          >\n        </label>\n        <label>\n          Label:\n          <input type=\"text\" ng-model=\"selectedStop.label\"\n              ng-required\n          >\n        </label>\n      </div>\n\n      <span class=\"btn-group\">\n        <button class=\"btn btn-primary\"\n          ng-disabled=\"!selectedStop.id\"\n          ng-click=\"done()\">\n          OK\n        </button>\n        <button class=\"btn btn-default\"\n          ng-click=\"cancel()\">\n          Cancel\n        </button>\n      </span>\n\n      <span class=\"btn-group\">\n        <button class=\"btn btn-primary\"\n          ng-disabled=\"stopForm.$invalid || stopForm.$pristine\"\n          ng-click=\"saveStop(selectedStop)\"\n          >\n          Save Stop\n        </button>\n        <button class=\"btn btn-danger\"\n          ng-show=\"selectedStop.id\"\n          ng-click=\"deleteStop(selectedStop)\"\n          >\n          Delete Stop\n        </button>\n      </span>\n    </form>\n  </div>\n</div>\n";
 
 /***/ },
-/* 170 */
+/* 166 */
 /*!**********************************************!*\
   !*** ./beeline-admin/services/mapService.js ***!
   \**********************************************/
@@ -95962,7 +95699,7 @@
 	};
 
 /***/ },
-/* 171 */
+/* 167 */
 /*!*************************************************!*\
   !*** ./beeline-admin/services/driverService.js ***!
   \*************************************************/
@@ -95978,7 +95715,7 @@
 	
 	var _getIterator3 = _interopRequireDefault(_getIterator2);
 	
-	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 172);
+	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 168);
 	
 	var _stringify2 = _interopRequireDefault(_stringify);
 	
@@ -96100,23 +95837,23 @@
 	
 	var _lodash2 = _interopRequireDefault(_lodash);
 	
-	var _querystring = __webpack_require__(/*! querystring */ 165);
+	var _querystring = __webpack_require__(/*! querystring */ 161);
 	
 	var _querystring2 = _interopRequireDefault(_querystring);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 172 */
+/* 168 */
 /*!***************************************************!*\
   !*** ./~/babel-runtime/core-js/json/stringify.js ***!
   \***************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/json/stringify */ 173), __esModule: true };
+	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/json/stringify */ 169), __esModule: true };
 
 /***/ },
-/* 173 */
+/* 169 */
 /*!****************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/fn/json/stringify.js ***!
   \****************************************************************/
@@ -96129,7 +95866,7 @@
 	};
 
 /***/ },
-/* 174 */
+/* 170 */
 /*!*************************************************!*\
   !*** ./beeline-admin/services/bookingRefund.js ***!
   \*************************************************/
@@ -96141,7 +95878,7 @@
 	  value: true
 	});
 	
-	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 172);
+	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 168);
 	
 	var _stringify2 = _interopRequireDefault(_stringify);
 	
@@ -96169,7 +95906,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var bookingRefundTemplate = __webpack_require__(/*! ./bookingRefund.html */ 175);
+	var bookingRefundTemplate = __webpack_require__(/*! ./bookingRefund.html */ 171);
 	
 	function BookingRefundController($scope, LoadingSpinner, RoutesService, AdminService) {
 	  var lastId = 1;
@@ -96259,7 +95996,7 @@
 	}
 
 /***/ },
-/* 175 */
+/* 171 */
 /*!***************************************************!*\
   !*** ./beeline-admin/services/bookingRefund.html ***!
   \***************************************************/
@@ -96268,7 +96005,7 @@
 	module.exports = "\n\n<div class=\"modal-header\">\n  <h3 class=\"modal-title\">Refunds / Replacement Trips</h3>\n</div>\n\n<div class=\"modal-body\" class='booking-refund'>\n\n  <div class=\"cancel-panel\">\n    <!-- list of tickets to cancel -->\n    <h2>Tickets to Cancel</h2>\n    <ol class=\"ticket-list\">\n      <li ng-repeat=\"ticket in cancelledTickets\"\n          ng-class=\"{\n            active: disp.selectedCancelled == ticket\n          }\"\n          ng-click=\"disp.selectedCancelled = ticket\"\n      >\n          {{ticket.user.json.name ? ticket.user.json.name  + ' #' + ticket.user.json.index : ticket.user.name}}\n          <br/>\n          <b>{{ticket.boardStop.trip.route.label}}:\n              {{ticket.boardStop.trip.route.from}} &mdash;\n              {{ticket.boardStop.trip.route.to}}</b>\n          <br/>\n          <b>{{ticket.boardStop.trip.date | date:'dd MMM yy':'UTC'}}</b><br/>\n          {{ticket.boardStop.stop.description}}<br/>\n          {{ticket.alightStop.stop.description}}<br/>\n      </li>\n    </ol>\n  </div>\n\n  <!-- list of tickets to issue -->\n  <div class=\"issue-panel\">\n    <h2>Replacement Tickets</h2>\n    <button class=\"btn btn-default\" type=\"button\" ng-click=\"issuedTickets.push({})\"\n      >\n      Add\n    </button>\n    <ol class=\"ticket-list\">\n      <li ng-repeat=\"ticket in issuedTickets\"\n      >\n        <div>\n          User:\n          <select ng-options=\"user.id as (user.json.name ? user.json.name + ' #' + user.json.index : user.name) for user in availableUsers\"\n            ng-model=\"ticket.userId\">\n          </select>\n        </div>\n        <div>\n          Select Trip:\n          <trip-selector\n            trip-id=\"ticket.tripId\"\n            board-stop-id=\"ticket.boardStopId\"\n            alight-stop-id=\"ticket.alightStopId\"\n            route-id=\"ticket.routeId\"\n          ></trip-selector>\n        </div>\n        <button class=\"btn btn-danger\" type=\"button\" ng-click=\"issuedTickets.splice($index, 1)\"\n          >\n          Remove\n        </button>\n      </li>\n    </ol>\n    <button class=\"btn btn-default\" type=\"button\" ng-click=\"issuedTickets.push({})\"\n      >\n      Add\n    </button>\n  </div>\n</div>\n\n<div class=\"modal-footer\">\n  <button\n      ng-disabled=\"issuedTickets.length == 0\"\n      class=\"btn btn-primary\" type=\"button\" ng-click=\"issueFreeTickets()\">\n    Issue Free Tickets\n  </button>\n\n  <button\n      ng-disabled=\"issuedTickets.length == 0\"\n      class=\"btn btn-primary\" type=\"button\" ng-click=\"replaceTickets()\">\n    Replace Tickets\n  </button>\n\n\n  <button\n      class=\"btn btn-default\" type=\"button\" ng-click=\"$dismiss()\">\n    Cancel\n  </button>\n</div>\n";
 
 /***/ },
-/* 176 */
+/* 172 */
 /*!**************************************************!*\
   !*** ./beeline-admin/services/loadingSpinner.js ***!
   \**************************************************/
@@ -96310,7 +96047,7 @@
 	};
 
 /***/ },
-/* 177 */
+/* 173 */
 /*!*************************************************************!*\
   !*** ./beeline-admin/controllers/transactionsController.js ***!
   \*************************************************************/
@@ -96326,11 +96063,11 @@
 	
 	var _getIterator3 = _interopRequireDefault(_getIterator2);
 	
-	var _keys = __webpack_require__(/*! babel-runtime/core-js/object/keys */ 178);
+	var _keys = __webpack_require__(/*! babel-runtime/core-js/object/keys */ 174);
 	
 	var _keys2 = _interopRequireDefault(_keys);
 	
-	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 172);
+	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 168);
 	
 	var _stringify2 = _interopRequireDefault(_stringify);
 	
@@ -96465,33 +96202,33 @@
 	  $scope.$watch('filter', query, true);
 	};
 	
-	var _querystring = __webpack_require__(/*! querystring */ 165);
+	var _querystring = __webpack_require__(/*! querystring */ 161);
 	
 	var _querystring2 = _interopRequireDefault(_querystring);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 178 */
+/* 174 */
 /*!************************************************!*\
   !*** ./~/babel-runtime/core-js/object/keys.js ***!
   \************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/keys */ 179), __esModule: true };
+	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/keys */ 175), __esModule: true };
 
 /***/ },
-/* 179 */
+/* 175 */
 /*!*************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/fn/object/keys.js ***!
   \*************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(/*! ../../modules/es6.object.keys */ 180);
+	__webpack_require__(/*! ../../modules/es6.object.keys */ 176);
 	module.exports = __webpack_require__(/*! ../../modules/_core */ 41).Object.keys;
 
 /***/ },
-/* 180 */
+/* 176 */
 /*!**********************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/es6.object.keys.js ***!
   \**********************************************************************/
@@ -96501,14 +96238,14 @@
 	var toObject = __webpack_require__(/*! ./_to-object */ 73)
 	  , $keys    = __webpack_require__(/*! ./_object-keys */ 59);
 	
-	__webpack_require__(/*! ./_object-sap */ 181)('keys', function(){
+	__webpack_require__(/*! ./_object-sap */ 177)('keys', function(){
 	  return function keys(it){
 	    return $keys(toObject(it));
 	  };
 	});
 
 /***/ },
-/* 181 */
+/* 177 */
 /*!******************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_object-sap.js ***!
   \******************************************************************/
@@ -96526,7 +96263,7 @@
 	};
 
 /***/ },
-/* 182 */
+/* 178 */
 /*!*******************************************************!*\
   !*** ./beeline-admin/controllers/routesController.js ***!
   \*******************************************************/
@@ -96538,7 +96275,7 @@
 	  value: true
 	});
 	
-	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 172);
+	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 168);
 	
 	var _stringify2 = _interopRequireDefault(_stringify);
 	
@@ -96559,7 +96296,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 183 */
+/* 179 */
 /*!********************************************************!*\
   !*** ./beeline-admin/controllers/summaryController.js ***!
   \********************************************************/
@@ -96656,7 +96393,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 184 */
+/* 180 */
 /*!*********************************************************!*\
   !*** ./beeline-admin/controllers/bookingsController.js ***!
   \*********************************************************/
@@ -96672,7 +96409,7 @@
 	
 	var _getIterator3 = _interopRequireDefault(_getIterator2);
 	
-	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 172);
+	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 168);
 	
 	var _stringify2 = _interopRequireDefault(_stringify);
 	
@@ -96775,14 +96512,14 @@
 	  $scope.$watch('filter.date', queryRoutes, true);
 	};
 	
-	var _querystring = __webpack_require__(/*! querystring */ 165);
+	var _querystring = __webpack_require__(/*! querystring */ 161);
 	
 	var _querystring2 = _interopRequireDefault(_querystring);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 185 */
+/* 181 */
 /*!************************************************************!*\
   !*** ./beeline-admin/controllers/bookingsControllerWrs.js ***!
   \************************************************************/
@@ -96798,11 +96535,11 @@
 	
 	var _getIterator3 = _interopRequireDefault(_getIterator2);
 	
-	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 172);
+	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 168);
 	
 	var _stringify2 = _interopRequireDefault(_stringify);
 	
-	var _keys = __webpack_require__(/*! babel-runtime/core-js/object/keys */ 178);
+	var _keys = __webpack_require__(/*! babel-runtime/core-js/object/keys */ 174);
 	
 	var _keys2 = _interopRequireDefault(_keys);
 	
@@ -97027,14 +96764,14 @@
 	  $scope.$watch('filter', query, true);
 	};
 	
-	var _querystring = __webpack_require__(/*! querystring */ 165);
+	var _querystring = __webpack_require__(/*! querystring */ 161);
 	
 	var _querystring2 = _interopRequireDefault(_querystring);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 186 */
+/* 182 */
 /*!********************************************************!*\
   !*** ./beeline-admin/controllers/driversController.js ***!
   \********************************************************/
@@ -97119,14 +96856,14 @@
 	  }, query);
 	};
 	
-	var _querystring = __webpack_require__(/*! querystring */ 165);
+	var _querystring = __webpack_require__(/*! querystring */ 161);
 	
 	var _querystring2 = _interopRequireDefault(_querystring);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 187 */
+/* 183 */
 /*!******************************************************!*\
   !*** ./beeline-admin/controllers/loginController.js ***!
   \******************************************************/
@@ -97143,7 +96880,7 @@
 	};
 
 /***/ },
-/* 188 */
+/* 184 */
 /*!*****************************************!*\
   !*** ./beeline-admin/shared/filters.js ***!
   \*****************************************/

@@ -4,18 +4,18 @@
     ng-click="copySelected()"
     ng-disabled="!selectedRoute">
   </button>
-  <ul>
+  <ul class="nav nav-sidebar">
     <li ng-repeat="route in availableRoutes | orderBy:'label' track by route.id"
     ng-click="selectRoute(route)"
     ng-class="{
       active: selectedRoute == route
     }"
-    >
+    > <a>
         {{route.label}}:
-        {{route.from}} to {{route.to}}
+        {{route.from}} to {{route.to}}</a>
     </li>
-    <li ng-click="selectRoute({})">
-      <em>New route!</em>
+    <li ng-click="selectRoute({})"> <a><em>New route!</em></a>
+
     </li>
   </ul>
 </div>

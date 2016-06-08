@@ -5,7 +5,7 @@ export default function($http, AdminService) {
     template: `
 
 <label ng-if="adminService.session().role == 'superadmin'">
-  Super Admin
+  Logged in as Super Admin
   <company-selector
   ng-model="adminService.actingCompany"></company-selector>
 </label>
