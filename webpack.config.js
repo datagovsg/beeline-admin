@@ -4,7 +4,7 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var autoprefixer = require('autoprefixer')
 
 var env = {
-    BACKEND_URL: process.env.BACKEND_URL || 'https://api.beeline.sg',
+    BACKEND_URL: process.env.BACKEND_URL || 'https://beeline-server-dev.herokuapp.com',
     AUTH0_CID: process.env.AUTH0_CID || 'BslsfnrdKMedsmr9GYkTv7ejJPReMgcE',
     AUTH0_DOMAIN: process.env.AUTH0_DOMAIN || 'beeline.au.auth0.com',
 }
