@@ -3,6 +3,7 @@ export default function($http, AdminService) {
   return {
     template: `
 <select
+
     ng-model="selectedCompany"
     ng-options="company.name for company in companies | orderBy:company.name track by company.id"
     >
