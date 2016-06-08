@@ -178,7 +178,11 @@
         </tr>
       </thead>
 
-      <tr ng-repeat="item in transactionItems track by $index">
+      <tr ng-repeat="item in transactionItems track by $index"
+        ng-class="{
+          failed: !item.transaciton.committed
+        }"
+      >
         <td ng-if="adminService.isSuperAdmin()">
           <a href="https://api.beeline.sg/custom/wrs/email/{{item.transaction.id}}">
             Send to feedback@beeline.sg

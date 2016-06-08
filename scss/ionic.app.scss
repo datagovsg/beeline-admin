@@ -126,3 +126,12 @@ li.active {
 .datepicker-wrap {
   display: inline-block;
 }
+
+tr.failed {
+  color: #888;
+  text-decoration: line-through;
+}
+
+tr.refunded {
+  color: #888;
+}
