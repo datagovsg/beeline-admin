@@ -263,6 +263,10 @@
           <a ui-sref="transactions({ticketId: ticket.id})">
             {{ticket.id}}
           </a>
+
+          <a ng-click="sendWrsEmail(ticket.ticketSale.transactionId)">
+            <i class="glyphicon glyphicon-envelope"></i>
+          </a>
         </td>
         <td>
           {{ticket.boardStop.trip.id}}
