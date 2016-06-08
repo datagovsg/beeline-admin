@@ -188,13 +188,6 @@ trips-editor section.add-trips {
 .bookings-page .datepicker-wrap {
   width: 300px; }
 
-.bookings-page tr.failed {
-  color: #888;
-  text-decoration: line-through; }
-
-.bookings-page tr.refunded {
-  color: #888; }
-
 .trip-selector {
   border: solid 1px black; }
   .trip-selector label {
@@ -325,5 +318,12 @@ li.active {
 
 .datepicker-wrap {
   display: inline-block; }
+
+tr.failed {
+  color: #888;
+  text-decoration: line-through; }
+
+tr.refunded {
+  color: #888; }
 
 /*# sourceMappingURL=styles.css.map*/
