@@ -1,7 +1,7 @@
 
 <nav class="tabs tabs-top tabs-icon-left tabs-light tabs-striped admin-nav">
   <ul>
-    <li>
+    <li ng-if="adminService.isSuperAdmin()">
       <!-- The tabs at the top of the page -->
       <a class="tab-item"
          ui-sref="transactions"
@@ -9,7 +9,7 @@
       	 <span class="tab-title">Transactions</span>
       </a>
     </li>
-    <li>
+    <li ng-if="adminService.isSuperAdmin()">
       <a class="tab-item"
          ui-sref="routes({routeId: 0, action: 'route'})"
          >
@@ -31,7 +31,7 @@
       	 <span class="tab-title">Summary</span>
       </a>
     </li>
-    <li>
+    <li ng-if="adminService.isSuperAdmin()">
       <a class="tab-item"
          ui-sref="driver"
          >

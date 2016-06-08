@@ -24,6 +24,10 @@ module.exports = {
         }
       },
       {
+        test: /\.json$/,
+        loader: 'json',
+      },
+      {
         test: /\.js$/,
         loader: 'babel',
         exclude: /node_modules/,
@@ -45,10 +49,6 @@ module.exports = {
       {
         test: /node_modules[\\\/]auth0-lock[\\\/].*\.ejs$/,
         loader: 'transform-loader/cacheable?ejsify'
-      },
-      {
-        test: /\.json$/,
-        loader: 'json-loader'
       },
       // Load SCSS
       { test: /\.scss$/,loader: ExtractTextPlugin.extract("style-loader", "css!postcss!sass") },

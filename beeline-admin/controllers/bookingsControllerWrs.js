@@ -99,6 +99,19 @@ BookingRefund, $state, $stateParams) {
     })
   }
 
+  $scope.sendWrsEmail = function (ticketId) {
+    AdminService.beeline({
+      method: 'POST',
+      url: `/custom/wrs/email/${ticketId}`
+    })
+    .then(() => {
+      alert("Email sent. Please check your inbox");
+    })
+    .then(null, () => {
+      alert("Email sending failed");
+    })
+  }
+
   $scope.refund = function (ticket) {
     if (confirm("Confirm refund?")) {
       AdminService.beeline({
