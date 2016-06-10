@@ -87,5 +87,5 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
     loginState: 'login',
   })
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/');
+  $urlRouterProvider.otherwise('/bookings');
 }
