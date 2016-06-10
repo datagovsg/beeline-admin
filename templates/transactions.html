@@ -180,7 +180,7 @@
 
       <tr ng-repeat="item in transactionItems track by $index"
         ng-class="{
-          failed: !item.transaciton.committed
+          failed: !item.transaction.committed
         }"
       >
         <td ng-if="adminService.isSuperAdmin()">
