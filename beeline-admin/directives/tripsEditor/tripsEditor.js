@@ -1,7 +1,7 @@
 import _ from 'lodash'
 
-export default function(RoutesService, AdminService, DriverService, StopsPopup,
-LoadingSpinner) {
+export default function(RoutesService, TripsService, AdminService, DriverService,
+  StopsPopup, LoadingSpinner) {
 
   return {
     scope: {
@@ -22,7 +22,6 @@ LoadingSpinner) {
         newDates: [],
         existingDates: [],
         validDates: [],
-        tripStops: [],
         trip: {},
 
         addTripStop() {
@@ -37,7 +36,7 @@ LoadingSpinner) {
         }
       }
       scope.refreshTrips = function() {
-        var promise = RoutesService.getTrips({
+        var promise = TripsService.getTrips({
           routeId: scope.routeId,
           startDate: new Date(scope.filter.startDate),
           endDate: new Date(new Date(scope.filter.startDate).getTime() + 60 * 24 * 60 * 60 * 1000),
@@ -51,7 +50,7 @@ LoadingSpinner) {
           scope.trips = trips;
 
           // populate dates
-          scope.disp.existingDates = _.uniq(trips.map(tr => tr.date.substr(0,10)))
+          scope.disp.existingDates = _.uniq(trips.map(tr => tr.date.getTime()))
             .map(dtStr => new Date(dtStr));
 
           // populate stops
@@ -75,25 +74,19 @@ LoadingSpinner) {
       }
       scope.resetTrips = function() {
         scope.disp.newDates = [];
-        scope.disp.tripStops = [];
+        scope.disp.trip.tripStops = [];
       }
       scope.findStop = function(trip, stopId) {
         return trip.tripStops.find(ts => ts.stop.id == stopId)
       }
       scope.referenceTrip = function(trip) {
-        scope.disp.trip = _.assign({}, trip);
+        scope.disp.trip = _.clone(trip);
+        scope.disp.trip.tripStops = _.cloneDeep(trip.tripStops);
         delete scope.disp.trip.id;
-
-        scope.disp.tripStops = trip.tripStops.map(ts => ({
-          stopId: ts.stopId,
-          time: new Date(ts.time),
-          canBoard: ts.canBoard,
-          canAlight: ts.canAlight,
-        }));
       }
       scope.deleteTrip = function(trip) {
         if (confirm("Are you sure you want to delete?")) {
-          RoutesService.deleteTrip(trip.id)
+          TripsService.deleteTrip(trip.id)
           .then(scope.refreshTrips)
           .catch((error) => {
             console.error(error);
@@ -101,18 +94,12 @@ LoadingSpinner) {
         }
       }
       scope.editTrip = function(trip) {
-        scope.disp.trip = _.assign({}, trip);
-        scope.disp.tripStops = trip.tripStops.map(ts => ({
-          id: ts.id,
-          stopId: ts.stopId,
-          time: new Date(ts.time),
-          canBoard: ts.canBoard,
-          canAlight: ts.canAlight,
-        }));
+        scope.disp.trip = _.clone(trip);
+        scope.disp.trip.tripStops = _.cloneDeep(trip.tripStops);
       }
       scope.clearEdit = function() {
         scope.disp.trip = {};
-        scope.disp.tripStops = [];
+        scope.disp.trip.tripStops = [];
       }
       scope.saveTrips = async function() {
         // get the driver id... and create the driver if non-existent
@@ -134,25 +121,15 @@ LoadingSpinner) {
           var trips = scope.trips.filter(tr => tr.id in scope.selection.selected)
 
           // update the trips...
-          return RoutesService.updateTrips(
-            {
-              trips: trips,
-              driverId: scope.disp.trip.driverId,
-              capacity: scope.disp.trip.capacity,
-              companyId: scope.disp.trip.transportCompanyId,
-              tripStops: scope.disp.tripStops,
-            })
+          return TripsService.updateTrips(
+            trips,
+            scope.disp.trip)
             .then(scope.refreshTrips)
         }
         else {
-          return RoutesService.createTrips({
-            routeId: scope.routeId,
-            dates: scope.disp.newDates,
-            capacity: scope.disp.trip.capacity,
-            tripStops: scope.disp.tripStops,
-            companyId: scope.disp.trip.transportCompanyId,
-            driverId: scope.disp.trip.driverId,
-          })
+          return TripsService.createTrips(
+            scope.disp.newDates,
+            scope.disp.trip)
           .then(scope.refreshTrips)
           .then(scope.resetTrips)
           .then(() => {
@@ -240,7 +217,7 @@ LoadingSpinner) {
           || _.keys(scope.selection.selected).length == 0
         ) {
           scope.disp.trip = {};
-          scope.disp.tripStops = [];
+          scope.disp.trip.tripStops = [];
         }
       }; /* selectTrips() */
 

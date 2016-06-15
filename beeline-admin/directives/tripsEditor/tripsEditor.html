@@ -65,6 +65,10 @@
         Trip capacity: <input type="number" ng-model="disp.trip.capacity" />
       </label>
 
+      <label>
+        Trip price: <input type="number" step="0.01" ng-model="disp.trip.price" />
+      </label>
+
       <label ng-if="adminService.session().role == 'superadmin'">
         Company:
         <company-selector ng-model="disp.trip.transportCompanyId">
@@ -79,10 +83,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="tripStop in disp.tripStops">
+          <tr ng-repeat="tripStop in disp.trip.tripStops">
             <td>
               <uib-timepicker ng-model="tripStop.time"
               show-spinners="false" show-meridian="false">
+              </uib-timepicker>
             </td>
             <td>
               <!-- <input type="text" ng-model="tripStop.stopId"> -->
@@ -145,6 +150,7 @@
         <th></th> <!-- actions (delete, use) -->
         <th></th> <!-- pax -->
         <th></th> <!-- booked -->
+        <th></th> <!-- price -->
         <th></th> <!--date -->
         <th></th> <!-- driver -->
         <th colspan="{{disp.stopsList.length}}">Stops</th>
@@ -154,9 +160,11 @@
         <th></th>
         <th>Cap</th>
         <th>Booked</th>
+        <th>Price</th>
         <th>Date</th>
         <th>Driver</th>
-        <th ng-repeat="stop in disp.stopsList track by $index">
+        <th ng-repeat="stop in disp.stopsList track by $index"
+            title="{{stop.stop.description}}">
           {{stop.stop.label}} /
           {{stop.stop.postcode}}
         </th>
@@ -193,8 +201,13 @@
           <i class="glyphicon glyphicon-user"></i>
         </td>
         <td>
-          {{trip.availability.seatsBooked}}
-          <i class="glyphicon glyphicon-user"></i>
+          <a ui-sref="bookings({tripId: trip.id})">
+            {{trip.availability.seatsBooked}}
+            <i class="glyphicon glyphicon-user"></i>
+          </a>
+        </td>
+        <td>
+          {{trip.price | number:2}}
         </td>
         <td>
           {{trip.date | date:'dd/MM/yy EEE'}}

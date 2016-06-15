@@ -35,6 +35,7 @@ angular.module('beeline-admin', [
 .directive('stopSelector', require('./directives/stopSelector/stopSelector').default)
 .directive('superAdminCompanySelector', require('./directives/companySelector/superAdminCompanySelector').default)
 .service('AdminService', require('./services/adminService').default)
+.service('TripsService', require('./services/tripsService').default)
 .service('RoutesService', require('./services/routesService').default)
 .service('StopsPopup', require('./services/stopsPopup').default)
 .service('mapService', require('./services/mapService').default)
