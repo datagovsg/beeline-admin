@@ -91,9 +91,6 @@ export default function (AdminService, DriverService, $q) {
     utcDate = validateDate(utcDate);
     time = validateDate(time);
 
-    console.log(utcDate);
-    console.log(time)
-
     //
     return new Date(
       utcDate.getUTCFullYear(),

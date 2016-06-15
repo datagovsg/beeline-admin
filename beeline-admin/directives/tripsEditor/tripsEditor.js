@@ -22,17 +22,21 @@ export default function(RoutesService, TripsService, AdminService, DriverService
         newDates: [],
         existingDates: [],
         validDates: [],
-        trip: {},
+        trip: {
+          routeId: scope.routeId,
+          tripStops: [],
+        },
 
         addTripStop() {
-          this.tripStops.push({
+          this.trip.tripStops = this.trip.tripStops || [];
+          this.trip.tripStops.push({
             time: new Date(2015,1,1,8,30,0),
             canBoard: true,
             canAlight: false
           })
         },
         deleteTripStop(index) {
-          this.tripStops.splice(index, 1)
+          this.trip.tripStops.splice(index, 1)
         }
       }
       scope.refreshTrips = function() {
@@ -99,6 +103,7 @@ export default function(RoutesService, TripsService, AdminService, DriverService
       }
       scope.clearEdit = function() {
         scope.disp.trip = {};
+        scope.disp.trip.routeId = scope.routeId;
         scope.disp.trip.tripStops = [];
       }
       scope.saveTrips = async function() {
