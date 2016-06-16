@@ -1,64 +1,45 @@
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <!-- Fixed navbar -->
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <a class="navbar-brand" href="#">Beeline Admin</a>
+      <ul class="nav navbar-nav">
+        <li><a ui-sref="bookings">Tickets</a></li>
+        <li><a ui-sref="transactions">Transactions</a></li>
+        <li><a ui-sref="routes({routeId: 0, action: 'route'})">Routes</a></li>
+        <li><a ui-sref="trips({routeId: 0, action: 'route'})">Trips</a></li>
+        <li><a ui-sref="summary">Summary</a></li>
+        <li><a ui-sref="driver">Drivers</a></li>
+        <li><a href="#">Incidents</a></li>
+      </ul>
 
-<nav class="tabs tabs-top tabs-icon-left tabs-light tabs-striped admin-nav">
-  <ul>
-    <li ng-if="adminService.isSuperAdmin()">
-      <!-- The tabs at the top of the page -->
-      <a class="tab-item"
-         ui-sref="transactions"
-         >
-      	 <span class="tab-title">Transactions</span>
-      </a>
-    </li>
-    <li ng-if="adminService.isSuperAdmin()">
-      <a class="tab-item"
-         ui-sref="routes({routeId: 0, action: 'route'})"
-         >
-      	 <span class="tab-title">Routes</span>
-      </a>
-    </li>
-    <li ng-if="adminService.isSuperAdmin()">
-      <a class="tab-item"
-         ui-sref="trips({routeId: 0, action: 'route'})"
-         >
-      	 <span class="tab-title">Trips</span>
-      </a>
-    </li>
-    <li>
-      <a class="tab-item"
-         ui-sref="bookings"
-         >
-      	 <span class="tab-title">Bookings</span>
-      </a>
-    </li>
-    <li>
-      <a class="tab-item"
-         ui-sref="summary"
-         title="See the list of bookings for each month"
-         >
-      	 <span class="tab-title">Summary</span>
-      </a>
-    </li>
-    <li ng-if="adminService.isSuperAdmin()">
-      <a class="tab-item"
-         ui-sref="driver"
-         >
-      	 <span class="tab-title">Drivers</span>
-      </a>
-    </li>
-    <li ng-if="auth.isAuthenticated">
-      <a class="tab-item"
-        ng-click="adminService.logout()"
-        >
-        Logout
-      </a>
-    </li>
-    <li ng-if="!auth.isAuthenticated">
-      <a class="tab-item"
-        ng-click="adminService.login()"
-        >
+      <ul class="nav navbar-nav pull-right">
+        <li>
+          <a>
+            <super-admin-company-selector></super-admin-company-selector>
+          </a>
+        </li>
+
+        <li ng-if="!auth.isAuthenticated">
+          <a ng-click="adminService.login()">
         Login
       </a>
-    </li>
-  </ul>
-  <super-admin-company-selector></super-admin-company-selector>
+        </li>
+
+        <li ng-if="auth.isAuthenticated">
+          <a ng-click="adminService.logout()">Log out</a>
+        </li>
+      </ul>
+    </div>
+    <!--/.nav-collapse -->
+  </div>
+
 </nav>

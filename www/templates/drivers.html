@@ -1,35 +1,40 @@
 
+<div class="container-fluid withnav">
+    <div class="col-lg-12">
 
-<table class="table table-condensed table-striped">
-  <thead>
-    <tr>
-      <th></th>
-      <th>Name</th>
-      <th>Telephone</th>
-      <th>Name (by Driver)</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr ng-repeat="driver in drivers track by driver.id">
-      <td>
-        <button ng-click="deleteDriver(driver.id)" class="btn btn-danger">
-          Delete
-        </button>
-      </td>
-      <td>
-        {{driver.transportCompanies[0].driverCompany.name}}
-        <button class="btn"
-              ng-click="updateDriverName(driver.id)"
-        >
-          Edit
-        </button>
-      </td>
-      <td>{{driver.telephone}}</td>
-      <td>{{driver.name}}</td>
-    </tr>
-  </tbody>
-</table>
+      <table class="table table-condensed table-striped table-bordered">
+      <thead>
+      <tr>
+        <th></th>
+        <th>Name</th>
+        <th>Telephone</th>
+        <th>Name (by Driver)</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="driver in drivers track by driver.id">
+        <td>
+          <button ng-click="deleteDriver(driver.id)" class="btn btn-danger">
+            Delete
+          </button>
+        </td>
+        <td>
+          {{driver.transportCompanies[0].driverCompany.name}}
+          <button class="btn"
+                ng-click="updateDriverName(driver.id)"
+          >
+            Edit
+          </button>
+        </td>
+        <td>{{driver.telephone}}</td>
+        <td>{{driver.name}}</td>
+      </tr>
+      </tbody>
+      </table>
 
-<button ng-click="addDriver()" class="btn btn-primary">
-  Add
-</button>
+      <button ng-click="addDriver()" class="btn btn-primary">
+      Add
+      </button>
+
+
+    </div></div>

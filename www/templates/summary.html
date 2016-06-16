@@ -1,47 +1,53 @@
-<div class="summary-page">
 
-<nav>
-  <uib-datepicker
-    ng-model="selectedMonth"
-    datepicker-options="{ minMode: 'month' }"
-  >
-  </uib-datepicker>
-</nav>
+<div class="container-fluid withnav">
+    <div class="col-lg-12">
 
-<h2 class="nodata" ng-if="routes.length == 0">
-    No seat data found for the selected month
-</h2>
+      <div class="summary-page">
 
-  <div ng-if="routes.length > 0">
-    <h2 ng-repeat-start="route in routes | orderBy:'label' track by $index">
-      {{route.label}}
-      :
-      {{route.from}}
-      {{route.trips[0].tripStops[0].time | date:'HH:mm'}}
-      &mdash;
-      {{route.to}}
-      {{route.trips[0].tripStops[route.trips[0].tripStops.length-1].time | date:'HH:mm'}}
-    </h3>
-
-    <table
-      ng-repeat-end
-      ng-if="routes.length > 0">
-      <tr>
-        <th>{{ route.trips[0].date | date:'MMM':'UTC'}}</th>
-        <th ng-repeat='trip in route.tripsByDay track by $index'
-            ng-class="{ day: true, 'has-trip': route.tripsByDay[$index] }"
+      <nav>
+        <uib-datepicker
+          ng-model="selectedMonth"
+          datepicker-options="{ minMode: 'month' }"
         >
-          {{$index + 1}}
-        </th>
-      </tr>
-      <tr>
-        <td></td>
-        <td ng-repeat='trip in route.tripsByDay track by $index'
-            ng-class="{ day: true, 'has-trip': route.tripsByDay[$index] }"
-        >
-          {{trip.availability.seatsBooked || ''}}
-        </td>
-      </tr>
-    </table>
-  </div>
-</div>
+        </uib-datepicker>
+      </nav>
+
+      <h2 class="nodata" ng-if="routes.length == 0">
+          No seat data found for the selected month
+      </h2>
+
+        <div ng-if="routes.length > 0">
+          <h2 ng-repeat-start="route in routes | orderBy:'label' track by $index">
+            {{route.label}}
+            :
+            {{route.from}}
+            {{route.trips[0].tripStops[0].time | date:'HH:mm'}}
+            &mdash;
+            {{route.to}}
+            {{route.trips[0].tripStops[route.trips[0].tripStops.length-1].time | date:'HH:mm'}}
+          </h3>
+
+          <table
+            ng-repeat-end
+            ng-if="routes.length > 0">
+            <tr>
+              <th>{{ route.trips[0].date | date:'MMM':'UTC'}}</th>
+              <th ng-repeat='trip in route.tripsByDay track by $index'
+                  ng-class="{ day: true, 'has-trip': route.tripsByDay[$index] }"
+              >
+                {{$index + 1}}
+              </th>
+            </tr>
+            <tr>
+              <td></td>
+              <td ng-repeat='trip in route.tripsByDay track by $index'
+                  ng-class="{ day: true, 'has-trip': route.tripsByDay[$index] }"
+              >
+                {{trip.availability.seatsBooked || ''}}
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+    </div></div>

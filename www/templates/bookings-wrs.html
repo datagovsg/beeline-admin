@@ -1,143 +1,97 @@
-<div class="bookings-page">
-  <h1>Bookings</h1>
+<div class="container-fluid withnav">
+  <div class="col-lg-12">
 
-  <nav>
-    <div class="datepicker-wrap">
-      <multiple-date-picker ng-model="disp.dates"
-                           highlight-days="disp.highlightDays">
-      </multiple-date-picker>
-    </div>
+    <div class="bookings-page">
+      <!--  Remove bookings-page class -->
+      <h1>Bookings</h1>
 
-    <div class="form-horizontal">
-      <label>
-        Route:
-        <select ng-options="route.id as (route.label + ': ' + route.name) for route in disp.availableRoutes | orderBy:'label'"
-          ng-model="filter.routeId"
-          ng-required="false"
-          class="form-control">
-          <option value="">(All)</option>
-        </select>
-      </label>
+      <nav>
+        <div class="datepicker-wrap">
+          <multiple-date-picker ng-model="disp.dates" highlight-days="disp.highlightDays">
+          </multiple-date-picker>
+        </div>
 
-      <label>
-        Trip:
-        <input type="number"
-          ng-model="filter.tripId"
-          ng-model-options="{ updateOn: 'blur' }"
-          class="form-control"
-          />
-      </label>
-    </div>
+        <div>
+          <label>
+            Route:
+            <select ng-options="route.id as (route.label + ': ' + route.name) for route in disp.availableRoutes | orderBy:'label'" ng-model="filter.routeId" ng-required="false" class="form-control">
+              <option value="">(All)</option>
+            </select>
+          </label>
 
-    <div>
-      Status:
-      <label>
-        <input type="checkbox"
-          ng-model="filter.status.valid"
-          />
-          Valid
-      </label>
+          <label>
+            Trip:
+            <input type="number" ng-model="filter.tripId" ng-model-options="{ updateOn: 'blur' }" class="form-control" />
+          </label>
+        </div>
 
-      <label>
-        <input type="checkbox"
-          ng-model="filter.status.refunded"
-          />
-          Refunded
-      </label>
+        <div>
+          Status:
+          <label>
+            <input type="checkbox" ng-model="filter.status.valid" /> Valid
+          </label>
 
-      <label>
-        <input type="checkbox"
-          ng-model="filter.status.failed"
-          />
-          Failed
-      </label>
-    </div>
+          <label>
+            <input type="checkbox" ng-model="filter.status.refunded" /> Refunded
+          </label>
 
-    <div>
-      Sort
-      <label>
-        <input type="radio"
-        ng-model="filter.orderBy"
-        value="createdAt"
-        />
-        Transaction date
-      </label>
+          <label>
+            <input type="checkbox" ng-model="filter.status.failed" /> Failed
+          </label>
+        </div>
 
-      <label>
-        <input type="radio"
-        ng-model="filter.orderBy"
-        value="boardingTime"
-        />
-        Trip time
-      </label>
+        <div>
+          Sort
+          <label>
+            <input type="radio" ng-model="filter.orderBy" value="createdAt" /> Transaction date
+          </label>
 
-      <label>
-        <input type="radio"
-        ng-model="filter.orderBy"
-        value="route"
-        />
-        Route
-      </label>
-    </div>
+          <label>
+            <input type="radio" ng-model="filter.orderBy" value="boardingTime" /> Trip time
+          </label>
 
-    <div>
-      Order
-      <label>
-        <input type="radio"
-        ng-model="filter.order"
-        value="desc"
-        />
-        Descending
-      </label>
-      <label>
-        <input type="radio"
-        ng-model="filter.order"
-        value="asc"
-        />
-        Ascending
-      </label>
-    </div>
+          <label>
+            <input type="radio" ng-model="filter.orderBy" value="route" /> Route
+          </label>
+        </div>
 
-    <!-- user query -->
-    <div class="form-group">
-      <label>
-        User search
-        <input type="text"
-        ng-model="filter.userQuery"
-        ng-model-options="{ updateOn: 'blur' }"
-        class="form-control"
-        />
-      </label>
-    </div>
+        <div>
+          Order
+          <label>
+            <input type="radio" ng-model="filter.order" value="desc" /> Descending
+          </label>
+          <label>
+            <input type="radio" ng-model="filter.order" value="asc" /> Ascending
+          </label>
+        </div>
 
-    <!-- stop query -->
-    <div class="form-group">
-      <label>
-        Stop search
-        <input type="text"
-        ng-model="filter.stopQuery"
-        ng-model-options="{ updateOn: 'blur' }"
-        class="form-control"
-        />
-      </label>
-    </div>
+        <!-- user query -->
+        <div class="form-group">
+          <label>
+            User search
+            <input type="text" ng-model="filter.userQuery" ng-model-options="{ updateOn: 'blur' }" class="form-control" />
+          </label>
+        </div>
+
+        <!-- stop query -->
+        <div class="form-group">
+          <label>
+            Stop search
+            <input type="text" ng-model="filter.stopQuery" ng-model-options="{ updateOn: 'blur' }" class="form-control" />
+          </label>
+        </div>
 
 
-    <button ng-click="downloadCsv()">
-      Download CSV
-    </button>
-  </nav>
-  <br clear="both" />
+        <button ng-click="downloadCsv()">
+          Download CSV
+        </button>
+      </nav>
+      <br clear="both" />
 
 
-  <uib-pagination
-    boundary-links="true"
-    ng-model="currentPage"
-    total-items="pageCount * perPage"
-    items-per-page="perPage"
-  ></uib-pagination>
+      <uib-pagination boundary-links="true" ng-model="currentPage" total-items="pageCount * perPage" items-per-page="perPage"></uib-pagination>
 
-  <!-- <div>
+      <!-- <div>
     <span class="btn-group">
       <button class="btn btn-default"
         ng-click="showRefundModal()"
@@ -146,111 +100,108 @@
       </button>
     </span>
   </div> -->
+      <div class="table-responsive">
+        <table class="table table-striped table-bordered table-condensed transactions-view">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Txn Id</th>
+              <th>Charge Id</th>
+              <th>Trip date</th>
+              <th>User name</th>
+              <th>User phone </th>
+              <th>User email</th>
+              <th>Ticket id</th>
+              <th>Trip id</th>
+              <th>Route Id</th>
+              <th>Route Label</th>
+              <th>Route description</th>
+              <th>Pick-up stop</th>
+              <th>Drop-off stop</th>
+              <th>Price per trip</th>
+              <th>Status</th>
+              <th>Timestamp</th>
+              <th>Refund</th>
+            </tr>
+          </thead>
 
-  <table class="table table-striped table-condensed transactions-view">
-    <thead>
-      <tr>
-        <th></th>
-        <th>Txn Id</th>
-        <th>Charge Id</th>
-        <th>Trip date</th>
-        <th>User name</th>
-        <th>User phone </th>
-        <th>User email</th>
-        <th>Ticket id</th>
-        <th>Trip id</th>
-        <th>Route Id</th>
-        <th>Route Label</th>
-        <th>Route description</th>
-        <th>Pick-up stop</th>
-        <th>Drop-off stop</th>
-        <th>Price per trip</th>
-        <th>Status</th>
-        <th>Timestamp</th>
-        <th>Refund</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr ng-repeat="ticket in tickets"
-          ng-class="{
+          <tbody>
+            <tr ng-repeat="ticket in tickets" ng-class="{
             valid: ticket.status == 'valid',
             refunded: ticket.status == 'refunded',
             failed: ticket.status == 'failed',
-          }"
-      >
-        <td>
-          <input type="checkbox" ng-model="selectedTickets[ticket.id]"
-            style="height: 100%;"
-          />
-        </td>
-        <td>
-          <a ui-sref="transactions({id: ticket.ticketSale.transactionId})">
+              }">
+              <td>
+                <input type="checkbox" ng-model="selectedTickets[ticket.id]" style="height: 100%;" />
+              </td>
+              <td>
+                <a ui-sref="transactions({id: ticket.ticketSale.transactionId})">
             {{ticket.ticketSale.transactionId}}
           </a>
-        </td>
-        <td>
-          {{ticket.paymentResource}}
-          <span ng-if="ticket.refundResource"><br/>{{ticket.refundResource}}</span>
-        </td>
-        <td>
-          {{ticket.boardStop.trip.date | date:'dd-MMM-yy':'UTC'}}
-        </td>
-        <td>
-          {{ticket.user.json.name ? (ticket.user.json.name + ' #' + ticket.user.json.index) : ticket.user.name}}
-        </td>
-        <td>
-          {{ticket.user.json.telephone || ticket.user.telephone}}
-        </td>
-        <td>
-          {{ticket.user.json.email || ticket.user.email}}
-        </td>
-        <td>
-          <a ui-sref="transactions({ticketId: ticket.id})">
+              </td>
+              <td>
+                {{ticket.paymentResource}}
+                <span ng-if="ticket.refundResource"><br/>{{ticket.refundResource}}</span>
+              </td>
+              <td>
+                {{ticket.boardStop.trip.date | date:'dd-MMM-yy':'UTC'}}
+              </td>
+              <td>
+                {{ticket.user.json.name ? (ticket.user.json.name + ' #' + ticket.user.json.index) : ticket.user.name}}
+              </td>
+              <td>
+                {{ticket.user.json.telephone || ticket.user.telephone}}
+              </td>
+              <td>
+                {{ticket.user.json.email || ticket.user.email}}
+              </td>
+              <td>
+                <a ui-sref="transactions({ticketId: ticket.id})">
             {{ticket.id}}
           </a>
 
-          <a ng-click="sendWrsEmail(ticket.ticketSale.transactionId)">
-            <i class="glyphicon glyphicon-envelope"></i>
-          </a>
-        </td>
-        <td>
-          {{ticket.boardStop.trip.id}}
-        </td>
-        <td>
-          {{ticket.boardStop.trip.routeId}}
-        </td>
-        <td>
-          {{ticket.boardStop.trip.route.label}}
-        </td>
-        <td>
-          {{ticket.boardStop.trip.route.from}} &mdash; {{ticket.boardStop.trip.route.to}}
-        </td>
-        <td>
-          {{ticket.boardStop.time | date:'HH:mm'}},
-          {{ticket.boardStop.stop.description}}
-        </td>
-        <td>
-          {{ticket.alightStop.time | date:'HH:mm'}},
-          {{ticket.alightStop.stop.description}}
-        </td>
-        <td>
-          {{ticket.boardStop.trip.price}}
-        </td>
-        <td>
-          {{ticket.status}}
-        </td>
-        <td>
-          {{ticket.createdAt | date:'dd-MMM-yy HH:mm:ss'}}
-        </td>
-        <td>
-          <button class="btn btn-danger" ng-click="refund(ticket)"
-            ng-disabled="ticket.status != 'valid'"
-          >
-            Refund!
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+                <a ng-click="sendWrsEmail(ticket.ticketSale.transactionId)">
+                  <i class="glyphicon glyphicon-envelope"></i>
+                </a>
+              </td>
+              <td>
+                {{ticket.boardStop.trip.id}}
+              </td>
+              <td>
+                {{ticket.boardStop.trip.routeId}}
+              </td>
+              <td>
+                {{ticket.boardStop.trip.route.label}}
+              </td>
+              <td>
+                {{ticket.boardStop.trip.route.from}} &mdash; {{ticket.boardStop.trip.route.to}}
+              </td>
+              <td>
+                {{ticket.boardStop.time | date:'HH:mm'}}, {{ticket.boardStop.stop.description}}
+              </td>
+              <td>
+                {{ticket.alightStop.time | date:'HH:mm'}}, {{ticket.alightStop.stop.description}}
+              </td>
+              <td>
+                {{ticket.boardStop.trip.price}}
+              </td>
+              <td>
+                {{ticket.status}}
+              </td>
+              <td>
+                {{ticket.createdAt | date:'dd-MMM-yy HH:mm:ss'}}
+              </td>
+              <td>
+                <button class="btn btn-danger" ng-click="refund(ticket)" ng-disabled="ticket.status != 'valid'">
+                  Refund!
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+  </div>
 </div>
