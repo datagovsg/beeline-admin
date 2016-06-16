@@ -36,6 +36,7 @@ angular.module('beeline-admin', [
 .directive('tripSelector', require('./directives/tripSelector/tripSelector').default)
 .directive('stopSelector', require('./directives/stopSelector/stopSelector').default)
 .directive('superAdminCompanySelector', require('./directives/companySelector/superAdminCompanySelector').default)
+.directive('mySort', require('./directives/mySort').default)
 .service('AdminService', require('./services/adminService').default)
 .service('TripsService', require('./services/tripsService').default)
 .service('RoutesService', require('./services/routesService').default)
@@ -45,6 +46,7 @@ angular.module('beeline-admin', [
 .service('BookingRefund', require('./services/bookingRefund').default)
 .service('LoadingSpinner', require('./services/loadingSpinner').default)
 .controller('transactions', require('./controllers/transactionsController.js').default)
+.controller('trips', require('./controllers/tripsController.js').default)
 .controller('routes', require('./controllers/routesController.js').default)
 .controller('summary', require('./controllers/summaryController.js').default)
 .controller('bookings', require('./controllers/bookingsController.js').default)
@@ -52,6 +54,7 @@ angular.module('beeline-admin', [
 .controller('drivers', require('./controllers/driversController.js').default)
 .controller('login', require('./controllers/loginController.js').default)
 .filter('makeRoutePath', require('./shared/filters.js').makeRoutePath)
+.filter('intervalToTime', require('./shared/filters.js').intervalToTime)
 .run(function (auth, $rootScope, store, jwtHelper, $window) {
   auth.hookEvents();
 

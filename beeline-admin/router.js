@@ -44,6 +44,15 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
     }
   })
 
+  .state('trips', {
+    url: '/routes/{routeId:int}/{action}',
+    templateUrl: 'templates/trips.html',
+    controller: 'trips',
+    data: {
+      requiresLogin: true,
+    }
+  })
+
   .state('summary', {
     url: '/summary',
     templateUrl: 'templates/summary.html',

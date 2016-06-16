@@ -16,6 +16,13 @@
       	 <span class="tab-title">Routes</span>
       </a>
     </li>
+    <li ng-if="adminService.isSuperAdmin()">
+      <a class="tab-item"
+         ui-sref="trips({routeId: 0, action: 'route'})"
+         >
+      	 <span class="tab-title">Trips</span>
+      </a>
+    </li>
     <li>
       <a class="tab-item"
          ui-sref="bookings"
