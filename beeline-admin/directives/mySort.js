@@ -6,11 +6,9 @@ export default function() {
       sortDirection: '=?',
     },
     link(scope, elem, attr) {
-      console.log(attr);
       if (attr.mySort) {
         elem[0].addEventListener('click', (event) => {
           scope.$apply(() => {
-            console.log(scope);
             if (scope.sortModel === attr.mySort) {
               scope.sortDirection = scope.sortDirection === 'asc' ? 'desc' : 'asc';
             }

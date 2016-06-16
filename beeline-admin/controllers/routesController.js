@@ -6,17 +6,19 @@ export default function($scope, $state, $urlRouter, AdminService, LoadingSpinner
   $scope.params = _.assign({}, $state.params);
   var myState = $state.current.name;
 
-  $scope.routes = [];
-  $scope.filter = {};
+  $scope.data = [];
+  $scope.filter = {
+    perPage: 20,
+    page: 1,
+  };
 
   function refreshRoutes() {
-    console.log($scope.filter);
     var promise = AdminService.beeline({
       method: 'GET',
       url: '/routes/report?' + querystring.stringify($scope.filter)
     })
     .then((response) => {
-      $scope.routes = response.data;
+      $scope.data = response.data;
     })
 
     LoadingSpinner.watchPromise(promise);

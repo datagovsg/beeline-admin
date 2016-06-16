@@ -1,4 +1,14 @@
 <div class="routes-page">
+
+  <div>
+    <uib-pagination
+      boundary-links="true"
+      ng-model="filter.page"
+      total-items="data.count"
+      items-per-page="filter.perPage"
+    ></uib-pagination>
+  </div>
+
   <table class="table table-condensed table-striped">
     <tr>
       <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="id">Route ID</th>
@@ -17,7 +27,7 @@
       <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Tags</th>
       <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Trips</th>
     </tr>
-    <tr ng-repeat="route in routes">
+    <tr ng-repeat="route in data.rows">
       <td>{{route.id}}</td>
       <td>{{route.label}}</td>
       <td>{{route.transportCompany.name}}</td>
