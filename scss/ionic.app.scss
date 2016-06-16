@@ -24,6 +24,7 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 $light: #FFF;
 $selected: #CCC;
 
+@import "node_modules/multiple-date-picker/dist/multiple-date-picker";
 @import 'scss/transactions';
 @import 'scss/routeEditor';
 @import 'scss/pathEditor';

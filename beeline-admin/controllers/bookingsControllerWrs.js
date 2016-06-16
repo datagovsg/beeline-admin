@@ -40,6 +40,7 @@ BookingRefund, $state, $stateParams) {
     month: now,
     datesBetween: [],
     counts: {},
+    dates: [],
   }
 
   $scope.selectedTickets = {};
@@ -232,6 +233,36 @@ BookingRefund, $state, $stateParams) {
 
     $scope.disp.datesBetween = _.range(start, end + 24*3600*1000, 24*3600*1000)
   }
+
+  $scope.$watch('disp.dates', (dates) => {
+    if (dates.length == 0)
+      return;
+
+    if (dates.length == 1) {
+      return;
+    }
+
+    if (dates.length == 2) {
+      $scope.filter.startDate = dates[0].toDate();
+      $scope.filter.endDate = dates[1].toDate();
+      return;
+    }
+
+    if (dates.length > 2) {
+      $scope.disp.dates = [dates[2]];
+      return;
+    }
+  }, true)
+
+  $scope.$watch('disp.counts', (counts) => {
+    $scope.disp.highlightDays = _.keys(counts).map((date) => {
+      return {
+        date: parseInt(date),
+        annotation: counts[date],
+        selectable: true,
+      }
+    })
+  })
 
   $scope.$watchGroup(['currentPage', 'perPage'], query)
   $scope.$watchGroup(['filter.startDate', 'filter.endDate'], queryRoutes)

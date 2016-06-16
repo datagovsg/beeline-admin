@@ -3,69 +3,10 @@
 
   <nav>
     <div class="datepicker-wrap">
-      Select Month:<br clear="both">
-      <uib-datepicker ng-model="disp.month"
-          datepicker-options="{minMode: 'month'}"></uib-datepicker>
+      <multiple-date-picker ng-model="disp.dates"
+                           highlight-days="disp.highlightDays">
+      </multiple-date-picker>
     </div>
-
-    <div class="datepicker-wrap">
-      Select Start Date:<br clear="both">
-      <div class="input-group">
-        <input type="text"
-            datepicker-options="{minMode: 'day'}"
-            uib-datepicker-popup="{{format}}"
-            ng-model="filter.startDate"
-
-            class="form-control"
-            is-open="disp.startDatePopup"
-            />
-        <span class="input-group-btn">
-          <button type="button" class="btn btn-default" ng-click="disp.startDatePopup = !disp.startDatePopup">
-            <i class="glyphicon glyphicon-calendar"></i>
-          </button>
-        </span>
-      </div>
-    </div>
-
-    <div class="datepicker-wrap">
-      Select End Date:<br clear="both">
-      <div class="input-group">
-        <input type="text"
-            datepicker-options="{minMode: 'day'}"
-            uib-datepicker-popup="{{format}}"
-            ng-model="filter.endDate"
-
-            class="form-control"
-            is-open="disp.startDatePopup"
-            />
-        <span class="input-group-btn">
-          <button type="button" class="btn btn-default" ng-click="disp.startDatePopup = !disp.startDatePopup">
-            <i class="glyphicon glyphicon-calendar"></i>
-          </button>
-        </span>
-      </div>
-    </div>
-
-    <br clear="both" />
-
-    <table class="bookings-by-date table table-condensed" style="width: auto">
-      <caption>
-        Bookings by date
-      </caption>
-      <tr>
-        <th ng-repeat="day in disp.datesBetween"
-        >
-          {{day | date:'dd'}}<br/>
-          {{day | date:'M'}}
-        </th>
-      </tr>
-      <tr>
-        <td ng-repeat="day in disp.datesBetween"
-        >
-          {{disp.counts[day]}}
-        </td>
-      </tr>
-    </table>
 
     <div>
       <label>
@@ -182,6 +123,7 @@
       Download CSV
     </button>
   </nav>
+  <br clear="both" />
 
 
   <uib-pagination

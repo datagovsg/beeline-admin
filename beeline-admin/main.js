@@ -1,12 +1,14 @@
 //require css for webpack
 require('../node_modules/bootstrap/dist/css/bootstrap.min.css');
 require('../scss/ionic.app.scss');
+global.moment = require('moment')
 
 require('beeline-calendar')
 require('angular-storage')
 require('angular-cookies')
 require('angular-jwt')
 require('auth0-angular')
+require('multiple-date-picker')
 
 const env = require('./env')
 
@@ -18,7 +20,7 @@ const env = require('./env')
 // 'starter.controllers' is found in controllers.js
 angular.module('beeline-admin', [
   'uiGmapgoogle-maps', 'ui.router', 'ui.bootstrap', 'beeline.calendar',
-  'auth0', 'angular-storage', 'angular-jwt', 'ngCookies'])
+  'auth0', 'angular-storage', 'angular-jwt', 'ngCookies', 'multipleDatePicker'])
 .config(require('./router').default)
 .config(configureGoogleMaps)
 .config(configureLoginPage)
