@@ -38,6 +38,7 @@
     "jsonwebtoken": "^6.2.0",
     "left-pad": "^1.1.0",
     "lodash": "^4.11.1",
+    "multiple-date-picker": "git+https://github.com/datagovsg/MultipleDatePicker.git",
     "node-sass": "^3.7.0",
     "postcss-loader": "^0.9.1",
     "sass-loader": "^3.2.0",
