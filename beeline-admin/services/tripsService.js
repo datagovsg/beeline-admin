@@ -61,6 +61,19 @@ export default function (AdminService, DriverService, $q) {
     })
   }
 
+  this.getPings = function (options) {
+    return AdminService.beeline({
+      method: 'GET',
+      url: `/trips/${options.tripId}/pings?`
+        + querystring.stringify(_.pick(options, [
+          'startTime', 'endTime'
+        ])),
+    })
+    .then((response) => {
+      return response.data;
+    })
+  }
+
   var updatableFields = [
     'driverId', 'capacity', 'companyId', 'price', 'transportCompanyId'
   ];

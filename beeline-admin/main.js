@@ -1,6 +1,6 @@
 //require css for webpack
-require('../node_modules/bootstrap/dist/css/bootstrap.min.css');
-require('../scss/ionic.app.scss');
+// require('../node_modules/bootstrap/dist/css/bootstrap.min.css');
+// require('../scss/ionic.app.scss');
 global.moment = require('moment')
 
 require('beeline-calendar')
@@ -41,6 +41,7 @@ angular.module('beeline-admin', [
 .service('TripsService', require('./services/tripsService').default)
 .service('RoutesService', require('./services/routesService').default)
 .service('StopsPopup', require('./services/stopsPopup').default)
+.service('RoutePopup', require('./services/routePopup').default)
 .service('mapService', require('./services/mapService').default)
 .service('DriverService', require('./services/driverService').default)
 .service('BookingRefund', require('./services/bookingRefund').default)

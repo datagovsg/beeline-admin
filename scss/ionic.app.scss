@@ -33,12 +33,14 @@ $selected: #CCC;
 @import 'scss/datePicker';
 @import 'scss/tripsEditor';
 @import 'scss/stopsPopup';
+@import 'scss/routePopup';
 @import 'scss/summary';
 @import 'scss/bookings';
 @import 'scss/tripSelector';
 @import 'scss/loadingSpinner';
 @import 'scss/bookingRefund';
 @import 'scss/mySort';
+@import 'scss/bootstrap';
 
 html, body {
   height: 100%;

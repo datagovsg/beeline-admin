@@ -1,6 +1,8 @@
 import querystring from 'querystring';
 
-export default function($scope, $state, $urlRouter, AdminService, LoadingSpinner) {
+export default function($scope, $state, $urlRouter, AdminService, LoadingSpinner,
+  RoutePopup) {
+
   $scope.selectedRoute = null;
 
   $scope.params = _.assign({}, $state.params);
@@ -20,8 +22,15 @@ export default function($scope, $state, $urlRouter, AdminService, LoadingSpinner
     .then((response) => {
       $scope.data = response.data;
     })
+    .then(null, (error) => {
+      console.log(error)
+    })
 
     LoadingSpinner.watchPromise(promise);
+  }
+
+  $scope.viewRoute = function (routeId) {
+    RoutePopup.show({routeId});
   }
 
   $scope.$watch('filter', refreshRoutes, true)

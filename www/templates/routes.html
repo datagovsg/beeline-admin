@@ -1,4 +1,5 @@
-<div class="container-fluid">
+<div class="container-fluid withnav">
+  <h1>Routes</h1>
 
   <div>
     <uib-pagination
@@ -10,44 +11,52 @@
   </div>
 
   <table class="table table-condensed table-striped">
-    <tr>
-      <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="id">Route ID</th>
-      <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="label">Route label</th>
-      <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Company</th>
-      <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="from">From</th>
-      <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="to">To</th>
-      <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="startDate">Start date</th>
-      <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="endDate">End date</th>
-      <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastStartTime">Start time</th>
-      <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastEndTime">End time</th>
-      <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Route path</th>
-      <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastDriverId">Last driver</th>
-      <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastPrice">Price</th>
-      <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastCapacity">Cap</th>
-      <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Tags</th>
-      <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Trips</th>
-    </tr>
-    <tr ng-repeat="route in data.rows">
-      <td>{{route.id}}</td>
-      <td>{{route.label}}</td>
-      <td>{{route.transportCompany.name}}</td>
-      <td>{{route.from}}</td>
-      <td>{{route.to}}</td>
-      <td>{{route.startDate | date:'dd MMM yyyy (EEE)'}}</td>
-      <td>{{route.endDate   | date:'dd MMM yyyy (EEE)'}}</td>
-      <td>{{route.lastStartTime | intervalToTime | date:'HH:mm'}}</td>
-      <td>{{route.lastEndTime   | intervalToTime | date:'HH:mm'}}</td>
-      <td>View...</td>
-      <td>{{route.lastDriverId}}</td>
-      <td>{{route.lastPrice}}</td>
-      <td>{{route.lastCapacity}}</td>
-      <td>
-        <ul class="tags">
-          <li ng-repeat="tag in route.tags">{{tag}}</li>
-        </ul>
-      </td>
-      <td>...</td>
-    </tr>
+    <thead>
+      <tr>
+        <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="id">Route ID</th>
+        <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="label">Route label</th>
+        <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Company</th>
+        <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="from">From</th>
+        <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="to">To</th>
+        <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="startDate">Start date</th>
+        <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="endDate">End date</th>
+        <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastStartTime">Start time</th>
+        <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastEndTime">End time</th>
+        <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Route path</th>
+        <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastDriverId">Last driver</th>
+        <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastPrice">Price</th>
+        <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastCapacity">Cap</th>
+        <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Tags</th>
+        <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Trips</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="route in data.rows">
+        <td>{{route.id}}</td>
+        <td>{{route.label}}</td>
+        <td>{{route.transportCompany.name}}</td>
+        <td>{{route.from}}</td>
+        <td>{{route.to}}</td>
+        <td>{{route.startDate | date:'dd MMM yyyy (EEE)'}}</td>
+        <td>{{route.endDate   | date:'dd MMM yyyy (EEE)'}}</td>
+        <td>{{route.lastStartTime | intervalToTime | date:'HH:mm'}}</td>
+        <td>{{route.lastEndTime   | intervalToTime | date:'HH:mm'}}</td>
+        <td><button ng-click="viewRoute(route.id)">View</button></td>
+        <td>{{route.lastDriverId}}</td>
+        <td>{{route.lastPrice}}</td>
+        <td>{{route.lastCapacity}}</td>
+        <td>
+          <ul class="tags">
+            <li ng-repeat="tag in route.tags">{{tag}}</li>
+          </ul>
+        </td>
+        <td>
+          <a ui-sref="trips({routeId: route.id, action: 'trips'})">
+            View
+          </a>
+        </td>
+      </tr>
+    </tbody>
   </table>
 
 </div>

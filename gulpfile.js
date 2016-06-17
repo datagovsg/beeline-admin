@@ -16,26 +16,31 @@ function errHandler(err) {
     this.emit('end');
 }
 
-gulp.task('default', ['sass', 'webpack', 'js-libraries']);
+gulp.task('default', ['sass', 'webpack', 'js-libraries', 'assets']);
 
 gulp.task('js-libraries', function() {
   gulp.src('./node_modules/angular-ui-bootstrap/dist/ui-bootstrap-csp.css')
       .pipe(gulp.dest('./www/css'))
 });
 
+gulp.task('assets', function (done) {
+  gulp.src(['./node_modules/bootstrap/fonts/*'])
+      .pipe(gulp.dest('./www/fonts/bootstrap'))
+      .on('end', done);
+})
+
 gulp.task('sass', function(done) {
-  // gulp.src(['./scss/ionic.app.scss'])
-  //   .pipe(sass())
-  //   .on('error', sass.logError)
-  //   .pipe(rename({ basename: 'styles' }))
-  //   .pipe(gulp.dest('./www/css/'))
-  //   .pipe(minifyCss({
-  //     keepSpecialComments: 0
-  //   }))
-  //   .pipe(rename({ extname: '.min.css' }))
-  //   .pipe(gulp.dest('./www/css/'))
-  //   .on('end', done);
-  done();
+  gulp.src(['./scss/ionic.app.scss'])
+    .pipe(sass())
+    .on('error', sass.logError)
+    .pipe(rename({ basename: 'styles' }))
+    .pipe(gulp.dest('./www/css/'))
+    .pipe(minifyCss({
+      keepSpecialComments: 0
+    }))
+    .pipe(rename("styles.css"))
+    .pipe(gulp.dest('./www/css/'))
+    .on('end', done);
 });
 
 gulp.task('webpack', function() {
