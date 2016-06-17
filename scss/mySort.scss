@@ -1,0 +1,10 @@
+.sortable {
+  background: transparent url("../img/sort_arrows.png") no-repeat 100% 50%;
+}
+
+.sortable.sort-asc {
+  background: #AAA url("../img/sort_arrows_asc.png") no-repeat 100% 50%;
+}
+.sortable.sort-desc {
+  background: #AAA url("../img/sort_arrows_desc.png") no-repeat 100% 50%;
+}
