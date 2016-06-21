@@ -56,7 +56,7 @@ angular.module('beeline-admin', [
 .controller('login', require('./controllers/loginController.js').default)
 .filter('makeRoutePath', require('./shared/filters.js').makeRoutePath)
 .filter('intervalToTime', require('./shared/filters.js').intervalToTime)
-.run(function (auth, $rootScope, store, jwtHelper, $window) {
+.run(function (auth, $rootScope, store, jwtHelper, $window, AdminService) {
   auth.hookEvents();
 
   // This events gets triggered on refresh or URL change
@@ -68,6 +68,7 @@ angular.module('beeline-admin', [
           auth.authenticate(store.get('profile'), token);
         }
       } else {
+        AdminService.login();
         // Either show Login page or use the refresh token to get a new idToken
       }
     }

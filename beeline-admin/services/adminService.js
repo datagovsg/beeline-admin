@@ -64,13 +64,17 @@ export default function ($http, $location, store, jwtHelper, auth) {
             lastSession.app_metadata.roles.indexOf('admin') != -1 ? 'admin'
             : null;
       lastSession.transportCompanyId = lastSession.app_metadata.transportCompanyId;
-      
+
       return lastSession;
     }
   }
 
   this.isSuperAdmin = function () {
+    if (!auth.isAuthenticated) return false;
+    
     var profile = store.get('profile')
+
+    if (!profile) return false;
 
     return (profile.app_metadata.roles.indexOf('superadmin') != -1);
   }

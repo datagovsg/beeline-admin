@@ -11,8 +11,10 @@
       active: selectedRoute == route
     }"
     > <a>
+        <small>(~{{route.id}})</small> 
         {{route.label}}:
-        {{route.from}} to {{route.to}}</a>
+        {{route.from}} to {{route.to}}
+      </a>
     </li>
     <li ng-click="selectRoute({})"> <a><em>New route!</em></a>
 
