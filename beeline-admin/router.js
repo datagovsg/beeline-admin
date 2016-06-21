@@ -44,6 +44,15 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
     }
   })
 
+  .state('companies', {
+    url: '/companies',
+    templateUrl: 'templates/companies.html',
+    controller: 'companies',
+    data: {
+      requiresLogin: true,
+    }
+  })
+
   .state('trips', {
     url: '/trips/{routeId:int}/{action}',
     templateUrl: 'templates/trips.html',

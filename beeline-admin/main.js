@@ -24,6 +24,7 @@ angular.module('beeline-admin', [
 .config(require('./router').default)
 .config(configureGoogleMaps)
 .config(configureLoginPage)
+.config(configureUrlWhitelist)
 .directive('adminNav', require('./directives/adminNav/adminNav').default)
 .directive('accountView', require('./directives/accountView/accountView').default)
 .directive('paymentView', require('./directives/paymentView/paymentView').default)
@@ -54,6 +55,7 @@ angular.module('beeline-admin', [
 .controller('bookingsWrs', require('./controllers/bookingsControllerWrs.js').default)
 .controller('drivers', require('./controllers/driversController.js').default)
 .controller('login', require('./controllers/loginController.js').default)
+.controller('companies', require('./controllers/companiesController.js').default)
 .filter('makeRoutePath', require('./shared/filters.js').makeRoutePath)
 .filter('intervalToTime', require('./shared/filters.js').intervalToTime)
 .run(function (auth, $rootScope, store, jwtHelper, $window, AdminService) {
@@ -149,4 +151,11 @@ ${error.error_description}`
       store.set('profile', p)
     })
   })
+}
+
+function configureUrlWhitelist($sceDelegateProvider) {
+  $sceDelegateProvider.resourceUrlWhitelist([
+    'self',
+    env.BACKEND_URL + '/**'
+  ])
 }
