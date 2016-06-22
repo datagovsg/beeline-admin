@@ -40,6 +40,14 @@ export default function(AdminService, RoutesService, $rootScope) {
           })
         }
       }
+
+      scope.$watch('route', () => {
+        if (!scope.route) return
+        RoutesService.getRoute(scope.route.id, {includeTrips: true})
+          .then((route) => {
+            scope.tripStops = _.maxBy(route.trips, 'date').tripStops
+          })
+      })
     },
   }
 

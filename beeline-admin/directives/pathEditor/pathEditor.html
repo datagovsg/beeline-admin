@@ -1,24 +1,24 @@
 
 <div>
-  <button class="btn btn-default"
+  <!-- <button class="btn btn-default"
     ng-click="clearPath"
   >
     Clear path
-  </button>
+  </button> -->
 
   <span class="btn-group">
     <button class="btn btn-primary"
-      uib-btn-radio="'start'"
-      ng-model="addToWhere"
+      uib-btn-radio="false"
+      ng-model="editPath"
       >
-      Add to start
+      View path
     </button>
 
     <button class="btn btn-primary"
-      uib-btn-radio="'end'"
-      ng-model="addToWhere"
+      uib-btn-radio="true"
+      ng-model="editPath"
       >
-      Add to end
+      Edit path
     </button>
   </span>
 </div>
@@ -28,24 +28,25 @@
     center="{latitude: 1.38, longitude: 103.8}"
     zoom="12"
     events="events"
-    options="{ draggableCursor: 'crosshair' }"
+    options="{draggable: false}"
     control="mapControl"
   >
-    <ui-gmap-polyline
+    <!-- <ui-gmap-polyline
+      ng-if="editPath"
       path="pathX"
       stroke="{
         color: '#4b3863',
         weight: 3.0,
       }"
-    >
+    > -->
     </ui-gmap-polyline>
   </ui-gmap-google-map>
 
-  <ul class="point-list">
+  <!-- <ul class="point-list">
     <li ng-repeat="p in path"
       ng-click="path.splice($index, 1)"
     >
       {{p.lat | number:5}}, {{p.lng | number:5}}
     </li>
-  </ul>
+  </ul> -->
 </div>
