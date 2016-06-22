@@ -19,6 +19,7 @@
         <li><a ui-sref="summary">Summary</a></li>
         <li><a ui-sref="driver">Drivers</a></li>
         <li ng-if="adminService.isSuperAdmin()"><a href="#">Incidents</a></li>
+        <li ng-if="adminService.isSuperAdmin()"><a ui-sref="assets">Assets</a></li>
         <li><a ui-sref="companies">Company Settings</a></li>
       </ul>
 

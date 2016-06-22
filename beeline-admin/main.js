@@ -56,6 +56,7 @@ angular.module('beeline-admin', [
 .controller('drivers', require('./controllers/driversController.js').default)
 .controller('login', require('./controllers/loginController.js').default)
 .controller('companies', require('./controllers/companiesController.js').default)
+.controller('assets', require('./controllers/assetsController.js').default)
 .filter('makeRoutePath', require('./shared/filters.js').makeRoutePath)
 .filter('intervalToTime', require('./shared/filters.js').intervalToTime)
 .run(function (auth, $rootScope, store, jwtHelper, $window, AdminService) {

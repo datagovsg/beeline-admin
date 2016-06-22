@@ -52,6 +52,14 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
       requiresLogin: true,
     }
   })
+  .state('assets', {
+    url: '/assets',
+    templateUrl: 'templates/assets.html',
+    controller: 'assets',
+    data: {
+      requiresLogin: true,
+    }
+  })
 
   .state('trips', {
     url: '/trips/{routeId:int}/{action}',
