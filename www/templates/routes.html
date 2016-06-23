@@ -23,7 +23,7 @@
         <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastStartTime">Start time</th>
         <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastEndTime">End time</th>
         <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Route path</th>
-        <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastDriverId">Last driver</th>
+        <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastDriverName">Last driver</th>
         <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastPrice">Price</th>
         <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastCapacity">Cap</th>
         <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Tags</th>
@@ -42,7 +42,7 @@
         <td>{{route.lastStartTime | intervalToTime | date:'HH:mm'}}</td>
         <td>{{route.lastEndTime   | intervalToTime | date:'HH:mm'}}</td>
         <td><button ng-click="viewRoute(route.id)">View</button></td>
-        <td>{{route.lastDriverId}}</td>
+        <td>{{route.lastDriverName}}</td>
         <td>{{route.lastPrice}}</td>
         <td>{{route.lastCapacity}}</td>
         <td>
