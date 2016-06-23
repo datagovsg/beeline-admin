@@ -1,24 +1,14 @@
 
 
 path-editor {
-  .main {
-    display: flex;
-    flex-direction: row;
+  .map-ctn {
     height: 400px;
+  }
 
-    ui-gmap-google-map {
-      flex: 1 1 auto;
-      display: relative;
-    }
-    .point-list {
-      flex: 0 0 auto;
-      width: 200px;
-      overflow: scroll;
-
-      li:before {
-        content: '❌';
-        color: #F00;
-      }
-    }
+  .polyline-str {
+    display: block;
+    width: 100%;
+    float: left;
+    margin-bottom: 15px;
   }
 }

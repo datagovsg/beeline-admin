@@ -70,7 +70,7 @@
   },
   "standard": {
     "parser": "babel-eslint",
-    "globals": ["google"]
+    "globals": ["_", "google"]
   },
   "author": "",
   "license": "ISC"

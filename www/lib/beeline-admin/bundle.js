@@ -104413,14 +104413,19 @@
 	      };
 	
 	      scope.$watch('route', function () {
-	        if (!scope.route) return;
-	        RoutesService.getRoute(scope.route.id, { includeTrips: true }).then(function (route) {
-	          scope.tripStops = _.maxBy(route.trips, 'date').tripStops;
+	        scope.route && scope.route.id && RoutesService.getRoute(scope.route.id, { includeTrips: true }).then(function (route) {
+	          scope.tripStops = _lodash2.default.maxBy(route.trips, 'date').tripStops;
 	        });
 	      });
 	    }
 	  };
 	};
+	
+	var _lodash = __webpack_require__(/*! lodash */ 8);
+	
+	var _lodash2 = _interopRequireDefault(_lodash);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
 /* 211 */
@@ -104429,7 +104434,7 @@
   \***************************************************************/
 /***/ function(module, exports) {
 
-	module.exports = "<div>\n  <span class=\"btn-group\">\n    <button class=\"btn btn-default\"\n      ng-click=\"edit = 'route'\">\n      Edit Route Description\n    </button>\n    <button class=\"btn btn-default\"\n      ng-click=\"edit = 'trips'\"\n      >\n      Edit Trips\n    </button>\n  </span>\n</div>\n\n<div ng-show=\"route\">\n  <div ng-show=\"edit == 'route'\">\n    <h2>{{route.label}}</h2>\n\n    <label>\n      Label:\n      <input type=\"text\" ng-model=\"route.label\">\n    </label>\n\n    <label>\n      Name:\n      <input type=\"text\" ng-model=\"route.name\">\n    </label>\n\n    <label>\n      From:\n      <input type=\"text\" ng-model=\"route.from\">\n    </label>\n\n    <label>\n      To:\n      <input type=\"text\" ng-model=\"route.to\">\n    </label>\n\n    <!-- ng-if creates a scope -->\n    <label ng-if=\"adminService.session().role == 'superadmin'\">\n      Company:\n      <company-selector ng-model=\"$parent.route.transportCompanyId\">\n      </company-selector>\n    </label>\n\n    <label>Path:</label>\n    <path-editor path=\"route.path\" trip-stops=\"tripStops\">\n    </path-editor>\n\n    <div class=\"btn-group\">\n      <button class=\"btn btn-primary\" ng-click=\"saveRoute()\"\n        ng-disabled=\"!route\">\n        Save\n      </button>\n      <button class=\"btn btn-default\" ng-click=\"resetRoute()\">\n        Reset\n      </button>\n    </div>\n    <button class=\"btn btn-danger\" ng-click=\"deleteRoute()\"\n      ng-disabled=\"!route || !route.id\">\n      Delete\n    </button>\n  </div>\n\n  <div ng-show=\"edit == 'trips'\">\n    <trips-editor route-id=\"route.id\" ng-if=\"route.id\">\n    </trips-editor>\n  </div>\n</div>\n";
+	module.exports = "<div>\n  <span class=\"btn-group\">\n    <button class=\"btn btn-default\"\n      ng-click=\"edit = 'route'\">\n      Edit Route Description\n    </button>\n    <button class=\"btn btn-default\"\n      ng-click=\"edit = 'trips'\"\n      >\n      Edit Trips\n    </button>\n  </span>\n</div>\n\n<div ng-show=\"route\">\n  <div ng-show=\"edit == 'route'\">\n    <h2>{{route.label}}</h2>\n\n    <label>\n      Label:\n      <input type=\"text\" ng-model=\"route.label\">\n    </label>\n\n    <label>\n      Name:\n      <input type=\"text\" ng-model=\"route.name\">\n    </label>\n\n    <label>\n      From:\n      <input type=\"text\" ng-model=\"route.from\">\n    </label>\n\n    <label>\n      To:\n      <input type=\"text\" ng-model=\"route.to\">\n    </label>\n\n    <!-- ng-if creates a scope -->\n    <label ng-if=\"adminService.session().role == 'superadmin'\">\n      Company:\n      <company-selector ng-model=\"$parent.route.transportCompanyId\">\n      </company-selector>\n    </label>\n\n    <label>Path:</label>\n    <path-editor path=\"route.path\" polyline=\"route.polyline\" trip-stops=\"tripStops\">\n    </path-editor>\n\n    <div class=\"btn-group\">\n      <button class=\"btn btn-primary\" ng-click=\"saveRoute()\"\n        ng-disabled=\"!route\">\n        Save\n      </button>\n      <button class=\"btn btn-default\" ng-click=\"resetRoute()\">\n        Reset\n      </button>\n    </div>\n    <button class=\"btn btn-danger\" ng-click=\"deleteRoute()\"\n      ng-disabled=\"!route || !route.id\">\n      Delete\n    </button>\n  </div>\n\n  <div ng-show=\"edit == 'trips'\">\n    <trips-editor route-id=\"route.id\" ng-if=\"route.id\">\n    </trips-editor>\n  </div>\n</div>\n";
 
 /***/ },
 /* 212 */
@@ -104444,7 +104449,7 @@
 	  value: true
 	});
 	
-	exports.default = function ($rootScope, $location, uiGmapGoogleMapApi) {
+	exports.default = function ($rootScope, $location, uiGmapGoogleMapApi, $q) {
 	  return {
 	    template: __webpack_require__(/*! ./pathEditor.html */ 213),
 	    scope: {
@@ -104452,40 +104457,47 @@
 	      tripStops: '='
 	    },
 	    link: function link(scope, elem, attr) {
-	      scope.editPath = true;
-	
-	      scope.events = {
-	        tilesloaded: function tilesloaded(map) {
-	          scope.map = map;
-	        }
-	      };
-	
+	      scope.newPath = '';
 	      uiGmapGoogleMapApi.then(function (googleMaps) {
+	        var singapore = new googleMaps.LatLng(1.352083, 103.819836);
+	        var map = new googleMaps.Map(document.querySelector('.map-ctn'), {
+	          zoom: 12,
+	          center: singapore
+	        });
+	
+	        var mapPath = new googleMaps.Polyline({
+	          strokeColor: '#FF0000',
+	          strokeWeight: 3
+	        });
+	
+	        scope.$watch('path', function (path) {
+	          if (!path) return;
+	          mapPath.setMap(map);
+	          if (typeof path === 'string') {
+	            mapPath.setPath(googleMaps.geometry.encoding.decodePath(path));
+	          } else {
+	            mapPath.setPath(path);
+	          }
+	        });
+	
 	        var dirService = new googleMaps.DirectionsService();
 	        var dirDisplay = new googleMaps.DirectionsRenderer({
 	          draggable: true,
-	          polylineOptions: { strokeWeight: 3, strokeColor: '#4b3863' }
+	          polylineOptions: { strokeWeight: 3, strokeColor: '#4b3863' },
+	          markerOptions: { icon: 'https://maps.gstatic.com/mapfiles/dd-via.png' }
 	        });
+	
 	        dirDisplay.directions_changed = function () {
 	          var directions = dirDisplay.getDirections();
 	          console.log(directions);
-	          var _directions$routes$ = directions.routes[0];
-	          var overview_path = _directions$routes$.overview_path;
-	          var overview_polyline = _directions$routes$.overview_polyline;
+	          var overview_polyline = directions.routes[0].overview_polyline;
 	
-	          scope.path = overview_path.map(function (point) {
-	            return [point.lat(), point.lng()];
-	          });
-	          scope.polyline = overview_polyline;
+	          scope.newPath = overview_polyline;
 	        };
 	
-	        scope.$watch('map', function () {
-	          dirDisplay.setMap(scope.map);
-	        });
-	
-	        scope.$watch('tripStops', function () {
-	          if (!scope.tripStops) return;
-	          var inputLatLng = scope.tripStops.map(function (tripStop) {
+	        scope.googlePath = function (tripStops) {
+	          if (!tripStops) return;
+	          var inputLatLng = tripStops.map(function (tripStop) {
 	            var coordinates = tripStop.stop.coordinates.coordinates;
 	
 	            return new googleMaps.LatLng(coordinates[1], coordinates[0]);
@@ -104496,62 +104508,32 @@
 	            waypoints: inputLatLng.slice(1, -1).map(function (latlng) {
 	              return { location: latlng };
 	            }),
-	            travelMode: googleMaps.TravelMode.DRIVING,
-	            avoidHighways: false,
-	            avoidTolls: false
+	            travelMode: googleMaps.TravelMode.DRIVING
 	          };
 	
 	          dirService.route(request, function (result, status) {
 	            if (status === googleMaps.DirectionsStatus.OK) {
+	              dirDisplay.setMap(map);
 	              dirDisplay.setDirections(result);
 	            } else {
-	              console.log(result);
+	              console.log('Google path failed', result);
 	            }
 	          });
-	        });
-	      });
+	        };
 	
-	      // scope.events = {
-	      //   click(map, eventName, args) {
-	      //     scope.$apply(() => {``
-	      //       if (scope.addToWhere == 'end') {
-	      //         scope.path = scope.path || []
-	      //         scope.path.push({
-	      //           lat: args[0].latLng.lat(),
-	      //           lng: args[0].latLng.lng(),
-	      //         })
-	      //       }
-	      //       else if (scope.addToWhere == 'start') {
-	      //         scope.path = scope.path || []
-	      //         scope.path.splice(0,0,{
-	      //           lat: args[0].latLng.lat(),
-	      //           lng: args[0].latLng.lng(),
-	      //         })
-	      //       }
-	      //     })
-	      //   }
-	      // }
-	      // scope.addToWhere = 'end'
-	      // For display purposes
+	        scope.updatePath = function () {
+	          if (!scope.newPath) return;
+	          scope.path = scope.newPath;
+	          scope.newPath = '';
+	          dirDisplay.setMap(null);
+	        };
 	
-	      scope.pathX = [];
-	      scope.$watch('path', function () {
-	        scope.pathX = scope.path ? scope.path.map(function (_ref) {
-	          var latitude = _ref.lat;
-	          var longitude = _ref.lng;
-	          return { latitude: latitude, longitude: longitude };
-	        }) : [];
-	      }, true);
-	
-	      scope.mapControl = {};
-	      scope.$watch(function () {
-	        return $location.url();
-	      }, function () {
-	        if (window.google && google.maps && scope.mapControl.getGMap) {
-	          setTimeout(function () {
-	            return google.maps.event.trigger(scope.mapControl.getGMap(), 'resize');
-	          }, 0);
-	        }
+	        scope.clearPath = function () {
+	          scope.path = '';
+	          scope.newPath = '';
+	          mapPath.setMap(null);
+	          dirDisplay.setMap(null);
+	        };
 	      });
 	    }
 	  };
@@ -104564,7 +104546,7 @@
   \*************************************************************/
 /***/ function(module, exports) {
 
-	module.exports = "\n<div>\n  <!-- <button class=\"btn btn-default\"\n    ng-click=\"clearPath\"\n  >\n    Clear path\n  </button> -->\n\n  <span class=\"btn-group\">\n    <button class=\"btn btn-primary\"\n      uib-btn-radio=\"false\"\n      ng-model=\"editPath\"\n      >\n      View path\n    </button>\n\n    <button class=\"btn btn-primary\"\n      uib-btn-radio=\"true\"\n      ng-model=\"editPath\"\n      >\n      Edit path\n    </button>\n  </span>\n</div>\n\n<div class=\"main\">\n  <ui-gmap-google-map\n    center=\"{latitude: 1.38, longitude: 103.8}\"\n    zoom=\"12\"\n    events=\"events\"\n    options=\"{draggable: false}\"\n    control=\"mapControl\"\n  >\n    <!-- <ui-gmap-polyline\n      ng-if=\"editPath\"\n      path=\"pathX\"\n      stroke=\"{\n        color: '#4b3863',\n        weight: 3.0,\n      }\"\n    > -->\n    </ui-gmap-polyline>\n  </ui-gmap-google-map>\n\n  <!-- <ul class=\"point-list\">\n    <li ng-repeat=\"p in path\"\n      ng-click=\"path.splice($index, 1)\"\n    >\n      {{p.lat | number:5}}, {{p.lng | number:5}}\n    </li>\n  </ul> -->\n</div>\n";
+	module.exports = "<div class=\"main\">\n  <button class=\"btn btn-default\"\n    ng-click=\"googlePath(tripStops)\">\n    Google path\n  </button>\n  <span class=\"btn-group\">\n    <button class=\"btn btn-primary\"\n      ng-click=\"updatePath()\">\n      Update path\n    </button>\n    <button class=\"btn btn-danger\"\n      ng-click=\"clearPath()\">\n      Clear path\n    </button>\n  </span>\n  <div class=\"map-ctn\"></div>\n  <textarea ng-model=\"path\"\n    class=\"polyline-str\"\n    placeholder=\"Path encoded as polyline\"\n    rows=7></textarea>\n</div>\n";
 
 /***/ },
 /* 214 */
@@ -109172,10 +109154,23 @@
 	            stops: []
 	          };
 	
-	          uiGmapGoogleMapApi.then(function (googleMap) {
+	          uiGmapGoogleMapApi.then(function (googleMaps) {
 	            _.assign($scope.map.pingSampleOptions.icon, {
-	              scaledSize: new google.maps.Size(15, 15),
-	              anchor: new google.maps.Point(8, 8)
+	              scaledSize: new googleMaps.Size(15, 15),
+	              anchor: new googleMaps.Point(8, 8)
+	            });
+	
+	            $scope.$watch('route.path', function (path) {
+	              if (!path) {
+	                $scope.computed.path = [];
+	                return;
+	              }
+	
+	              $scope.computed.path = typeof path === 'string' ? googleMaps.geometry.encoding.decodePath(path) : path.map(function (_ref) {
+	                var latitude = _ref.lat;
+	                var longitude = _ref.lng;
+	                return { latitude: latitude, longitude: longitude };
+	              });
 	            });
 	          });
 	
@@ -109280,20 +109275,6 @@
 	              }
 	
 	              console.log($scope.computed.pingSamples);
-	            });
-	          });
-	
-	          $scope.$watch('route.path', function (path) {
-	            if (!path) {
-	              $scope.computed.path = [];
-	              return;
-	            }
-	
-	            $scope.computed.path = path.map(function (ll) {
-	              return {
-	                latitude: ll.lat,
-	                longitude: ll.lng
-	              };
 	            });
 	          });
 	

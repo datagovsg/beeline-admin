@@ -1,4 +1,6 @@
-export default function(AdminService, RoutesService, $rootScope) {
+import _ from 'lodash'
+
+export default function (AdminService, RoutesService, $rootScope) {
   return {
     template: require('./routeEditor.html'),
     scope: {
@@ -42,11 +44,11 @@ export default function(AdminService, RoutesService, $rootScope) {
       }
 
       scope.$watch('route', () => {
-        if (!scope.route) return
+        scope.route && scope.route.id &&
         RoutesService.getRoute(scope.route.id, {includeTrips: true})
-          .then((route) => {
-            scope.tripStops = _.maxBy(route.trips, 'date').tripStops
-          })
+        .then((route) => {
+          scope.tripStops = _.maxBy(route.trips, 'date').tripStops
+        })
       })
     },
   }
