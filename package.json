@@ -13,7 +13,7 @@
     "angular-touch": "^1.5.5",
     "angular-ui-bootstrap": "^1.3.2",
     "angular-ui-router": "^0.2.18",
-    "auth0-angular": "^4.1.0",
+    "auth0-angular": "4.1.0",
     "autoprefixer": "^6.3.6",
     "autoprefixer-loader": "^3.2.0",
     "babel-loader": "^6.2.4",
@@ -67,6 +67,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server",
     "heroku-postbuild": "gulp"
+  },
+  "standard": {
+    "parser": "babel-eslint",
+    "globals": ["_", "google"]
   },
   "author": "",
   "license": "ISC"

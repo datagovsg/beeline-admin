@@ -1,51 +1,21 @@
-
-<div>
+<div class="path-editor">
   <button class="btn btn-default"
-    ng-click="clearPath"
-  >
-    Clear path
+    ng-click="googlePath(tripStops)">
+    Google path
   </button>
-
   <span class="btn-group">
     <button class="btn btn-primary"
-      uib-btn-radio="'start'"
-      ng-model="addToWhere"
-      >
-      Add to start
+      ng-click="updatePath()">
+      Update path
     </button>
-
-    <button class="btn btn-primary"
-      uib-btn-radio="'end'"
-      ng-model="addToWhere"
-      >
-      Add to end
+    <button class="btn btn-danger"
+      ng-click="clearPath()">
+      Clear path
     </button>
   </span>
-</div>
-
-<div class="main">
-  <ui-gmap-google-map
-    center="{latitude: 1.38, longitude: 103.8}"
-    zoom="12"
-    events="events"
-    options="{ draggableCursor: 'crosshair' }"
-    control="mapControl"
-  >
-    <ui-gmap-polyline
-      path="pathX"
-      stroke="{
-        color: '#4b3863',
-        weight: 3.0,
-      }"
-    >
-    </ui-gmap-polyline>
-  </ui-gmap-google-map>
-
-  <ul class="point-list">
-    <li ng-repeat="p in path"
-      ng-click="path.splice($index, 1)"
-    >
-      {{p.lat | number:5}}, {{p.lng | number:5}}
-    </li>
-  </ul>
+  <div class="map-container"></div>
+  <textarea class="form-control"
+    ng-model="path"
+    placeholder="Path encoded as polyline"
+    rows=7></textarea>
 </div>
