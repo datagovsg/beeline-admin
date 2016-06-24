@@ -1,4 +1,4 @@
-<div class="main">
+<div class="path-editor">
   <button class="btn btn-default"
     ng-click="googlePath(tripStops)">
     Google path
@@ -13,9 +13,9 @@
       Clear path
     </button>
   </span>
-  <div class="map-ctn"></div>
-  <textarea ng-model="path"
-    class="polyline-str"
+  <div class="map-container"></div>
+  <textarea class="form-control"
+    ng-model="path"
     placeholder="Path encoded as polyline"
     rows=7></textarea>
 </div>

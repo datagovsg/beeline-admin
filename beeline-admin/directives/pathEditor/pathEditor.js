@@ -9,7 +9,7 @@ export default function ($rootScope, $location, uiGmapGoogleMapApi, $q) {
       scope.newPath = ''
       uiGmapGoogleMapApi.then((googleMaps) => {
         const SINGAPORE = new googleMaps.LatLng(1.352083, 103.819836)
-        const map = new googleMaps.Map(document.querySelector('.map-ctn'), {
+        const map = new googleMaps.Map(document.querySelector('.map-container'), {
           zoom: 11,
           center: SINGAPORE
         })

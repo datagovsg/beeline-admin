@@ -1,14 +1,7 @@
 
 
 path-editor {
-  .map-ctn {
-    height: 400px;
-  }
-
-  .polyline-str {
-    display: block;
-    width: 100%;
-    float: left;
-    margin-bottom: 15px;
+  .map-container {
+    min-height: 400px;
   }
 }
