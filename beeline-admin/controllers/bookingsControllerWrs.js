@@ -146,8 +146,16 @@ BookingRefund, $state, $stateParams) {
 
       order: $scope.filter.order,
       orderBy: $scope.filter.orderBy,
-      tripStartDate: $scope.filter.startDate.getTime(),
-      tripEndDate: $scope.filter.endDate.getTime() + 24*60*60*1000,
+      tripStartDate: Date.UTC(
+        $scope.filter.startDate.getFullYear(),
+        $scope.filter.startDate.getMonth(),
+        $scope.filter.startDate.getDate()
+      ),
+      tripEndDate: Date.UTC(
+        $scope.filter.endDate.getFullYear(),
+        $scope.filter.endDate.getMonth(),
+        $scope.filter.endDate.getDate()
+      ) + 24*60*60*1000,
       statuses: JSON.stringify(Object.keys($scope.filter.status)
         .filter(key => $scope.filter.status[key]))
     }
