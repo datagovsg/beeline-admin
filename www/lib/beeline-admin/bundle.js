@@ -47,16 +47,16 @@
   \******************/
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(/*! /Users/yongjun21/GitHub/beeline-admin/node_modules/angular/angular */1);
-	__webpack_require__(/*! /Users/yongjun21/GitHub/beeline-admin/node_modules/angular-ui-router/release/angular-ui-router */2);
-	__webpack_require__(/*! /Users/yongjun21/GitHub/beeline-admin/node_modules/angular-ui-bootstrap/dist/ui-bootstrap */3);
-	__webpack_require__(/*! /Users/yongjun21/GitHub/beeline-admin/node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls */4);
-	__webpack_require__(/*! /Users/yongjun21/GitHub/beeline-admin/node_modules/angular-animate/angular-animate */5);
-	__webpack_require__(/*! /Users/yongjun21/GitHub/beeline-admin/node_modules/angular-touch/angular-touch */6);
-	__webpack_require__(/*! /Users/yongjun21/GitHub/beeline-admin/node_modules/angular-simple-logger/dist/angular-simple-logger */7);
-	__webpack_require__(/*! /Users/yongjun21/GitHub/beeline-admin/node_modules/lodash/lodash */8);
-	__webpack_require__(/*! /Users/yongjun21/GitHub/beeline-admin/node_modules/angular-google-maps/dist/angular-google-maps */10);
-	module.exports = __webpack_require__(/*! /Users/yongjun21/GitHub/beeline-admin/beeline-admin/main.js */11);
+	__webpack_require__(/*! /home/daniel/beeline-admin/node_modules/angular/angular */1);
+	__webpack_require__(/*! /home/daniel/beeline-admin/node_modules/angular-ui-router/release/angular-ui-router */2);
+	__webpack_require__(/*! /home/daniel/beeline-admin/node_modules/angular-ui-bootstrap/dist/ui-bootstrap */3);
+	__webpack_require__(/*! /home/daniel/beeline-admin/node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls */4);
+	__webpack_require__(/*! /home/daniel/beeline-admin/node_modules/angular-animate/angular-animate */5);
+	__webpack_require__(/*! /home/daniel/beeline-admin/node_modules/angular-touch/angular-touch */6);
+	__webpack_require__(/*! /home/daniel/beeline-admin/node_modules/angular-simple-logger/dist/angular-simple-logger */7);
+	__webpack_require__(/*! /home/daniel/beeline-admin/node_modules/lodash/lodash */8);
+	__webpack_require__(/*! /home/daniel/beeline-admin/node_modules/angular-google-maps/dist/angular-google-maps */10);
+	module.exports = __webpack_require__(/*! /home/daniel/beeline-admin/beeline-admin/main.js */11);
 
 
 /***/ },
@@ -67,7 +67,7 @@
 /***/ function(module, exports) {
 
 	/**
-	 * @license AngularJS v1.5.7
+	 * @license AngularJS v1.5.6
 	 * (c) 2010-2016 Google, Inc. http://angularjs.org
 	 * License: MIT
 	 */
@@ -125,7 +125,7 @@
 	      return match;
 	    });
 	
-	    message += '\nhttp://errors.angularjs.org/1.5.7/' +
+	    message += '\nhttp://errors.angularjs.org/1.5.6/' +
 	      (module ? module + '/' : '') + code;
 	
 	    for (i = SKIP_INDEXES, paramPrefix = '?'; i < templateArgs.length; i++, paramPrefix = '&') {
@@ -194,6 +194,7 @@
 	  includes: true,
 	  arrayRemove: true,
 	  copy: true,
+	  shallowCopy: true,
 	  equals: true,
 	  csp: true,
 	  jq: true,
@@ -1069,6 +1070,31 @@
 	      return source.cloneNode(true);
 	    }
 	  }
+	}
+	
+	/**
+	 * Creates a shallow copy of an object, an array or a primitive.
+	 *
+	 * Assumes that there are no proto properties for objects.
+	 */
+	function shallowCopy(src, dst) {
+	  if (isArray(src)) {
+	    dst = dst || [];
+	
+	    for (var i = 0, ii = src.length; i < ii; i++) {
+	      dst[i] = src[i];
+	    }
+	  } else if (isObject(src)) {
+	    dst = dst || {};
+	
+	    for (var key in src) {
+	      if (!(key.charAt(0) === '$' && key.charAt(1) === '$')) {
+	        dst[key] = src[key];
+	      }
+	    }
+	  }
+	
+	  return dst || src;
 	}
 	
 	
@@ -2411,34 +2437,7 @@
 	
 	}
 	
-	/* global shallowCopy: true */
-	
-	/**
-	 * Creates a shallow copy of an object, an array or a primitive.
-	 *
-	 * Assumes that there are no proto properties for objects.
-	 */
-	function shallowCopy(src, dst) {
-	  if (isArray(src)) {
-	    dst = dst || [];
-	
-	    for (var i = 0, ii = src.length; i < ii; i++) {
-	      dst[i] = src[i];
-	    }
-	  } else if (isObject(src)) {
-	    dst = dst || {};
-	
-	    for (var key in src) {
-	      if (!(key.charAt(0) === '$' && key.charAt(1) === '$')) {
-	        dst[key] = src[key];
-	      }
-	    }
-	  }
-	
-	  return dst || src;
-	}
-	
-	/* global toDebugString: true */
+	/* global: toDebugString: true */
 	
 	function serializeObject(obj) {
 	  var seen = [];
@@ -2579,11 +2578,11 @@
 	 * - `codeName` – `{string}` – Code name of the release, such as "jiggling-armfat".
 	 */
 	var version = {
-	  full: '1.5.7',    // all of these placeholder strings will be replaced by grunt's
+	  full: '1.5.6',    // all of these placeholder strings will be replaced by grunt's
 	  major: 1,    // package task
 	  minor: 5,
-	  dot: 7,
-	  codeName: 'hexagonal-circumvolution'
+	  dot: 6,
+	  codeName: 'arrow-stringification'
 	};
 	
 	
@@ -2779,7 +2778,7 @@
 	 * ## Angular's jqLite
 	 * jqLite provides only the following jQuery methods:
 	 *
-	 * - [`addClass()`](http://api.jquery.com/addClass/) - Does not support a function as first argument
+	 * - [`addClass()`](http://api.jquery.com/addClass/)
 	 * - [`after()`](http://api.jquery.com/after/)
 	 * - [`append()`](http://api.jquery.com/append/)
 	 * - [`attr()`](http://api.jquery.com/attr/) - Does not support functions as parameters
@@ -2806,7 +2805,7 @@
 	 * - [`ready()`](http://api.jquery.com/ready/)
 	 * - [`remove()`](http://api.jquery.com/remove/)
 	 * - [`removeAttr()`](http://api.jquery.com/removeAttr/)
-	 * - [`removeClass()`](http://api.jquery.com/removeClass/) - Does not support a function as first argument
+	 * - [`removeClass()`](http://api.jquery.com/removeClass/)
 	 * - [`removeData()`](http://api.jquery.com/removeData/)
 	 * - [`replaceWith()`](http://api.jquery.com/replaceWith/)
 	 * - [`text()`](http://api.jquery.com/text/)
@@ -5498,13 +5497,7 @@
 	       * @param {DOMElement} parent the parent element which will append the element as
 	       *   a child (so long as the after element is not present)
 	       * @param {DOMElement=} after the sibling element after which the element will be appended
-	       * @param {object=} options an optional collection of options/styles that will be applied to the element.
-	       *   The object can have the following properties:
-	       *
-	       *   - **addClass** - `{string}` - space-separated CSS classes to add to element
-	       *   - **from** - `{Object}` - CSS properties & values at the beginning of animation. Must have matching `to`
-	       *   - **removeClass** - `{string}` - space-separated CSS classes to remove from element
-	       *   - **to** - `{Object}` - CSS properties & values at end of animation. Must have matching `from`
+	       * @param {object=} options an optional collection of options/styles that will be applied to the element
 	       *
 	       * @return {Promise} the animation callback promise
 	       */
@@ -5530,13 +5523,7 @@
 	       * @param {DOMElement} parent the parent element which will append the element as
 	       *   a child (so long as the after element is not present)
 	       * @param {DOMElement=} after the sibling element after which the element will be appended
-	       * @param {object=} options an optional collection of options/styles that will be applied to the element.
-	       *   The object can have the following properties:
-	       *
-	       *   - **addClass** - `{string}` - space-separated CSS classes to add to element
-	       *   - **from** - `{Object}` - CSS properties & values at the beginning of animation. Must have matching `to`
-	       *   - **removeClass** - `{string}` - space-separated CSS classes to remove from element
-	       *   - **to** - `{Object}` - CSS properties & values at end of animation. Must have matching `from`
+	       * @param {object=} options an optional collection of options/styles that will be applied to the element
 	       *
 	       * @return {Promise} the animation callback promise
 	       */
@@ -5557,13 +5544,7 @@
 	       * digest once the animation has completed.
 	       *
 	       * @param {DOMElement} element the element which will be removed from the DOM
-	       * @param {object=} options an optional collection of options/styles that will be applied to the element.
-	       *   The object can have the following properties:
-	       *
-	       *   - **addClass** - `{string}` - space-separated CSS classes to add to element
-	       *   - **from** - `{Object}` - CSS properties & values at the beginning of animation. Must have matching `to`
-	       *   - **removeClass** - `{string}` - space-separated CSS classes to remove from element
-	       *   - **to** - `{Object}` - CSS properties & values at end of animation. Must have matching `from`
+	       * @param {object=} options an optional collection of options/styles that will be applied to the element
 	       *
 	       * @return {Promise} the animation callback promise
 	       */
@@ -5587,13 +5568,7 @@
 	       *
 	       * @param {DOMElement} element the element which the CSS classes will be applied to
 	       * @param {string} className the CSS class(es) that will be added (multiple classes are separated via spaces)
-	       * @param {object=} options an optional collection of options/styles that will be applied to the element.
-	       *   The object can have the following properties:
-	       *
-	       *   - **addClass** - `{string}` - space-separated CSS classes to add to element
-	       *   - **from** - `{Object}` - CSS properties & values at the beginning of animation. Must have matching `to`
-	       *   - **removeClass** - `{string}` - space-separated CSS classes to remove from element
-	       *   - **to** - `{Object}` - CSS properties & values at end of animation. Must have matching `from`
+	       * @param {object=} options an optional collection of options/styles that will be applied to the element
 	       *
 	       * @return {Promise} the animation callback promise
 	       */
@@ -5617,13 +5592,7 @@
 	       *
 	       * @param {DOMElement} element the element which the CSS classes will be applied to
 	       * @param {string} className the CSS class(es) that will be removed (multiple classes are separated via spaces)
-	       * @param {object=} options an optional collection of options/styles that will be applied to the element.
-	       *   The object can have the following properties:
-	       *
-	       *   - **addClass** - `{string}` - space-separated CSS classes to add to element
-	       *   - **from** - `{Object}` - CSS properties & values at the beginning of animation. Must have matching `to`
-	       *   - **removeClass** - `{string}` - space-separated CSS classes to remove from element
-	       *   - **to** - `{Object}` - CSS properties & values at end of animation. Must have matching `from`
+	       * @param {object=} options an optional collection of options/styles that will be applied to the element
 	       *
 	       * @return {Promise} the animation callback promise
 	       */
@@ -5648,13 +5617,7 @@
 	       * @param {DOMElement} element the element which the CSS classes will be applied to
 	       * @param {string} add the CSS class(es) that will be added (multiple classes are separated via spaces)
 	       * @param {string} remove the CSS class(es) that will be removed (multiple classes are separated via spaces)
-	       * @param {object=} options an optional collection of options/styles that will be applied to the element.
-	       *   The object can have the following properties:
-	       *
-	       *   - **addClass** - `{string}` - space-separated CSS classes to add to element
-	       *   - **from** - `{Object}` - CSS properties & values at the beginning of animation. Must have matching `to`
-	       *   - **removeClass** - `{string}` - space-separated CSS classes to remove from element
-	       *   - **to** - `{Object}` - CSS properties & values at end of animation. Must have matching `from`
+	       * @param {object=} options an optional collection of options/styles that will be applied to the element
 	       *
 	       * @return {Promise} the animation callback promise
 	       */
@@ -5695,13 +5658,7 @@
 	       * @param {string=} className an optional CSS class that will be applied to the element for the duration of the animation. If
 	       *    this value is left as empty then a CSS class of `ng-inline-animate` will be applied to the element.
 	       *    (Note that if no animation is detected then this value will not be applied to the element.)
-	       * @param {object=} options an optional collection of options/styles that will be applied to the element.
-	       *   The object can have the following properties:
-	       *
-	       *   - **addClass** - `{string}` - space-separated CSS classes to add to element
-	       *   - **from** - `{Object}` - CSS properties & values at the beginning of animation. Must have matching `to`
-	       *   - **removeClass** - `{string}` - space-separated CSS classes to remove from element
-	       *   - **to** - `{Object}` - CSS properties & values at end of animation. Must have matching `from`
+	       * @param {object=} options an optional collection of options/styles that will be applied to the element
 	       *
 	       * @return {Promise} the animation callback promise
 	       */
@@ -8048,19 +8005,11 @@
 	        }
 	        // We must run this hook in an apply since the $$postDigest runs outside apply
 	        $rootScope.$apply(function() {
-	          var errors = [];
 	          for (var i = 0, ii = onChangesQueue.length; i < ii; ++i) {
-	            try {
-	              onChangesQueue[i]();
-	            } catch (e) {
-	              errors.push(e);
-	            }
+	            onChangesQueue[i]();
 	          }
 	          // Reset the queue to trigger a new schedule next time there is a change
 	          onChangesQueue = undefined;
-	          if (errors.length) {
-	            throw errors;
-	          }
 	        });
 	      } finally {
 	        onChangesTtl++;
@@ -9236,18 +9185,10 @@
 	        forEach(elementControllers, function(controller) {
 	          var controllerInstance = controller.instance;
 	          if (isFunction(controllerInstance.$onChanges)) {
-	            try {
-	              controllerInstance.$onChanges(controller.bindingInfo.initialChanges);
-	            } catch (e) {
-	              $exceptionHandler(e);
-	            }
+	            controllerInstance.$onChanges(controller.bindingInfo.initialChanges);
 	          }
 	          if (isFunction(controllerInstance.$onInit)) {
-	            try {
-	              controllerInstance.$onInit();
-	            } catch (e) {
-	              $exceptionHandler(e);
-	            }
+	            controllerInstance.$onInit();
 	          }
 	          if (isFunction(controllerInstance.$onDestroy)) {
 	            controllerScope.$on('$destroy', function callOnDestroyHook() {
@@ -9511,16 +9452,18 @@
 	
 	      // copy the new attributes on the old attrs object
 	      forEach(src, function(value, key) {
-	        // Check if we already set this attribute in the loop above.
-	        // `dst` will never contain hasOwnProperty as DOM parser won't let it.
-	        // You will get an "InvalidCharacterError: DOM Exception 5" error if you
-	        // have an attribute like "has-own-property" or "data-has-own-property", etc.
-	        if (!dst.hasOwnProperty(key) && key.charAt(0) !== '$') {
+	        if (key == 'class') {
+	          safeAddClass($element, value);
+	          dst['class'] = (dst['class'] ? dst['class'] + ' ' : '') + value;
+	        } else if (key == 'style') {
+	          $element.attr('style', $element.attr('style') + ';' + value);
+	          dst['style'] = (dst['style'] ? dst['style'] + ';' : '') + value;
+	          // `dst` will never contain hasOwnProperty as DOM parser won't let it.
+	          // You will get an "InvalidCharacterError: DOM Exception 5" error if you
+	          // have an attribute like "has-own-property" or "data-has-own-property", etc.
+	        } else if (key.charAt(0) != '$' && !dst.hasOwnProperty(key)) {
 	          dst[key] = value;
-	
-	          if (key !== 'class' && key !== 'style') {
-	            dstAttr[key] = srcAttr[key];
-	          }
+	          dstAttr[key] = srcAttr[key];
 	        }
 	      });
 	    }
@@ -10381,20 +10324,17 @@
 	 *
 	 * ## Example:
 	 *
-	 * The example below will overwrite the default `$exceptionHandler` in order to (a) log uncaught
-	 * errors to the backend for later inspection by the developers and (b) to use `$log.warn()` instead
-	 * of `$log.error()`.
-	 *
 	 * ```js
-	 *   angular.
-	 *     module('exceptionOverwrite', []).
-	 *     factory('$exceptionHandler', ['$log', 'logErrorsToBackend', function($log, logErrorsToBackend) {
-	 *       return function myExceptionHandler(exception, cause) {
-	 *         logErrorsToBackend(exception, cause);
-	 *         $log.warn(exception, cause);
-	 *       };
-	 *     });
+	 *   angular.module('exceptionOverride', []).factory('$exceptionHandler', function() {
+	 *     return function(exception, cause) {
+	 *       exception.message += ' (caused by "' + cause + '")';
+	 *       throw exception;
+	 *     };
+	 *   });
 	 * ```
+	 *
+	 * This example will override the normal action of `$exceptionHandler`, to make angular
+	 * exceptions fail hard when they happen, instead of just logging to the console.
 	 *
 	 * <hr />
 	 * Note, that code executed in event-listeners (even those registered using jqLite's `on`/`bind`
@@ -10405,7 +10345,7 @@
 	 * `try { ... } catch(e) { $exceptionHandler(e); }`
 	 *
 	 * @param {Error} exception Exception associated with the error.
-	 * @param {string=} cause Optional information about the context in which
+	 * @param {string=} cause optional information about the context in which
 	 *       the error was thrown.
 	 *
 	 */
@@ -12953,12 +12893,6 @@
 	var locationPrototype = {
 	
 	  /**
-	   * Ensure absolute url is initialized.
-	   * @private
-	   */
-	  $$absUrl:'',
-	
-	  /**
 	   * Are we in html5 mode?
 	   * @private
 	   */
@@ -14331,7 +14265,7 @@
 	    var args = [];
 	    if (this.peekToken().text !== ')') {
 	      do {
-	        args.push(this.filterChain());
+	        args.push(this.expression());
 	      } while (this.expect(','));
 	    }
 	    return args;
@@ -20814,22 +20748,21 @@
 	 * @kind function
 	 *
 	 * @description
-	 * Creates a new array or string containing only a specified number of elements. The elements are
-	 * taken from either the beginning or the end of the source array, string or number, as specified by
-	 * the value and sign (positive or negative) of `limit`. Other array-like objects are also supported
-	 * (e.g. array subclasses, NodeLists, jqLite/jQuery collections etc). If a number is used as input,
-	 * it is converted to a string.
+	 * Creates a new array or string containing only a specified number of elements. The elements
+	 * are taken from either the beginning or the end of the source array, string or number, as specified by
+	 * the value and sign (positive or negative) of `limit`. If a number is used as input, it is
+	 * converted to a string.
 	 *
-	 * @param {Array|ArrayLike|string|number} input - Array/array-like, string or number to be limited.
-	 * @param {string|number} limit - The length of the returned array or string. If the `limit` number
+	 * @param {Array|string|number} input Source array, string or number to be limited.
+	 * @param {string|number} limit The length of the returned array or string. If the `limit` number
 	 *     is positive, `limit` number of items from the beginning of the source array/string are copied.
 	 *     If the number is negative, `limit` number  of items from the end of the source array/string
 	 *     are copied. The `limit` will be trimmed if it exceeds `array.length`. If `limit` is undefined,
 	 *     the input will be returned unchanged.
-	 * @param {(string|number)=} begin - Index at which to begin limitation. As a negative index,
-	 *     `begin` indicates an offset from the end of `input`. Defaults to `0`.
-	 * @returns {Array|string} A new sub-array or substring of length `limit` or less if the input had
-	 *     less than `limit` elements.
+	 * @param {(string|number)=} begin Index at which to begin limitation. As a negative index, `begin`
+	 *     indicates an offset from the end of `input`. Defaults to `0`.
+	 * @returns {Array|string} A new sub-array or substring of length `limit` or less if input array
+	 *     had less than `limit` elements.
 	 *
 	 * @example
 	   <example module="limitToExample">
@@ -20917,27 +20850,21 @@
 	    if (isNaN(limit)) return input;
 	
 	    if (isNumber(input)) input = input.toString();
-	    if (!isArrayLike(input)) return input;
+	    if (!isArray(input) && !isString(input)) return input;
 	
 	    begin = (!begin || isNaN(begin)) ? 0 : toInt(begin);
 	    begin = (begin < 0) ? Math.max(0, input.length + begin) : begin;
 	
 	    if (limit >= 0) {
-	      return sliceFn(input, begin, begin + limit);
+	      return input.slice(begin, begin + limit);
 	    } else {
 	      if (begin === 0) {
-	        return sliceFn(input, limit, input.length);
+	        return input.slice(limit, input.length);
 	      } else {
-	        return sliceFn(input, Math.max(0, begin + limit), begin);
+	        return input.slice(Math.max(0, begin + limit), begin);
 	      }
 	    }
 	  };
-	}
-	
-	function sliceFn(input, begin, end) {
-	  if (isString(input)) return input.slice(begin, end);
-	
-	  return slice.call(input, begin, end);
 	}
 	
 	/**
@@ -20946,128 +20873,44 @@
 	 * @kind function
 	 *
 	 * @description
-	 * Returns an array containing the items from the specified `collection`, ordered by a `comparator`
-	 * function based on the values computed using the `expression` predicate.
+	 * Orders a specified `array` by the `expression` predicate. It is ordered alphabetically
+	 * for strings and numerically for numbers. Note: if you notice numbers are not being sorted
+	 * as expected, make sure they are actually being saved as numbers and not strings.
+	 * Array-like values (e.g. NodeLists, jQuery objects, TypedArrays, Strings, etc) are also supported.
 	 *
-	 * For example, `[{id: 'foo'}, {id: 'bar'}] | orderBy:'id'` would result in
-	 * `[{id: 'bar'}, {id: 'foo'}]`.
-	 *
-	 * The `collection` can be an Array or array-like object (e.g. NodeList, jQuery object, TypedArray,
-	 * String, etc).
-	 *
-	 * The `expression` can be a single predicate, or a list of predicates each serving as a tie-breaker
-	 * for the preceeding one. The `expression` is evaluated against each item and the output is used
-	 * for comparing with other items.
-	 *
-	 * You can change the sorting order by setting `reverse` to `true`. By default, items are sorted in
-	 * ascending order.
-	 *
-	 * The comparison is done using the `comparator` function. If none is specified, a default, built-in
-	 * comparator is used (see below for details - in a nutshell, it compares numbers numerically and
-	 * strings alphabetically).
-	 *
-	 * ### Under the hood
-	 *
-	 * Ordering the specified `collection` happens in two phases:
-	 *
-	 * 1. All items are passed through the predicate (or predicates), and the returned values are saved
-	 *    along with their type (`string`, `number` etc). For example, an item `{label: 'foo'}`, passed
-	 *    through a predicate that extracts the value of the `label` property, would be transformed to:
-	 *    ```
-	 *    {
-	 *      value: 'foo',
-	 *      type: 'string',
-	 *      index: ...
-	 *    }
-	 *    ```
-	 * 2. The comparator function is used to sort the items, based on the derived values, types and
-	 *    indices.
-	 *
-	 * If you use a custom comparator, it will be called with pairs of objects of the form
-	 * `{value: ..., type: '...', index: ...}` and is expected to return `0` if the objects are equal
-	 * (as far as the comparator is concerned), `-1` if the 1st one should be ranked higher than the
-	 * second, or `1` otherwise.
-	 *
-	 * In order to ensure that the sorting will be deterministic across platforms, if none of the
-	 * specified predicates can distinguish between two items, `orderBy` will automatically introduce a
-	 * dummy predicate that returns the item's index as `value`.
-	 * (If you are using a custom comparator, make sure it can handle this predicate as well.)
-	 *
-	 * Finally, in an attempt to simplify things, if a predicate returns an object as the extracted
-	 * value for an item, `orderBy` will try to convert that object to a primitive value, before passing
-	 * it to the comparator. The following rules govern the conversion:
-	 *
-	 * 1. If the object has a `valueOf()` method that returns a primitive, its return value will be
-	 *    used instead.<br />
-	 *    (If the object has a `valueOf()` method that returns another object, then the returned object
-	 *    will be used in subsequent steps.)
-	 * 2. If the object has a custom `toString()` method (i.e. not the one inherited from `Object`) that
-	 *    returns a primitive, its return value will be used instead.<br />
-	 *    (If the object has a `toString()` method that returns another object, then the returned object
-	 *    will be used in subsequent steps.)
-	 * 3. No conversion; the object itself is used.
-	 *
-	 * ### The default comparator
-	 *
-	 * The default, built-in comparator should be sufficient for most usecases. In short, it compares
-	 * numbers numerically, strings alphabetically (and case-insensitively), for objects falls back to
-	 * using their index in the original collection, and sorts values of different types by type.
-	 *
-	 * More specifically, it follows these steps to determine the relative order of items:
-	 *
-	 * 1. If the compared values are of different types, compare the types themselves alphabetically.
-	 * 2. If both values are of type `string`, compare them alphabetically in a case- and
-	 *    locale-insensitive way.
-	 * 3. If both values are objects, compare their indices instead.
-	 * 4. Otherwise, return:
-	 *    -  `0`, if the values are equal (by strict equality comparison, i.e. using `===`).
-	 *    - `-1`, if the 1st value is "less than" the 2nd value (compared using the `<` operator).
-	 *    -  `1`, otherwise.
-	 *
-	 * **Note:** If you notice numbers not being sorted as expected, make sure they are actually being
-	 *           saved as numbers and not strings.
-	 *
-	 * @param {Array|ArrayLike} collection - The collection (array or array-like object) to sort.
-	 * @param {(Function|string|Array.<Function|string>)=} expression - A predicate (or list of
-	 *    predicates) to be used by the comparator to determine the order of elements.
+	 * @param {Array} array The array (or array-like object) to sort.
+	 * @param {function(*)|string|Array.<(function(*)|string)>=} expression A predicate to be
+	 *    used by the comparator to determine the order of elements.
 	 *
 	 *    Can be one of:
 	 *
-	 *    - `Function`: A getter function. This function will be called with each item as argument and
-	 *      the return value will be used for sorting.
-	 *    - `string`: An Angular expression. This expression will be evaluated against each item and the
-	 *      result will be used for sorting. For example, use `'label'` to sort by a property called
-	 *      `label` or `'label.substring(0, 3)'` to sort by the first 3 characters of the `label`
-	 *      property.<br />
-	 *      (The result of a constant expression is interpreted as a property name to be used for
-	 *      comparison. For example, use `'"special name"'` (note the extra pair of quotes) to sort by a
-	 *      property called `special name`.)<br />
-	 *      An expression can be optionally prefixed with `+` or `-` to control the sorting direction,
-	 *      ascending or descending. For example, `'+label'` or `'-label'`. If no property is provided,
-	 *      (e.g. `'+'` or `'-'`), the collection element itself is used in comparisons.
-	 *    - `Array`: An array of function and/or string predicates. If a predicate cannot determine the
-	 *      relative order of two items, the next predicate is used as a tie-breaker.
+	 *    - `function`: Getter function. The result of this function will be sorted using the
+	 *      `<`, `===`, `>` operator.
+	 *    - `string`: An Angular expression. The result of this expression is used to compare elements
+	 *      (for example `name` to sort by a property called `name` or `name.substr(0, 3)` to sort by
+	 *      3 first characters of a property called `name`). The result of a constant expression
+	 *      is interpreted as a property name to be used in comparisons (for example `"special name"`
+	 *      to sort object by the value of their `special name` property). An expression can be
+	 *      optionally prefixed with `+` or `-` to control ascending or descending sort order
+	 *      (for example, `+name` or `-name`). If no property is provided, (e.g. `'+'`) then the array
+	 *      element itself is used to compare where sorting.
+	 *    - `Array`: An array of function or string predicates. The first predicate in the array
+	 *      is used for sorting, but when two items are equivalent, the next predicate is used.
 	 *
-	 * **Note:** If the predicate is missing or empty then it defaults to `'+'`.
+	 *    If the predicate is missing or empty then it defaults to `'+'`.
 	 *
-	 * @param {boolean=} reverse - If `true`, reverse the sorting order.
-	 * @param {(Function)=} comparator - The comparator function used to determine the relative order of
-	 *    value pairs. If omitted, the built-in comparator will be used.
-	 *
-	 * @returns {Array} - The sorted array.
+	 * @param {boolean=} reverse Reverse the order of the array.
+	 * @returns {Array} Sorted copy of the source array.
 	 *
 	 *
 	 * @example
-	 * ### Ordering a table with `ngRepeat`
-	 *
-	 * The example below demonstrates a simple {@link ngRepeat ngRepeat}, where the data is sorted by
-	 * age in descending order (expression is set to `'-age'`). The `comparator` is not set, which means
-	 * it defaults to the built-in comparator.
-	 *
-	   <example name="orderBy-static" module="orderByExample1">
+	 * The example below demonstrates a simple ngRepeat, where the data is sorted
+	 * by age in descending order (predicate is set to `'-age'`).
+	 * `reverse` is not set, which means it defaults to `false`.
+	   <example module="orderByExample">
 	     <file name="index.html">
 	       <div ng-controller="ExampleController">
-	         <table class="friends">
+	         <table class="friend">
 	           <tr>
 	             <th>Name</th>
 	             <th>Phone Number</th>
@@ -21082,77 +20925,43 @@
 	       </div>
 	     </file>
 	     <file name="script.js">
-	       angular.module('orderByExample1', [])
+	       angular.module('orderByExample', [])
 	         .controller('ExampleController', ['$scope', function($scope) {
-	           $scope.friends = [
-	             {name: 'John',   phone: '555-1212',  age: 10},
-	             {name: 'Mary',   phone: '555-9876',  age: 19},
-	             {name: 'Mike',   phone: '555-4321',  age: 21},
-	             {name: 'Adam',   phone: '555-5678',  age: 35},
-	             {name: 'Julie',  phone: '555-8765',  age: 29}
-	           ];
+	           $scope.friends =
+	               [{name:'John', phone:'555-1212', age:10},
+	                {name:'Mary', phone:'555-9876', age:19},
+	                {name:'Mike', phone:'555-4321', age:21},
+	                {name:'Adam', phone:'555-5678', age:35},
+	                {name:'Julie', phone:'555-8765', age:29}];
 	         }]);
 	     </file>
-	     <file name="style.css">
-	       .friends {
-	         border-collapse: collapse;
-	       }
-	
-	       .friends th {
-	         border-bottom: 1px solid;
-	       }
-	       .friends td, .friends th {
-	         border-left: 1px solid;
-	         padding: 5px 10px;
-	       }
-	       .friends td:first-child, .friends th:first-child {
-	         border-left: none;
-	       }
-	     </file>
-	     <file name="protractor.js" type="protractor">
-	       // Element locators
-	       var names = element.all(by.repeater('friends').column('friend.name'));
-	
-	       it('should sort friends by age in reverse order', function() {
-	         expect(names.get(0).getText()).toBe('Adam');
-	         expect(names.get(1).getText()).toBe('Julie');
-	         expect(names.get(2).getText()).toBe('Mike');
-	         expect(names.get(3).getText()).toBe('Mary');
-	         expect(names.get(4).getText()).toBe('John');
-	       });
-	     </file>
 	   </example>
-	 * <hr />
 	 *
+	 * The predicate and reverse parameters can be controlled dynamically through scope properties,
+	 * as shown in the next example.
 	 * @example
-	 * ### Changing parameters dynamically
-	 *
-	 * All parameters can be changed dynamically. The next example shows how you can make the columns of
-	 * a table sortable, by binding the `expression` and `reverse` parameters to scope properties.
-	 *
-	   <example name="orderBy-dynamic" module="orderByExample2">
+	   <example module="orderByExample">
 	     <file name="index.html">
 	       <div ng-controller="ExampleController">
-	         <pre>Sort by = {{propertyName}}; reverse = {{reverse}}</pre>
+	         <pre>Sorting predicate = {{predicate}}; reverse = {{reverse}}</pre>
 	         <hr/>
-	         <button ng-click="propertyName = null; reverse = false">Set to unsorted</button>
-	         <hr/>
-	         <table class="friends">
+	         <button ng-click="predicate=''">Set to unsorted</button>
+	         <table class="friend">
 	           <tr>
-	             <th>
-	               <button ng-click="sortBy('name')">Name</button>
-	               <span class="sortorder" ng-show="propertyName === 'name'" ng-class="{reverse: reverse}"></span>
-	             </th>
-	             <th>
-	               <button ng-click="sortBy('phone')">Phone Number</button>
-	               <span class="sortorder" ng-show="propertyName === 'phone'" ng-class="{reverse: reverse}"></span>
-	             </th>
-	             <th>
-	               <button ng-click="sortBy('age')">Age</button>
-	               <span class="sortorder" ng-show="propertyName === 'age'" ng-class="{reverse: reverse}"></span>
-	             </th>
+	            <th>
+	                <button ng-click="order('name')">Name</button>
+	                <span class="sortorder" ng-show="predicate === 'name'" ng-class="{reverse:reverse}"></span>
+	            </th>
+	            <th>
+	                <button ng-click="order('phone')">Phone Number</button>
+	                <span class="sortorder" ng-show="predicate === 'phone'" ng-class="{reverse:reverse}"></span>
+	            </th>
+	            <th>
+	                <button ng-click="order('age')">Age</button>
+	                <span class="sortorder" ng-show="predicate === 'age'" ng-class="{reverse:reverse}"></span>
+	            </th>
 	           </tr>
-	           <tr ng-repeat="friend in friends | orderBy:propertyName:reverse">
+	           <tr ng-repeat="friend in friends | orderBy:predicate:reverse">
 	             <td>{{friend.name}}</td>
 	             <td>{{friend.phone}}</td>
 	             <td>{{friend.age}}</td>
@@ -21161,335 +20970,100 @@
 	       </div>
 	     </file>
 	     <file name="script.js">
-	       angular.module('orderByExample2', [])
+	       angular.module('orderByExample', [])
 	         .controller('ExampleController', ['$scope', function($scope) {
-	           var friends = [
-	             {name: 'John',   phone: '555-1212',  age: 10},
-	             {name: 'Mary',   phone: '555-9876',  age: 19},
-	             {name: 'Mike',   phone: '555-4321',  age: 21},
-	             {name: 'Adam',   phone: '555-5678',  age: 35},
-	             {name: 'Julie',  phone: '555-8765',  age: 29}
-	           ];
-	
-	           $scope.propertyName = 'age';
+	           $scope.friends =
+	               [{name:'John', phone:'555-1212', age:10},
+	                {name:'Mary', phone:'555-9876', age:19},
+	                {name:'Mike', phone:'555-4321', age:21},
+	                {name:'Adam', phone:'555-5678', age:35},
+	                {name:'Julie', phone:'555-8765', age:29}];
+	           $scope.predicate = 'age';
 	           $scope.reverse = true;
-	           $scope.friends = friends;
-	
-	           $scope.sortBy = function(propertyName) {
-	             $scope.reverse = ($scope.propertyName === propertyName) ? !$scope.reverse : false;
-	             $scope.propertyName = propertyName;
+	           $scope.order = function(predicate) {
+	             $scope.reverse = ($scope.predicate === predicate) ? !$scope.reverse : false;
+	             $scope.predicate = predicate;
 	           };
 	         }]);
-	     </file>
+	      </file>
 	     <file name="style.css">
-	       .friends {
-	         border-collapse: collapse;
-	       }
-	
-	       .friends th {
-	         border-bottom: 1px solid;
-	       }
-	       .friends td, .friends th {
-	         border-left: 1px solid;
-	         padding: 5px 10px;
-	       }
-	       .friends td:first-child, .friends th:first-child {
-	         border-left: none;
-	       }
-	
 	       .sortorder:after {
-	         content: '\25b2';   // BLACK UP-POINTING TRIANGLE
+	         content: '\25b2';
 	       }
 	       .sortorder.reverse:after {
-	         content: '\25bc';   // BLACK DOWN-POINTING TRIANGLE
+	         content: '\25bc';
 	       }
-	     </file>
-	     <file name="protractor.js" type="protractor">
-	       // Element locators
-	       var unsortButton = element(by.partialButtonText('unsorted'));
-	       var nameHeader = element(by.partialButtonText('Name'));
-	       var phoneHeader = element(by.partialButtonText('Phone'));
-	       var ageHeader = element(by.partialButtonText('Age'));
-	       var firstName = element(by.repeater('friends').column('friend.name').row(0));
-	       var lastName = element(by.repeater('friends').column('friend.name').row(4));
-	
-	       it('should sort friends by some property, when clicking on the column header', function() {
-	         expect(firstName.getText()).toBe('Adam');
-	         expect(lastName.getText()).toBe('John');
-	
-	         phoneHeader.click();
-	         expect(firstName.getText()).toBe('John');
-	         expect(lastName.getText()).toBe('Mary');
-	
-	         nameHeader.click();
-	         expect(firstName.getText()).toBe('Adam');
-	         expect(lastName.getText()).toBe('Mike');
-	
-	         ageHeader.click();
-	         expect(firstName.getText()).toBe('John');
-	         expect(lastName.getText()).toBe('Adam');
-	       });
-	
-	       it('should sort friends in reverse order, when clicking on the same column', function() {
-	         expect(firstName.getText()).toBe('Adam');
-	         expect(lastName.getText()).toBe('John');
-	
-	         ageHeader.click();
-	         expect(firstName.getText()).toBe('John');
-	         expect(lastName.getText()).toBe('Adam');
-	
-	         ageHeader.click();
-	         expect(firstName.getText()).toBe('Adam');
-	         expect(lastName.getText()).toBe('John');
-	       });
-	
-	       it('should restore the original order, when clicking "Set to unsorted"', function() {
-	         expect(firstName.getText()).toBe('Adam');
-	         expect(lastName.getText()).toBe('John');
-	
-	         unsortButton.click();
-	         expect(firstName.getText()).toBe('John');
-	         expect(lastName.getText()).toBe('Julie');
-	       });
 	     </file>
 	   </example>
-	 * <hr />
+	 *
+	 * It's also possible to call the orderBy filter manually, by injecting `$filter`, retrieving the
+	 * filter routine with `$filter('orderBy')`, and calling the returned filter routine with the
+	 * desired parameters.
+	 *
+	 * Example:
 	 *
 	 * @example
-	 * ### Using `orderBy` inside a controller
-	 *
-	 * It is also possible to call the `orderBy` filter manually, by injecting `orderByFilter`, and
-	 * calling it with the desired parameters. (Alternatively, you could inject the `$filter` factory
-	 * and retrieve the `orderBy` filter with `$filter('orderBy')`.)
-	 *
-	   <example name="orderBy-call-manually" module="orderByExample3">
-	     <file name="index.html">
-	       <div ng-controller="ExampleController">
-	         <pre>Sort by = {{propertyName}}; reverse = {{reverse}}</pre>
-	         <hr/>
-	         <button ng-click="sortBy(null)">Set to unsorted</button>
-	         <hr/>
-	         <table class="friends">
-	           <tr>
-	             <th>
-	               <button ng-click="sortBy('name')">Name</button>
-	               <span class="sortorder" ng-show="propertyName === 'name'" ng-class="{reverse: reverse}"></span>
-	             </th>
-	             <th>
-	               <button ng-click="sortBy('phone')">Phone Number</button>
-	               <span class="sortorder" ng-show="propertyName === 'phone'" ng-class="{reverse: reverse}"></span>
-	             </th>
-	             <th>
-	               <button ng-click="sortBy('age')">Age</button>
-	               <span class="sortorder" ng-show="propertyName === 'age'" ng-class="{reverse: reverse}"></span>
-	             </th>
-	           </tr>
-	           <tr ng-repeat="friend in friends">
-	             <td>{{friend.name}}</td>
-	             <td>{{friend.phone}}</td>
-	             <td>{{friend.age}}</td>
-	           </tr>
-	         </table>
-	       </div>
-	     </file>
-	     <file name="script.js">
-	       angular.module('orderByExample3', [])
-	         .controller('ExampleController', ['$scope', 'orderByFilter', function($scope, orderBy) {
-	           var friends = [
-	             {name: 'John',   phone: '555-1212',  age: 10},
-	             {name: 'Mary',   phone: '555-9876',  age: 19},
-	             {name: 'Mike',   phone: '555-4321',  age: 21},
-	             {name: 'Adam',   phone: '555-5678',  age: 35},
-	             {name: 'Julie',  phone: '555-8765',  age: 29}
-	           ];
+	  <example module="orderByExample">
+	    <file name="index.html">
+	    <div ng-controller="ExampleController">
+	      <pre>Sorting predicate = {{predicate}}; reverse = {{reverse}}</pre>
+	      <table class="friend">
+	        <tr>
+	          <th>
+	              <button ng-click="order('name')">Name</button>
+	              <span class="sortorder" ng-show="predicate === 'name'" ng-class="{reverse:reverse}"></span>
+	          </th>
+	          <th>
+	              <button ng-click="order('phone')">Phone Number</button>
+	              <span class="sortorder" ng-show="predicate === 'phone'" ng-class="{reverse:reverse}"></span>
+	          </th>
+	          <th>
+	              <button ng-click="order('age')">Age</button>
+	              <span class="sortorder" ng-show="predicate === 'age'" ng-class="{reverse:reverse}"></span>
+	          </th>
+	        </tr>
+	        <tr ng-repeat="friend in friends">
+	          <td>{{friend.name}}</td>
+	          <td>{{friend.phone}}</td>
+	          <td>{{friend.age}}</td>
+	        </tr>
+	      </table>
+	    </div>
+	    </file>
 	
-	           $scope.propertyName = 'age';
-	           $scope.reverse = true;
-	           $scope.friends = orderBy(friends, $scope.propertyName, $scope.reverse);
+	    <file name="script.js">
+	      angular.module('orderByExample', [])
+	        .controller('ExampleController', ['$scope', '$filter', function($scope, $filter) {
+	          var orderBy = $filter('orderBy');
+	          $scope.friends = [
+	            { name: 'John',    phone: '555-1212',    age: 10 },
+	            { name: 'Mary',    phone: '555-9876',    age: 19 },
+	            { name: 'Mike',    phone: '555-4321',    age: 21 },
+	            { name: 'Adam',    phone: '555-5678',    age: 35 },
+	            { name: 'Julie',   phone: '555-8765',    age: 29 }
+	          ];
+	          $scope.order = function(predicate) {
+	            $scope.predicate = predicate;
+	            $scope.reverse = ($scope.predicate === predicate) ? !$scope.reverse : false;
+	            $scope.friends = orderBy($scope.friends, predicate, $scope.reverse);
+	          };
+	          $scope.order('age', true);
+	        }]);
+	    </file>
 	
-	           $scope.sortBy = function(propertyName) {
-	             $scope.reverse = (propertyName !== null && $scope.propertyName === propertyName)
-	                 ? !$scope.reverse : false;
-	             $scope.propertyName = propertyName;
-	             $scope.friends = orderBy(friends, $scope.propertyName, $scope.reverse);
-	           };
-	         }]);
-	     </file>
-	     <file name="style.css">
-	       .friends {
-	         border-collapse: collapse;
-	       }
-	
-	       .friends th {
-	         border-bottom: 1px solid;
-	       }
-	       .friends td, .friends th {
-	         border-left: 1px solid;
-	         padding: 5px 10px;
-	       }
-	       .friends td:first-child, .friends th:first-child {
-	         border-left: none;
-	       }
-	
+	    <file name="style.css">
 	       .sortorder:after {
-	         content: '\25b2';   // BLACK UP-POINTING TRIANGLE
+	         content: '\25b2';
 	       }
 	       .sortorder.reverse:after {
-	         content: '\25bc';   // BLACK DOWN-POINTING TRIANGLE
+	         content: '\25bc';
 	       }
-	     </file>
-	     <file name="protractor.js" type="protractor">
-	       // Element locators
-	       var unsortButton = element(by.partialButtonText('unsorted'));
-	       var nameHeader = element(by.partialButtonText('Name'));
-	       var phoneHeader = element(by.partialButtonText('Phone'));
-	       var ageHeader = element(by.partialButtonText('Age'));
-	       var firstName = element(by.repeater('friends').column('friend.name').row(0));
-	       var lastName = element(by.repeater('friends').column('friend.name').row(4));
-	
-	       it('should sort friends by some property, when clicking on the column header', function() {
-	         expect(firstName.getText()).toBe('Adam');
-	         expect(lastName.getText()).toBe('John');
-	
-	         phoneHeader.click();
-	         expect(firstName.getText()).toBe('John');
-	         expect(lastName.getText()).toBe('Mary');
-	
-	         nameHeader.click();
-	         expect(firstName.getText()).toBe('Adam');
-	         expect(lastName.getText()).toBe('Mike');
-	
-	         ageHeader.click();
-	         expect(firstName.getText()).toBe('John');
-	         expect(lastName.getText()).toBe('Adam');
-	       });
-	
-	       it('should sort friends in reverse order, when clicking on the same column', function() {
-	         expect(firstName.getText()).toBe('Adam');
-	         expect(lastName.getText()).toBe('John');
-	
-	         ageHeader.click();
-	         expect(firstName.getText()).toBe('John');
-	         expect(lastName.getText()).toBe('Adam');
-	
-	         ageHeader.click();
-	         expect(firstName.getText()).toBe('Adam');
-	         expect(lastName.getText()).toBe('John');
-	       });
-	
-	       it('should restore the original order, when clicking "Set to unsorted"', function() {
-	         expect(firstName.getText()).toBe('Adam');
-	         expect(lastName.getText()).toBe('John');
-	
-	         unsortButton.click();
-	         expect(firstName.getText()).toBe('John');
-	         expect(lastName.getText()).toBe('Julie');
-	       });
-	     </file>
-	   </example>
-	 * <hr />
-	 *
-	 * @example
-	 * ### Using a custom comparator
-	 *
-	 * If you have very specific requirements about the way items are sorted, you can pass your own
-	 * comparator function. For example, you might need to compare some strings in a locale-sensitive
-	 * way. (When specifying a custom comparator, you also need to pass a value for the `reverse`
-	 * argument - passing `false` retains the default sorting order, i.e. ascending.)
-	 *
-	   <example name="orderBy-custom-comparator" module="orderByExample4">
-	     <file name="index.html">
-	       <div ng-controller="ExampleController">
-	         <div class="friends-container custom-comparator">
-	           <h3>Locale-sensitive Comparator</h3>
-	           <table class="friends">
-	             <tr>
-	               <th>Name</th>
-	               <th>Favorite Letter</th>
-	             </tr>
-	             <tr ng-repeat="friend in friends | orderBy:'favoriteLetter':false:localeSensitiveComparator">
-	               <td>{{friend.name}}</td>
-	               <td>{{friend.favoriteLetter}}</td>
-	             </tr>
-	           </table>
-	         </div>
-	         <div class="friends-container default-comparator">
-	           <h3>Default Comparator</h3>
-	           <table class="friends">
-	             <tr>
-	               <th>Name</th>
-	               <th>Favorite Letter</th>
-	             </tr>
-	             <tr ng-repeat="friend in friends | orderBy:'favoriteLetter'">
-	               <td>{{friend.name}}</td>
-	               <td>{{friend.favoriteLetter}}</td>
-	             </tr>
-	           </table>
-	         </div>
-	       </div>
-	     </file>
-	     <file name="script.js">
-	       angular.module('orderByExample4', [])
-	         .controller('ExampleController', ['$scope', function($scope) {
-	           $scope.friends = [
-	             {name: 'John',   favoriteLetter: 'Ä'},
-	             {name: 'Mary',   favoriteLetter: 'Ü'},
-	             {name: 'Mike',   favoriteLetter: 'Ö'},
-	             {name: 'Adam',   favoriteLetter: 'H'},
-	             {name: 'Julie',  favoriteLetter: 'Z'}
-	           ];
-	
-	           $scope.localeSensitiveComparator = function(v1, v2) {
-	             // If we don't get strings, just compare by index
-	             if (v1.type !== 'string' || v2.type !== 'string') {
-	               return (v1.index < v2.index) ? -1 : 1;
-	             }
-	
-	             // Compare strings alphabetically, taking locale into account
-	             return v1.value.localeCompare(v2.value);
-	           };
-	         }]);
-	     </file>
-	     <file name="style.css">
-	       .friends-container {
-	         display: inline-block;
-	         margin: 0 30px;
-	       }
-	
-	       .friends {
-	         border-collapse: collapse;
-	       }
-	
-	       .friends th {
-	         border-bottom: 1px solid;
-	       }
-	       .friends td, .friends th {
-	         border-left: 1px solid;
-	         padding: 5px 10px;
-	       }
-	       .friends td:first-child, .friends th:first-child {
-	         border-left: none;
-	       }
-	     </file>
-	     <file name="protractor.js" type="protractor">
-	       // Element locators
-	       var container = element(by.css('.custom-comparator'));
-	       var names = container.all(by.repeater('friends').column('friend.name'));
-	
-	       it('should sort friends by favorite letter (in correct alphabetical order)', function() {
-	         expect(names.get(0).getText()).toBe('John');
-	         expect(names.get(1).getText()).toBe('Adam');
-	         expect(names.get(2).getText()).toBe('Mike');
-	         expect(names.get(3).getText()).toBe('Mary');
-	         expect(names.get(4).getText()).toBe('Julie');
-	       });
-	     </file>
-	   </example>
-	 *
+	    </file>
+	</example>
 	 */
 	orderByFilter.$inject = ['$parse'];
 	function orderByFilter($parse) {
-	  return function(array, sortPredicate, reverseOrder, compareFn) {
+	  return function(array, sortPredicate, reverseOrder) {
 	
 	    if (array == null) return array;
 	    if (!isArrayLike(array)) {
@@ -21499,12 +21073,11 @@
 	    if (!isArray(sortPredicate)) { sortPredicate = [sortPredicate]; }
 	    if (sortPredicate.length === 0) { sortPredicate = ['+']; }
 	
-	    var predicates = processPredicates(sortPredicate);
-	
-	    var descending = reverseOrder ? -1 : 1;
-	
-	    // Define the `compare()` function. Use a default comparator if none is specified.
-	    var compare = isFunction(compareFn) ? compareFn : defaultCompare;
+	    var predicates = processPredicates(sortPredicate, reverseOrder);
+	    // Add a predicate at the end that evaluates to the element index. This makes the
+	    // sort stable as it works as a tie-breaker when all the input predicates cannot
+	    // distinguish between two elements.
+	    predicates.push({ get: function() { return {}; }, descending: reverseOrder ? -1 : 1});
 	
 	    // The next three lines are a version of a Swartzian Transform idiom from Perl
 	    // (sometimes called the Decorate-Sort-Undecorate idiom)
@@ -21516,12 +21089,8 @@
 	    return array;
 	
 	    function getComparisonObject(value, index) {
-	      // NOTE: We are adding an extra `tieBreaker` value based on the element's index.
-	      // This will be used to keep the sort stable when none of the input predicates can
-	      // distinguish between two elements.
 	      return {
 	        value: value,
-	        tieBreaker: {value: index, type: 'number', index: index},
 	        predicateValues: predicates.map(function(predicate) {
 	          return getPredicateValue(predicate.get(value), index);
 	        })
@@ -21529,19 +21098,18 @@
 	    }
 	
 	    function doComparison(v1, v2) {
-	      for (var i = 0, ii = predicates.length; i < ii; i++) {
-	        var result = compare(v1.predicateValues[i], v2.predicateValues[i]);
-	        if (result) {
-	          return result * predicates[i].descending * descending;
-	        }
+	      var result = 0;
+	      for (var index=0, length = predicates.length; index < length; ++index) {
+	        result = compare(v1.predicateValues[index], v2.predicateValues[index]) * predicates[index].descending;
+	        if (result) break;
 	      }
-	
-	      return compare(v1.tieBreaker, v2.tieBreaker) * descending;
+	      return result;
 	    }
 	  };
 	
-	  function processPredicates(sortPredicates) {
-	    return sortPredicates.map(function(predicate) {
+	  function processPredicates(sortPredicate, reverseOrder) {
+	    reverseOrder = reverseOrder ? -1 : 1;
+	    return sortPredicate.map(function(predicate) {
 	      var descending = 1, get = identity;
 	
 	      if (isFunction(predicate)) {
@@ -21559,7 +21127,7 @@
 	          }
 	        }
 	      }
-	      return {get: get, descending: descending};
+	      return { get: get, descending: descending * reverseOrder };
 	    });
 	  }
 	
@@ -21574,9 +21142,9 @@
 	    }
 	  }
 	
-	  function objectValue(value) {
+	  function objectValue(value, index) {
 	    // If `valueOf` is a valid function use that
-	    if (isFunction(value.valueOf)) {
+	    if (typeof value.valueOf === 'function') {
 	      value = value.valueOf();
 	      if (isPrimitive(value)) return value;
 	    }
@@ -21585,8 +21153,8 @@
 	      value = value.toString();
 	      if (isPrimitive(value)) return value;
 	    }
-	
-	    return value;
+	    // We have a basic object so we use the position of the object in the collection
+	    return index;
 	  }
 	
 	  function getPredicateValue(value, index) {
@@ -21594,39 +21162,23 @@
 	    if (value === null) {
 	      type = 'string';
 	      value = 'null';
+	    } else if (type === 'string') {
+	      value = value.toLowerCase();
 	    } else if (type === 'object') {
-	      value = objectValue(value);
+	      value = objectValue(value, index);
 	    }
-	    return {value: value, type: type, index: index};
+	    return { value: value, type: type };
 	  }
 	
-	  function defaultCompare(v1, v2) {
+	  function compare(v1, v2) {
 	    var result = 0;
-	    var type1 = v1.type;
-	    var type2 = v2.type;
-	
-	    if (type1 === type2) {
-	      var value1 = v1.value;
-	      var value2 = v2.value;
-	
-	      if (type1 === 'string') {
-	        // Compare strings case-insensitively
-	        value1 = value1.toLowerCase();
-	        value2 = value2.toLowerCase();
-	      } else if (type1 === 'object') {
-	        // For basic objects, use the position of the object
-	        // in the collection instead of the value
-	        if (isObject(value1)) value1 = v1.index;
-	        if (isObject(value2)) value2 = v2.index;
-	      }
-	
-	      if (value1 !== value2) {
-	        result = value1 < value2 ? -1 : 1;
+	    if (v1.type === v2.type) {
+	      if (v1.value !== v2.value) {
+	        result = v1.value < v2.value ? -1 : 1;
 	      }
 	    } else {
-	      result = type1 < type2 ? -1 : 1;
+	      result = v1.type < v2.type ? -1 : 1;
 	    }
-	
 	    return result;
 	  }
 	}
@@ -22671,9 +22223,7 @@
 	//   9. Fragment
 	//                 1111111111111111 222   333333    44444        555555555555555555555555    666     77777777     8888888     999
 	var URL_REGEXP = /^[a-z][a-z\d.+-]*:\/*(?:[^:@]+(?::[^@]+)?@)?(?:[^\s:/?#]+|\[[a-f\d:]+\])(?::\d+)?(?:\/[^?#]*)?(?:\?[^#]*)?(?:#.*)?$/i;
-	/* jshint maxlen:220 */
-	var EMAIL_REGEXP = /^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+\/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+\/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/;
-	/* jshint maxlen:200 */
+	var EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
 	var NUMBER_REGEXP = /^\s*(\-|\+)?(\d+|(\d*(\.\d*)))([eE][+-]?\d+)?\s*$/;
 	var DATE_REGEXP = /^(\d{4,})-(\d{2})-(\d{2})$/;
 	var DATETIMELOCAL_REGEXP = /^(\d{4,})-(\d\d)-(\d\d)T(\d\d):(\d\d)(?::(\d\d)(\.\d{1,3})?)?$/;
@@ -29194,7 +28744,7 @@
 	 *   it's a prefix used by Angular for public (`$`) and private (`$$`) properties.
 	 *
 	 * - The built-in filters {@link ng.orderBy orderBy} and {@link ng.filter filter} do not work with
-	 *   objects, and will throw an error if used with one.
+	 *   objects, and will throw if used with one.
 	 *
 	 * If you are hitting any of these limitations, the recommended workaround is to convert your object into an array
 	 * that is sorted into the order that you prefer before providing it to `ngRepeat`. You could
@@ -50382,7 +49932,7 @@
 /***/ function(module, exports) {
 
 	/**
-	 * @license AngularJS v1.5.7
+	 * @license AngularJS v1.5.6
 	 * (c) 2010-2016 Google, Inc. http://angularjs.org
 	 * License: MIT
 	 */
@@ -53596,6 +53146,8 @@
 	        // may attempt more elements, but custom drivers are more particular
 	        for (var i = drivers.length - 1; i >= 0; i--) {
 	          var driverName = drivers[i];
+	          if (!$injector.has(driverName)) continue; // TODO(matsko): remove this check
+	
 	          var factory = $injector.get(driverName);
 	          var driver = factory(animationDetails);
 	          if (driver) {
@@ -54537,7 +54089,7 @@
 /***/ function(module, exports) {
 
 	/**
-	 * @license AngularJS v1.5.7
+	 * @license AngularJS v1.5.6
 	 * (c) 2010-2016 Google, Inc. http://angularjs.org
 	 * License: MIT
 	 */
@@ -86402,7 +85954,7 @@
 	// the 2nd parameter is an array of 'requires'
 	// 'starter.services' is found in services.js
 	// 'starter.controllers' is found in controllers.js
-	angular.module('beeline-admin', ['uiGmapgoogle-maps', 'ui.router', 'ui.bootstrap', 'beeline.calendar', 'auth0', 'angular-storage', 'angular-jwt', 'ngCookies', 'multipleDatePicker']).config(__webpack_require__(/*! ./router */ 180).default).config(configureGoogleMaps).config(configureLoginPage).directive('adminNav', __webpack_require__(/*! ./directives/adminNav/adminNav */ 181).default).directive('accountView', __webpack_require__(/*! ./directives/accountView/accountView */ 183).default).directive('paymentView', __webpack_require__(/*! ./directives/paymentView/paymentView */ 184).default).directive('ticketView', __webpack_require__(/*! ./directives/ticketView/ticketView */ 206).default).directive('routeSelector', __webpack_require__(/*! ./directives/routeSelector/routeSelector */ 208).default).directive('routeEditor', __webpack_require__(/*! ./directives/routeEditor/routeEditor */ 210).default).directive('pathEditor', __webpack_require__(/*! ./directives/pathEditor/pathEditor */ 212).default).directive('tripsEditor', __webpack_require__(/*! ./directives/tripsEditor/tripsEditor */ 214).default).directive('companySelector', __webpack_require__(/*! ./directives/companySelector/companySelector */ 236).default).directive('tripSelector', __webpack_require__(/*! ./directives/tripSelector/tripSelector */ 237).default).directive('stopSelector', __webpack_require__(/*! ./directives/stopSelector/stopSelector */ 244).default).directive('superAdminCompanySelector', __webpack_require__(/*! ./directives/companySelector/superAdminCompanySelector */ 245).default).directive('mySort', __webpack_require__(/*! ./directives/mySort */ 246).default).service('AdminService', __webpack_require__(/*! ./services/adminService */ 251).default).service('TripsService', __webpack_require__(/*! ./services/tripsService */ 252).default).service('RoutesService', __webpack_require__(/*! ./services/routesService */ 256).default).service('StopsPopup', __webpack_require__(/*! ./services/stopsPopup */ 257).default).service('RoutePopup', __webpack_require__(/*! ./services/routePopup */ 259).default).service('mapService', __webpack_require__(/*! ./services/mapService */ 261).default).service('DriverService', __webpack_require__(/*! ./services/driverService */ 262).default).service('BookingRefund', __webpack_require__(/*! ./services/bookingRefund */ 265).default).service('LoadingSpinner', __webpack_require__(/*! ./services/loadingSpinner */ 267).default).controller('transactions', __webpack_require__(/*! ./controllers/transactionsController.js */ 268).default).controller('trips', __webpack_require__(/*! ./controllers/tripsController.js */ 273).default).controller('routes', __webpack_require__(/*! ./controllers/routesController.js */ 274).default).controller('summary', __webpack_require__(/*! ./controllers/summaryController.js */ 275).default).controller('bookings', __webpack_require__(/*! ./controllers/bookingsController.js */ 276).default).controller('bookingsWrs', __webpack_require__(/*! ./controllers/bookingsControllerWrs.js */ 277).default).controller('drivers', __webpack_require__(/*! ./controllers/driversController.js */ 278).default).controller('login', __webpack_require__(/*! ./controllers/loginController.js */ 279).default).filter('makeRoutePath', __webpack_require__(/*! ./shared/filters.js */ 280).makeRoutePath).filter('intervalToTime', __webpack_require__(/*! ./shared/filters.js */ 280).intervalToTime).run(function (auth, $rootScope, store, jwtHelper, $window) {
+	angular.module('beeline-admin', ['uiGmapgoogle-maps', 'ui.router', 'ui.bootstrap', 'beeline.calendar', 'auth0', 'angular-storage', 'angular-jwt', 'ngCookies', 'multipleDatePicker']).config(__webpack_require__(/*! ./router */ 180).default).config(configureGoogleMaps).config(configureLoginPage).directive('adminNav', __webpack_require__(/*! ./directives/adminNav/adminNav */ 181).default).directive('accountView', __webpack_require__(/*! ./directives/accountView/accountView */ 183).default).directive('paymentView', __webpack_require__(/*! ./directives/paymentView/paymentView */ 184).default).directive('ticketView', __webpack_require__(/*! ./directives/ticketView/ticketView */ 206).default).directive('routeSelector', __webpack_require__(/*! ./directives/routeSelector/routeSelector */ 208).default).directive('routeEditor', __webpack_require__(/*! ./directives/routeEditor/routeEditor */ 210).default).directive('pathEditor', __webpack_require__(/*! ./directives/pathEditor/pathEditor */ 212).default).directive('tripsEditor', __webpack_require__(/*! ./directives/tripsEditor/tripsEditor */ 214).default).directive('companySelector', __webpack_require__(/*! ./directives/companySelector/companySelector */ 236).default).directive('tripSelector', __webpack_require__(/*! ./directives/tripSelector/tripSelector */ 237).default).directive('stopSelector', __webpack_require__(/*! ./directives/stopSelector/stopSelector */ 249).default).directive('superAdminCompanySelector', __webpack_require__(/*! ./directives/companySelector/superAdminCompanySelector */ 250).default).directive('mySort', __webpack_require__(/*! ./directives/mySort */ 251).default).service('AdminService', __webpack_require__(/*! ./services/adminService */ 256).default).service('TripsService', __webpack_require__(/*! ./services/tripsService */ 257).default).service('RoutesService', __webpack_require__(/*! ./services/routesService */ 261).default).service('StopsPopup', __webpack_require__(/*! ./services/stopsPopup */ 262).default).service('RoutePopup', __webpack_require__(/*! ./services/routePopup */ 264).default).service('mapService', __webpack_require__(/*! ./services/mapService */ 266).default).service('DriverService', __webpack_require__(/*! ./services/driverService */ 267).default).service('BookingRefund', __webpack_require__(/*! ./services/bookingRefund */ 270).default).service('LoadingSpinner', __webpack_require__(/*! ./services/loadingSpinner */ 272).default).controller('transactions', __webpack_require__(/*! ./controllers/transactionsController.js */ 273).default).controller('trips', __webpack_require__(/*! ./controllers/tripsController.js */ 278).default).controller('routes', __webpack_require__(/*! ./controllers/routesController.js */ 279).default).controller('summary', __webpack_require__(/*! ./controllers/summaryController.js */ 280).default).controller('bookings', __webpack_require__(/*! ./controllers/bookingsController.js */ 281).default).controller('bookingsWrs', __webpack_require__(/*! ./controllers/bookingsControllerWrs.js */ 282).default).controller('drivers', __webpack_require__(/*! ./controllers/driversController.js */ 283).default).controller('login', __webpack_require__(/*! ./controllers/loginController.js */ 284).default).filter('makeRoutePath', __webpack_require__(/*! ./shared/filters.js */ 285).makeRoutePath).filter('intervalToTime', __webpack_require__(/*! ./shared/filters.js */ 285).intervalToTime).run(function (auth, $rootScope, store, jwtHelper, $window, AdminService) {
 	  auth.hookEvents();
 	
 	  // This events gets triggered on refresh or URL change
@@ -86414,6 +85966,7 @@
 	          auth.authenticate(store.get('profile'), token);
 	        }
 	      } else {
+	        AdminService.login();
 	        // Either show Login page or use the refresh token to get a new idToken
 	      }
 	    }
@@ -100937,9 +100490,9 @@
 
 /***/ },
 /* 117 */
-/*!**********************************************!*\
-  !*** ./~/core-js/library/fn/get-iterator.js ***!
-  \**********************************************/
+/*!**************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/fn/get-iterator.js ***!
+  \**************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(/*! ../modules/web.dom.iterable */ 118);
@@ -100948,9 +100501,9 @@
 
 /***/ },
 /* 118 */
-/*!*******************************************************!*\
-  !*** ./~/core-js/library/modules/web.dom.iterable.js ***!
-  \*******************************************************/
+/*!***********************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/web.dom.iterable.js ***!
+  \***********************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(/*! ./es6.array.iterator */ 119);
@@ -100969,9 +100522,9 @@
 
 /***/ },
 /* 119 */
-/*!*********************************************************!*\
-  !*** ./~/core-js/library/modules/es6.array.iterator.js ***!
-  \*********************************************************/
+/*!*************************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/es6.array.iterator.js ***!
+  \*************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -101011,18 +100564,18 @@
 
 /***/ },
 /* 120 */
-/*!**********************************************************!*\
-  !*** ./~/core-js/library/modules/_add-to-unscopables.js ***!
-  \**********************************************************/
+/*!**************************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_add-to-unscopables.js ***!
+  \**************************************************************************/
 /***/ function(module, exports) {
 
 	module.exports = function(){ /* empty */ };
 
 /***/ },
 /* 121 */
-/*!*************************************************!*\
-  !*** ./~/core-js/library/modules/_iter-step.js ***!
-  \*************************************************/
+/*!*****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_iter-step.js ***!
+  \*****************************************************************/
 /***/ function(module, exports) {
 
 	module.exports = function(done, value){
@@ -101031,18 +100584,18 @@
 
 /***/ },
 /* 122 */
-/*!*************************************************!*\
-  !*** ./~/core-js/library/modules/_iterators.js ***!
-  \*************************************************/
+/*!*****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_iterators.js ***!
+  \*****************************************************************/
 /***/ function(module, exports) {
 
 	module.exports = {};
 
 /***/ },
 /* 123 */
-/*!**************************************************!*\
-  !*** ./~/core-js/library/modules/_to-iobject.js ***!
-  \**************************************************/
+/*!******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_to-iobject.js ***!
+  \******************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	// to indexed object, toObject with fallback for non-array-like ES3 strings
@@ -101054,9 +100607,9 @@
 
 /***/ },
 /* 124 */
-/*!***********************************************!*\
-  !*** ./~/core-js/library/modules/_iobject.js ***!
-  \***********************************************/
+/*!***************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_iobject.js ***!
+  \***************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	// fallback for non-array-like ES3 and non-enumerable old V8 strings
@@ -101067,9 +100620,9 @@
 
 /***/ },
 /* 125 */
-/*!*******************************************!*\
-  !*** ./~/core-js/library/modules/_cof.js ***!
-  \*******************************************/
+/*!***********************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_cof.js ***!
+  \***********************************************************/
 /***/ function(module, exports) {
 
 	var toString = {}.toString;
@@ -101080,9 +100633,9 @@
 
 /***/ },
 /* 126 */
-/*!***********************************************!*\
-  !*** ./~/core-js/library/modules/_defined.js ***!
-  \***********************************************/
+/*!***************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_defined.js ***!
+  \***************************************************************/
 /***/ function(module, exports) {
 
 	// 7.2.1 RequireObjectCoercible(argument)
@@ -101093,9 +100646,9 @@
 
 /***/ },
 /* 127 */
-/*!***************************************************!*\
-  !*** ./~/core-js/library/modules/_iter-define.js ***!
-  \***************************************************/
+/*!*******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_iter-define.js ***!
+  \*******************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -101171,18 +100724,18 @@
 
 /***/ },
 /* 128 */
-/*!***********************************************!*\
-  !*** ./~/core-js/library/modules/_library.js ***!
-  \***********************************************/
+/*!***************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_library.js ***!
+  \***************************************************************/
 /***/ function(module, exports) {
 
 	module.exports = true;
 
 /***/ },
 /* 129 */
-/*!**********************************************!*\
-  !*** ./~/core-js/library/modules/_export.js ***!
-  \**********************************************/
+/*!**************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_export.js ***!
+  \**************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	var global    = __webpack_require__(/*! ./_global */ 130)
@@ -101249,9 +100802,9 @@
 
 /***/ },
 /* 130 */
-/*!**********************************************!*\
-  !*** ./~/core-js/library/modules/_global.js ***!
-  \**********************************************/
+/*!**************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_global.js ***!
+  \**************************************************************/
 /***/ function(module, exports) {
 
 	// https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
@@ -101261,9 +100814,9 @@
 
 /***/ },
 /* 131 */
-/*!********************************************!*\
-  !*** ./~/core-js/library/modules/_core.js ***!
-  \********************************************/
+/*!************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_core.js ***!
+  \************************************************************/
 /***/ function(module, exports) {
 
 	var core = module.exports = {version: '2.4.0'};
@@ -101271,9 +100824,9 @@
 
 /***/ },
 /* 132 */
-/*!*******************************************!*\
-  !*** ./~/core-js/library/modules/_ctx.js ***!
-  \*******************************************/
+/*!***********************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_ctx.js ***!
+  \***********************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	// optional / simple context binding
@@ -101299,9 +100852,9 @@
 
 /***/ },
 /* 133 */
-/*!**************************************************!*\
-  !*** ./~/core-js/library/modules/_a-function.js ***!
-  \**************************************************/
+/*!******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_a-function.js ***!
+  \******************************************************************/
 /***/ function(module, exports) {
 
 	module.exports = function(it){
@@ -101311,9 +100864,9 @@
 
 /***/ },
 /* 134 */
-/*!********************************************!*\
-  !*** ./~/core-js/library/modules/_hide.js ***!
-  \********************************************/
+/*!************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_hide.js ***!
+  \************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	var dP         = __webpack_require__(/*! ./_object-dp */ 135)
@@ -101327,9 +100880,9 @@
 
 /***/ },
 /* 135 */
-/*!*************************************************!*\
-  !*** ./~/core-js/library/modules/_object-dp.js ***!
-  \*************************************************/
+/*!*****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_object-dp.js ***!
+  \*****************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	var anObject       = __webpack_require__(/*! ./_an-object */ 136)
@@ -101351,9 +100904,9 @@
 
 /***/ },
 /* 136 */
-/*!*************************************************!*\
-  !*** ./~/core-js/library/modules/_an-object.js ***!
-  \*************************************************/
+/*!*****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_an-object.js ***!
+  \*****************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	var isObject = __webpack_require__(/*! ./_is-object */ 137);
@@ -101364,9 +100917,9 @@
 
 /***/ },
 /* 137 */
-/*!*************************************************!*\
-  !*** ./~/core-js/library/modules/_is-object.js ***!
-  \*************************************************/
+/*!*****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_is-object.js ***!
+  \*****************************************************************/
 /***/ function(module, exports) {
 
 	module.exports = function(it){
@@ -101375,9 +100928,9 @@
 
 /***/ },
 /* 138 */
-/*!******************************************************!*\
-  !*** ./~/core-js/library/modules/_ie8-dom-define.js ***!
-  \******************************************************/
+/*!**********************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_ie8-dom-define.js ***!
+  \**********************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = !__webpack_require__(/*! ./_descriptors */ 139) && !__webpack_require__(/*! ./_fails */ 140)(function(){
@@ -101386,9 +100939,9 @@
 
 /***/ },
 /* 139 */
-/*!***************************************************!*\
-  !*** ./~/core-js/library/modules/_descriptors.js ***!
-  \***************************************************/
+/*!*******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_descriptors.js ***!
+  \*******************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	// Thank's IE8 for his funny defineProperty
@@ -101398,9 +100951,9 @@
 
 /***/ },
 /* 140 */
-/*!*********************************************!*\
-  !*** ./~/core-js/library/modules/_fails.js ***!
-  \*********************************************/
+/*!*************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_fails.js ***!
+  \*************************************************************/
 /***/ function(module, exports) {
 
 	module.exports = function(exec){
@@ -101413,9 +100966,9 @@
 
 /***/ },
 /* 141 */
-/*!**************************************************!*\
-  !*** ./~/core-js/library/modules/_dom-create.js ***!
-  \**************************************************/
+/*!******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_dom-create.js ***!
+  \******************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	var isObject = __webpack_require__(/*! ./_is-object */ 137)
@@ -101428,9 +100981,9 @@
 
 /***/ },
 /* 142 */
-/*!****************************************************!*\
-  !*** ./~/core-js/library/modules/_to-primitive.js ***!
-  \****************************************************/
+/*!********************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_to-primitive.js ***!
+  \********************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	// 7.1.1 ToPrimitive(input [, PreferredType])
@@ -101448,9 +101001,9 @@
 
 /***/ },
 /* 143 */
-/*!*****************************************************!*\
-  !*** ./~/core-js/library/modules/_property-desc.js ***!
-  \*****************************************************/
+/*!*********************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_property-desc.js ***!
+  \*********************************************************************/
 /***/ function(module, exports) {
 
 	module.exports = function(bitmap, value){
@@ -101464,18 +101017,18 @@
 
 /***/ },
 /* 144 */
-/*!************************************************!*\
-  !*** ./~/core-js/library/modules/_redefine.js ***!
-  \************************************************/
+/*!****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_redefine.js ***!
+  \****************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = __webpack_require__(/*! ./_hide */ 134);
 
 /***/ },
 /* 145 */
-/*!*******************************************!*\
-  !*** ./~/core-js/library/modules/_has.js ***!
-  \*******************************************/
+/*!***********************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_has.js ***!
+  \***********************************************************/
 /***/ function(module, exports) {
 
 	var hasOwnProperty = {}.hasOwnProperty;
@@ -101485,9 +101038,9 @@
 
 /***/ },
 /* 146 */
-/*!***************************************************!*\
-  !*** ./~/core-js/library/modules/_iter-create.js ***!
-  \***************************************************/
+/*!*******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_iter-create.js ***!
+  \*******************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -101506,9 +101059,9 @@
 
 /***/ },
 /* 147 */
-/*!*****************************************************!*\
-  !*** ./~/core-js/library/modules/_object-create.js ***!
-  \*****************************************************/
+/*!*********************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_object-create.js ***!
+  \*********************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	// 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
@@ -101554,9 +101107,9 @@
 
 /***/ },
 /* 148 */
-/*!**************************************************!*\
-  !*** ./~/core-js/library/modules/_object-dps.js ***!
-  \**************************************************/
+/*!******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_object-dps.js ***!
+  \******************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	var dP       = __webpack_require__(/*! ./_object-dp */ 135)
@@ -101575,9 +101128,9 @@
 
 /***/ },
 /* 149 */
-/*!***************************************************!*\
-  !*** ./~/core-js/library/modules/_object-keys.js ***!
-  \***************************************************/
+/*!*******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_object-keys.js ***!
+  \*******************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	// 19.1.2.14 / 15.2.3.14 Object.keys(O)
@@ -101590,9 +101143,9 @@
 
 /***/ },
 /* 150 */
-/*!************************************************************!*\
-  !*** ./~/core-js/library/modules/_object-keys-internal.js ***!
-  \************************************************************/
+/*!****************************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_object-keys-internal.js ***!
+  \****************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	var has          = __webpack_require__(/*! ./_has */ 145)
@@ -101615,9 +101168,9 @@
 
 /***/ },
 /* 151 */
-/*!******************************************************!*\
-  !*** ./~/core-js/library/modules/_array-includes.js ***!
-  \******************************************************/
+/*!**********************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_array-includes.js ***!
+  \**********************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	// false -> Array#indexOf
@@ -101644,9 +101197,9 @@
 
 /***/ },
 /* 152 */
-/*!*************************************************!*\
-  !*** ./~/core-js/library/modules/_to-length.js ***!
-  \*************************************************/
+/*!*****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_to-length.js ***!
+  \*****************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	// 7.1.15 ToLength
@@ -101658,9 +101211,9 @@
 
 /***/ },
 /* 153 */
-/*!**************************************************!*\
-  !*** ./~/core-js/library/modules/_to-integer.js ***!
-  \**************************************************/
+/*!******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_to-integer.js ***!
+  \******************************************************************/
 /***/ function(module, exports) {
 
 	// 7.1.4 ToInteger
@@ -101672,9 +101225,9 @@
 
 /***/ },
 /* 154 */
-/*!************************************************!*\
-  !*** ./~/core-js/library/modules/_to-index.js ***!
-  \************************************************/
+/*!****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_to-index.js ***!
+  \****************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	var toInteger = __webpack_require__(/*! ./_to-integer */ 153)
@@ -101687,9 +101240,9 @@
 
 /***/ },
 /* 155 */
-/*!**************************************************!*\
-  !*** ./~/core-js/library/modules/_shared-key.js ***!
-  \**************************************************/
+/*!******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_shared-key.js ***!
+  \******************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	var shared = __webpack_require__(/*! ./_shared */ 156)('keys')
@@ -101700,9 +101253,9 @@
 
 /***/ },
 /* 156 */
-/*!**********************************************!*\
-  !*** ./~/core-js/library/modules/_shared.js ***!
-  \**********************************************/
+/*!**************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_shared.js ***!
+  \**************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	var global = __webpack_require__(/*! ./_global */ 130)
@@ -101714,9 +101267,9 @@
 
 /***/ },
 /* 157 */
-/*!*******************************************!*\
-  !*** ./~/core-js/library/modules/_uid.js ***!
-  \*******************************************/
+/*!***********************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_uid.js ***!
+  \***********************************************************/
 /***/ function(module, exports) {
 
 	var id = 0
@@ -101727,9 +101280,9 @@
 
 /***/ },
 /* 158 */
-/*!*****************************************************!*\
-  !*** ./~/core-js/library/modules/_enum-bug-keys.js ***!
-  \*****************************************************/
+/*!*********************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_enum-bug-keys.js ***!
+  \*********************************************************************/
 /***/ function(module, exports) {
 
 	// IE 8- don't enum bug keys
@@ -101739,18 +101292,18 @@
 
 /***/ },
 /* 159 */
-/*!********************************************!*\
-  !*** ./~/core-js/library/modules/_html.js ***!
-  \********************************************/
+/*!************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_html.js ***!
+  \************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = __webpack_require__(/*! ./_global */ 130).document && document.documentElement;
 
 /***/ },
 /* 160 */
-/*!*********************************************************!*\
-  !*** ./~/core-js/library/modules/_set-to-string-tag.js ***!
-  \*********************************************************/
+/*!*************************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_set-to-string-tag.js ***!
+  \*************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	var def = __webpack_require__(/*! ./_object-dp */ 135).f
@@ -101763,9 +101316,9 @@
 
 /***/ },
 /* 161 */
-/*!*******************************************!*\
-  !*** ./~/core-js/library/modules/_wks.js ***!
-  \*******************************************/
+/*!***********************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_wks.js ***!
+  \***********************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	var store      = __webpack_require__(/*! ./_shared */ 156)('wks')
@@ -101782,9 +101335,9 @@
 
 /***/ },
 /* 162 */
-/*!**************************************************!*\
-  !*** ./~/core-js/library/modules/_object-gpo.js ***!
-  \**************************************************/
+/*!******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_object-gpo.js ***!
+  \******************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	// 19.1.2.9 / 15.2.3.2 Object.getPrototypeOf(O)
@@ -101803,9 +101356,9 @@
 
 /***/ },
 /* 163 */
-/*!*************************************************!*\
-  !*** ./~/core-js/library/modules/_to-object.js ***!
-  \*************************************************/
+/*!*****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_to-object.js ***!
+  \*****************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	// 7.1.13 ToObject(argument)
@@ -101816,9 +101369,9 @@
 
 /***/ },
 /* 164 */
-/*!**********************************************************!*\
-  !*** ./~/core-js/library/modules/es6.string.iterator.js ***!
-  \**********************************************************/
+/*!**************************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/es6.string.iterator.js ***!
+  \**************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -101841,9 +101394,9 @@
 
 /***/ },
 /* 165 */
-/*!*************************************************!*\
-  !*** ./~/core-js/library/modules/_string-at.js ***!
-  \*************************************************/
+/*!*****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_string-at.js ***!
+  \*****************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	var toInteger = __webpack_require__(/*! ./_to-integer */ 153)
@@ -101866,9 +101419,9 @@
 
 /***/ },
 /* 166 */
-/*!********************************************************!*\
-  !*** ./~/core-js/library/modules/core.get-iterator.js ***!
-  \********************************************************/
+/*!************************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/core.get-iterator.js ***!
+  \************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	var anObject = __webpack_require__(/*! ./_an-object */ 136)
@@ -101881,9 +101434,9 @@
 
 /***/ },
 /* 167 */
-/*!***************************************************************!*\
-  !*** ./~/core-js/library/modules/core.get-iterator-method.js ***!
-  \***************************************************************/
+/*!*******************************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/core.get-iterator-method.js ***!
+  \*******************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	var classof   = __webpack_require__(/*! ./_classof */ 168)
@@ -101897,9 +101450,9 @@
 
 /***/ },
 /* 168 */
-/*!***********************************************!*\
-  !*** ./~/core-js/library/modules/_classof.js ***!
-  \***********************************************/
+/*!***************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_classof.js ***!
+  \***************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	// getting tag from 19.1.3.6 Object.prototype.toString()
@@ -102192,7 +101745,7 @@
 /***/ function(module, exports) {
 
 	/**
-	 * @license AngularJS v1.5.7
+	 * @license AngularJS v1.5.6
 	 * (c) 2010-2016 Google, Inc. http://angularjs.org
 	 * License: MIT
 	 */
@@ -103481,7 +103034,7 @@
 /***/ function(module, exports) {
 
 	module.exports = {
-		"BACKEND_URL": "https://beeline-server-dev.herokuapp.com",
+		"BACKEND_URL": "https://api.beeline.sg",
 		"AUTH0_CID": "BslsfnrdKMedsmr9GYkTv7ejJPReMgcE",
 		"AUTH0_DOMAIN": "beeline.au.auth0.com"
 	};
@@ -103611,7 +103164,7 @@
   \*********************************************************/
 /***/ function(module, exports) {
 
-	module.exports = "<nav class=\"navbar navbar-inverse navbar-fixed-top\">\n  <!-- Fixed navbar -->\n  <div class=\"container-fluid\">\n    <div class=\"navbar-header\">\n      <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#navbar\" aria-expanded=\"false\" aria-controls=\"navbar\">\n        <span class=\"sr-only\">Toggle navigation</span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n      </button>\n    </div>\n    <div id=\"navbar\" class=\"navbar-collapse collapse\">\n      <a class=\"navbar-brand\" href=\"#\">Beeline Admin</a>\n      <ul class=\"nav navbar-nav\">\n        <li><a ui-sref=\"bookings\">Tickets</a></li>\n        <li><a ui-sref=\"transactions\">Transactions</a></li>\n        <li><a ui-sref=\"routes({routeId: 0, action: 'route'})\">Routes</a></li>\n        <li><a ui-sref=\"trips({routeId: 0, action: 'route'})\">Trips</a></li>\n        <li><a ui-sref=\"summary\">Summary</a></li>\n        <li><a ui-sref=\"driver\">Drivers</a></li>\n        <li><a href=\"#\">Incidents</a></li>\n      </ul>\n\n      <ul class=\"nav navbar-nav pull-right\">\n        <li>\n          <a>\n            <super-admin-company-selector></super-admin-company-selector>\n          </a>\n        </li>\n\n        <li ng-if=\"!auth.isAuthenticated\">\n          <a ng-click=\"adminService.login()\">\n        Login\n      </a>\n        </li>\n\n        <li ng-if=\"auth.isAuthenticated\">\n          <a ng-click=\"adminService.logout()\">Log out</a>\n        </li>\n      </ul>\n    </div>\n    <!--/.nav-collapse -->\n  </div>\n\n</nav>\n";
+	module.exports = "<nav class=\"navbar navbar-inverse navbar-fixed-top\">\n  <!-- Fixed navbar -->\n  <div class=\"container-fluid\">\n    <div class=\"navbar-header\">\n      <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#navbar\" aria-expanded=\"false\" aria-controls=\"navbar\">\n        <span class=\"sr-only\">Toggle navigation</span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n      </button>\n    </div>\n    <div id=\"navbar\" class=\"navbar-collapse collapse\">\n      <a class=\"navbar-brand\" href=\"#\">Beeline Admin</a>\n      <ul class=\"nav navbar-nav\">\n        <li><a ui-sref=\"bookings\">Tickets</a></li>\n        <li ng-if=\"adminService.isSuperAdmin()\"><a ui-sref=\"transactions\">Transactions</a></li>\n        <li><a ui-sref=\"routes({routeId: 0, action: 'route'})\">Routes</a></li>\n        <li  ng-if=\"adminService.isSuperAdmin()\"><a ui-sref=\"trips({routeId: 0, action: 'route'})\">Trips</a></li>\n        <li><a ui-sref=\"summary\">Summary</a></li>\n        <li><a ui-sref=\"driver\">Drivers</a></li>\n        <li ng-if=\"adminService.isSuperAdmin()\"><a href=\"#\">Incidents</a></li>\n      </ul>\n\n      <ul class=\"nav navbar-nav pull-right\">\n        <li ng-if=\"adminService.isSuperAdmin()\">\n          <a>\n            <super-admin-company-selector></super-admin-company-selector>\n          </a>\n        </li>\n\n        <li ng-if=\"!auth.isAuthenticated\">\n          <a ng-click=\"adminService.login()\">\n        Login\n      </a>\n        </li>\n\n        <li ng-if=\"auth.isAuthenticated\">\n          <a ng-click=\"adminService.logout()\">Log out</a>\n        </li>\n      </ul>\n    </div>\n    <!--/.nav-collapse -->\n  </div>\n\n</nav>\n";
 
 /***/ },
 /* 183 */
@@ -103711,9 +103264,9 @@
 
 /***/ },
 /* 187 */
-/*!*************************************************!*\
-  !*** ./~/core-js/library/fn/symbol/iterator.js ***!
-  \*************************************************/
+/*!*****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/fn/symbol/iterator.js ***!
+  \*****************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(/*! ../../modules/es6.string.iterator */ 164);
@@ -103722,9 +103275,9 @@
 
 /***/ },
 /* 188 */
-/*!***********************************************!*\
-  !*** ./~/core-js/library/modules/_wks-ext.js ***!
-  \***********************************************/
+/*!***************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_wks-ext.js ***!
+  \***************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	exports.f = __webpack_require__(/*! ./_wks */ 161);
@@ -103740,9 +103293,9 @@
 
 /***/ },
 /* 190 */
-/*!**********************************************!*\
-  !*** ./~/core-js/library/fn/symbol/index.js ***!
-  \**********************************************/
+/*!**************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/fn/symbol/index.js ***!
+  \**************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(/*! ../../modules/es6.symbol */ 191);
@@ -103753,9 +103306,9 @@
 
 /***/ },
 /* 191 */
-/*!*************************************************!*\
-  !*** ./~/core-js/library/modules/es6.symbol.js ***!
-  \*************************************************/
+/*!*****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/es6.symbol.js ***!
+  \*****************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -103996,9 +103549,9 @@
 
 /***/ },
 /* 192 */
-/*!********************************************!*\
-  !*** ./~/core-js/library/modules/_meta.js ***!
-  \********************************************/
+/*!************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_meta.js ***!
+  \************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	var META     = __webpack_require__(/*! ./_uid */ 157)('meta')
@@ -104057,9 +103610,9 @@
 
 /***/ },
 /* 193 */
-/*!**************************************************!*\
-  !*** ./~/core-js/library/modules/_wks-define.js ***!
-  \**************************************************/
+/*!******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_wks-define.js ***!
+  \******************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	var global         = __webpack_require__(/*! ./_global */ 130)
@@ -104074,9 +103627,9 @@
 
 /***/ },
 /* 194 */
-/*!*********************************************!*\
-  !*** ./~/core-js/library/modules/_keyof.js ***!
-  \*********************************************/
+/*!*************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_keyof.js ***!
+  \*************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	var getKeys   = __webpack_require__(/*! ./_object-keys */ 149)
@@ -104092,9 +103645,9 @@
 
 /***/ },
 /* 195 */
-/*!*************************************************!*\
-  !*** ./~/core-js/library/modules/_enum-keys.js ***!
-  \*************************************************/
+/*!*****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_enum-keys.js ***!
+  \*****************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	// all enumerable object keys, includes symbols
@@ -104115,27 +103668,27 @@
 
 /***/ },
 /* 196 */
-/*!***************************************************!*\
-  !*** ./~/core-js/library/modules/_object-gops.js ***!
-  \***************************************************/
+/*!*******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_object-gops.js ***!
+  \*******************************************************************/
 /***/ function(module, exports) {
 
 	exports.f = Object.getOwnPropertySymbols;
 
 /***/ },
 /* 197 */
-/*!**************************************************!*\
-  !*** ./~/core-js/library/modules/_object-pie.js ***!
-  \**************************************************/
+/*!******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_object-pie.js ***!
+  \******************************************************************/
 /***/ function(module, exports) {
 
 	exports.f = {}.propertyIsEnumerable;
 
 /***/ },
 /* 198 */
-/*!************************************************!*\
-  !*** ./~/core-js/library/modules/_is-array.js ***!
-  \************************************************/
+/*!****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_is-array.js ***!
+  \****************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	// 7.2.2 IsArray(argument)
@@ -104146,9 +103699,9 @@
 
 /***/ },
 /* 199 */
-/*!*******************************************************!*\
-  !*** ./~/core-js/library/modules/_object-gopn-ext.js ***!
-  \*******************************************************/
+/*!***********************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_object-gopn-ext.js ***!
+  \***********************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	// fallback for IE11 buggy Object.getOwnPropertyNames with iframe and window
@@ -104174,9 +103727,9 @@
 
 /***/ },
 /* 200 */
-/*!***************************************************!*\
-  !*** ./~/core-js/library/modules/_object-gopn.js ***!
-  \***************************************************/
+/*!*******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_object-gopn.js ***!
+  \*******************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	// 19.1.2.7 / 15.2.3.4 Object.getOwnPropertyNames(O)
@@ -104189,9 +103742,9 @@
 
 /***/ },
 /* 201 */
-/*!***************************************************!*\
-  !*** ./~/core-js/library/modules/_object-gopd.js ***!
-  \***************************************************/
+/*!*******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_object-gopd.js ***!
+  \*******************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	var pIE            = __webpack_require__(/*! ./_object-pie */ 197)
@@ -104213,27 +103766,27 @@
 
 /***/ },
 /* 202 */
-/*!***********************************************************!*\
-  !*** ./~/core-js/library/modules/es6.object.to-string.js ***!
-  \***********************************************************/
+/*!***************************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/es6.object.to-string.js ***!
+  \***************************************************************************/
 /***/ function(module, exports) {
 
 
 
 /***/ },
 /* 203 */
-/*!****************************************************************!*\
-  !*** ./~/core-js/library/modules/es7.symbol.async-iterator.js ***!
-  \****************************************************************/
+/*!********************************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/es7.symbol.async-iterator.js ***!
+  \********************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(/*! ./_wks-define */ 193)('asyncIterator');
 
 /***/ },
 /* 204 */
-/*!************************************************************!*\
-  !*** ./~/core-js/library/modules/es7.symbol.observable.js ***!
-  \************************************************************/
+/*!****************************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/es7.symbol.observable.js ***!
+  \****************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(/*! ./_wks-define */ 193)('observable');
@@ -104360,7 +103913,7 @@
   \*******************************************************************/
 /***/ function(module, exports) {
 
-	module.exports = "<div>\n  <button class=\"glyphicon glyphicon-duplicate btn btn-default\"\n    title=\"copy\"\n    ng-click=\"copySelected()\"\n    ng-disabled=\"!selectedRoute\">\n  </button>\n  <ul class=\"nav nav-sidebar\">\n    <li ng-repeat=\"route in availableRoutes | orderBy:'label' track by route.id\"\n    ng-click=\"selectRoute(route)\"\n    ng-class=\"{\n      active: selectedRoute == route\n    }\"\n    > <a>\n        {{route.label}}:\n        {{route.from}} to {{route.to}}</a>\n    </li>\n    <li ng-click=\"selectRoute({})\"> <a><em>New route!</em></a>\n\n    </li>\n  </ul>\n</div>\n";
+	module.exports = "<div>\n  <button class=\"glyphicon glyphicon-duplicate btn btn-default\"\n    title=\"copy\"\n    ng-click=\"copySelected()\"\n    ng-disabled=\"!selectedRoute\">\n  </button>\n  <ul class=\"nav nav-sidebar\">\n    <li ng-repeat=\"route in availableRoutes | orderBy:'label' track by route.id\"\n    ng-click=\"selectRoute(route)\"\n    ng-class=\"{\n      active: selectedRoute == route\n    }\"\n    > <a>\n        <small>(~{{route.id}})</small> \n        {{route.label}}:\n        {{route.from}} to {{route.to}}\n      </a>\n    </li>\n    <li ng-click=\"selectRoute({})\"> <a><em>New route!</em></a>\n\n    </li>\n  </ul>\n</div>\n";
 
 /***/ },
 /* 210 */
@@ -104411,21 +103964,9 @@
 	          });
 	        }
 	      };
-	
-	      scope.$watch('route', function () {
-	        scope.route && scope.route.id && RoutesService.getRoute(scope.route.id, { includeTrips: true }).then(function (route) {
-	          scope.tripStops = _lodash2.default.maxBy(route.trips, 'date').tripStops;
-	        });
-	      });
 	    }
 	  };
 	};
-	
-	var _lodash = __webpack_require__(/*! lodash */ 8);
-	
-	var _lodash2 = _interopRequireDefault(_lodash);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
 /* 211 */
@@ -104434,7 +103975,7 @@
   \***************************************************************/
 /***/ function(module, exports) {
 
-	module.exports = "<div>\n  <span class=\"btn-group\">\n    <button class=\"btn btn-default\"\n      ng-click=\"edit = 'route'\">\n      Edit Route Description\n    </button>\n    <button class=\"btn btn-default\"\n      ng-click=\"edit = 'trips'\"\n      >\n      Edit Trips\n    </button>\n  </span>\n</div>\n\n<div ng-show=\"route\">\n  <div ng-show=\"edit == 'route'\">\n    <h2>{{route.label}}</h2>\n\n    <label>\n      Label:\n      <input type=\"text\" ng-model=\"route.label\">\n    </label>\n\n    <label>\n      Name:\n      <input type=\"text\" ng-model=\"route.name\">\n    </label>\n\n    <label>\n      From:\n      <input type=\"text\" ng-model=\"route.from\">\n    </label>\n\n    <label>\n      To:\n      <input type=\"text\" ng-model=\"route.to\">\n    </label>\n\n    <!-- ng-if creates a scope -->\n    <label ng-if=\"adminService.session().role == 'superadmin'\">\n      Company:\n      <company-selector ng-model=\"$parent.route.transportCompanyId\">\n      </company-selector>\n    </label>\n\n    <label>Path:</label>\n    <path-editor path=\"route.path\" trip-stops=\"tripStops\">\n    </path-editor>\n\n    <div class=\"btn-group\">\n      <button class=\"btn btn-primary\" ng-click=\"saveRoute()\"\n        ng-disabled=\"!route\">\n        Save\n      </button>\n      <button class=\"btn btn-default\" ng-click=\"resetRoute()\">\n        Reset\n      </button>\n    </div>\n    <button class=\"btn btn-danger\" ng-click=\"deleteRoute()\"\n      ng-disabled=\"!route || !route.id\">\n      Delete\n    </button>\n  </div>\n\n  <div ng-show=\"edit == 'trips'\">\n    <trips-editor route-id=\"route.id\" ng-if=\"route.id\">\n    </trips-editor>\n  </div>\n</div>\n";
+	module.exports = "<div>\n  <span class=\"btn-group\">\n    <button class=\"btn btn-default\"\n      ng-click=\"edit = 'route'\">\n      Edit Route Description\n    </button>\n    <button class=\"btn btn-default\"\n      ng-click=\"edit = 'trips'\"\n      >\n      Edit Trips\n    </button>\n  </span>\n</div>\n\n<div ng-show=\"route\">\n  <div ng-show=\"edit == 'route'\">\n    <h2>{{route.label}}</h2>\n\n    <label>\n      Label:\n      <input type=\"text\" ng-model=\"route.label\">\n    </label>\n\n    <label>\n      Name:\n      <input type=\"text\" ng-model=\"route.name\">\n    </label>\n\n    <label>\n      From:\n      <input type=\"text\" ng-model=\"route.from\">\n    </label>\n\n    <label>\n      To:\n      <input type=\"text\" ng-model=\"route.to\">\n    </label>\n\n    <!-- ng-if creates a scope -->\n    <label ng-if=\"adminService.session().role == 'superadmin'\">\n      Company:\n      <company-selector ng-model=\"$parent.route.transportCompanyId\">\n      </company-selector>\n    </label>\n\n    <label>Path:</label>\n    <path-editor path=\"route.path\">\n    </path-editor>\n\n    <div class=\"btn-group\">\n      <button class=\"btn btn-primary\" ng-click=\"saveRoute()\"\n        ng-disabled=\"!route\">\n        Save\n      </button>\n      <button class=\"btn btn-default\" ng-click=\"resetRoute()\">\n        Reset\n      </button>\n    </div>\n    <button class=\"btn btn-danger\" ng-click=\"deleteRoute()\"\n      ng-disabled=\"!route || !route.id\">\n      Delete\n    </button>\n  </div>\n\n  <div ng-show=\"edit == 'trips'\">\n    <trips-editor route-id=\"route.id\" ng-if=\"route.id\">\n    </trips-editor>\n  </div>\n</div>\n";
 
 /***/ },
 /* 212 */
@@ -104449,121 +103990,59 @@
 	  value: true
 	});
 	
-	exports.default = function ($rootScope, $location, uiGmapGoogleMapApi, $q) {
+	exports.default = function ($rootScope, $location) {
 	  return {
 	    template: __webpack_require__(/*! ./pathEditor.html */ 213),
 	    scope: {
-	      path: '=',
-	      tripStops: '='
+	      path: '='
 	    },
 	    link: function link(scope, elem, attr) {
-	      scope.newPath = '';
-	      uiGmapGoogleMapApi.then(function (googleMaps) {
-	        var SINGAPORE = new googleMaps.LatLng(1.352083, 103.819836);
-	        var map = new googleMaps.Map(document.querySelector('.map-container'), {
-	          zoom: 11,
-	          center: SINGAPORE
-	        });
-	
-	        var mapPath = new googleMaps.Polyline({
-	          strokeColor: '#FF0000',
-	          strokeWeight: 3
-	        });
-	
-	        scope.$watch('path', function (path) {
-	          if (!path) return;
-	          mapPath.setMap(map);
-	          if (typeof path === 'string') {
-	            mapPath.setPath(googleMaps.geometry.encoding.decodePath(path));
-	          } else {
-	            mapPath.setPath(path);
-	          }
-	        });
-	
-	        var markers = [];
-	
-	        scope.$watch('tripStops', function (tripStops) {
-	          map.setCenter(SINGAPORE);
-	          map.setZoom(11);
-	          dirRenderer.setMap(null);
-	          markers.forEach(function (marker) {
-	            return marker.setMap(null);
-	          });
-	          markers = tripStops ? tripStops.map(function (tripStop, i) {
-	            var _tripStop$stop = tripStop.stop;
-	            var coordinates = _tripStop$stop.coordinates.coordinates;
-	            var description = _tripStop$stop.description;
-	            var canBoard = tripStop.canBoard;
-	
-	            var latlng = new googleMaps.LatLng(coordinates[1], coordinates[0]);
-	            return new googleMaps.Marker({
-	              position: latlng,
-	              title: description,
-	              icon: {
-	                scaledSize: new googleMaps.Size(30, 30),
-	                anchor: new googleMaps.Point(15, 15),
-	                url: 'img/stop' + (canBoard ? 'Board' : 'Alight') + (i + 1) + '.png'
-	              },
-	              map: map
-	            });
-	          }) : [];
-	        });
-	
-	        var dirService = new googleMaps.DirectionsService();
-	        var dirRenderer = new googleMaps.DirectionsRenderer({
-	          draggable: true,
-	          polylineOptions: { strokeWeight: 3, strokeColor: '#4b3863' },
-	          markerOptions: { icon: 'https://maps.gstatic.com/mapfiles/dd-via.png' }
-	        });
-	
-	        dirRenderer.directions_changed = function () {
-	          var directions = dirRenderer.getDirections();
-	          console.log(directions);
-	          var overview_polyline = directions.routes[0].overview_polyline;
-	
-	          scope.newPath = overview_polyline;
-	        };
-	
-	        scope.googlePath = function (tripStops) {
-	          if (!tripStops) return;
-	          var stopsLatLng = tripStops.map(function (tripStop) {
-	            var coordinates = tripStop.stop.coordinates.coordinates;
-	
-	            return new googleMaps.LatLng(coordinates[1], coordinates[0]);
-	          });
-	
-	          var request = {
-	            origin: stopsLatLng[0],
-	            destination: stopsLatLng[stopsLatLng.length - 1],
-	            waypoints: stopsLatLng.slice(1, -1).map(function (latlng) {
-	              return { location: latlng };
-	            }),
-	            travelMode: googleMaps.TravelMode.DRIVING
-	          };
-	
-	          dirService.route(request, function (result, status) {
-	            if (status === googleMaps.DirectionsStatus.OK) {
-	              dirRenderer.setMap(map);
-	              dirRenderer.setDirections(result);
-	            } else {
-	              console.log('Google path failed', result);
+	      scope.mapControl = {};
+	      scope.events = {
+	        click: function click(map, eventName, args) {
+	          scope.$apply(function () {
+	            '';
+	            if (scope.addToWhere == 'end') {
+	              scope.path = scope.path || [];
+	              scope.path.push({
+	                lat: args[0].latLng.lat(),
+	                lng: args[0].latLng.lng()
+	              });
+	            } else if (scope.addToWhere == 'start') {
+	              scope.path = scope.path || [];
+	              scope.path.splice(0, 0, {
+	                lat: args[0].latLng.lat(),
+	                lng: args[0].latLng.lng()
+	              });
 	            }
 	          });
-	        };
+	        }
+	      };
+	      scope.addToWhere = 'end';
 	
-	        scope.updatePath = function () {
-	          if (!scope.newPath) return;
-	          scope.path = scope.newPath;
-	          scope.newPath = '';
-	          dirRenderer.setMap(null);
-	        };
+	      // For display purposes
+	      scope.pathX = [];
+	      scope.$watch('path', function () {
+	        if (!scope.path) {
+	          scope.pathX = [];
+	          return;
+	        }
+	        scope.pathX = scope.path.map(function (latlng) {
+	          return {
+	            latitude: latlng.lat,
+	            longitude: latlng.lng
+	          };
+	        });
+	      }, true);
 	
-	        scope.clearPath = function () {
-	          scope.path = '';
-	          scope.newPath = '';
-	          mapPath.setMap(null);
-	          dirRenderer.setMap(null);
-	        };
+	      scope.$watch(function () {
+	        return $location.url();
+	      }, function () {
+	        if (window.google && google.maps && scope.mapControl.getGMap) {
+	          setTimeout(function () {
+	            return google.maps.event.trigger(scope.mapControl.getGMap(), 'resize');
+	          }, 0);
+	        }
 	      });
 	    }
 	  };
@@ -104576,7 +104055,7 @@
   \*************************************************************/
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"path-editor\">\n  <button class=\"btn btn-default\"\n    ng-click=\"googlePath(tripStops)\">\n    Google path\n  </button>\n  <span class=\"btn-group\">\n    <button class=\"btn btn-primary\"\n      ng-click=\"updatePath()\">\n      Update path\n    </button>\n    <button class=\"btn btn-danger\"\n      ng-click=\"clearPath()\">\n      Clear path\n    </button>\n  </span>\n  <div class=\"map-container\"></div>\n  <textarea class=\"form-control\"\n    ng-model=\"path\"\n    placeholder=\"Path encoded as polyline\"\n    rows=7></textarea>\n</div>\n";
+	module.exports = "\n<div>\n  <button class=\"btn btn-default\"\n    ng-click=\"clearPath\"\n  >\n    Clear path\n  </button>\n\n  <span class=\"btn-group\">\n    <button class=\"btn btn-primary\"\n      uib-btn-radio=\"'start'\"\n      ng-model=\"addToWhere\"\n      >\n      Add to start\n    </button>\n\n    <button class=\"btn btn-primary\"\n      uib-btn-radio=\"'end'\"\n      ng-model=\"addToWhere\"\n      >\n      Add to end\n    </button>\n  </span>\n</div>\n\n<div class=\"main\">\n  <ui-gmap-google-map\n    center=\"{latitude: 1.38, longitude: 103.8}\"\n    zoom=\"12\"\n    events=\"events\"\n    options=\"{ draggableCursor: 'crosshair' }\"\n    control=\"mapControl\"\n  >\n    <ui-gmap-polyline\n      path=\"pathX\"\n      stroke=\"{\n        color: '#4b3863',\n        weight: 3.0,\n      }\"\n    >\n    </ui-gmap-polyline>\n  </ui-gmap-google-map>\n\n  <ul class=\"point-list\">\n    <li ng-repeat=\"p in path\"\n      ng-click=\"path.splice($index, 1)\"\n    >\n      {{p.lat | number:5}}, {{p.lng | number:5}}\n    </li>\n  </ul>\n</div>\n";
 
 /***/ },
 /* 214 */
@@ -105635,31 +105114,6 @@
 	// shim for using process in browser
 	
 	var process = module.exports = {};
-	
-	// cached from whatever global is present so that test runners that stub it
-	// don't break things.  But we need to wrap it in a try catch in case it is
-	// wrapped in strict mode code which doesn't define any globals.  It's inside a
-	// function because try/catches deoptimize in certain engines.
-	
-	var cachedSetTimeout;
-	var cachedClearTimeout;
-	
-	(function () {
-	  try {
-	    cachedSetTimeout = setTimeout;
-	  } catch (e) {
-	    cachedSetTimeout = function () {
-	      throw new Error('setTimeout is not defined');
-	    }
-	  }
-	  try {
-	    cachedClearTimeout = clearTimeout;
-	  } catch (e) {
-	    cachedClearTimeout = function () {
-	      throw new Error('clearTimeout is not defined');
-	    }
-	  }
-	} ())
 	var queue = [];
 	var draining = false;
 	var currentQueue;
@@ -105684,7 +105138,7 @@
 	    if (draining) {
 	        return;
 	    }
-	    var timeout = cachedSetTimeout(cleanUpNextTick);
+	    var timeout = setTimeout(cleanUpNextTick);
 	    draining = true;
 	
 	    var len = queue.length;
@@ -105701,7 +105155,7 @@
 	    }
 	    currentQueue = null;
 	    draining = false;
-	    cachedClearTimeout(timeout);
+	    clearTimeout(timeout);
 	}
 	
 	process.nextTick = function (fun) {
@@ -105713,7 +105167,7 @@
 	    }
 	    queue.push(new Item(fun, args));
 	    if (queue.length === 1 && !draining) {
-	        cachedSetTimeout(drainQueue, 0);
+	        setTimeout(drainQueue, 0);
 	    }
 	};
 	
@@ -105810,9 +105264,9 @@
 
 /***/ },
 /* 221 */
-/*!*****************************************!*\
-  !*** ./~/core-js/library/fn/promise.js ***!
-  \*****************************************/
+/*!*********************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/fn/promise.js ***!
+  \*********************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(/*! ../modules/es6.object.to-string */ 202);
@@ -105823,9 +105277,9 @@
 
 /***/ },
 /* 222 */
-/*!**************************************************!*\
-  !*** ./~/core-js/library/modules/es6.promise.js ***!
-  \**************************************************/
+/*!******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/es6.promise.js ***!
+  \******************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -106132,9 +105586,9 @@
 
 /***/ },
 /* 223 */
-/*!***************************************************!*\
-  !*** ./~/core-js/library/modules/_an-instance.js ***!
-  \***************************************************/
+/*!*******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_an-instance.js ***!
+  \*******************************************************************/
 /***/ function(module, exports) {
 
 	module.exports = function(it, Constructor, name, forbiddenField){
@@ -106145,9 +105599,9 @@
 
 /***/ },
 /* 224 */
-/*!**********************************************!*\
-  !*** ./~/core-js/library/modules/_for-of.js ***!
-  \**********************************************/
+/*!**************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_for-of.js ***!
+  \**************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	var ctx         = __webpack_require__(/*! ./_ctx */ 132)
@@ -106178,9 +105632,9 @@
 
 /***/ },
 /* 225 */
-/*!*************************************************!*\
-  !*** ./~/core-js/library/modules/_iter-call.js ***!
-  \*************************************************/
+/*!*****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_iter-call.js ***!
+  \*****************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	// call something on iterator step with safe closing on error
@@ -106198,9 +105652,9 @@
 
 /***/ },
 /* 226 */
-/*!*****************************************************!*\
-  !*** ./~/core-js/library/modules/_is-array-iter.js ***!
-  \*****************************************************/
+/*!*********************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_is-array-iter.js ***!
+  \*********************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	// check on default Array iterator
@@ -106214,9 +105668,9 @@
 
 /***/ },
 /* 227 */
-/*!*************************************************!*\
-  !*** ./~/core-js/library/modules/_set-proto.js ***!
-  \*************************************************/
+/*!*****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_set-proto.js ***!
+  \*****************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	// Works with __proto__ only. Old v8 can't work with null proto objects.
@@ -106247,9 +105701,9 @@
 
 /***/ },
 /* 228 */
-/*!***********************************************************!*\
-  !*** ./~/core-js/library/modules/_species-constructor.js ***!
-  \***********************************************************/
+/*!***************************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_species-constructor.js ***!
+  \***************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	// 7.3.20 SpeciesConstructor(O, defaultConstructor)
@@ -106263,9 +105717,9 @@
 
 /***/ },
 /* 229 */
-/*!********************************************!*\
-  !*** ./~/core-js/library/modules/_task.js ***!
-  \********************************************/
+/*!************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_task.js ***!
+  \************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	var ctx                = __webpack_require__(/*! ./_ctx */ 132)
@@ -106346,9 +105800,9 @@
 
 /***/ },
 /* 230 */
-/*!**********************************************!*\
-  !*** ./~/core-js/library/modules/_invoke.js ***!
-  \**********************************************/
+/*!**************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_invoke.js ***!
+  \**************************************************************/
 /***/ function(module, exports) {
 
 	// fast apply, http://jsperf.lnkit.com/fast-apply/5
@@ -106370,9 +105824,9 @@
 
 /***/ },
 /* 231 */
-/*!*************************************************!*\
-  !*** ./~/core-js/library/modules/_microtask.js ***!
-  \*************************************************/
+/*!*****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_microtask.js ***!
+  \*****************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	var global    = __webpack_require__(/*! ./_global */ 130)
@@ -106446,9 +105900,9 @@
 
 /***/ },
 /* 232 */
-/*!****************************************************!*\
-  !*** ./~/core-js/library/modules/_redefine-all.js ***!
-  \****************************************************/
+/*!********************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_redefine-all.js ***!
+  \********************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	var hide = __webpack_require__(/*! ./_hide */ 134);
@@ -106461,9 +105915,9 @@
 
 /***/ },
 /* 233 */
-/*!***************************************************!*\
-  !*** ./~/core-js/library/modules/_set-species.js ***!
-  \***************************************************/
+/*!*******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_set-species.js ***!
+  \*******************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -106483,9 +105937,9 @@
 
 /***/ },
 /* 234 */
-/*!***************************************************!*\
-  !*** ./~/core-js/library/modules/_iter-detect.js ***!
-  \***************************************************/
+/*!*******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_iter-detect.js ***!
+  \*******************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	var ITERATOR     = __webpack_require__(/*! ./_wks */ 161)('iterator')
@@ -106733,7 +106187,7 @@
 	
 	var _assert2 = _interopRequireDefault(_assert);
 	
-	var _leftPad = __webpack_require__(/*! left-pad */ 243);
+	var _leftPad = __webpack_require__(/*! left-pad */ 248);
 	
 	var _leftPad2 = _interopRequireDefault(_leftPad);
 
@@ -106755,51 +106209,7 @@
   \****************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
-	
-	// compare and isBuffer taken from https://github.com/feross/buffer/blob/680e9e5e488f22aac27599a57dc844a6315928dd/index.js
-	// original notice:
-	
-	/*!
-	 * The buffer module from node.js, for the browser.
-	 *
-	 * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
-	 * @license  MIT
-	 */
-	function compare(a, b) {
-	  if (a === b) {
-	    return 0;
-	  }
-	
-	  var x = a.length;
-	  var y = b.length;
-	
-	  for (var i = 0, len = Math.min(x, y); i < len; ++i) {
-	    if (a[i] !== b[i]) {
-	      x = a[i];
-	      y = b[i];
-	      break;
-	    }
-	  }
-	
-	  if (x < y) {
-	    return -1;
-	  }
-	  if (y < x) {
-	    return 1;
-	  }
-	  return 0;
-	}
-	function isBuffer(b) {
-	  if (global.Buffer && typeof global.Buffer.isBuffer === 'function') {
-	    return global.Buffer.isBuffer(b);
-	  }
-	  return !!(b != null && b._isBuffer);
-	}
-	
-	// based on node assert, original notice:
-	
-	// http://wiki.commonjs.org/wiki/Unit_Testing/1.0
+	/* WEBPACK VAR INJECTION */(function(global) {// http://wiki.commonjs.org/wiki/Unit_Testing/1.0
 	//
 	// THIS IS NOT TESTED NOR LIKELY TO WORK OUTSIDE V8!
 	//
@@ -106823,7 +106233,30 @@
 	// ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 	// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	
+	'use strict';
+	
+	// UTILITY
+	function compare(bufa, bufb) {
+	  var cmpLen = Math.min(bufa, bufb);
+	  if (cmpLen <= 0) {
+	    return 0;
+	  }
+	  var i = -1;
+	  var a,b;
+	  while (++i < cmpLen) {
+	    a = bufa[i];
+	    b = bufb[i];
+	    if (a < b) {
+	      return -1;
+	    } else if (a > b) {
+	      return 1;
+	    }
+	  }
+	  return 0;
+	}
 	var util = __webpack_require__(/*! util/ */ 240);
+	var Buffer = __webpack_require__(/*! buffer */ 243).Buffer;
+	var BufferShim = __webpack_require__(/*! buffer-shims */ 247);
 	var hasOwn = Object.prototype.hasOwnProperty;
 	var pSlice = Array.prototype.slice;
 	var functionsHaveNames = (function () {
@@ -106833,9 +106266,6 @@
 	  return Object.prototype.toString.call(obj);
 	}
 	function isView(arrbuf) {
-	  if (isBuffer(arrbuf)) {
-	    return false;
-	  }
 	  if (typeof global.ArrayBuffer !== 'function') {
 	    return false;
 	  }
@@ -106891,25 +106321,25 @@
 	  }
 	  var stackStartFunction = options.stackStartFunction || fail;
 	  if (Error.captureStackTrace) {
-	    Error.captureStackTrace(this, stackStartFunction);
-	  } else {
-	    // non v8 browsers so we can have a stacktrace
-	    var err = new Error();
-	    if (err.stack) {
-	      var out = err.stack;
+	   Error.captureStackTrace(this, stackStartFunction);
+	 } else {
+	   // non v8 browsers so we can have a stacktrace
+	   var err = new Error();
+	   if (err.stack) {
+	     var out = err.stack;
 	
-	      // try to strip useless frames
-	      var fn_name = getName(stackStartFunction);
-	      var idx = out.indexOf('\n' + fn_name);
-	      if (idx >= 0) {
-	        // once we have located the function frame
-	        // we need to strip out everything before it (and its line)
-	        var next_line = out.indexOf('\n', idx + 1);
-	        out = out.substring(next_line + 1);
-	      }
+	     // try to strip useless frames
+	     var fn_name = getName(stackStartFunction);
+	     var idx = out.indexOf('\n' + fn_name);
+	     if (idx >= 0) {
+	       // once we have located the function frame
+	       // we need to strip out everything before it (and its line)
+	       var next_line = out.indexOf('\n', idx + 1);
+	       out = out.substring(next_line + 1);
+	     }
 	
-	      this.stack = out;
-	    }
+	     this.stack = out;
+	   }
 	  }
 	};
 	
@@ -107009,7 +106439,7 @@
 	  // 7.1. All identical values are equivalent, as determined by ===.
 	  if (actual === expected) {
 	    return true;
-	  } else if (isBuffer(actual) && isBuffer(expected)) {
+	  } else if (Buffer.isBuffer(actual) && Buffer.isBuffer(expected)) {
 	    return compare(actual, expected) === 0;
 	
 	  // 7.2. If the expected value is a Date object, the actual value is
@@ -107043,8 +106473,8 @@
 	             pToString(actual) === pToString(expected) &&
 	             !(actual instanceof Float32Array ||
 	               actual instanceof Float64Array)) {
-	    return compare(new Uint8Array(actual.buffer),
-	                   new Uint8Array(expected.buffer)) === 0;
+	    return compare(BufferShim.from(actual.buffer),
+	                   BufferShim.from(expected.buffer)) === 0;
 	
 	  // 7.5 For all other Object pairs, including Array objects, equivalence is
 	  // determined by having the same number of owned properties (as verified
@@ -107052,8 +106482,6 @@
 	  // (although not necessarily the same order), equivalent values for every
 	  // corresponding key, and an identical 'prototype' property. Note: this
 	  // accounts for both named and indexed properties on Arrays.
-	  } else if (isBuffer(actual) !== isBuffer(expected)) {
-	    return false;
 	  } else {
 	    memos = memos || {actual: [], expected: []};
 	
@@ -107892,6 +107320,1922 @@
 
 /***/ },
 /* 243 */
+/*!***************************!*\
+  !*** ./~/buffer/index.js ***!
+  \***************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(Buffer, global) {/*!
+	 * The buffer module from node.js, for the browser.
+	 *
+	 * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
+	 * @license  MIT
+	 */
+	/* eslint-disable no-proto */
+	
+	'use strict'
+	
+	var base64 = __webpack_require__(/*! base64-js */ 244)
+	var ieee754 = __webpack_require__(/*! ieee754 */ 245)
+	var isArray = __webpack_require__(/*! isarray */ 246)
+	
+	exports.Buffer = Buffer
+	exports.SlowBuffer = SlowBuffer
+	exports.INSPECT_MAX_BYTES = 50
+	Buffer.poolSize = 8192 // not used by this implementation
+	
+	var rootParent = {}
+	
+	/**
+	 * If `Buffer.TYPED_ARRAY_SUPPORT`:
+	 *   === true    Use Uint8Array implementation (fastest)
+	 *   === false   Use Object implementation (most compatible, even IE6)
+	 *
+	 * Browsers that support typed arrays are IE 10+, Firefox 4+, Chrome 7+, Safari 5.1+,
+	 * Opera 11.6+, iOS 4.2+.
+	 *
+	 * Due to various browser bugs, sometimes the Object implementation will be used even
+	 * when the browser supports typed arrays.
+	 *
+	 * Note:
+	 *
+	 *   - Firefox 4-29 lacks support for adding new properties to `Uint8Array` instances,
+	 *     See: https://bugzilla.mozilla.org/show_bug.cgi?id=695438.
+	 *
+	 *   - Safari 5-7 lacks support for changing the `Object.prototype.constructor` property
+	 *     on objects.
+	 *
+	 *   - Chrome 9-10 is missing the `TypedArray.prototype.subarray` function.
+	 *
+	 *   - IE10 has a broken `TypedArray.prototype.subarray` function which returns arrays of
+	 *     incorrect length in some situations.
+	
+	 * We detect these buggy browsers and set `Buffer.TYPED_ARRAY_SUPPORT` to `false` so they
+	 * get the Object implementation, which is slower but behaves correctly.
+	 */
+	Buffer.TYPED_ARRAY_SUPPORT = global.TYPED_ARRAY_SUPPORT !== undefined
+	  ? global.TYPED_ARRAY_SUPPORT
+	  : typedArraySupport()
+	
+	function typedArraySupport () {
+	  function Bar () {}
+	  try {
+	    var arr = new Uint8Array(1)
+	    arr.foo = function () { return 42 }
+	    arr.constructor = Bar
+	    return arr.foo() === 42 && // typed array instances can be augmented
+	        arr.constructor === Bar && // constructor can be set
+	        typeof arr.subarray === 'function' && // chrome 9-10 lack `subarray`
+	        arr.subarray(1, 1).byteLength === 0 // ie10 has broken `subarray`
+	  } catch (e) {
+	    return false
+	  }
+	}
+	
+	function kMaxLength () {
+	  return Buffer.TYPED_ARRAY_SUPPORT
+	    ? 0x7fffffff
+	    : 0x3fffffff
+	}
+	
+	/**
+	 * Class: Buffer
+	 * =============
+	 *
+	 * The Buffer constructor returns instances of `Uint8Array` that are augmented
+	 * with function properties for all the node `Buffer` API functions. We use
+	 * `Uint8Array` so that square bracket notation works as expected -- it returns
+	 * a single octet.
+	 *
+	 * By augmenting the instances, we can avoid modifying the `Uint8Array`
+	 * prototype.
+	 */
+	function Buffer (arg) {
+	  if (!(this instanceof Buffer)) {
+	    // Avoid going through an ArgumentsAdaptorTrampoline in the common case.
+	    if (arguments.length > 1) return new Buffer(arg, arguments[1])
+	    return new Buffer(arg)
+	  }
+	
+	  if (!Buffer.TYPED_ARRAY_SUPPORT) {
+	    this.length = 0
+	    this.parent = undefined
+	  }
+	
+	  // Common case.
+	  if (typeof arg === 'number') {
+	    return fromNumber(this, arg)
+	  }
+	
+	  // Slightly less common case.
+	  if (typeof arg === 'string') {
+	    return fromString(this, arg, arguments.length > 1 ? arguments[1] : 'utf8')
+	  }
+	
+	  // Unusual.
+	  return fromObject(this, arg)
+	}
+	
+	function fromNumber (that, length) {
+	  that = allocate(that, length < 0 ? 0 : checked(length) | 0)
+	  if (!Buffer.TYPED_ARRAY_SUPPORT) {
+	    for (var i = 0; i < length; i++) {
+	      that[i] = 0
+	    }
+	  }
+	  return that
+	}
+	
+	function fromString (that, string, encoding) {
+	  if (typeof encoding !== 'string' || encoding === '') encoding = 'utf8'
+	
+	  // Assumption: byteLength() return value is always < kMaxLength.
+	  var length = byteLength(string, encoding) | 0
+	  that = allocate(that, length)
+	
+	  that.write(string, encoding)
+	  return that
+	}
+	
+	function fromObject (that, object) {
+	  if (Buffer.isBuffer(object)) return fromBuffer(that, object)
+	
+	  if (isArray(object)) return fromArray(that, object)
+	
+	  if (object == null) {
+	    throw new TypeError('must start with number, buffer, array or string')
+	  }
+	
+	  if (typeof ArrayBuffer !== 'undefined') {
+	    if (object.buffer instanceof ArrayBuffer) {
+	      return fromTypedArray(that, object)
+	    }
+	    if (object instanceof ArrayBuffer) {
+	      return fromArrayBuffer(that, object)
+	    }
+	  }
+	
+	  if (object.length) return fromArrayLike(that, object)
+	
+	  return fromJsonObject(that, object)
+	}
+	
+	function fromBuffer (that, buffer) {
+	  var length = checked(buffer.length) | 0
+	  that = allocate(that, length)
+	  buffer.copy(that, 0, 0, length)
+	  return that
+	}
+	
+	function fromArray (that, array) {
+	  var length = checked(array.length) | 0
+	  that = allocate(that, length)
+	  for (var i = 0; i < length; i += 1) {
+	    that[i] = array[i] & 255
+	  }
+	  return that
+	}
+	
+	// Duplicate of fromArray() to keep fromArray() monomorphic.
+	function fromTypedArray (that, array) {
+	  var length = checked(array.length) | 0
+	  that = allocate(that, length)
+	  // Truncating the elements is probably not what people expect from typed
+	  // arrays with BYTES_PER_ELEMENT > 1 but it's compatible with the behavior
+	  // of the old Buffer constructor.
+	  for (var i = 0; i < length; i += 1) {
+	    that[i] = array[i] & 255
+	  }
+	  return that
+	}
+	
+	function fromArrayBuffer (that, array) {
+	  if (Buffer.TYPED_ARRAY_SUPPORT) {
+	    // Return an augmented `Uint8Array` instance, for best performance
+	    array.byteLength
+	    that = Buffer._augment(new Uint8Array(array))
+	  } else {
+	    // Fallback: Return an object instance of the Buffer class
+	    that = fromTypedArray(that, new Uint8Array(array))
+	  }
+	  return that
+	}
+	
+	function fromArrayLike (that, array) {
+	  var length = checked(array.length) | 0
+	  that = allocate(that, length)
+	  for (var i = 0; i < length; i += 1) {
+	    that[i] = array[i] & 255
+	  }
+	  return that
+	}
+	
+	// Deserialize { type: 'Buffer', data: [1,2,3,...] } into a Buffer object.
+	// Returns a zero-length buffer for inputs that don't conform to the spec.
+	function fromJsonObject (that, object) {
+	  var array
+	  var length = 0
+	
+	  if (object.type === 'Buffer' && isArray(object.data)) {
+	    array = object.data
+	    length = checked(array.length) | 0
+	  }
+	  that = allocate(that, length)
+	
+	  for (var i = 0; i < length; i += 1) {
+	    that[i] = array[i] & 255
+	  }
+	  return that
+	}
+	
+	if (Buffer.TYPED_ARRAY_SUPPORT) {
+	  Buffer.prototype.__proto__ = Uint8Array.prototype
+	  Buffer.__proto__ = Uint8Array
+	} else {
+	  // pre-set for values that may exist in the future
+	  Buffer.prototype.length = undefined
+	  Buffer.prototype.parent = undefined
+	}
+	
+	function allocate (that, length) {
+	  if (Buffer.TYPED_ARRAY_SUPPORT) {
+	    // Return an augmented `Uint8Array` instance, for best performance
+	    that = Buffer._augment(new Uint8Array(length))
+	    that.__proto__ = Buffer.prototype
+	  } else {
+	    // Fallback: Return an object instance of the Buffer class
+	    that.length = length
+	    that._isBuffer = true
+	  }
+	
+	  var fromPool = length !== 0 && length <= Buffer.poolSize >>> 1
+	  if (fromPool) that.parent = rootParent
+	
+	  return that
+	}
+	
+	function checked (length) {
+	  // Note: cannot use `length < kMaxLength` here because that fails when
+	  // length is NaN (which is otherwise coerced to zero.)
+	  if (length >= kMaxLength()) {
+	    throw new RangeError('Attempt to allocate Buffer larger than maximum ' +
+	                         'size: 0x' + kMaxLength().toString(16) + ' bytes')
+	  }
+	  return length | 0
+	}
+	
+	function SlowBuffer (subject, encoding) {
+	  if (!(this instanceof SlowBuffer)) return new SlowBuffer(subject, encoding)
+	
+	  var buf = new Buffer(subject, encoding)
+	  delete buf.parent
+	  return buf
+	}
+	
+	Buffer.isBuffer = function isBuffer (b) {
+	  return !!(b != null && b._isBuffer)
+	}
+	
+	Buffer.compare = function compare (a, b) {
+	  if (!Buffer.isBuffer(a) || !Buffer.isBuffer(b)) {
+	    throw new TypeError('Arguments must be Buffers')
+	  }
+	
+	  if (a === b) return 0
+	
+	  var x = a.length
+	  var y = b.length
+	
+	  var i = 0
+	  var len = Math.min(x, y)
+	  while (i < len) {
+	    if (a[i] !== b[i]) break
+	
+	    ++i
+	  }
+	
+	  if (i !== len) {
+	    x = a[i]
+	    y = b[i]
+	  }
+	
+	  if (x < y) return -1
+	  if (y < x) return 1
+	  return 0
+	}
+	
+	Buffer.isEncoding = function isEncoding (encoding) {
+	  switch (String(encoding).toLowerCase()) {
+	    case 'hex':
+	    case 'utf8':
+	    case 'utf-8':
+	    case 'ascii':
+	    case 'binary':
+	    case 'base64':
+	    case 'raw':
+	    case 'ucs2':
+	    case 'ucs-2':
+	    case 'utf16le':
+	    case 'utf-16le':
+	      return true
+	    default:
+	      return false
+	  }
+	}
+	
+	Buffer.concat = function concat (list, length) {
+	  if (!isArray(list)) throw new TypeError('list argument must be an Array of Buffers.')
+	
+	  if (list.length === 0) {
+	    return new Buffer(0)
+	  }
+	
+	  var i
+	  if (length === undefined) {
+	    length = 0
+	    for (i = 0; i < list.length; i++) {
+	      length += list[i].length
+	    }
+	  }
+	
+	  var buf = new Buffer(length)
+	  var pos = 0
+	  for (i = 0; i < list.length; i++) {
+	    var item = list[i]
+	    item.copy(buf, pos)
+	    pos += item.length
+	  }
+	  return buf
+	}
+	
+	function byteLength (string, encoding) {
+	  if (typeof string !== 'string') string = '' + string
+	
+	  var len = string.length
+	  if (len === 0) return 0
+	
+	  // Use a for loop to avoid recursion
+	  var loweredCase = false
+	  for (;;) {
+	    switch (encoding) {
+	      case 'ascii':
+	      case 'binary':
+	      // Deprecated
+	      case 'raw':
+	      case 'raws':
+	        return len
+	      case 'utf8':
+	      case 'utf-8':
+	        return utf8ToBytes(string).length
+	      case 'ucs2':
+	      case 'ucs-2':
+	      case 'utf16le':
+	      case 'utf-16le':
+	        return len * 2
+	      case 'hex':
+	        return len >>> 1
+	      case 'base64':
+	        return base64ToBytes(string).length
+	      default:
+	        if (loweredCase) return utf8ToBytes(string).length // assume utf8
+	        encoding = ('' + encoding).toLowerCase()
+	        loweredCase = true
+	    }
+	  }
+	}
+	Buffer.byteLength = byteLength
+	
+	function slowToString (encoding, start, end) {
+	  var loweredCase = false
+	
+	  start = start | 0
+	  end = end === undefined || end === Infinity ? this.length : end | 0
+	
+	  if (!encoding) encoding = 'utf8'
+	  if (start < 0) start = 0
+	  if (end > this.length) end = this.length
+	  if (end <= start) return ''
+	
+	  while (true) {
+	    switch (encoding) {
+	      case 'hex':
+	        return hexSlice(this, start, end)
+	
+	      case 'utf8':
+	      case 'utf-8':
+	        return utf8Slice(this, start, end)
+	
+	      case 'ascii':
+	        return asciiSlice(this, start, end)
+	
+	      case 'binary':
+	        return binarySlice(this, start, end)
+	
+	      case 'base64':
+	        return base64Slice(this, start, end)
+	
+	      case 'ucs2':
+	      case 'ucs-2':
+	      case 'utf16le':
+	      case 'utf-16le':
+	        return utf16leSlice(this, start, end)
+	
+	      default:
+	        if (loweredCase) throw new TypeError('Unknown encoding: ' + encoding)
+	        encoding = (encoding + '').toLowerCase()
+	        loweredCase = true
+	    }
+	  }
+	}
+	
+	Buffer.prototype.toString = function toString () {
+	  var length = this.length | 0
+	  if (length === 0) return ''
+	  if (arguments.length === 0) return utf8Slice(this, 0, length)
+	  return slowToString.apply(this, arguments)
+	}
+	
+	Buffer.prototype.equals = function equals (b) {
+	  if (!Buffer.isBuffer(b)) throw new TypeError('Argument must be a Buffer')
+	  if (this === b) return true
+	  return Buffer.compare(this, b) === 0
+	}
+	
+	Buffer.prototype.inspect = function inspect () {
+	  var str = ''
+	  var max = exports.INSPECT_MAX_BYTES
+	  if (this.length > 0) {
+	    str = this.toString('hex', 0, max).match(/.{2}/g).join(' ')
+	    if (this.length > max) str += ' ... '
+	  }
+	  return '<Buffer ' + str + '>'
+	}
+	
+	Buffer.prototype.compare = function compare (b) {
+	  if (!Buffer.isBuffer(b)) throw new TypeError('Argument must be a Buffer')
+	  if (this === b) return 0
+	  return Buffer.compare(this, b)
+	}
+	
+	Buffer.prototype.indexOf = function indexOf (val, byteOffset) {
+	  if (byteOffset > 0x7fffffff) byteOffset = 0x7fffffff
+	  else if (byteOffset < -0x80000000) byteOffset = -0x80000000
+	  byteOffset >>= 0
+	
+	  if (this.length === 0) return -1
+	  if (byteOffset >= this.length) return -1
+	
+	  // Negative offsets start from the end of the buffer
+	  if (byteOffset < 0) byteOffset = Math.max(this.length + byteOffset, 0)
+	
+	  if (typeof val === 'string') {
+	    if (val.length === 0) return -1 // special case: looking for empty string always fails
+	    return String.prototype.indexOf.call(this, val, byteOffset)
+	  }
+	  if (Buffer.isBuffer(val)) {
+	    return arrayIndexOf(this, val, byteOffset)
+	  }
+	  if (typeof val === 'number') {
+	    if (Buffer.TYPED_ARRAY_SUPPORT && Uint8Array.prototype.indexOf === 'function') {
+	      return Uint8Array.prototype.indexOf.call(this, val, byteOffset)
+	    }
+	    return arrayIndexOf(this, [ val ], byteOffset)
+	  }
+	
+	  function arrayIndexOf (arr, val, byteOffset) {
+	    var foundIndex = -1
+	    for (var i = 0; byteOffset + i < arr.length; i++) {
+	      if (arr[byteOffset + i] === val[foundIndex === -1 ? 0 : i - foundIndex]) {
+	        if (foundIndex === -1) foundIndex = i
+	        if (i - foundIndex + 1 === val.length) return byteOffset + foundIndex
+	      } else {
+	        foundIndex = -1
+	      }
+	    }
+	    return -1
+	  }
+	
+	  throw new TypeError('val must be string, number or Buffer')
+	}
+	
+	// `get` is deprecated
+	Buffer.prototype.get = function get (offset) {
+	  console.log('.get() is deprecated. Access using array indexes instead.')
+	  return this.readUInt8(offset)
+	}
+	
+	// `set` is deprecated
+	Buffer.prototype.set = function set (v, offset) {
+	  console.log('.set() is deprecated. Access using array indexes instead.')
+	  return this.writeUInt8(v, offset)
+	}
+	
+	function hexWrite (buf, string, offset, length) {
+	  offset = Number(offset) || 0
+	  var remaining = buf.length - offset
+	  if (!length) {
+	    length = remaining
+	  } else {
+	    length = Number(length)
+	    if (length > remaining) {
+	      length = remaining
+	    }
+	  }
+	
+	  // must be an even number of digits
+	  var strLen = string.length
+	  if (strLen % 2 !== 0) throw new Error('Invalid hex string')
+	
+	  if (length > strLen / 2) {
+	    length = strLen / 2
+	  }
+	  for (var i = 0; i < length; i++) {
+	    var parsed = parseInt(string.substr(i * 2, 2), 16)
+	    if (isNaN(parsed)) throw new Error('Invalid hex string')
+	    buf[offset + i] = parsed
+	  }
+	  return i
+	}
+	
+	function utf8Write (buf, string, offset, length) {
+	  return blitBuffer(utf8ToBytes(string, buf.length - offset), buf, offset, length)
+	}
+	
+	function asciiWrite (buf, string, offset, length) {
+	  return blitBuffer(asciiToBytes(string), buf, offset, length)
+	}
+	
+	function binaryWrite (buf, string, offset, length) {
+	  return asciiWrite(buf, string, offset, length)
+	}
+	
+	function base64Write (buf, string, offset, length) {
+	  return blitBuffer(base64ToBytes(string), buf, offset, length)
+	}
+	
+	function ucs2Write (buf, string, offset, length) {
+	  return blitBuffer(utf16leToBytes(string, buf.length - offset), buf, offset, length)
+	}
+	
+	Buffer.prototype.write = function write (string, offset, length, encoding) {
+	  // Buffer#write(string)
+	  if (offset === undefined) {
+	    encoding = 'utf8'
+	    length = this.length
+	    offset = 0
+	  // Buffer#write(string, encoding)
+	  } else if (length === undefined && typeof offset === 'string') {
+	    encoding = offset
+	    length = this.length
+	    offset = 0
+	  // Buffer#write(string, offset[, length][, encoding])
+	  } else if (isFinite(offset)) {
+	    offset = offset | 0
+	    if (isFinite(length)) {
+	      length = length | 0
+	      if (encoding === undefined) encoding = 'utf8'
+	    } else {
+	      encoding = length
+	      length = undefined
+	    }
+	  // legacy write(string, encoding, offset, length) - remove in v0.13
+	  } else {
+	    var swap = encoding
+	    encoding = offset
+	    offset = length | 0
+	    length = swap
+	  }
+	
+	  var remaining = this.length - offset
+	  if (length === undefined || length > remaining) length = remaining
+	
+	  if ((string.length > 0 && (length < 0 || offset < 0)) || offset > this.length) {
+	    throw new RangeError('attempt to write outside buffer bounds')
+	  }
+	
+	  if (!encoding) encoding = 'utf8'
+	
+	  var loweredCase = false
+	  for (;;) {
+	    switch (encoding) {
+	      case 'hex':
+	        return hexWrite(this, string, offset, length)
+	
+	      case 'utf8':
+	      case 'utf-8':
+	        return utf8Write(this, string, offset, length)
+	
+	      case 'ascii':
+	        return asciiWrite(this, string, offset, length)
+	
+	      case 'binary':
+	        return binaryWrite(this, string, offset, length)
+	
+	      case 'base64':
+	        // Warning: maxLength not taken into account in base64Write
+	        return base64Write(this, string, offset, length)
+	
+	      case 'ucs2':
+	      case 'ucs-2':
+	      case 'utf16le':
+	      case 'utf-16le':
+	        return ucs2Write(this, string, offset, length)
+	
+	      default:
+	        if (loweredCase) throw new TypeError('Unknown encoding: ' + encoding)
+	        encoding = ('' + encoding).toLowerCase()
+	        loweredCase = true
+	    }
+	  }
+	}
+	
+	Buffer.prototype.toJSON = function toJSON () {
+	  return {
+	    type: 'Buffer',
+	    data: Array.prototype.slice.call(this._arr || this, 0)
+	  }
+	}
+	
+	function base64Slice (buf, start, end) {
+	  if (start === 0 && end === buf.length) {
+	    return base64.fromByteArray(buf)
+	  } else {
+	    return base64.fromByteArray(buf.slice(start, end))
+	  }
+	}
+	
+	function utf8Slice (buf, start, end) {
+	  end = Math.min(buf.length, end)
+	  var res = []
+	
+	  var i = start
+	  while (i < end) {
+	    var firstByte = buf[i]
+	    var codePoint = null
+	    var bytesPerSequence = (firstByte > 0xEF) ? 4
+	      : (firstByte > 0xDF) ? 3
+	      : (firstByte > 0xBF) ? 2
+	      : 1
+	
+	    if (i + bytesPerSequence <= end) {
+	      var secondByte, thirdByte, fourthByte, tempCodePoint
+	
+	      switch (bytesPerSequence) {
+	        case 1:
+	          if (firstByte < 0x80) {
+	            codePoint = firstByte
+	          }
+	          break
+	        case 2:
+	          secondByte = buf[i + 1]
+	          if ((secondByte & 0xC0) === 0x80) {
+	            tempCodePoint = (firstByte & 0x1F) << 0x6 | (secondByte & 0x3F)
+	            if (tempCodePoint > 0x7F) {
+	              codePoint = tempCodePoint
+	            }
+	          }
+	          break
+	        case 3:
+	          secondByte = buf[i + 1]
+	          thirdByte = buf[i + 2]
+	          if ((secondByte & 0xC0) === 0x80 && (thirdByte & 0xC0) === 0x80) {
+	            tempCodePoint = (firstByte & 0xF) << 0xC | (secondByte & 0x3F) << 0x6 | (thirdByte & 0x3F)
+	            if (tempCodePoint > 0x7FF && (tempCodePoint < 0xD800 || tempCodePoint > 0xDFFF)) {
+	              codePoint = tempCodePoint
+	            }
+	          }
+	          break
+	        case 4:
+	          secondByte = buf[i + 1]
+	          thirdByte = buf[i + 2]
+	          fourthByte = buf[i + 3]
+	          if ((secondByte & 0xC0) === 0x80 && (thirdByte & 0xC0) === 0x80 && (fourthByte & 0xC0) === 0x80) {
+	            tempCodePoint = (firstByte & 0xF) << 0x12 | (secondByte & 0x3F) << 0xC | (thirdByte & 0x3F) << 0x6 | (fourthByte & 0x3F)
+	            if (tempCodePoint > 0xFFFF && tempCodePoint < 0x110000) {
+	              codePoint = tempCodePoint
+	            }
+	          }
+	      }
+	    }
+	
+	    if (codePoint === null) {
+	      // we did not generate a valid codePoint so insert a
+	      // replacement char (U+FFFD) and advance only 1 byte
+	      codePoint = 0xFFFD
+	      bytesPerSequence = 1
+	    } else if (codePoint > 0xFFFF) {
+	      // encode to utf16 (surrogate pair dance)
+	      codePoint -= 0x10000
+	      res.push(codePoint >>> 10 & 0x3FF | 0xD800)
+	      codePoint = 0xDC00 | codePoint & 0x3FF
+	    }
+	
+	    res.push(codePoint)
+	    i += bytesPerSequence
+	  }
+	
+	  return decodeCodePointsArray(res)
+	}
+	
+	// Based on http://stackoverflow.com/a/22747272/680742, the browser with
+	// the lowest limit is Chrome, with 0x10000 args.
+	// We go 1 magnitude less, for safety
+	var MAX_ARGUMENTS_LENGTH = 0x1000
+	
+	function decodeCodePointsArray (codePoints) {
+	  var len = codePoints.length
+	  if (len <= MAX_ARGUMENTS_LENGTH) {
+	    return String.fromCharCode.apply(String, codePoints) // avoid extra slice()
+	  }
+	
+	  // Decode in chunks to avoid "call stack size exceeded".
+	  var res = ''
+	  var i = 0
+	  while (i < len) {
+	    res += String.fromCharCode.apply(
+	      String,
+	      codePoints.slice(i, i += MAX_ARGUMENTS_LENGTH)
+	    )
+	  }
+	  return res
+	}
+	
+	function asciiSlice (buf, start, end) {
+	  var ret = ''
+	  end = Math.min(buf.length, end)
+	
+	  for (var i = start; i < end; i++) {
+	    ret += String.fromCharCode(buf[i] & 0x7F)
+	  }
+	  return ret
+	}
+	
+	function binarySlice (buf, start, end) {
+	  var ret = ''
+	  end = Math.min(buf.length, end)
+	
+	  for (var i = start; i < end; i++) {
+	    ret += String.fromCharCode(buf[i])
+	  }
+	  return ret
+	}
+	
+	function hexSlice (buf, start, end) {
+	  var len = buf.length
+	
+	  if (!start || start < 0) start = 0
+	  if (!end || end < 0 || end > len) end = len
+	
+	  var out = ''
+	  for (var i = start; i < end; i++) {
+	    out += toHex(buf[i])
+	  }
+	  return out
+	}
+	
+	function utf16leSlice (buf, start, end) {
+	  var bytes = buf.slice(start, end)
+	  var res = ''
+	  for (var i = 0; i < bytes.length; i += 2) {
+	    res += String.fromCharCode(bytes[i] + bytes[i + 1] * 256)
+	  }
+	  return res
+	}
+	
+	Buffer.prototype.slice = function slice (start, end) {
+	  var len = this.length
+	  start = ~~start
+	  end = end === undefined ? len : ~~end
+	
+	  if (start < 0) {
+	    start += len
+	    if (start < 0) start = 0
+	  } else if (start > len) {
+	    start = len
+	  }
+	
+	  if (end < 0) {
+	    end += len
+	    if (end < 0) end = 0
+	  } else if (end > len) {
+	    end = len
+	  }
+	
+	  if (end < start) end = start
+	
+	  var newBuf
+	  if (Buffer.TYPED_ARRAY_SUPPORT) {
+	    newBuf = Buffer._augment(this.subarray(start, end))
+	  } else {
+	    var sliceLen = end - start
+	    newBuf = new Buffer(sliceLen, undefined)
+	    for (var i = 0; i < sliceLen; i++) {
+	      newBuf[i] = this[i + start]
+	    }
+	  }
+	
+	  if (newBuf.length) newBuf.parent = this.parent || this
+	
+	  return newBuf
+	}
+	
+	/*
+	 * Need to make sure that buffer isn't trying to write out of bounds.
+	 */
+	function checkOffset (offset, ext, length) {
+	  if ((offset % 1) !== 0 || offset < 0) throw new RangeError('offset is not uint')
+	  if (offset + ext > length) throw new RangeError('Trying to access beyond buffer length')
+	}
+	
+	Buffer.prototype.readUIntLE = function readUIntLE (offset, byteLength, noAssert) {
+	  offset = offset | 0
+	  byteLength = byteLength | 0
+	  if (!noAssert) checkOffset(offset, byteLength, this.length)
+	
+	  var val = this[offset]
+	  var mul = 1
+	  var i = 0
+	  while (++i < byteLength && (mul *= 0x100)) {
+	    val += this[offset + i] * mul
+	  }
+	
+	  return val
+	}
+	
+	Buffer.prototype.readUIntBE = function readUIntBE (offset, byteLength, noAssert) {
+	  offset = offset | 0
+	  byteLength = byteLength | 0
+	  if (!noAssert) {
+	    checkOffset(offset, byteLength, this.length)
+	  }
+	
+	  var val = this[offset + --byteLength]
+	  var mul = 1
+	  while (byteLength > 0 && (mul *= 0x100)) {
+	    val += this[offset + --byteLength] * mul
+	  }
+	
+	  return val
+	}
+	
+	Buffer.prototype.readUInt8 = function readUInt8 (offset, noAssert) {
+	  if (!noAssert) checkOffset(offset, 1, this.length)
+	  return this[offset]
+	}
+	
+	Buffer.prototype.readUInt16LE = function readUInt16LE (offset, noAssert) {
+	  if (!noAssert) checkOffset(offset, 2, this.length)
+	  return this[offset] | (this[offset + 1] << 8)
+	}
+	
+	Buffer.prototype.readUInt16BE = function readUInt16BE (offset, noAssert) {
+	  if (!noAssert) checkOffset(offset, 2, this.length)
+	  return (this[offset] << 8) | this[offset + 1]
+	}
+	
+	Buffer.prototype.readUInt32LE = function readUInt32LE (offset, noAssert) {
+	  if (!noAssert) checkOffset(offset, 4, this.length)
+	
+	  return ((this[offset]) |
+	      (this[offset + 1] << 8) |
+	      (this[offset + 2] << 16)) +
+	      (this[offset + 3] * 0x1000000)
+	}
+	
+	Buffer.prototype.readUInt32BE = function readUInt32BE (offset, noAssert) {
+	  if (!noAssert) checkOffset(offset, 4, this.length)
+	
+	  return (this[offset] * 0x1000000) +
+	    ((this[offset + 1] << 16) |
+	    (this[offset + 2] << 8) |
+	    this[offset + 3])
+	}
+	
+	Buffer.prototype.readIntLE = function readIntLE (offset, byteLength, noAssert) {
+	  offset = offset | 0
+	  byteLength = byteLength | 0
+	  if (!noAssert) checkOffset(offset, byteLength, this.length)
+	
+	  var val = this[offset]
+	  var mul = 1
+	  var i = 0
+	  while (++i < byteLength && (mul *= 0x100)) {
+	    val += this[offset + i] * mul
+	  }
+	  mul *= 0x80
+	
+	  if (val >= mul) val -= Math.pow(2, 8 * byteLength)
+	
+	  return val
+	}
+	
+	Buffer.prototype.readIntBE = function readIntBE (offset, byteLength, noAssert) {
+	  offset = offset | 0
+	  byteLength = byteLength | 0
+	  if (!noAssert) checkOffset(offset, byteLength, this.length)
+	
+	  var i = byteLength
+	  var mul = 1
+	  var val = this[offset + --i]
+	  while (i > 0 && (mul *= 0x100)) {
+	    val += this[offset + --i] * mul
+	  }
+	  mul *= 0x80
+	
+	  if (val >= mul) val -= Math.pow(2, 8 * byteLength)
+	
+	  return val
+	}
+	
+	Buffer.prototype.readInt8 = function readInt8 (offset, noAssert) {
+	  if (!noAssert) checkOffset(offset, 1, this.length)
+	  if (!(this[offset] & 0x80)) return (this[offset])
+	  return ((0xff - this[offset] + 1) * -1)
+	}
+	
+	Buffer.prototype.readInt16LE = function readInt16LE (offset, noAssert) {
+	  if (!noAssert) checkOffset(offset, 2, this.length)
+	  var val = this[offset] | (this[offset + 1] << 8)
+	  return (val & 0x8000) ? val | 0xFFFF0000 : val
+	}
+	
+	Buffer.prototype.readInt16BE = function readInt16BE (offset, noAssert) {
+	  if (!noAssert) checkOffset(offset, 2, this.length)
+	  var val = this[offset + 1] | (this[offset] << 8)
+	  return (val & 0x8000) ? val | 0xFFFF0000 : val
+	}
+	
+	Buffer.prototype.readInt32LE = function readInt32LE (offset, noAssert) {
+	  if (!noAssert) checkOffset(offset, 4, this.length)
+	
+	  return (this[offset]) |
+	    (this[offset + 1] << 8) |
+	    (this[offset + 2] << 16) |
+	    (this[offset + 3] << 24)
+	}
+	
+	Buffer.prototype.readInt32BE = function readInt32BE (offset, noAssert) {
+	  if (!noAssert) checkOffset(offset, 4, this.length)
+	
+	  return (this[offset] << 24) |
+	    (this[offset + 1] << 16) |
+	    (this[offset + 2] << 8) |
+	    (this[offset + 3])
+	}
+	
+	Buffer.prototype.readFloatLE = function readFloatLE (offset, noAssert) {
+	  if (!noAssert) checkOffset(offset, 4, this.length)
+	  return ieee754.read(this, offset, true, 23, 4)
+	}
+	
+	Buffer.prototype.readFloatBE = function readFloatBE (offset, noAssert) {
+	  if (!noAssert) checkOffset(offset, 4, this.length)
+	  return ieee754.read(this, offset, false, 23, 4)
+	}
+	
+	Buffer.prototype.readDoubleLE = function readDoubleLE (offset, noAssert) {
+	  if (!noAssert) checkOffset(offset, 8, this.length)
+	  return ieee754.read(this, offset, true, 52, 8)
+	}
+	
+	Buffer.prototype.readDoubleBE = function readDoubleBE (offset, noAssert) {
+	  if (!noAssert) checkOffset(offset, 8, this.length)
+	  return ieee754.read(this, offset, false, 52, 8)
+	}
+	
+	function checkInt (buf, value, offset, ext, max, min) {
+	  if (!Buffer.isBuffer(buf)) throw new TypeError('buffer must be a Buffer instance')
+	  if (value > max || value < min) throw new RangeError('value is out of bounds')
+	  if (offset + ext > buf.length) throw new RangeError('index out of range')
+	}
+	
+	Buffer.prototype.writeUIntLE = function writeUIntLE (value, offset, byteLength, noAssert) {
+	  value = +value
+	  offset = offset | 0
+	  byteLength = byteLength | 0
+	  if (!noAssert) checkInt(this, value, offset, byteLength, Math.pow(2, 8 * byteLength), 0)
+	
+	  var mul = 1
+	  var i = 0
+	  this[offset] = value & 0xFF
+	  while (++i < byteLength && (mul *= 0x100)) {
+	    this[offset + i] = (value / mul) & 0xFF
+	  }
+	
+	  return offset + byteLength
+	}
+	
+	Buffer.prototype.writeUIntBE = function writeUIntBE (value, offset, byteLength, noAssert) {
+	  value = +value
+	  offset = offset | 0
+	  byteLength = byteLength | 0
+	  if (!noAssert) checkInt(this, value, offset, byteLength, Math.pow(2, 8 * byteLength), 0)
+	
+	  var i = byteLength - 1
+	  var mul = 1
+	  this[offset + i] = value & 0xFF
+	  while (--i >= 0 && (mul *= 0x100)) {
+	    this[offset + i] = (value / mul) & 0xFF
+	  }
+	
+	  return offset + byteLength
+	}
+	
+	Buffer.prototype.writeUInt8 = function writeUInt8 (value, offset, noAssert) {
+	  value = +value
+	  offset = offset | 0
+	  if (!noAssert) checkInt(this, value, offset, 1, 0xff, 0)
+	  if (!Buffer.TYPED_ARRAY_SUPPORT) value = Math.floor(value)
+	  this[offset] = (value & 0xff)
+	  return offset + 1
+	}
+	
+	function objectWriteUInt16 (buf, value, offset, littleEndian) {
+	  if (value < 0) value = 0xffff + value + 1
+	  for (var i = 0, j = Math.min(buf.length - offset, 2); i < j; i++) {
+	    buf[offset + i] = (value & (0xff << (8 * (littleEndian ? i : 1 - i)))) >>>
+	      (littleEndian ? i : 1 - i) * 8
+	  }
+	}
+	
+	Buffer.prototype.writeUInt16LE = function writeUInt16LE (value, offset, noAssert) {
+	  value = +value
+	  offset = offset | 0
+	  if (!noAssert) checkInt(this, value, offset, 2, 0xffff, 0)
+	  if (Buffer.TYPED_ARRAY_SUPPORT) {
+	    this[offset] = (value & 0xff)
+	    this[offset + 1] = (value >>> 8)
+	  } else {
+	    objectWriteUInt16(this, value, offset, true)
+	  }
+	  return offset + 2
+	}
+	
+	Buffer.prototype.writeUInt16BE = function writeUInt16BE (value, offset, noAssert) {
+	  value = +value
+	  offset = offset | 0
+	  if (!noAssert) checkInt(this, value, offset, 2, 0xffff, 0)
+	  if (Buffer.TYPED_ARRAY_SUPPORT) {
+	    this[offset] = (value >>> 8)
+	    this[offset + 1] = (value & 0xff)
+	  } else {
+	    objectWriteUInt16(this, value, offset, false)
+	  }
+	  return offset + 2
+	}
+	
+	function objectWriteUInt32 (buf, value, offset, littleEndian) {
+	  if (value < 0) value = 0xffffffff + value + 1
+	  for (var i = 0, j = Math.min(buf.length - offset, 4); i < j; i++) {
+	    buf[offset + i] = (value >>> (littleEndian ? i : 3 - i) * 8) & 0xff
+	  }
+	}
+	
+	Buffer.prototype.writeUInt32LE = function writeUInt32LE (value, offset, noAssert) {
+	  value = +value
+	  offset = offset | 0
+	  if (!noAssert) checkInt(this, value, offset, 4, 0xffffffff, 0)
+	  if (Buffer.TYPED_ARRAY_SUPPORT) {
+	    this[offset + 3] = (value >>> 24)
+	    this[offset + 2] = (value >>> 16)
+	    this[offset + 1] = (value >>> 8)
+	    this[offset] = (value & 0xff)
+	  } else {
+	    objectWriteUInt32(this, value, offset, true)
+	  }
+	  return offset + 4
+	}
+	
+	Buffer.prototype.writeUInt32BE = function writeUInt32BE (value, offset, noAssert) {
+	  value = +value
+	  offset = offset | 0
+	  if (!noAssert) checkInt(this, value, offset, 4, 0xffffffff, 0)
+	  if (Buffer.TYPED_ARRAY_SUPPORT) {
+	    this[offset] = (value >>> 24)
+	    this[offset + 1] = (value >>> 16)
+	    this[offset + 2] = (value >>> 8)
+	    this[offset + 3] = (value & 0xff)
+	  } else {
+	    objectWriteUInt32(this, value, offset, false)
+	  }
+	  return offset + 4
+	}
+	
+	Buffer.prototype.writeIntLE = function writeIntLE (value, offset, byteLength, noAssert) {
+	  value = +value
+	  offset = offset | 0
+	  if (!noAssert) {
+	    var limit = Math.pow(2, 8 * byteLength - 1)
+	
+	    checkInt(this, value, offset, byteLength, limit - 1, -limit)
+	  }
+	
+	  var i = 0
+	  var mul = 1
+	  var sub = value < 0 ? 1 : 0
+	  this[offset] = value & 0xFF
+	  while (++i < byteLength && (mul *= 0x100)) {
+	    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF
+	  }
+	
+	  return offset + byteLength
+	}
+	
+	Buffer.prototype.writeIntBE = function writeIntBE (value, offset, byteLength, noAssert) {
+	  value = +value
+	  offset = offset | 0
+	  if (!noAssert) {
+	    var limit = Math.pow(2, 8 * byteLength - 1)
+	
+	    checkInt(this, value, offset, byteLength, limit - 1, -limit)
+	  }
+	
+	  var i = byteLength - 1
+	  var mul = 1
+	  var sub = value < 0 ? 1 : 0
+	  this[offset + i] = value & 0xFF
+	  while (--i >= 0 && (mul *= 0x100)) {
+	    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF
+	  }
+	
+	  return offset + byteLength
+	}
+	
+	Buffer.prototype.writeInt8 = function writeInt8 (value, offset, noAssert) {
+	  value = +value
+	  offset = offset | 0
+	  if (!noAssert) checkInt(this, value, offset, 1, 0x7f, -0x80)
+	  if (!Buffer.TYPED_ARRAY_SUPPORT) value = Math.floor(value)
+	  if (value < 0) value = 0xff + value + 1
+	  this[offset] = (value & 0xff)
+	  return offset + 1
+	}
+	
+	Buffer.prototype.writeInt16LE = function writeInt16LE (value, offset, noAssert) {
+	  value = +value
+	  offset = offset | 0
+	  if (!noAssert) checkInt(this, value, offset, 2, 0x7fff, -0x8000)
+	  if (Buffer.TYPED_ARRAY_SUPPORT) {
+	    this[offset] = (value & 0xff)
+	    this[offset + 1] = (value >>> 8)
+	  } else {
+	    objectWriteUInt16(this, value, offset, true)
+	  }
+	  return offset + 2
+	}
+	
+	Buffer.prototype.writeInt16BE = function writeInt16BE (value, offset, noAssert) {
+	  value = +value
+	  offset = offset | 0
+	  if (!noAssert) checkInt(this, value, offset, 2, 0x7fff, -0x8000)
+	  if (Buffer.TYPED_ARRAY_SUPPORT) {
+	    this[offset] = (value >>> 8)
+	    this[offset + 1] = (value & 0xff)
+	  } else {
+	    objectWriteUInt16(this, value, offset, false)
+	  }
+	  return offset + 2
+	}
+	
+	Buffer.prototype.writeInt32LE = function writeInt32LE (value, offset, noAssert) {
+	  value = +value
+	  offset = offset | 0
+	  if (!noAssert) checkInt(this, value, offset, 4, 0x7fffffff, -0x80000000)
+	  if (Buffer.TYPED_ARRAY_SUPPORT) {
+	    this[offset] = (value & 0xff)
+	    this[offset + 1] = (value >>> 8)
+	    this[offset + 2] = (value >>> 16)
+	    this[offset + 3] = (value >>> 24)
+	  } else {
+	    objectWriteUInt32(this, value, offset, true)
+	  }
+	  return offset + 4
+	}
+	
+	Buffer.prototype.writeInt32BE = function writeInt32BE (value, offset, noAssert) {
+	  value = +value
+	  offset = offset | 0
+	  if (!noAssert) checkInt(this, value, offset, 4, 0x7fffffff, -0x80000000)
+	  if (value < 0) value = 0xffffffff + value + 1
+	  if (Buffer.TYPED_ARRAY_SUPPORT) {
+	    this[offset] = (value >>> 24)
+	    this[offset + 1] = (value >>> 16)
+	    this[offset + 2] = (value >>> 8)
+	    this[offset + 3] = (value & 0xff)
+	  } else {
+	    objectWriteUInt32(this, value, offset, false)
+	  }
+	  return offset + 4
+	}
+	
+	function checkIEEE754 (buf, value, offset, ext, max, min) {
+	  if (value > max || value < min) throw new RangeError('value is out of bounds')
+	  if (offset + ext > buf.length) throw new RangeError('index out of range')
+	  if (offset < 0) throw new RangeError('index out of range')
+	}
+	
+	function writeFloat (buf, value, offset, littleEndian, noAssert) {
+	  if (!noAssert) {
+	    checkIEEE754(buf, value, offset, 4, 3.4028234663852886e+38, -3.4028234663852886e+38)
+	  }
+	  ieee754.write(buf, value, offset, littleEndian, 23, 4)
+	  return offset + 4
+	}
+	
+	Buffer.prototype.writeFloatLE = function writeFloatLE (value, offset, noAssert) {
+	  return writeFloat(this, value, offset, true, noAssert)
+	}
+	
+	Buffer.prototype.writeFloatBE = function writeFloatBE (value, offset, noAssert) {
+	  return writeFloat(this, value, offset, false, noAssert)
+	}
+	
+	function writeDouble (buf, value, offset, littleEndian, noAssert) {
+	  if (!noAssert) {
+	    checkIEEE754(buf, value, offset, 8, 1.7976931348623157E+308, -1.7976931348623157E+308)
+	  }
+	  ieee754.write(buf, value, offset, littleEndian, 52, 8)
+	  return offset + 8
+	}
+	
+	Buffer.prototype.writeDoubleLE = function writeDoubleLE (value, offset, noAssert) {
+	  return writeDouble(this, value, offset, true, noAssert)
+	}
+	
+	Buffer.prototype.writeDoubleBE = function writeDoubleBE (value, offset, noAssert) {
+	  return writeDouble(this, value, offset, false, noAssert)
+	}
+	
+	// copy(targetBuffer, targetStart=0, sourceStart=0, sourceEnd=buffer.length)
+	Buffer.prototype.copy = function copy (target, targetStart, start, end) {
+	  if (!start) start = 0
+	  if (!end && end !== 0) end = this.length
+	  if (targetStart >= target.length) targetStart = target.length
+	  if (!targetStart) targetStart = 0
+	  if (end > 0 && end < start) end = start
+	
+	  // Copy 0 bytes; we're done
+	  if (end === start) return 0
+	  if (target.length === 0 || this.length === 0) return 0
+	
+	  // Fatal error conditions
+	  if (targetStart < 0) {
+	    throw new RangeError('targetStart out of bounds')
+	  }
+	  if (start < 0 || start >= this.length) throw new RangeError('sourceStart out of bounds')
+	  if (end < 0) throw new RangeError('sourceEnd out of bounds')
+	
+	  // Are we oob?
+	  if (end > this.length) end = this.length
+	  if (target.length - targetStart < end - start) {
+	    end = target.length - targetStart + start
+	  }
+	
+	  var len = end - start
+	  var i
+	
+	  if (this === target && start < targetStart && targetStart < end) {
+	    // descending copy from end
+	    for (i = len - 1; i >= 0; i--) {
+	      target[i + targetStart] = this[i + start]
+	    }
+	  } else if (len < 1000 || !Buffer.TYPED_ARRAY_SUPPORT) {
+	    // ascending copy from start
+	    for (i = 0; i < len; i++) {
+	      target[i + targetStart] = this[i + start]
+	    }
+	  } else {
+	    target._set(this.subarray(start, start + len), targetStart)
+	  }
+	
+	  return len
+	}
+	
+	// fill(value, start=0, end=buffer.length)
+	Buffer.prototype.fill = function fill (value, start, end) {
+	  if (!value) value = 0
+	  if (!start) start = 0
+	  if (!end) end = this.length
+	
+	  if (end < start) throw new RangeError('end < start')
+	
+	  // Fill 0 bytes; we're done
+	  if (end === start) return
+	  if (this.length === 0) return
+	
+	  if (start < 0 || start >= this.length) throw new RangeError('start out of bounds')
+	  if (end < 0 || end > this.length) throw new RangeError('end out of bounds')
+	
+	  var i
+	  if (typeof value === 'number') {
+	    for (i = start; i < end; i++) {
+	      this[i] = value
+	    }
+	  } else {
+	    var bytes = utf8ToBytes(value.toString())
+	    var len = bytes.length
+	    for (i = start; i < end; i++) {
+	      this[i] = bytes[i % len]
+	    }
+	  }
+	
+	  return this
+	}
+	
+	/**
+	 * Creates a new `ArrayBuffer` with the *copied* memory of the buffer instance.
+	 * Added in Node 0.12. Only available in browsers that support ArrayBuffer.
+	 */
+	Buffer.prototype.toArrayBuffer = function toArrayBuffer () {
+	  if (typeof Uint8Array !== 'undefined') {
+	    if (Buffer.TYPED_ARRAY_SUPPORT) {
+	      return (new Buffer(this)).buffer
+	    } else {
+	      var buf = new Uint8Array(this.length)
+	      for (var i = 0, len = buf.length; i < len; i += 1) {
+	        buf[i] = this[i]
+	      }
+	      return buf.buffer
+	    }
+	  } else {
+	    throw new TypeError('Buffer.toArrayBuffer not supported in this browser')
+	  }
+	}
+	
+	// HELPER FUNCTIONS
+	// ================
+	
+	var BP = Buffer.prototype
+	
+	/**
+	 * Augment a Uint8Array *instance* (not the Uint8Array class!) with Buffer methods
+	 */
+	Buffer._augment = function _augment (arr) {
+	  arr.constructor = Buffer
+	  arr._isBuffer = true
+	
+	  // save reference to original Uint8Array set method before overwriting
+	  arr._set = arr.set
+	
+	  // deprecated
+	  arr.get = BP.get
+	  arr.set = BP.set
+	
+	  arr.write = BP.write
+	  arr.toString = BP.toString
+	  arr.toLocaleString = BP.toString
+	  arr.toJSON = BP.toJSON
+	  arr.equals = BP.equals
+	  arr.compare = BP.compare
+	  arr.indexOf = BP.indexOf
+	  arr.copy = BP.copy
+	  arr.slice = BP.slice
+	  arr.readUIntLE = BP.readUIntLE
+	  arr.readUIntBE = BP.readUIntBE
+	  arr.readUInt8 = BP.readUInt8
+	  arr.readUInt16LE = BP.readUInt16LE
+	  arr.readUInt16BE = BP.readUInt16BE
+	  arr.readUInt32LE = BP.readUInt32LE
+	  arr.readUInt32BE = BP.readUInt32BE
+	  arr.readIntLE = BP.readIntLE
+	  arr.readIntBE = BP.readIntBE
+	  arr.readInt8 = BP.readInt8
+	  arr.readInt16LE = BP.readInt16LE
+	  arr.readInt16BE = BP.readInt16BE
+	  arr.readInt32LE = BP.readInt32LE
+	  arr.readInt32BE = BP.readInt32BE
+	  arr.readFloatLE = BP.readFloatLE
+	  arr.readFloatBE = BP.readFloatBE
+	  arr.readDoubleLE = BP.readDoubleLE
+	  arr.readDoubleBE = BP.readDoubleBE
+	  arr.writeUInt8 = BP.writeUInt8
+	  arr.writeUIntLE = BP.writeUIntLE
+	  arr.writeUIntBE = BP.writeUIntBE
+	  arr.writeUInt16LE = BP.writeUInt16LE
+	  arr.writeUInt16BE = BP.writeUInt16BE
+	  arr.writeUInt32LE = BP.writeUInt32LE
+	  arr.writeUInt32BE = BP.writeUInt32BE
+	  arr.writeIntLE = BP.writeIntLE
+	  arr.writeIntBE = BP.writeIntBE
+	  arr.writeInt8 = BP.writeInt8
+	  arr.writeInt16LE = BP.writeInt16LE
+	  arr.writeInt16BE = BP.writeInt16BE
+	  arr.writeInt32LE = BP.writeInt32LE
+	  arr.writeInt32BE = BP.writeInt32BE
+	  arr.writeFloatLE = BP.writeFloatLE
+	  arr.writeFloatBE = BP.writeFloatBE
+	  arr.writeDoubleLE = BP.writeDoubleLE
+	  arr.writeDoubleBE = BP.writeDoubleBE
+	  arr.fill = BP.fill
+	  arr.inspect = BP.inspect
+	  arr.toArrayBuffer = BP.toArrayBuffer
+	
+	  return arr
+	}
+	
+	var INVALID_BASE64_RE = /[^+\/0-9A-Za-z-_]/g
+	
+	function base64clean (str) {
+	  // Node strips out invalid characters like \n and \t from the string, base64-js does not
+	  str = stringtrim(str).replace(INVALID_BASE64_RE, '')
+	  // Node converts strings with length < 2 to ''
+	  if (str.length < 2) return ''
+	  // Node allows for non-padded base64 strings (missing trailing ===), base64-js does not
+	  while (str.length % 4 !== 0) {
+	    str = str + '='
+	  }
+	  return str
+	}
+	
+	function stringtrim (str) {
+	  if (str.trim) return str.trim()
+	  return str.replace(/^\s+|\s+$/g, '')
+	}
+	
+	function toHex (n) {
+	  if (n < 16) return '0' + n.toString(16)
+	  return n.toString(16)
+	}
+	
+	function utf8ToBytes (string, units) {
+	  units = units || Infinity
+	  var codePoint
+	  var length = string.length
+	  var leadSurrogate = null
+	  var bytes = []
+	
+	  for (var i = 0; i < length; i++) {
+	    codePoint = string.charCodeAt(i)
+	
+	    // is surrogate component
+	    if (codePoint > 0xD7FF && codePoint < 0xE000) {
+	      // last char was a lead
+	      if (!leadSurrogate) {
+	        // no lead yet
+	        if (codePoint > 0xDBFF) {
+	          // unexpected trail
+	          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+	          continue
+	        } else if (i + 1 === length) {
+	          // unpaired lead
+	          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+	          continue
+	        }
+	
+	        // valid lead
+	        leadSurrogate = codePoint
+	
+	        continue
+	      }
+	
+	      // 2 leads in a row
+	      if (codePoint < 0xDC00) {
+	        if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+	        leadSurrogate = codePoint
+	        continue
+	      }
+	
+	      // valid surrogate pair
+	      codePoint = (leadSurrogate - 0xD800 << 10 | codePoint - 0xDC00) + 0x10000
+	    } else if (leadSurrogate) {
+	      // valid bmp char, but last char was a lead
+	      if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+	    }
+	
+	    leadSurrogate = null
+	
+	    // encode utf8
+	    if (codePoint < 0x80) {
+	      if ((units -= 1) < 0) break
+	      bytes.push(codePoint)
+	    } else if (codePoint < 0x800) {
+	      if ((units -= 2) < 0) break
+	      bytes.push(
+	        codePoint >> 0x6 | 0xC0,
+	        codePoint & 0x3F | 0x80
+	      )
+	    } else if (codePoint < 0x10000) {
+	      if ((units -= 3) < 0) break
+	      bytes.push(
+	        codePoint >> 0xC | 0xE0,
+	        codePoint >> 0x6 & 0x3F | 0x80,
+	        codePoint & 0x3F | 0x80
+	      )
+	    } else if (codePoint < 0x110000) {
+	      if ((units -= 4) < 0) break
+	      bytes.push(
+	        codePoint >> 0x12 | 0xF0,
+	        codePoint >> 0xC & 0x3F | 0x80,
+	        codePoint >> 0x6 & 0x3F | 0x80,
+	        codePoint & 0x3F | 0x80
+	      )
+	    } else {
+	      throw new Error('Invalid code point')
+	    }
+	  }
+	
+	  return bytes
+	}
+	
+	function asciiToBytes (str) {
+	  var byteArray = []
+	  for (var i = 0; i < str.length; i++) {
+	    // Node's code seems to be doing this and not & 0x7F..
+	    byteArray.push(str.charCodeAt(i) & 0xFF)
+	  }
+	  return byteArray
+	}
+	
+	function utf16leToBytes (str, units) {
+	  var c, hi, lo
+	  var byteArray = []
+	  for (var i = 0; i < str.length; i++) {
+	    if ((units -= 2) < 0) break
+	
+	    c = str.charCodeAt(i)
+	    hi = c >> 8
+	    lo = c % 256
+	    byteArray.push(lo)
+	    byteArray.push(hi)
+	  }
+	
+	  return byteArray
+	}
+	
+	function base64ToBytes (str) {
+	  return base64.toByteArray(base64clean(str))
+	}
+	
+	function blitBuffer (src, dst, offset, length) {
+	  for (var i = 0; i < length; i++) {
+	    if ((i + offset >= dst.length) || (i >= src.length)) break
+	    dst[i + offset] = src[i]
+	  }
+	  return i
+	}
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 243).Buffer, (function() { return this; }())))
+
+/***/ },
+/* 244 */
+/*!********************************!*\
+  !*** ./~/base64-js/lib/b64.js ***!
+  \********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+	
+	;(function (exports) {
+		'use strict';
+	
+	  var Arr = (typeof Uint8Array !== 'undefined')
+	    ? Uint8Array
+	    : Array
+	
+		var PLUS   = '+'.charCodeAt(0)
+		var SLASH  = '/'.charCodeAt(0)
+		var NUMBER = '0'.charCodeAt(0)
+		var LOWER  = 'a'.charCodeAt(0)
+		var UPPER  = 'A'.charCodeAt(0)
+		var PLUS_URL_SAFE = '-'.charCodeAt(0)
+		var SLASH_URL_SAFE = '_'.charCodeAt(0)
+	
+		function decode (elt) {
+			var code = elt.charCodeAt(0)
+			if (code === PLUS ||
+			    code === PLUS_URL_SAFE)
+				return 62 // '+'
+			if (code === SLASH ||
+			    code === SLASH_URL_SAFE)
+				return 63 // '/'
+			if (code < NUMBER)
+				return -1 //no match
+			if (code < NUMBER + 10)
+				return code - NUMBER + 26 + 26
+			if (code < UPPER + 26)
+				return code - UPPER
+			if (code < LOWER + 26)
+				return code - LOWER + 26
+		}
+	
+		function b64ToByteArray (b64) {
+			var i, j, l, tmp, placeHolders, arr
+	
+			if (b64.length % 4 > 0) {
+				throw new Error('Invalid string. Length must be a multiple of 4')
+			}
+	
+			// the number of equal signs (place holders)
+			// if there are two placeholders, than the two characters before it
+			// represent one byte
+			// if there is only one, then the three characters before it represent 2 bytes
+			// this is just a cheap hack to not do indexOf twice
+			var len = b64.length
+			placeHolders = '=' === b64.charAt(len - 2) ? 2 : '=' === b64.charAt(len - 1) ? 1 : 0
+	
+			// base64 is 4/3 + up to two characters of the original data
+			arr = new Arr(b64.length * 3 / 4 - placeHolders)
+	
+			// if there are placeholders, only get up to the last complete 4 chars
+			l = placeHolders > 0 ? b64.length - 4 : b64.length
+	
+			var L = 0
+	
+			function push (v) {
+				arr[L++] = v
+			}
+	
+			for (i = 0, j = 0; i < l; i += 4, j += 3) {
+				tmp = (decode(b64.charAt(i)) << 18) | (decode(b64.charAt(i + 1)) << 12) | (decode(b64.charAt(i + 2)) << 6) | decode(b64.charAt(i + 3))
+				push((tmp & 0xFF0000) >> 16)
+				push((tmp & 0xFF00) >> 8)
+				push(tmp & 0xFF)
+			}
+	
+			if (placeHolders === 2) {
+				tmp = (decode(b64.charAt(i)) << 2) | (decode(b64.charAt(i + 1)) >> 4)
+				push(tmp & 0xFF)
+			} else if (placeHolders === 1) {
+				tmp = (decode(b64.charAt(i)) << 10) | (decode(b64.charAt(i + 1)) << 4) | (decode(b64.charAt(i + 2)) >> 2)
+				push((tmp >> 8) & 0xFF)
+				push(tmp & 0xFF)
+			}
+	
+			return arr
+		}
+	
+		function uint8ToBase64 (uint8) {
+			var i,
+				extraBytes = uint8.length % 3, // if we have 1 byte left, pad 2 bytes
+				output = "",
+				temp, length
+	
+			function encode (num) {
+				return lookup.charAt(num)
+			}
+	
+			function tripletToBase64 (num) {
+				return encode(num >> 18 & 0x3F) + encode(num >> 12 & 0x3F) + encode(num >> 6 & 0x3F) + encode(num & 0x3F)
+			}
+	
+			// go through the array every three bytes, we'll deal with trailing stuff later
+			for (i = 0, length = uint8.length - extraBytes; i < length; i += 3) {
+				temp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2])
+				output += tripletToBase64(temp)
+			}
+	
+			// pad the end with zeros, but make sure to not forget the extra bytes
+			switch (extraBytes) {
+				case 1:
+					temp = uint8[uint8.length - 1]
+					output += encode(temp >> 2)
+					output += encode((temp << 4) & 0x3F)
+					output += '=='
+					break
+				case 2:
+					temp = (uint8[uint8.length - 2] << 8) + (uint8[uint8.length - 1])
+					output += encode(temp >> 10)
+					output += encode((temp >> 4) & 0x3F)
+					output += encode((temp << 2) & 0x3F)
+					output += '='
+					break
+			}
+	
+			return output
+		}
+	
+		exports.toByteArray = b64ToByteArray
+		exports.fromByteArray = uint8ToBase64
+	}( false ? (this.base64js = {}) : exports))
+
+
+/***/ },
+/* 245 */
+/*!****************************!*\
+  !*** ./~/ieee754/index.js ***!
+  \****************************/
+/***/ function(module, exports) {
+
+	exports.read = function (buffer, offset, isLE, mLen, nBytes) {
+	  var e, m
+	  var eLen = nBytes * 8 - mLen - 1
+	  var eMax = (1 << eLen) - 1
+	  var eBias = eMax >> 1
+	  var nBits = -7
+	  var i = isLE ? (nBytes - 1) : 0
+	  var d = isLE ? -1 : 1
+	  var s = buffer[offset + i]
+	
+	  i += d
+	
+	  e = s & ((1 << (-nBits)) - 1)
+	  s >>= (-nBits)
+	  nBits += eLen
+	  for (; nBits > 0; e = e * 256 + buffer[offset + i], i += d, nBits -= 8) {}
+	
+	  m = e & ((1 << (-nBits)) - 1)
+	  e >>= (-nBits)
+	  nBits += mLen
+	  for (; nBits > 0; m = m * 256 + buffer[offset + i], i += d, nBits -= 8) {}
+	
+	  if (e === 0) {
+	    e = 1 - eBias
+	  } else if (e === eMax) {
+	    return m ? NaN : ((s ? -1 : 1) * Infinity)
+	  } else {
+	    m = m + Math.pow(2, mLen)
+	    e = e - eBias
+	  }
+	  return (s ? -1 : 1) * m * Math.pow(2, e - mLen)
+	}
+	
+	exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
+	  var e, m, c
+	  var eLen = nBytes * 8 - mLen - 1
+	  var eMax = (1 << eLen) - 1
+	  var eBias = eMax >> 1
+	  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0)
+	  var i = isLE ? 0 : (nBytes - 1)
+	  var d = isLE ? 1 : -1
+	  var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
+	
+	  value = Math.abs(value)
+	
+	  if (isNaN(value) || value === Infinity) {
+	    m = isNaN(value) ? 1 : 0
+	    e = eMax
+	  } else {
+	    e = Math.floor(Math.log(value) / Math.LN2)
+	    if (value * (c = Math.pow(2, -e)) < 1) {
+	      e--
+	      c *= 2
+	    }
+	    if (e + eBias >= 1) {
+	      value += rt / c
+	    } else {
+	      value += rt * Math.pow(2, 1 - eBias)
+	    }
+	    if (value * c >= 2) {
+	      e++
+	      c /= 2
+	    }
+	
+	    if (e + eBias >= eMax) {
+	      m = 0
+	      e = eMax
+	    } else if (e + eBias >= 1) {
+	      m = (value * c - 1) * Math.pow(2, mLen)
+	      e = e + eBias
+	    } else {
+	      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen)
+	      e = 0
+	    }
+	  }
+	
+	  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8) {}
+	
+	  e = (e << mLen) | m
+	  eLen += mLen
+	  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8) {}
+	
+	  buffer[offset + i - d] |= s * 128
+	}
+
+
+/***/ },
+/* 246 */
+/*!****************************!*\
+  !*** ./~/isarray/index.js ***!
+  \****************************/
+/***/ function(module, exports) {
+
+	var toString = {}.toString;
+	
+	module.exports = Array.isArray || function (arr) {
+	  return toString.call(arr) == '[object Array]';
+	};
+
+
+/***/ },
+/* 247 */
+/*!*********************************!*\
+  !*** ./~/buffer-shims/index.js ***!
+  \*********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	
+	var buffer = __webpack_require__(/*! buffer */ 243);
+	var Buffer = buffer.Buffer;
+	var SlowBuffer = buffer.SlowBuffer;
+	var MAX_LEN = buffer.kMaxLength || 2147483647;
+	exports.alloc = function alloc(size, fill, encoding) {
+	  if (typeof Buffer.alloc === 'function') {
+	    return Buffer.alloc(size, fill, encoding);
+	  }
+	  if (typeof encoding === 'number') {
+	    throw new TypeError('encoding must not be number');
+	  }
+	  if (typeof size !== 'number') {
+	    throw new TypeError('size must be a number');
+	  }
+	  if (size > MAX_LEN) {
+	    throw new RangeError('size is too large');
+	  }
+	  var enc = encoding;
+	  var _fill = fill;
+	  if (_fill === undefined) {
+	    enc = undefined;
+	    _fill = 0;
+	  }
+	  var buf = new Buffer(size);
+	  if (typeof _fill === 'string') {
+	    var fillBuf = new Buffer(_fill, enc);
+	    var flen = fillBuf.length;
+	    var i = -1;
+	    while (++i < size) {
+	      buf[i] = fillBuf[i % flen];
+	    }
+	  } else {
+	    buf.fill(_fill);
+	  }
+	  return buf;
+	}
+	exports.allocUnsafe = function allocUnsafe(size) {
+	  if (typeof Buffer.allocUnsafe === 'function') {
+	    return Buffer.allocUnsafe(size);
+	  }
+	  if (typeof size !== 'number') {
+	    throw new TypeError('size must be a number');
+	  }
+	  if (size > MAX_LEN) {
+	    throw new RangeError('size is too large');
+	  }
+	  return new Buffer(size);
+	}
+	exports.from = function from(value, encodingOrOffset, length) {
+	  if (typeof Buffer.from === 'function' && (!global.Uint8Array || Uint8Array.from !== Buffer.from)) {
+	    return Buffer.from(value, encodingOrOffset, length);
+	  }
+	  if (typeof value === 'number') {
+	    throw new TypeError('"value" argument must not be a number');
+	  }
+	  if (typeof value === 'string') {
+	    return new Buffer(value, encodingOrOffset);
+	  }
+	  if (typeof ArrayBuffer !== 'undefined' && value instanceof ArrayBuffer) {
+	    var offset = encodingOrOffset;
+	    if (arguments.length === 1) {
+	      return new Buffer(value);
+	    }
+	    if (typeof offset === 'undefined') {
+	      offset = 0;
+	    }
+	    var len = length;
+	    if (typeof len === 'undefined') {
+	      len = value.byteLength - offset;
+	    }
+	    if (offset >= value.byteLength) {
+	      throw new RangeError('\'offset\' is out of bounds');
+	    }
+	    if (len > value.byteLength - offset) {
+	      throw new RangeError('\'length\' is out of bounds');
+	    }
+	    return new Buffer(value.slice(offset, offset + len));
+	  }
+	  if (Buffer.isBuffer(value)) {
+	    var out = new Buffer(value.length);
+	    value.copy(out, 0, 0, value.length);
+	    return out;
+	  }
+	  if (value) {
+	    if (Array.isArray(value) || (typeof ArrayBuffer !== 'undefined' && value.buffer instanceof ArrayBuffer) || 'length' in value) {
+	      return new Buffer(value);
+	    }
+	    if (value.type === 'Buffer' && Array.isArray(value.data)) {
+	      return new Buffer(value.data);
+	    }
+	  }
+	
+	  throw new TypeError('First argument must be a string, Buffer, ' + 'ArrayBuffer, Array, or array-like object.');
+	}
+	exports.allocUnsafeSlow = function allocUnsafeSlow(size) {
+	  if (typeof Buffer.allocUnsafeSlow === 'function') {
+	    return Buffer.allocUnsafeSlow(size);
+	  }
+	  if (typeof size !== 'number') {
+	    throw new TypeError('size must be a number');
+	  }
+	  if (size >= MAX_LEN) {
+	    throw new RangeError('size is too large');
+	  }
+	  return new SlowBuffer(size);
+	}
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 248 */
 /*!*****************************!*\
   !*** ./~/left-pad/index.js ***!
   \*****************************/
@@ -107937,7 +109281,7 @@
 
 
 /***/ },
-/* 244 */
+/* 249 */
 /*!***************************************************************!*\
   !*** ./beeline-admin/directives/stopSelector/stopSelector.js ***!
   \***************************************************************/
@@ -107985,7 +109329,7 @@
 	};
 
 /***/ },
-/* 245 */
+/* 250 */
 /*!*******************************************************************************!*\
   !*** ./beeline-admin/directives/companySelector/superAdminCompanySelector.js ***!
   \*******************************************************************************/
@@ -108008,7 +109352,7 @@
 	};
 
 /***/ },
-/* 246 */
+/* 251 */
 /*!********************************************!*\
   !*** ./beeline-admin/directives/mySort.js ***!
   \********************************************/
@@ -108020,7 +109364,7 @@
 	  value: true
 	});
 	
-	var _slicedToArray2 = __webpack_require__(/*! babel-runtime/helpers/slicedToArray */ 247);
+	var _slicedToArray2 = __webpack_require__(/*! babel-runtime/helpers/slicedToArray */ 252);
 	
 	var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 	
@@ -108068,7 +109412,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 247 */
+/* 252 */
 /*!**************************************************!*\
   !*** ./~/babel-runtime/helpers/slicedToArray.js ***!
   \**************************************************/
@@ -108078,7 +109422,7 @@
 	
 	exports.__esModule = true;
 	
-	var _isIterable2 = __webpack_require__(/*! ../core-js/is-iterable */ 248);
+	var _isIterable2 = __webpack_require__(/*! ../core-js/is-iterable */ 253);
 	
 	var _isIterable3 = _interopRequireDefault(_isIterable2);
 	
@@ -108127,30 +109471,30 @@
 	}();
 
 /***/ },
-/* 248 */
+/* 253 */
 /*!************************************************!*\
   !*** ./~/babel-runtime/core-js/is-iterable.js ***!
   \************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/is-iterable */ 249), __esModule: true };
+	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/is-iterable */ 254), __esModule: true };
 
 /***/ },
-/* 249 */
-/*!*********************************************!*\
-  !*** ./~/core-js/library/fn/is-iterable.js ***!
-  \*********************************************/
+/* 254 */
+/*!*************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/fn/is-iterable.js ***!
+  \*************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(/*! ../modules/web.dom.iterable */ 118);
 	__webpack_require__(/*! ../modules/es6.string.iterator */ 164);
-	module.exports = __webpack_require__(/*! ../modules/core.is-iterable */ 250);
+	module.exports = __webpack_require__(/*! ../modules/core.is-iterable */ 255);
 
 /***/ },
-/* 250 */
-/*!*******************************************************!*\
-  !*** ./~/core-js/library/modules/core.is-iterable.js ***!
-  \*******************************************************/
+/* 255 */
+/*!***********************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/core.is-iterable.js ***!
+  \***********************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	var classof   = __webpack_require__(/*! ./_classof */ 168)
@@ -108164,7 +109508,7 @@
 	};
 
 /***/ },
-/* 251 */
+/* 256 */
 /*!************************************************!*\
   !*** ./beeline-admin/services/adminService.js ***!
   \************************************************/
@@ -108176,7 +109520,7 @@
 	  value: true
 	});
 	
-	var _slicedToArray2 = __webpack_require__(/*! babel-runtime/helpers/slicedToArray */ 247);
+	var _slicedToArray2 = __webpack_require__(/*! babel-runtime/helpers/slicedToArray */ 252);
 	
 	var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 	
@@ -108238,7 +109582,11 @@
 	  };
 	
 	  this.isSuperAdmin = function () {
+	    if (!auth.isAuthenticated) return false;
+	
 	    var profile = store.get('profile');
+	
+	    if (!profile) return false;
 	
 	    return profile.app_metadata.roles.indexOf('superadmin') != -1;
 	  };
@@ -108284,7 +109632,7 @@
 	}
 
 /***/ },
-/* 252 */
+/* 257 */
 /*!************************************************!*\
   !*** ./beeline-admin/services/tripsService.js ***!
   \************************************************/
@@ -108551,7 +109899,7 @@
 	
 	var _lodash2 = _interopRequireDefault(_lodash);
 	
-	var _querystring = __webpack_require__(/*! querystring */ 253);
+	var _querystring = __webpack_require__(/*! querystring */ 258);
 	
 	var _querystring2 = _interopRequireDefault(_querystring);
 	
@@ -108562,7 +109910,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 253 */
+/* 258 */
 /*!********************************!*\
   !*** ./~/querystring/index.js ***!
   \********************************/
@@ -108570,12 +109918,12 @@
 
 	'use strict';
 	
-	exports.decode = exports.parse = __webpack_require__(/*! ./decode */ 254);
-	exports.encode = exports.stringify = __webpack_require__(/*! ./encode */ 255);
+	exports.decode = exports.parse = __webpack_require__(/*! ./decode */ 259);
+	exports.encode = exports.stringify = __webpack_require__(/*! ./encode */ 260);
 
 
 /***/ },
-/* 254 */
+/* 259 */
 /*!*********************************!*\
   !*** ./~/querystring/decode.js ***!
   \*********************************/
@@ -108664,7 +110012,7 @@
 
 
 /***/ },
-/* 255 */
+/* 260 */
 /*!*********************************!*\
   !*** ./~/querystring/encode.js ***!
   \*********************************/
@@ -108737,7 +110085,7 @@
 
 
 /***/ },
-/* 256 */
+/* 261 */
 /*!*************************************************!*\
   !*** ./beeline-admin/services/routesService.js ***!
   \*************************************************/
@@ -108939,7 +110287,7 @@
 	
 	var _lodash2 = _interopRequireDefault(_lodash);
 	
-	var _querystring = __webpack_require__(/*! querystring */ 253);
+	var _querystring = __webpack_require__(/*! querystring */ 258);
 	
 	var _querystring2 = _interopRequireDefault(_querystring);
 	
@@ -108950,7 +110298,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 257 */
+/* 262 */
 /*!**********************************************!*\
   !*** ./beeline-admin/services/stopsPopup.js ***!
   \**********************************************/
@@ -109100,14 +110448,14 @@
 	  };
 	};
 	
-	var _stopsPopup = __webpack_require__(/*! ../templates/stopsPopup.html */ 258);
+	var _stopsPopup = __webpack_require__(/*! ../templates/stopsPopup.html */ 263);
 	
 	var _stopsPopup2 = _interopRequireDefault(_stopsPopup);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 258 */
+/* 263 */
 /*!*************************************************!*\
   !*** ./beeline-admin/templates/stopsPopup.html ***!
   \*************************************************/
@@ -109116,7 +110464,7 @@
 	module.exports = "\n<div class=\"stops-popup\">\n  <div class=\"modal-header\">\n    <h3>{{title}}</h3>\n  </div>\n\n  <div class=\"modal-body\">\n    <ui-gmap-google-map\n      center=\"map.center\"\n      zoom=\"map.zoom\"\n      control=\"map.control\"\n      options=\"map.options\"\n      events=\"map.events\"\n    >\n      <ui-gmap-markers\n        models=\"allStops\"\n        coords=\"'$latlng'\"\n        idKey=\"'id'\"\n        doCluster=\"true\"\n        click=\"stopClicked\"\n        dorebuildall=\"true\"\n        modelsbyref=\"true\"\n        control=\"map.markersControl\"\n        >\n      </ui-gmap-markers>\n\n      <ui-gmap-marker\n        idkey=\"'newstop'\"\n        coords=\"selectedStop.$latlng\"\n        ng-if=\"!selectedStop.id\"\n        options=\"map.newStopOptions\"\n      >\n      </ui-gmap-marker>\n    </ui-gmap-google-map>\n  </div>\n\n  <div class=\"modal-footer\">\n    <form name=\"stopForm\">\n      <div ng-show=\"selectedStop\">\n        <h3>\n          <i ng-if=\"!selectedStop.id\">New Stop</i>\n          <span ng-if=\"selectedStop.id\">{{selectedStop.description}}</span>\n        </h3>\n        <label>\n          Description:\n          <input type=\"text\" ng-model=\"selectedStop.description\"\n              ng-required\n              >\n        </label>\n        <label>\n          Road:\n          <input type=\"text\" ng-model=\"selectedStop.road\"\n              ng-required\n          >\n        </label>\n        <label>\n          Label:\n          <input type=\"text\" ng-model=\"selectedStop.label\"\n              ng-required\n          >\n        </label>\n      </div>\n\n      <span class=\"btn-group\">\n        <button class=\"btn btn-primary\"\n          ng-disabled=\"!selectedStop.id\"\n          ng-click=\"done()\">\n          OK\n        </button>\n        <button class=\"btn btn-default\"\n          ng-click=\"cancel()\">\n          Cancel\n        </button>\n      </span>\n\n      <span class=\"btn-group\">\n        <button class=\"btn btn-primary\"\n          ng-disabled=\"stopForm.$invalid || stopForm.$pristine\"\n          ng-click=\"saveStop(selectedStop)\"\n          >\n          Save Stop\n        </button>\n        <button class=\"btn btn-danger\"\n          ng-show=\"selectedStop.id\"\n          ng-click=\"deleteStop(selectedStop)\"\n          >\n          Delete Stop\n        </button>\n      </span>\n    </form>\n  </div>\n</div>\n";
 
 /***/ },
-/* 259 */
+/* 264 */
 /*!**********************************************!*\
   !*** ./beeline-admin/services/routePopup.js ***!
   \**********************************************/
@@ -109184,23 +110532,10 @@
 	            stops: []
 	          };
 	
-	          uiGmapGoogleMapApi.then(function (googleMaps) {
+	          uiGmapGoogleMapApi.then(function (googleMap) {
 	            _.assign($scope.map.pingSampleOptions.icon, {
-	              scaledSize: new googleMaps.Size(15, 15),
-	              anchor: new googleMaps.Point(8, 8)
-	            });
-	
-	            $scope.$watch('route.path', function (path) {
-	              if (!path) {
-	                $scope.computed.path = [];
-	                return;
-	              }
-	
-	              $scope.computed.path = typeof path === 'string' ? googleMaps.geometry.encoding.decodePath(path) : path.map(function (_ref) {
-	                var latitude = _ref.lat;
-	                var longitude = _ref.lng;
-	                return { latitude: latitude, longitude: longitude };
-	              });
+	              scaledSize: new google.maps.Size(15, 15),
+	              anchor: new google.maps.Point(8, 8)
 	            });
 	          });
 	
@@ -109308,6 +110643,20 @@
 	            });
 	          });
 	
+	          $scope.$watch('route.path', function (path) {
+	            if (!path) {
+	              $scope.computed.path = [];
+	              return;
+	            }
+	
+	            $scope.computed.path = path.map(function (ll) {
+	              return {
+	                latitude: ll.lat,
+	                longitude: ll.lng
+	              };
+	            });
+	          });
+	
 	          setTimeout(function () {
 	            google.maps.event.trigger($scope.map.control.getGMap(), 'resize');
 	            $scope.map.center = { latitude: 1.38, longitude: 103.8 };
@@ -109319,14 +110668,14 @@
 	  };
 	};
 	
-	var _routePopup = __webpack_require__(/*! ../templates/routePopup.html */ 260);
+	var _routePopup = __webpack_require__(/*! ../templates/routePopup.html */ 265);
 	
 	var _routePopup2 = _interopRequireDefault(_routePopup);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 260 */
+/* 265 */
 /*!*************************************************!*\
   !*** ./beeline-admin/templates/routePopup.html ***!
   \*************************************************/
@@ -109335,7 +110684,7 @@
 	module.exports = "\n<div class=\"route-popup\">\n  <div class=\"modal-header\">\n    <h3>{{route.label}}: {{route.from}} &mdash; {{route.to}}</h3>\n\n    <button class=\"glyphicon glyphicon-remove\"\n      ng-click=\"closing = true\">\n    </button>\n  </div>\n\n  <div class=\"modal-body\">\n    <select ng-options=\"trip.date | date:'d MMM yyyy' for trip in trips | orderBy:'date':1\"\n            ng-model=\"trip\">\n    </select>\n\n    <ui-gmap-google-map\n      center=\"map.center\"\n      zoom=\"map.zoom\"\n      control=\"map.control\"\n      options=\"map.options\"\n      events=\"map.events\"\n    >\n      <!-- Route path -->\n      <ui-gmap-polyline path=\"computed.path\"\n                        idkey=\"'routePath'\"\n      ></ui-gmap-polyline>\n\n      <!-- Route ping -->\n      <ui-gmap-polyline path=\"computed.pingPath\"\n                        idkey=\"'pingPath'\"\n                        icons=\"map.pingPathOptions.icons\"\n                        stroke=\"map.pingPathOptions.stroke\"\n      ></ui-gmap-polyline>\n\n      <ui-gmap-markers\n        ng-if=\"computed.pingSamples\"\n        models=\"computed.pingSamples\"\n        coords=\"'coordinates'\"\n        idKey=\"'id'\"\n        options=\"'_options'\"\n        events=\"map.pingEvents\"\n        >\n      </ui-gmap-markers>\n\n      <!-- Trip stops -->\n      <ui-gmap-markers\n        ng-if=\"trip\"\n        models=\"trip.tripStops\"\n        coords=\"'stop.coordinates'\"\n        idKey=\"'id'\"\n        doCluster=\"false\"\n        click=\"stopClicked\"\n        options=\"'_options'\"\n        control=\"map.markersControl\"\n        >\n      </ui-gmap-markers>\n\n      <ui-gmap-window coords=\"selectedStop.stop.coordinates\"\n                      show=\"selectedStop\">\n        <div>\n          <b>{{selectedStop.stop.description}}</b>\n          <br/>\n          {{selectedStop.time | date:'HH:mm'}}\n        </div>\n      </ui-gmap-window>\n\n      <ui-gmap-window coords=\"selectedPing.coordinates\"\n                      show=\"selectedPing\">\n        <div>\n          <b>{{selectedPing.time | date:'HH:mm:ss'}}</b>\n        </div>\n      </ui-gmap-window>\n\n    </ui-gmap-google-map>\n  </div>\n</div>\n";
 
 /***/ },
-/* 261 */
+/* 266 */
 /*!**********************************************!*\
   !*** ./beeline-admin/services/mapService.js ***!
   \**********************************************/
@@ -109381,7 +110730,7 @@
 	};
 
 /***/ },
-/* 262 */
+/* 267 */
 /*!*************************************************!*\
   !*** ./beeline-admin/services/driverService.js ***!
   \*************************************************/
@@ -109397,7 +110746,7 @@
 	
 	var _getIterator3 = _interopRequireDefault(_getIterator2);
 	
-	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 263);
+	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 268);
 	
 	var _stringify2 = _interopRequireDefault(_stringify);
 	
@@ -109519,26 +110868,26 @@
 	
 	var _lodash2 = _interopRequireDefault(_lodash);
 	
-	var _querystring = __webpack_require__(/*! querystring */ 253);
+	var _querystring = __webpack_require__(/*! querystring */ 258);
 	
 	var _querystring2 = _interopRequireDefault(_querystring);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 263 */
+/* 268 */
 /*!***************************************************!*\
   !*** ./~/babel-runtime/core-js/json/stringify.js ***!
   \***************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/json/stringify */ 264), __esModule: true };
+	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/json/stringify */ 269), __esModule: true };
 
 /***/ },
-/* 264 */
-/*!************************************************!*\
-  !*** ./~/core-js/library/fn/json/stringify.js ***!
-  \************************************************/
+/* 269 */
+/*!****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/fn/json/stringify.js ***!
+  \****************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	var core  = __webpack_require__(/*! ../../modules/_core */ 131)
@@ -109548,7 +110897,7 @@
 	};
 
 /***/ },
-/* 265 */
+/* 270 */
 /*!*************************************************!*\
   !*** ./beeline-admin/services/bookingRefund.js ***!
   \*************************************************/
@@ -109560,7 +110909,7 @@
 	  value: true
 	});
 	
-	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 263);
+	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 268);
 	
 	var _stringify2 = _interopRequireDefault(_stringify);
 	
@@ -109588,7 +110937,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var bookingRefundTemplate = __webpack_require__(/*! ./bookingRefund.html */ 266);
+	var bookingRefundTemplate = __webpack_require__(/*! ./bookingRefund.html */ 271);
 	
 	function BookingRefundController($scope, LoadingSpinner, RoutesService, AdminService) {
 	  var lastId = 1;
@@ -109678,7 +111027,7 @@
 	}
 
 /***/ },
-/* 266 */
+/* 271 */
 /*!***************************************************!*\
   !*** ./beeline-admin/services/bookingRefund.html ***!
   \***************************************************/
@@ -109687,7 +111036,7 @@
 	module.exports = "\n\n<div class=\"modal-header\">\n  <h3 class=\"modal-title\">Refunds / Replacement Trips</h3>\n</div>\n\n<div class=\"modal-body\" class='booking-refund'>\n\n  <div class=\"cancel-panel\">\n    <!-- list of tickets to cancel -->\n    <h2>Tickets to Cancel</h2>\n    <ol class=\"ticket-list\">\n      <li ng-repeat=\"ticket in cancelledTickets\"\n          ng-class=\"{\n            active: disp.selectedCancelled == ticket\n          }\"\n          ng-click=\"disp.selectedCancelled = ticket\"\n      >\n          {{ticket.user.json.name ? ticket.user.json.name  + ' #' + ticket.user.json.index : ticket.user.name}}\n          <br/>\n          <b>{{ticket.boardStop.trip.route.label}}:\n              {{ticket.boardStop.trip.route.from}} &mdash;\n              {{ticket.boardStop.trip.route.to}}</b>\n          <br/>\n          <b>{{ticket.boardStop.trip.date | date:'dd MMM yy':'UTC'}}</b><br/>\n          {{ticket.boardStop.stop.description}}<br/>\n          {{ticket.alightStop.stop.description}}<br/>\n      </li>\n    </ol>\n  </div>\n\n  <!-- list of tickets to issue -->\n  <div class=\"issue-panel\">\n    <h2>Replacement Tickets</h2>\n    <button class=\"btn btn-default\" type=\"button\" ng-click=\"issuedTickets.push({})\"\n      >\n      Add\n    </button>\n    <ol class=\"ticket-list\">\n      <li ng-repeat=\"ticket in issuedTickets\"\n      >\n        <div>\n          User:\n          <select ng-options=\"user.id as (user.json.name ? user.json.name + ' #' + user.json.index : user.name) for user in availableUsers\"\n            ng-model=\"ticket.userId\">\n          </select>\n        </div>\n        <div>\n          Select Trip:\n          <trip-selector\n            trip-id=\"ticket.tripId\"\n            board-stop-id=\"ticket.boardStopId\"\n            alight-stop-id=\"ticket.alightStopId\"\n            route-id=\"ticket.routeId\"\n          ></trip-selector>\n        </div>\n        <button class=\"btn btn-danger\" type=\"button\" ng-click=\"issuedTickets.splice($index, 1)\"\n          >\n          Remove\n        </button>\n      </li>\n    </ol>\n    <button class=\"btn btn-default\" type=\"button\" ng-click=\"issuedTickets.push({})\"\n      >\n      Add\n    </button>\n  </div>\n</div>\n\n<div class=\"modal-footer\">\n  <button\n      ng-disabled=\"issuedTickets.length == 0\"\n      class=\"btn btn-primary\" type=\"button\" ng-click=\"issueFreeTickets()\">\n    Issue Free Tickets\n  </button>\n\n  <button\n      ng-disabled=\"issuedTickets.length == 0\"\n      class=\"btn btn-primary\" type=\"button\" ng-click=\"replaceTickets()\">\n    Replace Tickets\n  </button>\n\n\n  <button\n      class=\"btn btn-default\" type=\"button\" ng-click=\"$dismiss()\">\n    Cancel\n  </button>\n</div>\n";
 
 /***/ },
-/* 267 */
+/* 272 */
 /*!**************************************************!*\
   !*** ./beeline-admin/services/loadingSpinner.js ***!
   \**************************************************/
@@ -109729,7 +111078,7 @@
 	};
 
 /***/ },
-/* 268 */
+/* 273 */
 /*!*************************************************************!*\
   !*** ./beeline-admin/controllers/transactionsController.js ***!
   \*************************************************************/
@@ -109745,11 +111094,11 @@
 	
 	var _getIterator3 = _interopRequireDefault(_getIterator2);
 	
-	var _keys = __webpack_require__(/*! babel-runtime/core-js/object/keys */ 269);
+	var _keys = __webpack_require__(/*! babel-runtime/core-js/object/keys */ 274);
 	
 	var _keys2 = _interopRequireDefault(_keys);
 	
-	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 263);
+	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 268);
 	
 	var _stringify2 = _interopRequireDefault(_stringify);
 	
@@ -109884,53 +111233,53 @@
 	  $scope.$watch('filter', query, true);
 	};
 	
-	var _querystring = __webpack_require__(/*! querystring */ 253);
+	var _querystring = __webpack_require__(/*! querystring */ 258);
 	
 	var _querystring2 = _interopRequireDefault(_querystring);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 269 */
+/* 274 */
 /*!************************************************!*\
   !*** ./~/babel-runtime/core-js/object/keys.js ***!
   \************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/keys */ 270), __esModule: true };
+	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/keys */ 275), __esModule: true };
 
 /***/ },
-/* 270 */
-/*!*********************************************!*\
-  !*** ./~/core-js/library/fn/object/keys.js ***!
-  \*********************************************/
+/* 275 */
+/*!*************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/fn/object/keys.js ***!
+  \*************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(/*! ../../modules/es6.object.keys */ 271);
+	__webpack_require__(/*! ../../modules/es6.object.keys */ 276);
 	module.exports = __webpack_require__(/*! ../../modules/_core */ 131).Object.keys;
 
 /***/ },
-/* 271 */
-/*!******************************************************!*\
-  !*** ./~/core-js/library/modules/es6.object.keys.js ***!
-  \******************************************************/
+/* 276 */
+/*!**********************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/es6.object.keys.js ***!
+  \**********************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	// 19.1.2.14 Object.keys(O)
 	var toObject = __webpack_require__(/*! ./_to-object */ 163)
 	  , $keys    = __webpack_require__(/*! ./_object-keys */ 149);
 	
-	__webpack_require__(/*! ./_object-sap */ 272)('keys', function(){
+	__webpack_require__(/*! ./_object-sap */ 277)('keys', function(){
 	  return function keys(it){
 	    return $keys(toObject(it));
 	  };
 	});
 
 /***/ },
-/* 272 */
-/*!**************************************************!*\
-  !*** ./~/core-js/library/modules/_object-sap.js ***!
-  \**************************************************/
+/* 277 */
+/*!******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_object-sap.js ***!
+  \******************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	// most Object methods by ES6 should accept primitives
@@ -109945,7 +111294,7 @@
 	};
 
 /***/ },
-/* 273 */
+/* 278 */
 /*!******************************************************!*\
   !*** ./beeline-admin/controllers/tripsController.js ***!
   \******************************************************/
@@ -109957,7 +111306,7 @@
 	  value: true
 	});
 	
-	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 263);
+	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 268);
 	
 	var _stringify2 = _interopRequireDefault(_stringify);
 	
@@ -109978,7 +111327,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 274 */
+/* 279 */
 /*!*******************************************************!*\
   !*** ./beeline-admin/controllers/routesController.js ***!
   \*******************************************************/
@@ -110023,14 +111372,14 @@
 	  $scope.$watch('filter', refreshRoutes, true);
 	};
 	
-	var _querystring = __webpack_require__(/*! querystring */ 253);
+	var _querystring = __webpack_require__(/*! querystring */ 258);
 	
 	var _querystring2 = _interopRequireDefault(_querystring);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 275 */
+/* 280 */
 /*!********************************************************!*\
   !*** ./beeline-admin/controllers/summaryController.js ***!
   \********************************************************/
@@ -110127,7 +111476,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 276 */
+/* 281 */
 /*!*********************************************************!*\
   !*** ./beeline-admin/controllers/bookingsController.js ***!
   \*********************************************************/
@@ -110143,7 +111492,7 @@
 	
 	var _getIterator3 = _interopRequireDefault(_getIterator2);
 	
-	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 263);
+	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 268);
 	
 	var _stringify2 = _interopRequireDefault(_stringify);
 	
@@ -110246,14 +111595,14 @@
 	  $scope.$watch('filter.date', queryRoutes, true);
 	};
 	
-	var _querystring = __webpack_require__(/*! querystring */ 253);
+	var _querystring = __webpack_require__(/*! querystring */ 258);
 	
 	var _querystring2 = _interopRequireDefault(_querystring);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 277 */
+/* 282 */
 /*!************************************************************!*\
   !*** ./beeline-admin/controllers/bookingsControllerWrs.js ***!
   \************************************************************/
@@ -110269,11 +111618,11 @@
 	
 	var _getIterator3 = _interopRequireDefault(_getIterator2);
 	
-	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 263);
+	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 268);
 	
 	var _stringify2 = _interopRequireDefault(_stringify);
 	
-	var _keys = __webpack_require__(/*! babel-runtime/core-js/object/keys */ 269);
+	var _keys = __webpack_require__(/*! babel-runtime/core-js/object/keys */ 274);
 	
 	var _keys2 = _interopRequireDefault(_keys);
 	
@@ -110539,14 +111888,14 @@
 	  $scope.$watch('filter', query, true);
 	};
 	
-	var _querystring = __webpack_require__(/*! querystring */ 253);
+	var _querystring = __webpack_require__(/*! querystring */ 258);
 	
 	var _querystring2 = _interopRequireDefault(_querystring);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 278 */
+/* 283 */
 /*!********************************************************!*\
   !*** ./beeline-admin/controllers/driversController.js ***!
   \********************************************************/
@@ -110631,14 +111980,14 @@
 	  }, query);
 	};
 	
-	var _querystring = __webpack_require__(/*! querystring */ 253);
+	var _querystring = __webpack_require__(/*! querystring */ 258);
 	
 	var _querystring2 = _interopRequireDefault(_querystring);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 279 */
+/* 284 */
 /*!******************************************************!*\
   !*** ./beeline-admin/controllers/loginController.js ***!
   \******************************************************/
@@ -110655,7 +112004,7 @@
 	};
 
 /***/ },
-/* 280 */
+/* 285 */
 /*!*****************************************!*\
   !*** ./beeline-admin/shared/filters.js ***!
   \*****************************************/
