@@ -47,16 +47,16 @@
   \******************/
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(/*! /Users/yongjun21/github/beeline-admin/node_modules/angular/angular */1);
-	__webpack_require__(/*! /Users/yongjun21/github/beeline-admin/node_modules/angular-ui-router/release/angular-ui-router */2);
-	__webpack_require__(/*! /Users/yongjun21/github/beeline-admin/node_modules/angular-ui-bootstrap/dist/ui-bootstrap */3);
-	__webpack_require__(/*! /Users/yongjun21/github/beeline-admin/node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls */4);
-	__webpack_require__(/*! /Users/yongjun21/github/beeline-admin/node_modules/angular-animate/angular-animate */5);
-	__webpack_require__(/*! /Users/yongjun21/github/beeline-admin/node_modules/angular-touch/angular-touch */6);
-	__webpack_require__(/*! /Users/yongjun21/github/beeline-admin/node_modules/angular-simple-logger/dist/angular-simple-logger */7);
-	__webpack_require__(/*! /Users/yongjun21/github/beeline-admin/node_modules/lodash/lodash */8);
-	__webpack_require__(/*! /Users/yongjun21/github/beeline-admin/node_modules/angular-google-maps/dist/angular-google-maps */10);
-	module.exports = __webpack_require__(/*! /Users/yongjun21/github/beeline-admin/beeline-admin/main.js */11);
+	__webpack_require__(/*! /Users/yongjun21/GitHub/beeline-admin/node_modules/angular/angular */1);
+	__webpack_require__(/*! /Users/yongjun21/GitHub/beeline-admin/node_modules/angular-ui-router/release/angular-ui-router */2);
+	__webpack_require__(/*! /Users/yongjun21/GitHub/beeline-admin/node_modules/angular-ui-bootstrap/dist/ui-bootstrap */3);
+	__webpack_require__(/*! /Users/yongjun21/GitHub/beeline-admin/node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls */4);
+	__webpack_require__(/*! /Users/yongjun21/GitHub/beeline-admin/node_modules/angular-animate/angular-animate */5);
+	__webpack_require__(/*! /Users/yongjun21/GitHub/beeline-admin/node_modules/angular-touch/angular-touch */6);
+	__webpack_require__(/*! /Users/yongjun21/GitHub/beeline-admin/node_modules/angular-simple-logger/dist/angular-simple-logger */7);
+	__webpack_require__(/*! /Users/yongjun21/GitHub/beeline-admin/node_modules/lodash/lodash */8);
+	__webpack_require__(/*! /Users/yongjun21/GitHub/beeline-admin/node_modules/angular-google-maps/dist/angular-google-maps */10);
+	module.exports = __webpack_require__(/*! /Users/yongjun21/GitHub/beeline-admin/beeline-admin/main.js */11);
 
 
 /***/ },
@@ -104459,10 +104459,10 @@
 	    link: function link(scope, elem, attr) {
 	      scope.newPath = '';
 	      uiGmapGoogleMapApi.then(function (googleMaps) {
-	        var singapore = new googleMaps.LatLng(1.352083, 103.819836);
+	        var SINGAPORE = new googleMaps.LatLng(1.352083, 103.819836);
 	        var map = new googleMaps.Map(document.querySelector('.map-ctn'), {
-	          zoom: 12,
-	          center: singapore
+	          zoom: 11,
+	          center: SINGAPORE
 	        });
 	
 	        var mapPath = new googleMaps.Polyline({
@@ -104480,15 +104480,44 @@
 	          }
 	        });
 	
+	        var markers = [];
+	
+	        scope.$watch('tripStops', function (tripStops) {
+	          map.setCenter(SINGAPORE);
+	          map.setZoom(11);
+	          dirRenderer.setMap(null);
+	          markers.forEach(function (marker) {
+	            return marker.setMap(null);
+	          });
+	          markers = tripStops ? tripStops.map(function (tripStop, i) {
+	            var _tripStop$stop = tripStop.stop;
+	            var coordinates = _tripStop$stop.coordinates.coordinates;
+	            var description = _tripStop$stop.description;
+	            var canBoard = tripStop.canBoard;
+	
+	            var latlng = new googleMaps.LatLng(coordinates[1], coordinates[0]);
+	            return new googleMaps.Marker({
+	              position: latlng,
+	              title: description,
+	              icon: {
+	                scaledSize: new googleMaps.Size(30, 30),
+	                anchor: new googleMaps.Point(15, 15),
+	                url: 'img/stop' + (canBoard ? 'Board' : 'Alight') + (i + 1) + '.png'
+	              },
+	              map: map
+	            });
+	          }) : [];
+	        });
+	
 	        var dirService = new googleMaps.DirectionsService();
-	        var dirDisplay = new googleMaps.DirectionsRenderer({
+	        var dirRenderer = new googleMaps.DirectionsRenderer({
 	          draggable: true,
 	          polylineOptions: { strokeWeight: 3, strokeColor: '#4b3863' },
 	          markerOptions: { icon: 'https://maps.gstatic.com/mapfiles/dd-via.png' }
 	        });
 	
-	        dirDisplay.directions_changed = function () {
-	          var directions = dirDisplay.getDirections();
+	        dirRenderer.directions_changed = function () {
+	          var directions = dirRenderer.getDirections();
 	          console.log(directions);
 	          var overview_polyline = directions.routes[0].overview_polyline;
 	
@@ -104497,15 +104526,16 @@
 	
 	        scope.googlePath = function (tripStops) {
 	          if (!tripStops) return;
-	          var inputLatLng = tripStops.map(function (tripStop) {
+	          var stopsLatLng = tripStops.map(function (tripStop) {
 	            var coordinates = tripStop.stop.coordinates.coordinates;
 	
 	            return new googleMaps.LatLng(coordinates[1], coordinates[0]);
 	          });
+	
 	          var request = {
-	            origin: inputLatLng[0],
-	            destination: inputLatLng[inputLatLng.length - 1],
-	            waypoints: inputLatLng.slice(1, -1).map(function (latlng) {
+	            origin: stopsLatLng[0],
+	            destination: stopsLatLng[stopsLatLng.length - 1],
+	            waypoints: stopsLatLng.slice(1, -1).map(function (latlng) {
 	              return { location: latlng };
 	            }),
 	            travelMode: googleMaps.TravelMode.DRIVING
@@ -104513,8 +104543,8 @@
 	
 	          dirService.route(request, function (result, status) {
 	            if (status === googleMaps.DirectionsStatus.OK) {
-	              dirDisplay.setMap(map);
-	              dirDisplay.setDirections(result);
+	              dirRenderer.setMap(map);
+	              dirRenderer.setDirections(result);
 	            } else {
 	              console.log('Google path failed', result);
 	            }
@@ -104525,14 +104555,14 @@
 	          if (!scope.newPath) return;
 	          scope.path = scope.newPath;
 	          scope.newPath = '';
-	          dirDisplay.setMap(null);
+	          dirRenderer.setMap(null);
 	        };
 	
 	        scope.clearPath = function () {
 	          scope.path = '';
 	          scope.newPath = '';
 	          mapPath.setMap(null);
-	          dirDisplay.setMap(null);
+	          dirRenderer.setMap(null);
 	        };
 	      });
 	    }
