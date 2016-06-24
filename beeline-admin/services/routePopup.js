@@ -50,10 +50,21 @@ export default function (RoutesService, $uibModal, mapService, TripsService) {
             stops: []
           }
 
-          uiGmapGoogleMapApi.then((googleMap) => {
+          uiGmapGoogleMapApi.then((googleMaps) => {
             _.assign($scope.map.pingSampleOptions.icon, {
-              scaledSize: new google.maps.Size(15,15),
-              anchor: new google.maps.Point(8,8),
+              scaledSize: new googleMaps.Size(15, 15),
+              anchor: new googleMaps.Point(8, 8)
+            })
+
+            $scope.$watch('route.path', (path) => {
+              if (!path) {
+                $scope.computed.path = []
+                return
+              }
+
+              $scope.computed.path = typeof path === 'string'
+              ? googleMaps.geometry.encoding.decodePath(path)
+              : path.map(({lat: latitude, lng: longitude}) => ({latitude, longitude}))
             })
           })
 
@@ -137,18 +148,6 @@ export default function (RoutesService, $uibModal, mapService, TripsService) {
 
               console.log($scope.computed.pingSamples);
             })
-          })
-
-          $scope.$watch('route.path', (path) => {
-            if (!path) {
-              $scope.computed.path = [];
-              return;
-            }
-
-            $scope.computed.path = path.map((ll) => ({
-              latitude: ll.lat,
-              longitude: ll.lng,
-            }))
           })
 
           setTimeout(() => {
