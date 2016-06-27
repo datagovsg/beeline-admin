@@ -5,7 +5,7 @@ export default function($scope, $state, $stateParams, $http, AdminService, Loadi
 
   $scope.filter = {
     currentPage: 1,
-    perPage: 20,
+    perPage: 100,
     pageCount: 1,
 
     orderBy: 'createdAt',

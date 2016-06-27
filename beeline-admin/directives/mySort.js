@@ -21,14 +21,17 @@ export default function() {
 
       scope.$watchGroup(['sortModel', 'sortDirection'], ([model, direction]) => {
         if (model == attr.mySort) {
-          elem[0].classList.remove('sort-asc');
-          elem[0].classList.remove('sort-desc');
-
           if (direction == 'asc') {
             elem[0].classList.add('sort-asc');
+            elem[0].classList.remove('sort-desc');
           } else if (direction == 'desc') {
             elem[0].classList.add('sort-desc');
+            elem[0].classList.remove('sort-asc');
           }
+        }
+        else {
+          elem[0].classList.remove('sort-asc');
+          elem[0].classList.remove('sort-desc');
         }
       });
     }

@@ -5,7 +5,7 @@ BookingRefund, $state, $stateParams) {
   $scope.tickets = [];
   $scope.currentPage = 1;
 
-  $scope.perPage = 20;
+  $scope.perPage = 50;
   $scope.pageCount = 1;
 
   var now = new Date();
