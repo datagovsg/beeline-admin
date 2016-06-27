@@ -33,19 +33,7 @@ export default function($scope, $state, $stateParams, $http, AdminService, Loadi
   $scope.filter.startDate.setDate(1)
   $scope.filter.endDate.setDate(1)
   $scope.filter.endDate.setMonth($scope.filter.endDate.getMonth() + 1)
-
-  $scope.$watch('disp.month', () => {
-    $scope.filter.startDate = new Date(
-      $scope.disp.month.getFullYear(),
-      $scope.disp.month.getMonth(),
-      1
-    )
-    $scope.filter.endDate = new Date(
-      $scope.disp.month.getFullYear(),
-      $scope.disp.month.getMonth() + 1,
-      1
-    )
-  })
+  $scope.filter.endDate.setDate(0)
 
   // URL handling
   $scope.$watch(() => $stateParams.id, () => {
@@ -94,7 +82,7 @@ export default function($scope, $state, $stateParams, $http, AdminService, Loadi
       queryOpts.endDate = new Date(
         $scope.filter.endDate.getFullYear(),
         $scope.filter.endDate.getMonth(),
-        $scope.filter.endDate.getDate()
+        $scope.filter.endDate.getDate() + 1
       ).getTime();
     }
 

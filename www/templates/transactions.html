@@ -3,33 +3,17 @@
     <div class="col-lg-12">
   <h1>Transactions</h1>
 
-  <uib-pagination
-    boundary-links="true"
-    ng-model="filter.currentPage"
-    total-items="filter.pageCount * filter.perPage"
-    items-per-page="filter.perPage"
-  ></uib-pagination>
+  <!-- transaction dates -->
+  <div class="datepicker-wrap">
+    Select the start date, and the end date:
+    <span-select
+      highlight-days="disp.highlightDays"
+      first-date="filter.startDate"
+      last-date="filter.endDate">
+    </span-select>
+  </div>
 
   <section>
-    <!-- transaction dates -->
-    <div class="datepicker-wrap">
-      Select Month:<br clear="both">
-      <uib-datepicker ng-model="disp.month"
-          datepicker-options="{minMode: 'month'}"></uib-datepicker>
-    </div>
-
-    <div class="datepicker-wrap">
-    Select Start Date:<br clear="both">
-    <uib-datepicker ng-model="filter.startDate"
-        datepicker-options="{minMode: 'day'}"></uib-datepicker>
-    </div>
-
-    <div class="datepicker-wrap">
-    Select End Date:<br clear="both">
-    <uib-datepicker ng-model="filter.endDate"
-        datepicker-options="{minMode: 'day'}"></uib-datepicker>
-    </div>
-
     <!-- transaction types -->
     <div>
       Status:
@@ -112,6 +96,14 @@
       </label>
     </div>
   </section>
+
+
+  <uib-pagination
+    boundary-links="true"
+    ng-model="filter.currentPage"
+    total-items="filter.pageCount * filter.perPage"
+    items-per-page="filter.perPage"
+  ></uib-pagination>
 
   <table class="table table-striped transactions-view">
     <thead>

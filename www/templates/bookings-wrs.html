@@ -7,8 +7,12 @@
 
       <nav>
         <div class="datepicker-wrap">
-          <multiple-date-picker ng-model="disp.dates" highlight-days="disp.highlightDays">
-          </multiple-date-picker>
+          Select the start date, and the end date:
+          <span-select
+            highlight-days="disp.highlightDays"
+            first-date="filter.startDate"
+            last-date="filter.endDate">
+          </span-select>
         </div>
 
         <div>
