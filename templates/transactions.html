@@ -79,51 +79,6 @@
       </label>
     </div>
 
-    <!-- order by -->
-    <div>
-      Order By
-      <label>
-        <input type="radio"
-        ng-model="filter.orderBy"
-        value="createdAt"
-        />
-        CreatedAt
-      </label>
-      <label>
-        <input type="radio"
-        ng-model="filter.orderBy"
-        value="transactionId"
-        />
-        Transaction Id
-      </label>
-      <label>
-        <input type="radio"
-        ng-model="filter.itemType"
-        value="itemType"
-        />
-        Item Type
-      </label>
-    </div>
-
-    <!-- order -->
-    <div>
-      Order
-      <label>
-        <input type="radio"
-        ng-model="filter.order"
-        value="desc"
-        />
-        Descending
-      </label>
-      <label>
-        <input type="radio"
-        ng-model="filter.order"
-        value="asc"
-        />
-        Ascending
-      </label>
-    </div>
-
     <!-- txn id -->
     <div>
       <label>
@@ -161,21 +116,21 @@
   <table class="table table-striped transactions-view">
     <thead>
       <tr>
-        <th class="id" ng-if="adminService.isSuperAdmin()">Actions</th>
-        <th class="id">Txn ID</th>
-        <th class="id">Txn Date</th>
-        <th class="id">Txn Description</th>
-        <th class="id">Txn Item ID</th>
-        <th class="item-type">Item type</th>
-        <th class="item-type">Item ID</th>
-        <th class="item-description">Description 1</th>
-        <th class="item-description">Description 2</th>
-        <th class="item-description">Description 3</th>
-        <th class="item-description">Description 4</th>
-        <th class="item-description">Description 5</th>
-        <th class="item-description">Description 6</th>
-        <th class="debit-credit">Debit</th>
-        <th class="debit-credit">Credit</th>
+        <th sort-model="filter.orderBy" sort-direction="filter.order" my-sort="" class="id" ng-if="adminService.isSuperAdmin()">Actions</th>
+        <th sort-model="filter.orderBy" sort-direction="filter.order" my-sort="transactionId" class="id">Txn ID</th>
+        <th sort-model="filter.orderBy" sort-direction="filter.order" my-sort="createdAt" class="id">Txn Date</th>
+        <th sort-model="filter.orderBy" sort-direction="filter.order" my-sort="" class="id">Txn Description</th>
+        <th sort-model="filter.orderBy" sort-direction="filter.order" my-sort="" class="id">Txn Item ID</th>
+        <th sort-model="filter.orderBy" sort-direction="filter.order" my-sort="itemType" class="item-type">Item type</th>
+        <th sort-model="filter.orderBy" sort-direction="filter.order" my-sort="" class="item-type">Item ID</th>
+        <th sort-model="filter.orderBy" sort-direction="filter.order" my-sort="" class="item-description">Description 1</th>
+        <th sort-model="filter.orderBy" sort-direction="filter.order" my-sort="" class="item-description">Description 2</th>
+        <th sort-model="filter.orderBy" sort-direction="filter.order" my-sort="" class="item-description">Description 3</th>
+        <th sort-model="filter.orderBy" sort-direction="filter.order" my-sort="" class="item-description">Description 4</th>
+        <th sort-model="filter.orderBy" sort-direction="filter.order" my-sort="" class="item-description">Description 5</th>
+        <th sort-model="filter.orderBy" sort-direction="filter.order" my-sort="" class="item-description">Description 6</th>
+        <th sort-model="filter.orderBy" sort-direction="filter.order" my-sort="" class="debit-credit">Debit</th>
+        <th sort-model="filter.orderBy" sort-direction="filter.order" my-sort="" class="debit-credit">Credit</th>
       </tr>
     </thead>
 
