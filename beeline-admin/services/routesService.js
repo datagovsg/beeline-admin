@@ -25,6 +25,21 @@ export default function (AdminService, DriverService, $q) {
     return query
   }
 
+  function postProcessRoute(route) {
+    if (route.trips) {
+      for (let trip of route.trips) {
+        trip.date = new Date(trip.date)
+
+        if (trip.tripStops) {
+          for (let tripStop of trip.tripStops) {
+            tripStop.time = new Date(tripStop.time);
+          }
+        }
+      }
+    }
+    return route;
+  }
+
   /**
     @param options -- options to pass in query string to /routes
       @prop startDate : string | int
@@ -49,6 +64,11 @@ export default function (AdminService, DriverService, $q) {
       })
       .then((response) => {
         routesCache = response.data;
+
+        for (let route of response.data) {
+          postProcessRoute(route);
+        }
+
         return routesCache
       })
 
@@ -73,10 +93,7 @@ export default function (AdminService, DriverService, $q) {
         url: `/routes/${id}?${query}`,
       })
       .then((response) => {
-        for (let trip of response.data.trips) {
-          trip.date = new Date(trip.date)
-        }
-        return response.data;
+        return postProcessRoute(response.data);
       })
     }
     return this.getRoutes()

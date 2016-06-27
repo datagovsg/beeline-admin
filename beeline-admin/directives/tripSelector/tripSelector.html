@@ -1,53 +1,51 @@
-<div class="trip-selector">
-  <label>
-    Route
+<div class="trip-selector form-inline">
+  <div>
+    <label>
+      Route
+    </label>
     <select ng-options="route.id as displayRoute(route) for route in info.routes | orderBy:'label'"
-            ng-model="routeId"
-    >
+            ng-model="data.routeId"
+            class="form-control form-inline">
     </select>
-  </label>
+  </div>
 
-  <label >
-    Date
-    <div  style="display: inline-block; width: 300px;">
-      <div class="input-group">
-        <input type="text"
-          class="form-control"
-          uib-datepicker-popup
-          is-open="disp.popupOpen"
+  <div>
+    <h3>Dates (Seats available)</h3>
 
-          ng-model="query.tripDate"
-          ng-model-options="{timezone: 'UTC'}"
-          datepicker-options="disp.datepickerOptions"
-          close-text="Close"
-          >
-
-        <span class="input-group-btn">
-          <button type="button" class="btn btn-default" ng-click="disp.popupOpen = !disp.popupOpen">
-            <i class="glyphicon glyphicon-calendar"></i>
-          </button>
-        </span>
-      </div>
-    </div>
-  </label>
-
-  {{info.trip.availability.seatsAvailable}} seats available
+    <multiple-date-picker days-allowed="disp.datepicker.daysAllowed"
+      ng-model="data.selectedDates">
+    </multiple-date-picker>
+  </div>
 
   <label>
     Boarding Stop
-    <select ng-options="tripStop.id as displayStop(tripStop) for tripStop in info.tripStops | filter:isBoardStop"
-      ng-model="boardStopId"
+    <select ng-options="tripStop as displayStop(tripStop) for tripStop in info.tripStops | filter:isBoardStop"
+      ng-model="boardStop"
     >
     </select>
   </label>
 
   <label>
     Alighting Stop
-    <select ng-options="tripStop.id as displayStop(tripStop) for tripStop in info.tripStops | filter:isAlightStop"
-      ng-model="alightStopId"
+    <select ng-options="tripStop as displayStop(tripStop) for tripStop in info.tripStops | filter:isAlightStop"
+      ng-model="alightStop"
     >
     </select>
   </label>
+
+  <div>
+    Selected Trips:
+    <ul>
+      <li ng-repeat="trip in data.trips">
+        {{trip.date | date:'dd MMM yyyy'}}
+        <button ng-click="removeTrip(trip.date)"
+          class="btn btn-danger">
+          (remove)
+        </button>
+      </li>
+    </ul>
+
+  </div>
   <!-- <dl>
     <dt>Trip ID</dt>
     <dd>{{tripId}}</dd>
