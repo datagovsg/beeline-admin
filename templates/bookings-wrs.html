@@ -3,7 +3,7 @@
 
     <div class="bookings-page">
       <!--  Remove bookings-page class -->
-      <h1>Bookings</h1>
+      <h1>Tickets</h1>
 
       <nav>
         <div class="datepicker-wrap">
@@ -171,8 +171,11 @@
                 {{ticket.createdAt | date:'dd-MMM-yy HH:mm:ss'}}
               </td>
               <td>
-                <button class="btn btn-danger" ng-click="refund(ticket)" ng-disabled="ticket.status != 'valid'">
-                  Refund!
+                <button class="btn btn-danger btn-condensed" ng-click="refund(ticket)" ng-disabled="ticket.status != 'valid'">
+                  Refund
+                </button>
+                <button class="btn btn-default btn-condensed" ng-click="replace(ticket)" ng-disabled="ticket.status != 'valid'">
+                  Replace
                 </button>
               </td>
             </tr>
