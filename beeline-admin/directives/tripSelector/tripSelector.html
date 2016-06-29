@@ -1,4 +1,14 @@
 <div class="trip-selector form-inline">
+  <div class="date-picker">
+    <h3>Dates (Seats available)</h3>
+
+    <multiple-date-picker
+      days-allowed="disp.datepicker.daysAllowed"
+      highlight-days="disp.datepicker.highlightDays"
+      ng-model="data.selectedDates">
+    </multiple-date-picker>
+  </div>
+
   <div>
     <label>
       Route
@@ -9,18 +19,10 @@
     </select>
   </div>
 
-  <div>
-    <h3>Dates (Seats available)</h3>
-
-    <multiple-date-picker days-allowed="disp.datepicker.daysAllowed"
-      ng-model="data.selectedDates">
-    </multiple-date-picker>
-  </div>
-
   <label>
     Boarding Stop
     <select ng-options="tripStop as displayStop(tripStop) for tripStop in info.tripStops | filter:isBoardStop"
-      ng-model="boardStop"
+      ng-model="boardStop" class="form-control"
     >
     </select>
   </label>
@@ -28,14 +30,21 @@
   <label>
     Alighting Stop
     <select ng-options="tripStop as displayStop(tripStop) for tripStop in info.tripStops | filter:isAlightStop"
-      ng-model="alightStop"
+      ng-model="alightStop" class="form-control"
     >
     </select>
   </label>
 
   <div>
+    <label>
+      Reason
+      <textarea class="form-control" ng-model="reason">e.g. Bus did not turn up</textarea>
+    </label>
+  </div>
+
+  <div>
     Selected Trips:
-    <ul>
+    <ul class="selected-dates">
       <li ng-repeat="trip in data.trips">
         {{trip.date | date:'dd MMM yyyy'}}
         <button ng-click="removeTrip(trip.date)"
@@ -56,4 +65,5 @@
     <dt>Alight Stop ID</dt>
     <dd>{{alightStopId}}</dd>
   </dl> -->
+  <br clear="both" />
 </div>

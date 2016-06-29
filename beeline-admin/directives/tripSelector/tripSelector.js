@@ -6,10 +6,11 @@ export default function(AdminService, RoutesService, $rootScope, LoadingSpinner)
     template: require('./tripSelector.html'),
     scope: {
       tripId: '=',
-      alightStopId: '=?',
-      boardStopId: '=?',
+      alightStopId: '<?',
+      boardStopId: '<?',
       routeId: '=?',
-      tickets: '=?',
+      trips: '=?',
+      reason: '=',
     },
     link(scope, elem, attr) {
       var todayUTC = new Date()
@@ -27,11 +28,6 @@ export default function(AdminService, RoutesService, $rootScope, LoadingSpinner)
         tripDate: todayUTC,
       }
       scope.disp = {
-    //     ng-model="disp.selectedDatesLocal"
-    //  days-allowed="disp.daysAllowed"
-    //   highlight-days="disp.highlightDays"
-    //    disallow-back-past-months="true"
-    //     disable-days-before="disp.today"
         datepicker: {
           highlightDays: [],
           daysAllowed: [],
@@ -39,7 +35,7 @@ export default function(AdminService, RoutesService, $rootScope, LoadingSpinner)
         popupOpen: false,
       }
       scope.data = {
-        routeId: null,
+        routeId: scope.routeId,
         selectedDates: [],
         trips: [],
       }
@@ -76,12 +72,18 @@ export default function(AdminService, RoutesService, $rootScope, LoadingSpinner)
           scope.info.trips = route.trips
 
           scope.disp.datepicker.daysAllowed = route.trips.map(trip =>
-            moment(trip.date));
+            new Date(
+                trip.date.getFullYear(),
+                trip.date.getMonth(),
+                trip.date.getDate()));
           scope.disp.datepicker.highlightDays = route.trips.map(trip =>
             ({
-              date: trip.date,
+              date: new Date(
+                  trip.date.getFullYear(),
+                  trip.date.getMonth(),
+                  trip.date.getDate()),
               selectable: true,
-              annotation: trip.availability.seatsAvailable
+              annotation: `${trip.availability.seatsAvailable}`
             }))
         })
       });
@@ -89,6 +91,7 @@ export default function(AdminService, RoutesService, $rootScope, LoadingSpinner)
       // Get stops
       scope.$watch('data.selectedDates', (selectedDates) => {
         if (!selectedDates || selectedDates.length === 0) {
+          scope.data.trips = [];
           scope.info.tripStops = null;
           return;
         }
@@ -116,16 +119,33 @@ export default function(AdminService, RoutesService, $rootScope, LoadingSpinner)
         }
         scope.data.trips = _.sortBy(scope.data.trips, t => t.date)
         scope.info.tripStops = initialSubset;
+
+        // Update boardStop / alightStop
+        if (scope.boardStopId) {
+          scope.boardStop = scope.info.tripStops.find(ts =>
+            ts.stopId === scope.boardStopId)
+        }
+        if (scope.alightStopId) {
+          scope.alightStop = scope.info.tripStops.find(ts =>
+            ts.stopId === scope.alightStopId)
+        }
       }, true);
 
       scope.$watchGroup(['boardStop', 'alightStop', 'data.trips'], () => {
-        // update scope.tickets
-        scope.tickets = scope.data.trips.map(trip =>
+        if (scope.boardStop) {
+          scope.boardStopId = scope.boardStop.stopId;
+        }
+        if (scope.alightStop) {
+          scope.alightStopId = scope.alightStop.stopId;
+        }
+
+        // update scope.trips
+        scope.trips = scope.data.trips.map(trip =>
           ({
             tripId: trip.id,
-            boardStopId: scope.boardStop ? trip.tripStops.find(ts => ts.stop.id === scope.boardStop.stop.id).id
+            boardStopId: scope.boardStop ? trip.tripStops.find(ts => ts.stopId === scope.boardStop.stopId).id
                                     : null,
-            alightStopId: scope.alightStop ? trip.tripStops.find(ts => ts.stop.id === scope.alightStop.stop.id).id
+            alightStopId: scope.alightStop ? trip.tripStops.find(ts => ts.stopId === scope.alightStop.stopId).id
                                     : null
           }))
       })

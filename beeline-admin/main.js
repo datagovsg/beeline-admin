@@ -9,6 +9,7 @@ require('angular-cookies')
 require('angular-jwt')
 require('auth0-angular')
 require('multiple-date-picker')
+require('ui-select/dist/select')
 
 const env = require('./env')
 
@@ -20,7 +21,8 @@ const env = require('./env')
 // 'starter.controllers' is found in controllers.js
 angular.module('beeline-admin', [
   'uiGmapgoogle-maps', 'ui.router', 'ui.bootstrap', 'beeline.calendar',
-  'auth0', 'angular-storage', 'angular-jwt', 'ngCookies', 'multipleDatePicker'])
+  'auth0', 'angular-storage', 'angular-jwt', 'ngCookies', 'multipleDatePicker',
+  'ui.select'])
 .config(require('./router').default)
 .config(configureGoogleMaps)
 .config(configureLoginPage)
@@ -39,6 +41,7 @@ angular.module('beeline-admin', [
 .directive('superAdminCompanySelector', require('./directives/companySelector/superAdminCompanySelector').default)
 .directive('mySort', require('./directives/mySort').default)
 .directive('spanSelect', require('./directives/spanSelect').default)
+.directive('userSelector', require('./directives/userSelector/userSelector').default)
 .service('AdminService', require('./services/adminService').default)
 .service('TripsService', require('./services/tripsService').default)
 .service('RoutesService', require('./services/routesService').default)
@@ -46,7 +49,7 @@ angular.module('beeline-admin', [
 .service('RoutePopup', require('./services/routePopup').default)
 .service('mapService', require('./services/mapService').default)
 .service('DriverService', require('./services/driverService').default)
-.service('BookingRefund', require('./services/bookingRefund').default)
+.service('issueTicketModal', require('./services/issueTicketModal').default)
 .service('LoadingSpinner', require('./services/loadingSpinner').default)
 .controller('transactions', require('./controllers/transactionsController.js').default)
 .controller('trips', require('./controllers/tripsController.js').default)
