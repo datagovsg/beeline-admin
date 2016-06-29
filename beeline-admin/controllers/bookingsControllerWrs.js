@@ -17,7 +17,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
   var endOfMonth = new Date(
     now.getFullYear(),
     now.getMonth() + 1,
-    1
+    0
   )
 
   $scope.filter = {
