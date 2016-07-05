@@ -31,7 +31,7 @@ export default function ($http, $location, store, jwtHelper, auth) {
     store.remove('token');
     store.remove('sessionToken');
     store.remove('profile');
-    $location.path('/login');
+    window.location.reload(); // Needed, otherwise Auth0 won't recognize this as a new page
   }
 
   this.login = function() {
@@ -71,7 +71,7 @@ export default function ($http, $location, store, jwtHelper, auth) {
 
   this.isSuperAdmin = function () {
     if (!auth.isAuthenticated) return false;
-    
+
     var profile = store.get('profile')
 
     if (!profile) return false;

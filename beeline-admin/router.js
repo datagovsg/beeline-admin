@@ -60,6 +60,14 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
       requiresLogin: true,
     }
   })
+  .state('admins', {
+    url: '/admins',
+    templateUrl: 'templates/admins.html',
+    controller: 'admins',
+    data: {
+      requiresLogin: true,
+    }
+  })
 
   .state('trips', {
     url: '/trips/{routeId:int}/{action}',

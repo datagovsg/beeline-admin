@@ -48,6 +48,7 @@ angular.module('beeline-admin', [
 .service('StopsPopup', require('./services/stopsPopup').default)
 .service('RoutePopup', require('./services/routePopup').default)
 .service('mapService', require('./services/mapService').default)
+.service('companiesSvc', require('./services/companiesSvc').default)
 .service('DriverService', require('./services/driverService').default)
 .service('issueTicketModal', require('./services/issueTicketModal').default)
 .service('LoadingSpinner', require('./services/loadingSpinner').default)
@@ -61,6 +62,7 @@ angular.module('beeline-admin', [
 .controller('login', require('./controllers/loginController.js').default)
 .controller('companies', require('./controllers/companiesController.js').default)
 .controller('assets', require('./controllers/assetsController.js').default)
+.controller('admins', require('./controllers/adminsController.js').default)
 .filter('makeRoutePath', require('./shared/filters.js').makeRoutePath)
 .filter('intervalToTime', require('./shared/filters.js').intervalToTime)
 .run(function (auth, $rootScope, store, jwtHelper, $window, AdminService) {

@@ -92,6 +92,12 @@ li.active {
   overflow-x: auto;
 }
 
+nav.navbar {
+  company-selector select {
+    color: black;
+  }
+}
+
 .admin-nav {
   display: flex;
   flex-direction: row;
