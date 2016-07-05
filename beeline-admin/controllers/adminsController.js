@@ -27,7 +27,7 @@ export default function ($scope, AdminService, LoadingSpinner) {
     });
   };
 
-  $scope.updateAdmin = (admin) => {
+  $scope.updateAdmin = (admin, form) => {
     if (admin.id) {
       AdminService.beeline({
         method: 'PUT',
@@ -41,6 +41,9 @@ export default function ($scope, AdminService, LoadingSpinner) {
         }
       })
       .then(query)
+      .then(() => {
+        form.$setPristine();
+      })
       .then(null, err => {
         console.log(err);
       });
@@ -59,6 +62,9 @@ export default function ($scope, AdminService, LoadingSpinner) {
         }
       })
       .then(query)
+      .then(() => {
+        form.$setPristine();
+      })
       .then(null, err => {
         console.log(err);
       });
