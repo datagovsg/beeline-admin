@@ -1,0 +1,3 @@
+[submodule "ngTagEditor"]
+	path = ngTagEditor
+	url = git@github.com:varyoo/ngTagEditor.git

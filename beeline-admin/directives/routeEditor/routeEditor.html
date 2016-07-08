@@ -43,6 +43,11 @@
       </company-selector>
     </label>
 
+    <label>Tags:</label>
+    <tag-editor ng-model="disp.routeTags">
+    </tag-editor>
+    {{route.tags}}
+
     <label>Path:</label>
     <path-editor path="route.path" trip-stops="tripStops">
     </path-editor>

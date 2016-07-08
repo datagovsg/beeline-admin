@@ -1,4 +1,5 @@
-import _ from 'lodash'
+import _ from 'lodash';
+import assert from 'assert';
 
 export default function (AdminService, RoutesService, $rootScope) {
   return {
@@ -7,9 +8,12 @@ export default function (AdminService, RoutesService, $rootScope) {
       route: '=',
       edit: '=?',
     },
-    link(scope, elem, attr) {
+    link(scope, elem, attr) {``
       scope.edit = scope.edit || 'route'
       scope.adminService = AdminService;
+      scope.disp = {
+        routeTags: [],
+      }
 
       scope.resetRoute = function() {
         if (scope.route && scope.route.id) {
@@ -48,7 +52,12 @@ export default function (AdminService, RoutesService, $rootScope) {
         RoutesService.getRoute(scope.route.id, {includeTrips: true})
         .then((route) => {
           scope.tripStops = _.maxBy(route.trips, 'date').tripStops
+          scope.disp.routeTags = scope.route.tags && scope.route.tags.map(t => ({name: t}));
         })
+      })
+      scope.$watchCollection('disp.routeTags', (rawTags) => {
+        if (!scope.route) return;
+        scope.route.tags = rawTags ? rawTags.map(t => t.name) : [];
       })
     },
   }

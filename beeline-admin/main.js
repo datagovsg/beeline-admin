@@ -10,6 +10,7 @@ require('angular-jwt')
 require('auth0-angular')
 require('multiple-date-picker')
 require('ui-select/dist/select')
+require('../ngTagEditor/ngTagEditor')
 
 const env = require('./env')
 
@@ -22,7 +23,7 @@ const env = require('./env')
 angular.module('beeline-admin', [
   'uiGmapgoogle-maps', 'ui.router', 'ui.bootstrap', 'beeline.calendar',
   'auth0', 'angular-storage', 'angular-jwt', 'ngCookies', 'multipleDatePicker',
-  'ui.select'])
+  'ui.select', 'ngTagEditor'])
 .config(require('./router').default)
 .config(configureGoogleMaps)
 .config(configureLoginPage)
@@ -124,7 +125,8 @@ ${bits.error_description}`
 
 function configureGoogleMaps(uiGmapGoogleMapApiProvider) {
   uiGmapGoogleMapApiProvider.configure({
-    key: 'AIzaSyBkFH42PlbFrsfdAnjw37qMLAxjhkMT-54'
+    key: 'AIzaSyBkFH42PlbFrsfdAnjw37qMLAxjhkMT-54',
+    libraries: 'geometry',
   })
 }
 
