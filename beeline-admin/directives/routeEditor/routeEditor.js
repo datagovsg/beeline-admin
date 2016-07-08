@@ -53,6 +53,12 @@ export default function (AdminService, RoutesService, $rootScope) {
         .then((route) => {
           scope.tripStops = _.maxBy(route.trips, 'date').tripStops
           scope.disp.routeTags = scope.route.tags && scope.route.tags.map(t => ({name: t}));
+          // quick hack to convert arrays to polyline string
+          if (google.maps.geometry && scope.route.path instanceof Array) {
+            scope.route.path = google.maps.geometry.encoding.encodePath(
+              scope.route.path.map(latlng => new google.maps.LatLng(latlng.lat, latlng.lng)))
+          }
+          scope.$broadcast('mapLoaded')
         })
       })
       scope.$watchCollection('disp.routeTags', (rawTags) => {
