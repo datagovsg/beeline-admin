@@ -63,13 +63,13 @@
 
     <h2>Live account</h2>
 
-    <div ng-if="!company.hasClientId">
-      <button ng-click="stripeConnect()" class="btn btn-primary">
-        Connect Stripe account
-      </button>
-    </div>
     <div ng-if="company.hasClientId">
       You are connected!
     </div>
+    <button ng-if="!AdminService.isSuperAdmin()"
+      ng-click="stripeConnect()" class="btn btn-primary">
+      Connect Stripe account
+    </button>
+
   </form>
 </div>
