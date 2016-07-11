@@ -61,6 +61,15 @@
   <form ng-if="company.id">
     <h1>Connect Stripe Account</h1>
 
-    Please contact the Beeline team to connect your Stripe account.
+    <h2>Live account</h2>
+
+    <div ng-if="!company.hasClientId">
+      <button ng-click="stripeConnect()" class="btn btn-primary">
+        Connect Stripe account
+      </button>
+    </div>
+    <div ng-if="company.hasClientId">
+      You are connected!
+    </div>
   </form>
 </div>
