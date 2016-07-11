@@ -54,7 +54,7 @@ export default function (AdminService, DriverService, $q) {
       return routesPromise;
     }
     else {
-      if (AdminService.session().role == 'admin') {
+      if (AdminService.session() && AdminService.session().role == 'admin') {
         options = options || {}
         options.transportCompanyId = AdminService.session().transportCompanyId
       }

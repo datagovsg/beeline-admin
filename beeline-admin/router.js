@@ -114,12 +114,7 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
       requiresLogin: true,
     }
   })
-
-  authProvider.init({
-    domain: env.AUTH0_DOMAIN,
-    clientId: env.AUTH0_CID,
-    loginState: 'login',
-  })
+  
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/bookings');
 }

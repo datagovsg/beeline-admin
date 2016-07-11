@@ -69,20 +69,36 @@ angular.module('beeline-admin', [
 .run(function (auth, $rootScope, store, jwtHelper, $window, AdminService) {
   auth.hookEvents();
 
+  /* initialize Auth0 by pulling Auth0 domain information from server */
+  var authInitPromise = AdminService.beeline({
+    method: 'GET', url: '/auth/credentials'
+  })
+  .then((response) => {
+    var {domain, cid} = response.data;
+    auth.init({
+      domain: domain, clientId: cid, loginState: 'login'
+    })
+  });
+
   // This events gets triggered on refresh or URL change
-  $rootScope.$on('$locationChangeStart', function() {
+  $rootScope.$on('$locationChangeStart', checkLogin);
+  checkLogin()
+
+  async function checkLogin() {
     var token = store.get('sessionToken');
     if (token) {
       if (!jwtHelper.isTokenExpired(token)) {
+        await authInitPromise
+
         if (!auth.isAuthenticated) {
           auth.authenticate(store.get('profile'), token);
         }
-      } else {
-        AdminService.login();
-        // Either show Login page or use the refresh token to get a new idToken
+        return;
       }
     }
-  });
+    await authInitPromise
+    AdminService.login();
+  }
 
   // Unfortunately the auth0 library does not handle redirect errors!
   // WTF!
