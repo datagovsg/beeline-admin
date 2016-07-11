@@ -20,6 +20,8 @@ export default function (AdminService, DriverService, $q) {
         query.include_trips = options.includeTrips;
       if (options.includeAvailability)
         query.include_availability = options.includeAvailability;
+      if (options.transportCompanyId)
+        query.transportCompanyId = options.transportCompanyId;
     }
     query = querystring.stringify(query)
     return query
