@@ -4,6 +4,7 @@ const env = require('../env.json')
 export default function($scope, $state, $urlRouter, AdminService, store,
   LoadingSpinner) {
   $scope.company = {};
+  $scope.AdminService = AdminService;
 
   $scope.$watch(() => AdminService.getCompanyId(), () => {
     var companyId = AdminService.getCompanyId();
