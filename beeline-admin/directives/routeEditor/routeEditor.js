@@ -8,7 +8,7 @@ export default function (AdminService, RoutesService, $rootScope) {
       route: '=',
       edit: '=?',
     },
-    link(scope, elem, attr) {``
+    link(scope, elem, attr) {
       scope.edit = scope.edit || 'route'
       scope.adminService = AdminService;
       scope.disp = {

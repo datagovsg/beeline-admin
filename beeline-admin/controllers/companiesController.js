@@ -37,4 +37,18 @@ export default function($scope, $state, $urlRouter, AdminService, store,
     LoadingSpinner.watchPromise(updatePromise);
   }
 
+  $scope.stripeConnect = function() {
+    // Get the redirect URL from server
+    AdminService.beeline({
+      method: 'POST',
+      url: `/companies/stripeConnect`,
+      data: {
+        redirect: window.location.href
+      }
+    })
+    .then((response) => {
+      window.location.href = response.data;
+    })
+  }
+
 }
