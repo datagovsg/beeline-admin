@@ -86395,15 +86395,16 @@
 	__webpack_require__(/*! auth0-angular */ 176);
 	__webpack_require__(/*! multiple-date-picker */ 177);
 	__webpack_require__(/*! ui-select/dist/select */ 179);
+	__webpack_require__(/*! ../ngTagEditor/ngTagEditor */ 180);
 	
-	var env = __webpack_require__(/*! ./env */ 180);
+	var env = __webpack_require__(/*! ./env */ 182);
 	
 	// angular.module is a global place for creating, registering and retrieving Angular modules
 	// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 	// the 2nd parameter is an array of 'requires'
 	// 'starter.services' is found in services.js
 	// 'starter.controllers' is found in controllers.js
-	angular.module('beeline-admin', ['uiGmapgoogle-maps', 'ui.router', 'ui.bootstrap', 'beeline.calendar', 'auth0', 'angular-storage', 'angular-jwt', 'ngCookies', 'multipleDatePicker', 'ui.select']).config(__webpack_require__(/*! ./router */ 181).default).config(configureGoogleMaps).config(configureLoginPage).config(configureUrlWhitelist).directive('adminNav', __webpack_require__(/*! ./directives/adminNav/adminNav */ 182).default).directive('accountView', __webpack_require__(/*! ./directives/accountView/accountView */ 184).default).directive('paymentView', __webpack_require__(/*! ./directives/paymentView/paymentView */ 185).default).directive('ticketView', __webpack_require__(/*! ./directives/ticketView/ticketView */ 207).default).directive('routeSelector', __webpack_require__(/*! ./directives/routeSelector/routeSelector */ 209).default).directive('routeEditor', __webpack_require__(/*! ./directives/routeEditor/routeEditor */ 211).default).directive('pathEditor', __webpack_require__(/*! ./directives/pathEditor/pathEditor */ 213).default).directive('tripsEditor', __webpack_require__(/*! ./directives/tripsEditor/tripsEditor */ 215).default).directive('companySelector', __webpack_require__(/*! ./directives/companySelector/companySelector */ 237).default).directive('tripSelector', __webpack_require__(/*! ./directives/tripSelector/tripSelector */ 238).default).directive('stopSelector', __webpack_require__(/*! ./directives/stopSelector/stopSelector */ 250).default).directive('superAdminCompanySelector', __webpack_require__(/*! ./directives/companySelector/superAdminCompanySelector */ 251).default).directive('mySort', __webpack_require__(/*! ./directives/mySort */ 252).default).directive('spanSelect', __webpack_require__(/*! ./directives/spanSelect */ 257).default).directive('userSelector', __webpack_require__(/*! ./directives/userSelector/userSelector */ 258).default).service('AdminService', __webpack_require__(/*! ./services/adminService */ 262).default).service('TripsService', __webpack_require__(/*! ./services/tripsService */ 263).default).service('RoutesService', __webpack_require__(/*! ./services/routesService */ 264).default).service('StopsPopup', __webpack_require__(/*! ./services/stopsPopup */ 265).default).service('RoutePopup', __webpack_require__(/*! ./services/routePopup */ 267).default).service('mapService', __webpack_require__(/*! ./services/mapService */ 269).default).service('DriverService', __webpack_require__(/*! ./services/driverService */ 270).default).service('issueTicketModal', __webpack_require__(/*! ./services/issueTicketModal */ 273).default).service('LoadingSpinner', __webpack_require__(/*! ./services/loadingSpinner */ 275).default).controller('transactions', __webpack_require__(/*! ./controllers/transactionsController.js */ 276).default).controller('trips', __webpack_require__(/*! ./controllers/tripsController.js */ 281).default).controller('routes', __webpack_require__(/*! ./controllers/routesController.js */ 282).default).controller('summary', __webpack_require__(/*! ./controllers/summaryController.js */ 283).default).controller('bookings', __webpack_require__(/*! ./controllers/bookingsController.js */ 284).default).controller('bookingsWrs', __webpack_require__(/*! ./controllers/bookingsControllerWrs.js */ 285).default).controller('drivers', __webpack_require__(/*! ./controllers/driversController.js */ 286).default).controller('login', __webpack_require__(/*! ./controllers/loginController.js */ 287).default).controller('companies', __webpack_require__(/*! ./controllers/companiesController.js */ 288).default).controller('assets', __webpack_require__(/*! ./controllers/assetsController.js */ 289).default).filter('makeRoutePath', __webpack_require__(/*! ./shared/filters.js */ 290).makeRoutePath).filter('intervalToTime', __webpack_require__(/*! ./shared/filters.js */ 290).intervalToTime).run(function (auth, $rootScope, store, jwtHelper, $window, AdminService) {
+	angular.module('beeline-admin', ['uiGmapgoogle-maps', 'ui.router', 'ui.bootstrap', 'beeline.calendar', 'auth0', 'angular-storage', 'angular-jwt', 'ngCookies', 'multipleDatePicker', 'ui.select', 'ngTagEditor']).config(__webpack_require__(/*! ./router */ 183).default).config(configureGoogleMaps).config(configureLoginPage).config(configureUrlWhitelist).directive('adminNav', __webpack_require__(/*! ./directives/adminNav/adminNav */ 184).default).directive('accountView', __webpack_require__(/*! ./directives/accountView/accountView */ 186).default).directive('paymentView', __webpack_require__(/*! ./directives/paymentView/paymentView */ 187).default).directive('ticketView', __webpack_require__(/*! ./directives/ticketView/ticketView */ 209).default).directive('routeSelector', __webpack_require__(/*! ./directives/routeSelector/routeSelector */ 211).default).directive('routeEditor', __webpack_require__(/*! ./directives/routeEditor/routeEditor */ 213).default).directive('pathEditor', __webpack_require__(/*! ./directives/pathEditor/pathEditor */ 225).default).directive('tripsEditor', __webpack_require__(/*! ./directives/tripsEditor/tripsEditor */ 227).default).directive('companySelector', __webpack_require__(/*! ./directives/companySelector/companySelector */ 248).default).directive('tripSelector', __webpack_require__(/*! ./directives/tripSelector/tripSelector */ 249).default).directive('stopSelector', __webpack_require__(/*! ./directives/stopSelector/stopSelector */ 252).default).directive('superAdminCompanySelector', __webpack_require__(/*! ./directives/companySelector/superAdminCompanySelector */ 253).default).directive('mySort', __webpack_require__(/*! ./directives/mySort */ 254).default).directive('spanSelect', __webpack_require__(/*! ./directives/spanSelect */ 259).default).directive('userSelector', __webpack_require__(/*! ./directives/userSelector/userSelector */ 260).default).service('AdminService', __webpack_require__(/*! ./services/adminService */ 264).default).service('TripsService', __webpack_require__(/*! ./services/tripsService */ 265).default).service('RoutesService', __webpack_require__(/*! ./services/routesService */ 266).default).service('StopsPopup', __webpack_require__(/*! ./services/stopsPopup */ 267).default).service('RoutePopup', __webpack_require__(/*! ./services/routePopup */ 269).default).service('mapService', __webpack_require__(/*! ./services/mapService */ 271).default).service('companiesSvc', __webpack_require__(/*! ./services/companiesSvc */ 272).default).service('DriverService', __webpack_require__(/*! ./services/driverService */ 273).default).service('issueTicketModal', __webpack_require__(/*! ./services/issueTicketModal */ 276).default).service('LoadingSpinner', __webpack_require__(/*! ./services/loadingSpinner */ 278).default).controller('transactions', __webpack_require__(/*! ./controllers/transactionsController.js */ 279).default).controller('trips', __webpack_require__(/*! ./controllers/tripsController.js */ 284).default).controller('routes', __webpack_require__(/*! ./controllers/routesController.js */ 285).default).controller('summary', __webpack_require__(/*! ./controllers/summaryController.js */ 286).default).controller('bookings', __webpack_require__(/*! ./controllers/bookingsController.js */ 287).default).controller('bookingsWrs', __webpack_require__(/*! ./controllers/bookingsControllerWrs.js */ 288).default).controller('drivers', __webpack_require__(/*! ./controllers/driversController.js */ 289).default).controller('login', __webpack_require__(/*! ./controllers/loginController.js */ 290).default).controller('companies', __webpack_require__(/*! ./controllers/companiesController.js */ 291).default).controller('assets', __webpack_require__(/*! ./controllers/assetsController.js */ 292).default).controller('admins', __webpack_require__(/*! ./controllers/adminsController.js */ 293).default).filter('makeRoutePath', __webpack_require__(/*! ./shared/filters.js */ 294).makeRoutePath).filter('intervalToTime', __webpack_require__(/*! ./shared/filters.js */ 294).intervalToTime).run(function (auth, $rootScope, store, jwtHelper, $window, AdminService) {
 	  auth.hookEvents();
 	
 	  // This events gets triggered on refresh or URL change
@@ -86461,7 +86462,8 @@
 	
 	function configureGoogleMaps(uiGmapGoogleMapApiProvider) {
 	  uiGmapGoogleMapApiProvider.configure({
-	    key: 'AIzaSyBkFH42PlbFrsfdAnjw37qMLAxjhkMT-54'
+	    key: 'AIzaSyBkFH42PlbFrsfdAnjw37qMLAxjhkMT-54',
+	    libraries: 'geometry'
 	  });
 	}
 	
@@ -105578,6 +105580,106 @@
 
 /***/ },
 /* 180 */
+/*!************************************!*\
+  !*** ./ngTagEditor/ngTagEditor.js ***!
+  \************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	angular.module('ngTagEditor', []).filter('getCol', function () {
+		return function (items, row) {
+			return items && items.map(function (item) {
+				return item[row];
+			}).join(',');
+		};
+	}).directive('focusMe', ['$timeout', '$parse', function ($timeout, $parse) {
+		return {
+			link: function link(scope, element, attrs) {
+				var model = $parse(attrs.focusMe);
+				scope.$watch(model, function (value) {
+					if (value === true) {
+						$timeout(function () {
+							element[0].focus();
+						});
+					}
+				});
+				element.bind('blur', function () {
+					scope.$apply(model.assign(scope, false));
+				});
+			}
+		};
+	}]).directive('tagEditor', function () {
+		return {
+			restrict: 'AE',
+			/* require: 'ngModel',*/
+			scope: {
+				tags: '=ngModel'
+			},
+			replace: true,
+			template: __webpack_require__(/*! ./ngTagEditor.html */ 181),
+			controller: ['$scope', '$attrs', '$element', '$http', '$filter', function ($scope, $attrs, $element, $http, $filter) {
+	
+				$scope.options = [];
+				$scope.options.output = $attrs.output || 'name';
+				$scope.options.fetch = $attrs.fetch || null;
+				$scope.options.placeholder = $attrs.placeholder || 'Enter a few letters...';
+				$scope.options.apiOnly = $attrs.apiOnly || false;
+				$scope.search = '';
+	
+				$scope.$watch('search', function () {
+					if (!$scope.options.fetch) return;
+					$http.get($scope.options.fetch + $scope.search).success(function (data) {
+						$scope.suggestions = data.data;
+						/* console.log(data); */
+					});
+				});
+				$scope.add = function (id, name) {
+					$scope.tags = $scope.tags || [];
+					$scope.tags.push({ 'id': id, 'name': name });
+					$scope.search = '';
+					$scope.$apply();
+				};
+				$scope.remove = function (index) {
+					$scope.tags.splice(index, 1);
+				};
+	
+				$element.find('input').on('keydown', function (e) {
+					var keys = [8, 13, 32];
+					if (keys.indexOf(e.which) !== -1) {
+						if (e.which == 8) {
+							/* backspace */
+							if ($scope.search.length === 0 && $scope.tags.length) {
+								$scope.tags.pop();
+								e.preventDefault();
+							}
+						} else if (e.which == 32 || e.which == 13) {
+							/* space & enter */
+							if ($scope.search.length && !$scope.apiOnly) {
+								if (!$scope.apiOnly) {
+									$scope.add(0, $scope.search);
+									e.preventDefault();
+								}
+							}
+						}
+						$scope.$apply();
+					}
+				});
+			}]
+		};
+	});
+
+/***/ },
+/* 181 */
+/*!**************************************!*\
+  !*** ./ngTagEditor/ngTagEditor.html ***!
+  \**************************************/
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"tag-editor\" ng-class=\"{active:focus}\" ng-init=\"focus = false\" ng-click=\"setFocus = true\">\n\t<div class=\"tag-draft\">\n\t\t<span class=\"tag\" ng-repeat=\"tag in tags\">{{tag.name}}<span class=\"remove\" ng-click=\"remove($index)\">x</span></span>\n\t\t<input type=\"hidden\" name=\"tags\" value=\"{{tags | getCol:options.output}}\"/>\n\t\t<input type=\"text\" class=\"tag-input\" placeholder=\"{{options.placeholder}}\" ng-focus=\"focus = true\" ng-blur=\"focus = false\" focus-me=\"setFocus\" ng-model=\"search\"/>\n\t</div>\n\t<div class=\"tag-suggestions\" ng-show=\"suggestions && focus\">\n\t\t<span class=\"title\">Suggestions:</span>\n\t\t<span class=\"tag\" ng-repeat=\"tag in suggestions | limitTo:4\" ng-mousedown=\"add(tag.id, tag.name)\">{{tag.name}}</span>\n\t</div>\n</div>\n";
+
+/***/ },
+/* 182 */
 /*!********************************!*\
   !*** ./beeline-admin/env.json ***!
   \********************************/
@@ -105590,7 +105692,7 @@
 	};
 
 /***/ },
-/* 181 */
+/* 183 */
 /*!*********************************!*\
   !*** ./beeline-admin/router.js ***!
   \*********************************/
@@ -105649,6 +105751,13 @@
 	    data: {
 	      requiresLogin: true
 	    }
+	  }).state('admins', {
+	    url: '/admins',
+	    templateUrl: 'templates/admins.html',
+	    controller: 'admins',
+	    data: {
+	      requiresLogin: true
+	    }
 	  }).state('trips', {
 	    url: '/trips/{routeId:int}/{action}',
 	    templateUrl: 'templates/trips.html',
@@ -105695,10 +105804,10 @@
 	  $urlRouterProvider.otherwise('/bookings');
 	};
 	
-	var env = __webpack_require__(/*! ./env */ 180);
+	var env = __webpack_require__(/*! ./env */ 182);
 
 /***/ },
-/* 182 */
+/* 184 */
 /*!*******************************************************!*\
   !*** ./beeline-admin/directives/adminNav/adminNav.js ***!
   \*******************************************************/
@@ -105713,7 +105822,7 @@
 	exports.default = function (AdminService, auth) {
 	  return {
 	    replace: true,
-	    template: __webpack_require__(/*! ./adminNav.html */ 183),
+	    template: __webpack_require__(/*! ./adminNav.html */ 185),
 	    link: function link(scope, elem, attr) {
 	      scope.adminService = AdminService;
 	      scope.auth = auth;
@@ -105722,16 +105831,16 @@
 	};
 
 /***/ },
-/* 183 */
+/* 185 */
 /*!*********************************************************!*\
   !*** ./beeline-admin/directives/adminNav/adminNav.html ***!
   \*********************************************************/
 /***/ function(module, exports) {
 
-	module.exports = "<nav class=\"navbar navbar-inverse\">\n  <!-- Fixed navbar -->\n  <div class=\"container-fluid\">\n    <div class=\"navbar-header\">\n      <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#navbar\" aria-expanded=\"false\" aria-controls=\"navbar\">\n        <span class=\"sr-only\">Toggle navigation</span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n      </button>\n    </div>\n    <div id=\"navbar\" class=\"navbar-collapse collapse\">\n      <a class=\"navbar-brand\" href=\"#\">Beeline Admin</a>\n      <ul class=\"nav navbar-nav\">\n        <li><a ui-sref=\"bookings\">Tickets</a></li>\n        <li ng-if=\"adminService.isSuperAdmin()\"><a ui-sref=\"transactions\">Transactions</a></li>\n        <li><a ui-sref=\"routes({routeId: 0, action: 'route'})\">Routes</a></li>\n        <li  ng-if=\"adminService.isSuperAdmin()\"><a ui-sref=\"trips({routeId: 0, action: 'route'})\">Trips</a></li>\n        <li><a ui-sref=\"summary\">Summary</a></li>\n        <li><a ui-sref=\"driver\">Drivers</a></li>\n        <li ng-if=\"adminService.isSuperAdmin()\"><a href=\"#\">Incidents</a></li>\n        <li ng-if=\"adminService.isSuperAdmin()\"><a ui-sref=\"assets\">Assets</a></li>\n        <li><a ui-sref=\"companies\">Company Settings</a></li>\n      </ul>\n\n      <ul class=\"nav navbar-nav pull-right\">\n        <li ng-if=\"adminService.isSuperAdmin()\">\n          <a>\n            <super-admin-company-selector></super-admin-company-selector>\n          </a>\n        </li>\n\n        <li ng-if=\"!auth.isAuthenticated\">\n          <a ng-click=\"adminService.login()\">\n        Login\n      </a>\n        </li>\n\n        <li ng-if=\"auth.isAuthenticated\">\n          <a ng-click=\"adminService.logout()\">Log out</a>\n        </li>\n      </ul>\n    </div>\n    <!--/.nav-collapse -->\n  </div>\n\n</nav>\n";
+	module.exports = "<nav class=\"navbar navbar-inverse\">\n  <!-- Fixed navbar -->\n  <div class=\"container-fluid\">\n    <div class=\"navbar-header\">\n      <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#navbar\" aria-expanded=\"false\" aria-controls=\"navbar\">\n        <span class=\"sr-only\">Toggle navigation</span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n      </button>\n    </div>\n    <div id=\"navbar\" class=\"navbar-collapse collapse\">\n      <a class=\"navbar-brand\" href=\"#\">Beeline Admin</a>\n      <ul class=\"nav navbar-nav\">\n        <li><a ui-sref=\"bookings\">Tickets</a></li>\n        <li ng-if=\"adminService.isSuperAdmin()\"><a ui-sref=\"transactions\">Transactions</a></li>\n        <li><a ui-sref=\"routes({routeId: 0, action: 'route'})\">Routes</a></li>\n        <li  ng-if=\"adminService.isSuperAdmin()\"><a ui-sref=\"trips({routeId: 0, action: 'route'})\">Trips</a></li>\n        <li><a ui-sref=\"summary\">Summary</a></li>\n        <li><a ui-sref=\"driver\">Drivers</a></li>\n        <li ng-if=\"adminService.isSuperAdmin()\"><a href=\"#\">Incidents</a></li>\n        <li ng-if=\"adminService.isSuperAdmin()\"><a ui-sref=\"assets\">Assets</a></li>\n        <li><a ui-sref=\"companies\">Company Settings</a></li>\n        <li><a ui-sref=\"admins\">Admin Settings</a></li>\n      </ul>\n\n      <ul class=\"nav navbar-nav pull-right\">\n        <li ng-if=\"adminService.isSuperAdmin()\">\n          <a>\n            <super-admin-company-selector></super-admin-company-selector>\n          </a>\n        </li>\n\n        <li ng-if=\"!auth.isAuthenticated\">\n          <a ng-click=\"adminService.login()\">\n        Login\n      </a>\n        </li>\n\n        <li ng-if=\"auth.isAuthenticated\">\n          <a ng-click=\"adminService.logout()\">Log out</a>\n        </li>\n      </ul>\n    </div>\n    <!--/.nav-collapse -->\n  </div>\n\n</nav>\n";
 
 /***/ },
-/* 184 */
+/* 186 */
 /*!*************************************************************!*\
   !*** ./beeline-admin/directives/accountView/accountView.js ***!
   \*************************************************************/
@@ -105753,7 +105862,7 @@
 	};
 
 /***/ },
-/* 185 */
+/* 187 */
 /*!*************************************************************!*\
   !*** ./beeline-admin/directives/paymentView/paymentView.js ***!
   \*************************************************************/
@@ -105765,13 +105874,13 @@
 	  value: true
 	});
 	
-	var _typeof2 = __webpack_require__(/*! babel-runtime/helpers/typeof */ 186);
+	var _typeof2 = __webpack_require__(/*! babel-runtime/helpers/typeof */ 188);
 	
 	var _typeof3 = _interopRequireDefault(_typeof2);
 	
 	exports.default = function () {
 	  return {
-	    template: __webpack_require__(/*! ./paymentView.html */ 206),
+	    template: __webpack_require__(/*! ./paymentView.html */ 208),
 	    scope: {
 	      pvData: '=',
 	      pvTitle: '=',
@@ -105789,7 +105898,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 186 */
+/* 188 */
 /*!*******************************************!*\
   !*** ./~/babel-runtime/helpers/typeof.js ***!
   \*******************************************/
@@ -105799,11 +105908,11 @@
 	
 	exports.__esModule = true;
 	
-	var _iterator = __webpack_require__(/*! ../core-js/symbol/iterator */ 187);
+	var _iterator = __webpack_require__(/*! ../core-js/symbol/iterator */ 189);
 	
 	var _iterator2 = _interopRequireDefault(_iterator);
 	
-	var _symbol = __webpack_require__(/*! ../core-js/symbol */ 190);
+	var _symbol = __webpack_require__(/*! ../core-js/symbol */ 192);
 	
 	var _symbol2 = _interopRequireDefault(_symbol);
 	
@@ -105818,16 +105927,16 @@
 	};
 
 /***/ },
-/* 187 */
+/* 189 */
 /*!****************************************************!*\
   !*** ./~/babel-runtime/core-js/symbol/iterator.js ***!
   \****************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/symbol/iterator */ 188), __esModule: true };
+	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/symbol/iterator */ 190), __esModule: true };
 
 /***/ },
-/* 188 */
+/* 190 */
 /*!*****************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/fn/symbol/iterator.js ***!
   \*****************************************************************/
@@ -105835,10 +105944,10 @@
 
 	__webpack_require__(/*! ../../modules/es6.string.iterator */ 164);
 	__webpack_require__(/*! ../../modules/web.dom.iterable */ 118);
-	module.exports = __webpack_require__(/*! ../../modules/_wks-ext */ 189).f('iterator');
+	module.exports = __webpack_require__(/*! ../../modules/_wks-ext */ 191).f('iterator');
 
 /***/ },
-/* 189 */
+/* 191 */
 /*!***************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_wks-ext.js ***!
   \***************************************************************/
@@ -105847,29 +105956,29 @@
 	exports.f = __webpack_require__(/*! ./_wks */ 161);
 
 /***/ },
-/* 190 */
+/* 192 */
 /*!*******************************************!*\
   !*** ./~/babel-runtime/core-js/symbol.js ***!
   \*******************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/symbol */ 191), __esModule: true };
+	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/symbol */ 193), __esModule: true };
 
 /***/ },
-/* 191 */
+/* 193 */
 /*!**************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/fn/symbol/index.js ***!
   \**************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(/*! ../../modules/es6.symbol */ 192);
-	__webpack_require__(/*! ../../modules/es6.object.to-string */ 203);
-	__webpack_require__(/*! ../../modules/es7.symbol.async-iterator */ 204);
-	__webpack_require__(/*! ../../modules/es7.symbol.observable */ 205);
+	__webpack_require__(/*! ../../modules/es6.symbol */ 194);
+	__webpack_require__(/*! ../../modules/es6.object.to-string */ 205);
+	__webpack_require__(/*! ../../modules/es7.symbol.async-iterator */ 206);
+	__webpack_require__(/*! ../../modules/es7.symbol.observable */ 207);
 	module.exports = __webpack_require__(/*! ../../modules/_core */ 131).Symbol;
 
 /***/ },
-/* 192 */
+/* 194 */
 /*!*****************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/es6.symbol.js ***!
   \*****************************************************************/
@@ -105882,24 +105991,24 @@
 	  , DESCRIPTORS    = __webpack_require__(/*! ./_descriptors */ 139)
 	  , $export        = __webpack_require__(/*! ./_export */ 129)
 	  , redefine       = __webpack_require__(/*! ./_redefine */ 144)
-	  , META           = __webpack_require__(/*! ./_meta */ 193).KEY
+	  , META           = __webpack_require__(/*! ./_meta */ 195).KEY
 	  , $fails         = __webpack_require__(/*! ./_fails */ 140)
 	  , shared         = __webpack_require__(/*! ./_shared */ 156)
 	  , setToStringTag = __webpack_require__(/*! ./_set-to-string-tag */ 160)
 	  , uid            = __webpack_require__(/*! ./_uid */ 157)
 	  , wks            = __webpack_require__(/*! ./_wks */ 161)
-	  , wksExt         = __webpack_require__(/*! ./_wks-ext */ 189)
-	  , wksDefine      = __webpack_require__(/*! ./_wks-define */ 194)
-	  , keyOf          = __webpack_require__(/*! ./_keyof */ 195)
-	  , enumKeys       = __webpack_require__(/*! ./_enum-keys */ 196)
-	  , isArray        = __webpack_require__(/*! ./_is-array */ 199)
+	  , wksExt         = __webpack_require__(/*! ./_wks-ext */ 191)
+	  , wksDefine      = __webpack_require__(/*! ./_wks-define */ 196)
+	  , keyOf          = __webpack_require__(/*! ./_keyof */ 197)
+	  , enumKeys       = __webpack_require__(/*! ./_enum-keys */ 198)
+	  , isArray        = __webpack_require__(/*! ./_is-array */ 201)
 	  , anObject       = __webpack_require__(/*! ./_an-object */ 136)
 	  , toIObject      = __webpack_require__(/*! ./_to-iobject */ 123)
 	  , toPrimitive    = __webpack_require__(/*! ./_to-primitive */ 142)
 	  , createDesc     = __webpack_require__(/*! ./_property-desc */ 143)
 	  , _create        = __webpack_require__(/*! ./_object-create */ 147)
-	  , gOPNExt        = __webpack_require__(/*! ./_object-gopn-ext */ 200)
-	  , $GOPD          = __webpack_require__(/*! ./_object-gopd */ 202)
+	  , gOPNExt        = __webpack_require__(/*! ./_object-gopn-ext */ 202)
+	  , $GOPD          = __webpack_require__(/*! ./_object-gopd */ 204)
 	  , $DP            = __webpack_require__(/*! ./_object-dp */ 135)
 	  , $keys          = __webpack_require__(/*! ./_object-keys */ 149)
 	  , gOPD           = $GOPD.f
@@ -106024,9 +106133,9 @@
 	
 	  $GOPD.f = $getOwnPropertyDescriptor;
 	  $DP.f   = $defineProperty;
-	  __webpack_require__(/*! ./_object-gopn */ 201).f = gOPNExt.f = $getOwnPropertyNames;
-	  __webpack_require__(/*! ./_object-pie */ 198).f  = $propertyIsEnumerable;
-	  __webpack_require__(/*! ./_object-gops */ 197).f = $getOwnPropertySymbols;
+	  __webpack_require__(/*! ./_object-gopn */ 203).f = gOPNExt.f = $getOwnPropertyNames;
+	  __webpack_require__(/*! ./_object-pie */ 200).f  = $propertyIsEnumerable;
+	  __webpack_require__(/*! ./_object-gops */ 199).f = $getOwnPropertySymbols;
 	
 	  if(DESCRIPTORS && !__webpack_require__(/*! ./_library */ 128)){
 	    redefine(ObjectProto, 'propertyIsEnumerable', $propertyIsEnumerable, true);
@@ -106112,7 +106221,7 @@
 	setToStringTag(global.JSON, 'JSON', true);
 
 /***/ },
-/* 193 */
+/* 195 */
 /*!************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_meta.js ***!
   \************************************************************/
@@ -106173,7 +106282,7 @@
 	};
 
 /***/ },
-/* 194 */
+/* 196 */
 /*!******************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_wks-define.js ***!
   \******************************************************************/
@@ -106182,7 +106291,7 @@
 	var global         = __webpack_require__(/*! ./_global */ 130)
 	  , core           = __webpack_require__(/*! ./_core */ 131)
 	  , LIBRARY        = __webpack_require__(/*! ./_library */ 128)
-	  , wksExt         = __webpack_require__(/*! ./_wks-ext */ 189)
+	  , wksExt         = __webpack_require__(/*! ./_wks-ext */ 191)
 	  , defineProperty = __webpack_require__(/*! ./_object-dp */ 135).f;
 	module.exports = function(name){
 	  var $Symbol = core.Symbol || (core.Symbol = LIBRARY ? {} : global.Symbol || {});
@@ -106190,7 +106299,7 @@
 	};
 
 /***/ },
-/* 195 */
+/* 197 */
 /*!*************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_keyof.js ***!
   \*************************************************************/
@@ -106208,7 +106317,7 @@
 	};
 
 /***/ },
-/* 196 */
+/* 198 */
 /*!*****************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_enum-keys.js ***!
   \*****************************************************************/
@@ -106216,8 +106325,8 @@
 
 	// all enumerable object keys, includes symbols
 	var getKeys = __webpack_require__(/*! ./_object-keys */ 149)
-	  , gOPS    = __webpack_require__(/*! ./_object-gops */ 197)
-	  , pIE     = __webpack_require__(/*! ./_object-pie */ 198);
+	  , gOPS    = __webpack_require__(/*! ./_object-gops */ 199)
+	  , pIE     = __webpack_require__(/*! ./_object-pie */ 200);
 	module.exports = function(it){
 	  var result     = getKeys(it)
 	    , getSymbols = gOPS.f;
@@ -106231,7 +106340,7 @@
 	};
 
 /***/ },
-/* 197 */
+/* 199 */
 /*!*******************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_object-gops.js ***!
   \*******************************************************************/
@@ -106240,7 +106349,7 @@
 	exports.f = Object.getOwnPropertySymbols;
 
 /***/ },
-/* 198 */
+/* 200 */
 /*!******************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_object-pie.js ***!
   \******************************************************************/
@@ -106249,7 +106358,7 @@
 	exports.f = {}.propertyIsEnumerable;
 
 /***/ },
-/* 199 */
+/* 201 */
 /*!****************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_is-array.js ***!
   \****************************************************************/
@@ -106262,7 +106371,7 @@
 	};
 
 /***/ },
-/* 200 */
+/* 202 */
 /*!***********************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_object-gopn-ext.js ***!
   \***********************************************************************/
@@ -106270,7 +106379,7 @@
 
 	// fallback for IE11 buggy Object.getOwnPropertyNames with iframe and window
 	var toIObject = __webpack_require__(/*! ./_to-iobject */ 123)
-	  , gOPN      = __webpack_require__(/*! ./_object-gopn */ 201).f
+	  , gOPN      = __webpack_require__(/*! ./_object-gopn */ 203).f
 	  , toString  = {}.toString;
 	
 	var windowNames = typeof window == 'object' && window && Object.getOwnPropertyNames
@@ -106290,7 +106399,7 @@
 
 
 /***/ },
-/* 201 */
+/* 203 */
 /*!*******************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_object-gopn.js ***!
   \*******************************************************************/
@@ -106305,13 +106414,13 @@
 	};
 
 /***/ },
-/* 202 */
+/* 204 */
 /*!*******************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_object-gopd.js ***!
   \*******************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var pIE            = __webpack_require__(/*! ./_object-pie */ 198)
+	var pIE            = __webpack_require__(/*! ./_object-pie */ 200)
 	  , createDesc     = __webpack_require__(/*! ./_property-desc */ 143)
 	  , toIObject      = __webpack_require__(/*! ./_to-iobject */ 123)
 	  , toPrimitive    = __webpack_require__(/*! ./_to-primitive */ 142)
@@ -106329,7 +106438,7 @@
 	};
 
 /***/ },
-/* 203 */
+/* 205 */
 /*!***************************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/es6.object.to-string.js ***!
   \***************************************************************************/
@@ -106338,25 +106447,25 @@
 
 
 /***/ },
-/* 204 */
+/* 206 */
 /*!********************************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/es7.symbol.async-iterator.js ***!
   \********************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(/*! ./_wks-define */ 194)('asyncIterator');
+	__webpack_require__(/*! ./_wks-define */ 196)('asyncIterator');
 
 /***/ },
-/* 205 */
+/* 207 */
 /*!****************************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/es7.symbol.observable.js ***!
   \****************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(/*! ./_wks-define */ 194)('observable');
+	__webpack_require__(/*! ./_wks-define */ 196)('observable');
 
 /***/ },
-/* 206 */
+/* 208 */
 /*!***************************************************************!*\
   !*** ./beeline-admin/directives/paymentView/paymentView.html ***!
   \***************************************************************/
@@ -106365,7 +106474,7 @@
 	module.exports = "<div>\n  <button class=\"btn btn-default\"\n    ng-click=\"collapsed = !collapsed\">\n    {{pvTitle}}\n  </button>\n  <dl class=\"dl-compact\"\n      ng-repeat=\"(key, val) in pvData\"\n      ng-hide=\"collapsed\">\n    <dt>{{key}}</dt>\n    <dd ng-if=\"!isObject(val)\">{{val}}</dd>\n    <dd ng-if=\"isObject(val)\">\n      <payment-view ng-if=\"val != null\" pv-data=\"val\" pv-title=\"\"></payment-view>\n      <span ng-if=\"val == null\"><i>null</i></span>\n    </dd>\n  </dl>\n</div>\n";
 
 /***/ },
-/* 207 */
+/* 209 */
 /*!***********************************************************!*\
   !*** ./beeline-admin/directives/ticketView/ticketView.js ***!
   \***********************************************************/
@@ -106377,13 +106486,13 @@
 	  value: true
 	});
 	
-	var _typeof2 = __webpack_require__(/*! babel-runtime/helpers/typeof */ 186);
+	var _typeof2 = __webpack_require__(/*! babel-runtime/helpers/typeof */ 188);
 	
 	var _typeof3 = _interopRequireDefault(_typeof2);
 	
 	exports.default = function () {
 	  return {
-	    template: __webpack_require__(/*! ./ticketView.html */ 208),
+	    template: __webpack_require__(/*! ./ticketView.html */ 210),
 	    scope: {
 	      data: '=',
 	      collapse: '='
@@ -106400,7 +106509,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 208 */
+/* 210 */
 /*!*************************************************************!*\
   !*** ./beeline-admin/directives/ticketView/ticketView.html ***!
   \*************************************************************/
@@ -106409,7 +106518,7 @@
 	module.exports = "<div>\n<b>{{data.trips[0].route.label}}</b>\n{{data.trips[0].date | date: 'EEE dd MMM yy':'UTC'}}\n  <dl class=\"dl-compact\">\n    <dt>Board Stop</dt>\n    <dd>\n        {{data.boardStop.stop.description}}\n        ({{data.boardStop.time | date:'HH:mm'}})\n    </dd>\n\n\n    <dt>Alight Stop</dt>\n    <dd>\n        {{data.alightStop.stop.description}}\n        ({{data.alightStop.time | date:'HH:mm'}})\n    </dd>\n\n    <dt>User</dt>\n    <dd>\n      <payment-view ng-if=\"data.user.json\"\n        pv-data=\"data.user.json\"\n        pv-title=\"data.user.json.name\"\n        collapsed=\"false\"\n        >\n      </payment-view>\n      <span ng-if=\"!data.user.json\">\n        {{data.user.name}} /\n        {{data.user.email}} /\n        {{data.user.telephone}}\n      </span>\n    </dd>\n\n    <dt>Id</dt>\n    <dd>{{data.id}}</dd>\n  </dl>\n</div>\n";
 
 /***/ },
-/* 209 */
+/* 211 */
 /*!*****************************************************************!*\
   !*** ./beeline-admin/directives/routeSelector/routeSelector.js ***!
   \*****************************************************************/
@@ -106424,7 +106533,7 @@
 	exports.default = function (RoutesService, LoadingSpinner) {
 	
 	  return {
-	    template: __webpack_require__(/*! ./routeSelector.html */ 210),
+	    template: __webpack_require__(/*! ./routeSelector.html */ 212),
 	    scope: {
 	      selectedRoute: '=',
 	      selectedRouteId: '=?'
@@ -106471,7 +106580,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 210 */
+/* 212 */
 /*!*******************************************************************!*\
   !*** ./beeline-admin/directives/routeSelector/routeSelector.html ***!
   \*******************************************************************/
@@ -106480,7 +106589,7 @@
 	module.exports = "<div>\n  <button class=\"glyphicon glyphicon-duplicate btn btn-default\"\n    title=\"copy\"\n    ng-click=\"copySelected()\"\n    ng-disabled=\"!selectedRoute\">\n  </button>\n  <ul class=\"nav nav-sidebar\">\n    <li ng-repeat=\"route in availableRoutes | orderBy:'label' track by route.id\"\n    ng-click=\"selectRoute(route)\"\n    ng-class=\"{\n      active: selectedRoute == route\n    }\"\n    > <a>\n        <small>(~{{route.id}})</small> \n        {{route.label}}:\n        {{route.from}} to {{route.to}}\n      </a>\n    </li>\n    <li ng-click=\"selectRoute({})\"> <a><em>New route!</em></a>\n\n    </li>\n  </ul>\n</div>\n";
 
 /***/ },
-/* 211 */
+/* 213 */
 /*!*************************************************************!*\
   !*** ./beeline-admin/directives/routeEditor/routeEditor.js ***!
   \*************************************************************/
@@ -106494,14 +106603,18 @@
 	
 	exports.default = function (AdminService, RoutesService, $rootScope) {
 	  return {
-	    template: __webpack_require__(/*! ./routeEditor.html */ 212),
+	    template: __webpack_require__(/*! ./routeEditor.html */ 214),
 	    scope: {
 	      route: '=',
 	      edit: '=?'
 	    },
 	    link: function link(scope, elem, attr) {
+	      '';
 	      scope.edit = scope.edit || 'route';
 	      scope.adminService = AdminService;
+	      scope.disp = {
+	        routeTags: []
+	      };
 	
 	      scope.resetRoute = function () {
 	        if (scope.route && scope.route.id) {
@@ -106532,7 +106645,23 @@
 	      scope.$watch('route', function () {
 	        scope.route && scope.route.id && RoutesService.getRoute(scope.route.id, { includeTrips: true }).then(function (route) {
 	          scope.tripStops = _lodash2.default.maxBy(route.trips, 'date').tripStops;
+	          scope.disp.routeTags = scope.route.tags && scope.route.tags.map(function (t) {
+	            return { name: t };
+	          });
+	          // quick hack to convert arrays to polyline string
+	          if (google.maps.geometry && scope.route.path instanceof Array) {
+	            scope.route.path = google.maps.geometry.encoding.encodePath(scope.route.path.map(function (latlng) {
+	              return new google.maps.LatLng(latlng.lat, latlng.lng);
+	            }));
+	          }
+	          scope.$broadcast('mapLoaded');
 	        });
+	      });
+	      scope.$watchCollection('disp.routeTags', function (rawTags) {
+	        if (!scope.route) return;
+	        scope.route.tags = rawTags ? rawTags.map(function (t) {
+	          return t.name;
+	        }) : [];
 	      });
 	    }
 	  };
@@ -106541,2369 +106670,24 @@
 	var _lodash = __webpack_require__(/*! lodash */ 8);
 	
 	var _lodash2 = _interopRequireDefault(_lodash);
+	
+	var _assert = __webpack_require__(/*! assert */ 215);
+	
+	var _assert2 = _interopRequireDefault(_assert);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 212 */
+/* 214 */
 /*!***************************************************************!*\
   !*** ./beeline-admin/directives/routeEditor/routeEditor.html ***!
   \***************************************************************/
 /***/ function(module, exports) {
 
-	module.exports = "<div>\n  <span class=\"btn-group\">\n    <button class=\"btn btn-default\"\n      ng-click=\"edit = 'route'\">\n      Edit Route Description\n    </button>\n    <button class=\"btn btn-default\"\n      ng-click=\"edit = 'trips'\"\n      >\n      Edit Trips\n    </button>\n  </span>\n</div>\n\n<div ng-show=\"route\">\n  <div ng-show=\"edit == 'route'\">\n    <h2>{{route.label}}</h2>\n\n    <label>\n      Label:\n      <input type=\"text\" ng-model=\"route.label\">\n    </label>\n\n    <label>\n      Name:\n      <input type=\"text\" ng-model=\"route.name\">\n    </label>\n\n    <label>\n      From:\n      <input type=\"text\" ng-model=\"route.from\">\n    </label>\n\n    <label>\n      To:\n      <input type=\"text\" ng-model=\"route.to\">\n    </label>\n\n    <!-- ng-if creates a scope -->\n    <label ng-if=\"adminService.session().role == 'superadmin'\">\n      Company:\n      <company-selector ng-model=\"$parent.route.transportCompanyId\">\n      </company-selector>\n    </label>\n\n    <label>Path:</label>\n    <path-editor path=\"route.path\" trip-stops=\"tripStops\">\n    </path-editor>\n\n    <div class=\"btn-group\">\n      <button class=\"btn btn-primary\" ng-click=\"saveRoute()\"\n        ng-disabled=\"!route\">\n        Save\n      </button>\n      <button class=\"btn btn-default\" ng-click=\"resetRoute()\">\n        Reset\n      </button>\n    </div>\n    <button class=\"btn btn-danger\" ng-click=\"deleteRoute()\"\n      ng-disabled=\"!route || !route.id\">\n      Delete\n    </button>\n  </div>\n\n  <div ng-show=\"edit == 'trips'\">\n    <trips-editor route-id=\"route.id\" ng-if=\"route.id\">\n    </trips-editor>\n  </div>\n</div>\n";
-
-/***/ },
-/* 213 */
-/*!***********************************************************!*\
-  !*** ./beeline-admin/directives/pathEditor/pathEditor.js ***!
-  \***********************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	exports.default = function ($rootScope, $location, uiGmapGoogleMapApi, $q) {
-	  return {
-	    template: __webpack_require__(/*! ./pathEditor.html */ 214),
-	    scope: {
-	      path: '=',
-	      tripStops: '='
-	    },
-	    link: function link(scope, elem, attr) {
-	      scope.newPath = '';
-	      uiGmapGoogleMapApi.then(function (googleMaps) {
-	        var SINGAPORE = new googleMaps.LatLng(1.352083, 103.819836);
-	        var map = new googleMaps.Map(document.querySelector('.map-container'), {
-	          zoom: 11,
-	          center: SINGAPORE
-	        });
-	
-	        var mapPath = new googleMaps.Polyline({
-	          strokeColor: '#FF0000',
-	          strokeWeight: 3
-	        });
-	
-	        scope.$watch('path', function (path) {
-	          if (!path) return;
-	          mapPath.setMap(map);
-	          if (typeof path === 'string') {
-	            mapPath.setPath(googleMaps.geometry.encoding.decodePath(path));
-	          } else {
-	            mapPath.setPath(path);
-	          }
-	        });
-	
-	        var markers = [];
-	
-	        scope.$watch('tripStops', function (tripStops) {
-	          map.setCenter(SINGAPORE);
-	          map.setZoom(11);
-	          dirRenderer.setMap(null);
-	          markers.forEach(function (marker) {
-	            return marker.setMap(null);
-	          });
-	          markers = tripStops ? tripStops.map(function (tripStop, i) {
-	            var _tripStop$stop = tripStop.stop;
-	            var coordinates = _tripStop$stop.coordinates.coordinates;
-	            var description = _tripStop$stop.description;
-	            var canBoard = tripStop.canBoard;
-	
-	            var latlng = new googleMaps.LatLng(coordinates[1], coordinates[0]);
-	            return new googleMaps.Marker({
-	              position: latlng,
-	              title: description,
-	              icon: {
-	                scaledSize: new googleMaps.Size(30, 30),
-	                anchor: new googleMaps.Point(15, 15),
-	                url: 'img/stop' + (canBoard ? 'Board' : 'Alight') + (i + 1) + '.png'
-	              },
-	              map: map
-	            });
-	          }) : [];
-	        });
-	
-	        var dirService = new googleMaps.DirectionsService();
-	        var dirRenderer = new googleMaps.DirectionsRenderer({
-	          draggable: true,
-	          polylineOptions: { strokeWeight: 3, strokeColor: '#4b3863' },
-	          markerOptions: { icon: 'https://maps.gstatic.com/mapfiles/dd-via.png' }
-	        });
-	
-	        dirRenderer.directions_changed = function () {
-	          var directions = dirRenderer.getDirections();
-	          console.log(directions);
-	          var overview_polyline = directions.routes[0].overview_polyline;
-	
-	          scope.newPath = overview_polyline;
-	        };
-	
-	        scope.googlePath = function (tripStops) {
-	          if (!tripStops) return;
-	          var stopsLatLng = tripStops.map(function (tripStop) {
-	            var coordinates = tripStop.stop.coordinates.coordinates;
-	
-	            return new googleMaps.LatLng(coordinates[1], coordinates[0]);
-	          });
-	
-	          var request = {
-	            origin: stopsLatLng[0],
-	            destination: stopsLatLng[stopsLatLng.length - 1],
-	            waypoints: stopsLatLng.slice(1, -1).map(function (latlng) {
-	              return { location: latlng };
-	            }),
-	            travelMode: googleMaps.TravelMode.DRIVING
-	          };
-	
-	          dirService.route(request, function (result, status) {
-	            if (status === googleMaps.DirectionsStatus.OK) {
-	              dirRenderer.setMap(map);
-	              dirRenderer.setDirections(result);
-	            } else {
-	              console.log('Google path failed', result);
-	            }
-	          });
-	        };
-	
-	        scope.updatePath = function () {
-	          if (!scope.newPath) return;
-	          scope.path = scope.newPath;
-	          scope.newPath = '';
-	          dirRenderer.setMap(null);
-	        };
-	
-	        scope.clearPath = function () {
-	          scope.path = '';
-	          scope.newPath = '';
-	          mapPath.setMap(null);
-	          dirRenderer.setMap(null);
-	        };
-	      });
-	    }
-	  };
-	};
-
-/***/ },
-/* 214 */
-/*!*************************************************************!*\
-  !*** ./beeline-admin/directives/pathEditor/pathEditor.html ***!
-  \*************************************************************/
-/***/ function(module, exports) {
-
-	module.exports = "<div class=\"path-editor\">\n  <button class=\"btn btn-default\"\n    ng-click=\"googlePath(tripStops)\">\n    Google path\n  </button>\n  <span class=\"btn-group\">\n    <button class=\"btn btn-primary\"\n      ng-click=\"updatePath()\">\n      Update path\n    </button>\n    <button class=\"btn btn-danger\"\n      ng-click=\"clearPath()\">\n      Clear path\n    </button>\n  </span>\n  <div class=\"map-container\"></div>\n  <textarea class=\"form-control\"\n    ng-model=\"path\"\n    placeholder=\"Path encoded as polyline\"\n    rows=7></textarea>\n</div>\n";
+	module.exports = "<div>\n  <span class=\"btn-group\">\n    <button class=\"btn btn-default\"\n      ng-click=\"edit = 'route'\">\n      Edit Route Description\n    </button>\n    <button class=\"btn btn-default\"\n      ng-click=\"edit = 'trips'\"\n      >\n      Edit Trips\n    </button>\n  </span>\n</div>\n\n<div ng-show=\"route\">\n  <div ng-show=\"edit == 'route'\">\n    <h2>{{route.label}}</h2>\n\n    <label>\n      Label:\n      <input type=\"text\" ng-model=\"route.label\">\n    </label>\n\n    <label>\n      Name:\n      <input type=\"text\" ng-model=\"route.name\">\n    </label>\n\n    <label>\n      From:\n      <input type=\"text\" ng-model=\"route.from\">\n    </label>\n\n    <label>\n      To:\n      <input type=\"text\" ng-model=\"route.to\">\n    </label>\n\n    <!-- ng-if creates a scope -->\n    <label ng-if=\"adminService.session().role == 'superadmin'\">\n      Company:\n      <company-selector ng-model=\"$parent.route.transportCompanyId\">\n      </company-selector>\n    </label>\n\n    <label>Tags:</label>\n    <tag-editor ng-model=\"disp.routeTags\">\n    </tag-editor>\n\n    <label>Path:</label>\n    <path-editor path=\"route.path\" trip-stops=\"tripStops\">\n    </path-editor>\n\n    <div class=\"btn-group\">\n      <button class=\"btn btn-primary\" ng-click=\"saveRoute()\"\n        ng-disabled=\"!route\">\n        Save\n      </button>\n      <button class=\"btn btn-default\" ng-click=\"resetRoute()\">\n        Reset\n      </button>\n    </div>\n    <button class=\"btn btn-danger\" ng-click=\"deleteRoute()\"\n      ng-disabled=\"!route || !route.id\">\n      Delete\n    </button>\n  </div>\n\n  <div ng-show=\"edit == 'trips'\">\n    <trips-editor route-id=\"route.id\" ng-if=\"route.id\">\n    </trips-editor>\n  </div>\n</div>\n";
 
 /***/ },
 /* 215 */
-/*!*************************************************************!*\
-  !*** ./beeline-admin/directives/tripsEditor/tripsEditor.js ***!
-  \*************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _regenerator = __webpack_require__(/*! babel-runtime/regenerator */ 216);
-	
-	var _regenerator2 = _interopRequireDefault(_regenerator);
-	
-	var _asyncToGenerator2 = __webpack_require__(/*! babel-runtime/helpers/asyncToGenerator */ 220);
-	
-	var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
-	
-	var _getIterator2 = __webpack_require__(/*! babel-runtime/core-js/get-iterator */ 116);
-	
-	var _getIterator3 = _interopRequireDefault(_getIterator2);
-	
-	exports.default = function (RoutesService, TripsService, AdminService, DriverService, StopsPopup, LoadingSpinner) {
-	
-	  return {
-	    scope: {
-	      routeId: '='
-	    },
-	    template: __webpack_require__(/*! ./tripsEditor.html */ 236),
-	    link: function link(scope, elem, attr) {
-	      scope.adminService = AdminService;
-	
-	      /* Date filters require UTC time */
-	      var now = new Date();
-	      now.setUTCHours(0, 0, 0, 0);
-	      scope.filter = {
-	        startDate: now
-	      };
-	      scope.disp = {
-	        stopsList: [],
-	        newDates: [],
-	        existingDates: [],
-	        validDates: [],
-	        trip: {
-	          routeId: scope.routeId,
-	          tripStops: []
-	        },
-	
-	        addTripStop: function addTripStop() {
-	          this.trip.tripStops = this.trip.tripStops || [];
-	          this.trip.tripStops.push({
-	            time: new Date(2015, 1, 1, 8, 30, 0),
-	            canBoard: true,
-	            canAlight: false
-	          });
-	        },
-	        deleteTripStop: function deleteTripStop(index) {
-	          this.trip.tripStops.splice(index, 1);
-	        }
-	      };
-	      scope.refreshTrips = function () {
-	        var promise = TripsService.getTrips({
-	          routeId: scope.routeId,
-	          startDate: new Date(scope.filter.startDate),
-	          endDate: new Date(new Date(scope.filter.startDate).getTime() + 60 * 24 * 60 * 60 * 1000),
-	          includeAvailability: true
-	        }).then(function (trips) {
-	          // Add driver info to trips
-	          return DriverService.fetchDriverInfo(trips);
-	        }).then(function (trips) {
-	          scope.trips = trips;
-	
-	          // populate dates
-	          scope.disp.existingDates = _lodash2.default.uniq(trips.map(function (tr) {
-	            return tr.date.getTime();
-	          })).map(function (dtStr) {
-	            return new Date(dtStr);
-	          });
-	
-	          // populate stops
-	          var stopsSet = {};
-	
-	          var _iteratorNormalCompletion = true;
-	          var _didIteratorError = false;
-	          var _iteratorError = undefined;
-	
-	          try {
-	            for (var _iterator = (0, _getIterator3.default)(trips), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	              var trip = _step.value;
-	              var _iteratorNormalCompletion2 = true;
-	              var _didIteratorError2 = false;
-	              var _iteratorError2 = undefined;
-	
-	              try {
-	                for (var _iterator2 = (0, _getIterator3.default)(trip.tripStops), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-	                  var tripStop = _step2.value;
-	
-	                  if (!(tripStop.stop.id in stopsSet)) {
-	                    stopsSet[tripStop.stop.id] = tripStop;
-	                  }
-	                }
-	              } catch (err) {
-	                _didIteratorError2 = true;
-	                _iteratorError2 = err;
-	              } finally {
-	                try {
-	                  if (!_iteratorNormalCompletion2 && _iterator2.return) {
-	                    _iterator2.return();
-	                  }
-	                } finally {
-	                  if (_didIteratorError2) {
-	                    throw _iteratorError2;
-	                  }
-	                }
-	              }
-	            }
-	          } catch (err) {
-	            _didIteratorError = true;
-	            _iteratorError = err;
-	          } finally {
-	            try {
-	              if (!_iteratorNormalCompletion && _iterator.return) {
-	                _iterator.return();
-	              }
-	            } finally {
-	              if (_didIteratorError) {
-	                throw _iteratorError;
-	              }
-	            }
-	          }
-	
-	          var stopsList = _lodash2.default.values(stopsSet);
-	          stopsList = _lodash2.default.sortBy(stopsList, function (s) {
-	            return s.time;
-	          });
-	          scope.disp.stopsList = stopsList;
-	        });
-	
-	        LoadingSpinner.watchPromise(promise);
-	      };
-	      scope.resetTrips = function () {
-	        scope.disp.newDates = [];
-	        scope.disp.trip.tripStops = [];
-	      };
-	      scope.findStop = function (trip, stopId) {
-	        return trip.tripStops.find(function (ts) {
-	          return ts.stop.id == stopId;
-	        });
-	      };
-	      scope.referenceTrip = function (trip) {
-	        scope.disp.trip = _lodash2.default.clone(trip);
-	        scope.disp.trip.tripStops = _lodash2.default.cloneDeep(trip.tripStops);
-	        delete scope.disp.trip.id;
-	      };
-	      scope.deleteTrip = function (trip) {
-	        if (confirm("Are you sure you want to delete?")) {
-	          TripsService.deleteTrip(trip.id).then(scope.refreshTrips).catch(function (error) {
-	            console.error(error);
-	          });
-	        }
-	      };
-	      scope.editTrip = function (trip) {
-	        scope.disp.trip = _lodash2.default.clone(trip);
-	        scope.disp.trip.tripStops = _lodash2.default.cloneDeep(trip.tripStops);
-	      };
-	      scope.clearEdit = function () {
-	        scope.disp.trip = {};
-	        scope.disp.trip.routeId = scope.routeId;
-	        scope.disp.trip.tripStops = [];
-	      };
-	      scope.saveTrips = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee() {
-	        var driver, trips;
-	        return _regenerator2.default.wrap(function _callee$(_context) {
-	          while (1) {
-	            switch (_context.prev = _context.next) {
-	              case 0:
-	                _context.next = 2;
-	                return DriverService.fetchDriverIds([scope.disp.trip]);
-	
-	              case 2:
-	                driver = _context.sent;
-	
-	                if (!(scope.disp.trip.driverTelephone && !scope.disp.trip.driverId)) {
-	                  _context.next = 10;
-	                  break;
-	                }
-	
-	                _context.next = 6;
-	                return DriverService.createDriver({
-	                  telephone: '+65' + scope.disp.trip.driverTelephone,
-	                  name: scope.disp.trip.driverTelephone
-	                });
-	
-	              case 6:
-	                driver = _context.sent;
-	
-	                scope.disp.trip.driverId = driver.id;
-	                _context.next = 11;
-	                break;
-	
-	              case 10:
-	                if (!scope.disp.trip.driverTelephone) {
-	                  scope.disp.trip.driverId = null;
-	                }
-	
-	              case 11:
-	                if (!scope.disp.trip.id) {
-	                  _context.next = 16;
-	                  break;
-	                }
-	
-	                // get a list of the trips to update
-	                trips = scope.trips.filter(function (tr) {
-	                  return tr.id in scope.selection.selected;
-	                });
-	
-	                // update the trips...
-	
-	                return _context.abrupt('return', TripsService.updateTrips(trips, scope.disp.trip).then(scope.refreshTrips));
-	
-	              case 16:
-	                return _context.abrupt('return', TripsService.createTrips(scope.disp.newDates, scope.disp.trip).then(scope.refreshTrips).then(scope.resetTrips).then(function () {
-	                  alert("Trips created");
-	                }).catch(function (error) {
-	                  console.log(error);
-	                  alert(error.data.error + ' -- ' + error.data.message);
-	                }));
-	
-	              case 17:
-	              case 'end':
-	                return _context.stop();
-	            }
-	          }
-	        }, _callee, this);
-	      }));
-	      scope.showPopupFor = function (ts) {
-	        StopsPopup.show({
-	          title: 'Select a Stop!'
-	        }).then(function (x) {
-	          ts.stopId = x.id;
-	        });
-	      };
-	
-	      //// Logic to handle trip selection (using Ctrl, Shift etc)
-	      scope.selection = {
-	        selected: {},
-	        lastSelected: null,
-	        listStart: null
-	      };
-	      scope.selectTrips = function (list, index, event) {
-	        var id = list[index].id;
-	
-	        function toggle(index) {
-	          if (list[index].id in scope.selection.selected) {
-	            delete scope.selection.selected[list[index].id];
-	          } else {
-	            scope.selection.selected[list[index].id] = list[index];
-	          }
-	        }
-	
-	        if (event.ctrlKey) {
-	          event.preventDefault();
-	          toggle(index);
-	          scope.selection.listStart = index;
-	          scope.selection.lastSelected = index;
-	        } else if (event.shiftKey) {
-	          // FIXME: This is still not entirely intuitive
-	          event.preventDefault();
-	
-	          if (index < scope.selection.lastSelected) {
-	            for (var i = scope.selection.lastSelected - (scope.selection.lastSelected == scope.selection.listStart ? 1 : scope.selection.lastSelected < scope.selection.listStart ? 1 : 0); i >= index; i--) {
-	              toggle(i);
-	            }
-	          } else if (index > scope.selection.lastSelected) {
-	            for (var _i = scope.selection.lastSelected + (scope.selection.lastSelected == scope.selection.listStart ? 1 : scope.selection.lastSelected > scope.selection.listStart ? 1 : 0); _i <= index; _i++) {
-	              toggle(_i);
-	            }
-	          }
-	
-	          scope.selection.lastSelected = index;
-	        } else {
-	          event.preventDefault();
-	          scope.selection.selected = {};
-	          toggle(index);
-	          scope.selection.listStart = index;
-	          scope.selection.lastSelected = index;
-	        }
-	        if (scope.selection.selected[id]) {
-	          scope.editTrip(list[index]);
-	        }
-	        // if nothing is selected clear the trip
-	        console.log(scope.selection.selected);
-	        if (!_lodash2.default.every(_lodash2.default.values(scope.selection.selected)) || _lodash2.default.keys(scope.selection.selected).length == 0) {
-	          scope.disp.trip = {};
-	          scope.disp.trip.tripStops = [];
-	        }
-	      }; /* selectTrips() */
-	
-	      scope.$watchGroup(['filter.startDate', 'filter.endDate'], scope.refreshTrips);
-	      scope.$watch('routeId', scope.refreshTrips);
-	      scope.$watch('startDate', function () {
-	        scope.disp.validDates = _lodash2.default.range(0, 365).map(function (i) {
-	          return new Date(now.getTime() + i * 24 * 3600 * 1000);
-	        });
-	      });
-	    }
-	  };
-	};
-	
-	var _lodash = __webpack_require__(/*! lodash */ 8);
-	
-	var _lodash2 = _interopRequireDefault(_lodash);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/***/ },
-/* 216 */
-/*!**********************************************!*\
-  !*** ./~/babel-runtime/regenerator/index.js ***!
-  \**********************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __webpack_require__(/*! regenerator-runtime */ 217);
-
-
-/***/ },
-/* 217 */
-/*!*************************************************!*\
-  !*** ./~/regenerator-runtime/runtime-module.js ***!
-  \*************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {// This method of obtaining a reference to the global object needs to be
-	// kept identical to the way it is obtained in runtime.js
-	var g =
-	  typeof global === "object" ? global :
-	  typeof window === "object" ? window :
-	  typeof self === "object" ? self : this;
-	
-	// Use `getOwnPropertyNames` because not all browsers support calling
-	// `hasOwnProperty` on the global `self` object in a worker. See #183.
-	var hadRuntime = g.regeneratorRuntime &&
-	  Object.getOwnPropertyNames(g).indexOf("regeneratorRuntime") >= 0;
-	
-	// Save the old regeneratorRuntime in case it needs to be restored later.
-	var oldRuntime = hadRuntime && g.regeneratorRuntime;
-	
-	// Force reevalutation of runtime.js.
-	g.regeneratorRuntime = undefined;
-	
-	module.exports = __webpack_require__(/*! ./runtime */ 218);
-	
-	if (hadRuntime) {
-	  // Restore the original runtime.
-	  g.regeneratorRuntime = oldRuntime;
-	} else {
-	  // Remove the global property added by runtime.js.
-	  try {
-	    delete g.regeneratorRuntime;
-	  } catch(e) {
-	    g.regeneratorRuntime = undefined;
-	  }
-	}
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 218 */
-/*!******************************************!*\
-  !*** ./~/regenerator-runtime/runtime.js ***!
-  \******************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global, process) {/**
-	 * Copyright (c) 2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * https://raw.github.com/facebook/regenerator/master/LICENSE file. An
-	 * additional grant of patent rights can be found in the PATENTS file in
-	 * the same directory.
-	 */
-	
-	!(function(global) {
-	  "use strict";
-	
-	  var hasOwn = Object.prototype.hasOwnProperty;
-	  var undefined; // More compressible than void 0.
-	  var $Symbol = typeof Symbol === "function" ? Symbol : {};
-	  var iteratorSymbol = $Symbol.iterator || "@@iterator";
-	  var toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag";
-	
-	  var inModule = typeof module === "object";
-	  var runtime = global.regeneratorRuntime;
-	  if (runtime) {
-	    if (inModule) {
-	      // If regeneratorRuntime is defined globally and we're in a module,
-	      // make the exports object identical to regeneratorRuntime.
-	      module.exports = runtime;
-	    }
-	    // Don't bother evaluating the rest of this file if the runtime was
-	    // already defined globally.
-	    return;
-	  }
-	
-	  // Define the runtime globally (as expected by generated code) as either
-	  // module.exports (if we're in a module) or a new, empty object.
-	  runtime = global.regeneratorRuntime = inModule ? module.exports : {};
-	
-	  function wrap(innerFn, outerFn, self, tryLocsList) {
-	    // If outerFn provided, then outerFn.prototype instanceof Generator.
-	    var generator = Object.create((outerFn || Generator).prototype);
-	    var context = new Context(tryLocsList || []);
-	
-	    // The ._invoke method unifies the implementations of the .next,
-	    // .throw, and .return methods.
-	    generator._invoke = makeInvokeMethod(innerFn, self, context);
-	
-	    return generator;
-	  }
-	  runtime.wrap = wrap;
-	
-	  // Try/catch helper to minimize deoptimizations. Returns a completion
-	  // record like context.tryEntries[i].completion. This interface could
-	  // have been (and was previously) designed to take a closure to be
-	  // invoked without arguments, but in all the cases we care about we
-	  // already have an existing method we want to call, so there's no need
-	  // to create a new function object. We can even get away with assuming
-	  // the method takes exactly one argument, since that happens to be true
-	  // in every case, so we don't have to touch the arguments object. The
-	  // only additional allocation required is the completion record, which
-	  // has a stable shape and so hopefully should be cheap to allocate.
-	  function tryCatch(fn, obj, arg) {
-	    try {
-	      return { type: "normal", arg: fn.call(obj, arg) };
-	    } catch (err) {
-	      return { type: "throw", arg: err };
-	    }
-	  }
-	
-	  var GenStateSuspendedStart = "suspendedStart";
-	  var GenStateSuspendedYield = "suspendedYield";
-	  var GenStateExecuting = "executing";
-	  var GenStateCompleted = "completed";
-	
-	  // Returning this object from the innerFn has the same effect as
-	  // breaking out of the dispatch switch statement.
-	  var ContinueSentinel = {};
-	
-	  // Dummy constructor functions that we use as the .constructor and
-	  // .constructor.prototype properties for functions that return Generator
-	  // objects. For full spec compliance, you may wish to configure your
-	  // minifier not to mangle the names of these two functions.
-	  function Generator() {}
-	  function GeneratorFunction() {}
-	  function GeneratorFunctionPrototype() {}
-	
-	  var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype;
-	  GeneratorFunction.prototype = Gp.constructor = GeneratorFunctionPrototype;
-	  GeneratorFunctionPrototype.constructor = GeneratorFunction;
-	  GeneratorFunctionPrototype[toStringTagSymbol] = GeneratorFunction.displayName = "GeneratorFunction";
-	
-	  // Helper for defining the .next, .throw, and .return methods of the
-	  // Iterator interface in terms of a single ._invoke method.
-	  function defineIteratorMethods(prototype) {
-	    ["next", "throw", "return"].forEach(function(method) {
-	      prototype[method] = function(arg) {
-	        return this._invoke(method, arg);
-	      };
-	    });
-	  }
-	
-	  runtime.isGeneratorFunction = function(genFun) {
-	    var ctor = typeof genFun === "function" && genFun.constructor;
-	    return ctor
-	      ? ctor === GeneratorFunction ||
-	        // For the native GeneratorFunction constructor, the best we can
-	        // do is to check its .name property.
-	        (ctor.displayName || ctor.name) === "GeneratorFunction"
-	      : false;
-	  };
-	
-	  runtime.mark = function(genFun) {
-	    if (Object.setPrototypeOf) {
-	      Object.setPrototypeOf(genFun, GeneratorFunctionPrototype);
-	    } else {
-	      genFun.__proto__ = GeneratorFunctionPrototype;
-	      if (!(toStringTagSymbol in genFun)) {
-	        genFun[toStringTagSymbol] = "GeneratorFunction";
-	      }
-	    }
-	    genFun.prototype = Object.create(Gp);
-	    return genFun;
-	  };
-	
-	  // Within the body of any async function, `await x` is transformed to
-	  // `yield regeneratorRuntime.awrap(x)`, so that the runtime can test
-	  // `value instanceof AwaitArgument` to determine if the yielded value is
-	  // meant to be awaited. Some may consider the name of this method too
-	  // cutesy, but they are curmudgeons.
-	  runtime.awrap = function(arg) {
-	    return new AwaitArgument(arg);
-	  };
-	
-	  function AwaitArgument(arg) {
-	    this.arg = arg;
-	  }
-	
-	  function AsyncIterator(generator) {
-	    function invoke(method, arg, resolve, reject) {
-	      var record = tryCatch(generator[method], generator, arg);
-	      if (record.type === "throw") {
-	        reject(record.arg);
-	      } else {
-	        var result = record.arg;
-	        var value = result.value;
-	        if (value instanceof AwaitArgument) {
-	          return Promise.resolve(value.arg).then(function(value) {
-	            invoke("next", value, resolve, reject);
-	          }, function(err) {
-	            invoke("throw", err, resolve, reject);
-	          });
-	        }
-	
-	        return Promise.resolve(value).then(function(unwrapped) {
-	          // When a yielded Promise is resolved, its final value becomes
-	          // the .value of the Promise<{value,done}> result for the
-	          // current iteration. If the Promise is rejected, however, the
-	          // result for this iteration will be rejected with the same
-	          // reason. Note that rejections of yielded Promises are not
-	          // thrown back into the generator function, as is the case
-	          // when an awaited Promise is rejected. This difference in
-	          // behavior between yield and await is important, because it
-	          // allows the consumer to decide what to do with the yielded
-	          // rejection (swallow it and continue, manually .throw it back
-	          // into the generator, abandon iteration, whatever). With
-	          // await, by contrast, there is no opportunity to examine the
-	          // rejection reason outside the generator function, so the
-	          // only option is to throw it from the await expression, and
-	          // let the generator function handle the exception.
-	          result.value = unwrapped;
-	          resolve(result);
-	        }, reject);
-	      }
-	    }
-	
-	    if (typeof process === "object" && process.domain) {
-	      invoke = process.domain.bind(invoke);
-	    }
-	
-	    var previousPromise;
-	
-	    function enqueue(method, arg) {
-	      function callInvokeWithMethodAndArg() {
-	        return new Promise(function(resolve, reject) {
-	          invoke(method, arg, resolve, reject);
-	        });
-	      }
-	
-	      return previousPromise =
-	        // If enqueue has been called before, then we want to wait until
-	        // all previous Promises have been resolved before calling invoke,
-	        // so that results are always delivered in the correct order. If
-	        // enqueue has not been called before, then it is important to
-	        // call invoke immediately, without waiting on a callback to fire,
-	        // so that the async generator function has the opportunity to do
-	        // any necessary setup in a predictable way. This predictability
-	        // is why the Promise constructor synchronously invokes its
-	        // executor callback, and why async functions synchronously
-	        // execute code before the first await. Since we implement simple
-	        // async functions in terms of async generators, it is especially
-	        // important to get this right, even though it requires care.
-	        previousPromise ? previousPromise.then(
-	          callInvokeWithMethodAndArg,
-	          // Avoid propagating failures to Promises returned by later
-	          // invocations of the iterator.
-	          callInvokeWithMethodAndArg
-	        ) : callInvokeWithMethodAndArg();
-	    }
-	
-	    // Define the unified helper method that is used to implement .next,
-	    // .throw, and .return (see defineIteratorMethods).
-	    this._invoke = enqueue;
-	  }
-	
-	  defineIteratorMethods(AsyncIterator.prototype);
-	
-	  // Note that simple async functions are implemented on top of
-	  // AsyncIterator objects; they just return a Promise for the value of
-	  // the final result produced by the iterator.
-	  runtime.async = function(innerFn, outerFn, self, tryLocsList) {
-	    var iter = new AsyncIterator(
-	      wrap(innerFn, outerFn, self, tryLocsList)
-	    );
-	
-	    return runtime.isGeneratorFunction(outerFn)
-	      ? iter // If outerFn is a generator, return the full iterator.
-	      : iter.next().then(function(result) {
-	          return result.done ? result.value : iter.next();
-	        });
-	  };
-	
-	  function makeInvokeMethod(innerFn, self, context) {
-	    var state = GenStateSuspendedStart;
-	
-	    return function invoke(method, arg) {
-	      if (state === GenStateExecuting) {
-	        throw new Error("Generator is already running");
-	      }
-	
-	      if (state === GenStateCompleted) {
-	        if (method === "throw") {
-	          throw arg;
-	        }
-	
-	        // Be forgiving, per 25.3.3.3.3 of the spec:
-	        // https://people.mozilla.org/~jorendorff/es6-draft.html#sec-generatorresume
-	        return doneResult();
-	      }
-	
-	      while (true) {
-	        var delegate = context.delegate;
-	        if (delegate) {
-	          if (method === "return" ||
-	              (method === "throw" && delegate.iterator[method] === undefined)) {
-	            // A return or throw (when the delegate iterator has no throw
-	            // method) always terminates the yield* loop.
-	            context.delegate = null;
-	
-	            // If the delegate iterator has a return method, give it a
-	            // chance to clean up.
-	            var returnMethod = delegate.iterator["return"];
-	            if (returnMethod) {
-	              var record = tryCatch(returnMethod, delegate.iterator, arg);
-	              if (record.type === "throw") {
-	                // If the return method threw an exception, let that
-	                // exception prevail over the original return or throw.
-	                method = "throw";
-	                arg = record.arg;
-	                continue;
-	              }
-	            }
-	
-	            if (method === "return") {
-	              // Continue with the outer return, now that the delegate
-	              // iterator has been terminated.
-	              continue;
-	            }
-	          }
-	
-	          var record = tryCatch(
-	            delegate.iterator[method],
-	            delegate.iterator,
-	            arg
-	          );
-	
-	          if (record.type === "throw") {
-	            context.delegate = null;
-	
-	            // Like returning generator.throw(uncaught), but without the
-	            // overhead of an extra function call.
-	            method = "throw";
-	            arg = record.arg;
-	            continue;
-	          }
-	
-	          // Delegate generator ran and handled its own exceptions so
-	          // regardless of what the method was, we continue as if it is
-	          // "next" with an undefined arg.
-	          method = "next";
-	          arg = undefined;
-	
-	          var info = record.arg;
-	          if (info.done) {
-	            context[delegate.resultName] = info.value;
-	            context.next = delegate.nextLoc;
-	          } else {
-	            state = GenStateSuspendedYield;
-	            return info;
-	          }
-	
-	          context.delegate = null;
-	        }
-	
-	        if (method === "next") {
-	          // Setting context._sent for legacy support of Babel's
-	          // function.sent implementation.
-	          context.sent = context._sent = arg;
-	
-	        } else if (method === "throw") {
-	          if (state === GenStateSuspendedStart) {
-	            state = GenStateCompleted;
-	            throw arg;
-	          }
-	
-	          if (context.dispatchException(arg)) {
-	            // If the dispatched exception was caught by a catch block,
-	            // then let that catch block handle the exception normally.
-	            method = "next";
-	            arg = undefined;
-	          }
-	
-	        } else if (method === "return") {
-	          context.abrupt("return", arg);
-	        }
-	
-	        state = GenStateExecuting;
-	
-	        var record = tryCatch(innerFn, self, context);
-	        if (record.type === "normal") {
-	          // If an exception is thrown from innerFn, we leave state ===
-	          // GenStateExecuting and loop back for another invocation.
-	          state = context.done
-	            ? GenStateCompleted
-	            : GenStateSuspendedYield;
-	
-	          var info = {
-	            value: record.arg,
-	            done: context.done
-	          };
-	
-	          if (record.arg === ContinueSentinel) {
-	            if (context.delegate && method === "next") {
-	              // Deliberately forget the last sent value so that we don't
-	              // accidentally pass it on to the delegate.
-	              arg = undefined;
-	            }
-	          } else {
-	            return info;
-	          }
-	
-	        } else if (record.type === "throw") {
-	          state = GenStateCompleted;
-	          // Dispatch the exception by looping back around to the
-	          // context.dispatchException(arg) call above.
-	          method = "throw";
-	          arg = record.arg;
-	        }
-	      }
-	    };
-	  }
-	
-	  // Define Generator.prototype.{next,throw,return} in terms of the
-	  // unified ._invoke helper method.
-	  defineIteratorMethods(Gp);
-	
-	  Gp[iteratorSymbol] = function() {
-	    return this;
-	  };
-	
-	  Gp[toStringTagSymbol] = "Generator";
-	
-	  Gp.toString = function() {
-	    return "[object Generator]";
-	  };
-	
-	  function pushTryEntry(locs) {
-	    var entry = { tryLoc: locs[0] };
-	
-	    if (1 in locs) {
-	      entry.catchLoc = locs[1];
-	    }
-	
-	    if (2 in locs) {
-	      entry.finallyLoc = locs[2];
-	      entry.afterLoc = locs[3];
-	    }
-	
-	    this.tryEntries.push(entry);
-	  }
-	
-	  function resetTryEntry(entry) {
-	    var record = entry.completion || {};
-	    record.type = "normal";
-	    delete record.arg;
-	    entry.completion = record;
-	  }
-	
-	  function Context(tryLocsList) {
-	    // The root entry object (effectively a try statement without a catch
-	    // or a finally block) gives us a place to store values thrown from
-	    // locations where there is no enclosing try statement.
-	    this.tryEntries = [{ tryLoc: "root" }];
-	    tryLocsList.forEach(pushTryEntry, this);
-	    this.reset(true);
-	  }
-	
-	  runtime.keys = function(object) {
-	    var keys = [];
-	    for (var key in object) {
-	      keys.push(key);
-	    }
-	    keys.reverse();
-	
-	    // Rather than returning an object with a next method, we keep
-	    // things simple and return the next function itself.
-	    return function next() {
-	      while (keys.length) {
-	        var key = keys.pop();
-	        if (key in object) {
-	          next.value = key;
-	          next.done = false;
-	          return next;
-	        }
-	      }
-	
-	      // To avoid creating an additional object, we just hang the .value
-	      // and .done properties off the next function object itself. This
-	      // also ensures that the minifier will not anonymize the function.
-	      next.done = true;
-	      return next;
-	    };
-	  };
-	
-	  function values(iterable) {
-	    if (iterable) {
-	      var iteratorMethod = iterable[iteratorSymbol];
-	      if (iteratorMethod) {
-	        return iteratorMethod.call(iterable);
-	      }
-	
-	      if (typeof iterable.next === "function") {
-	        return iterable;
-	      }
-	
-	      if (!isNaN(iterable.length)) {
-	        var i = -1, next = function next() {
-	          while (++i < iterable.length) {
-	            if (hasOwn.call(iterable, i)) {
-	              next.value = iterable[i];
-	              next.done = false;
-	              return next;
-	            }
-	          }
-	
-	          next.value = undefined;
-	          next.done = true;
-	
-	          return next;
-	        };
-	
-	        return next.next = next;
-	      }
-	    }
-	
-	    // Return an iterator with no values.
-	    return { next: doneResult };
-	  }
-	  runtime.values = values;
-	
-	  function doneResult() {
-	    return { value: undefined, done: true };
-	  }
-	
-	  Context.prototype = {
-	    constructor: Context,
-	
-	    reset: function(skipTempReset) {
-	      this.prev = 0;
-	      this.next = 0;
-	      // Resetting context._sent for legacy support of Babel's
-	      // function.sent implementation.
-	      this.sent = this._sent = undefined;
-	      this.done = false;
-	      this.delegate = null;
-	
-	      this.tryEntries.forEach(resetTryEntry);
-	
-	      if (!skipTempReset) {
-	        for (var name in this) {
-	          // Not sure about the optimal order of these conditions:
-	          if (name.charAt(0) === "t" &&
-	              hasOwn.call(this, name) &&
-	              !isNaN(+name.slice(1))) {
-	            this[name] = undefined;
-	          }
-	        }
-	      }
-	    },
-	
-	    stop: function() {
-	      this.done = true;
-	
-	      var rootEntry = this.tryEntries[0];
-	      var rootRecord = rootEntry.completion;
-	      if (rootRecord.type === "throw") {
-	        throw rootRecord.arg;
-	      }
-	
-	      return this.rval;
-	    },
-	
-	    dispatchException: function(exception) {
-	      if (this.done) {
-	        throw exception;
-	      }
-	
-	      var context = this;
-	      function handle(loc, caught) {
-	        record.type = "throw";
-	        record.arg = exception;
-	        context.next = loc;
-	        return !!caught;
-	      }
-	
-	      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
-	        var entry = this.tryEntries[i];
-	        var record = entry.completion;
-	
-	        if (entry.tryLoc === "root") {
-	          // Exception thrown outside of any try block that could handle
-	          // it, so set the completion value of the entire function to
-	          // throw the exception.
-	          return handle("end");
-	        }
-	
-	        if (entry.tryLoc <= this.prev) {
-	          var hasCatch = hasOwn.call(entry, "catchLoc");
-	          var hasFinally = hasOwn.call(entry, "finallyLoc");
-	
-	          if (hasCatch && hasFinally) {
-	            if (this.prev < entry.catchLoc) {
-	              return handle(entry.catchLoc, true);
-	            } else if (this.prev < entry.finallyLoc) {
-	              return handle(entry.finallyLoc);
-	            }
-	
-	          } else if (hasCatch) {
-	            if (this.prev < entry.catchLoc) {
-	              return handle(entry.catchLoc, true);
-	            }
-	
-	          } else if (hasFinally) {
-	            if (this.prev < entry.finallyLoc) {
-	              return handle(entry.finallyLoc);
-	            }
-	
-	          } else {
-	            throw new Error("try statement without catch or finally");
-	          }
-	        }
-	      }
-	    },
-	
-	    abrupt: function(type, arg) {
-	      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
-	        var entry = this.tryEntries[i];
-	        if (entry.tryLoc <= this.prev &&
-	            hasOwn.call(entry, "finallyLoc") &&
-	            this.prev < entry.finallyLoc) {
-	          var finallyEntry = entry;
-	          break;
-	        }
-	      }
-	
-	      if (finallyEntry &&
-	          (type === "break" ||
-	           type === "continue") &&
-	          finallyEntry.tryLoc <= arg &&
-	          arg <= finallyEntry.finallyLoc) {
-	        // Ignore the finally entry if control is not jumping to a
-	        // location outside the try/catch block.
-	        finallyEntry = null;
-	      }
-	
-	      var record = finallyEntry ? finallyEntry.completion : {};
-	      record.type = type;
-	      record.arg = arg;
-	
-	      if (finallyEntry) {
-	        this.next = finallyEntry.finallyLoc;
-	      } else {
-	        this.complete(record);
-	      }
-	
-	      return ContinueSentinel;
-	    },
-	
-	    complete: function(record, afterLoc) {
-	      if (record.type === "throw") {
-	        throw record.arg;
-	      }
-	
-	      if (record.type === "break" ||
-	          record.type === "continue") {
-	        this.next = record.arg;
-	      } else if (record.type === "return") {
-	        this.rval = record.arg;
-	        this.next = "end";
-	      } else if (record.type === "normal" && afterLoc) {
-	        this.next = afterLoc;
-	      }
-	    },
-	
-	    finish: function(finallyLoc) {
-	      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
-	        var entry = this.tryEntries[i];
-	        if (entry.finallyLoc === finallyLoc) {
-	          this.complete(entry.completion, entry.afterLoc);
-	          resetTryEntry(entry);
-	          return ContinueSentinel;
-	        }
-	      }
-	    },
-	
-	    "catch": function(tryLoc) {
-	      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
-	        var entry = this.tryEntries[i];
-	        if (entry.tryLoc === tryLoc) {
-	          var record = entry.completion;
-	          if (record.type === "throw") {
-	            var thrown = record.arg;
-	            resetTryEntry(entry);
-	          }
-	          return thrown;
-	        }
-	      }
-	
-	      // The context.catch method must only be called with a location
-	      // argument that corresponds to a known catch block.
-	      throw new Error("illegal catch attempt");
-	    },
-	
-	    delegateYield: function(iterable, resultName, nextLoc) {
-	      this.delegate = {
-	        iterator: values(iterable),
-	        resultName: resultName,
-	        nextLoc: nextLoc
-	      };
-	
-	      return ContinueSentinel;
-	    }
-	  };
-	})(
-	  // Among the various tricks for obtaining a reference to the global
-	  // object, this seems to be the most reliable technique that does not
-	  // use indirect eval (which violates Content Security Policy).
-	  typeof global === "object" ? global :
-	  typeof window === "object" ? window :
-	  typeof self === "object" ? self : this
-	);
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(/*! ./~/process/browser.js */ 219)))
-
-/***/ },
-/* 219 */
-/*!******************************!*\
-  !*** ./~/process/browser.js ***!
-  \******************************/
-/***/ function(module, exports) {
-
-	// shim for using process in browser
-	
-	var process = module.exports = {};
-	var queue = [];
-	var draining = false;
-	var currentQueue;
-	var queueIndex = -1;
-	
-	function cleanUpNextTick() {
-	    if (!draining || !currentQueue) {
-	        return;
-	    }
-	    draining = false;
-	    if (currentQueue.length) {
-	        queue = currentQueue.concat(queue);
-	    } else {
-	        queueIndex = -1;
-	    }
-	    if (queue.length) {
-	        drainQueue();
-	    }
-	}
-	
-	function drainQueue() {
-	    if (draining) {
-	        return;
-	    }
-	    var timeout = setTimeout(cleanUpNextTick);
-	    draining = true;
-	
-	    var len = queue.length;
-	    while(len) {
-	        currentQueue = queue;
-	        queue = [];
-	        while (++queueIndex < len) {
-	            if (currentQueue) {
-	                currentQueue[queueIndex].run();
-	            }
-	        }
-	        queueIndex = -1;
-	        len = queue.length;
-	    }
-	    currentQueue = null;
-	    draining = false;
-	    clearTimeout(timeout);
-	}
-	
-	process.nextTick = function (fun) {
-	    var args = new Array(arguments.length - 1);
-	    if (arguments.length > 1) {
-	        for (var i = 1; i < arguments.length; i++) {
-	            args[i - 1] = arguments[i];
-	        }
-	    }
-	    queue.push(new Item(fun, args));
-	    if (queue.length === 1 && !draining) {
-	        setTimeout(drainQueue, 0);
-	    }
-	};
-	
-	// v8 likes predictible objects
-	function Item(fun, array) {
-	    this.fun = fun;
-	    this.array = array;
-	}
-	Item.prototype.run = function () {
-	    this.fun.apply(null, this.array);
-	};
-	process.title = 'browser';
-	process.browser = true;
-	process.env = {};
-	process.argv = [];
-	process.version = ''; // empty string to avoid regexp issues
-	process.versions = {};
-	
-	function noop() {}
-	
-	process.on = noop;
-	process.addListener = noop;
-	process.once = noop;
-	process.off = noop;
-	process.removeListener = noop;
-	process.removeAllListeners = noop;
-	process.emit = noop;
-	
-	process.binding = function (name) {
-	    throw new Error('process.binding is not supported');
-	};
-	
-	process.cwd = function () { return '/' };
-	process.chdir = function (dir) {
-	    throw new Error('process.chdir is not supported');
-	};
-	process.umask = function() { return 0; };
-
-
-/***/ },
-/* 220 */
-/*!*****************************************************!*\
-  !*** ./~/babel-runtime/helpers/asyncToGenerator.js ***!
-  \*****************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	exports.__esModule = true;
-	
-	var _promise = __webpack_require__(/*! ../core-js/promise */ 221);
-	
-	var _promise2 = _interopRequireDefault(_promise);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	exports.default = function (fn) {
-	  return function () {
-	    var gen = fn.apply(this, arguments);
-	    return new _promise2.default(function (resolve, reject) {
-	      function step(key, arg) {
-	        try {
-	          var info = gen[key](arg);
-	          var value = info.value;
-	        } catch (error) {
-	          reject(error);
-	          return;
-	        }
-	
-	        if (info.done) {
-	          resolve(value);
-	        } else {
-	          return _promise2.default.resolve(value).then(function (value) {
-	            return step("next", value);
-	          }, function (err) {
-	            return step("throw", err);
-	          });
-	        }
-	      }
-	
-	      return step("next");
-	    });
-	  };
-	};
-
-/***/ },
-/* 221 */
-/*!********************************************!*\
-  !*** ./~/babel-runtime/core-js/promise.js ***!
-  \********************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/promise */ 222), __esModule: true };
-
-/***/ },
-/* 222 */
-/*!*********************************************************!*\
-  !*** ./~/babel-runtime/~/core-js/library/fn/promise.js ***!
-  \*********************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	__webpack_require__(/*! ../modules/es6.object.to-string */ 203);
-	__webpack_require__(/*! ../modules/es6.string.iterator */ 164);
-	__webpack_require__(/*! ../modules/web.dom.iterable */ 118);
-	__webpack_require__(/*! ../modules/es6.promise */ 223);
-	module.exports = __webpack_require__(/*! ../modules/_core */ 131).Promise;
-
-/***/ },
-/* 223 */
-/*!******************************************************************!*\
-  !*** ./~/babel-runtime/~/core-js/library/modules/es6.promise.js ***!
-  \******************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	var LIBRARY            = __webpack_require__(/*! ./_library */ 128)
-	  , global             = __webpack_require__(/*! ./_global */ 130)
-	  , ctx                = __webpack_require__(/*! ./_ctx */ 132)
-	  , classof            = __webpack_require__(/*! ./_classof */ 168)
-	  , $export            = __webpack_require__(/*! ./_export */ 129)
-	  , isObject           = __webpack_require__(/*! ./_is-object */ 137)
-	  , anObject           = __webpack_require__(/*! ./_an-object */ 136)
-	  , aFunction          = __webpack_require__(/*! ./_a-function */ 133)
-	  , anInstance         = __webpack_require__(/*! ./_an-instance */ 224)
-	  , forOf              = __webpack_require__(/*! ./_for-of */ 225)
-	  , setProto           = __webpack_require__(/*! ./_set-proto */ 228).set
-	  , speciesConstructor = __webpack_require__(/*! ./_species-constructor */ 229)
-	  , task               = __webpack_require__(/*! ./_task */ 230).set
-	  , microtask          = __webpack_require__(/*! ./_microtask */ 232)()
-	  , PROMISE            = 'Promise'
-	  , TypeError          = global.TypeError
-	  , process            = global.process
-	  , $Promise           = global[PROMISE]
-	  , process            = global.process
-	  , isNode             = classof(process) == 'process'
-	  , empty              = function(){ /* empty */ }
-	  , Internal, GenericPromiseCapability, Wrapper;
-	
-	var USE_NATIVE = !!function(){
-	  try {
-	    // correct subclassing with @@species support
-	    var promise     = $Promise.resolve(1)
-	      , FakePromise = (promise.constructor = {})[__webpack_require__(/*! ./_wks */ 161)('species')] = function(exec){ exec(empty, empty); };
-	    // unhandled rejections tracking support, NodeJS Promise without it fails @@species test
-	    return (isNode || typeof PromiseRejectionEvent == 'function') && promise.then(empty) instanceof FakePromise;
-	  } catch(e){ /* empty */ }
-	}();
-	
-	// helpers
-	var sameConstructor = function(a, b){
-	  // with library wrapper special case
-	  return a === b || a === $Promise && b === Wrapper;
-	};
-	var isThenable = function(it){
-	  var then;
-	  return isObject(it) && typeof (then = it.then) == 'function' ? then : false;
-	};
-	var newPromiseCapability = function(C){
-	  return sameConstructor($Promise, C)
-	    ? new PromiseCapability(C)
-	    : new GenericPromiseCapability(C);
-	};
-	var PromiseCapability = GenericPromiseCapability = function(C){
-	  var resolve, reject;
-	  this.promise = new C(function($$resolve, $$reject){
-	    if(resolve !== undefined || reject !== undefined)throw TypeError('Bad Promise constructor');
-	    resolve = $$resolve;
-	    reject  = $$reject;
-	  });
-	  this.resolve = aFunction(resolve);
-	  this.reject  = aFunction(reject);
-	};
-	var perform = function(exec){
-	  try {
-	    exec();
-	  } catch(e){
-	    return {error: e};
-	  }
-	};
-	var notify = function(promise, isReject){
-	  if(promise._n)return;
-	  promise._n = true;
-	  var chain = promise._c;
-	  microtask(function(){
-	    var value = promise._v
-	      , ok    = promise._s == 1
-	      , i     = 0;
-	    var run = function(reaction){
-	      var handler = ok ? reaction.ok : reaction.fail
-	        , resolve = reaction.resolve
-	        , reject  = reaction.reject
-	        , domain  = reaction.domain
-	        , result, then;
-	      try {
-	        if(handler){
-	          if(!ok){
-	            if(promise._h == 2)onHandleUnhandled(promise);
-	            promise._h = 1;
-	          }
-	          if(handler === true)result = value;
-	          else {
-	            if(domain)domain.enter();
-	            result = handler(value);
-	            if(domain)domain.exit();
-	          }
-	          if(result === reaction.promise){
-	            reject(TypeError('Promise-chain cycle'));
-	          } else if(then = isThenable(result)){
-	            then.call(result, resolve, reject);
-	          } else resolve(result);
-	        } else reject(value);
-	      } catch(e){
-	        reject(e);
-	      }
-	    };
-	    while(chain.length > i)run(chain[i++]); // variable length - can't use forEach
-	    promise._c = [];
-	    promise._n = false;
-	    if(isReject && !promise._h)onUnhandled(promise);
-	  });
-	};
-	var onUnhandled = function(promise){
-	  task.call(global, function(){
-	    var value = promise._v
-	      , abrupt, handler, console;
-	    if(isUnhandled(promise)){
-	      abrupt = perform(function(){
-	        if(isNode){
-	          process.emit('unhandledRejection', value, promise);
-	        } else if(handler = global.onunhandledrejection){
-	          handler({promise: promise, reason: value});
-	        } else if((console = global.console) && console.error){
-	          console.error('Unhandled promise rejection', value);
-	        }
-	      });
-	      // Browsers should not trigger `rejectionHandled` event if it was handled here, NodeJS - should
-	      promise._h = isNode || isUnhandled(promise) ? 2 : 1;
-	    } promise._a = undefined;
-	    if(abrupt)throw abrupt.error;
-	  });
-	};
-	var isUnhandled = function(promise){
-	  if(promise._h == 1)return false;
-	  var chain = promise._a || promise._c
-	    , i     = 0
-	    , reaction;
-	  while(chain.length > i){
-	    reaction = chain[i++];
-	    if(reaction.fail || !isUnhandled(reaction.promise))return false;
-	  } return true;
-	};
-	var onHandleUnhandled = function(promise){
-	  task.call(global, function(){
-	    var handler;
-	    if(isNode){
-	      process.emit('rejectionHandled', promise);
-	    } else if(handler = global.onrejectionhandled){
-	      handler({promise: promise, reason: promise._v});
-	    }
-	  });
-	};
-	var $reject = function(value){
-	  var promise = this;
-	  if(promise._d)return;
-	  promise._d = true;
-	  promise = promise._w || promise; // unwrap
-	  promise._v = value;
-	  promise._s = 2;
-	  if(!promise._a)promise._a = promise._c.slice();
-	  notify(promise, true);
-	};
-	var $resolve = function(value){
-	  var promise = this
-	    , then;
-	  if(promise._d)return;
-	  promise._d = true;
-	  promise = promise._w || promise; // unwrap
-	  try {
-	    if(promise === value)throw TypeError("Promise can't be resolved itself");
-	    if(then = isThenable(value)){
-	      microtask(function(){
-	        var wrapper = {_w: promise, _d: false}; // wrap
-	        try {
-	          then.call(value, ctx($resolve, wrapper, 1), ctx($reject, wrapper, 1));
-	        } catch(e){
-	          $reject.call(wrapper, e);
-	        }
-	      });
-	    } else {
-	      promise._v = value;
-	      promise._s = 1;
-	      notify(promise, false);
-	    }
-	  } catch(e){
-	    $reject.call({_w: promise, _d: false}, e); // wrap
-	  }
-	};
-	
-	// constructor polyfill
-	if(!USE_NATIVE){
-	  // 25.4.3.1 Promise(executor)
-	  $Promise = function Promise(executor){
-	    anInstance(this, $Promise, PROMISE, '_h');
-	    aFunction(executor);
-	    Internal.call(this);
-	    try {
-	      executor(ctx($resolve, this, 1), ctx($reject, this, 1));
-	    } catch(err){
-	      $reject.call(this, err);
-	    }
-	  };
-	  Internal = function Promise(executor){
-	    this._c = [];             // <- awaiting reactions
-	    this._a = undefined;      // <- checked in isUnhandled reactions
-	    this._s = 0;              // <- state
-	    this._d = false;          // <- done
-	    this._v = undefined;      // <- value
-	    this._h = 0;              // <- rejection state, 0 - default, 1 - handled, 2 - unhandled
-	    this._n = false;          // <- notify
-	  };
-	  Internal.prototype = __webpack_require__(/*! ./_redefine-all */ 233)($Promise.prototype, {
-	    // 25.4.5.3 Promise.prototype.then(onFulfilled, onRejected)
-	    then: function then(onFulfilled, onRejected){
-	      var reaction    = newPromiseCapability(speciesConstructor(this, $Promise));
-	      reaction.ok     = typeof onFulfilled == 'function' ? onFulfilled : true;
-	      reaction.fail   = typeof onRejected == 'function' && onRejected;
-	      reaction.domain = isNode ? process.domain : undefined;
-	      this._c.push(reaction);
-	      if(this._a)this._a.push(reaction);
-	      if(this._s)notify(this, false);
-	      return reaction.promise;
-	    },
-	    // 25.4.5.1 Promise.prototype.catch(onRejected)
-	    'catch': function(onRejected){
-	      return this.then(undefined, onRejected);
-	    }
-	  });
-	  PromiseCapability = function(){
-	    var promise  = new Internal;
-	    this.promise = promise;
-	    this.resolve = ctx($resolve, promise, 1);
-	    this.reject  = ctx($reject, promise, 1);
-	  };
-	}
-	
-	$export($export.G + $export.W + $export.F * !USE_NATIVE, {Promise: $Promise});
-	__webpack_require__(/*! ./_set-to-string-tag */ 160)($Promise, PROMISE);
-	__webpack_require__(/*! ./_set-species */ 234)(PROMISE);
-	Wrapper = __webpack_require__(/*! ./_core */ 131)[PROMISE];
-	
-	// statics
-	$export($export.S + $export.F * !USE_NATIVE, PROMISE, {
-	  // 25.4.4.5 Promise.reject(r)
-	  reject: function reject(r){
-	    var capability = newPromiseCapability(this)
-	      , $$reject   = capability.reject;
-	    $$reject(r);
-	    return capability.promise;
-	  }
-	});
-	$export($export.S + $export.F * (LIBRARY || !USE_NATIVE), PROMISE, {
-	  // 25.4.4.6 Promise.resolve(x)
-	  resolve: function resolve(x){
-	    // instanceof instead of internal slot check because we should fix it without replacement native Promise core
-	    if(x instanceof $Promise && sameConstructor(x.constructor, this))return x;
-	    var capability = newPromiseCapability(this)
-	      , $$resolve  = capability.resolve;
-	    $$resolve(x);
-	    return capability.promise;
-	  }
-	});
-	$export($export.S + $export.F * !(USE_NATIVE && __webpack_require__(/*! ./_iter-detect */ 235)(function(iter){
-	  $Promise.all(iter)['catch'](empty);
-	})), PROMISE, {
-	  // 25.4.4.1 Promise.all(iterable)
-	  all: function all(iterable){
-	    var C          = this
-	      , capability = newPromiseCapability(C)
-	      , resolve    = capability.resolve
-	      , reject     = capability.reject;
-	    var abrupt = perform(function(){
-	      var values    = []
-	        , index     = 0
-	        , remaining = 1;
-	      forOf(iterable, false, function(promise){
-	        var $index        = index++
-	          , alreadyCalled = false;
-	        values.push(undefined);
-	        remaining++;
-	        C.resolve(promise).then(function(value){
-	          if(alreadyCalled)return;
-	          alreadyCalled  = true;
-	          values[$index] = value;
-	          --remaining || resolve(values);
-	        }, reject);
-	      });
-	      --remaining || resolve(values);
-	    });
-	    if(abrupt)reject(abrupt.error);
-	    return capability.promise;
-	  },
-	  // 25.4.4.4 Promise.race(iterable)
-	  race: function race(iterable){
-	    var C          = this
-	      , capability = newPromiseCapability(C)
-	      , reject     = capability.reject;
-	    var abrupt = perform(function(){
-	      forOf(iterable, false, function(promise){
-	        C.resolve(promise).then(capability.resolve, reject);
-	      });
-	    });
-	    if(abrupt)reject(abrupt.error);
-	    return capability.promise;
-	  }
-	});
-
-/***/ },
-/* 224 */
-/*!*******************************************************************!*\
-  !*** ./~/babel-runtime/~/core-js/library/modules/_an-instance.js ***!
-  \*******************************************************************/
-/***/ function(module, exports) {
-
-	module.exports = function(it, Constructor, name, forbiddenField){
-	  if(!(it instanceof Constructor) || (forbiddenField !== undefined && forbiddenField in it)){
-	    throw TypeError(name + ': incorrect invocation!');
-	  } return it;
-	};
-
-/***/ },
-/* 225 */
-/*!**************************************************************!*\
-  !*** ./~/babel-runtime/~/core-js/library/modules/_for-of.js ***!
-  \**************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	var ctx         = __webpack_require__(/*! ./_ctx */ 132)
-	  , call        = __webpack_require__(/*! ./_iter-call */ 226)
-	  , isArrayIter = __webpack_require__(/*! ./_is-array-iter */ 227)
-	  , anObject    = __webpack_require__(/*! ./_an-object */ 136)
-	  , toLength    = __webpack_require__(/*! ./_to-length */ 152)
-	  , getIterFn   = __webpack_require__(/*! ./core.get-iterator-method */ 167)
-	  , BREAK       = {}
-	  , RETURN      = {};
-	var exports = module.exports = function(iterable, entries, fn, that, ITERATOR){
-	  var iterFn = ITERATOR ? function(){ return iterable; } : getIterFn(iterable)
-	    , f      = ctx(fn, that, entries ? 2 : 1)
-	    , index  = 0
-	    , length, step, iterator, result;
-	  if(typeof iterFn != 'function')throw TypeError(iterable + ' is not iterable!');
-	  // fast case for arrays with default iterator
-	  if(isArrayIter(iterFn))for(length = toLength(iterable.length); length > index; index++){
-	    result = entries ? f(anObject(step = iterable[index])[0], step[1]) : f(iterable[index]);
-	    if(result === BREAK || result === RETURN)return result;
-	  } else for(iterator = iterFn.call(iterable); !(step = iterator.next()).done; ){
-	    result = call(iterator, f, step.value, entries);
-	    if(result === BREAK || result === RETURN)return result;
-	  }
-	};
-	exports.BREAK  = BREAK;
-	exports.RETURN = RETURN;
-
-/***/ },
-/* 226 */
-/*!*****************************************************************!*\
-  !*** ./~/babel-runtime/~/core-js/library/modules/_iter-call.js ***!
-  \*****************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	// call something on iterator step with safe closing on error
-	var anObject = __webpack_require__(/*! ./_an-object */ 136);
-	module.exports = function(iterator, fn, value, entries){
-	  try {
-	    return entries ? fn(anObject(value)[0], value[1]) : fn(value);
-	  // 7.4.6 IteratorClose(iterator, completion)
-	  } catch(e){
-	    var ret = iterator['return'];
-	    if(ret !== undefined)anObject(ret.call(iterator));
-	    throw e;
-	  }
-	};
-
-/***/ },
-/* 227 */
-/*!*********************************************************************!*\
-  !*** ./~/babel-runtime/~/core-js/library/modules/_is-array-iter.js ***!
-  \*********************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	// check on default Array iterator
-	var Iterators  = __webpack_require__(/*! ./_iterators */ 122)
-	  , ITERATOR   = __webpack_require__(/*! ./_wks */ 161)('iterator')
-	  , ArrayProto = Array.prototype;
-	
-	module.exports = function(it){
-	  return it !== undefined && (Iterators.Array === it || ArrayProto[ITERATOR] === it);
-	};
-
-/***/ },
-/* 228 */
-/*!*****************************************************************!*\
-  !*** ./~/babel-runtime/~/core-js/library/modules/_set-proto.js ***!
-  \*****************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	// Works with __proto__ only. Old v8 can't work with null proto objects.
-	/* eslint-disable no-proto */
-	var isObject = __webpack_require__(/*! ./_is-object */ 137)
-	  , anObject = __webpack_require__(/*! ./_an-object */ 136);
-	var check = function(O, proto){
-	  anObject(O);
-	  if(!isObject(proto) && proto !== null)throw TypeError(proto + ": can't set as prototype!");
-	};
-	module.exports = {
-	  set: Object.setPrototypeOf || ('__proto__' in {} ? // eslint-disable-line
-	    function(test, buggy, set){
-	      try {
-	        set = __webpack_require__(/*! ./_ctx */ 132)(Function.call, __webpack_require__(/*! ./_object-gopd */ 202).f(Object.prototype, '__proto__').set, 2);
-	        set(test, []);
-	        buggy = !(test instanceof Array);
-	      } catch(e){ buggy = true; }
-	      return function setPrototypeOf(O, proto){
-	        check(O, proto);
-	        if(buggy)O.__proto__ = proto;
-	        else set(O, proto);
-	        return O;
-	      };
-	    }({}, false) : undefined),
-	  check: check
-	};
-
-/***/ },
-/* 229 */
-/*!***************************************************************************!*\
-  !*** ./~/babel-runtime/~/core-js/library/modules/_species-constructor.js ***!
-  \***************************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	// 7.3.20 SpeciesConstructor(O, defaultConstructor)
-	var anObject  = __webpack_require__(/*! ./_an-object */ 136)
-	  , aFunction = __webpack_require__(/*! ./_a-function */ 133)
-	  , SPECIES   = __webpack_require__(/*! ./_wks */ 161)('species');
-	module.exports = function(O, D){
-	  var C = anObject(O).constructor, S;
-	  return C === undefined || (S = anObject(C)[SPECIES]) == undefined ? D : aFunction(S);
-	};
-
-/***/ },
-/* 230 */
-/*!************************************************************!*\
-  !*** ./~/babel-runtime/~/core-js/library/modules/_task.js ***!
-  \************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	var ctx                = __webpack_require__(/*! ./_ctx */ 132)
-	  , invoke             = __webpack_require__(/*! ./_invoke */ 231)
-	  , html               = __webpack_require__(/*! ./_html */ 159)
-	  , cel                = __webpack_require__(/*! ./_dom-create */ 141)
-	  , global             = __webpack_require__(/*! ./_global */ 130)
-	  , process            = global.process
-	  , setTask            = global.setImmediate
-	  , clearTask          = global.clearImmediate
-	  , MessageChannel     = global.MessageChannel
-	  , counter            = 0
-	  , queue              = {}
-	  , ONREADYSTATECHANGE = 'onreadystatechange'
-	  , defer, channel, port;
-	var run = function(){
-	  var id = +this;
-	  if(queue.hasOwnProperty(id)){
-	    var fn = queue[id];
-	    delete queue[id];
-	    fn();
-	  }
-	};
-	var listener = function(event){
-	  run.call(event.data);
-	};
-	// Node.js 0.9+ & IE10+ has setImmediate, otherwise:
-	if(!setTask || !clearTask){
-	  setTask = function setImmediate(fn){
-	    var args = [], i = 1;
-	    while(arguments.length > i)args.push(arguments[i++]);
-	    queue[++counter] = function(){
-	      invoke(typeof fn == 'function' ? fn : Function(fn), args);
-	    };
-	    defer(counter);
-	    return counter;
-	  };
-	  clearTask = function clearImmediate(id){
-	    delete queue[id];
-	  };
-	  // Node.js 0.8-
-	  if(__webpack_require__(/*! ./_cof */ 125)(process) == 'process'){
-	    defer = function(id){
-	      process.nextTick(ctx(run, id, 1));
-	    };
-	  // Browsers with MessageChannel, includes WebWorkers
-	  } else if(MessageChannel){
-	    channel = new MessageChannel;
-	    port    = channel.port2;
-	    channel.port1.onmessage = listener;
-	    defer = ctx(port.postMessage, port, 1);
-	  // Browsers with postMessage, skip WebWorkers
-	  // IE8 has postMessage, but it's sync & typeof its postMessage is 'object'
-	  } else if(global.addEventListener && typeof postMessage == 'function' && !global.importScripts){
-	    defer = function(id){
-	      global.postMessage(id + '', '*');
-	    };
-	    global.addEventListener('message', listener, false);
-	  // IE8-
-	  } else if(ONREADYSTATECHANGE in cel('script')){
-	    defer = function(id){
-	      html.appendChild(cel('script'))[ONREADYSTATECHANGE] = function(){
-	        html.removeChild(this);
-	        run.call(id);
-	      };
-	    };
-	  // Rest old browsers
-	  } else {
-	    defer = function(id){
-	      setTimeout(ctx(run, id, 1), 0);
-	    };
-	  }
-	}
-	module.exports = {
-	  set:   setTask,
-	  clear: clearTask
-	};
-
-/***/ },
-/* 231 */
-/*!**************************************************************!*\
-  !*** ./~/babel-runtime/~/core-js/library/modules/_invoke.js ***!
-  \**************************************************************/
-/***/ function(module, exports) {
-
-	// fast apply, http://jsperf.lnkit.com/fast-apply/5
-	module.exports = function(fn, args, that){
-	  var un = that === undefined;
-	  switch(args.length){
-	    case 0: return un ? fn()
-	                      : fn.call(that);
-	    case 1: return un ? fn(args[0])
-	                      : fn.call(that, args[0]);
-	    case 2: return un ? fn(args[0], args[1])
-	                      : fn.call(that, args[0], args[1]);
-	    case 3: return un ? fn(args[0], args[1], args[2])
-	                      : fn.call(that, args[0], args[1], args[2]);
-	    case 4: return un ? fn(args[0], args[1], args[2], args[3])
-	                      : fn.call(that, args[0], args[1], args[2], args[3]);
-	  } return              fn.apply(that, args);
-	};
-
-/***/ },
-/* 232 */
-/*!*****************************************************************!*\
-  !*** ./~/babel-runtime/~/core-js/library/modules/_microtask.js ***!
-  \*****************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	var global    = __webpack_require__(/*! ./_global */ 130)
-	  , macrotask = __webpack_require__(/*! ./_task */ 230).set
-	  , Observer  = global.MutationObserver || global.WebKitMutationObserver
-	  , process   = global.process
-	  , Promise   = global.Promise
-	  , isNode    = __webpack_require__(/*! ./_cof */ 125)(process) == 'process';
-	
-	module.exports = function(){
-	  var head, last, notify;
-	
-	  var flush = function(){
-	    var parent, fn;
-	    if(isNode && (parent = process.domain))parent.exit();
-	    while(head){
-	      fn   = head.fn;
-	      head = head.next;
-	      try {
-	        fn();
-	      } catch(e){
-	        if(head)notify();
-	        else last = undefined;
-	        throw e;
-	      }
-	    } last = undefined;
-	    if(parent)parent.enter();
-	  };
-	
-	  // Node.js
-	  if(isNode){
-	    notify = function(){
-	      process.nextTick(flush);
-	    };
-	  // browsers with MutationObserver
-	  } else if(Observer){
-	    var toggle = true
-	      , node   = document.createTextNode('');
-	    new Observer(flush).observe(node, {characterData: true}); // eslint-disable-line no-new
-	    notify = function(){
-	      node.data = toggle = !toggle;
-	    };
-	  // environments with maybe non-completely correct, but existent Promise
-	  } else if(Promise && Promise.resolve){
-	    var promise = Promise.resolve();
-	    notify = function(){
-	      promise.then(flush);
-	    };
-	  // for other environments - macrotask based on:
-	  // - setImmediate
-	  // - MessageChannel
-	  // - window.postMessag
-	  // - onreadystatechange
-	  // - setTimeout
-	  } else {
-	    notify = function(){
-	      // strange IE + webpack dev server bug - use .call(global)
-	      macrotask.call(global, flush);
-	    };
-	  }
-	
-	  return function(fn){
-	    var task = {fn: fn, next: undefined};
-	    if(last)last.next = task;
-	    if(!head){
-	      head = task;
-	      notify();
-	    } last = task;
-	  };
-	};
-
-/***/ },
-/* 233 */
-/*!********************************************************************!*\
-  !*** ./~/babel-runtime/~/core-js/library/modules/_redefine-all.js ***!
-  \********************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	var hide = __webpack_require__(/*! ./_hide */ 134);
-	module.exports = function(target, src, safe){
-	  for(var key in src){
-	    if(safe && target[key])target[key] = src[key];
-	    else hide(target, key, src[key]);
-	  } return target;
-	};
-
-/***/ },
-/* 234 */
-/*!*******************************************************************!*\
-  !*** ./~/babel-runtime/~/core-js/library/modules/_set-species.js ***!
-  \*******************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	var global      = __webpack_require__(/*! ./_global */ 130)
-	  , core        = __webpack_require__(/*! ./_core */ 131)
-	  , dP          = __webpack_require__(/*! ./_object-dp */ 135)
-	  , DESCRIPTORS = __webpack_require__(/*! ./_descriptors */ 139)
-	  , SPECIES     = __webpack_require__(/*! ./_wks */ 161)('species');
-	
-	module.exports = function(KEY){
-	  var C = typeof core[KEY] == 'function' ? core[KEY] : global[KEY];
-	  if(DESCRIPTORS && C && !C[SPECIES])dP.f(C, SPECIES, {
-	    configurable: true,
-	    get: function(){ return this; }
-	  });
-	};
-
-/***/ },
-/* 235 */
-/*!*******************************************************************!*\
-  !*** ./~/babel-runtime/~/core-js/library/modules/_iter-detect.js ***!
-  \*******************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	var ITERATOR     = __webpack_require__(/*! ./_wks */ 161)('iterator')
-	  , SAFE_CLOSING = false;
-	
-	try {
-	  var riter = [7][ITERATOR]();
-	  riter['return'] = function(){ SAFE_CLOSING = true; };
-	  Array.from(riter, function(){ throw 2; });
-	} catch(e){ /* empty */ }
-	
-	module.exports = function(exec, skipClosing){
-	  if(!skipClosing && !SAFE_CLOSING)return false;
-	  var safe = false;
-	  try {
-	    var arr  = [7]
-	      , iter = arr[ITERATOR]();
-	    iter.next = function(){ return {done: safe = true}; };
-	    arr[ITERATOR] = function(){ return iter; };
-	    exec(arr);
-	  } catch(e){ /* empty */ }
-	  return safe;
-	};
-
-/***/ },
-/* 236 */
-/*!***************************************************************!*\
-  !*** ./beeline-admin/directives/tripsEditor/tripsEditor.html ***!
-  \***************************************************************/
-/***/ function(module, exports) {
-
-	module.exports = "\n<section class=\"filter\">\n  <label>\n    Start Date:\n    <button class=\"glyphicon glyphicon-calendar\"\n      ng-click=\"filter.$startDatePopupIsOpen = !filter.$startDatePopupIsOpen\">\n    </button>\n    <input type=\"text\" uib-datepicker-popup=\"dd-MMM-yyyy\"\n      ng-model=\"filter.startDate\"\n      is-open=\"filter.$startDatePopupIsOpen\">\n  </label>\n  <label ng-if=\"false\">\n    End Date:\n    <button class=\"glyphicon glyphicon-calendar\"\n      ng-click=\"filter.$startDatePopupIsOpen = !filter.$startDatePopupIsOpen\">\n    </button>\n    <input type=\"text\" uib-datepicker-popup=\"dd-MMM-yyyy\"\n      ng-model=\"filter.endDate\">\n  </label>\n</section>\n\n<section class=\"add-trips\">\n  <h2>Add Trips</h2>\n  <div class=\"add-trips-components flex-row\">\n    <beeline-datepicker\n      ng-if=\"!disp.trip.id\"\n      class=\"flex-shrink\"\n      dates=\"disp.newDates\"\n      booked-dates=\"disp.existingDates\"\n      valid-dates=\"disp.validDates\"\n      show-legend=\"false\"\n      start-date=\"filter.startDate\"\n    >\n    </beeline-datepicker>\n    <div class=\"flex-shrink overflow-scroll selected-dates\"\n      ng-if=\"!disp.trip.id\"\n    >\n      <h3>{{disp.newDates.length}} dates selected</h3>\n      <ul>\n        <li ng-repeat=\"date in disp.newDates | orderBy:date.getTime() track by $index\">\n          {{date | date:'dd-MMM-yy (EEE)':'UTC'}}\n        </li>\n      </ul>\n    </div>\n\n    <div class=\"flex-grow overflow-scroll\">\n      <h3 ng-if=\"!disp.trip.id\">Stops</h3>\n      <!-- <h3 ng-if=\"disp.trip\">Editing trip on {{disp.trip.date | date:'dd-MMM-yy':'UTC'}}</h3> -->\n\n      <h3 ng-if=\"disp.trip.id\">Editing trip on\n        <ng-repeat ng-repeat=\"(key, value) in selection.selected\">\n          {{value.date | date:'dd MMM yy'}},\n        </ng-repeat>\n      </h3>\n\n      <label>\n        Telephone number of driver: +65 <input type=\"tel\" ng-model=\"disp.trip.driverTelephone\" />\n\n        <span ng-if=\"disp.trip.driverName\">\n          ~{{disp.driver.name}}\n        </span>\n      </label>\n\n      <label>\n        Trip capacity: <input type=\"number\" ng-model=\"disp.trip.capacity\" />\n      </label>\n\n      <label>\n        Trip price: <input type=\"number\" step=\"0.01\" ng-model=\"disp.trip.price\" />\n      </label>\n\n      <label ng-if=\"adminService.session().role == 'superadmin'\">\n        Company:\n        <company-selector ng-model=\"disp.trip.transportCompanyId\">\n        </company-selector>\n      </label>\n\n      <table>\n        <thead>\n          <tr>\n            <th>Time</th>\n            <th>Stop</th>\n          </tr>\n        </thead>\n        <tbody>\n          <tr ng-repeat=\"tripStop in disp.trip.tripStops\">\n            <td>\n              <uib-timepicker ng-model=\"tripStop.time\"\n              show-spinners=\"false\" show-meridian=\"false\">\n              </uib-timepicker>\n            </td>\n            <td>\n              <!-- <input type=\"text\" ng-model=\"tripStop.stopId\"> -->\n              <stop-selector\n                ng-model=\"tripStop.stopId\"\n              ></stop-selector>\n              <button ng-click=\"showPopupFor(tripStop)\">\n                ?\n              </button>\n            </td>\n            <td>\n              <label>\n                <input type=\"checkbox\" ng-model=\"tripStop.canBoard\" />\n                Boarding\n              </label>\n            </td>\n            <td>\n              <label>\n                <input type=\"checkbox\" ng-model=\"tripStop.canAlight\" />\n                Alighting\n              </label>\n            </td>\n            <td>\n              <button class=\"btn btn-default glyphicon glyphicon-trash\"\n                ng-click=\"disp.deleteTripStop($index)\"\n              ></button>\n            </td>\n          </tr>\n        </tbody>\n        <tfoot>\n          <tr>\n            <td>\n              <button class=\"btn btn-default glyphicon glyphicon-plus\"\n                ng-click=\"disp.addTripStop()\"\n              ></button>\n            </td>\n          </tr>\n        </tfoot>\n      </table>\n    </div>\n  </div>\n\n  <span class=\"btn-group\">\n    <button class=\"btn btn-primary\" ng-click=\"saveTrips()\"\n      >\n      Save\n    </button>\n    <button class=\"btn btn-default\" ng-click=\"clearEdit()\"\n      ng-if=\"disp.trip\">\n      Clear\n    </button>\n  </span>\n</section>\n\n<div>\n  <table class=\"table table-striped\">\n    <thead>\n      <tr>\n        <th></th> <!-- selection button -->\n        <th></th> <!-- actions (delete, use) -->\n        <th></th> <!-- pax -->\n        <th></th> <!-- booked -->\n        <th></th> <!-- price -->\n        <th></th> <!--date -->\n        <th></th> <!-- driver -->\n        <th colspan=\"{{disp.stopsList.length}}\">Stops</th>\n      </tr>\n      <tr>\n        <th></th>\n        <th></th>\n        <th>Cap</th>\n        <th>Booked</th>\n        <th>Price</th>\n        <th>Date</th>\n        <th>Driver</th>\n        <th ng-repeat=\"stop in disp.stopsList track by $index\"\n            title=\"{{stop.stop.description}}\">\n          {{stop.stop.label}} /\n          {{stop.stop.postcode}}\n        </th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr ng-repeat=\"trip in (sorted_trips = trips | orderBy:'date') track by trip.id\"\n        class=\"{\n          active: selection.selected[trip.id]\n        }\"\n      >\n        <td\n          ng-mousedown=\"selectTrips(sorted_trips, $index, $event)\"\n          >\n          <small>{{trip.id}}</small>\n          <i ng-hide=\"!selection.selected[trip.id]\"\n            class=\"glyphicon glyphicon-ok\">\n          </i>\n        </td>\n        <td>\n          <span class=\"btn-group\">\n            <button class=\"btn btn-default glyphicon glyphicon-copy\"\n              ng-click='referenceTrip(trip)'\n            >\n            </button>\n            <button class=\"btn btn-default glyphicon glyphicon-trash\"\n              ng-click='deleteTrip(trip)'\n            >\n            </button>\n          </span>\n        </td>\n        <td>\n          {{trip.capacity}}\n          <i class=\"glyphicon glyphicon-user\"></i>\n        </td>\n        <td>\n          <a ui-sref=\"bookings({tripId: trip.id})\">\n            {{trip.availability.seatsBooked}}\n            <i class=\"glyphicon glyphicon-user\"></i>\n          </a>\n        </td>\n        <td>\n          {{trip.price | number:2}}\n        </td>\n        <td>\n          {{trip.date | date:'dd/MM/yy EEE'}}\n        </td>\n        <td>\n          {{trip.driverTelephone }}\n        </td>\n        <td ng-repeat=\"stop in disp.stopsList\">\n          {{ findStop(trip, stop.stop.id).time | date:'HH:mm'}}\n        </td>\n      </tr>\n    </tbody>\n  </table>\n</div>\n";
-
-/***/ },
-/* 237 */
-/*!*********************************************************************!*\
-  !*** ./beeline-admin/directives/companySelector/companySelector.js ***!
-  \*********************************************************************/
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	exports.default = function ($http, AdminService) {
-	  return {
-	    template: '\n<select\n    ng-model="selectedCompany"\n    ng-options="company.name for company in companies | orderBy:company.name track by company.id"\n    >\n</select>\n    ',
-	    scope: {
-	      ngModel: '='
-	    },
-	    link: function link(scope, elem, attr) {
-	      scope.companies = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }, { id: 7 }];
-	      scope.selectedCompany = null;
-	
-	      // Some bug in ngSelect??
-	      scope.$watch('selectedCompany', function () {
-	        if (scope.selectedCompany) {
-	          scope.ngModel = scope.selectedCompany.id;
-	        } else {
-	          scope.ngModel = null;
-	        }
-	      });
-	      scope.$watch('ngModel', function () {
-	        scope.selectedCompany = scope.companies.find(function (x) {
-	          return x.id == scope.ngModel;
-	        });
-	      });
-	
-	      AdminService.beeline({
-	        method: 'GET',
-	        url: '/companies'
-	      }).then(function (response) {
-	        return scope.companies = response.data;
-	      });
-	    }
-	  };
-	};
-
-/***/ },
-/* 238 */
-/*!***************************************************************!*\
-  !*** ./beeline-admin/directives/tripSelector/tripSelector.js ***!
-  \***************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _getIterator2 = __webpack_require__(/*! babel-runtime/core-js/get-iterator */ 116);
-	
-	var _getIterator3 = _interopRequireDefault(_getIterator2);
-	
-	exports.default = function (AdminService, RoutesService, $rootScope, LoadingSpinner) {
-	  return {
-	    template: __webpack_require__(/*! ./tripSelector.html */ 239),
-	    scope: {
-	      tripId: '=',
-	      alightStopId: '<?',
-	      boardStopId: '<?',
-	      routeId: '=?',
-	      trips: '=?',
-	      reason: '='
-	    },
-	    link: function link(scope, elem, attr) {
-	      var todayUTC = new Date();
-	      todayUTC = new Date(Date.UTC(todayUTC.getFullYear(), todayUTC.getMonth(), todayUTC.getDate()));
-	
-	      // The options for the select
-	      scope.info = {
-	        routes: [],
-	        tripDates: [],
-	        trips: [],
-	        tripStops: [],
-	        trip: null
-	      };
-	      scope.query = {
-	        tripDate: todayUTC
-	      };
-	      scope.disp = {
-	        datepicker: {
-	          highlightDays: [],
-	          daysAllowed: []
-	        },
-	        popupOpen: false
-	      };
-	      scope.data = {
-	        routeId: scope.routeId,
-	        selectedDates: [],
-	        trips: []
-	      };
-	
-	      // Get routes
-	      scope.displayRoute = function (route) {
-	        return route.label + ': ' + route.from + ' -- ' + route.to;
-	      };
-	      var routesPromise = RoutesService.getRoutes({
-	        includeTrips: false,
-	        startDate: Date.now()
-	      }).then(function (routes) {
-	        scope.info.routes = routes;
-	      });
-	      LoadingSpinner.watchPromise(routesPromise);
-	
-	      // Get trip dates
-	      scope.$watch('data.routeId', function (routeId) {
-	        if (!routeId) {
-	          return null;
-	        }
-	
-	        scope.info.tripDates = [];
-	        scope.info.trips = [];
-	
-	        var today = new Date();
-	        today.setHours(0, 0, 0);
-	
-	        RoutesService.getRoute(routeId, {
-	          includeTrips: true,
-	          includeAvailability: true,
-	          startDate: today.getTime()
-	        }).then(function (route) {
-	          scope.info.trips = route.trips;
-	
-	          scope.disp.datepicker.daysAllowed = route.trips.map(function (trip) {
-	            return new Date(trip.date.getFullYear(), trip.date.getMonth(), trip.date.getDate());
-	          });
-	          scope.disp.datepicker.highlightDays = route.trips.map(function (trip) {
-	            return {
-	              date: new Date(trip.date.getFullYear(), trip.date.getMonth(), trip.date.getDate()),
-	              selectable: true,
-	              annotation: '' + trip.availability.seatsAvailable
-	            };
-	          });
-	        });
-	      });
-	
-	      // Get stops
-	      scope.$watch('data.selectedDates', function (selectedDates) {
-	        if (!selectedDates || selectedDates.length === 0) {
-	          scope.data.trips = [];
-	          scope.info.tripStops = null;
-	          return;
-	        }
-	
-	        // Find the initial set of stops
-	        var offset = new Date().getTimezoneOffset() * 60000;
-	        var initialSubset = scope.info.trips.find(function (tr) {
-	          return moment(tr.date).valueOf() + offset === selectedDates[0].valueOf();
-	        });
-	        (0, _assert2.default)(initialSubset);
-	
-	        initialSubset = initialSubset.tripStops;
-	
-	        // For each day, reduce the subset to the intersection
-	        scope.data.trips = [];
-	        var _iteratorNormalCompletion = true;
-	        var _didIteratorError = false;
-	        var _iteratorError = undefined;
-	
-	        try {
-	          var _loop = function _loop() {
-	            var day = _step.value;
-	
-	            var trip = scope.info.trips.find(function (tr) {
-	              return moment(tr.date).valueOf() + offset == day.valueOf();
-	            });
-	            var stopsSet = trip.tripStops;
-	
-	            // Stops must match by id and time
-	            initialSubset = _.intersectionBy(initialSubset, function (ts) {
-	              return ts.stop.id + ';' + ts.time.getHours() + ';' + ts.time.getMinutes();
-	            });
-	            // push to list of trips
-	            scope.data.trips.push(trip);
-	          };
-	
-	          for (var _iterator = (0, _getIterator3.default)(selectedDates), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	            _loop();
-	          }
-	        } catch (err) {
-	          _didIteratorError = true;
-	          _iteratorError = err;
-	        } finally {
-	          try {
-	            if (!_iteratorNormalCompletion && _iterator.return) {
-	              _iterator.return();
-	            }
-	          } finally {
-	            if (_didIteratorError) {
-	              throw _iteratorError;
-	            }
-	          }
-	        }
-	
-	        scope.data.trips = _.sortBy(scope.data.trips, function (t) {
-	          return t.date;
-	        });
-	        scope.info.tripStops = initialSubset;
-	
-	        // Update boardStop / alightStop
-	        if (scope.boardStopId) {
-	          scope.boardStop = scope.info.tripStops.find(function (ts) {
-	            return ts.stopId === scope.boardStopId;
-	          });
-	        }
-	        if (scope.alightStopId) {
-	          scope.alightStop = scope.info.tripStops.find(function (ts) {
-	            return ts.stopId === scope.alightStopId;
-	          });
-	        }
-	      }, true);
-	
-	      scope.$watchGroup(['boardStop', 'alightStop', 'data.trips'], function () {
-	        if (scope.boardStop) {
-	          scope.boardStopId = scope.boardStop.stopId;
-	        }
-	        if (scope.alightStop) {
-	          scope.alightStopId = scope.alightStop.stopId;
-	        }
-	
-	        // update scope.trips
-	        scope.trips = scope.data.trips.map(function (trip) {
-	          return {
-	            tripId: trip.id,
-	            boardStopId: scope.boardStop ? trip.tripStops.find(function (ts) {
-	              return ts.stopId === scope.boardStop.stopId;
-	            }).id : null,
-	            alightStopId: scope.alightStop ? trip.tripStops.find(function (ts) {
-	              return ts.stopId === scope.alightStop.stopId;
-	            }).id : null
-	          };
-	        });
-	      });
-	
-	      scope.removeTrip = function (date) {
-	        var offset = new Date().getTimezoneOffset() * 60000;
-	        var matchingIndex = scope.data.selectedDates.findIndex(function (dt) {
-	          return dt.valueOf() === date.valueOf() + offset;
-	        });
-	
-	        scope.data.selectedDates.splice(matchingIndex, 1);
-	      };
-	
-	      // Get the board stops / alight stops
-	      function formatTime(tm) {
-	        var dt = new Date(tm);
-	        return dt.getHours() + ':' + (0, _leftPad2.default)(dt.getMinutes(), 2, '0');
-	      }
-	      scope.isBoardStop = function (ts) {
-	        return ts.canBoard;
-	      };
-	      scope.isAlightStop = function (ts) {
-	        return ts.canAlight;
-	      };
-	      scope.displayStop = function (ts) {
-	        return formatTime(ts.time) + ': ' + ts.stop.description;
-	      };
-	    }
-	  };
-	};
-	
-	var _assert = __webpack_require__(/*! assert */ 240);
-	
-	var _assert2 = _interopRequireDefault(_assert);
-	
-	var _leftPad = __webpack_require__(/*! left-pad */ 249);
-	
-	var _leftPad2 = _interopRequireDefault(_leftPad);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/***/ },
-/* 239 */
-/*!*****************************************************************!*\
-  !*** ./beeline-admin/directives/tripSelector/tripSelector.html ***!
-  \*****************************************************************/
-/***/ function(module, exports) {
-
-	module.exports = "<div class=\"trip-selector form-inline\">\n  <div class=\"date-picker\">\n    <h3>Dates (Seats available)</h3>\n\n    <multiple-date-picker\n      days-allowed=\"disp.datepicker.daysAllowed\"\n      highlight-days=\"disp.datepicker.highlightDays\"\n      ng-model=\"data.selectedDates\">\n    </multiple-date-picker>\n  </div>\n\n  <div>\n    <label>\n      Route\n    </label>\n    <select ng-options=\"route.id as displayRoute(route) for route in info.routes | orderBy:'label'\"\n            ng-model=\"data.routeId\"\n            class=\"form-control form-inline\">\n    </select>\n  </div>\n\n  <label>\n    Boarding Stop\n    <select ng-options=\"tripStop as displayStop(tripStop) for tripStop in info.tripStops | filter:isBoardStop\"\n      ng-model=\"boardStop\" class=\"form-control\"\n    >\n    </select>\n  </label>\n\n  <label>\n    Alighting Stop\n    <select ng-options=\"tripStop as displayStop(tripStop) for tripStop in info.tripStops | filter:isAlightStop\"\n      ng-model=\"alightStop\" class=\"form-control\"\n    >\n    </select>\n  </label>\n\n  <div>\n    <label>\n      Reason\n      <textarea class=\"form-control\" ng-model=\"reason\">e.g. Bus did not turn up</textarea>\n    </label>\n  </div>\n\n  <div>\n    Selected Trips:\n    <ul class=\"selected-dates\">\n      <li ng-repeat=\"trip in data.trips\">\n        {{trip.date | date:'dd MMM yyyy'}}\n        <button ng-click=\"removeTrip(trip.date)\"\n          class=\"btn btn-danger\">\n          (remove)\n        </button>\n      </li>\n    </ul>\n\n  </div>\n  <!-- <dl>\n    <dt>Trip ID</dt>\n    <dd>{{tripId}}</dd>\n\n    <dt>Board Stop ID</dt>\n    <dd>{{boardStopId}}</dd>\n\n    <dt>Alight Stop ID</dt>\n    <dd>{{alightStopId}}</dd>\n  </dl> -->\n  <br clear=\"both\" />\n</div>\n";
-
-/***/ },
-/* 240 */
 /*!****************************!*\
   !*** ./~/assert/assert.js ***!
   \****************************/
@@ -108954,9 +106738,9 @@
 	  }
 	  return 0;
 	}
-	var util = __webpack_require__(/*! util/ */ 241);
-	var Buffer = __webpack_require__(/*! buffer */ 244).Buffer;
-	var BufferShim = __webpack_require__(/*! buffer-shims */ 248);
+	var util = __webpack_require__(/*! util/ */ 216);
+	var Buffer = __webpack_require__(/*! buffer */ 220).Buffer;
+	var BufferShim = __webpack_require__(/*! buffer-shims */ 224);
 	var hasOwn = Object.prototype.hasOwnProperty;
 	var pSlice = Array.prototype.slice;
 	var functionsHaveNames = (function () {
@@ -109377,7 +107161,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 241 */
+/* 216 */
 /*!************************!*\
   !*** ./~/util/util.js ***!
   \************************/
@@ -109908,7 +107692,7 @@
 	}
 	exports.isPrimitive = isPrimitive;
 	
-	exports.isBuffer = __webpack_require__(/*! ./support/isBuffer */ 242);
+	exports.isBuffer = __webpack_require__(/*! ./support/isBuffer */ 218);
 	
 	function objectToString(o) {
 	  return Object.prototype.toString.call(o);
@@ -109952,7 +107736,7 @@
 	 *     prototype.
 	 * @param {function} superCtor Constructor function to inherit prototype from.
 	 */
-	exports.inherits = __webpack_require__(/*! inherits */ 243);
+	exports.inherits = __webpack_require__(/*! inherits */ 219);
 	
 	exports._extend = function(origin, add) {
 	  // Don't do anything if add isn't an object
@@ -109970,10 +107754,113 @@
 	  return Object.prototype.hasOwnProperty.call(obj, prop);
 	}
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(/*! ./~/process/browser.js */ 219)))
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(/*! ./~/process/browser.js */ 217)))
 
 /***/ },
-/* 242 */
+/* 217 */
+/*!******************************!*\
+  !*** ./~/process/browser.js ***!
+  \******************************/
+/***/ function(module, exports) {
+
+	// shim for using process in browser
+	
+	var process = module.exports = {};
+	var queue = [];
+	var draining = false;
+	var currentQueue;
+	var queueIndex = -1;
+	
+	function cleanUpNextTick() {
+	    if (!draining || !currentQueue) {
+	        return;
+	    }
+	    draining = false;
+	    if (currentQueue.length) {
+	        queue = currentQueue.concat(queue);
+	    } else {
+	        queueIndex = -1;
+	    }
+	    if (queue.length) {
+	        drainQueue();
+	    }
+	}
+	
+	function drainQueue() {
+	    if (draining) {
+	        return;
+	    }
+	    var timeout = setTimeout(cleanUpNextTick);
+	    draining = true;
+	
+	    var len = queue.length;
+	    while(len) {
+	        currentQueue = queue;
+	        queue = [];
+	        while (++queueIndex < len) {
+	            if (currentQueue) {
+	                currentQueue[queueIndex].run();
+	            }
+	        }
+	        queueIndex = -1;
+	        len = queue.length;
+	    }
+	    currentQueue = null;
+	    draining = false;
+	    clearTimeout(timeout);
+	}
+	
+	process.nextTick = function (fun) {
+	    var args = new Array(arguments.length - 1);
+	    if (arguments.length > 1) {
+	        for (var i = 1; i < arguments.length; i++) {
+	            args[i - 1] = arguments[i];
+	        }
+	    }
+	    queue.push(new Item(fun, args));
+	    if (queue.length === 1 && !draining) {
+	        setTimeout(drainQueue, 0);
+	    }
+	};
+	
+	// v8 likes predictible objects
+	function Item(fun, array) {
+	    this.fun = fun;
+	    this.array = array;
+	}
+	Item.prototype.run = function () {
+	    this.fun.apply(null, this.array);
+	};
+	process.title = 'browser';
+	process.browser = true;
+	process.env = {};
+	process.argv = [];
+	process.version = ''; // empty string to avoid regexp issues
+	process.versions = {};
+	
+	function noop() {}
+	
+	process.on = noop;
+	process.addListener = noop;
+	process.once = noop;
+	process.off = noop;
+	process.removeListener = noop;
+	process.removeAllListeners = noop;
+	process.emit = noop;
+	
+	process.binding = function (name) {
+	    throw new Error('process.binding is not supported');
+	};
+	
+	process.cwd = function () { return '/' };
+	process.chdir = function (dir) {
+	    throw new Error('process.chdir is not supported');
+	};
+	process.umask = function() { return 0; };
+
+
+/***/ },
+/* 218 */
 /*!*******************************************!*\
   !*** ./~/util/support/isBufferBrowser.js ***!
   \*******************************************/
@@ -109987,7 +107874,7 @@
 	}
 
 /***/ },
-/* 243 */
+/* 219 */
 /*!****************************************!*\
   !*** ./~/inherits/inherits_browser.js ***!
   \****************************************/
@@ -110019,7 +107906,7 @@
 
 
 /***/ },
-/* 244 */
+/* 220 */
 /*!***************************!*\
   !*** ./~/buffer/index.js ***!
   \***************************/
@@ -110035,9 +107922,9 @@
 	
 	'use strict'
 	
-	var base64 = __webpack_require__(/*! base64-js */ 245)
-	var ieee754 = __webpack_require__(/*! ieee754 */ 246)
-	var isArray = __webpack_require__(/*! isarray */ 247)
+	var base64 = __webpack_require__(/*! base64-js */ 221)
+	var ieee754 = __webpack_require__(/*! ieee754 */ 222)
+	var isArray = __webpack_require__(/*! isarray */ 223)
 	
 	exports.Buffer = Buffer
 	exports.SlowBuffer = SlowBuffer
@@ -111574,10 +109461,10 @@
 	  return i
 	}
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 244).Buffer, (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 220).Buffer, (function() { return this; }())))
 
 /***/ },
-/* 245 */
+/* 221 */
 /*!********************************!*\
   !*** ./~/base64-js/lib/b64.js ***!
   \********************************/
@@ -111710,7 +109597,7 @@
 
 
 /***/ },
-/* 246 */
+/* 222 */
 /*!****************************!*\
   !*** ./~/ieee754/index.js ***!
   \****************************/
@@ -111803,7 +109690,7 @@
 
 
 /***/ },
-/* 247 */
+/* 223 */
 /*!****************************!*\
   !*** ./~/isarray/index.js ***!
   \****************************/
@@ -111817,7 +109704,7 @@
 
 
 /***/ },
-/* 248 */
+/* 224 */
 /*!*********************************!*\
   !*** ./~/buffer-shims/index.js ***!
   \*********************************/
@@ -111825,7 +109712,7 @@
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
 	
-	var buffer = __webpack_require__(/*! buffer */ 244);
+	var buffer = __webpack_require__(/*! buffer */ 220);
 	var Buffer = buffer.Buffer;
 	var SlowBuffer = buffer.SlowBuffer;
 	var MAX_LEN = buffer.kMaxLength || 2147483647;
@@ -111935,7 +109822,2237 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
+/* 225 */
+/*!***********************************************************!*\
+  !*** ./beeline-admin/directives/pathEditor/pathEditor.js ***!
+  \***********************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	exports.default = function ($rootScope, $location, uiGmapGoogleMapApi, $q) {
+	  return {
+	    template: __webpack_require__(/*! ./pathEditor.html */ 226),
+	    scope: {
+	      path: '=',
+	      tripStops: '='
+	    },
+	    link: function link(scope, elem, attr) {
+	      scope.newPath = '';
+	      uiGmapGoogleMapApi.then(function (googleMaps) {
+	        var SINGAPORE = new googleMaps.LatLng(1.352083, 103.819836);
+	        var map = new googleMaps.Map(document.querySelector('.map-container'), {
+	          zoom: 11,
+	          center: SINGAPORE
+	        });
+	
+	        var mapPath = new googleMaps.Polyline({
+	          strokeColor: '#FF0000',
+	          strokeWeight: 3
+	        });
+	
+	        scope.$on('mapLoaded', function () {
+	          googleMaps.event.trigger(map, 'resize');
+	        });
+	
+	        scope.$watch('path', function (path) {
+	          if (!path) return;
+	          mapPath.setMap(map);
+	          if (typeof path === 'string') {
+	            mapPath.setPath(googleMaps.geometry.encoding.decodePath(path));
+	          } else {
+	            mapPath.setPath(path);
+	          }
+	        });
+	
+	        var markers = [];
+	
+	        scope.$watch('tripStops', function (tripStops) {
+	          map.setCenter(SINGAPORE);
+	          map.setZoom(11);
+	          dirRenderer.setMap(null);
+	          markers.forEach(function (marker) {
+	            return marker.setMap(null);
+	          });
+	          markers = tripStops ? tripStops.map(function (tripStop, i) {
+	            var _tripStop$stop = tripStop.stop;
+	            var coordinates = _tripStop$stop.coordinates.coordinates;
+	            var description = _tripStop$stop.description;
+	            var canBoard = tripStop.canBoard;
+	
+	            var latlng = new googleMaps.LatLng(coordinates[1], coordinates[0]);
+	            return new googleMaps.Marker({
+	              position: latlng,
+	              title: description,
+	              icon: {
+	                scaledSize: new googleMaps.Size(30, 30),
+	                anchor: new googleMaps.Point(15, 15),
+	                url: 'img/stop' + (canBoard ? 'Board' : 'Alight') + (i + 1) + '.png'
+	              },
+	              map: map
+	            });
+	          }) : [];
+	        });
+	
+	        var dirService = new googleMaps.DirectionsService();
+	        var dirRenderer = new googleMaps.DirectionsRenderer({
+	          draggable: true,
+	          polylineOptions: { strokeWeight: 3, strokeColor: '#4b3863' },
+	          markerOptions: { icon: 'https://maps.gstatic.com/mapfiles/dd-via.png' }
+	        });
+	
+	        dirRenderer.directions_changed = function () {
+	          var directions = dirRenderer.getDirections();
+	          console.log(directions);
+	          var overview_polyline = directions.routes[0].overview_polyline;
+	
+	          scope.newPath = overview_polyline;
+	        };
+	
+	        scope.googlePath = function (tripStops) {
+	          if (!tripStops) return;
+	          var stopsLatLng = tripStops.map(function (tripStop) {
+	            var coordinates = tripStop.stop.coordinates.coordinates;
+	
+	            return new googleMaps.LatLng(coordinates[1], coordinates[0]);
+	          });
+	
+	          var request = {
+	            origin: stopsLatLng[0],
+	            destination: stopsLatLng[stopsLatLng.length - 1],
+	            waypoints: stopsLatLng.slice(1, -1).map(function (latlng) {
+	              return { location: latlng };
+	            }),
+	            travelMode: googleMaps.TravelMode.DRIVING
+	          };
+	
+	          dirService.route(request, function (result, status) {
+	            if (status === googleMaps.DirectionsStatus.OK) {
+	              dirRenderer.setMap(map);
+	              dirRenderer.setDirections(result);
+	            } else {
+	              console.log('Google path failed', result);
+	            }
+	          });
+	        };
+	
+	        scope.updatePath = function () {
+	          if (!scope.newPath) return;
+	          scope.path = scope.newPath;
+	          scope.newPath = '';
+	          dirRenderer.setMap(null);
+	        };
+	
+	        scope.clearPath = function () {
+	          scope.path = '';
+	          scope.newPath = '';
+	          mapPath.setMap(null);
+	          dirRenderer.setMap(null);
+	        };
+	      });
+	    }
+	  };
+	};
+
+/***/ },
+/* 226 */
+/*!*************************************************************!*\
+  !*** ./beeline-admin/directives/pathEditor/pathEditor.html ***!
+  \*************************************************************/
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"path-editor\">\n  <button class=\"btn btn-default\"\n    ng-click=\"googlePath(tripStops)\">\n    Google path\n  </button>\n  <span class=\"btn-group\">\n    <button class=\"btn btn-primary\"\n      ng-click=\"updatePath()\">\n      Update path\n    </button>\n    <button class=\"btn btn-danger\"\n      ng-click=\"clearPath()\">\n      Clear path\n    </button>\n  </span>\n  <div class=\"map-container\"></div>\n  <textarea class=\"form-control\"\n    ng-model=\"path\"\n    placeholder=\"Path encoded as polyline\"\n    rows=7></textarea>\n</div>\n";
+
+/***/ },
+/* 227 */
+/*!*************************************************************!*\
+  !*** ./beeline-admin/directives/tripsEditor/tripsEditor.js ***!
+  \*************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _regenerator = __webpack_require__(/*! babel-runtime/regenerator */ 228);
+	
+	var _regenerator2 = _interopRequireDefault(_regenerator);
+	
+	var _asyncToGenerator2 = __webpack_require__(/*! babel-runtime/helpers/asyncToGenerator */ 231);
+	
+	var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+	
+	var _getIterator2 = __webpack_require__(/*! babel-runtime/core-js/get-iterator */ 116);
+	
+	var _getIterator3 = _interopRequireDefault(_getIterator2);
+	
+	exports.default = function (RoutesService, TripsService, AdminService, DriverService, StopsPopup, LoadingSpinner) {
+	
+	  return {
+	    scope: {
+	      routeId: '='
+	    },
+	    template: __webpack_require__(/*! ./tripsEditor.html */ 247),
+	    link: function link(scope, elem, attr) {
+	      scope.adminService = AdminService;
+	
+	      /* Date filters require UTC time */
+	      var now = new Date();
+	      now.setUTCHours(0, 0, 0, 0);
+	      scope.filter = {
+	        startDate: now
+	      };
+	      scope.disp = {
+	        stopsList: [],
+	        newDates: [],
+	        existingDates: [],
+	        validDates: [],
+	        trip: {
+	          routeId: scope.routeId,
+	          tripStops: []
+	        },
+	
+	        addTripStop: function addTripStop() {
+	          this.trip.tripStops = this.trip.tripStops || [];
+	          this.trip.tripStops.push({
+	            time: new Date(2015, 1, 1, 8, 30, 0),
+	            canBoard: true,
+	            canAlight: false
+	          });
+	        },
+	        deleteTripStop: function deleteTripStop(index) {
+	          this.trip.tripStops.splice(index, 1);
+	        }
+	      };
+	      scope.refreshTrips = function () {
+	        var promise = TripsService.getTrips({
+	          routeId: scope.routeId,
+	          startDate: new Date(scope.filter.startDate),
+	          endDate: new Date(new Date(scope.filter.startDate).getTime() + 60 * 24 * 60 * 60 * 1000),
+	          includeAvailability: true
+	        }).then(function (trips) {
+	          // Add driver info to trips
+	          return DriverService.fetchDriverInfo(trips);
+	        }).then(function (trips) {
+	          scope.trips = trips;
+	
+	          // populate dates
+	          scope.disp.existingDates = _lodash2.default.uniq(trips.map(function (tr) {
+	            return tr.date.getTime();
+	          })).map(function (dtStr) {
+	            return new Date(dtStr);
+	          });
+	
+	          // populate stops
+	          var stopsSet = {};
+	
+	          var _iteratorNormalCompletion = true;
+	          var _didIteratorError = false;
+	          var _iteratorError = undefined;
+	
+	          try {
+	            for (var _iterator = (0, _getIterator3.default)(trips), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	              var trip = _step.value;
+	              var _iteratorNormalCompletion2 = true;
+	              var _didIteratorError2 = false;
+	              var _iteratorError2 = undefined;
+	
+	              try {
+	                for (var _iterator2 = (0, _getIterator3.default)(trip.tripStops), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	                  var tripStop = _step2.value;
+	
+	                  if (!(tripStop.stop.id in stopsSet)) {
+	                    stopsSet[tripStop.stop.id] = tripStop;
+	                  }
+	                }
+	              } catch (err) {
+	                _didIteratorError2 = true;
+	                _iteratorError2 = err;
+	              } finally {
+	                try {
+	                  if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	                    _iterator2.return();
+	                  }
+	                } finally {
+	                  if (_didIteratorError2) {
+	                    throw _iteratorError2;
+	                  }
+	                }
+	              }
+	            }
+	          } catch (err) {
+	            _didIteratorError = true;
+	            _iteratorError = err;
+	          } finally {
+	            try {
+	              if (!_iteratorNormalCompletion && _iterator.return) {
+	                _iterator.return();
+	              }
+	            } finally {
+	              if (_didIteratorError) {
+	                throw _iteratorError;
+	              }
+	            }
+	          }
+	
+	          var stopsList = _lodash2.default.values(stopsSet);
+	          stopsList = _lodash2.default.sortBy(stopsList, function (s) {
+	            return s.time;
+	          });
+	          scope.disp.stopsList = stopsList;
+	        });
+	
+	        LoadingSpinner.watchPromise(promise);
+	      };
+	      scope.resetTrips = function () {
+	        scope.disp.newDates = [];
+	        scope.disp.trip.tripStops = [];
+	      };
+	      scope.findStop = function (trip, stopId) {
+	        return trip.tripStops.find(function (ts) {
+	          return ts.stop.id == stopId;
+	        });
+	      };
+	      scope.referenceTrip = function (trip) {
+	        scope.disp.trip = _lodash2.default.clone(trip);
+	        scope.disp.trip.tripStops = _lodash2.default.cloneDeep(trip.tripStops);
+	        delete scope.disp.trip.id;
+	      };
+	      scope.deleteTrip = function (trip) {
+	        if (confirm("Are you sure you want to delete?")) {
+	          TripsService.deleteTrip(trip.id).then(scope.refreshTrips).catch(function (error) {
+	            console.error(error);
+	          });
+	        }
+	      };
+	      scope.editTrip = function (trip) {
+	        scope.disp.trip = _lodash2.default.clone(trip);
+	        scope.disp.trip.tripStops = _lodash2.default.cloneDeep(trip.tripStops);
+	      };
+	      scope.clearEdit = function () {
+	        scope.disp.trip = {};
+	        scope.disp.trip.routeId = scope.routeId;
+	        scope.disp.trip.tripStops = [];
+	      };
+	      scope.saveTrips = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee() {
+	        var driver, trips;
+	        return _regenerator2.default.wrap(function _callee$(_context) {
+	          while (1) {
+	            switch (_context.prev = _context.next) {
+	              case 0:
+	                _context.next = 2;
+	                return DriverService.fetchDriverIds([scope.disp.trip]);
+	
+	              case 2:
+	                driver = _context.sent;
+	
+	                if (!(scope.disp.trip.driverTelephone && !scope.disp.trip.driverId)) {
+	                  _context.next = 10;
+	                  break;
+	                }
+	
+	                _context.next = 6;
+	                return DriverService.createDriver({
+	                  telephone: '+65' + scope.disp.trip.driverTelephone,
+	                  name: scope.disp.trip.driverTelephone
+	                });
+	
+	              case 6:
+	                driver = _context.sent;
+	
+	                scope.disp.trip.driverId = driver.id;
+	                _context.next = 11;
+	                break;
+	
+	              case 10:
+	                if (!scope.disp.trip.driverTelephone) {
+	                  scope.disp.trip.driverId = null;
+	                }
+	
+	              case 11:
+	                if (!scope.disp.trip.id) {
+	                  _context.next = 16;
+	                  break;
+	                }
+	
+	                // get a list of the trips to update
+	                trips = scope.trips.filter(function (tr) {
+	                  return tr.id in scope.selection.selected;
+	                });
+	
+	                // update the trips...
+	
+	                return _context.abrupt('return', TripsService.updateTrips(trips, scope.disp.trip).then(scope.refreshTrips));
+	
+	              case 16:
+	                return _context.abrupt('return', TripsService.createTrips(scope.disp.newDates, scope.disp.trip).then(scope.refreshTrips).then(scope.resetTrips).then(function () {
+	                  alert("Trips created");
+	                }).catch(function (error) {
+	                  console.log(error);
+	                  alert(error.data.error + ' -- ' + error.data.message);
+	                }));
+	
+	              case 17:
+	              case 'end':
+	                return _context.stop();
+	            }
+	          }
+	        }, _callee, this);
+	      }));
+	      scope.showPopupFor = function (ts) {
+	        StopsPopup.show({
+	          title: 'Select a Stop!'
+	        }).then(function (x) {
+	          ts.stopId = x.id;
+	        });
+	      };
+	
+	      //// Logic to handle trip selection (using Ctrl, Shift etc)
+	      scope.selection = {
+	        selected: {},
+	        lastSelected: null,
+	        listStart: null
+	      };
+	      scope.selectTrips = function (list, index, event) {
+	        var id = list[index].id;
+	
+	        function toggle(index) {
+	          if (list[index].id in scope.selection.selected) {
+	            delete scope.selection.selected[list[index].id];
+	          } else {
+	            scope.selection.selected[list[index].id] = list[index];
+	          }
+	        }
+	
+	        if (event.ctrlKey) {
+	          event.preventDefault();
+	          toggle(index);
+	          scope.selection.listStart = index;
+	          scope.selection.lastSelected = index;
+	        } else if (event.shiftKey) {
+	          // FIXME: This is still not entirely intuitive
+	          event.preventDefault();
+	
+	          if (index < scope.selection.lastSelected) {
+	            for (var i = scope.selection.lastSelected - (scope.selection.lastSelected == scope.selection.listStart ? 1 : scope.selection.lastSelected < scope.selection.listStart ? 1 : 0); i >= index; i--) {
+	              toggle(i);
+	            }
+	          } else if (index > scope.selection.lastSelected) {
+	            for (var _i = scope.selection.lastSelected + (scope.selection.lastSelected == scope.selection.listStart ? 1 : scope.selection.lastSelected > scope.selection.listStart ? 1 : 0); _i <= index; _i++) {
+	              toggle(_i);
+	            }
+	          }
+	
+	          scope.selection.lastSelected = index;
+	        } else {
+	          event.preventDefault();
+	          scope.selection.selected = {};
+	          toggle(index);
+	          scope.selection.listStart = index;
+	          scope.selection.lastSelected = index;
+	        }
+	        if (scope.selection.selected[id]) {
+	          scope.editTrip(list[index]);
+	        }
+	        // if nothing is selected clear the trip
+	        console.log(scope.selection.selected);
+	        if (!_lodash2.default.every(_lodash2.default.values(scope.selection.selected)) || _lodash2.default.keys(scope.selection.selected).length == 0) {
+	          scope.disp.trip = {};
+	          scope.disp.trip.tripStops = [];
+	        }
+	      }; /* selectTrips() */
+	
+	      scope.$watchGroup(['filter.startDate', 'filter.endDate'], scope.refreshTrips);
+	      scope.$watch('routeId', scope.refreshTrips);
+	      scope.$watch('startDate', function () {
+	        scope.disp.validDates = _lodash2.default.range(0, 365).map(function (i) {
+	          return new Date(now.getTime() + i * 24 * 3600 * 1000);
+	        });
+	      });
+	    }
+	  };
+	};
+	
+	var _lodash = __webpack_require__(/*! lodash */ 8);
+	
+	var _lodash2 = _interopRequireDefault(_lodash);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/***/ },
+/* 228 */
+/*!**********************************************!*\
+  !*** ./~/babel-runtime/regenerator/index.js ***!
+  \**********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(/*! regenerator-runtime */ 229);
+
+
+/***/ },
+/* 229 */
+/*!*************************************************!*\
+  !*** ./~/regenerator-runtime/runtime-module.js ***!
+  \*************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {// This method of obtaining a reference to the global object needs to be
+	// kept identical to the way it is obtained in runtime.js
+	var g =
+	  typeof global === "object" ? global :
+	  typeof window === "object" ? window :
+	  typeof self === "object" ? self : this;
+	
+	// Use `getOwnPropertyNames` because not all browsers support calling
+	// `hasOwnProperty` on the global `self` object in a worker. See #183.
+	var hadRuntime = g.regeneratorRuntime &&
+	  Object.getOwnPropertyNames(g).indexOf("regeneratorRuntime") >= 0;
+	
+	// Save the old regeneratorRuntime in case it needs to be restored later.
+	var oldRuntime = hadRuntime && g.regeneratorRuntime;
+	
+	// Force reevalutation of runtime.js.
+	g.regeneratorRuntime = undefined;
+	
+	module.exports = __webpack_require__(/*! ./runtime */ 230);
+	
+	if (hadRuntime) {
+	  // Restore the original runtime.
+	  g.regeneratorRuntime = oldRuntime;
+	} else {
+	  // Remove the global property added by runtime.js.
+	  try {
+	    delete g.regeneratorRuntime;
+	  } catch(e) {
+	    g.regeneratorRuntime = undefined;
+	  }
+	}
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 230 */
+/*!******************************************!*\
+  !*** ./~/regenerator-runtime/runtime.js ***!
+  \******************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global, process) {/**
+	 * Copyright (c) 2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * https://raw.github.com/facebook/regenerator/master/LICENSE file. An
+	 * additional grant of patent rights can be found in the PATENTS file in
+	 * the same directory.
+	 */
+	
+	!(function(global) {
+	  "use strict";
+	
+	  var hasOwn = Object.prototype.hasOwnProperty;
+	  var undefined; // More compressible than void 0.
+	  var $Symbol = typeof Symbol === "function" ? Symbol : {};
+	  var iteratorSymbol = $Symbol.iterator || "@@iterator";
+	  var toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag";
+	
+	  var inModule = typeof module === "object";
+	  var runtime = global.regeneratorRuntime;
+	  if (runtime) {
+	    if (inModule) {
+	      // If regeneratorRuntime is defined globally and we're in a module,
+	      // make the exports object identical to regeneratorRuntime.
+	      module.exports = runtime;
+	    }
+	    // Don't bother evaluating the rest of this file if the runtime was
+	    // already defined globally.
+	    return;
+	  }
+	
+	  // Define the runtime globally (as expected by generated code) as either
+	  // module.exports (if we're in a module) or a new, empty object.
+	  runtime = global.regeneratorRuntime = inModule ? module.exports : {};
+	
+	  function wrap(innerFn, outerFn, self, tryLocsList) {
+	    // If outerFn provided, then outerFn.prototype instanceof Generator.
+	    var generator = Object.create((outerFn || Generator).prototype);
+	    var context = new Context(tryLocsList || []);
+	
+	    // The ._invoke method unifies the implementations of the .next,
+	    // .throw, and .return methods.
+	    generator._invoke = makeInvokeMethod(innerFn, self, context);
+	
+	    return generator;
+	  }
+	  runtime.wrap = wrap;
+	
+	  // Try/catch helper to minimize deoptimizations. Returns a completion
+	  // record like context.tryEntries[i].completion. This interface could
+	  // have been (and was previously) designed to take a closure to be
+	  // invoked without arguments, but in all the cases we care about we
+	  // already have an existing method we want to call, so there's no need
+	  // to create a new function object. We can even get away with assuming
+	  // the method takes exactly one argument, since that happens to be true
+	  // in every case, so we don't have to touch the arguments object. The
+	  // only additional allocation required is the completion record, which
+	  // has a stable shape and so hopefully should be cheap to allocate.
+	  function tryCatch(fn, obj, arg) {
+	    try {
+	      return { type: "normal", arg: fn.call(obj, arg) };
+	    } catch (err) {
+	      return { type: "throw", arg: err };
+	    }
+	  }
+	
+	  var GenStateSuspendedStart = "suspendedStart";
+	  var GenStateSuspendedYield = "suspendedYield";
+	  var GenStateExecuting = "executing";
+	  var GenStateCompleted = "completed";
+	
+	  // Returning this object from the innerFn has the same effect as
+	  // breaking out of the dispatch switch statement.
+	  var ContinueSentinel = {};
+	
+	  // Dummy constructor functions that we use as the .constructor and
+	  // .constructor.prototype properties for functions that return Generator
+	  // objects. For full spec compliance, you may wish to configure your
+	  // minifier not to mangle the names of these two functions.
+	  function Generator() {}
+	  function GeneratorFunction() {}
+	  function GeneratorFunctionPrototype() {}
+	
+	  var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype;
+	  GeneratorFunction.prototype = Gp.constructor = GeneratorFunctionPrototype;
+	  GeneratorFunctionPrototype.constructor = GeneratorFunction;
+	  GeneratorFunctionPrototype[toStringTagSymbol] = GeneratorFunction.displayName = "GeneratorFunction";
+	
+	  // Helper for defining the .next, .throw, and .return methods of the
+	  // Iterator interface in terms of a single ._invoke method.
+	  function defineIteratorMethods(prototype) {
+	    ["next", "throw", "return"].forEach(function(method) {
+	      prototype[method] = function(arg) {
+	        return this._invoke(method, arg);
+	      };
+	    });
+	  }
+	
+	  runtime.isGeneratorFunction = function(genFun) {
+	    var ctor = typeof genFun === "function" && genFun.constructor;
+	    return ctor
+	      ? ctor === GeneratorFunction ||
+	        // For the native GeneratorFunction constructor, the best we can
+	        // do is to check its .name property.
+	        (ctor.displayName || ctor.name) === "GeneratorFunction"
+	      : false;
+	  };
+	
+	  runtime.mark = function(genFun) {
+	    if (Object.setPrototypeOf) {
+	      Object.setPrototypeOf(genFun, GeneratorFunctionPrototype);
+	    } else {
+	      genFun.__proto__ = GeneratorFunctionPrototype;
+	      if (!(toStringTagSymbol in genFun)) {
+	        genFun[toStringTagSymbol] = "GeneratorFunction";
+	      }
+	    }
+	    genFun.prototype = Object.create(Gp);
+	    return genFun;
+	  };
+	
+	  // Within the body of any async function, `await x` is transformed to
+	  // `yield regeneratorRuntime.awrap(x)`, so that the runtime can test
+	  // `value instanceof AwaitArgument` to determine if the yielded value is
+	  // meant to be awaited. Some may consider the name of this method too
+	  // cutesy, but they are curmudgeons.
+	  runtime.awrap = function(arg) {
+	    return new AwaitArgument(arg);
+	  };
+	
+	  function AwaitArgument(arg) {
+	    this.arg = arg;
+	  }
+	
+	  function AsyncIterator(generator) {
+	    function invoke(method, arg, resolve, reject) {
+	      var record = tryCatch(generator[method], generator, arg);
+	      if (record.type === "throw") {
+	        reject(record.arg);
+	      } else {
+	        var result = record.arg;
+	        var value = result.value;
+	        if (value instanceof AwaitArgument) {
+	          return Promise.resolve(value.arg).then(function(value) {
+	            invoke("next", value, resolve, reject);
+	          }, function(err) {
+	            invoke("throw", err, resolve, reject);
+	          });
+	        }
+	
+	        return Promise.resolve(value).then(function(unwrapped) {
+	          // When a yielded Promise is resolved, its final value becomes
+	          // the .value of the Promise<{value,done}> result for the
+	          // current iteration. If the Promise is rejected, however, the
+	          // result for this iteration will be rejected with the same
+	          // reason. Note that rejections of yielded Promises are not
+	          // thrown back into the generator function, as is the case
+	          // when an awaited Promise is rejected. This difference in
+	          // behavior between yield and await is important, because it
+	          // allows the consumer to decide what to do with the yielded
+	          // rejection (swallow it and continue, manually .throw it back
+	          // into the generator, abandon iteration, whatever). With
+	          // await, by contrast, there is no opportunity to examine the
+	          // rejection reason outside the generator function, so the
+	          // only option is to throw it from the await expression, and
+	          // let the generator function handle the exception.
+	          result.value = unwrapped;
+	          resolve(result);
+	        }, reject);
+	      }
+	    }
+	
+	    if (typeof process === "object" && process.domain) {
+	      invoke = process.domain.bind(invoke);
+	    }
+	
+	    var previousPromise;
+	
+	    function enqueue(method, arg) {
+	      function callInvokeWithMethodAndArg() {
+	        return new Promise(function(resolve, reject) {
+	          invoke(method, arg, resolve, reject);
+	        });
+	      }
+	
+	      return previousPromise =
+	        // If enqueue has been called before, then we want to wait until
+	        // all previous Promises have been resolved before calling invoke,
+	        // so that results are always delivered in the correct order. If
+	        // enqueue has not been called before, then it is important to
+	        // call invoke immediately, without waiting on a callback to fire,
+	        // so that the async generator function has the opportunity to do
+	        // any necessary setup in a predictable way. This predictability
+	        // is why the Promise constructor synchronously invokes its
+	        // executor callback, and why async functions synchronously
+	        // execute code before the first await. Since we implement simple
+	        // async functions in terms of async generators, it is especially
+	        // important to get this right, even though it requires care.
+	        previousPromise ? previousPromise.then(
+	          callInvokeWithMethodAndArg,
+	          // Avoid propagating failures to Promises returned by later
+	          // invocations of the iterator.
+	          callInvokeWithMethodAndArg
+	        ) : callInvokeWithMethodAndArg();
+	    }
+	
+	    // Define the unified helper method that is used to implement .next,
+	    // .throw, and .return (see defineIteratorMethods).
+	    this._invoke = enqueue;
+	  }
+	
+	  defineIteratorMethods(AsyncIterator.prototype);
+	
+	  // Note that simple async functions are implemented on top of
+	  // AsyncIterator objects; they just return a Promise for the value of
+	  // the final result produced by the iterator.
+	  runtime.async = function(innerFn, outerFn, self, tryLocsList) {
+	    var iter = new AsyncIterator(
+	      wrap(innerFn, outerFn, self, tryLocsList)
+	    );
+	
+	    return runtime.isGeneratorFunction(outerFn)
+	      ? iter // If outerFn is a generator, return the full iterator.
+	      : iter.next().then(function(result) {
+	          return result.done ? result.value : iter.next();
+	        });
+	  };
+	
+	  function makeInvokeMethod(innerFn, self, context) {
+	    var state = GenStateSuspendedStart;
+	
+	    return function invoke(method, arg) {
+	      if (state === GenStateExecuting) {
+	        throw new Error("Generator is already running");
+	      }
+	
+	      if (state === GenStateCompleted) {
+	        if (method === "throw") {
+	          throw arg;
+	        }
+	
+	        // Be forgiving, per 25.3.3.3.3 of the spec:
+	        // https://people.mozilla.org/~jorendorff/es6-draft.html#sec-generatorresume
+	        return doneResult();
+	      }
+	
+	      while (true) {
+	        var delegate = context.delegate;
+	        if (delegate) {
+	          if (method === "return" ||
+	              (method === "throw" && delegate.iterator[method] === undefined)) {
+	            // A return or throw (when the delegate iterator has no throw
+	            // method) always terminates the yield* loop.
+	            context.delegate = null;
+	
+	            // If the delegate iterator has a return method, give it a
+	            // chance to clean up.
+	            var returnMethod = delegate.iterator["return"];
+	            if (returnMethod) {
+	              var record = tryCatch(returnMethod, delegate.iterator, arg);
+	              if (record.type === "throw") {
+	                // If the return method threw an exception, let that
+	                // exception prevail over the original return or throw.
+	                method = "throw";
+	                arg = record.arg;
+	                continue;
+	              }
+	            }
+	
+	            if (method === "return") {
+	              // Continue with the outer return, now that the delegate
+	              // iterator has been terminated.
+	              continue;
+	            }
+	          }
+	
+	          var record = tryCatch(
+	            delegate.iterator[method],
+	            delegate.iterator,
+	            arg
+	          );
+	
+	          if (record.type === "throw") {
+	            context.delegate = null;
+	
+	            // Like returning generator.throw(uncaught), but without the
+	            // overhead of an extra function call.
+	            method = "throw";
+	            arg = record.arg;
+	            continue;
+	          }
+	
+	          // Delegate generator ran and handled its own exceptions so
+	          // regardless of what the method was, we continue as if it is
+	          // "next" with an undefined arg.
+	          method = "next";
+	          arg = undefined;
+	
+	          var info = record.arg;
+	          if (info.done) {
+	            context[delegate.resultName] = info.value;
+	            context.next = delegate.nextLoc;
+	          } else {
+	            state = GenStateSuspendedYield;
+	            return info;
+	          }
+	
+	          context.delegate = null;
+	        }
+	
+	        if (method === "next") {
+	          // Setting context._sent for legacy support of Babel's
+	          // function.sent implementation.
+	          context.sent = context._sent = arg;
+	
+	        } else if (method === "throw") {
+	          if (state === GenStateSuspendedStart) {
+	            state = GenStateCompleted;
+	            throw arg;
+	          }
+	
+	          if (context.dispatchException(arg)) {
+	            // If the dispatched exception was caught by a catch block,
+	            // then let that catch block handle the exception normally.
+	            method = "next";
+	            arg = undefined;
+	          }
+	
+	        } else if (method === "return") {
+	          context.abrupt("return", arg);
+	        }
+	
+	        state = GenStateExecuting;
+	
+	        var record = tryCatch(innerFn, self, context);
+	        if (record.type === "normal") {
+	          // If an exception is thrown from innerFn, we leave state ===
+	          // GenStateExecuting and loop back for another invocation.
+	          state = context.done
+	            ? GenStateCompleted
+	            : GenStateSuspendedYield;
+	
+	          var info = {
+	            value: record.arg,
+	            done: context.done
+	          };
+	
+	          if (record.arg === ContinueSentinel) {
+	            if (context.delegate && method === "next") {
+	              // Deliberately forget the last sent value so that we don't
+	              // accidentally pass it on to the delegate.
+	              arg = undefined;
+	            }
+	          } else {
+	            return info;
+	          }
+	
+	        } else if (record.type === "throw") {
+	          state = GenStateCompleted;
+	          // Dispatch the exception by looping back around to the
+	          // context.dispatchException(arg) call above.
+	          method = "throw";
+	          arg = record.arg;
+	        }
+	      }
+	    };
+	  }
+	
+	  // Define Generator.prototype.{next,throw,return} in terms of the
+	  // unified ._invoke helper method.
+	  defineIteratorMethods(Gp);
+	
+	  Gp[iteratorSymbol] = function() {
+	    return this;
+	  };
+	
+	  Gp[toStringTagSymbol] = "Generator";
+	
+	  Gp.toString = function() {
+	    return "[object Generator]";
+	  };
+	
+	  function pushTryEntry(locs) {
+	    var entry = { tryLoc: locs[0] };
+	
+	    if (1 in locs) {
+	      entry.catchLoc = locs[1];
+	    }
+	
+	    if (2 in locs) {
+	      entry.finallyLoc = locs[2];
+	      entry.afterLoc = locs[3];
+	    }
+	
+	    this.tryEntries.push(entry);
+	  }
+	
+	  function resetTryEntry(entry) {
+	    var record = entry.completion || {};
+	    record.type = "normal";
+	    delete record.arg;
+	    entry.completion = record;
+	  }
+	
+	  function Context(tryLocsList) {
+	    // The root entry object (effectively a try statement without a catch
+	    // or a finally block) gives us a place to store values thrown from
+	    // locations where there is no enclosing try statement.
+	    this.tryEntries = [{ tryLoc: "root" }];
+	    tryLocsList.forEach(pushTryEntry, this);
+	    this.reset(true);
+	  }
+	
+	  runtime.keys = function(object) {
+	    var keys = [];
+	    for (var key in object) {
+	      keys.push(key);
+	    }
+	    keys.reverse();
+	
+	    // Rather than returning an object with a next method, we keep
+	    // things simple and return the next function itself.
+	    return function next() {
+	      while (keys.length) {
+	        var key = keys.pop();
+	        if (key in object) {
+	          next.value = key;
+	          next.done = false;
+	          return next;
+	        }
+	      }
+	
+	      // To avoid creating an additional object, we just hang the .value
+	      // and .done properties off the next function object itself. This
+	      // also ensures that the minifier will not anonymize the function.
+	      next.done = true;
+	      return next;
+	    };
+	  };
+	
+	  function values(iterable) {
+	    if (iterable) {
+	      var iteratorMethod = iterable[iteratorSymbol];
+	      if (iteratorMethod) {
+	        return iteratorMethod.call(iterable);
+	      }
+	
+	      if (typeof iterable.next === "function") {
+	        return iterable;
+	      }
+	
+	      if (!isNaN(iterable.length)) {
+	        var i = -1, next = function next() {
+	          while (++i < iterable.length) {
+	            if (hasOwn.call(iterable, i)) {
+	              next.value = iterable[i];
+	              next.done = false;
+	              return next;
+	            }
+	          }
+	
+	          next.value = undefined;
+	          next.done = true;
+	
+	          return next;
+	        };
+	
+	        return next.next = next;
+	      }
+	    }
+	
+	    // Return an iterator with no values.
+	    return { next: doneResult };
+	  }
+	  runtime.values = values;
+	
+	  function doneResult() {
+	    return { value: undefined, done: true };
+	  }
+	
+	  Context.prototype = {
+	    constructor: Context,
+	
+	    reset: function(skipTempReset) {
+	      this.prev = 0;
+	      this.next = 0;
+	      // Resetting context._sent for legacy support of Babel's
+	      // function.sent implementation.
+	      this.sent = this._sent = undefined;
+	      this.done = false;
+	      this.delegate = null;
+	
+	      this.tryEntries.forEach(resetTryEntry);
+	
+	      if (!skipTempReset) {
+	        for (var name in this) {
+	          // Not sure about the optimal order of these conditions:
+	          if (name.charAt(0) === "t" &&
+	              hasOwn.call(this, name) &&
+	              !isNaN(+name.slice(1))) {
+	            this[name] = undefined;
+	          }
+	        }
+	      }
+	    },
+	
+	    stop: function() {
+	      this.done = true;
+	
+	      var rootEntry = this.tryEntries[0];
+	      var rootRecord = rootEntry.completion;
+	      if (rootRecord.type === "throw") {
+	        throw rootRecord.arg;
+	      }
+	
+	      return this.rval;
+	    },
+	
+	    dispatchException: function(exception) {
+	      if (this.done) {
+	        throw exception;
+	      }
+	
+	      var context = this;
+	      function handle(loc, caught) {
+	        record.type = "throw";
+	        record.arg = exception;
+	        context.next = loc;
+	        return !!caught;
+	      }
+	
+	      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+	        var entry = this.tryEntries[i];
+	        var record = entry.completion;
+	
+	        if (entry.tryLoc === "root") {
+	          // Exception thrown outside of any try block that could handle
+	          // it, so set the completion value of the entire function to
+	          // throw the exception.
+	          return handle("end");
+	        }
+	
+	        if (entry.tryLoc <= this.prev) {
+	          var hasCatch = hasOwn.call(entry, "catchLoc");
+	          var hasFinally = hasOwn.call(entry, "finallyLoc");
+	
+	          if (hasCatch && hasFinally) {
+	            if (this.prev < entry.catchLoc) {
+	              return handle(entry.catchLoc, true);
+	            } else if (this.prev < entry.finallyLoc) {
+	              return handle(entry.finallyLoc);
+	            }
+	
+	          } else if (hasCatch) {
+	            if (this.prev < entry.catchLoc) {
+	              return handle(entry.catchLoc, true);
+	            }
+	
+	          } else if (hasFinally) {
+	            if (this.prev < entry.finallyLoc) {
+	              return handle(entry.finallyLoc);
+	            }
+	
+	          } else {
+	            throw new Error("try statement without catch or finally");
+	          }
+	        }
+	      }
+	    },
+	
+	    abrupt: function(type, arg) {
+	      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+	        var entry = this.tryEntries[i];
+	        if (entry.tryLoc <= this.prev &&
+	            hasOwn.call(entry, "finallyLoc") &&
+	            this.prev < entry.finallyLoc) {
+	          var finallyEntry = entry;
+	          break;
+	        }
+	      }
+	
+	      if (finallyEntry &&
+	          (type === "break" ||
+	           type === "continue") &&
+	          finallyEntry.tryLoc <= arg &&
+	          arg <= finallyEntry.finallyLoc) {
+	        // Ignore the finally entry if control is not jumping to a
+	        // location outside the try/catch block.
+	        finallyEntry = null;
+	      }
+	
+	      var record = finallyEntry ? finallyEntry.completion : {};
+	      record.type = type;
+	      record.arg = arg;
+	
+	      if (finallyEntry) {
+	        this.next = finallyEntry.finallyLoc;
+	      } else {
+	        this.complete(record);
+	      }
+	
+	      return ContinueSentinel;
+	    },
+	
+	    complete: function(record, afterLoc) {
+	      if (record.type === "throw") {
+	        throw record.arg;
+	      }
+	
+	      if (record.type === "break" ||
+	          record.type === "continue") {
+	        this.next = record.arg;
+	      } else if (record.type === "return") {
+	        this.rval = record.arg;
+	        this.next = "end";
+	      } else if (record.type === "normal" && afterLoc) {
+	        this.next = afterLoc;
+	      }
+	    },
+	
+	    finish: function(finallyLoc) {
+	      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+	        var entry = this.tryEntries[i];
+	        if (entry.finallyLoc === finallyLoc) {
+	          this.complete(entry.completion, entry.afterLoc);
+	          resetTryEntry(entry);
+	          return ContinueSentinel;
+	        }
+	      }
+	    },
+	
+	    "catch": function(tryLoc) {
+	      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+	        var entry = this.tryEntries[i];
+	        if (entry.tryLoc === tryLoc) {
+	          var record = entry.completion;
+	          if (record.type === "throw") {
+	            var thrown = record.arg;
+	            resetTryEntry(entry);
+	          }
+	          return thrown;
+	        }
+	      }
+	
+	      // The context.catch method must only be called with a location
+	      // argument that corresponds to a known catch block.
+	      throw new Error("illegal catch attempt");
+	    },
+	
+	    delegateYield: function(iterable, resultName, nextLoc) {
+	      this.delegate = {
+	        iterator: values(iterable),
+	        resultName: resultName,
+	        nextLoc: nextLoc
+	      };
+	
+	      return ContinueSentinel;
+	    }
+	  };
+	})(
+	  // Among the various tricks for obtaining a reference to the global
+	  // object, this seems to be the most reliable technique that does not
+	  // use indirect eval (which violates Content Security Policy).
+	  typeof global === "object" ? global :
+	  typeof window === "object" ? window :
+	  typeof self === "object" ? self : this
+	);
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(/*! ./~/process/browser.js */ 217)))
+
+/***/ },
+/* 231 */
+/*!*****************************************************!*\
+  !*** ./~/babel-runtime/helpers/asyncToGenerator.js ***!
+  \*****************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	exports.__esModule = true;
+	
+	var _promise = __webpack_require__(/*! ../core-js/promise */ 232);
+	
+	var _promise2 = _interopRequireDefault(_promise);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	exports.default = function (fn) {
+	  return function () {
+	    var gen = fn.apply(this, arguments);
+	    return new _promise2.default(function (resolve, reject) {
+	      function step(key, arg) {
+	        try {
+	          var info = gen[key](arg);
+	          var value = info.value;
+	        } catch (error) {
+	          reject(error);
+	          return;
+	        }
+	
+	        if (info.done) {
+	          resolve(value);
+	        } else {
+	          return _promise2.default.resolve(value).then(function (value) {
+	            return step("next", value);
+	          }, function (err) {
+	            return step("throw", err);
+	          });
+	        }
+	      }
+	
+	      return step("next");
+	    });
+	  };
+	};
+
+/***/ },
+/* 232 */
+/*!********************************************!*\
+  !*** ./~/babel-runtime/core-js/promise.js ***!
+  \********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/promise */ 233), __esModule: true };
+
+/***/ },
+/* 233 */
+/*!*********************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/fn/promise.js ***!
+  \*********************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(/*! ../modules/es6.object.to-string */ 205);
+	__webpack_require__(/*! ../modules/es6.string.iterator */ 164);
+	__webpack_require__(/*! ../modules/web.dom.iterable */ 118);
+	__webpack_require__(/*! ../modules/es6.promise */ 234);
+	module.exports = __webpack_require__(/*! ../modules/_core */ 131).Promise;
+
+/***/ },
+/* 234 */
+/*!******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/es6.promise.js ***!
+  \******************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	var LIBRARY            = __webpack_require__(/*! ./_library */ 128)
+	  , global             = __webpack_require__(/*! ./_global */ 130)
+	  , ctx                = __webpack_require__(/*! ./_ctx */ 132)
+	  , classof            = __webpack_require__(/*! ./_classof */ 168)
+	  , $export            = __webpack_require__(/*! ./_export */ 129)
+	  , isObject           = __webpack_require__(/*! ./_is-object */ 137)
+	  , anObject           = __webpack_require__(/*! ./_an-object */ 136)
+	  , aFunction          = __webpack_require__(/*! ./_a-function */ 133)
+	  , anInstance         = __webpack_require__(/*! ./_an-instance */ 235)
+	  , forOf              = __webpack_require__(/*! ./_for-of */ 236)
+	  , setProto           = __webpack_require__(/*! ./_set-proto */ 239).set
+	  , speciesConstructor = __webpack_require__(/*! ./_species-constructor */ 240)
+	  , task               = __webpack_require__(/*! ./_task */ 241).set
+	  , microtask          = __webpack_require__(/*! ./_microtask */ 243)()
+	  , PROMISE            = 'Promise'
+	  , TypeError          = global.TypeError
+	  , process            = global.process
+	  , $Promise           = global[PROMISE]
+	  , process            = global.process
+	  , isNode             = classof(process) == 'process'
+	  , empty              = function(){ /* empty */ }
+	  , Internal, GenericPromiseCapability, Wrapper;
+	
+	var USE_NATIVE = !!function(){
+	  try {
+	    // correct subclassing with @@species support
+	    var promise     = $Promise.resolve(1)
+	      , FakePromise = (promise.constructor = {})[__webpack_require__(/*! ./_wks */ 161)('species')] = function(exec){ exec(empty, empty); };
+	    // unhandled rejections tracking support, NodeJS Promise without it fails @@species test
+	    return (isNode || typeof PromiseRejectionEvent == 'function') && promise.then(empty) instanceof FakePromise;
+	  } catch(e){ /* empty */ }
+	}();
+	
+	// helpers
+	var sameConstructor = function(a, b){
+	  // with library wrapper special case
+	  return a === b || a === $Promise && b === Wrapper;
+	};
+	var isThenable = function(it){
+	  var then;
+	  return isObject(it) && typeof (then = it.then) == 'function' ? then : false;
+	};
+	var newPromiseCapability = function(C){
+	  return sameConstructor($Promise, C)
+	    ? new PromiseCapability(C)
+	    : new GenericPromiseCapability(C);
+	};
+	var PromiseCapability = GenericPromiseCapability = function(C){
+	  var resolve, reject;
+	  this.promise = new C(function($$resolve, $$reject){
+	    if(resolve !== undefined || reject !== undefined)throw TypeError('Bad Promise constructor');
+	    resolve = $$resolve;
+	    reject  = $$reject;
+	  });
+	  this.resolve = aFunction(resolve);
+	  this.reject  = aFunction(reject);
+	};
+	var perform = function(exec){
+	  try {
+	    exec();
+	  } catch(e){
+	    return {error: e};
+	  }
+	};
+	var notify = function(promise, isReject){
+	  if(promise._n)return;
+	  promise._n = true;
+	  var chain = promise._c;
+	  microtask(function(){
+	    var value = promise._v
+	      , ok    = promise._s == 1
+	      , i     = 0;
+	    var run = function(reaction){
+	      var handler = ok ? reaction.ok : reaction.fail
+	        , resolve = reaction.resolve
+	        , reject  = reaction.reject
+	        , domain  = reaction.domain
+	        , result, then;
+	      try {
+	        if(handler){
+	          if(!ok){
+	            if(promise._h == 2)onHandleUnhandled(promise);
+	            promise._h = 1;
+	          }
+	          if(handler === true)result = value;
+	          else {
+	            if(domain)domain.enter();
+	            result = handler(value);
+	            if(domain)domain.exit();
+	          }
+	          if(result === reaction.promise){
+	            reject(TypeError('Promise-chain cycle'));
+	          } else if(then = isThenable(result)){
+	            then.call(result, resolve, reject);
+	          } else resolve(result);
+	        } else reject(value);
+	      } catch(e){
+	        reject(e);
+	      }
+	    };
+	    while(chain.length > i)run(chain[i++]); // variable length - can't use forEach
+	    promise._c = [];
+	    promise._n = false;
+	    if(isReject && !promise._h)onUnhandled(promise);
+	  });
+	};
+	var onUnhandled = function(promise){
+	  task.call(global, function(){
+	    var value = promise._v
+	      , abrupt, handler, console;
+	    if(isUnhandled(promise)){
+	      abrupt = perform(function(){
+	        if(isNode){
+	          process.emit('unhandledRejection', value, promise);
+	        } else if(handler = global.onunhandledrejection){
+	          handler({promise: promise, reason: value});
+	        } else if((console = global.console) && console.error){
+	          console.error('Unhandled promise rejection', value);
+	        }
+	      });
+	      // Browsers should not trigger `rejectionHandled` event if it was handled here, NodeJS - should
+	      promise._h = isNode || isUnhandled(promise) ? 2 : 1;
+	    } promise._a = undefined;
+	    if(abrupt)throw abrupt.error;
+	  });
+	};
+	var isUnhandled = function(promise){
+	  if(promise._h == 1)return false;
+	  var chain = promise._a || promise._c
+	    , i     = 0
+	    , reaction;
+	  while(chain.length > i){
+	    reaction = chain[i++];
+	    if(reaction.fail || !isUnhandled(reaction.promise))return false;
+	  } return true;
+	};
+	var onHandleUnhandled = function(promise){
+	  task.call(global, function(){
+	    var handler;
+	    if(isNode){
+	      process.emit('rejectionHandled', promise);
+	    } else if(handler = global.onrejectionhandled){
+	      handler({promise: promise, reason: promise._v});
+	    }
+	  });
+	};
+	var $reject = function(value){
+	  var promise = this;
+	  if(promise._d)return;
+	  promise._d = true;
+	  promise = promise._w || promise; // unwrap
+	  promise._v = value;
+	  promise._s = 2;
+	  if(!promise._a)promise._a = promise._c.slice();
+	  notify(promise, true);
+	};
+	var $resolve = function(value){
+	  var promise = this
+	    , then;
+	  if(promise._d)return;
+	  promise._d = true;
+	  promise = promise._w || promise; // unwrap
+	  try {
+	    if(promise === value)throw TypeError("Promise can't be resolved itself");
+	    if(then = isThenable(value)){
+	      microtask(function(){
+	        var wrapper = {_w: promise, _d: false}; // wrap
+	        try {
+	          then.call(value, ctx($resolve, wrapper, 1), ctx($reject, wrapper, 1));
+	        } catch(e){
+	          $reject.call(wrapper, e);
+	        }
+	      });
+	    } else {
+	      promise._v = value;
+	      promise._s = 1;
+	      notify(promise, false);
+	    }
+	  } catch(e){
+	    $reject.call({_w: promise, _d: false}, e); // wrap
+	  }
+	};
+	
+	// constructor polyfill
+	if(!USE_NATIVE){
+	  // 25.4.3.1 Promise(executor)
+	  $Promise = function Promise(executor){
+	    anInstance(this, $Promise, PROMISE, '_h');
+	    aFunction(executor);
+	    Internal.call(this);
+	    try {
+	      executor(ctx($resolve, this, 1), ctx($reject, this, 1));
+	    } catch(err){
+	      $reject.call(this, err);
+	    }
+	  };
+	  Internal = function Promise(executor){
+	    this._c = [];             // <- awaiting reactions
+	    this._a = undefined;      // <- checked in isUnhandled reactions
+	    this._s = 0;              // <- state
+	    this._d = false;          // <- done
+	    this._v = undefined;      // <- value
+	    this._h = 0;              // <- rejection state, 0 - default, 1 - handled, 2 - unhandled
+	    this._n = false;          // <- notify
+	  };
+	  Internal.prototype = __webpack_require__(/*! ./_redefine-all */ 244)($Promise.prototype, {
+	    // 25.4.5.3 Promise.prototype.then(onFulfilled, onRejected)
+	    then: function then(onFulfilled, onRejected){
+	      var reaction    = newPromiseCapability(speciesConstructor(this, $Promise));
+	      reaction.ok     = typeof onFulfilled == 'function' ? onFulfilled : true;
+	      reaction.fail   = typeof onRejected == 'function' && onRejected;
+	      reaction.domain = isNode ? process.domain : undefined;
+	      this._c.push(reaction);
+	      if(this._a)this._a.push(reaction);
+	      if(this._s)notify(this, false);
+	      return reaction.promise;
+	    },
+	    // 25.4.5.1 Promise.prototype.catch(onRejected)
+	    'catch': function(onRejected){
+	      return this.then(undefined, onRejected);
+	    }
+	  });
+	  PromiseCapability = function(){
+	    var promise  = new Internal;
+	    this.promise = promise;
+	    this.resolve = ctx($resolve, promise, 1);
+	    this.reject  = ctx($reject, promise, 1);
+	  };
+	}
+	
+	$export($export.G + $export.W + $export.F * !USE_NATIVE, {Promise: $Promise});
+	__webpack_require__(/*! ./_set-to-string-tag */ 160)($Promise, PROMISE);
+	__webpack_require__(/*! ./_set-species */ 245)(PROMISE);
+	Wrapper = __webpack_require__(/*! ./_core */ 131)[PROMISE];
+	
+	// statics
+	$export($export.S + $export.F * !USE_NATIVE, PROMISE, {
+	  // 25.4.4.5 Promise.reject(r)
+	  reject: function reject(r){
+	    var capability = newPromiseCapability(this)
+	      , $$reject   = capability.reject;
+	    $$reject(r);
+	    return capability.promise;
+	  }
+	});
+	$export($export.S + $export.F * (LIBRARY || !USE_NATIVE), PROMISE, {
+	  // 25.4.4.6 Promise.resolve(x)
+	  resolve: function resolve(x){
+	    // instanceof instead of internal slot check because we should fix it without replacement native Promise core
+	    if(x instanceof $Promise && sameConstructor(x.constructor, this))return x;
+	    var capability = newPromiseCapability(this)
+	      , $$resolve  = capability.resolve;
+	    $$resolve(x);
+	    return capability.promise;
+	  }
+	});
+	$export($export.S + $export.F * !(USE_NATIVE && __webpack_require__(/*! ./_iter-detect */ 246)(function(iter){
+	  $Promise.all(iter)['catch'](empty);
+	})), PROMISE, {
+	  // 25.4.4.1 Promise.all(iterable)
+	  all: function all(iterable){
+	    var C          = this
+	      , capability = newPromiseCapability(C)
+	      , resolve    = capability.resolve
+	      , reject     = capability.reject;
+	    var abrupt = perform(function(){
+	      var values    = []
+	        , index     = 0
+	        , remaining = 1;
+	      forOf(iterable, false, function(promise){
+	        var $index        = index++
+	          , alreadyCalled = false;
+	        values.push(undefined);
+	        remaining++;
+	        C.resolve(promise).then(function(value){
+	          if(alreadyCalled)return;
+	          alreadyCalled  = true;
+	          values[$index] = value;
+	          --remaining || resolve(values);
+	        }, reject);
+	      });
+	      --remaining || resolve(values);
+	    });
+	    if(abrupt)reject(abrupt.error);
+	    return capability.promise;
+	  },
+	  // 25.4.4.4 Promise.race(iterable)
+	  race: function race(iterable){
+	    var C          = this
+	      , capability = newPromiseCapability(C)
+	      , reject     = capability.reject;
+	    var abrupt = perform(function(){
+	      forOf(iterable, false, function(promise){
+	        C.resolve(promise).then(capability.resolve, reject);
+	      });
+	    });
+	    if(abrupt)reject(abrupt.error);
+	    return capability.promise;
+	  }
+	});
+
+/***/ },
+/* 235 */
+/*!*******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_an-instance.js ***!
+  \*******************************************************************/
+/***/ function(module, exports) {
+
+	module.exports = function(it, Constructor, name, forbiddenField){
+	  if(!(it instanceof Constructor) || (forbiddenField !== undefined && forbiddenField in it)){
+	    throw TypeError(name + ': incorrect invocation!');
+	  } return it;
+	};
+
+/***/ },
+/* 236 */
+/*!**************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_for-of.js ***!
+  \**************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	var ctx         = __webpack_require__(/*! ./_ctx */ 132)
+	  , call        = __webpack_require__(/*! ./_iter-call */ 237)
+	  , isArrayIter = __webpack_require__(/*! ./_is-array-iter */ 238)
+	  , anObject    = __webpack_require__(/*! ./_an-object */ 136)
+	  , toLength    = __webpack_require__(/*! ./_to-length */ 152)
+	  , getIterFn   = __webpack_require__(/*! ./core.get-iterator-method */ 167)
+	  , BREAK       = {}
+	  , RETURN      = {};
+	var exports = module.exports = function(iterable, entries, fn, that, ITERATOR){
+	  var iterFn = ITERATOR ? function(){ return iterable; } : getIterFn(iterable)
+	    , f      = ctx(fn, that, entries ? 2 : 1)
+	    , index  = 0
+	    , length, step, iterator, result;
+	  if(typeof iterFn != 'function')throw TypeError(iterable + ' is not iterable!');
+	  // fast case for arrays with default iterator
+	  if(isArrayIter(iterFn))for(length = toLength(iterable.length); length > index; index++){
+	    result = entries ? f(anObject(step = iterable[index])[0], step[1]) : f(iterable[index]);
+	    if(result === BREAK || result === RETURN)return result;
+	  } else for(iterator = iterFn.call(iterable); !(step = iterator.next()).done; ){
+	    result = call(iterator, f, step.value, entries);
+	    if(result === BREAK || result === RETURN)return result;
+	  }
+	};
+	exports.BREAK  = BREAK;
+	exports.RETURN = RETURN;
+
+/***/ },
+/* 237 */
+/*!*****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_iter-call.js ***!
+  \*****************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	// call something on iterator step with safe closing on error
+	var anObject = __webpack_require__(/*! ./_an-object */ 136);
+	module.exports = function(iterator, fn, value, entries){
+	  try {
+	    return entries ? fn(anObject(value)[0], value[1]) : fn(value);
+	  // 7.4.6 IteratorClose(iterator, completion)
+	  } catch(e){
+	    var ret = iterator['return'];
+	    if(ret !== undefined)anObject(ret.call(iterator));
+	    throw e;
+	  }
+	};
+
+/***/ },
+/* 238 */
+/*!*********************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_is-array-iter.js ***!
+  \*********************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	// check on default Array iterator
+	var Iterators  = __webpack_require__(/*! ./_iterators */ 122)
+	  , ITERATOR   = __webpack_require__(/*! ./_wks */ 161)('iterator')
+	  , ArrayProto = Array.prototype;
+	
+	module.exports = function(it){
+	  return it !== undefined && (Iterators.Array === it || ArrayProto[ITERATOR] === it);
+	};
+
+/***/ },
+/* 239 */
+/*!*****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_set-proto.js ***!
+  \*****************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	// Works with __proto__ only. Old v8 can't work with null proto objects.
+	/* eslint-disable no-proto */
+	var isObject = __webpack_require__(/*! ./_is-object */ 137)
+	  , anObject = __webpack_require__(/*! ./_an-object */ 136);
+	var check = function(O, proto){
+	  anObject(O);
+	  if(!isObject(proto) && proto !== null)throw TypeError(proto + ": can't set as prototype!");
+	};
+	module.exports = {
+	  set: Object.setPrototypeOf || ('__proto__' in {} ? // eslint-disable-line
+	    function(test, buggy, set){
+	      try {
+	        set = __webpack_require__(/*! ./_ctx */ 132)(Function.call, __webpack_require__(/*! ./_object-gopd */ 204).f(Object.prototype, '__proto__').set, 2);
+	        set(test, []);
+	        buggy = !(test instanceof Array);
+	      } catch(e){ buggy = true; }
+	      return function setPrototypeOf(O, proto){
+	        check(O, proto);
+	        if(buggy)O.__proto__ = proto;
+	        else set(O, proto);
+	        return O;
+	      };
+	    }({}, false) : undefined),
+	  check: check
+	};
+
+/***/ },
+/* 240 */
+/*!***************************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_species-constructor.js ***!
+  \***************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	// 7.3.20 SpeciesConstructor(O, defaultConstructor)
+	var anObject  = __webpack_require__(/*! ./_an-object */ 136)
+	  , aFunction = __webpack_require__(/*! ./_a-function */ 133)
+	  , SPECIES   = __webpack_require__(/*! ./_wks */ 161)('species');
+	module.exports = function(O, D){
+	  var C = anObject(O).constructor, S;
+	  return C === undefined || (S = anObject(C)[SPECIES]) == undefined ? D : aFunction(S);
+	};
+
+/***/ },
+/* 241 */
+/*!************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_task.js ***!
+  \************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	var ctx                = __webpack_require__(/*! ./_ctx */ 132)
+	  , invoke             = __webpack_require__(/*! ./_invoke */ 242)
+	  , html               = __webpack_require__(/*! ./_html */ 159)
+	  , cel                = __webpack_require__(/*! ./_dom-create */ 141)
+	  , global             = __webpack_require__(/*! ./_global */ 130)
+	  , process            = global.process
+	  , setTask            = global.setImmediate
+	  , clearTask          = global.clearImmediate
+	  , MessageChannel     = global.MessageChannel
+	  , counter            = 0
+	  , queue              = {}
+	  , ONREADYSTATECHANGE = 'onreadystatechange'
+	  , defer, channel, port;
+	var run = function(){
+	  var id = +this;
+	  if(queue.hasOwnProperty(id)){
+	    var fn = queue[id];
+	    delete queue[id];
+	    fn();
+	  }
+	};
+	var listener = function(event){
+	  run.call(event.data);
+	};
+	// Node.js 0.9+ & IE10+ has setImmediate, otherwise:
+	if(!setTask || !clearTask){
+	  setTask = function setImmediate(fn){
+	    var args = [], i = 1;
+	    while(arguments.length > i)args.push(arguments[i++]);
+	    queue[++counter] = function(){
+	      invoke(typeof fn == 'function' ? fn : Function(fn), args);
+	    };
+	    defer(counter);
+	    return counter;
+	  };
+	  clearTask = function clearImmediate(id){
+	    delete queue[id];
+	  };
+	  // Node.js 0.8-
+	  if(__webpack_require__(/*! ./_cof */ 125)(process) == 'process'){
+	    defer = function(id){
+	      process.nextTick(ctx(run, id, 1));
+	    };
+	  // Browsers with MessageChannel, includes WebWorkers
+	  } else if(MessageChannel){
+	    channel = new MessageChannel;
+	    port    = channel.port2;
+	    channel.port1.onmessage = listener;
+	    defer = ctx(port.postMessage, port, 1);
+	  // Browsers with postMessage, skip WebWorkers
+	  // IE8 has postMessage, but it's sync & typeof its postMessage is 'object'
+	  } else if(global.addEventListener && typeof postMessage == 'function' && !global.importScripts){
+	    defer = function(id){
+	      global.postMessage(id + '', '*');
+	    };
+	    global.addEventListener('message', listener, false);
+	  // IE8-
+	  } else if(ONREADYSTATECHANGE in cel('script')){
+	    defer = function(id){
+	      html.appendChild(cel('script'))[ONREADYSTATECHANGE] = function(){
+	        html.removeChild(this);
+	        run.call(id);
+	      };
+	    };
+	  // Rest old browsers
+	  } else {
+	    defer = function(id){
+	      setTimeout(ctx(run, id, 1), 0);
+	    };
+	  }
+	}
+	module.exports = {
+	  set:   setTask,
+	  clear: clearTask
+	};
+
+/***/ },
+/* 242 */
+/*!**************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_invoke.js ***!
+  \**************************************************************/
+/***/ function(module, exports) {
+
+	// fast apply, http://jsperf.lnkit.com/fast-apply/5
+	module.exports = function(fn, args, that){
+	  var un = that === undefined;
+	  switch(args.length){
+	    case 0: return un ? fn()
+	                      : fn.call(that);
+	    case 1: return un ? fn(args[0])
+	                      : fn.call(that, args[0]);
+	    case 2: return un ? fn(args[0], args[1])
+	                      : fn.call(that, args[0], args[1]);
+	    case 3: return un ? fn(args[0], args[1], args[2])
+	                      : fn.call(that, args[0], args[1], args[2]);
+	    case 4: return un ? fn(args[0], args[1], args[2], args[3])
+	                      : fn.call(that, args[0], args[1], args[2], args[3]);
+	  } return              fn.apply(that, args);
+	};
+
+/***/ },
+/* 243 */
+/*!*****************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_microtask.js ***!
+  \*****************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	var global    = __webpack_require__(/*! ./_global */ 130)
+	  , macrotask = __webpack_require__(/*! ./_task */ 241).set
+	  , Observer  = global.MutationObserver || global.WebKitMutationObserver
+	  , process   = global.process
+	  , Promise   = global.Promise
+	  , isNode    = __webpack_require__(/*! ./_cof */ 125)(process) == 'process';
+	
+	module.exports = function(){
+	  var head, last, notify;
+	
+	  var flush = function(){
+	    var parent, fn;
+	    if(isNode && (parent = process.domain))parent.exit();
+	    while(head){
+	      fn   = head.fn;
+	      head = head.next;
+	      try {
+	        fn();
+	      } catch(e){
+	        if(head)notify();
+	        else last = undefined;
+	        throw e;
+	      }
+	    } last = undefined;
+	    if(parent)parent.enter();
+	  };
+	
+	  // Node.js
+	  if(isNode){
+	    notify = function(){
+	      process.nextTick(flush);
+	    };
+	  // browsers with MutationObserver
+	  } else if(Observer){
+	    var toggle = true
+	      , node   = document.createTextNode('');
+	    new Observer(flush).observe(node, {characterData: true}); // eslint-disable-line no-new
+	    notify = function(){
+	      node.data = toggle = !toggle;
+	    };
+	  // environments with maybe non-completely correct, but existent Promise
+	  } else if(Promise && Promise.resolve){
+	    var promise = Promise.resolve();
+	    notify = function(){
+	      promise.then(flush);
+	    };
+	  // for other environments - macrotask based on:
+	  // - setImmediate
+	  // - MessageChannel
+	  // - window.postMessag
+	  // - onreadystatechange
+	  // - setTimeout
+	  } else {
+	    notify = function(){
+	      // strange IE + webpack dev server bug - use .call(global)
+	      macrotask.call(global, flush);
+	    };
+	  }
+	
+	  return function(fn){
+	    var task = {fn: fn, next: undefined};
+	    if(last)last.next = task;
+	    if(!head){
+	      head = task;
+	      notify();
+	    } last = task;
+	  };
+	};
+
+/***/ },
+/* 244 */
+/*!********************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_redefine-all.js ***!
+  \********************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	var hide = __webpack_require__(/*! ./_hide */ 134);
+	module.exports = function(target, src, safe){
+	  for(var key in src){
+	    if(safe && target[key])target[key] = src[key];
+	    else hide(target, key, src[key]);
+	  } return target;
+	};
+
+/***/ },
+/* 245 */
+/*!*******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_set-species.js ***!
+  \*******************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	var global      = __webpack_require__(/*! ./_global */ 130)
+	  , core        = __webpack_require__(/*! ./_core */ 131)
+	  , dP          = __webpack_require__(/*! ./_object-dp */ 135)
+	  , DESCRIPTORS = __webpack_require__(/*! ./_descriptors */ 139)
+	  , SPECIES     = __webpack_require__(/*! ./_wks */ 161)('species');
+	
+	module.exports = function(KEY){
+	  var C = typeof core[KEY] == 'function' ? core[KEY] : global[KEY];
+	  if(DESCRIPTORS && C && !C[SPECIES])dP.f(C, SPECIES, {
+	    configurable: true,
+	    get: function(){ return this; }
+	  });
+	};
+
+/***/ },
+/* 246 */
+/*!*******************************************************************!*\
+  !*** ./~/babel-runtime/~/core-js/library/modules/_iter-detect.js ***!
+  \*******************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	var ITERATOR     = __webpack_require__(/*! ./_wks */ 161)('iterator')
+	  , SAFE_CLOSING = false;
+	
+	try {
+	  var riter = [7][ITERATOR]();
+	  riter['return'] = function(){ SAFE_CLOSING = true; };
+	  Array.from(riter, function(){ throw 2; });
+	} catch(e){ /* empty */ }
+	
+	module.exports = function(exec, skipClosing){
+	  if(!skipClosing && !SAFE_CLOSING)return false;
+	  var safe = false;
+	  try {
+	    var arr  = [7]
+	      , iter = arr[ITERATOR]();
+	    iter.next = function(){ return {done: safe = true}; };
+	    arr[ITERATOR] = function(){ return iter; };
+	    exec(arr);
+	  } catch(e){ /* empty */ }
+	  return safe;
+	};
+
+/***/ },
+/* 247 */
+/*!***************************************************************!*\
+  !*** ./beeline-admin/directives/tripsEditor/tripsEditor.html ***!
+  \***************************************************************/
+/***/ function(module, exports) {
+
+	module.exports = "\n<section class=\"filter\">\n  <label>\n    Start Date:\n    <button class=\"glyphicon glyphicon-calendar\"\n      ng-click=\"filter.$startDatePopupIsOpen = !filter.$startDatePopupIsOpen\">\n    </button>\n    <input type=\"text\" uib-datepicker-popup=\"dd-MMM-yyyy\"\n      ng-model=\"filter.startDate\"\n      is-open=\"filter.$startDatePopupIsOpen\">\n  </label>\n  <label ng-if=\"false\">\n    End Date:\n    <button class=\"glyphicon glyphicon-calendar\"\n      ng-click=\"filter.$startDatePopupIsOpen = !filter.$startDatePopupIsOpen\">\n    </button>\n    <input type=\"text\" uib-datepicker-popup=\"dd-MMM-yyyy\"\n      ng-model=\"filter.endDate\">\n  </label>\n</section>\n\n<section class=\"add-trips\">\n  <h2>Add Trips</h2>\n  <div class=\"add-trips-components flex-row\">\n    <beeline-datepicker\n      ng-if=\"!disp.trip.id\"\n      class=\"flex-shrink\"\n      dates=\"disp.newDates\"\n      booked-dates=\"disp.existingDates\"\n      valid-dates=\"disp.validDates\"\n      show-legend=\"false\"\n      start-date=\"filter.startDate\"\n    >\n    </beeline-datepicker>\n    <div class=\"flex-shrink overflow-scroll selected-dates\"\n      ng-if=\"!disp.trip.id\"\n    >\n      <h3>{{disp.newDates.length}} dates selected</h3>\n      <ul>\n        <li ng-repeat=\"date in disp.newDates | orderBy:date.getTime() track by $index\">\n          {{date | date:'dd-MMM-yy (EEE)':'UTC'}}\n        </li>\n      </ul>\n    </div>\n\n    <div class=\"flex-grow overflow-scroll\">\n      <h3 ng-if=\"!disp.trip.id\">Stops</h3>\n      <!-- <h3 ng-if=\"disp.trip\">Editing trip on {{disp.trip.date | date:'dd-MMM-yy':'UTC'}}</h3> -->\n\n      <h3 ng-if=\"disp.trip.id\">Editing trip on\n        <ng-repeat ng-repeat=\"(key, value) in selection.selected\">\n          {{value.date | date:'dd MMM yy'}},\n        </ng-repeat>\n      </h3>\n\n      <label>\n        Telephone number of driver: +65 <input type=\"tel\" ng-model=\"disp.trip.driverTelephone\" />\n\n        <span ng-if=\"disp.trip.driverName\">\n          ~{{disp.driver.name}}\n        </span>\n      </label>\n\n      <label>\n        Trip capacity: <input type=\"number\" ng-model=\"disp.trip.capacity\" />\n      </label>\n\n      <label>\n        Trip price: <input type=\"number\" step=\"0.01\" ng-model=\"disp.trip.price\" />\n      </label>\n\n      <label ng-if=\"adminService.session().role == 'superadmin'\">\n        Company:\n        <company-selector ng-model=\"disp.trip.transportCompanyId\">\n        </company-selector>\n      </label>\n\n      <table>\n        <thead>\n          <tr>\n            <th>Time</th>\n            <th>Stop</th>\n          </tr>\n        </thead>\n        <tbody>\n          <tr ng-repeat=\"tripStop in disp.trip.tripStops\">\n            <td>\n              <uib-timepicker ng-model=\"tripStop.time\"\n              show-spinners=\"false\" show-meridian=\"false\">\n              </uib-timepicker>\n            </td>\n            <td>\n              <!-- <input type=\"text\" ng-model=\"tripStop.stopId\"> -->\n              <stop-selector\n                ng-model=\"tripStop.stopId\"\n              ></stop-selector>\n              <button ng-click=\"showPopupFor(tripStop)\">\n                ?\n              </button>\n            </td>\n            <td>\n              <label>\n                <input type=\"checkbox\" ng-model=\"tripStop.canBoard\" />\n                Boarding\n              </label>\n            </td>\n            <td>\n              <label>\n                <input type=\"checkbox\" ng-model=\"tripStop.canAlight\" />\n                Alighting\n              </label>\n            </td>\n            <td>\n              <button class=\"btn btn-default glyphicon glyphicon-trash\"\n                ng-click=\"disp.deleteTripStop($index)\"\n              ></button>\n            </td>\n          </tr>\n        </tbody>\n        <tfoot>\n          <tr>\n            <td>\n              <button class=\"btn btn-default glyphicon glyphicon-plus\"\n                ng-click=\"disp.addTripStop()\"\n              ></button>\n            </td>\n          </tr>\n        </tfoot>\n      </table>\n    </div>\n  </div>\n\n  <span class=\"btn-group\">\n    <button class=\"btn btn-primary\" ng-click=\"saveTrips()\"\n      >\n      Save\n    </button>\n    <button class=\"btn btn-default\" ng-click=\"clearEdit()\"\n      ng-if=\"disp.trip\">\n      Clear\n    </button>\n  </span>\n</section>\n\n<div>\n  <table class=\"table table-striped\">\n    <thead>\n      <tr>\n        <th></th> <!-- selection button -->\n        <th></th> <!-- actions (delete, use) -->\n        <th></th> <!-- pax -->\n        <th></th> <!-- booked -->\n        <th></th> <!-- price -->\n        <th></th> <!--date -->\n        <th></th> <!-- driver -->\n        <th colspan=\"{{disp.stopsList.length}}\">Stops</th>\n      </tr>\n      <tr>\n        <th></th>\n        <th></th>\n        <th>Cap</th>\n        <th>Booked</th>\n        <th>Price</th>\n        <th>Date</th>\n        <th>Driver</th>\n        <th ng-repeat=\"stop in disp.stopsList track by $index\"\n            title=\"{{stop.stop.description}}\">\n          {{stop.stop.label}} /\n          {{stop.stop.postcode}}\n        </th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr ng-repeat=\"trip in (sorted_trips = trips | orderBy:'date') track by trip.id\"\n        class=\"{\n          active: selection.selected[trip.id]\n        }\"\n      >\n        <td\n          ng-mousedown=\"selectTrips(sorted_trips, $index, $event)\"\n          >\n          <small>{{trip.id}}</small>\n          <i ng-hide=\"!selection.selected[trip.id]\"\n            class=\"glyphicon glyphicon-ok\">\n          </i>\n        </td>\n        <td>\n          <span class=\"btn-group\">\n            <button class=\"btn btn-default glyphicon glyphicon-copy\"\n              ng-click='referenceTrip(trip)'\n            >\n            </button>\n            <button class=\"btn btn-default glyphicon glyphicon-trash\"\n              ng-click='deleteTrip(trip)'\n            >\n            </button>\n          </span>\n        </td>\n        <td>\n          {{trip.capacity}}\n          <i class=\"glyphicon glyphicon-user\"></i>\n        </td>\n        <td>\n          <a ui-sref=\"bookings({tripId: trip.id})\">\n            {{trip.availability.seatsBooked}}\n            <i class=\"glyphicon glyphicon-user\"></i>\n          </a>\n        </td>\n        <td>\n          {{trip.price | number:2}}\n        </td>\n        <td>\n          {{trip.date | date:'dd/MM/yy EEE'}}\n        </td>\n        <td>\n          {{trip.driverTelephone }}\n        </td>\n        <td ng-repeat=\"stop in disp.stopsList\">\n          {{ findStop(trip, stop.stop.id).time | date:'HH:mm'}}\n        </td>\n      </tr>\n    </tbody>\n  </table>\n</div>\n";
+
+/***/ },
+/* 248 */
+/*!*********************************************************************!*\
+  !*** ./beeline-admin/directives/companySelector/companySelector.js ***!
+  \*********************************************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	exports.default = function ($http, companiesSvc) {
+	  return {
+	    template: '\n<select\n    ng-model="ngModel"\n    ng-options="company.id as company.name for company in (companies | orderBy:company.name)"\n    >\n</select>\n    ',
+	    scope: {
+	      ngModel: '=?'
+	    },
+	    link: function link(scope, elem, attr) {
+	      companiesSvc.getCompanies().then(function (companies) {
+	        return scope.companies = [{ id: 0, name: '(All)' }].concat(companies);
+	      });
+	    }
+	  };
+	};
+
+/***/ },
 /* 249 */
+/*!***************************************************************!*\
+  !*** ./beeline-admin/directives/tripSelector/tripSelector.js ***!
+  \***************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _getIterator2 = __webpack_require__(/*! babel-runtime/core-js/get-iterator */ 116);
+	
+	var _getIterator3 = _interopRequireDefault(_getIterator2);
+	
+	exports.default = function (AdminService, RoutesService, $rootScope, LoadingSpinner) {
+	  return {
+	    template: __webpack_require__(/*! ./tripSelector.html */ 250),
+	    scope: {
+	      tripId: '=',
+	      alightStopId: '<?',
+	      boardStopId: '<?',
+	      routeId: '=?',
+	      trips: '=?',
+	      reason: '='
+	    },
+	    link: function link(scope, elem, attr) {
+	      var todayUTC = new Date();
+	      todayUTC = new Date(Date.UTC(todayUTC.getFullYear(), todayUTC.getMonth(), todayUTC.getDate()));
+	
+	      // The options for the select
+	      scope.info = {
+	        routes: [],
+	        tripDates: [],
+	        trips: [],
+	        tripStops: [],
+	        trip: null
+	      };
+	      scope.query = {
+	        tripDate: todayUTC
+	      };
+	      scope.disp = {
+	        datepicker: {
+	          highlightDays: [],
+	          daysAllowed: []
+	        },
+	        popupOpen: false
+	      };
+	      scope.data = {
+	        routeId: scope.routeId,
+	        selectedDates: [],
+	        trips: []
+	      };
+	
+	      // Get routes
+	      scope.displayRoute = function (route) {
+	        return route.label + ': ' + route.from + ' -- ' + route.to;
+	      };
+	      var routesPromise = RoutesService.getRoutes({
+	        includeTrips: false,
+	        startDate: Date.now()
+	      }).then(function (routes) {
+	        scope.info.routes = routes;
+	      });
+	      LoadingSpinner.watchPromise(routesPromise);
+	
+	      // Get trip dates
+	      scope.$watch('data.routeId', function (routeId) {
+	        if (!routeId) {
+	          return null;
+	        }
+	
+	        scope.info.tripDates = [];
+	        scope.info.trips = [];
+	
+	        var today = new Date();
+	        today.setHours(0, 0, 0);
+	
+	        RoutesService.getRoute(routeId, {
+	          includeTrips: true,
+	          includeAvailability: true,
+	          startDate: today.getTime()
+	        }).then(function (route) {
+	          scope.info.trips = route.trips;
+	
+	          scope.disp.datepicker.daysAllowed = route.trips.map(function (trip) {
+	            return new Date(trip.date.getFullYear(), trip.date.getMonth(), trip.date.getDate());
+	          });
+	          scope.disp.datepicker.highlightDays = route.trips.map(function (trip) {
+	            return {
+	              date: new Date(trip.date.getFullYear(), trip.date.getMonth(), trip.date.getDate()),
+	              selectable: true,
+	              annotation: '' + trip.availability.seatsAvailable
+	            };
+	          });
+	        });
+	      });
+	
+	      // Get stops
+	      scope.$watch('data.selectedDates', function (selectedDates) {
+	        if (!selectedDates || selectedDates.length === 0) {
+	          scope.data.trips = [];
+	          scope.info.tripStops = null;
+	          return;
+	        }
+	
+	        // Find the initial set of stops
+	        var offset = new Date().getTimezoneOffset() * 60000;
+	        var initialSubset = scope.info.trips.find(function (tr) {
+	          return moment(tr.date).valueOf() + offset === selectedDates[0].valueOf();
+	        });
+	        (0, _assert2.default)(initialSubset);
+	
+	        initialSubset = initialSubset.tripStops;
+	
+	        // For each day, reduce the subset to the intersection
+	        scope.data.trips = [];
+	        var _iteratorNormalCompletion = true;
+	        var _didIteratorError = false;
+	        var _iteratorError = undefined;
+	
+	        try {
+	          var _loop = function _loop() {
+	            var day = _step.value;
+	
+	            var trip = scope.info.trips.find(function (tr) {
+	              return moment(tr.date).valueOf() + offset == day.valueOf();
+	            });
+	            var stopsSet = trip.tripStops;
+	
+	            // Stops must match by id and time
+	            initialSubset = _.intersectionBy(initialSubset, function (ts) {
+	              return ts.stop.id + ';' + ts.time.getHours() + ';' + ts.time.getMinutes();
+	            });
+	            // push to list of trips
+	            scope.data.trips.push(trip);
+	          };
+	
+	          for (var _iterator = (0, _getIterator3.default)(selectedDates), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	            _loop();
+	          }
+	        } catch (err) {
+	          _didIteratorError = true;
+	          _iteratorError = err;
+	        } finally {
+	          try {
+	            if (!_iteratorNormalCompletion && _iterator.return) {
+	              _iterator.return();
+	            }
+	          } finally {
+	            if (_didIteratorError) {
+	              throw _iteratorError;
+	            }
+	          }
+	        }
+	
+	        scope.data.trips = _.sortBy(scope.data.trips, function (t) {
+	          return t.date;
+	        });
+	        scope.info.tripStops = initialSubset;
+	
+	        // Update boardStop / alightStop
+	        if (scope.boardStopId) {
+	          scope.boardStop = scope.info.tripStops.find(function (ts) {
+	            return ts.stopId === scope.boardStopId;
+	          });
+	        }
+	        if (scope.alightStopId) {
+	          scope.alightStop = scope.info.tripStops.find(function (ts) {
+	            return ts.stopId === scope.alightStopId;
+	          });
+	        }
+	      }, true);
+	
+	      scope.$watchGroup(['boardStop', 'alightStop', 'data.trips'], function () {
+	        if (scope.boardStop) {
+	          scope.boardStopId = scope.boardStop.stopId;
+	        }
+	        if (scope.alightStop) {
+	          scope.alightStopId = scope.alightStop.stopId;
+	        }
+	
+	        // update scope.trips
+	        scope.trips = scope.data.trips.map(function (trip) {
+	          return {
+	            tripId: trip.id,
+	            boardStopId: scope.boardStop ? trip.tripStops.find(function (ts) {
+	              return ts.stopId === scope.boardStop.stopId;
+	            }).id : null,
+	            alightStopId: scope.alightStop ? trip.tripStops.find(function (ts) {
+	              return ts.stopId === scope.alightStop.stopId;
+	            }).id : null
+	          };
+	        });
+	      });
+	
+	      scope.removeTrip = function (date) {
+	        var offset = new Date().getTimezoneOffset() * 60000;
+	        var matchingIndex = scope.data.selectedDates.findIndex(function (dt) {
+	          return dt.valueOf() === date.valueOf() + offset;
+	        });
+	
+	        scope.data.selectedDates.splice(matchingIndex, 1);
+	      };
+	
+	      // Get the board stops / alight stops
+	      function formatTime(tm) {
+	        var dt = new Date(tm);
+	        return dt.getHours() + ':' + (0, _leftPad2.default)(dt.getMinutes(), 2, '0');
+	      }
+	      scope.isBoardStop = function (ts) {
+	        return ts.canBoard;
+	      };
+	      scope.isAlightStop = function (ts) {
+	        return ts.canAlight;
+	      };
+	      scope.displayStop = function (ts) {
+	        return formatTime(ts.time) + ': ' + ts.stop.description;
+	      };
+	    }
+	  };
+	};
+	
+	var _assert = __webpack_require__(/*! assert */ 215);
+	
+	var _assert2 = _interopRequireDefault(_assert);
+	
+	var _leftPad = __webpack_require__(/*! left-pad */ 251);
+	
+	var _leftPad2 = _interopRequireDefault(_leftPad);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/***/ },
+/* 250 */
+/*!*****************************************************************!*\
+  !*** ./beeline-admin/directives/tripSelector/tripSelector.html ***!
+  \*****************************************************************/
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"trip-selector form-inline\">\n  <div class=\"date-picker\">\n    <h3>Dates (Seats available)</h3>\n\n    <multiple-date-picker\n      days-allowed=\"disp.datepicker.daysAllowed\"\n      highlight-days=\"disp.datepicker.highlightDays\"\n      ng-model=\"data.selectedDates\">\n    </multiple-date-picker>\n  </div>\n\n  <div>\n    <label>\n      Route\n    </label>\n    <select ng-options=\"route.id as displayRoute(route) for route in info.routes | orderBy:'label'\"\n            ng-model=\"data.routeId\"\n            class=\"form-control form-inline\">\n    </select>\n  </div>\n\n  <label>\n    Boarding Stop\n    <select ng-options=\"tripStop as displayStop(tripStop) for tripStop in info.tripStops | filter:isBoardStop\"\n      ng-model=\"boardStop\" class=\"form-control\"\n    >\n    </select>\n  </label>\n\n  <label>\n    Alighting Stop\n    <select ng-options=\"tripStop as displayStop(tripStop) for tripStop in info.tripStops | filter:isAlightStop\"\n      ng-model=\"alightStop\" class=\"form-control\"\n    >\n    </select>\n  </label>\n\n  <div>\n    <label>\n      Reason\n      <textarea class=\"form-control\" ng-model=\"reason\">e.g. Bus did not turn up</textarea>\n    </label>\n  </div>\n\n  <div>\n    Selected Trips:\n    <ul class=\"selected-dates\">\n      <li ng-repeat=\"trip in data.trips\">\n        {{trip.date | date:'dd MMM yyyy'}}\n        <button ng-click=\"removeTrip(trip.date)\"\n          class=\"btn btn-danger\">\n          (remove)\n        </button>\n      </li>\n    </ul>\n\n  </div>\n  <!-- <dl>\n    <dt>Trip ID</dt>\n    <dd>{{tripId}}</dd>\n\n    <dt>Board Stop ID</dt>\n    <dd>{{boardStopId}}</dd>\n\n    <dt>Alight Stop ID</dt>\n    <dd>{{alightStopId}}</dd>\n  </dl> -->\n  <br clear=\"both\" />\n</div>\n";
+
+/***/ },
+/* 251 */
 /*!*****************************!*\
   !*** ./~/left-pad/index.js ***!
   \*****************************/
@@ -111981,7 +112098,7 @@
 
 
 /***/ },
-/* 250 */
+/* 252 */
 /*!***************************************************************!*\
   !*** ./beeline-admin/directives/stopSelector/stopSelector.js ***!
   \***************************************************************/
@@ -112029,7 +112146,7 @@
 	};
 
 /***/ },
-/* 251 */
+/* 253 */
 /*!*******************************************************************************!*\
   !*** ./beeline-admin/directives/companySelector/superAdminCompanySelector.js ***!
   \*******************************************************************************/
@@ -112052,7 +112169,7 @@
 	};
 
 /***/ },
-/* 252 */
+/* 254 */
 /*!********************************************!*\
   !*** ./beeline-admin/directives/mySort.js ***!
   \********************************************/
@@ -112064,7 +112181,7 @@
 	  value: true
 	});
 	
-	var _slicedToArray2 = __webpack_require__(/*! babel-runtime/helpers/slicedToArray */ 253);
+	var _slicedToArray2 = __webpack_require__(/*! babel-runtime/helpers/slicedToArray */ 255);
 	
 	var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 	
@@ -112114,7 +112231,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 253 */
+/* 255 */
 /*!**************************************************!*\
   !*** ./~/babel-runtime/helpers/slicedToArray.js ***!
   \**************************************************/
@@ -112124,7 +112241,7 @@
 	
 	exports.__esModule = true;
 	
-	var _isIterable2 = __webpack_require__(/*! ../core-js/is-iterable */ 254);
+	var _isIterable2 = __webpack_require__(/*! ../core-js/is-iterable */ 256);
 	
 	var _isIterable3 = _interopRequireDefault(_isIterable2);
 	
@@ -112173,16 +112290,16 @@
 	}();
 
 /***/ },
-/* 254 */
+/* 256 */
 /*!************************************************!*\
   !*** ./~/babel-runtime/core-js/is-iterable.js ***!
   \************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/is-iterable */ 255), __esModule: true };
+	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/is-iterable */ 257), __esModule: true };
 
 /***/ },
-/* 255 */
+/* 257 */
 /*!*************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/fn/is-iterable.js ***!
   \*************************************************************/
@@ -112190,10 +112307,10 @@
 
 	__webpack_require__(/*! ../modules/web.dom.iterable */ 118);
 	__webpack_require__(/*! ../modules/es6.string.iterator */ 164);
-	module.exports = __webpack_require__(/*! ../modules/core.is-iterable */ 256);
+	module.exports = __webpack_require__(/*! ../modules/core.is-iterable */ 258);
 
 /***/ },
-/* 256 */
+/* 258 */
 /*!***********************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/core.is-iterable.js ***!
   \***********************************************************************/
@@ -112210,7 +112327,7 @@
 	};
 
 /***/ },
-/* 257 */
+/* 259 */
 /*!************************************************!*\
   !*** ./beeline-admin/directives/spanSelect.js ***!
   \************************************************/
@@ -112255,7 +112372,7 @@
 	};
 
 /***/ },
-/* 258 */
+/* 260 */
 /*!***************************************************************!*\
   !*** ./beeline-admin/directives/userSelector/userSelector.js ***!
   \***************************************************************/
@@ -112307,14 +112424,14 @@
 	  };
 	};
 	
-	var _querystring = __webpack_require__(/*! querystring */ 259);
+	var _querystring = __webpack_require__(/*! querystring */ 261);
 	
 	var _querystring2 = _interopRequireDefault(_querystring);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 259 */
+/* 261 */
 /*!********************************!*\
   !*** ./~/querystring/index.js ***!
   \********************************/
@@ -112322,12 +112439,12 @@
 
 	'use strict';
 	
-	exports.decode = exports.parse = __webpack_require__(/*! ./decode */ 260);
-	exports.encode = exports.stringify = __webpack_require__(/*! ./encode */ 261);
+	exports.decode = exports.parse = __webpack_require__(/*! ./decode */ 262);
+	exports.encode = exports.stringify = __webpack_require__(/*! ./encode */ 263);
 
 
 /***/ },
-/* 260 */
+/* 262 */
 /*!*********************************!*\
   !*** ./~/querystring/decode.js ***!
   \*********************************/
@@ -112416,7 +112533,7 @@
 
 
 /***/ },
-/* 261 */
+/* 263 */
 /*!*********************************!*\
   !*** ./~/querystring/encode.js ***!
   \*********************************/
@@ -112489,7 +112606,7 @@
 
 
 /***/ },
-/* 262 */
+/* 264 */
 /*!************************************************!*\
   !*** ./beeline-admin/services/adminService.js ***!
   \************************************************/
@@ -112501,7 +112618,7 @@
 	  value: true
 	});
 	
-	var _slicedToArray2 = __webpack_require__(/*! babel-runtime/helpers/slicedToArray */ 253);
+	var _slicedToArray2 = __webpack_require__(/*! babel-runtime/helpers/slicedToArray */ 255);
 	
 	var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 	
@@ -112527,7 +112644,7 @@
 	    store.remove('token');
 	    store.remove('sessionToken');
 	    store.remove('profile');
-	    $location.path('/login');
+	    window.location.reload(); // Needed, otherwise Auth0 won't recognize this as a new page
 	  };
 	
 	  this.login = function () {
@@ -112587,13 +112704,13 @@
 	  };
 	};
 	
-	var _assert = __webpack_require__(/*! assert */ 240);
+	var _assert = __webpack_require__(/*! assert */ 215);
 	
 	var _assert2 = _interopRequireDefault(_assert);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var env = __webpack_require__(/*! ../env.json */ 180);
+	var env = __webpack_require__(/*! ../env.json */ 182);
 	
 	function b64_to_utf8(str) {
 	  return decodeURIComponent(unescape(window.atob(str)));
@@ -112613,7 +112730,7 @@
 	}
 
 /***/ },
-/* 263 */
+/* 265 */
 /*!************************************************!*\
   !*** ./beeline-admin/services/tripsService.js ***!
   \************************************************/
@@ -112625,15 +112742,15 @@
 	  value: true
 	});
 	
-	var _regenerator = __webpack_require__(/*! babel-runtime/regenerator */ 216);
+	var _regenerator = __webpack_require__(/*! babel-runtime/regenerator */ 228);
 	
 	var _regenerator2 = _interopRequireDefault(_regenerator);
 	
-	var _promise = __webpack_require__(/*! babel-runtime/core-js/promise */ 221);
+	var _promise = __webpack_require__(/*! babel-runtime/core-js/promise */ 232);
 	
 	var _promise2 = _interopRequireDefault(_promise);
 	
-	var _asyncToGenerator2 = __webpack_require__(/*! babel-runtime/helpers/asyncToGenerator */ 220);
+	var _asyncToGenerator2 = __webpack_require__(/*! babel-runtime/helpers/asyncToGenerator */ 231);
 	
 	var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 	
@@ -112881,18 +112998,18 @@
 	
 	var _lodash2 = _interopRequireDefault(_lodash);
 	
-	var _querystring = __webpack_require__(/*! querystring */ 259);
+	var _querystring = __webpack_require__(/*! querystring */ 261);
 	
 	var _querystring2 = _interopRequireDefault(_querystring);
 	
-	var _assert = __webpack_require__(/*! assert */ 240);
+	var _assert = __webpack_require__(/*! assert */ 215);
 	
 	var _assert2 = _interopRequireDefault(_assert);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 264 */
+/* 266 */
 /*!*************************************************!*\
   !*** ./beeline-admin/services/routesService.js ***!
   \*************************************************/
@@ -113152,18 +113269,18 @@
 	
 	var _lodash2 = _interopRequireDefault(_lodash);
 	
-	var _querystring = __webpack_require__(/*! querystring */ 259);
+	var _querystring = __webpack_require__(/*! querystring */ 261);
 	
 	var _querystring2 = _interopRequireDefault(_querystring);
 	
-	var _assert = __webpack_require__(/*! assert */ 240);
+	var _assert = __webpack_require__(/*! assert */ 215);
 	
 	var _assert2 = _interopRequireDefault(_assert);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 265 */
+/* 267 */
 /*!**********************************************!*\
   !*** ./beeline-admin/services/stopsPopup.js ***!
   \**********************************************/
@@ -113179,7 +113296,7 @@
 	
 	var _getIterator3 = _interopRequireDefault(_getIterator2);
 	
-	var _promise = __webpack_require__(/*! babel-runtime/core-js/promise */ 221);
+	var _promise = __webpack_require__(/*! babel-runtime/core-js/promise */ 232);
 	
 	var _promise2 = _interopRequireDefault(_promise);
 	
@@ -113313,14 +113430,14 @@
 	  };
 	};
 	
-	var _stopsPopup = __webpack_require__(/*! ../templates/stopsPopup.html */ 266);
+	var _stopsPopup = __webpack_require__(/*! ../templates/stopsPopup.html */ 268);
 	
 	var _stopsPopup2 = _interopRequireDefault(_stopsPopup);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 266 */
+/* 268 */
 /*!*************************************************!*\
   !*** ./beeline-admin/templates/stopsPopup.html ***!
   \*************************************************/
@@ -113329,7 +113446,7 @@
 	module.exports = "\n<div class=\"stops-popup\">\n  <div class=\"modal-header\">\n    <h3>{{title}}</h3>\n  </div>\n\n  <div class=\"modal-body\">\n    <ui-gmap-google-map\n      center=\"map.center\"\n      zoom=\"map.zoom\"\n      control=\"map.control\"\n      options=\"map.options\"\n      events=\"map.events\"\n    >\n      <ui-gmap-markers\n        models=\"allStops\"\n        coords=\"'$latlng'\"\n        idKey=\"'id'\"\n        doCluster=\"true\"\n        click=\"stopClicked\"\n        dorebuildall=\"true\"\n        modelsbyref=\"true\"\n        control=\"map.markersControl\"\n        >\n      </ui-gmap-markers>\n\n      <ui-gmap-marker\n        idkey=\"'newstop'\"\n        coords=\"selectedStop.$latlng\"\n        ng-if=\"!selectedStop.id\"\n        options=\"map.newStopOptions\"\n      >\n      </ui-gmap-marker>\n    </ui-gmap-google-map>\n  </div>\n\n  <div class=\"modal-footer\">\n    <form name=\"stopForm\">\n      <div ng-show=\"selectedStop\">\n        <h3>\n          <i ng-if=\"!selectedStop.id\">New Stop</i>\n          <span ng-if=\"selectedStop.id\">{{selectedStop.description}}</span>\n        </h3>\n        <label>\n          Description:\n          <input type=\"text\" ng-model=\"selectedStop.description\"\n              ng-required\n              >\n        </label>\n        <label>\n          Road:\n          <input type=\"text\" ng-model=\"selectedStop.road\"\n              ng-required\n          >\n        </label>\n        <label>\n          Label:\n          <input type=\"text\" ng-model=\"selectedStop.label\"\n              ng-required\n          >\n        </label>\n      </div>\n\n      <span class=\"btn-group\">\n        <button class=\"btn btn-primary\"\n          ng-disabled=\"!selectedStop.id\"\n          ng-click=\"done()\">\n          OK\n        </button>\n        <button class=\"btn btn-default\"\n          ng-click=\"cancel()\">\n          Cancel\n        </button>\n      </span>\n\n      <span class=\"btn-group\">\n        <button class=\"btn btn-primary\"\n          ng-disabled=\"stopForm.$invalid || stopForm.$pristine\"\n          ng-click=\"saveStop(selectedStop)\"\n          >\n          Save Stop\n        </button>\n        <button class=\"btn btn-danger\"\n          ng-show=\"selectedStop.id\"\n          ng-click=\"deleteStop(selectedStop)\"\n          >\n          Delete Stop\n        </button>\n      </span>\n    </form>\n  </div>\n</div>\n";
 
 /***/ },
-/* 267 */
+/* 269 */
 /*!**********************************************!*\
   !*** ./beeline-admin/services/routePopup.js ***!
   \**********************************************/
@@ -113345,7 +113462,7 @@
 	
 	var _getIterator3 = _interopRequireDefault(_getIterator2);
 	
-	var _promise = __webpack_require__(/*! babel-runtime/core-js/promise */ 221);
+	var _promise = __webpack_require__(/*! babel-runtime/core-js/promise */ 232);
 	
 	var _promise2 = _interopRequireDefault(_promise);
 	
@@ -113532,14 +113649,14 @@
 	  };
 	};
 	
-	var _routePopup = __webpack_require__(/*! ../templates/routePopup.html */ 268);
+	var _routePopup = __webpack_require__(/*! ../templates/routePopup.html */ 270);
 	
 	var _routePopup2 = _interopRequireDefault(_routePopup);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 268 */
+/* 270 */
 /*!*************************************************!*\
   !*** ./beeline-admin/templates/routePopup.html ***!
   \*************************************************/
@@ -113548,7 +113665,7 @@
 	module.exports = "\n<div class=\"route-popup\">\n  <div class=\"modal-header\">\n    <h3>{{route.label}}: {{route.from}} &mdash; {{route.to}}</h3>\n\n    <button class=\"glyphicon glyphicon-remove\"\n      ng-click=\"closing = true\">\n    </button>\n  </div>\n\n  <div class=\"modal-body\">\n    <select ng-options=\"trip.date | date:'d MMM yyyy' for trip in trips | orderBy:'date':1\"\n            ng-model=\"trip\">\n    </select>\n\n    <ui-gmap-google-map\n      center=\"map.center\"\n      zoom=\"map.zoom\"\n      control=\"map.control\"\n      options=\"map.options\"\n      events=\"map.events\"\n    >\n      <!-- Route path -->\n      <ui-gmap-polyline path=\"computed.path\"\n                        idkey=\"'routePath'\"\n      ></ui-gmap-polyline>\n\n      <!-- Route ping -->\n      <ui-gmap-polyline path=\"computed.pingPath\"\n                        idkey=\"'pingPath'\"\n                        icons=\"map.pingPathOptions.icons\"\n                        stroke=\"map.pingPathOptions.stroke\"\n      ></ui-gmap-polyline>\n\n      <ui-gmap-markers\n        ng-if=\"computed.pingSamples\"\n        models=\"computed.pingSamples\"\n        coords=\"'coordinates'\"\n        idKey=\"'id'\"\n        options=\"'_options'\"\n        events=\"map.pingEvents\"\n        >\n      </ui-gmap-markers>\n\n      <!-- Trip stops -->\n      <ui-gmap-markers\n        ng-if=\"trip\"\n        models=\"trip.tripStops\"\n        coords=\"'stop.coordinates'\"\n        idKey=\"'id'\"\n        doCluster=\"false\"\n        click=\"stopClicked\"\n        options=\"'_options'\"\n        control=\"map.markersControl\"\n        >\n      </ui-gmap-markers>\n\n      <ui-gmap-window coords=\"selectedStop.stop.coordinates\"\n                      show=\"selectedStop\">\n        <div>\n          <b>{{selectedStop.stop.description}}</b>\n          <br/>\n          {{selectedStop.time | date:'HH:mm'}}\n        </div>\n      </ui-gmap-window>\n\n      <ui-gmap-window coords=\"selectedPing.coordinates\"\n                      show=\"selectedPing\">\n        <div>\n          <b>{{selectedPing.time | date:'HH:mm:ss'}}</b>\n        </div>\n      </ui-gmap-window>\n\n    </ui-gmap-google-map>\n  </div>\n</div>\n";
 
 /***/ },
-/* 269 */
+/* 271 */
 /*!**********************************************!*\
   !*** ./beeline-admin/services/mapService.js ***!
   \**********************************************/
@@ -113594,7 +113711,58 @@
 	};
 
 /***/ },
-/* 270 */
+/* 272 */
+/*!************************************************!*\
+  !*** ./beeline-admin/services/companiesSvc.js ***!
+  \************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	exports.default = function (AdminService, DriverService, $q) {
+	  var companiesCache;
+	
+	  /**
+	    @param options -- options to pass in query string to /routes
+	      @prop startDate : string | int
+	      @prop endDate : string | int
+	      @prop includeAvailability : boolean
+	      @prop includeTrips : boolean
+	  **/
+	  this.getCompanies = function (options) {
+	    if (!options && companiesCache) return companiesCache;
+	
+	    companiesCache = AdminService.beeline({
+	      method: 'GET',
+	      url: '/companies'
+	    }).then(function (response) {
+	      return response.data;
+	    });
+	
+	    return companiesCache;
+	  };
+	};
+	
+	var _lodash = __webpack_require__(/*! lodash */ 8);
+	
+	var _lodash2 = _interopRequireDefault(_lodash);
+	
+	var _querystring = __webpack_require__(/*! querystring */ 261);
+	
+	var _querystring2 = _interopRequireDefault(_querystring);
+	
+	var _assert = __webpack_require__(/*! assert */ 215);
+	
+	var _assert2 = _interopRequireDefault(_assert);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/***/ },
+/* 273 */
 /*!*************************************************!*\
   !*** ./beeline-admin/services/driverService.js ***!
   \*************************************************/
@@ -113610,7 +113778,7 @@
 	
 	var _getIterator3 = _interopRequireDefault(_getIterator2);
 	
-	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 271);
+	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 274);
 	
 	var _stringify2 = _interopRequireDefault(_stringify);
 	
@@ -113732,23 +113900,23 @@
 	
 	var _lodash2 = _interopRequireDefault(_lodash);
 	
-	var _querystring = __webpack_require__(/*! querystring */ 259);
+	var _querystring = __webpack_require__(/*! querystring */ 261);
 	
 	var _querystring2 = _interopRequireDefault(_querystring);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 271 */
+/* 274 */
 /*!***************************************************!*\
   !*** ./~/babel-runtime/core-js/json/stringify.js ***!
   \***************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/json/stringify */ 272), __esModule: true };
+	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/json/stringify */ 275), __esModule: true };
 
 /***/ },
-/* 272 */
+/* 275 */
 /*!****************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/fn/json/stringify.js ***!
   \****************************************************************/
@@ -113761,7 +113929,7 @@
 	};
 
 /***/ },
-/* 273 */
+/* 276 */
 /*!****************************************************!*\
   !*** ./beeline-admin/services/issueTicketModal.js ***!
   \****************************************************/
@@ -113798,7 +113966,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var issueTicketTemplate = __webpack_require__(/*! ../templates/issueTicket.html */ 274);
+	var issueTicketTemplate = __webpack_require__(/*! ../templates/issueTicket.html */ 277);
 	
 	
 	function IssueTicketController($scope, AdminService) {
@@ -113829,7 +113997,7 @@
 	}
 
 /***/ },
-/* 274 */
+/* 277 */
 /*!**************************************************!*\
   !*** ./beeline-admin/templates/issueTicket.html ***!
   \**************************************************/
@@ -113838,7 +114006,7 @@
 	module.exports = "<div class=\"issue-ticket-popup\">\n  <div class=\"modal-header\">\n    <h3>Issue Tickets</h3>\n  </div>\n  <div class=\"modal-body\">\n    <trip-selector trip-id=\"tripId\" trips=\"trips\" board-stop-id=\"boardStopId\"\n      alight-stop-id=\"alightStopId\" route-id=\"routeId\" reason=\"reason\">\n    </trip-selector>\n\n    <h3>Issue to</h3>\n    <user-selector ng-model=\"userId\" user=\"user\">\n    </user-selector>\n  </div>\n  <div class=\"modal-footer\">\n    <button class=\"btn btn-default\" ng-click=\"$dismiss()\">\n      Cancel\n    </button>\n    <button class=\"btn btn-primary\" ng-click=\"issue()\">\n      Issue\n    </button>\n  </div>\n</div>\n";
 
 /***/ },
-/* 275 */
+/* 278 */
 /*!**************************************************!*\
   !*** ./beeline-admin/services/loadingSpinner.js ***!
   \**************************************************/
@@ -113880,7 +114048,7 @@
 	};
 
 /***/ },
-/* 276 */
+/* 279 */
 /*!*************************************************************!*\
   !*** ./beeline-admin/controllers/transactionsController.js ***!
   \*************************************************************/
@@ -113896,11 +114064,11 @@
 	
 	var _getIterator3 = _interopRequireDefault(_getIterator2);
 	
-	var _keys = __webpack_require__(/*! babel-runtime/core-js/object/keys */ 277);
+	var _keys = __webpack_require__(/*! babel-runtime/core-js/object/keys */ 280);
 	
 	var _keys2 = _interopRequireDefault(_keys);
 	
-	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 271);
+	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 274);
 	
 	var _stringify2 = _interopRequireDefault(_stringify);
 	
@@ -114031,33 +114199,33 @@
 	  $scope.$watch('filter', query, true);
 	};
 	
-	var _querystring = __webpack_require__(/*! querystring */ 259);
+	var _querystring = __webpack_require__(/*! querystring */ 261);
 	
 	var _querystring2 = _interopRequireDefault(_querystring);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 277 */
+/* 280 */
 /*!************************************************!*\
   !*** ./~/babel-runtime/core-js/object/keys.js ***!
   \************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/keys */ 278), __esModule: true };
+	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/keys */ 281), __esModule: true };
 
 /***/ },
-/* 278 */
+/* 281 */
 /*!*************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/fn/object/keys.js ***!
   \*************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(/*! ../../modules/es6.object.keys */ 279);
+	__webpack_require__(/*! ../../modules/es6.object.keys */ 282);
 	module.exports = __webpack_require__(/*! ../../modules/_core */ 131).Object.keys;
 
 /***/ },
-/* 279 */
+/* 282 */
 /*!**********************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/es6.object.keys.js ***!
   \**********************************************************************/
@@ -114067,14 +114235,14 @@
 	var toObject = __webpack_require__(/*! ./_to-object */ 163)
 	  , $keys    = __webpack_require__(/*! ./_object-keys */ 149);
 	
-	__webpack_require__(/*! ./_object-sap */ 280)('keys', function(){
+	__webpack_require__(/*! ./_object-sap */ 283)('keys', function(){
 	  return function keys(it){
 	    return $keys(toObject(it));
 	  };
 	});
 
 /***/ },
-/* 280 */
+/* 283 */
 /*!******************************************************************!*\
   !*** ./~/babel-runtime/~/core-js/library/modules/_object-sap.js ***!
   \******************************************************************/
@@ -114092,7 +114260,7 @@
 	};
 
 /***/ },
-/* 281 */
+/* 284 */
 /*!******************************************************!*\
   !*** ./beeline-admin/controllers/tripsController.js ***!
   \******************************************************/
@@ -114104,7 +114272,7 @@
 	  value: true
 	});
 	
-	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 271);
+	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 274);
 	
 	var _stringify2 = _interopRequireDefault(_stringify);
 	
@@ -114125,7 +114293,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 282 */
+/* 285 */
 /*!*******************************************************!*\
   !*** ./beeline-admin/controllers/routesController.js ***!
   \*******************************************************/
@@ -114170,14 +114338,14 @@
 	  $scope.$watch('filter', refreshRoutes, true);
 	};
 	
-	var _querystring = __webpack_require__(/*! querystring */ 259);
+	var _querystring = __webpack_require__(/*! querystring */ 261);
 	
 	var _querystring2 = _interopRequireDefault(_querystring);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 283 */
+/* 286 */
 /*!********************************************************!*\
   !*** ./beeline-admin/controllers/summaryController.js ***!
   \********************************************************/
@@ -114274,7 +114442,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 284 */
+/* 287 */
 /*!*********************************************************!*\
   !*** ./beeline-admin/controllers/bookingsController.js ***!
   \*********************************************************/
@@ -114290,7 +114458,7 @@
 	
 	var _getIterator3 = _interopRequireDefault(_getIterator2);
 	
-	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 271);
+	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 274);
 	
 	var _stringify2 = _interopRequireDefault(_stringify);
 	
@@ -114393,14 +114561,14 @@
 	  $scope.$watch('filter.date', queryRoutes, true);
 	};
 	
-	var _querystring = __webpack_require__(/*! querystring */ 259);
+	var _querystring = __webpack_require__(/*! querystring */ 261);
 	
 	var _querystring2 = _interopRequireDefault(_querystring);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 285 */
+/* 288 */
 /*!************************************************************!*\
   !*** ./beeline-admin/controllers/bookingsControllerWrs.js ***!
   \************************************************************/
@@ -114416,11 +114584,11 @@
 	
 	var _getIterator3 = _interopRequireDefault(_getIterator2);
 	
-	var _keys = __webpack_require__(/*! babel-runtime/core-js/object/keys */ 277);
+	var _keys = __webpack_require__(/*! babel-runtime/core-js/object/keys */ 280);
 	
 	var _keys2 = _interopRequireDefault(_keys);
 	
-	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 271);
+	var _stringify = __webpack_require__(/*! babel-runtime/core-js/json/stringify */ 274);
 	
 	var _stringify2 = _interopRequireDefault(_stringify);
 	
@@ -114666,14 +114834,14 @@
 	  }, query, true);
 	};
 	
-	var _querystring = __webpack_require__(/*! querystring */ 259);
+	var _querystring = __webpack_require__(/*! querystring */ 261);
 	
 	var _querystring2 = _interopRequireDefault(_querystring);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 286 */
+/* 289 */
 /*!********************************************************!*\
   !*** ./beeline-admin/controllers/driversController.js ***!
   \********************************************************/
@@ -114758,14 +114926,14 @@
 	  }, query);
 	};
 	
-	var _querystring = __webpack_require__(/*! querystring */ 259);
+	var _querystring = __webpack_require__(/*! querystring */ 261);
 	
 	var _querystring2 = _interopRequireDefault(_querystring);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 287 */
+/* 290 */
 /*!******************************************************!*\
   !*** ./beeline-admin/controllers/loginController.js ***!
   \******************************************************/
@@ -114782,7 +114950,7 @@
 	};
 
 /***/ },
-/* 288 */
+/* 291 */
 /*!**********************************************************!*\
   !*** ./beeline-admin/controllers/companiesController.js ***!
   \**********************************************************/
@@ -114832,10 +115000,10 @@
 	  };
 	};
 	
-	var env = __webpack_require__(/*! ../env.json */ 180);
+	var env = __webpack_require__(/*! ../env.json */ 182);
 
 /***/ },
-/* 289 */
+/* 292 */
 /*!*******************************************************!*\
   !*** ./beeline-admin/controllers/assetsController.js ***!
   \*******************************************************/
@@ -114917,10 +115085,99 @@
 	  refreshAssets();
 	};
 	
-	var env = __webpack_require__(/*! ../env.json */ 180);
+	var env = __webpack_require__(/*! ../env.json */ 182);
 
 /***/ },
-/* 290 */
+/* 293 */
+/*!*******************************************************!*\
+  !*** ./beeline-admin/controllers/adminsController.js ***!
+  \*******************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	exports.default = function ($scope, AdminService, LoadingSpinner) {
+	  $scope.admins = [];
+	
+	  function query() {
+	    LoadingSpinner.watchPromise(AdminService.beeline({
+	      method: 'GET',
+	      url: '/admins'
+	    }).then(function (response) {
+	      $scope.admins = response.data;
+	    }));
+	  }
+	
+	  $scope.deleteAdmin = function (admin) {
+	    if (!confirm('Are you sure you want to delete ' + admin.email + '?')) return;
+	    AdminService.beeline({
+	      method: 'DELETE',
+	      url: '/admins/' + admin.id
+	    }).then(query).then(null, function (err) {
+	      console.log(err);
+	    });
+	  };
+	
+	  $scope.updateAdmin = function (admin, form) {
+	    if (admin.id) {
+	      AdminService.beeline({
+	        method: 'PUT',
+	        url: '/admins/' + admin.id,
+	        data: {
+	          name: admin.name,
+	          telephone: admin.telephone || null,
+	          receiveAlerts: admin.receiveAlerts ? 'true' : 'false',
+	          isCompanyAdmin: admin.isCompanyAdmin ? 'true' : 'false',
+	          transportCompanyId: admin.transportCompanyId
+	        }
+	      }).then(query).then(function () {
+	        form.$setPristine();
+	      }).then(null, function (err) {
+	        console.log(err);
+	      });
+	    } else {
+	      AdminService.beeline({
+	        method: 'POST',
+	        url: '/admins',
+	        data: {
+	          name: admin.name,
+	          email: admin.email,
+	          telephone: admin.telephone || null,
+	          receiveAlerts: admin.receiveAlerts ? 'true' : 'false',
+	          isCompanyAdmin: admin.isCompanyAdmin ? 'true' : 'false',
+	          transportCompanyId: admin.transportCompanyId
+	        }
+	      }).then(query).then(function () {
+	        form.$setPristine();
+	      }).then(null, function (err) {
+	        console.log(err);
+	      });
+	    }
+	  };
+	
+	  $scope.addAdmin = function () {
+	    $scope.admins.push({});
+	  };
+	
+	  query();
+	};
+	
+	var _querystring = __webpack_require__(/*! querystring */ 261);
+	
+	var _querystring2 = _interopRequireDefault(_querystring);
+	
+	var _lodash = __webpack_require__(/*! lodash */ 8);
+	
+	var _lodash2 = _interopRequireDefault(_lodash);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/***/ },
+/* 294 */
 /*!*****************************************!*\
   !*** ./beeline-admin/shared/filters.js ***!
   \*****************************************/
