@@ -35,6 +35,33 @@ export default function($scope, $state, $stateParams, $http, AdminService, Loadi
   $scope.filter.endDate.setMonth($scope.filter.endDate.getMonth() + 1)
   $scope.filter.endDate.setDate(0)
 
+  // CSV Download
+  $scope.downloadCsv = function() {
+    AdminService.beeline({
+      method: 'POST',
+      url: '/makeDownloadLink',
+      data: {
+        uri: $scope.csvUrl
+      }
+    })
+    .then((result) => {
+      window.location.href = AdminService.serverUrl() + '/downloadLink?token=' + result.data.token;
+    })
+  }
+  // Statement Download
+  $scope.downloadStatement = function() {
+    AdminService.beeline({
+      method: 'POST',
+      url: '/makeDownloadLink',
+      data: {
+        uri: $scope.statementUrl
+      }
+    })
+    .then((result) => {
+      window.location.href = AdminService.serverUrl() + '/downloadLink?token=' + result.data.token;
+    })
+  }
+
   // URL handling
   $scope.$watch(() => $stateParams.id, () => {
     $scope.filter.transactionId = $stateParams.id;
@@ -53,7 +80,7 @@ export default function($scope, $state, $stateParams, $http, AdminService, Loadi
     $state.go(myState, params, {notify: false, reload: false})
   })
 
-  function buildQuery() {
+  function buildQuery(overrides) {
     var queryOpts = {};
 
     queryOpts.order = $scope.filter.order;
@@ -86,13 +113,19 @@ export default function($scope, $state, $stateParams, $http, AdminService, Loadi
       ).getTime();
     }
 
+    _.assign(queryOpts, overrides);
+
     return '/transactionItems?' + querystring.stringify(queryOpts);
   }
 
   function query() {
+    var ajaxUrl = buildQuery();
+    $scope.csvUrl = buildQuery({page:1, perPage:10000000, format: 'csv'})
+    $scope.statementUrl = buildQuery({page:1, perPage:10000000, format: 'statement'})
+
     var queryPromise = AdminService.beeline({
       method: 'GET',
-      url: buildQuery(),
+      url: ajaxUrl,
     })
     .then((result) => {
 

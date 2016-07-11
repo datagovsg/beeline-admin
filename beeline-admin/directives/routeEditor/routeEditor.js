@@ -34,6 +34,7 @@ export default function (AdminService, RoutesService, $rootScope) {
         RoutesService.saveRoute(scope.route)
         .then((route) => {
           scope.route = route;
+          scope.edit.routeId = route.id;
         })
       }
 
