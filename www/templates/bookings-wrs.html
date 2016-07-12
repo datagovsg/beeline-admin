@@ -115,12 +115,18 @@
               </td>
               <td>
                 <a ui-sref="transactions({id: ticket.ticketSale.transactionId})">
-            {{ticket.ticketSale.transactionId}}
-          </a>
+                  {{ticket.ticketSale.transactionId}}
+                </a>
               </td>
               <td>
                 {{ticket.paymentResource}}
                 <span ng-if="ticket.refundResource"><br/>{{ticket.refundResource}}</span>
+                <span ng-if="ticket.paymentData.transfer.destination_payment">
+                  <br/>{{ticket.paymentData.transfer.destination_payment}}
+                </span>
+                <span ng-if="ticket.refundData.transfer.destination_payment">
+                  <br/>{{ticket.refundData.transfer.destination_payment}}
+                </span>
               </td>
               <td>
                 {{ticket.boardStop.trip.date | date:'dd-MMM-yy':'UTC'}}
