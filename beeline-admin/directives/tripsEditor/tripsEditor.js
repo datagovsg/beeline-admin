@@ -26,6 +26,12 @@ export default function(RoutesService, TripsService, AdminService, DriverService
           routeId: scope.routeId,
           tripStops: [],
         },
+        windowSizeOptions: [
+          {size: 0, label: '0 mins before'},
+          {size: -300000, label: '5 mins before'},
+          {size: -600000, label: '10 mins before'},
+          {size: -12 * 60 * 60 * 1000, label: '12 hrs before'},
+        ],
 
         addTripStop() {
           this.trip.tripStops = this.trip.tripStops || [];
@@ -106,45 +112,47 @@ export default function(RoutesService, TripsService, AdminService, DriverService
         scope.disp.trip.routeId = scope.routeId;
         scope.disp.trip.tripStops = [];
       }
-      scope.saveTrips = async function() {
-        // get the driver id... and create the driver if non-existent
-        var driver = await DriverService.fetchDriverIds([scope.disp.trip])
+      scope.saveTrips = function() {
+        return LoadingSpinner.watchPromise((async function() {
+          // get the driver id... and create the driver if non-existent
+          var driver = await DriverService.fetchDriverIds([scope.disp.trip])
 
-        if (scope.disp.trip.driverTelephone && !scope.disp.trip.driverId) {
-          driver = await DriverService.createDriver({
-            telephone: '+65' + scope.disp.trip.driverTelephone,
-            name: scope.disp.trip.driverTelephone,
-          })
-          scope.disp.trip.driverId = driver.id;
-        }
-        else if (!scope.disp.trip.driverTelephone) {
-          scope.disp.trip.driverId = null;
-        }
+          if (scope.disp.trip.driverTelephone && !scope.disp.trip.driverId) {
+            driver = await DriverService.createDriver({
+              telephone: '+65' + scope.disp.trip.driverTelephone,
+              name: scope.disp.trip.driverTelephone,
+            })
+            scope.disp.trip.driverId = driver.id;
+          }
+          else if (!scope.disp.trip.driverTelephone) {
+            scope.disp.trip.driverId = null;
+          }
 
-        if (scope.disp.trip.id) {
-          // get a list of the trips to update
-          var trips = scope.trips.filter(tr => tr.id in scope.selection.selected)
+          if (scope.disp.trip.id) {
+            // get a list of the trips to update
+            var trips = scope.trips.filter(tr => tr.id in scope.selection.selected)
 
-          // update the trips...
-          return TripsService.updateTrips(
-            trips,
-            scope.disp.trip)
+            // update the trips...
+            return TripsService.updateTrips(
+              trips,
+              scope.disp.trip)
+              .then(scope.refreshTrips)
+          }
+          else {
+            return TripsService.createTrips(
+              scope.disp.newDates,
+              scope.disp.trip)
             .then(scope.refreshTrips)
-        }
-        else {
-          return TripsService.createTrips(
-            scope.disp.newDates,
-            scope.disp.trip)
-          .then(scope.refreshTrips)
-          .then(scope.resetTrips)
-          .then(() => {
-            alert("Trips created")
-          })
-          .catch((error) => {
-            console.log(error)
-            alert(`${error.data.error} -- ${error.data.message}`)
-          })
-        }
+            .then(scope.resetTrips)
+            .then(() => {
+              alert("Trips created")
+            })
+            .catch((error) => {
+              console.log(error)
+              alert(`${error.data.error} -- ${error.data.message}`)
+            })
+          }
+        })())
       }
       scope.showPopupFor = function (ts) {
         StopsPopup.show({

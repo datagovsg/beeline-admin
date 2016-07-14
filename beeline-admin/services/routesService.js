@@ -2,7 +2,7 @@ import _ from 'lodash'
 import querystring from 'querystring'
 import assert from 'assert'
 
-export default function (AdminService, DriverService, $q) {
+export default function (AdminService, DriverService, $q, LoadingSpinner) {
 
   var routesPromise = null;
   var routesById = null;
@@ -117,7 +117,7 @@ export default function (AdminService, DriverService, $q) {
 
   this.saveRoute = function (route) {
     if (route.id) {
-      return AdminService.beeline({
+      return LoadingSpinner.watchPromise(AdminService.beeline({
        method: 'PUT',
        url: `/routes/${route.id}`,
        data: route,
@@ -127,10 +127,10 @@ export default function (AdminService, DriverService, $q) {
         routesCache.splice(index, 1, response.data)
         routesById[route.id] = response.data
         return response.data
-      });
+      }));
     }
     else {
-      return AdminService.beeline({
+      return LoadingSpinner.watchPromise(AdminService.beeline({
        method: 'POST',
        url: `/routes`,
        data: route
@@ -139,7 +139,7 @@ export default function (AdminService, DriverService, $q) {
         routesCache.push(response.data)
         routesById[response.data.id] = response.data
         return response.data
-      });
+      }));
     }
   }
 

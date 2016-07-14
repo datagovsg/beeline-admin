@@ -1,5 +1,23 @@
-.tag-editor{display:block;position:relative;margin:5px 0 10px 0;border:1px solid #ccc;border-radius:3px;min-height:40px;overflow:hidden;padding:0 9px;font-size:16px;font-weight:normal;background-color:#fff;color:#000;cursor:text;font-family:sans-serif;font-size:16px;line-height:38px;}
-.tag-draft{}, .tag-suggestions{display:block;}
+.tag-editor{
+  display: inline-block;
+  vertical-align: middle;
+  position:relative;
+  margin: 0;
+  border:1px solid #ccc;
+  border-radius:3px;
+  min-height:40px;
+  overflow:hidden;
+  padding:0 9px;
+  font-size:16px;
+  font-weight:normal;
+  background-color:#fff;
+  color:#000;
+  cursor:text;
+  font-family:sans-serif;
+  font-size:16px;
+  line-height:38px;
+}
+.tag-draft{}, .tag-suggestions{display:inline-block;}
 .tag-editor .tag{display:inline-block;height:24px;margin:0 7px 0 0;background-color:#ffab40;color:#fff;padding:0 5px;border-radius:2px;font-size:14px;line-height:24px;cursor:default;transition:box-shadow 100ms linear;}
 .tag-editor .tag:hover{box-shadow: 0 3px 3px rgba(0,0,0,0.2);}
 .tag-editor .tag .remove{margin:0 0 0 5px;font-weight:bold;cursor:pointer;}
