@@ -43,6 +43,7 @@ angular.module('beeline-admin', [
 .directive('mySort', require('./directives/mySort').default)
 .directive('spanSelect', require('./directives/spanSelect').default)
 .directive('userSelector', require('./directives/userSelector/userSelector').default)
+.directive('pingPath', require('./directives/pingPath').default)
 .service('AdminService', require('./services/adminService').default)
 .service('TripsService', require('./services/tripsService').default)
 .service('RoutesService', require('./services/routesService').default)

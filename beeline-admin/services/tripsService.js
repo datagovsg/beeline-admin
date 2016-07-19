@@ -62,14 +62,22 @@ export default function (AdminService, DriverService, $q) {
   }
 
   this.getPings = function (options) {
+    _.defaults(options, {
+      limit: 100000,
+    })
     return AdminService.beeline({
       method: 'GET',
       url: `/trips/${options.tripId}/pings?`
         + querystring.stringify(_.pick(options, [
-          'startTime', 'endTime'
+          'startTime', 'endTime', 'byTripId', 'limit'
         ])),
     })
     .then((response) => {
+      for (let ping of response.data) {
+        ping.time = new Date(ping.time);
+        ping.createdAt = new Date(ping.createdAt);
+        ping.updatedAt = new Date(ping.updatedAt);
+      }
       return response.data;
     })
   }
