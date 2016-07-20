@@ -80,6 +80,13 @@ export default function ($rootScope, $location, uiGmapGoogleMapApi, $q) {
             travelMode: googleMaps.TravelMode.DRIVING
           }
 
+          if (request.waypoints.length > 6) {
+            const length = request.waypoints.length
+            const start = Math.floor((length - 6) / 2)
+            const end = start + 6
+            request.waypoints = request.waypoints.slice(start, end)
+          }
+
           dirService.route(request, (result, status) => {
             if (status === googleMaps.DirectionsStatus.OK) {
               dirRenderer.setMap(map)
