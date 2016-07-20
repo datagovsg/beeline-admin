@@ -1,0 +1,75 @@
+<div class="companies container-fluid withnav">
+
+  <div ng-if="!company.id">
+    You are Superadmin! Pick the company you would like to edit
+    from the top right hand corner
+  </div>
+
+  <form method="POST" action="{{companyLogoUrl}}" enctype="multipart/form-data"
+    ng-if="company.id">
+    <h1>Update logo</h1>
+    Current logo:
+    <div>
+      <img ng-src="{{companyLogoUrl}}" class="logo">
+    </div>
+
+    <input type="file" name="logo">
+    <input type="hidden" name="sessionToken" value="{{sessionToken}}">
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+
+  <form ng-if="company.id" ng-submit="updateCompanyInfo()" name="updateCompany">
+    <h1>Update company information</h1>
+
+    <div class="form-group">
+      <label class="col-sm-2">Name</label>
+      <div class="col-sm-10">
+      <input type="text" ng-model="company.name"
+        class="form-control" disabled/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-2">Email</label>
+      <div class="col-sm-10">
+        <input type="text" ng-model="company.email"
+          class="form-control" required/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-2">Telephone</label>
+      <div class="col-sm-10">
+      <input type="text" ng-model="company.contactNo"
+        class="form-control"/>
+      </div>
+    </div>
+
+    <label>Terms and Conditions</label>
+    <textarea ng-model="company.terms"
+      class="form-control"></textarea>
+
+    <label>Features</label>
+    <textarea ng-model="company.features"
+      class="form-control"></textarea>
+
+    <button type="submit" class="btn btn-primary"
+      ng-disabled="updateCompany.$invalid">Submit</button>
+  </form>
+
+  <form ng-if="company.id">
+    <h1>Connect Stripe Account</h1>
+
+    <h2>Live account</h2>
+
+    <div ng-if="company.hasClientId">
+      You are connected!
+    </div>
+    <button ng-if="!AdminService.isSuperAdmin()"
+      ng-click="stripeConnect()" class="btn btn-primary">
+      Connect Stripe account
+    </button>
+
+  </form>
+</div>

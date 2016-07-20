@@ -1,11 +1,11 @@
 import querystring from 'querystring'
 
 export default function($scope, AdminService, RoutesService, LoadingSpinner,
-BookingRefund, $state, $stateParams) {
+  $state, $stateParams, issueTicketModal) {
   $scope.tickets = [];
   $scope.currentPage = 1;
 
-  $scope.perPage = 20;
+  $scope.perPage = 50;
   $scope.pageCount = 1;
 
   var now = new Date();
@@ -17,7 +17,7 @@ BookingRefund, $state, $stateParams) {
   var endOfMonth = new Date(
     now.getFullYear(),
     now.getMonth() + 1,
-    1
+    0
   )
 
   $scope.filter = {
@@ -63,19 +63,6 @@ BookingRefund, $state, $stateParams) {
     $state.go(myState, params, {notify: false, reload: false})
   })
 
-  $scope.$watch('disp.month', () => {
-    $scope.filter.startDate = new Date(
-      $scope.disp.month.getFullYear(),
-      $scope.disp.month.getMonth(),
-      1
-    )
-    $scope.filter.endDate = new Date(
-      $scope.disp.month.getFullYear(),
-      $scope.disp.month.getMonth() + 1,
-      0
-    )
-  })
-
   $scope.downloadCsv = function() {
     AdminService.beeline({
       method: 'POST',
@@ -88,17 +75,17 @@ BookingRefund, $state, $stateParams) {
       window.location.href = AdminService.serverUrl() + '/downloadLink?token=' + result.data.token;
     })
   }
-
-  $scope.showRefundModal = function() {
-    var ticketsById = _.keyBy($scope.tickets, t => t.id)
-    var ticketsToCancel = Object.keys($scope.selectedTickets)
-      .filter(ticketId => $scope.selectedTickets[ticketId])
-      .map(ticketId => ticketsById[ticketId])
-
-    BookingRefund.open({
-      cancelledTickets: ticketsToCancel,
-    })
-  }
+  //
+  // $scope.showRefundModal = function() {
+  //   var ticketsById = _.keyBy($scope.tickets, t => t.id)
+  //   var ticketsToCancel = Object.keys($scope.selectedTickets)
+  //     .filter(ticketId => $scope.selectedTickets[ticketId])
+  //     .map(ticketId => ticketsById[ticketId])
+  //
+  //   BookingRefund.open({
+  //     cancelledTickets: ticketsToCancel,
+  //   })
+  // }
 
   $scope.sendWrsEmail = function (ticketId) {
     AdminService.beeline({
@@ -137,6 +124,16 @@ BookingRefund, $state, $stateParams) {
       })
     }
   }
+  $scope.replace = function (ticket) {
+    console.log(ticket);
+    issueTicketModal.open({
+      user: ticket.user,
+      userId: ticket.userId,
+      routeId: ticket.boardStop.trip.routeId,
+      boardStopId: ticket.boardStop.stopId,
+      alightStopId: ticket.alightStop.stopId,
+    })
+  }
 
   function buildQuery(override) {
     // update the request and CSV url
@@ -146,8 +143,16 @@ BookingRefund, $state, $stateParams) {
 
       order: $scope.filter.order,
       orderBy: $scope.filter.orderBy,
-      tripStartDate: $scope.filter.startDate.getTime(),
-      tripEndDate: $scope.filter.endDate.getTime() + 24*60*60*1000,
+      tripStartDate: Date.UTC(
+        $scope.filter.startDate.getFullYear(),
+        $scope.filter.startDate.getMonth(),
+        $scope.filter.startDate.getDate()
+      ),
+      tripEndDate: Date.UTC(
+        $scope.filter.endDate.getFullYear(),
+        $scope.filter.endDate.getMonth(),
+        $scope.filter.endDate.getDate()
+      ) + 24*60*60*1000,
       statuses: JSON.stringify(Object.keys($scope.filter.status)
         .filter(key => $scope.filter.status[key]))
     }
@@ -171,7 +176,7 @@ BookingRefund, $state, $stateParams) {
     return requestUrl;
   }
 
-  function query() {
+  function query(newV, oldV) {
     var requestUrl = buildQuery();
     $scope.csvUrl = buildQuery({
                       page: 1,
@@ -207,52 +212,17 @@ BookingRefund, $state, $stateParams) {
     LoadingSpinner.watchPromise(queryPromise)
   }
 
-  function queryRoutes() {
+  function queryRoutes(newV, oldV) {
     RoutesService.getRoutes({
       startDate: $scope.filter.startDate.getTime(),
       endDate: $scope.filter.endDate.getTime() + 24*60*60*1000,
-      includeTrips: true,
+      includeTrips: false,
       includeAvailability: false,
     }).then((routes) => {
       console.log(routes)
       $scope.disp.availableRoutes = routes
     })
   }
-
-  function updateDatesBetween() {
-    var start = Date.UTC(
-      $scope.filter.startDate.getFullYear(),
-      $scope.filter.startDate.getMonth(),
-      $scope.filter.startDate.getDate()
-    );
-    var end = Date.UTC(
-      $scope.filter.endDate.getFullYear(),
-      $scope.filter.endDate.getMonth(),
-      $scope.filter.endDate.getDate()
-    );
-
-    $scope.disp.datesBetween = _.range(start, end + 24*3600*1000, 24*3600*1000)
-  }
-
-  $scope.$watch('disp.dates', (dates) => {
-    if (dates.length == 0)
-      return;
-
-    if (dates.length == 1) {
-      return;
-    }
-
-    if (dates.length == 2) {
-      $scope.filter.startDate = dates[0].toDate();
-      $scope.filter.endDate = dates[1].toDate();
-      return;
-    }
-
-    if (dates.length > 2) {
-      $scope.disp.dates = [dates[2]];
-      return;
-    }
-  }, true)
 
   $scope.$watch('disp.counts', (counts) => {
     $scope.disp.highlightDays = _.keys(counts).map((date) => {
@@ -264,8 +234,16 @@ BookingRefund, $state, $stateParams) {
     })
   })
 
-  $scope.$watchGroup(['currentPage', 'perPage'], query)
-  $scope.$watchGroup(['filter.startDate', 'filter.endDate'], queryRoutes)
-  $scope.$watchGroup(['filter.startDate', 'filter.endDate'], updateDatesBetween)
-  $scope.$watch('filter', query, true)
+  $scope.$watch(() => [
+      $scope.filter.startDate.getTime(),
+      $scope.filter.endDate.getTime()],
+    queryRoutes, true)
+  $scope.$watch(() =>
+    [_.assign({}, $scope.filter, {
+        startDate: $scope.filter.startDate.getTime(),
+        endDate: $scope.filter.endDate.getTime(),
+      }),
+      $scope.currentPage,
+      $scope.perPage],
+    query, true)
 }

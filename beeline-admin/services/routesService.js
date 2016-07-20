@@ -2,7 +2,7 @@ import _ from 'lodash'
 import querystring from 'querystring'
 import assert from 'assert'
 
-export default function (AdminService, DriverService, $q) {
+export default function (AdminService, DriverService, $q, LoadingSpinner) {
 
   var routesPromise = null;
   var routesById = null;
@@ -20,9 +20,26 @@ export default function (AdminService, DriverService, $q) {
         query.include_trips = options.includeTrips;
       if (options.includeAvailability)
         query.include_availability = options.includeAvailability;
+      if (options.transportCompanyId)
+        query.transportCompanyId = options.transportCompanyId;
     }
     query = querystring.stringify(query)
     return query
+  }
+
+  function postProcessRoute(route) {
+    if (route.trips) {
+      for (let trip of route.trips) {
+        trip.date = new Date(trip.date)
+
+        if (trip.tripStops) {
+          for (let tripStop of trip.tripStops) {
+            tripStop.time = new Date(tripStop.time);
+          }
+        }
+      }
+    }
+    return route;
   }
 
   /**
@@ -37,7 +54,7 @@ export default function (AdminService, DriverService, $q) {
       return routesPromise;
     }
     else {
-      if (AdminService.session().role == 'admin') {
+      if (AdminService.session() && AdminService.session().role == 'admin') {
         options = options || {}
         options.transportCompanyId = AdminService.session().transportCompanyId
       }
@@ -49,6 +66,11 @@ export default function (AdminService, DriverService, $q) {
       })
       .then((response) => {
         routesCache = response.data;
+
+        for (let route of response.data) {
+          postProcessRoute(route);
+        }
+
         return routesCache
       })
 
@@ -73,10 +95,7 @@ export default function (AdminService, DriverService, $q) {
         url: `/routes/${id}?${query}`,
       })
       .then((response) => {
-        for (let trip of response.data.trips) {
-          trip.date = new Date(trip.date)
-        }
-        return response.data;
+        return postProcessRoute(response.data);
       })
     }
     return this.getRoutes()
@@ -98,7 +117,7 @@ export default function (AdminService, DriverService, $q) {
 
   this.saveRoute = function (route) {
     if (route.id) {
-      return AdminService.beeline({
+      return LoadingSpinner.watchPromise(AdminService.beeline({
        method: 'PUT',
        url: `/routes/${route.id}`,
        data: route,
@@ -108,10 +127,10 @@ export default function (AdminService, DriverService, $q) {
         routesCache.splice(index, 1, response.data)
         routesById[route.id] = response.data
         return response.data
-      });
+      }));
     }
     else {
-      return AdminService.beeline({
+      return LoadingSpinner.watchPromise(AdminService.beeline({
        method: 'POST',
        url: `/routes`,
        data: route
@@ -120,7 +139,7 @@ export default function (AdminService, DriverService, $q) {
         routesCache.push(response.data)
         routesById[response.data.id] = response.data
         return response.data
-      });
+      }));
     }
   }
 

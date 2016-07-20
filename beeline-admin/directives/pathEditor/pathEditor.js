@@ -19,6 +19,10 @@ export default function ($rootScope, $location, uiGmapGoogleMapApi, $q) {
           strokeWeight: 3
         })
 
+        scope.$on('mapLoaded', () => {
+          googleMaps.event.trigger(map, 'resize');
+        })
+
         scope.$watch('path', (path) => {
           if (!path) return
           mapPath.setMap(map)

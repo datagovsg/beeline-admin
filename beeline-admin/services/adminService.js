@@ -31,7 +31,7 @@ export default function ($http, $location, store, jwtHelper, auth) {
     store.remove('token');
     store.remove('sessionToken');
     store.remove('profile');
-    $location.path('/login');
+    window.location.reload(); // Needed, otherwise Auth0 won't recognize this as a new page
   }
 
   this.login = function() {
@@ -39,6 +39,11 @@ export default function ($http, $location, store, jwtHelper, auth) {
       authParams: {
         scope: 'openid name email app_metadata user_id'
       }
+    }, function (result) {
+      window.location.reload();
+    }, function (error) {
+      alert(JSON.stringify(error, null, 2));
+      console.log(error);
     })
   }
 
@@ -64,13 +69,17 @@ export default function ($http, $location, store, jwtHelper, auth) {
             lastSession.app_metadata.roles.indexOf('admin') != -1 ? 'admin'
             : null;
       lastSession.transportCompanyId = lastSession.app_metadata.transportCompanyId;
-      
+
       return lastSession;
     }
   }
 
   this.isSuperAdmin = function () {
+    if (!auth.isAuthenticated) return false;
+
     var profile = store.get('profile')
+
+    if (!profile) return false;
 
     return (profile.app_metadata.roles.indexOf('superadmin') != -1);
   }

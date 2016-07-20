@@ -1,35 +1,19 @@
 
 <div class="container-fluid withnav">
-    <div class="col-lg-12">
+  <div class="col-lg-12">
   <h1>Transactions</h1>
 
-  <uib-pagination
-    boundary-links="true"
-    ng-model="filter.currentPage"
-    total-items="filter.pageCount * filter.perPage"
-    items-per-page="filter.perPage"
-  ></uib-pagination>
+  <!-- transaction dates -->
+  <div class="datepicker-wrap">
+    Select the start date, and the end date:
+    <span-select
+      highlight-days="disp.highlightDays"
+      first-date="filter.startDate"
+      last-date="filter.endDate">
+    </span-select>
+  </div>
 
   <section>
-    <!-- transaction dates -->
-    <div class="datepicker-wrap">
-      Select Month:<br clear="both">
-      <uib-datepicker ng-model="disp.month"
-          datepicker-options="{minMode: 'month'}"></uib-datepicker>
-    </div>
-
-    <div class="datepicker-wrap">
-    Select Start Date:<br clear="both">
-    <uib-datepicker ng-model="filter.startDate"
-        datepicker-options="{minMode: 'day'}"></uib-datepicker>
-    </div>
-
-    <div class="datepicker-wrap">
-    Select End Date:<br clear="both">
-    <uib-datepicker ng-model="filter.endDate"
-        datepicker-options="{minMode: 'day'}"></uib-datepicker>
-    </div>
-
     <!-- transaction types -->
     <div>
       Status:
@@ -79,51 +63,6 @@
       </label>
     </div>
 
-    <!-- order by -->
-    <div>
-      Order By
-      <label>
-        <input type="radio"
-        ng-model="filter.orderBy"
-        value="createdAt"
-        />
-        CreatedAt
-      </label>
-      <label>
-        <input type="radio"
-        ng-model="filter.orderBy"
-        value="transactionId"
-        />
-        Transaction Id
-      </label>
-      <label>
-        <input type="radio"
-        ng-model="filter.itemType"
-        value="itemType"
-        />
-        Item Type
-      </label>
-    </div>
-
-    <!-- order -->
-    <div>
-      Order
-      <label>
-        <input type="radio"
-        ng-model="filter.order"
-        value="desc"
-        />
-        Descending
-      </label>
-      <label>
-        <input type="radio"
-        ng-model="filter.order"
-        value="asc"
-        />
-        Ascending
-      </label>
-    </div>
-
     <!-- txn id -->
     <div>
       <label>
@@ -156,26 +95,41 @@
         />
       </label>
     </div>
+
+    <button ng-click="downloadCsv()">
+      Download CSV
+    </button>
+    <button ng-click="downloadStatement()">
+      Download Statement
+    </button>
   </section>
+
+
+  <uib-pagination
+    boundary-links="true"
+    ng-model="filter.currentPage"
+    total-items="filter.pageCount * filter.perPage"
+    items-per-page="filter.perPage"
+  ></uib-pagination>
 
   <table class="table table-striped transactions-view">
     <thead>
       <tr>
-        <th class="id" ng-if="adminService.isSuperAdmin()">Actions</th>
-        <th class="id">Txn ID</th>
-        <th class="id">Txn Date</th>
-        <th class="id">Txn Description</th>
-        <th class="id">Txn Item ID</th>
-        <th class="item-type">Item type</th>
-        <th class="item-type">Item ID</th>
-        <th class="item-description">Description 1</th>
-        <th class="item-description">Description 2</th>
-        <th class="item-description">Description 3</th>
-        <th class="item-description">Description 4</th>
-        <th class="item-description">Description 5</th>
-        <th class="item-description">Description 6</th>
-        <th class="debit-credit">Debit</th>
-        <th class="debit-credit">Credit</th>
+        <th sort-model="filter.orderBy" sort-direction="filter.order" my-sort="" class="id" ng-if="adminService.isSuperAdmin()">Actions</th>
+        <th sort-model="filter.orderBy" sort-direction="filter.order" my-sort="transactionId" class="id">Txn ID</th>
+        <th sort-model="filter.orderBy" sort-direction="filter.order" my-sort="createdAt" class="id">Txn Date</th>
+        <th sort-model="filter.orderBy" sort-direction="filter.order" my-sort="" class="id">Txn Description</th>
+        <th sort-model="filter.orderBy" sort-direction="filter.order" my-sort="" class="id">Txn Item ID</th>
+        <th sort-model="filter.orderBy" sort-direction="filter.order" my-sort="itemType" class="item-type">Item type</th>
+        <th sort-model="filter.orderBy" sort-direction="filter.order" my-sort="" class="item-type">Item ID</th>
+        <th sort-model="filter.orderBy" sort-direction="filter.order" my-sort="" class="item-description">Description 1</th>
+        <th sort-model="filter.orderBy" sort-direction="filter.order" my-sort="" class="item-description">Description 2</th>
+        <th sort-model="filter.orderBy" sort-direction="filter.order" my-sort="" class="item-description">Description 3</th>
+        <th sort-model="filter.orderBy" sort-direction="filter.order" my-sort="" class="item-description">Description 4</th>
+        <th sort-model="filter.orderBy" sort-direction="filter.order" my-sort="" class="item-description">Description 5</th>
+        <th sort-model="filter.orderBy" sort-direction="filter.order" my-sort="" class="item-description">Description 6</th>
+        <th sort-model="filter.orderBy" sort-direction="filter.order" my-sort="" class="debit-credit">Debit</th>
+        <th sort-model="filter.orderBy" sort-direction="filter.order" my-sort="" class="debit-credit">Credit</th>
       </tr>
     </thead>
 

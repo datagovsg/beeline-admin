@@ -9,6 +9,8 @@ require('angular-cookies')
 require('angular-jwt')
 require('auth0-angular')
 require('multiple-date-picker')
+require('ui-select/dist/select')
+require('../ngTagEditor/ngTagEditor')
 
 const env = require('./env')
 
@@ -20,10 +22,12 @@ const env = require('./env')
 // 'starter.controllers' is found in controllers.js
 angular.module('beeline-admin', [
   'uiGmapgoogle-maps', 'ui.router', 'ui.bootstrap', 'beeline.calendar',
-  'auth0', 'angular-storage', 'angular-jwt', 'ngCookies', 'multipleDatePicker'])
+  'auth0', 'angular-storage', 'angular-jwt', 'ngCookies', 'multipleDatePicker',
+  'ui.select', 'ngTagEditor'])
 .config(require('./router').default)
 .config(configureGoogleMaps)
 .config(configureLoginPage)
+.config(configureUrlWhitelist)
 .directive('adminNav', require('./directives/adminNav/adminNav').default)
 .directive('accountView', require('./directives/accountView/accountView').default)
 .directive('paymentView', require('./directives/paymentView/paymentView').default)
@@ -37,14 +41,17 @@ angular.module('beeline-admin', [
 .directive('stopSelector', require('./directives/stopSelector/stopSelector').default)
 .directive('superAdminCompanySelector', require('./directives/companySelector/superAdminCompanySelector').default)
 .directive('mySort', require('./directives/mySort').default)
+.directive('spanSelect', require('./directives/spanSelect').default)
+.directive('userSelector', require('./directives/userSelector/userSelector').default)
 .service('AdminService', require('./services/adminService').default)
 .service('TripsService', require('./services/tripsService').default)
 .service('RoutesService', require('./services/routesService').default)
 .service('StopsPopup', require('./services/stopsPopup').default)
 .service('RoutePopup', require('./services/routePopup').default)
 .service('mapService', require('./services/mapService').default)
+.service('companiesSvc', require('./services/companiesSvc').default)
 .service('DriverService', require('./services/driverService').default)
-.service('BookingRefund', require('./services/bookingRefund').default)
+.service('issueTicketModal', require('./services/issueTicketModal').default)
 .service('LoadingSpinner', require('./services/loadingSpinner').default)
 .controller('transactions', require('./controllers/transactionsController.js').default)
 .controller('trips', require('./controllers/tripsController.js').default)
@@ -54,24 +61,42 @@ angular.module('beeline-admin', [
 .controller('bookingsWrs', require('./controllers/bookingsControllerWrs.js').default)
 .controller('drivers', require('./controllers/driversController.js').default)
 .controller('login', require('./controllers/loginController.js').default)
+.controller('companies', require('./controllers/companiesController.js').default)
+.controller('assets', require('./controllers/assetsController.js').default)
+.controller('admins', require('./controllers/adminsController.js').default)
 .filter('makeRoutePath', require('./shared/filters.js').makeRoutePath)
 .filter('intervalToTime', require('./shared/filters.js').intervalToTime)
-.run(function (auth, $rootScope, store, jwtHelper, $window) {
+.run(function (auth, $rootScope, store, jwtHelper, $window, AdminService) {
   auth.hookEvents();
 
-  // This events gets triggered on refresh or URL change
-  $rootScope.$on('$locationChangeStart', function() {
-    var token = store.get('sessionToken');
-    if (token) {
-      if (!jwtHelper.isTokenExpired(token)) {
-        if (!auth.isAuthenticated) {
-          auth.authenticate(store.get('profile'), token);
+  /* initialize Auth0 by pulling Auth0 domain information from server */
+  var authInitPromise = AdminService.beeline({
+    method: 'GET', url: '/auth/credentials'
+  })
+  .then((response) => {
+    var {domain, cid} = response.data;
+    auth.init({
+      domain: domain, clientId: cid, loginState: 'login'
+    })
+
+    // This events gets triggered on refresh or URL change
+    $rootScope.$on('$locationChangeStart', checkLogin);
+    checkLogin()
+
+    function checkLogin() {
+      var token = store.get('sessionToken');
+      if (token) {
+        if (!jwtHelper.isTokenExpired(token)) {
+          if (!auth.isAuthenticated) {
+            auth.authenticate(store.get('profile'), token);
+          }
+          return;
         }
-      } else {
-        // Either show Login page or use the refresh token to get a new idToken
       }
+      AdminService.login();
     }
   });
+
 
   // Unfortunately the auth0 library does not handle redirect errors!
   // WTF!
@@ -114,7 +139,8 @@ ${bits.error_description}`
 
 function configureGoogleMaps(uiGmapGoogleMapApiProvider) {
   uiGmapGoogleMapApiProvider.configure({
-    key: 'AIzaSyBkFH42PlbFrsfdAnjw37qMLAxjhkMT-54'
+    key: 'AIzaSyBkFH42PlbFrsfdAnjw37qMLAxjhkMT-54',
+    libraries: 'geometry',
   })
 }
 
@@ -148,4 +174,11 @@ ${error.error_description}`
       store.set('profile', p)
     })
   })
+}
+
+function configureUrlWhitelist($sceDelegateProvider) {
+  $sceDelegateProvider.resourceUrlWhitelist([
+    'self',
+    env.BACKEND_URL + '/**'
+  ])
 }

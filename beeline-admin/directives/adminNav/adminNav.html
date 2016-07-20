@@ -1,4 +1,4 @@
-<nav class="navbar navbar-inverse navbar-fixed-top">
+<nav class="navbar navbar-inverse">
   <!-- Fixed navbar -->
   <div class="container-fluid">
     <div class="navbar-header">
@@ -13,16 +13,19 @@
       <a class="navbar-brand" href="#">Beeline Admin</a>
       <ul class="nav navbar-nav">
         <li><a ui-sref="bookings">Tickets</a></li>
-        <li><a ui-sref="transactions">Transactions</a></li>
+        <li ng-if="adminService.isSuperAdmin()"><a ui-sref="transactions">Transactions</a></li>
         <li><a ui-sref="routes({routeId: 0, action: 'route'})">Routes</a></li>
-        <li><a ui-sref="trips({routeId: 0, action: 'route'})">Trips</a></li>
+        <li  ng-if="adminService.isSuperAdmin()"><a ui-sref="trips({routeId: 0, action: 'route'})">Trips</a></li>
         <li><a ui-sref="summary">Summary</a></li>
         <li><a ui-sref="driver">Drivers</a></li>
-        <li><a href="#">Incidents</a></li>
+        <li ng-if="adminService.isSuperAdmin()"><a href="#">Incidents</a></li>
+        <li ng-if="adminService.isSuperAdmin()"><a ui-sref="assets">Assets</a></li>
+        <li><a ui-sref="companies">Company Settings</a></li>
+        <li><a ui-sref="admins">Admin Settings</a></li>
       </ul>
 
       <ul class="nav navbar-nav pull-right">
-        <li>
+        <li ng-if="adminService.isSuperAdmin()">
           <a>
             <super-admin-company-selector></super-admin-company-selector>
           </a>

@@ -3,12 +3,16 @@
 
     <div class="bookings-page">
       <!--  Remove bookings-page class -->
-      <h1>Bookings</h1>
+      <h1>Tickets</h1>
 
       <nav>
         <div class="datepicker-wrap">
-          <multiple-date-picker ng-model="disp.dates" highlight-days="disp.highlightDays">
-          </multiple-date-picker>
+          Select the start date, and the end date:
+          <span-select
+            highlight-days="disp.highlightDays"
+            first-date="filter.startDate"
+            last-date="filter.endDate">
+          </span-select>
         </div>
 
         <div>
@@ -20,7 +24,7 @@
           </label>
 
           <label>
-            Trip:
+            Trip ID:
             <input type="number" ng-model="filter.tripId" ng-model-options="{ updateOn: 'blur' }" class="form-control" />
           </label>
         </div>
@@ -37,31 +41,6 @@
 
           <label>
             <input type="checkbox" ng-model="filter.status.failed" /> Failed
-          </label>
-        </div>
-
-        <div>
-          Sort
-          <label>
-            <input type="radio" ng-model="filter.orderBy" value="createdAt" /> Transaction date
-          </label>
-
-          <label>
-            <input type="radio" ng-model="filter.orderBy" value="boardingTime" /> Trip time
-          </label>
-
-          <label>
-            <input type="radio" ng-model="filter.orderBy" value="route" /> Route
-          </label>
-        </div>
-
-        <div>
-          Order
-          <label>
-            <input type="radio" ng-model="filter.order" value="desc" /> Descending
-          </label>
-          <label>
-            <input type="radio" ng-model="filter.order" value="asc" /> Ascending
           </label>
         </div>
 
@@ -104,24 +83,24 @@
         <table class="table table-striped table-bordered table-condensed transactions-view">
           <thead>
             <tr>
-              <th></th>
-              <th>Txn Id</th>
-              <th>Charge Id</th>
-              <th>Trip date</th>
-              <th>User name</th>
-              <th>User phone </th>
-              <th>User email</th>
-              <th>Ticket id</th>
-              <th>Trip id</th>
-              <th>Route Id</th>
-              <th>Route Label</th>
-              <th>Route description</th>
-              <th>Pick-up stop</th>
-              <th>Drop-off stop</th>
-              <th>Price per trip</th>
-              <th>Status</th>
-              <th>Timestamp</th>
-              <th>Refund</th>
+              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort=""></th>
+              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Txn Id</th>
+              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Charge Id</th>
+              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="boardingTime">Trip date</th>
+              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">User name</th>
+              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">User phone </th>
+              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">User email</th>
+              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Ticket id</th>
+              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Trip id</th>
+              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="route">Route Id</th>
+              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Route Label</th>
+              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Route description</th>
+              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Pick-up stop</th>
+              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Drop-off stop</th>
+              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Price per trip</th>
+              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Status</th>
+              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="createdAt">Timestamp</th>
+              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Refund</th>
             </tr>
           </thead>
 
@@ -136,12 +115,18 @@
               </td>
               <td>
                 <a ui-sref="transactions({id: ticket.ticketSale.transactionId})">
-            {{ticket.ticketSale.transactionId}}
-          </a>
+                  {{ticket.ticketSale.transactionId}}
+                </a>
               </td>
               <td>
                 {{ticket.paymentResource}}
                 <span ng-if="ticket.refundResource"><br/>{{ticket.refundResource}}</span>
+                <span ng-if="ticket.paymentData.transfer.destination_payment">
+                  <br/>{{ticket.paymentData.transfer.destination_payment}}
+                </span>
+                <span ng-if="ticket.refundData.transfer.destination_payment">
+                  <br/>{{ticket.refundData.transfer.destination_payment}}
+                </span>
               </td>
               <td>
                 {{ticket.boardStop.trip.date | date:'dd-MMM-yy':'UTC'}}
@@ -192,8 +177,11 @@
                 {{ticket.createdAt | date:'dd-MMM-yy HH:mm:ss'}}
               </td>
               <td>
-                <button class="btn btn-danger" ng-click="refund(ticket)" ng-disabled="ticket.status != 'valid'">
-                  Refund!
+                <button class="btn btn-danger btn-condensed" ng-click="refund(ticket)" ng-disabled="ticket.status != 'valid'">
+                  Refund
+                </button>
+                <button class="btn btn-default btn-condensed" ng-click="replace(ticket)" ng-disabled="ticket.status != 'valid'">
+                  Replace
                 </button>
               </td>
             </tr>

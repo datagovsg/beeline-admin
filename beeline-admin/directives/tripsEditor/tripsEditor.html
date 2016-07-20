@@ -1,40 +1,39 @@
 
-<section class="filter">
-  <label>
-    Start Date:
-    <button class="glyphicon glyphicon-calendar"
-      ng-click="filter.$startDatePopupIsOpen = !filter.$startDatePopupIsOpen">
-    </button>
-    <input type="text" uib-datepicker-popup="dd-MMM-yyyy"
-      ng-model="filter.startDate"
-      is-open="filter.$startDatePopupIsOpen">
-  </label>
-  <label ng-if="false">
-    End Date:
-    <button class="glyphicon glyphicon-calendar"
-      ng-click="filter.$startDatePopupIsOpen = !filter.$startDatePopupIsOpen">
-    </button>
-    <input type="text" uib-datepicker-popup="dd-MMM-yyyy"
-      ng-model="filter.endDate">
-  </label>
-</section>
+<section class="container-fluid">
+  <div class="flex-row">
+    <div class="flex-shrink" ng-style="{
+      visibility: disp.trip.id ? 'hidden' : 'normal'
+    }">
+      <h3>New Trips</h3>
+      <label>
+        Start Date:
+        <button class="glyphicon glyphicon-calendar"
+          ng-click="filter.$startDatePopupIsOpen = !filter.$startDatePopupIsOpen">
+        </button>
+        <input type="text" uib-datepicker-popup="dd-MMM-yyyy"
+          ng-model="filter.startDate"
+          is-open="filter.$startDatePopupIsOpen">
+      </label>
+      <label ng-if="false">
+        End Date:
+        <button class="glyphicon glyphicon-calendar"
+          ng-click="filter.$startDatePopupIsOpen = !filter.$startDatePopupIsOpen">
+        </button>
+        <input type="text" uib-datepicker-popup="dd-MMM-yyyy"
+          ng-model="filter.endDate">
+      </label>
 
-<section class="add-trips">
-  <h2>Add Trips</h2>
-  <div class="add-trips-components flex-row">
-    <beeline-datepicker
-      ng-if="!disp.trip.id"
-      class="flex-shrink"
-      dates="disp.newDates"
-      booked-dates="disp.existingDates"
-      valid-dates="disp.validDates"
-      show-legend="false"
-      start-date="filter.startDate"
-    >
-    </beeline-datepicker>
-    <div class="flex-shrink overflow-scroll selected-dates"
-      ng-if="!disp.trip.id"
-    >
+      <beeline-datepicker
+        dates="disp.newDates"
+        booked-dates="disp.existingDates"
+        valid-dates="disp.validDates"
+        show-legend="false"
+        start-date="filter.startDate">
+      </beeline-datepicker>
+    </div>
+
+    <div class="flex-shrink overflow-scroll"
+      ng-if="!disp.trip.id">
       <h3>{{disp.newDates.length}} dates selected</h3>
       <ul>
         <li ng-repeat="date in disp.newDates | orderBy:date.getTime() track by $index">
@@ -43,37 +42,67 @@
       </ul>
     </div>
 
+    <div class="flex-shrink overflow-scroll"
+      ng-if="disp.trip.id">
+      <h3>{{disp.newDates.length}} dates selected</h3>
+      <ul>
+        <li ng-repeat="(key, value) in selection.selected">
+          {{value.date | date:'dd-MMM-yy (EEE)':'UTC'}}
+        </li>
+      </ul>
+    </div>
+
     <div class="flex-grow overflow-scroll">
       <h3 ng-if="!disp.trip.id">Stops</h3>
-      <!-- <h3 ng-if="disp.trip">Editing trip on {{disp.trip.date | date:'dd-MMM-yy':'UTC'}}</h3> -->
-
-      <h3 ng-if="disp.trip.id">Editing trip on
-        <ng-repeat ng-repeat="(key, value) in selection.selected">
-          {{value.date | date:'dd MMM yy'}},
-        </ng-repeat>
+      <h3 ng-if="disp.trip.id">Editing trips
       </h3>
 
-      <label>
-        Telephone number of driver: +65 <input type="tel" ng-model="disp.trip.driverTelephone" />
+      <div class="flex-row form-inline">
+        <div class="flex-grow">
+          <label>
+            Telephone number of driver:
+            +65 <input type="tel" class="form-control" ng-model="disp.trip.driverTelephone" />
 
-        <span ng-if="disp.trip.driverName">
-          ~{{disp.driver.name}}
-        </span>
-      </label>
+            <span ng-if="disp.trip.driverName">
+              ~{{disp.driver.name}}
+            </span>
+          </label>
 
-      <label>
-        Trip capacity: <input type="number" ng-model="disp.trip.capacity" />
-      </label>
+          <label>
+            Trip capacity: <input type="number" class="form-control" ng-model="disp.trip.capacity" />
+          </label>
 
-      <label>
-        Trip price: <input type="number" step="0.01" ng-model="disp.trip.price" />
-      </label>
+          <label>
+            Trip price: <input type="number" class="form-control" step="0.01" ng-model="disp.trip.price" />
+          </label>
 
-      <label ng-if="adminService.session().role == 'superadmin'">
-        Company:
-        <company-selector ng-model="disp.trip.transportCompanyId">
-        </company-selector>
-      </label>
+          <label ng-if="adminService.session().role == 'superadmin'">
+            Company:
+            <company-selector class="form-control" ng-model="disp.trip.transportCompanyId">
+            </company-selector>
+          </label>
+        </div>
+        <div class="flex-grow">
+          {{disp.trip.bookingInfo}}
+          <label>
+            Booking Window Type:
+            <select class="form-control" ng-model="disp.trip.bookingInfo.windowType">
+              <option value="stop">Stop</option>
+              <option value="firstStop">First stop</option>
+            </select>
+          </label>
+          <label>
+            Close booking:
+            <select class="form-control" ng-model="disp.trip.bookingInfo.windowSize"
+              ng-options="opt.size as opt.label for opt in disp.windowSizeOptions">
+            </select>
+          </label>
+          <label>
+            Notes to passenger:
+            <input type="text" class="form-control" ng-model="disp.trip.bookingInfo.notes">
+          </label>
+        </div>
+      </div>
 
       <table>
         <thead>
@@ -89,12 +118,11 @@
               show-spinners="false" show-meridian="false">
               </uib-timepicker>
             </td>
-            <td>
+            <td class="form-inline">
               <!-- <input type="text" ng-model="tripStop.stopId"> -->
-              <stop-selector
-                ng-model="tripStop.stopId"
+              <stop-selector class="form-control" ng-model="tripStop.stopId"
               ></stop-selector>
-              <button ng-click="showPopupFor(tripStop)">
+              <button ng-click="showPopupFor(tripStop)" class="btn btn-default">
                 ?
               </button>
             </td>
@@ -128,7 +156,7 @@
         </tfoot>
       </table>
     </div>
-  </div>
+  </div> <!-- row -->
 
   <span class="btn-group">
     <button class="btn btn-primary" ng-click="saveTrips()"

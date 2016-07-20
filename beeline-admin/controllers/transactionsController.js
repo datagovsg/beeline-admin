@@ -5,7 +5,7 @@ export default function($scope, $state, $stateParams, $http, AdminService, Loadi
 
   $scope.filter = {
     currentPage: 1,
-    perPage: 20,
+    perPage: 100,
     pageCount: 1,
 
     orderBy: 'createdAt',
@@ -33,19 +33,34 @@ export default function($scope, $state, $stateParams, $http, AdminService, Loadi
   $scope.filter.startDate.setDate(1)
   $scope.filter.endDate.setDate(1)
   $scope.filter.endDate.setMonth($scope.filter.endDate.getMonth() + 1)
+  $scope.filter.endDate.setDate(0)
 
-  $scope.$watch('disp.month', () => {
-    $scope.filter.startDate = new Date(
-      $scope.disp.month.getFullYear(),
-      $scope.disp.month.getMonth(),
-      1
-    )
-    $scope.filter.endDate = new Date(
-      $scope.disp.month.getFullYear(),
-      $scope.disp.month.getMonth() + 1,
-      1
-    )
-  })
+  // CSV Download
+  $scope.downloadCsv = function() {
+    AdminService.beeline({
+      method: 'POST',
+      url: '/makeDownloadLink',
+      data: {
+        uri: $scope.csvUrl
+      }
+    })
+    .then((result) => {
+      window.location.href = AdminService.serverUrl() + '/downloadLink?token=' + result.data.token;
+    })
+  }
+  // Statement Download
+  $scope.downloadStatement = function() {
+    AdminService.beeline({
+      method: 'POST',
+      url: '/makeDownloadLink',
+      data: {
+        uri: $scope.statementUrl
+      }
+    })
+    .then((result) => {
+      window.location.href = AdminService.serverUrl() + '/downloadLink?token=' + result.data.token;
+    })
+  }
 
   // URL handling
   $scope.$watch(() => $stateParams.id, () => {
@@ -65,7 +80,7 @@ export default function($scope, $state, $stateParams, $http, AdminService, Loadi
     $state.go(myState, params, {notify: false, reload: false})
   })
 
-  function buildQuery() {
+  function buildQuery(overrides) {
     var queryOpts = {};
 
     queryOpts.order = $scope.filter.order;
@@ -94,17 +109,23 @@ export default function($scope, $state, $stateParams, $http, AdminService, Loadi
       queryOpts.endDate = new Date(
         $scope.filter.endDate.getFullYear(),
         $scope.filter.endDate.getMonth(),
-        $scope.filter.endDate.getDate()
+        $scope.filter.endDate.getDate() + 1
       ).getTime();
     }
+
+    _.assign(queryOpts, overrides);
 
     return '/transactionItems?' + querystring.stringify(queryOpts);
   }
 
   function query() {
+    var ajaxUrl = buildQuery();
+    $scope.csvUrl = buildQuery({page:1, perPage:10000000, format: 'csv'})
+    $scope.statementUrl = buildQuery({page:1, perPage:10000000, format: 'statement'})
+
     var queryPromise = AdminService.beeline({
       method: 'GET',
-      url: buildQuery(),
+      url: ajaxUrl,
     })
     .then((result) => {
 

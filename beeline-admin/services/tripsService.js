@@ -75,7 +75,8 @@ export default function (AdminService, DriverService, $q) {
   }
 
   var updatableFields = [
-    'driverId', 'capacity', 'companyId', 'price', 'transportCompanyId'
+    'driverId', 'capacity', 'companyId', 'price', 'transportCompanyId',
+    'bookingInfo'
   ];
   var updatableTripStopFields = [
     'canBoard', 'canAlight', 'time', 'stopId'
@@ -83,9 +84,7 @@ export default function (AdminService, DriverService, $q) {
   var creatableFields = updatableFields.concat([
     'routeId'
   ])
-  var creatableTripStopFields = updatableTripStopFields.concat([
-    'canBoard', 'canAlight', 'time', 'stopId'
-  ])
+  var creatableTripStopFields = updatableTripStopFields.concat([])
 
   function validateDate(date) {
     // convert the dates...

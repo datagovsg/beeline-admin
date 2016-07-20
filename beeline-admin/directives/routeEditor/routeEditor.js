@@ -1,4 +1,5 @@
-import _ from 'lodash'
+import _ from 'lodash';
+import assert from 'assert';
 
 export default function (AdminService, RoutesService, $rootScope) {
   return {
@@ -10,6 +11,9 @@ export default function (AdminService, RoutesService, $rootScope) {
     link(scope, elem, attr) {
       scope.edit = scope.edit || 'route'
       scope.adminService = AdminService;
+      scope.disp = {
+        routeTags: [],
+      }
 
       scope.resetRoute = function() {
         if (scope.route && scope.route.id) {
@@ -30,6 +34,7 @@ export default function (AdminService, RoutesService, $rootScope) {
         RoutesService.saveRoute(scope.route)
         .then((route) => {
           scope.route = route;
+          scope.edit.routeId = route.id;
         })
       }
 
@@ -48,7 +53,18 @@ export default function (AdminService, RoutesService, $rootScope) {
         RoutesService.getRoute(scope.route.id, {includeTrips: true})
         .then((route) => {
           scope.tripStops = _.maxBy(route.trips, 'date').tripStops
+          scope.disp.routeTags = scope.route.tags && scope.route.tags.map(t => ({name: t}));
+          // quick hack to convert arrays to polyline string
+          if (google.maps.geometry && scope.route.path instanceof Array) {
+            scope.route.path = google.maps.geometry.encoding.encodePath(
+              scope.route.path.map(latlng => new google.maps.LatLng(latlng.lat, latlng.lng)))
+          }
+          scope.$broadcast('mapLoaded')
         })
+      })
+      scope.$watchCollection('disp.routeTags', (rawTags) => {
+        if (!scope.route) return;
+        scope.route.tags = rawTags ? rawTags.map(t => t.name) : [];
       })
     },
   }

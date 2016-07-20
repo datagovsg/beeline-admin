@@ -1,2 +1,17 @@
-<trip-selector trip-id="tripId">
-</trip-selector>
+<div class="container-fluid withnav">
+  <h1>Issue Tickets</h1>
+  <trip-selector trip-id="tripId" trips="trips" board-stop-id="boardStopId"
+    alight-stop-id="alightStopId">
+  </trip-selector>
+
+  <h2>Issue to</h2>
+  <user-selector ng-model="user">
+  </user-selector>
+  User ID: {{userId}}
+
+  <div>
+  <button class="btn btn-primary">
+    Issue
+  </button>
+  </div>
+</div>

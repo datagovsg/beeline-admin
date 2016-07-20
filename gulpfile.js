@@ -26,7 +26,8 @@ gulp.task('js-libraries', function() {
 gulp.task('assets', function (done) {
   gulp.src(['./node_modules/bootstrap/fonts/*'])
       .pipe(gulp.dest('./www/fonts/bootstrap'))
-      .on('end', done);
+      .on('end', done)
+      .on('error', done);
 })
 
 gulp.task('sass', function(done) {

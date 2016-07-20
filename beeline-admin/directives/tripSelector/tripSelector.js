@@ -1,14 +1,16 @@
 import assert from 'assert';
 import leftPad from 'left-pad';
 
-export default function(AdminService, RoutesService, $rootScope) {
+export default function(AdminService, RoutesService, $rootScope, LoadingSpinner) {
   return {
     template: require('./tripSelector.html'),
     scope: {
       tripId: '=',
-      alightStopId: '=?',
-      boardStopId: '=?',
+      alightStopId: '<?',
+      boardStopId: '<?',
       routeId: '=?',
+      trips: '=?',
+      reason: '=',
     },
     link(scope, elem, attr) {
       var todayUTC = new Date()
@@ -26,63 +28,135 @@ export default function(AdminService, RoutesService, $rootScope) {
         tripDate: todayUTC,
       }
       scope.disp = {
-        datepickerOptions: {
-          dateDisabled: ({date, mode}) => {
-            return true;
-          }
+        datepicker: {
+          highlightDays: [],
+          daysAllowed: [],
         },
         popupOpen: false,
       }
+      scope.data = {
+        routeId: scope.routeId,
+        selectedDates: [],
+        trips: [],
+      }
 
-      // Get routess
+      // Get routes
       scope.displayRoute = (route) => `${route.label}: ${route.from} -- ${route.to}`
-      RoutesService.getRoutes()
+      var routesPromise = RoutesService.getRoutes({
+        includeTrips: false,
+        startDate: Date.now()
+      })
       .then((routes) => {
         scope.info.routes = routes;
       })
-
-      // If tripId changes (due to external force)
-      // need to ensure that the route & the stops are valid
-      scope.$watch('tripId', (tripId) => {
-        if (!tripId) return;
-        
-        // FIXME: use caching here
-        RoutesService.getTrip(scope.tripId)
-        .then((trip) => {
-          if (scope.routeId != trip.routeId) {
-            scope.routeId = trip.routeId;
-          }
-        })
-      })
+      LoadingSpinner.watchPromise(routesPromise);
 
       // Get trip dates
-      scope.$watch('routeId', () => {
-        if (!scope.routeId) {
+      scope.$watch('data.routeId', (routeId) => {
+        if (!routeId) {
           return null;
         }
 
-        scope.disp.datepickerOptions.dateDisabled = () => true
-        scope.$broadcast('refreshDatepickers')
+        scope.info.tripDates = [];
+        scope.info.trips = [];
 
-        scope.info.tripDates = []
-        scope.info.trips = []
-        RoutesService.getRoute(scope.routeId, {
+        var today = new Date();
+        today.setHours(0,0,0);
+
+        RoutesService.getRoute(routeId, {
           includeTrips: true,
           includeAvailability: true,
+          startDate: today.getTime()
         })
         .then((route) => {
           scope.info.trips = route.trips
 
-          var tripDatesObj = _.keyBy(scope.info.trips, t => t.date.getTime())
-          scope.disp.datepickerOptions.dateDisabled = ({date, mode}) => {
-            var dateInUtc = new Date(Date.UTC(date.getFullYear(),
-                        date.getMonth(),
-                        date.getDate()));
-            return !(dateInUtc.getTime() in tripDatesObj)
-          }
-          scope.$broadcast('refreshDatepickers')
+          scope.disp.datepicker.daysAllowed = route.trips.map(trip =>
+            new Date(
+                trip.date.getFullYear(),
+                trip.date.getMonth(),
+                trip.date.getDate()));
+          scope.disp.datepicker.highlightDays = route.trips.map(trip =>
+            ({
+              date: new Date(
+                  trip.date.getFullYear(),
+                  trip.date.getMonth(),
+                  trip.date.getDate()),
+              selectable: true,
+              annotation: `${trip.availability.seatsAvailable}`
+            }))
         })
+      });
+
+      // Get stops
+      scope.$watch('data.selectedDates', (selectedDates) => {
+        if (!selectedDates || selectedDates.length === 0) {
+          scope.data.trips = [];
+          scope.info.tripStops = null;
+          return;
+        }
+
+        // Find the initial set of stops
+        var offset = new Date().getTimezoneOffset() * 60000;
+        var initialSubset = scope.info.trips.find(tr =>
+            moment(tr.date).valueOf() + offset === selectedDates[0].valueOf())
+        assert(initialSubset);
+
+        initialSubset = initialSubset.tripStops;
+
+        // For each day, reduce the subset to the intersection
+        scope.data.trips = [];
+        for (let day of selectedDates) {
+          let trip = scope.info.trips.find(tr =>
+            moment(tr.date).valueOf() + offset == day.valueOf());
+          let stopsSet = trip.tripStops;
+
+          // Stops must match by id and time
+          initialSubset = _.intersectionBy(initialSubset,
+                                           ts => `${ts.stop.id};${ts.time.getHours()};${ts.time.getMinutes()}`);
+          // push to list of trips
+          scope.data.trips.push(trip);
+        }
+        scope.data.trips = _.sortBy(scope.data.trips, t => t.date)
+        scope.info.tripStops = initialSubset;
+
+        // Update boardStop / alightStop
+        if (scope.boardStopId) {
+          scope.boardStop = scope.info.tripStops.find(ts =>
+            ts.stopId === scope.boardStopId)
+        }
+        if (scope.alightStopId) {
+          scope.alightStop = scope.info.tripStops.find(ts =>
+            ts.stopId === scope.alightStopId)
+        }
+      }, true);
+
+      scope.$watchGroup(['boardStop', 'alightStop', 'data.trips'], () => {
+        if (scope.boardStop) {
+          scope.boardStopId = scope.boardStop.stopId;
+        }
+        if (scope.alightStop) {
+          scope.alightStopId = scope.alightStop.stopId;
+        }
+
+        // update scope.trips
+        scope.trips = scope.data.trips.map(trip =>
+          ({
+            tripId: trip.id,
+            boardStopId: scope.boardStop ? trip.tripStops.find(ts => ts.stopId === scope.boardStop.stopId).id
+                                    : null,
+            alightStopId: scope.alightStop ? trip.tripStops.find(ts => ts.stopId === scope.alightStop.stopId).id
+                                    : null
+          }))
       })
+
+      scope.removeTrip = function(date) {
+        var offset = new Date().getTimezoneOffset() * 60000;
+        var matchingIndex = scope.data.selectedDates.findIndex(dt =>
+          dt.valueOf() === date.valueOf() + offset)
+
+        scope.data.selectedDates.splice(matchingIndex, 1);
+      }
 
       // Get the board stops / alight stops
       function formatTime(tm) {
@@ -92,42 +166,6 @@ export default function(AdminService, RoutesService, $rootScope) {
       scope.isBoardStop = ts => ts.canBoard
       scope.isAlightStop = ts => ts.canAlight
       scope.displayStop = ts => `${formatTime(ts.time)}: ${ts.stop.description}`
-
-      // When date changes, update trip stops
-      scope.$watchGroup(['info.trips', 'query.tripDate'], () => {
-        var theTrip  = scope.info.trips
-          .find(tr => tr.date.getTime() == scope.query.tripDate.getTime())
-
-        scope.info.trip = theTrip;
-
-        if (!theTrip) {
-          scope.info.tripId = null;
-          scope.info.tripStops = null;
-          return;
-        }
-
-        // Find the previous stops
-        if (scope.info.tripStops) {
-          var previousBoardStop = scope.info.tripStops
-            .find(ts => ts.id == scope.boardStopId)
-          previousBoardStop = previousBoardStop ? previousBoardStop.stop.id : null;
-
-          var previousAlightStop = scope.info.tripStops
-            .find(ts => ts.id == scope.alightStopId)
-          previousAlightStop = previousAlightStop ? previousAlightStop.stop.id : null;
-
-          // Update the board stop id, alight stop id
-          scope.boardStopId = theTrip.tripStops.find(ts => ts.stop.id == previousBoardStop)
-          scope.alightStopId = theTrip.tripStops.find(ts => ts.stop.id == previousAlightStop)
-
-          scope.boardStopId = scope.boardStopId ? scope.boardStopId.id : null;
-          scope.alightStopId = scope.alightStopId ? scope.alightStopId.id : null;
-        }
-        // update trip ID, trip stops
-        scope.tripId = theTrip.id
-        scope.info.tripStops = theTrip.tripStops
-
-      })
     },
   }
 

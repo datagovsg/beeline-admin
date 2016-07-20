@@ -44,6 +44,31 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
     }
   })
 
+  .state('companies', {
+    url: '/companies',
+    templateUrl: 'templates/companies.html',
+    controller: 'companies',
+    data: {
+      requiresLogin: true,
+    }
+  })
+  .state('assets', {
+    url: '/assets',
+    templateUrl: 'templates/assets.html',
+    controller: 'assets',
+    data: {
+      requiresLogin: true,
+    }
+  })
+  .state('admins', {
+    url: '/admins',
+    templateUrl: 'templates/admins.html',
+    controller: 'admins',
+    data: {
+      requiresLogin: true,
+    }
+  })
+
   .state('trips', {
     url: '/trips/{routeId:int}/{action}',
     templateUrl: 'templates/trips.html',
@@ -89,12 +114,7 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
       requiresLogin: true,
     }
   })
-
-  authProvider.init({
-    domain: env.AUTH0_DOMAIN,
-    clientId: env.AUTH0_CID,
-    loginState: 'login',
-  })
+  
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/bookings');
 }

@@ -13,35 +13,50 @@
 </div>
 
 <div ng-show="route">
-  <div ng-show="edit == 'route'">
+  <div ng-show="edit == 'route'" class="container">
     <h2>{{route.label}}</h2>
 
-    <label>
-      Label:
-      <input type="text" ng-model="route.label">
-    </label>
+    <div class="row">
+      <div class="col-md-6 form-inline">
+        <label>
+          Label:
+          <input type="text" class="form-control" ng-model="route.label">
+        </label>
 
-    <label>
-      Name:
-      <input type="text" ng-model="route.name">
-    </label>
+        <label>
+          Name:
+          <input type="text" class="form-control" ng-model="route.name">
+        </label>
 
-    <label>
-      From:
-      <input type="text" ng-model="route.from">
-    </label>
+        <label>
+          From:
+          <input type="text" class="form-control" ng-model="route.from">
+        </label>
 
-    <label>
-      To:
-      <input type="text" ng-model="route.to">
-    </label>
+        <label>
+          To:
+          <input type="text" class="form-control" ng-model="route.to">
+        </label>
+      </div>
 
-    <!-- ng-if creates a scope -->
-    <label ng-if="adminService.session().role == 'superadmin'">
-      Company:
-      <company-selector ng-model="$parent.route.transportCompanyId">
-      </company-selector>
-    </label>
+      <div class="col-md-6 form-inline">
+        <label>
+          Schedule:
+          <input type="text" class="form-control" ng-model="route.schedule">
+        </label>
+
+        <label>Tags:
+        <tag-editor ng-model="disp.routeTags">
+        </tag-editor></label>
+
+        <!-- ng-if creates a scope -->
+        <label ng-if="adminService.session().role == 'superadmin'">
+          Company:
+          <company-selector class="form-control" ng-model="$parent.route.transportCompanyId">
+          </company-selector>
+        </label>
+      </div>
+    </div>
 
     <label>Path:</label>
     <path-editor path="route.path" trip-stops="tripStops">

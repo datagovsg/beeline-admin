@@ -25,6 +25,8 @@ $light: #FFF;
 $selected: #CCC;
 
 @import "node_modules/multiple-date-picker/dist/multiple-date-picker";
+@import "node_modules/ui-select/dist/select";
+@import "ngTagEditor/ngTagEditor";
 @import 'scss/transactions';
 @import 'scss/routeEditor';
 @import 'scss/pathEditor';
@@ -40,7 +42,9 @@ $selected: #CCC;
 @import 'scss/loadingSpinner';
 @import 'scss/bookingRefund';
 @import 'scss/mySort';
+@import 'scss/companies';
 @import 'scss/bootstrap';
+@import 'scss/datePickers';
 
 html, body {
   height: 100%;
@@ -87,6 +91,12 @@ li.active {
 .overflow-scroll {
   overflow-y: auto;
   overflow-x: auto;
+}
+
+nav.navbar {
+  company-selector select {
+    color: black;
+  }
 }
 
 .admin-nav {

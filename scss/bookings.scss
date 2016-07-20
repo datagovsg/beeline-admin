@@ -12,32 +12,4 @@
       clear: both;
     }
   }
-
-  .datepicker-wrap {
-    width: 350px;
-    float: right;
-  }
-
-  .picker-day {
-    position: relative;
-    text-align: left;
-    padding: 5px 0 5px 5px;
-
-    .annotation {
-      background-color: #F9F;
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      padding: 2px 5px 0;
-    }
-  }
-  .picker-top-row {
-    display: flex;
-    .picker-navigate {
-      flex: 0 0 auto;
-    }
-    .picker-month {
-      flex: 1 1 auto;
-    }
-  }
 }
