@@ -16,7 +16,8 @@ export default function ($rootScope, $location, uiGmapGoogleMapApi, $q) {
 
         const mapPath = new googleMaps.Polyline({
           strokeColor: '#FF0000',
-          strokeWeight: 3
+          strokeWeight: 3,
+          zIndex: 10
         })
 
         scope.$on('mapLoaded', () => {
@@ -38,7 +39,7 @@ export default function ($rootScope, $location, uiGmapGoogleMapApi, $q) {
         scope.$watch('tripStops', (tripStops) => {
           map.setCenter(SINGAPORE)
           map.setZoom(11)
-          dirRenderer.setMap(null)
+          dirRenderers.forEach((renderer) => { renderer.setMap(null) })
           markers.forEach((marker) => marker.setMap(null))
           markers = tripStops ? tripStops.map((tripStop, i) => {
             const {stop: {coordinates: {coordinates}, description}, canBoard} = tripStop
@@ -57,62 +58,102 @@ export default function ($rootScope, $location, uiGmapGoogleMapApi, $q) {
         })
 
         const dirService = new googleMaps.DirectionsService()
-        const dirRenderer = new googleMaps.DirectionsRenderer({
-          draggable: true,
-          polylineOptions: {strokeWeight: 3, strokeColor: '#4b3863'},
-          markerOptions: {icon: 'https://maps.gstatic.com/mapfiles/dd-via.png'}
-        })
+        let dirRenderers = []
+        let legs = []
+        let updateQueue = Promise.resolve()
 
-        dirRenderer.directions_changed = () => {
-          const directions = dirRenderer.getDirections()
-          console.log(directions)
-          const {overview_polyline} = directions.routes[0]
-          scope.newPath = overview_polyline
+        function updateDirections (renderer, origin, destination, waypoints) {
+          const update = () => {
+            const request = {
+              origin, destination, waypoints,
+              travelMode: googleMaps.TravelMode.DRIVING,
+              avoidHighways: false,
+              avoidTolls: false
+            }
+
+            return new Promise((resolve, reject) => {
+              dirService.route(request, (result, status) => {
+                if (status === googleMaps.DirectionsStatus.OK) {
+                  renderer.setDirections(result)
+                  setTimeout(resolve, 300)
+                } else {
+                  console.log(status, result)
+                  reject()
+                }
+              })
+            })
+          }
+
+          updateQueue = updateQueue.then(update)
         }
 
-        scope.googlePath = (tripStops) => {
+        scope.googlePath = async (tripStops) => {
           if (!tripStops) return
           const stopsLatLng = tripStops.map((tripStop) => {
             const {stop: {coordinates: {coordinates}}} = tripStop
             return new googleMaps.LatLng(coordinates[1], coordinates[0])
           })
 
-          const request = {
-            origin: stopsLatLng[0],
-            destination: stopsLatLng[stopsLatLng.length - 1],
-            waypoints: stopsLatLng.slice(1, -1).map((latlng) => ({location: latlng})),
-            travelMode: googleMaps.TravelMode.DRIVING
-          }
+          dirRenderers.forEach((renderer) => { renderer.setMap(null) })
+          dirRenderers = []
+          legs = []
 
-          if (request.waypoints.length > 6) {
-            const length = request.waypoints.length
-            const start = Math.floor((length - 6) / 2)
-            const end = start + 6
-            request.waypoints = request.waypoints.slice(start, end)
-          }
+          for (let i = 0; i < stopsLatLng.length - 1; i++) {
+            const renderer = new googleMaps.DirectionsRenderer({
+              map: map,
+              draggable: true,
+              markerOptions: {icon: 'https://maps.gstatic.com/mapfiles/dd-via.png'},
+              polylineOptions: {
+                strokeWeight: 2,
+                strokeColor: '#4b3863',
+                zIndex: 20
+              },
+              preserveViewport: true
+            })
 
-          dirService.route(request, (result, status) => {
-            if (status === googleMaps.DirectionsStatus.OK) {
-              dirRenderer.setMap(map)
-              dirRenderer.setDirections(result)
-            } else {
-              console.log('Google path failed', result)
+            let lastOrigin = stopsLatLng[i]
+            let lastDestination = stopsLatLng[i + 1]
+
+            renderer.directions_changed = () => {
+              const directions = renderer.getDirections()
+              console.log(directions)
+              legs[i] = directions.routes[0].overview_path
+              const {origin: currentOrigin, destination: currentDestination} = directions.request
+              if (i > 0 && currentOrigin !== lastOrigin) {
+                lastOrigin = currentOrigin
+                const directions = dirRenderers[i - 1].getDirections()
+                const {origin, waypoints} = directions.request
+                updateDirections(dirRenderers[i - 1], origin, currentOrigin, waypoints)
+              } else if (i < stopsLatLng.length - 1 && currentDestination !== lastDestination) {
+                lastDestination = currentDestination
+                const directions = dirRenderers[i + 1].getDirections()
+                const {destination, waypoints} = directions.request
+                updateDirections(dirRenderers[i + 1], currentDestination, destination, waypoints)
+              } else {
+                let points = legs.reduce((all, leg) => all.concat(leg))
+                scope.newPath = google.maps.geometry.encoding.encodePath(points)
+              }
             }
-          })
+
+            await updateDirections(renderer, lastOrigin, lastDestination)
+
+            dirRenderers.push(renderer)
+            legs.push([stopsLatLng[i], stopsLatLng[i + 1]])
+          }
         }
 
         scope.updatePath = () => {
           if (!scope.newPath) return
           scope.path = scope.newPath
           scope.newPath = ''
-          dirRenderer.setMap(null)
+          dirRenderers.forEach((renderer) => { renderer.setMap(null) })
         }
 
         scope.clearPath = () => {
           scope.path = ''
           scope.newPath = ''
           mapPath.setMap(null)
-          dirRenderer.setMap(null)
+          dirRenderers.forEach((renderer) => { renderer.setMap(null) })
         }
       })
     }
