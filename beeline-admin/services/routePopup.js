@@ -12,37 +12,36 @@ export default function (RoutesService, $uibModal, mapService, TripsService) {
           uiGmapGoogleMapApi) {
           $scope.newStop = {}
           $scope.map = mapService.defaultMapOptions({
-            events: {
-            },
             newStopOptions: {
               label: '+',
             },
             markersControl: {},
-            pingPathOptions: {
-              icons: [{
-                icon: {
-                  path: 'M 0,-1 0,1',
-                  strokeOpacity: 1,
-                  scale: 4
-                },
-                offset: '0',
-                repeat: '5px'
-              }],
+            routePathOptions: {
               stroke: {
-                opacity: 0,
-              },
-            },
-            pingSampleOptions: {
-              icon: {
-                url: './img/routePtMarker.png',
+                opacity: 0.5,
+                color: '#99CCFF',
               }
             },
-            pingEvents: {
-              mouseover(marker, event, model) {
-                console.log(model);
-                $scope.selectedPing = model;
+            pingPathOptions: {
+              icons: [],
+              stroke: {
+                opacity: 1.0,
+                color: '#0000FF',
               },
-            }
+              polylineOptions: {
+                zIndex: 10,
+              }
+            },
+            otherPingPathOptions: {
+              icons: [],
+              stroke: {
+                opacity: 0.5,
+                color: '#0000FF',
+              },
+              polylineOptions: {
+                zIndex: 10,
+              }
+            },
           });
           $scope.computed = {
             path: [],
@@ -51,10 +50,8 @@ export default function (RoutesService, $uibModal, mapService, TripsService) {
           }
 
           uiGmapGoogleMapApi.then((googleMaps) => {
-            _.assign($scope.map.pingSampleOptions.icon, {
-              scaledSize: new googleMaps.Size(15, 15),
-              anchor: new googleMaps.Point(8, 8)
-            })
+            $scope.map.pingPathOptions.polylineOptions.zIndex = googleMaps.MAX_ZINDEX + 4;
+            $scope.map.otherPingPathOptions.polylineOptions.zIndex = googleMaps.MAX_ZINDEX;
 
             $scope.$watch('route.path', (path) => {
               if (!path) {
@@ -104,6 +101,10 @@ export default function (RoutesService, $uibModal, mapService, TripsService) {
             $scope.selectedStop = model;
           }
 
+          $scope.$on('pingPath.pingSelected', (event, ping) => {
+            $scope.selectedPing = ping;
+          })
+
           $scope.$watch('trip', (trip) => {
             if (!trip) return;
 
@@ -121,12 +122,8 @@ export default function (RoutesService, $uibModal, mapService, TripsService) {
               }
             }
 
-            var periodStart = new Date(
-              trip.date.getFullYear(),
-              trip.date.getMonth(),
-              trip.date.getDate()
-            ).getTime();
-            var periodEnd = periodStart + 24*60*60*1000;
+            var periodStart = _.minBy(trip.tripStops, 'time').time.getTime() - 60*60*1000
+            var periodEnd = _.maxBy(trip.tripStops, 'time').time.getTime() + 60*60*1000
 
             TripsService.getPings({
               tripId: trip.id,
@@ -134,19 +131,17 @@ export default function (RoutesService, $uibModal, mapService, TripsService) {
               endTime: periodEnd,
             })
             .then((pings) => {
-              $scope.pings = _.sortBy(pings, ping => ping.time);
-              $scope.computed.pingPath = pings.map(ping => ({
-                latitude: ping.coordinates.coordinates[1],
-                longitude: ping.coordinates.coordinates[0],
-              }))
+              $scope.pings = pings;
+            })
 
-              $scope.computed.pingSamples = _.filter(pings, (value, index) => index % 3 == 0)
-
-              for (let ping of $scope.computed.pingSamples) {
-                ping._options = $scope.map.pingSampleOptions;
-              }
-
-              console.log($scope.computed.pingSamples);
+            TripsService.getPings({
+              tripId: trip.id,
+              byTripId: true,
+              startTime: periodStart,
+              endTime: periodEnd,
+            })
+            .then((pings) => {
+              $scope.otherPings = _.groupBy(pings, 'driverId')
             })
           })
 
@@ -155,7 +150,7 @@ export default function (RoutesService, $uibModal, mapService, TripsService) {
             $scope.map.center = {latitude: 1.38, longitude: 103.8}
             $scope.map.zoom = 10;
           }, 1000)
-        }
+        } /* Controller */
       })
     })
   }

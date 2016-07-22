@@ -23,6 +23,8 @@ export function hasStop() {
 
 export function intervalToTime() {
   return (interval) => {
+    if (!interval) return null;
+
     var offset = 0;
 
     offset += interval.days || 0;
