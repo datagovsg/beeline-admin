@@ -3,7 +3,7 @@ export default function(RoutesService) {
   return {
     template: `
 <select
-    ng-options="stop.id as stop.description for stop in stops | orderBy:stop.name"
+    ng-options="stop.id as stop.description for stop in stops | orderBy:'description'"
     >
 </select>
     `,
