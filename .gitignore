@@ -6,4 +6,6 @@ platforms/
 plugins/
 beeline-admin/env.json
 www/css
-www/lib
+www/lib/beeline-admin/bundle.js.map
+www/lib/beeline-admin/bundle.js
+build
