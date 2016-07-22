@@ -7,6 +7,9 @@ var minifyCss = require('gulp-minify-css');
 var rename = require('gulp-rename');
 var webpack = require('webpack-stream');
 var sourcemaps = require('gulp-sourcemaps');
+var fs = require('fs')
+var child_process = require('child_process')
+var path = require('path')
 
 var paths = {
   sass: ['./scss/**/*.scss']
@@ -44,14 +47,19 @@ gulp.task('sass', function(done) {
     .on('end', done);
 });
 
-gulp.task('webpack', function() {
-    return gulp.src(['beeline-admin/main.js', '!node_modules/**/*.js', '!www/**/*.js'])
-    .pipe(sourcemaps.init())
-    .pipe(webpack(require('./webpack.config.js'))
-        .on('error', errHandler))
-    .pipe(sourcemaps.write())
-    .pipe(gulp.dest('www/lib/beeline-admin'))
-    .on('error', errHandler)
+
+function webpackPrefix(PREFIX, done) {
+  return gulp.src(['beeline-admin/main.js', '!node_modules/**/*.js', '!www/**/*.js'])
+  .pipe(sourcemaps.init())
+  .pipe(webpack(require('./webpack.config.js'))
+      .on('error', errHandler))
+  .pipe(sourcemaps.write())
+  .pipe(gulp.dest((PREFIX || 'www') + '/lib/beeline-admin'))
+  .on('error', errHandler)
+}
+
+gulp.task('webpack', function(done) {
+  return webpackPrefix(null,done);
 });
 
 gulp.task('watch', ['sass', 'webpack', 'js-libraries'], function() {
@@ -59,22 +67,57 @@ gulp.task('watch', ['sass', 'webpack', 'js-libraries'], function() {
   gulp.watch(['beeline-admin/**/*.js', 'beeline-admin/**/*.html', 'scss/*.scss'], ['webpack']);
 });
 
-//gulp.task('install', ['git-check'], function() {
-//  return bower.commands.install()
-//    .on('log', function(data) {
-//      gutil.log('bower', gutil.colors.cyan(data.id), data.message);
-//    });
-//});
+/*** To deploy the app to Github pages ***/
 
-gulp.task('git-check', function(done) {
-  if (!sh.which('git')) {
-    console.log(
-      '  ' + gutil.colors.red('Git is not installed.'),
-      '\n  Git, the version control system, is required to download Ionic.',
-      '\n  Download git here:', gutil.colors.cyan('http://git-scm.com/downloads') + '.',
-      '\n  Once git is installed, run \'' + gutil.colors.cyan('gulp install') + '\' again.'
-    );
-    process.exit(1);
-  }
+function promiseExec(cmd, options) {
+  return new Promise((resolve, reject) => {
+    child_process.exec(cmd, options || {}, (err, stdout, stderr) => {
+      console.log(stdout);
+      console.log(stderr);
+
+      return err ? reject(err) : resolve();
+    })
+  })
+}
+
+gulp.task('deploy-prepare-git', function (done) {
+  // Ensure that build/ is a git repo
+  new Promise((resolve, reject) => {
+    fs.mkdir(path.resolve('build'), (err) => err ? resolve() : reject(err))
+  })
+  .then(() => promiseExec('git init .', {cwd: path.resolve('build')}))
+  .then(() => promiseExec('git pull', {cwd: path.resolve('build')}))
+  // Pull the latest (avoid conflicts)
+  .then(() => {
+    fs.writeFileSync(path.resolve('build') + '/CNAME', 'admin.beeline.sg')
+  })
+  .then(done, errHandler);
+});
+
+gulp.task('deploy-copy', ['deploy-prepare-git'], function (done) {
+  return gulp.src('./www/**/*')
+    .pipe(gulp.dest('build'))
+})
+
+gulp.task('deploy-build', ['deploy-copy'], function (done) {
+  process.env.BACKEND_URL='https://api.beeline.sg'
+  process.env.AUTH0_CID='BslsfnrdKMedsmr9GYkTv7ejJPReMgcE'
+  process.env.AUTH0_DOMAIN='beeline.au.auth0.com'
+
+  return webpackPrefix('build', done)
+})
+
+gulp.task('deploy', ['deploy-build'], function (done) {
   done();
+})
+
+gulp.task('deploy!', ['deploy'], function (done) {
+  fs.writeFileSync(path.resolve('.tmp-commit-message'),
+                    'Deploy on ' + new Date().toISOString() + ' by ')
+
+  promiseExec('git add .', {cwd: path.resolve('build')})
+  .then(() => promiseExec(`git commit -m "Deployed on ${new Date().toISOString()}"`, {cwd: path.resolve('build')}))
+  .then(() => promiseExec('git push', {cwd: path.resolve('build')}))
+  .catch(errHandler)
+  .then(done)
 });

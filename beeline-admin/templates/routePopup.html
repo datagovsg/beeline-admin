@@ -23,24 +23,23 @@
       <!-- Route path -->
       <ui-gmap-polyline path="computed.path"
                         idkey="'routePath'"
+                        stroke="map.routePathOptions.stroke"
       ></ui-gmap-polyline>
 
-      <!-- Route ping -->
-      <ui-gmap-polyline path="computed.pingPath"
-                        idkey="'pingPath'"
-                        icons="map.pingPathOptions.icons"
-                        stroke="map.pingPathOptions.stroke"
-      ></ui-gmap-polyline>
+      <!-- the official ping path -->
+      <!-- <ping-path pings="pings"
+                 idkey="'pingPath'"
+                 stroke="map.pingPathOptions.stroke"
+                 polyline-options="map.pingPathOptions.polylineOptions"
+      ></ping-path> -->
 
-      <ui-gmap-markers
-        ng-if="computed.pingSamples"
-        models="computed.pingSamples"
-        coords="'coordinates'"
-        idKey="'id'"
-        options="'_options'"
-        events="map.pingEvents"
-        >
-      </ui-gmap-markers>
+      <!-- Pings by other drivers? -->
+      <ping-path ng-repeat="(driverId, oPings) in otherPings"
+                 pings="oPings"
+                 idkey="'otherPingPath' + driverId"
+                 stroke="map.otherPingPathOptions.stroke"
+                 polyline-options="map.otherPingPathOptions.polylineOptions"
+      ></ping-path>
 
       <!-- Trip stops -->
       <ui-gmap-markers
@@ -68,6 +67,8 @@
                       show="selectedPing">
         <div>
           <b>{{selectedPing.time | date:'HH:mm:ss'}}</b>
+          <br/>
+          Driver Id: #{{selectedPing.driverId}}
         </div>
       </ui-gmap-window>
 
