@@ -52,7 +52,7 @@ export default function (AdminService, RoutesService, $rootScope) {
         scope.route && scope.route.id &&
         RoutesService.getRoute(scope.route.id, {includeTrips: true})
         .then((route) => {
-          scope.tripStops = _.maxBy(route.trips, 'date').tripStops
+          scope.tripStops = route.trips && route.trips.length && _.maxBy(route.trips, 'date').tripStops
           scope.disp.routeTags = scope.route.tags && scope.route.tags.map(t => ({name: t}));
           // quick hack to convert arrays to polyline string
           if (google.maps.geometry && scope.route.path instanceof Array) {
