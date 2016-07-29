@@ -167,9 +167,9 @@
       </td>
 
       <!-- for each ticket type -->
-      <td ng-if="item.itemType == 'ticketRefund'">{{item.ticketRefund.user.json.name || item.ticketSale.user.name}}</td>
-      <td ng-if="item.itemType == 'ticketRefund'">{{item.ticketRefund.user.json.telephone || item.ticketSale.user.telephone}}</td>
-      <td ng-if="item.itemType == 'ticketRefund'">{{item.ticketRefund.user.json.email || item.ticketSale.user.email}}</td>
+      <td ng-if="item.itemType == 'ticketRefund'">{{item.ticketRefund.user.json.name || item.ticketRefund.user.name}}</td>
+      <td ng-if="item.itemType == 'ticketRefund'">{{item.ticketRefund.user.json.telephone || item.ticketRefund.user.telephone}}</td>
+      <td ng-if="item.itemType == 'ticketRefund'">{{item.ticketRefund.user.json.email || item.ticketRefund.user.email}}</td>
       <td ng-if="item.itemType == 'ticketRefund'">{{item.ticketRefund.boardStop.stop.description}}</td>
       <td ng-if="item.itemType == 'ticketRefund'">{{item.ticketRefund.alightStop.stop.description}}</td>
       <td ng-if="item.itemType == 'ticketRefund'">
@@ -183,9 +183,9 @@
       </td>
 
       <!-- for each ticket type -->
-      <td ng-if="item.itemType == 'ticketExpense'">{{item.ticketExpense.user.json.name || item.ticketSale.user.name}}</td>
-      <td ng-if="item.itemType == 'ticketExpense'">{{item.ticketExpense.user.json.telephone || item.ticketSale.user.telephone}}</td>
-      <td ng-if="item.itemType == 'ticketExpense'">{{item.ticketExpense.user.json.email || item.ticketSale.user.email}}</td>
+      <td ng-if="item.itemType == 'ticketExpense'">{{(item.ticketExpense.user.json.name) || item.ticketExpense.user.name}}</td>
+      <td ng-if="item.itemType == 'ticketExpense'">{{(item.ticketExpense.user.json.telephone) || item.ticketExpense.user.telephone}}</td>
+      <td ng-if="item.itemType == 'ticketExpense'">{{(item.ticketExpense.user.json.email) || item.ticketExpense.user.email}}</td>
       <td ng-if="item.itemType == 'ticketExpense'">{{item.ticketExpense.boardStop.stop.description}}</td>
       <td ng-if="item.itemType == 'ticketExpense'">{{item.ticketExpense.alightStop.stop.description}}</td>
       <td ng-if="item.itemType == 'ticketExpense'">
