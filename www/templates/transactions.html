@@ -149,11 +149,11 @@
       <td>{{item.itemId}}</td>
 
       <!-- for each ticket type -->
-      <td ng-if="item.itemType == 'ticketSale'">{{item.ticketSale.user.json.name || item.ticketSale.boardStop.user.name}}
+      <td ng-if="item.itemType == 'ticketSale'">{{item.ticketSale.user.json.name || item.ticketSale.user.name}}
           {{item.ticketSale.user.json.index >= 0 ? '#' + (item.ticketSale.user.json.index + 1) : ''}}
       </td>
-      <td ng-if="item.itemType == 'ticketSale'">{{item.ticketSale.user.json.telephone || item.ticketSale.boardStop.user.telephone}}</td>
-      <td ng-if="item.itemType == 'ticketSale'">{{item.ticketSale.user.json.email || item.ticketSale.boardStop.user.email}}</td>
+      <td ng-if="item.itemType == 'ticketSale'">{{item.ticketSale.user.json.telephone || item.ticketSale.user.telephone}}</td>
+      <td ng-if="item.itemType == 'ticketSale'">{{item.ticketSale.user.json.email || item.ticketSale.user.email}}</td>
       <td ng-if="item.itemType == 'ticketSale'">{{item.ticketSale.boardStop.stop.description}}</td>
       <td ng-if="item.itemType == 'ticketSale'">{{item.ticketSale.alightStop.stop.description}}</td>
       <td ng-if="item.itemType == 'ticketSale'">
@@ -167,9 +167,9 @@
       </td>
 
       <!-- for each ticket type -->
-      <td ng-if="item.itemType == 'ticketRefund'">{{item.ticketRefund.user.json.name || item.ticketSale.boardStop.user.name}}</td>
-      <td ng-if="item.itemType == 'ticketRefund'">{{item.ticketRefund.user.json.telephone || item.ticketSale.boardStop.user.telephone}}</td>
-      <td ng-if="item.itemType == 'ticketRefund'">{{item.ticketRefund.user.json.email || item.ticketSale.boardStop.user.email}}</td>
+      <td ng-if="item.itemType == 'ticketRefund'">{{item.ticketRefund.user.json.name || item.ticketSale.user.name}}</td>
+      <td ng-if="item.itemType == 'ticketRefund'">{{item.ticketRefund.user.json.telephone || item.ticketSale.user.telephone}}</td>
+      <td ng-if="item.itemType == 'ticketRefund'">{{item.ticketRefund.user.json.email || item.ticketSale.user.email}}</td>
       <td ng-if="item.itemType == 'ticketRefund'">{{item.ticketRefund.boardStop.stop.description}}</td>
       <td ng-if="item.itemType == 'ticketRefund'">{{item.ticketRefund.alightStop.stop.description}}</td>
       <td ng-if="item.itemType == 'ticketRefund'">
@@ -183,9 +183,9 @@
       </td>
 
       <!-- for each ticket type -->
-      <td ng-if="item.itemType == 'ticketExpense'">{{item.ticketExpense.user.json.name || item.ticketSale.boardStop.user.name}}</td>
-      <td ng-if="item.itemType == 'ticketExpense'">{{item.ticketExpense.user.json.telephone || item.ticketSale.boardStop.user.telephone}}</td>
-      <td ng-if="item.itemType == 'ticketExpense'">{{item.ticketExpense.user.json.email || item.ticketSale.boardStop.user.email}}</td>
+      <td ng-if="item.itemType == 'ticketExpense'">{{item.ticketExpense.user.json.name || item.ticketSale.user.name}}</td>
+      <td ng-if="item.itemType == 'ticketExpense'">{{item.ticketExpense.user.json.telephone || item.ticketSale.user.telephone}}</td>
+      <td ng-if="item.itemType == 'ticketExpense'">{{item.ticketExpense.user.json.email || item.ticketSale.user.email}}</td>
       <td ng-if="item.itemType == 'ticketExpense'">{{item.ticketExpense.boardStop.stop.description}}</td>
       <td ng-if="item.itemType == 'ticketExpense'">{{item.ticketExpense.alightStop.stop.description}}</td>
       <td ng-if="item.itemType == 'ticketExpense'">
