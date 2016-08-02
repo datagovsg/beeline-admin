@@ -48,8 +48,8 @@ export default function(RoutesService, TripsService, AdminService, DriverService
       scope.refreshTrips = function() {
         var promise = TripsService.getTrips({
           routeId: scope.routeId,
-          startDate: new Date(scope.filter.startDate),
-          endDate: new Date(new Date(scope.filter.startDate).getTime() + 60 * 24 * 60 * 60 * 1000),
+          startDate: new Date(scope.filter.startDate.getTime() - 8*60*60*1000 /* timezone offset */),
+          endDate: new Date(scope.filter.startDate.getTime() + 365 * 24 * 60 * 60 * 1000 - 8*60*60*1000 /* timezone offset */),
           includeAvailability: true,
         })
         .then((trips) => {

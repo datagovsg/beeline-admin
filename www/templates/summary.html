@@ -26,14 +26,21 @@
             {{route.to}}
             {{route.trips[0].tripStops[route.trips[0].tripStops.length-1].time | date:'HH:mm'}}
           </h3>
-
           <table
             ng-repeat-end
             ng-if="routes.length > 0">
             <tr>
               <th>{{ route.trips[0].date | date:'MMM':'UTC'}}</th>
               <th ng-repeat='trip in route.tripsByDay track by $index'
-                  ng-class="{ day: true, 'has-trip': route.tripsByDay[$index] }"
+                  ng-class="{ 'has-trip': route.tripsByDay[$index],
+                          'mon-wed-fri':  weekDays[$index] % 2,
+                          'sun':          weekDays[$index] === 0,
+                          'mon':          weekDays[$index] === 1,
+                          'fri':          weekDays[$index] === 5,
+                          'sat':          weekDays[$index] === 6,
+                          today: $index === today
+                        }"
+                  class="summary-day day"
               >
                 {{$index + 1}}
               </th>
@@ -41,7 +48,15 @@
             <tr>
               <td></td>
               <td ng-repeat='trip in route.tripsByDay track by $index'
-                  ng-class="{ day: true, 'has-trip': route.tripsByDay[$index] }"
+                  ng-class="{ 'has-trip': route.tripsByDay[$index],
+                              'mon-wed-fri': weekDays[$index] % 2,
+                              'sun': weekDays[$index] === 0,
+                              'mon': weekDays[$index] === 1,
+                              'fri': weekDays[$index] === 5,
+                              'sat': weekDays[$index] === 6,
+                              today: $index === today
+                            }"
+                  class="passenger-count day"
               >
                 {{trip.availability.seatsBooked || ''}}
               </td>

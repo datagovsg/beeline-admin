@@ -3,14 +3,48 @@
 .summary-page {
   td.day, th.day {
     text-align: center;
-    min-width: 1.5em;
+    min-width: 2.2em;
     padding: 0.5em;
+
+    &::after {
+      content: '\a0';
+    }
   }
-  td.day.has-trip, th.day.has-trip {
-    background-color: #FFF;
+  td.day.has-trip {
+    &.mon-wed-fri {
+      background-color: #EEEEFF;
+      &.today {
+        background-color: #FDD;
+      }
+    }
+    &:not(.mon-wed-fri) {
+      background-color: #EEEEEE;
+      &.today {
+        background-color: #FDD;
+      }
+    }
+  }
+  td.day, th.day {
+    &.sun, &.fri {
+      border-right: solid 1px #888;
+    }
+    &.sat, &.mon {
+      border-left: solid 1px #888;
+    }
+    &.today {
+      background-color: #FDD;
+    }
+  }
+  td.passenger-count {
+    font-weight: bold;
   }
   td.day:not(.has-trip), th.day:not(.has-trip) {
     background-color: #CCC;
     color: #DDD;
+  }
+
+  th.summary-day {
+    font-weight: normal;
+    font-size: 80%;
   }
 }
