@@ -12,6 +12,7 @@
       <table class="table table-condensed table-striped table-bordered">
         <thead>
           <tr>
+            <th>No.</th>
             <th>ID</th>
             <th>Name</th>
             <th>Telephone</th>
@@ -22,6 +23,9 @@
         </thead>
         <tbody>
           <tr ng-repeat="driver in drivers track by driver.id">
+            <td>
+              {{$index+1}}
+            </td>
             <td>
               {{driver.id}}
             </td>
@@ -37,12 +41,12 @@
             </td>
             <td class="text-center">
               <button class="btn btn-primary" ng-click="updateDriverName(driver.id)">
-                Edit
+                Edit Name or Phone No.
               </button>
             </td>
             <td class="text-center">
               <button ng-click="deleteDriver(driver.id)" class="btn btn-danger">
-                Delete
+                Delete Driver
               </button>
             </td>
           </tr>
