@@ -12,18 +12,29 @@
     <div id="navbar" class="navbar-collapse collapse">
       <a class="navbar-brand" href="#">Beeline Admin</a>
       <ul class="nav navbar-nav">
-        <li><a ui-sref="bookings">Tickets</a></li>
-        <li ng-if="adminService.isSuperAdmin()"><a ui-sref="transactions">Transactions</a></li>
+        <li><a ui-sref="bookings">Bookings</a></li>
         <li><a ui-sref="routes({routeId: 0, action: 'route'})">Routes</a></li>
-        <li  ng-if="adminService.isSuperAdmin()"><a ui-sref="trips({routeId: 0, action: 'route'})">Trips</a></li>
-        <li><a ui-sref="summary">Summary</a></li>
         <li><a ui-sref="driver">Drivers</a></li>
+        <li><a ui-sref="summary">Summary</a></li>
         <li ng-if="adminService.isSuperAdmin()"><a href="#">Incidents</a></li>
-        <li ng-if="adminService.isSuperAdmin()"><a ui-sref="assets">Assets</a></li>
-        <li><a ui-sref="companies">Company Settings</a></li>
-        <li><a ui-sref="admins">Admin Settings</a></li>
-      </ul>
+        <li uib-dropdown on-toggle="toggled(open)">
+          <a href id="simple-dropdown" uib-dropdown-toggle>Company <span class="caret"></span></a>
+          <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
+            <li><a ui-sref="companies">Edit Profile</a></li>
+            <li><a ui-sref="admins">Users</a></li>
+            <li ng-if="adminService.isSuperAdmin()"><a ui-sref="transactions">Transactions</a></li>
+          </ul>
+        </li>
+        <li  ng-if="adminService.isSuperAdmin()" uib-dropdown on-toggle="toggled(open)">
+          <a href id="simple-dropdown" uib-dropdown-toggle>Super Admin <span class="caret"></span></a>
+          <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
+            <li ng-if="adminService.isSuperAdmin()"><a ui-sref="trips({routeId: 0, action: 'route'})">Route Trip Editor</a></li>
+            <li ng-if="adminService.isSuperAdmin()"><a ui-sref="assets">Assets</a></li>
 
+
+          </ul>
+        </li>
+      </ul>
       <ul class="nav navbar-nav pull-right">
         <li ng-if="adminService.isSuperAdmin()">
           <a>
