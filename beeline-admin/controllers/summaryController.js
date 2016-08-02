@@ -25,12 +25,18 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner) {
       options.transportCompanyId = AdminService.getCompanyId();
     }
 
+    // preprocess the routes to track all days...
+    var numDays = (options.endDate - options.startDate)
+        / (24 * 3600 * 1000)
+
+    $scope.weekDays = _.range(0, numDays).map(day =>
+      new Date($scope.selectedMonth.getFullYear(),
+               $scope.selectedMonth.getMonth(),
+               day + 1).getDay())
+
     LoadingSpinner.watchPromise(RoutesService.getRoutes(options)
     .then((routes) => {
 
-      // preprocess the routes to track all days...
-      var numDays = (options.endDate - options.startDate)
-          / (24 * 3600 * 1000)
 
       for (let route of routes) {
         route.tripsByDay = new Array(numDays)
