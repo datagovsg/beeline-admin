@@ -30,6 +30,14 @@
             ng-repeat-end
             ng-if="routes.length > 0">
             <tr>
+              <td></td>
+              <th ng-repeat="trip in route.priceSummary" colspan="{{trip.count}}" class="price-summary">
+                <span ng-if="trip.price !== undefined">
+                  ${{trip.price | number:2}} / {{trip.capacity}}<i class="glyphicon glyphicon-user"></i>
+                </span>
+              </th>
+            </tr>
+            <tr>
               <th>{{ route.trips[0].date | date:'MMM':'UTC'}}</th>
               <th ng-repeat='trip in route.tripsByDay track by $index'
                   ng-class="{ 'has-trip': route.tripsByDay[$index],
