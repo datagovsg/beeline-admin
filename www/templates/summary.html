@@ -76,7 +76,9 @@
                             }"
                   class="passenger-count day"
               >
+                <a href="#/bookings?tripId={{trip.id}}">
                 {{trip ? trip.availability.seatsBooked || '0' : ''}}
+                </a>
               </td>
             </tr>
           </table>

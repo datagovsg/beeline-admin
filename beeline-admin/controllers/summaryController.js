@@ -39,7 +39,11 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner) {
       for (let route of routes) {
         route.tripsByDay = new Array(numDays)
 
-        for (let trip of route.trips) {
+        // Prioritize cancelled trips, so that
+        // non-cancelled trips will overwrite cancelled trips
+        var trips = _.sortBy(route.trips, t => [t.date, t.status !== 'cancelled'])
+
+        for (let trip of trips) {
           trip.date = new Date(trip.date)
           route.tripsByDay[trip.date.getUTCDate() - 1] = trip
         }
