@@ -32,12 +32,11 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner) {
     $scope.weekDays = _.range(0, numDays).map(day =>
       new Date($scope.selectedMonth.getFullYear(),
                $scope.selectedMonth.getMonth(),
-               day + 1).getDay())
+               day + 1).getDay());
+    $scope.today = Math.floor((Date.now() - options.startDate) / (24*60*60*1000))
 
     LoadingSpinner.watchPromise(RoutesService.getRoutes(options)
     .then((routes) => {
-
-
       for (let route of routes) {
         route.tripsByDay = new Array(numDays)
 

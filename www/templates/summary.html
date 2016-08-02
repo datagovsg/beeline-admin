@@ -38,6 +38,7 @@
                           'mon':          weekDays[$index] === 1,
                           'fri':          weekDays[$index] === 5,
                           'sat':          weekDays[$index] === 6,
+                          today: $index === today
                         }"
                   class="summary-day day"
               >
@@ -53,6 +54,7 @@
                               'mon': weekDays[$index] === 1,
                               'fri': weekDays[$index] === 5,
                               'sat': weekDays[$index] === 6,
+                              today: $index === today
                             }"
                   class="passenger-count day"
               >

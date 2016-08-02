@@ -13,9 +13,15 @@
   td.day.has-trip {
     &.mon-wed-fri {
       background-color: #EEEEFF;
+      &.today {
+        background-color: #FDD;
+      }
     }
     &:not(.mon-wed-fri) {
       background-color: #EEEEEE;
+      &.today {
+        background-color: #FDD;
+      }
     }
   }
   td.day, th.day {
@@ -24,6 +30,9 @@
     }
     &.sat, &.mon {
       border-left: solid 1px #888;
+    }
+    &.today {
+      background-color: #FDD;
     }
   }
   td.passenger-count {
