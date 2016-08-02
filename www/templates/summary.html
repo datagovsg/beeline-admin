@@ -33,11 +33,25 @@
               <th>{{ route.trips[0].date | date:'MMM':'UTC'}}</th>
               <th ng-repeat='trip in route.tripsByDay track by $index'
                   ng-class="{ 'has-trip': route.tripsByDay[$index],
-                          'mon-wed-fri':  weekDays[$index] % 2,
-                          'sun':          weekDays[$index] === 0,
-                          'mon':          weekDays[$index] === 1,
-                          'fri':          weekDays[$index] === 5,
-                          'sat':          weekDays[$index] === 6,
+                          today: $index === today
+                        }"
+                  class="weekday day"
+              >
+              {{
+                weekDays[$index] === 0 ? 'Su' :
+                weekDays[$index] === 1 ? 'Mo' :
+                weekDays[$index] === 2 ? 'Tu' :
+                weekDays[$index] === 3 ? 'We' :
+                weekDays[$index] === 4 ? 'Th' :
+                weekDays[$index] === 5 ? 'Fr' :
+                weekDays[$index] === 6 ? 'Sa' : ''
+              }}
+              </th>
+            </tr>
+            <tr>
+              <th></th>
+              <th ng-repeat='trip in route.tripsByDay track by $index'
+                  ng-class="{ 'has-trip': route.tripsByDay[$index],
                           today: $index === today
                         }"
                   class="summary-day day"
@@ -49,16 +63,12 @@
               <td></td>
               <td ng-repeat='trip in route.tripsByDay track by $index'
                   ng-class="{ 'has-trip': route.tripsByDay[$index],
-                              'mon-wed-fri': weekDays[$index] % 2,
-                              'sun': weekDays[$index] === 0,
-                              'mon': weekDays[$index] === 1,
-                              'fri': weekDays[$index] === 5,
-                              'sat': weekDays[$index] === 6,
-                              today: $index === today
+                              today: $index === today,
+                              cancelled: route.tripsByDay[$index].status === 'cancelled'
                             }"
                   class="passenger-count day"
               >
-                {{trip.availability.seatsBooked || ''}}
+                {{trip ? trip.availability.seatsBooked || '0' : ''}}
               </td>
             </tr>
           </table>
