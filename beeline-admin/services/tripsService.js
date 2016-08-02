@@ -14,8 +14,8 @@ export default function (AdminService, DriverService, $q) {
       method: 'GET',
       url: `/routes/${options.routeId}?`+ querystring.stringify({
         include_trips: true,
-        start_date: options.startDate.toISOString().substr(0,10),
-        end_date: options.endDate.toISOString().substr(0,10),
+        start_date: options.startDate.getTime(),
+        end_date: options.endDate.getTime(),
         include_availability: options.includeAvailability ? true : false,
       })
     })
