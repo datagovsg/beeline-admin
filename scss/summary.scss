@@ -1,6 +1,11 @@
 
 
 .summary-page {
+
+  h2 {
+    font-size: 20px;
+  }
+
   td.day, th.day {
     text-align: center;
     min-width: 2.2em;
@@ -26,7 +31,7 @@
       background-color: #eeeeee;
     }
     &:nth-child(odd) {
-      background-color: #dddddd;
+      background-color: #cccccc;
     }
   }
   td.passenger-count {
