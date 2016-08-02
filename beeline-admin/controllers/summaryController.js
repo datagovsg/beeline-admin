@@ -1,7 +1,6 @@
 
 
 export default function($scope, AdminService, RoutesService, LoadingSpinner) {
-
   $scope.selectedMonth = new Date();
   $scope.routes = [];
 

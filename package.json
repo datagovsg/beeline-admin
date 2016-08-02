@@ -64,7 +64,6 @@
     "webpack-watch": "webpack --watch -d",
     "build": "npm run webpack",
     "watch": "npm run start & npm run webpack-watch",
-    "deploy": "./build-wrs.sh && git add www && git commit && git subtree push --prefix www/ origin gh-pages",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server",
     "heroku-postbuild": "gulp"
