@@ -18,7 +18,7 @@
 
         <div ng-if="routes.length > 0">
           <h2 ng-repeat-start="route in routes | orderBy:'label' track by $index">
-            {{route.label}}
+            {{route.label}} ({{route.id}})
             :
             {{route.from}}
             {{route.trips[0].tripStops[0].time | date:'HH:mm'}}
