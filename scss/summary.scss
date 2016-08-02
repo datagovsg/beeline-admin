@@ -2,48 +2,51 @@
 
 .summary-page {
 
-  h2 {
-    font-size: 20px;
+  .route-summaries {
+    h2 {
+      font-size: 20px;
+    }
+
+    td.day, th.day {
+      text-align: center;
+      min-width: 2.2em;
+
+      &::after {
+        content: '\a0';
+      }
+    }
+    td.day.has-trip {
+      background-color: $white;
+    }
+    th {
+      padding: $table-condensed-cell-padding;
+      font-size: 80%;
+      font-weight: normal;
+      &.today {
+        border: solid 1px $gray-base;
+      }
+    }
+    th.price-summary {
+      text-align: center;
+      &:nth-child(even) {
+        background-color: $gray-lightest;
+      }
+      &:nth-child(odd) {
+        background-color: $gray-lighter;
+      }
+    }
+    td.passenger-count {
+      font-weight: bold;
+    }
+    td.day:not(.has-trip), th.day:not(.has-trip) {
+      background: repeating-linear-gradient(
+        135deg,
+        $gray-lighter,
+        $gray-lighter 2px,
+        $gray-lightest 2px,
+        $gray-lightest 4px
+      );
+    }
   }
 
-  td.day, th.day {
-    text-align: center;
-    min-width: 2.2em;
-
-    &::after {
-      content: '\a0';
-    }
-  }
-  td.day.has-trip {
-    background-color: white;
-  }
-  th {
-    padding: 0.1em;
-    font-size: 80%;
-    font-weight: normal;
-    &.today {
-      border: solid 1px black;
-    }
-  }
-  th.price-summary {
-    text-align: center;
-    &:nth-child(even) {
-      background-color: #eeeeee;
-    }
-    &:nth-child(odd) {
-      background-color: #cccccc;
-    }
-  }
-  td.passenger-count {
-    font-weight: bold;
-  }
-  td.day:not(.has-trip), th.day:not(.has-trip) {
-    background: repeating-linear-gradient(
-      135deg,
-      #DDD,
-      #DDD 2px,
-      #BBB 2px,
-      #BBB 4px
-    );
-  }
 }

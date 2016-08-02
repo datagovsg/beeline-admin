@@ -16,7 +16,7 @@
           No seat data found for the selected month
       </h2>
 
-        <div ng-if="routes.length > 0">
+        <div ng-if="routes.length > 0" class="route-summaries">
           <h2 ng-repeat-start="route in routes | orderBy:'label' track by $index">
             {{route.label}} ({{route.id}})
             :
