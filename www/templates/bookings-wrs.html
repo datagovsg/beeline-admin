@@ -88,17 +88,15 @@
           <thead>
             <tr>
               <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort=""></th>
-              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Txn Id</th>
-              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Charge Id</th>
+              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Txn ID</th>
+              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Charge ID</th>
+              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">User</th>
+              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Ticket ID</th>
+              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Trip ID</th>
               <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="boardingTime">Trip date</th>
-              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">User name</th>
-              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">User phone </th>
-              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">User email</th>
-              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Ticket id</th>
-              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Trip id</th>
-              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="route">Route Id</th>
+              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="route">Route ID</th>
               <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Route Label</th>
-              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Route description</th>
+              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Route Description</th>
               <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Pick-up stop</th>
               <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Drop-off stop</th>
               <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Price per trip</th>
@@ -133,15 +131,8 @@
             </span>
               </td>
               <td>
-                {{ticket.boardStop.trip.date | date:'dd-MMM-yy':'UTC'}}
-              </td>
-              <td>
-                {{ticket.user.json.name ? (ticket.user.json.name + ' #' + ticket.user.json.index) : ticket.user.name}}
-              </td>
-              <td>
-                {{ticket.user.json.telephone || ticket.user.telephone}}
-              </td>
-              <td>
+                <strong>{{ticket.user.json.name ? (ticket.user.json.name + ' #' + ticket.user.json.index) : ticket.user.name}} </strong><br>
+                {{ticket.user.json.telephone || ticket.user.telephone}} <br>
                 {{ticket.user.json.email || ticket.user.email}}
               </td>
               <td>
@@ -157,6 +148,9 @@
                 {{ticket.boardStop.trip.id}}
               </td>
               <td>
+                {{ticket.boardStop.trip.date | date:'dd-MMM-yy':'UTC'}}
+              </td>
+              <td>
                 {{ticket.boardStop.trip.routeId}}
               </td>
               <td>
@@ -166,10 +160,10 @@
                 {{ticket.boardStop.trip.route.from}} &mdash; {{ticket.boardStop.trip.route.to}}
               </td>
               <td>
-                {{ticket.boardStop.time | date:'HH:mm'}}, {{ticket.boardStop.stop.description}}
+                {{ticket.boardStop.time | date:'HH:mm'}}<br>{{ticket.boardStop.stop.description}}
               </td>
               <td>
-                {{ticket.alightStop.time | date:'HH:mm'}}, {{ticket.alightStop.stop.description}}
+                {{ticket.alightStop.time | date:'HH:mm'}}<br>{{ticket.alightStop.stop.description}}
               </td>
               <td>
                 {{ticket.boardStop.trip.price}}
