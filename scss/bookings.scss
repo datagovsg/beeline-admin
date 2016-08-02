@@ -12,4 +12,21 @@
       clear: both;
     }
   }
+
+  .ticketSearch{
+    margin-right: $padding-large-horizontal;
+    margin-top: $padding-large-horizontal;
+  }
+
+  .ticketCheckbox {
+    margin-right: $padding-base-horizontal;
+  }
+
+  .downloadCsv {
+    margin-top: $padding-large-vertical;
+  }
+}
+
+.red {
+  background: #ffcccc;
 }
