@@ -1,5 +1,5 @@
 var express = require('express');
-var port = process.env.PORT || 5000;
+var port = process.env.PORT || 8100;
 app = express();
 app.use(express.static('www'));
 app.all('*', function(req, res, next) {
