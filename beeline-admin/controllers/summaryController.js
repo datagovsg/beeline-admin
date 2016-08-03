@@ -20,8 +20,9 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner) {
       ).getTime(),
     }
 
-    if (!AdminService.isSuperAdmin()) {
+    if (!AdminService.isSuperAdmin() || AdminService.getCompanyId()) {
       options.transportCompanyId = AdminService.getCompanyId();
+      $scope.companyId = options.transportCompanyId;
     }
 
     // preprocess the routes to track all days...
@@ -76,5 +77,6 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner) {
     }))
   }
 
+  $scope.$watch(() => AdminService.getCompanyId(), refresh)
   $scope.$watch('selectedMonth', refresh)
 }

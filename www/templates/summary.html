@@ -5,6 +5,8 @@
       <div class="summary-page">
 
       <nav>
+        <company-logo ng-if="companyId" company-id="companyId" class="company-logo"></company-logo>
+
         <uib-datepicker
           ng-model="selectedMonth"
           datepicker-options="{ minMode: 'month' }"
