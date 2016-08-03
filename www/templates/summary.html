@@ -64,43 +64,46 @@
               ng-repeat-end
               ng-if="routes.length > 0">
               <tr>
-                <th rowspan="4">{{ route.trips[0].date | date:'MMM':'UTC'}}</th>
+                <th rowspan="4" width="3%">{{ route.trips[0].date | date:'MMM':'UTC'}}</th>
 
                 <th ng-repeat="trip in route.priceSummary" colspan="{{trip.count}}" class="price-summary">
                   <span ng-if="trip.price !== undefined">
+                    <i class="glyphicon glyphicon-menu-left pull-left"></i>
                     ${{trip.price | number:2}} / {{trip.capacity}}<i class="glyphicon glyphicon-user"></i>
+                    <i class="glyphicon glyphicon-menu-right pull-right"></i>
                   </span>
                 </th>
               </tr>
               <tr>
               <!--   <th></th> -->
-                <th ng-repeat='trip in route.tripsByDay track by $index'
-                    ng-class="{ 'has-trip': route.tripsByDay[$index],
-                            today: $index === today
-                          }"
-                    class="weekday day"
-                >
-                {{
-                  weekDays[$index] === 0 ? 'Su' :
-                  weekDays[$index] === 1 ? 'Mo' :
-                  weekDays[$index] === 2 ? 'Tu' :
-                  weekDays[$index] === 3 ? 'We' :
-                  weekDays[$index] === 4 ? 'Th' :
-                  weekDays[$index] === 5 ? 'Fr' :
-                  weekDays[$index] === 6 ? 'Sa' : ''
-                }}
-                </th>
+              <th ng-repeat='trip in route.tripsByDay track by $index'
+                  ng-class="{ 'has-trip': route.tripsByDay[$index],
+                          today: $index === today
+                        }"
+                  class="summary-day day"
+              >
+                {{$index + 1}}
+              </th>
               </tr>
               <tr>
               <!--   <th></th> -->
-                <th ng-repeat='trip in route.tripsByDay track by $index'
-                    ng-class="{ 'has-trip': route.tripsByDay[$index],
-                            today: $index === today
-                          }"
-                    class="summary-day day"
-                >
-                  {{$index + 1}}
-                </th>
+              <th ng-repeat='trip in route.tripsByDay track by $index'
+                  ng-class="{ 'has-trip': route.tripsByDay[$index],
+                          today: $index === today
+                        }"
+                  class="weekday day"
+              >
+              {{
+                weekDays[$index] === 0 ? 'Su' :
+                weekDays[$index] === 1 ? 'Mo' :
+                weekDays[$index] === 2 ? 'Tu' :
+                weekDays[$index] === 3 ? 'We' :
+                weekDays[$index] === 4 ? 'Th' :
+                weekDays[$index] === 5 ? 'Fr' :
+                weekDays[$index] === 6 ? 'Sa' : ''
+              }}
+              </th>
+
               </tr>
               <tr>
               <!--   <td></td> -->

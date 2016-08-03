@@ -1,4 +1,4 @@
-
+$summaryTableBG: #eee;
 
 .summary-page {
   .uib-datepicker{
@@ -52,50 +52,62 @@
         margin-bottom: $padding-large-vertical*6;
         border: 1px solid $gray-lightest;
         border-top: none;
+        th{
+          text-align: center;
+        }
+        tr{
+          th,td{
+            border: 1px solid $gray-lightest;
+          }
+        }
       }
     }
 
+    .today {
+      border: solid 2px $gray-lighter;
+      font-weight: bold;
+      &tr{
+        border: none;
+        td,th{
+          border: none;
+        }
+      }
+    }
     td.day, th.day {
       text-align: center;
       min-width: 2.2em;
-
-      &::after {
-        content: '\a0';
-      }
+    }
+    td.day {
+      height: 50px;
     }
     td.day.has-trip {
-      background-color: $white;
+      background-color: $body-bg;
     }
     th {
-      padding: $table-condensed-cell-padding;
+      padding: 0;
       font-size: 80%;
       font-weight: normal;
-      &.today {
-        border: solid 2px $gray-lighter;
-        font-weight: bold;
-      }
     }
     th.price-summary {
       text-align: center;
-      border-left: solid 2px $gray-lighter;
+      border-left: solid 1px $gray-lightest !important;
       background-color: $body-bg;
-      /* &:nth-child(even) {
-        background-color: $gray-lightest;
+      padding: $padding-xs-horizontal;
+      .glyphicon-user {
+        padding-left: $padding-xs-horizontal;
       }
-      &:nth-child(odd) {
-        background-color: $gray-lighter;
-      } */
     }
     td.passenger-count {
       font-weight: bold;
+
     }
     td.day:not(.has-trip), th.day:not(.has-trip) {
       background: repeating-linear-gradient(
         135deg,
-        $gray-lighter,
-        $gray-lighter 2px,
+        $gray-lightest,
         $gray-lightest 2px,
-        $gray-lightest 4px
+        darken($gray-lightest, 10%) 2px,
+        darken($gray-lightest, 10%) 4px
       );
     }
   }
