@@ -1,15 +1,30 @@
-
 .bookings-page {
   nav {
     .uib-datepicker {
       float: left;
       margin: 0 1em;
     }
-
     &:after {
       content: ".";
       visibility: hidden;
       clear: both;
     }
+  }
+  .ticketSearch {
+    margin-right: $padding-large-horizontal;
+    margin-top: $padding-large-horizontal;
+  }
+  .ticketCheckbox {
+    margin-right: $padding-base-horizontal;
+  }
+  .bookingNav {
+    margin-top: $padding-large-vertical;
+    margin-right: $padding-base-horizontal;
+  }
+}
+
+.actions{
+  &.btn{
+    margin: $padding_small_vertical 0;
   }
 }

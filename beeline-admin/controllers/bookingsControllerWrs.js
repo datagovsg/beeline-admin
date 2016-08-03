@@ -93,7 +93,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
       url: `/custom/wrs/email/${ticketId}`
     })
     .then(() => {
-      alert("Email sent. Please check your inbox");
+      alert("Email sent to your Beeline Admin Login Email ID. Please check your inbox");
     })
     .then(null, () => {
       alert("Email sending failed");
