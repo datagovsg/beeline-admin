@@ -133,6 +133,8 @@
               </td>
               <td>
                 {{ticket.user.json.name ? (ticket.user.json.name + ' #' + ticket.user.json.index) : ticket.user.name}}
+
+                (UID: {{ticket.user.id}})
               </td>
               <td>
                 {{ticket.user.json.telephone || ticket.user.telephone}}

@@ -125,7 +125,6 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
     }
   }
   $scope.replace = function (ticket) {
-    console.log(ticket);
     issueTicketModal.open({
       user: ticket.user,
       userId: ticket.userId,
