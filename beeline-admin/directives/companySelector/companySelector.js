@@ -4,7 +4,7 @@ export default function($http, companiesSvc) {
     template: `
 <select
     ng-options="company.id as company.name for company in (companies | orderBy:'name')"
-    > <option value="">- Select a Company -</option>
+    class="form-control form-control-condensed"> <option value="">- Select a Company -</option>
 </select>
     `,
     replace: true,
