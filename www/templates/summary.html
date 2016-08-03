@@ -69,7 +69,8 @@
                 <th ng-repeat="trip in route.priceSummary" colspan="{{trip.count}}" class="price-summary">
                   <span ng-if="trip.price !== undefined">
                     <i class="glyphicon glyphicon-menu-left pull-left"></i>
-                    ${{trip.price | number:2}} / {{trip.capacity}}<i class="glyphicon glyphicon-user"></i>
+                    <span class="priceSummaryInfo">Price: ${{trip.price | number:2}}</span>
+                    <span class="priceSummaryInfo">Capacity: {{trip.capacity}}<i class="glyphicon glyphicon-user"></i></span>
                     <i class="glyphicon glyphicon-menu-right pull-right"></i>
                   </span>
                 </th>

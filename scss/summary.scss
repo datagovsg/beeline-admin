@@ -64,14 +64,8 @@ $summaryTableBG: #eee;
     }
 
     .today {
-      border: solid 2px $gray-lighter;
+      border: solid 2px $gray-lighter !important;
       font-weight: bold;
-      &tr{
-        border: none;
-        td,th{
-          border: none;
-        }
-      }
     }
     td.day, th.day {
       text-align: center;
@@ -93,9 +87,13 @@ $summaryTableBG: #eee;
       border-left: solid 1px $gray-lightest !important;
       background-color: $body-bg;
       padding: $padding-xs-horizontal;
-      .glyphicon-user {
-        padding-left: $padding-xs-horizontal;
+      .priceSummaryInfo{
+        padding: 0 $padding-base-horizontal;
+        .glyphicon-user {
+          padding-left: $padding-xs-horizontal;
+        }
       }
+
     }
     td.passenger-count {
       font-weight: bold;
