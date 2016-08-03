@@ -13,13 +13,14 @@
   }
 
   .route-summaries {
-    
+
     table{
       &.routeInfo{
         width: 100%;
         margin-bottom: 0;
         margin-top: $padding-large-vertical*2;
         border: 1px solid $gray-lightest;
+        border-bottom: none;
         .purpleID {
           background-color: $brand-primary;
           color: $white;
@@ -32,7 +33,7 @@
         tr{
           th{
             vertical-align: bottom;
-            padding: 5px 10px;
+            padding: $padding-base-vertical $padding_base_horizontal;
             color: $gray_light;
             background-color: $body-bg;
             border: none;
@@ -49,6 +50,8 @@
       &.routeSummary{
         width: 100%;
         margin-bottom: $padding-large-vertical*6;
+        border: 1px solid $gray-lightest;
+        border-top: none;
       }
     }
 
@@ -75,12 +78,13 @@
     th.price-summary {
       text-align: center;
       border-left: solid 2px $gray-lighter;
-      &:nth-child(even) {
+      background-color: $body-bg;
+      /* &:nth-child(even) {
         background-color: $gray-lightest;
       }
       &:nth-child(odd) {
         background-color: $gray-lighter;
-      }
+      } */
     }
     td.passenger-count {
       font-weight: bold;
