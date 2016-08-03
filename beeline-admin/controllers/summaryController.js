@@ -42,7 +42,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner) {
 
         // Prioritize cancelled trips, so that
         // non-cancelled trips will overwrite cancelled trips
-        var trips = _.sortBy(route.trips, t => [t.date, t.status !== 'cancelled'])
+        var trips = _.sortBy(route.trips, t => [t.date, !t.isRunning])
 
         for (let trip of trips) {
           trip.date = new Date(trip.date)

@@ -43,8 +43,10 @@
               <th>{{ route.trips[0].date | date:'MMM':'UTC'}}</th>
               <th ng-repeat='trip in route.tripsByDay track by $index'
                   ng-class="{ 'has-trip': route.tripsByDay[$index],
-                          today: $index === today
-                        }"
+                              today: $index === today,
+                              void: route.tripsByDay[$index].status === 'void',
+                              cancelled: route.tripsByDay[$index].status === 'cancelled'
+                            }"
                   class="weekday day"
               >
               {{
@@ -62,7 +64,9 @@
               <th></th>
               <th ng-repeat='trip in route.tripsByDay track by $index'
                   ng-class="{ 'has-trip': route.tripsByDay[$index],
-                          today: $index === today
+                          today: $index === today,
+                          cancelled: route.tripsByDay[$index].status === 'cancelled',
+                          void: route.tripsByDay[$index].status === 'void'
                         }"
                   class="summary-day day"
               >
@@ -74,7 +78,8 @@
               <td ng-repeat='trip in route.tripsByDay track by $index'
                   ng-class="{ 'has-trip': route.tripsByDay[$index],
                               today: $index === today,
-                              cancelled: route.tripsByDay[$index].status === 'cancelled'
+                              cancelled: route.tripsByDay[$index].status === 'cancelled',
+                              void: route.tripsByDay[$index].status === 'void'
                             }"
                   class="passenger-count day"
               >
