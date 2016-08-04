@@ -86,6 +86,9 @@ module.exports = {
     filename: process.env.OUTPUT_FILENAME || 'bundle.js',
     pathinfo: true,
   },
+  externals: {
+    'lodash': '_'
+  }
   // plugins: [
   //   new ExtractTextPlugin("../../css/styles.css")
   // ],

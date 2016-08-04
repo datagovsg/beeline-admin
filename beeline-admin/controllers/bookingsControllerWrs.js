@@ -129,8 +129,8 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
       user: ticket.user,
       userId: ticket.userId,
       routeId: ticket.boardStop.trip.routeId,
-      boardStopId: ticket.boardStop.stopId,
-      alightStopId: ticket.alightStop.stopId,
+      boardStopStopId: ticket.boardStop.stopId,
+      alightStopStopId: ticket.alightStop.stopId,
     })
   }
 
@@ -218,7 +218,6 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
       includeTrips: false,
       includeAvailability: false,
     }).then((routes) => {
-      console.log(routes)
       $scope.disp.availableRoutes = routes
     })
   }

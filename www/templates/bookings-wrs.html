@@ -116,7 +116,8 @@
                   <input type="checkbox" ng-model="selectedTickets[ticket.id]" style="height: 100%;" />
                 </td>
                 <td>
-                  <a ui-sref="transactions({id: ticket.ticketSale.transactionId})">
+                  <a ng-if="ticket.ticketSale"
+                      ui-sref="transactions({id: ticket.ticketSale.transactionId})">
                     {{ticket.ticketSale.transactionId}}<br/>
                   </a>
                   <a ng-if="ticket.ticketExpense"

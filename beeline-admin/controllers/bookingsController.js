@@ -92,7 +92,6 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner) {
       includeTrips: true,
       includeAvailability: false,
     }).then((routes) => {
-      console.log(routes)
       $scope.disp.availableRoutes = routes
     })
   }

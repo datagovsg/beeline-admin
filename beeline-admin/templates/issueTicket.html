@@ -2,27 +2,105 @@
   <div class="modal-header">
     <h3>Issue Tickets</h3>
   </div>
-  <div class="modal-body">
-    <trip-selector trip-id="tripId" trips="trips" board-stop-id="boardStopId"
-      alight-stop-id="alightStopId" route-id="routeId" reason="reason">
-    </trip-selector>
+  <div class="modal-body form-inline trip-selector">
+    <!-- Brokers the linkage between routes and trips, routes and tripstops -->
+    <trip-selection-broker  purchase-order="purchaseOrder"
+                            trips="disp.trips"
+                            board-stops="disp.boardStops"
+                            alight-stops="disp.alightStops"
+                            datepicker-highlight-days="disp.datepicker.highlightDays"
+                            datepicker-days-allowed="disp.datepicker.daysAllowed"
+                            selected-dates="data.selectedDates"
+                            selected-trips="disp.selectedTrips"
+                            routes="disp.routes"
+                            route-id="data.routeId"
+                            board-stop-id="data.boardStopId"
+                            alight-stop-id="data.alightStopId"
+                            board-stop="data.boardStop"
+                            alight-stop="data.alightStop">
+    </trip-selection-broker>
+
+    <!-- Route Selection -->
+    <div class="date-picker">
+      <h3>Dates (Seats available)</h3>
+
+      <multiple-date-picker
+        days-allowed="disp.datepicker.daysAllowed"
+        highlight-days="disp.datepicker.highlightDays"
+        ng-model="data.selectedDates"
+        sunday-first-day="true">
+      </multiple-date-picker>
+    </div>
+
+    <div>
+      <label>
+        Route
+      </label>
+      <select ng-options="route.id as f.displayRoute(route) for route in disp.routes | orderBy:'label'"
+              ng-model="data.routeId"
+              class="form-control form-inline">
+      </select>
+    </div>
+
+    <label>
+      Boarding Stop
+      <select ng-options="tripStop as f.displayStop(tripStop) for tripStop in disp.boardStops"
+              ng-model="data.boardStop" class="form-control">
+      </select>
+    </label>
+
+    <label>
+      Alighting Stop
+      <select ng-options="tripStop as f.displayStop(tripStop) for tripStop in disp.alightStops"
+              ng-model="data.alightStop" class="form-control">
+      </select>
+    </label>
+
+    <div>
+      <label>
+        Reason
+        <textarea class="form-control" ng-model="data.reason">e.g. Bus did not turn up</textarea>
+      </label>
+    </div>
+
+    <div>
+      Selected Trips:
+      <ul class="selected-dates">
+        <li ng-repeat="trip in disp.selectedTrips">
+          {{trip.date | date:'dd MMM yyyy'}}
+          <button ng-click="removeTrip(trip.date)"
+            class="btn btn-danger glyphicon glyphicon-trash">
+          </button>
+        </li>
+      </ul>
+
+    </div>
+
+    <!-- User selection -->
 
     <h3>Issue to</h3>
-    <table class="table">
-      <tr ng-repeat="user in users">
-        <td>{{$index}}</td>
+    <table class="user-selectors">
+      <tr ng-repeat="user in data.users">
+        <td>{{$index + 1}}.</td>
         <td>
           <user-selector ng-model="user.id" initial-user="user">
           </user-selector>
+
+          <div class="conflicts" ng-if="conflictsByUid[user.id]">
+            This user already has a trip on
+            <span ng-repeat="conflict in conflictsByUid[user.id]">{{
+              $index ? ',' : ''
+            }} {{disp.tripsById[conflict.tripId].date | date:'dd MMM yy'}}</span>
+          </div>
         </td>
         <td>
-          <button class="btn btn-default glyphicon glyphicon-minus" ng-click="users.splice(users.indexOf(user), 1)"></button>
+          <button class="btn btn-default glyphicon glyphicon-minus" ng-click="data.users.splice(users.indexOf(user), 1)"></button>
         </td>
       </li>
       </tr>
       <tr>
         <td colspan="3">
-          <button class="btn btn-default glyphicon glyphicon-plus" ng-click="users.push({})"></button>
+          <button class="btn btn-default glyphicon glyphicon-plus" ng-click="data.users.push({})"></button>
         </td>
       </tr>
     </table>
