@@ -1,7 +1,7 @@
 import _ from 'lodash'
 
 export default function(RoutesService, TripsService, AdminService, DriverService,
-  StopsPopup, LoadingSpinner) {
+  StopsPopup, LoadingSpinner, commonModals) {
 
   return {
     scope: {
@@ -94,8 +94,8 @@ export default function(RoutesService, TripsService, AdminService, DriverService
         scope.disp.trip.tripStops = _.cloneDeep(trip.tripStops);
         delete scope.disp.trip.id;
       }
-      scope.deleteTrip = function(trip) {
-        if (confirm("Are you sure you want to delete?")) {
+      scope.deleteTrip = async function(trip) {
+        if (await commonModals.confirm("Are you sure you want to delete?")) {
           TripsService.deleteTrip(trip.id)
           .then(scope.refreshTrips)
           .catch((error) => {
@@ -145,11 +145,14 @@ export default function(RoutesService, TripsService, AdminService, DriverService
             .then(scope.refreshTrips)
             .then(scope.resetTrips)
             .then(() => {
-              alert("Trips created")
+              return commonModals.alert("Trips created")
             })
             .catch((error) => {
               console.log(error)
-              alert(`${error.data.error} -- ${error.data.message}`)
+              commonModals.alert({
+                title: error.data.error,
+                message: error.data.message
+              });
             })
           }
         })())

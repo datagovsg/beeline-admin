@@ -11,7 +11,7 @@ function decodeToken(tk) {
   return b64_to_utf8(b);
 }
 
-export default function ($http, $location, store, jwtHelper, auth) {
+export default function ($http, $location, store, jwtHelper, auth, commonModals) {
 
   this.serverUrl = () => env.BACKEND_URL;
 
