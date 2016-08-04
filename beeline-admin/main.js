@@ -56,6 +56,7 @@ angular.module('beeline-admin', [
 .service('DriverService', require('./services/driverService').default)
 .service('issueTicketModal', require('./services/issueTicketModal').default)
 .service('LoadingSpinner', require('./services/loadingSpinner').default)
+.service('commonModals', require('./services/commonModals').default)
 .controller('transactions', require('./controllers/transactionsController.js').default)
 .controller('trips', require('./controllers/tripsController.js').default)
 .controller('routes', require('./controllers/routesController.js').default)

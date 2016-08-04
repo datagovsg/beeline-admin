@@ -11,7 +11,7 @@ function decodeToken(tk) {
   return b64_to_utf8(b);
 }
 
-export default function ($http, $location, store, jwtHelper, auth) {
+export default function ($http, $location, store, jwtHelper, auth, commonModals) {
 
   this.serverUrl = () => env.BACKEND_URL;
 
@@ -42,7 +42,7 @@ export default function ($http, $location, store, jwtHelper, auth) {
     }, function (result) {
       window.location.reload();
     }, function (error) {
-      alert(JSON.stringify(error, null, 2));
+      commonModals.alert(JSON.stringify(error, null, 2));
       console.log(error);
     })
   }
