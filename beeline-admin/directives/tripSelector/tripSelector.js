@@ -69,14 +69,14 @@ export default function(AdminService, RoutesService, $rootScope, LoadingSpinner)
           startDate: today.getTime()
         })
         .then((route) => {
-          scope.info.trips = route.trips
+          scope.info.trips = route.trips.filter(t => t.isRunning);
 
-          scope.disp.datepicker.daysAllowed = route.trips.map(trip =>
+          scope.disp.datepicker.daysAllowed = scope.info.trips.map(trip =>
             new Date(
                 trip.date.getFullYear(),
                 trip.date.getMonth(),
                 trip.date.getDate()));
-          scope.disp.datepicker.highlightDays = route.trips.map(trip =>
+          scope.disp.datepicker.highlightDays = scope.info.trips.map(trip =>
             ({
               date: new Date(
                   trip.date.getFullYear(),

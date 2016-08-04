@@ -2,7 +2,7 @@
   <div class="summary-page">
     <div class="row">
       <div class="col-lg-12">
-          <h1>Booking Summary</h1>
+        <h1>Booking Summary</h1>
         <nav>
           <div class="pull-left">
             <uib-datepicker ng-model="selectedMonth" datepicker-options="{ minMode: 'month' }">
@@ -12,17 +12,16 @@
             <company-logo ng-if="companyId" company-id="companyId" class="company-logo"></company-logo>
           </div>
         </nav>
-
       </div>
     </div>
     <div class="row">
       <div class="col-lg-12">
         <h2 class="nodata" ng-if="routes.length == 0">
-            No seat data found for the selected month
+          No seat data found for the selected month
         </h2>
 
         <div ng-if="routes.length > 0" class="route-summaries">
-          <table class= "routeInfo" ng-repeat-start="route in routes | orderBy:'label' track by $index">
+          <table class="routeInfo" ng-repeat-start="route in routes | orderBy:'label' track by $index">
             <tr>
               <th class="purpleID" width="10%">
                 Route ID
@@ -48,81 +47,63 @@
                 {{route.label}}
               </td>
               <td>
-                  {{route.trips[0].tripStops[0].time | date:'HH:mm a'}} - {{route.from}}
-                  <br >
-                  {{route.trips[0].tripStops[route.trips[0].tripStops.length-1].time | date:'HH:mm a'}} - {{route.to}}
+                {{route.trips[0].tripStops[0].time | date:'HH:mm a'}} - {{route.from}}
+                <br> {{route.trips[0].tripStops[route.trips[0].tripStops.length-1].time | date:'HH:mm a'}} - {{route.to}}
               </td>
               <td>
-                  (First Trip Date)
+                (First Trip Date)
               </td>
               <td>
-                  (Last Trip Date)
+                (Last Trip Date)
               </td>
             </tr>
           </table>
-            <table class="routeSummary"
-              ng-repeat-end
-              ng-if="routes.length > 0">
-              <tr>
-                <th rowspan="4" width="3%">{{ route.trips[0].date | date:'MMM':'UTC'}}</th>
+          <table class="routeSummary" ng-repeat-end ng-if="routes.length > 0">
+            <tr> <!-- 1/4 row of span -->
+              <th rowspan="4" width="3%">{{ route.trips[0].date | date:'MMM':'UTC'}}</th>
 
-                <th ng-repeat="trip in route.priceSummary" colspan="{{trip.count}}" class="price-summary">
-                  <span ng-if="trip.price !== undefined">
+              <th ng-repeat="trip in route.priceSummary" colspan="{{trip.count}}" class="price-summary">
+                <span ng-if="trip.price !== undefined">
                     <i class="glyphicon glyphicon-menu-left pull-left"></i>
                     <span class="priceSummaryInfo">Price: ${{trip.price | number:2}}</span>
-                    <span class="priceSummaryInfo">Capacity: {{trip.capacity}}<i class="glyphicon glyphicon-user"></i></span>
-                    <i class="glyphicon glyphicon-menu-right pull-right"></i>
-                  </span>
-                </th>
-              </tr>
-              <tr>
-              <!--   <th></th> -->
-              <th ng-repeat='trip in route.tripsByDay track by $index'
-                  ng-class="{ 'has-trip': route.tripsByDay[$index],
-                          today: $index === today
-                        }"
-                  class="summary-day day"
-              >
+                <span class="priceSummaryInfo">Capacity: {{trip.capacity}}<i class="glyphicon glyphicon-user"></i></span>
+                <i class="glyphicon glyphicon-menu-right pull-right"></i>
+                </span>
+              </th>
+            </tr>
+            <tr> <!-- 2/4 row of span -->
+              <th ng-repeat='trip in route.tripsByDay track by $index' ng-class="{ 'has-trip': route.tripsByDay[$index],
+                          today: $index === today,
+                          cancelled: route.tripsByDay[$index].status === 'cancelled',
+                          void: route.tripsByDay[$index].status === 'void'
+                        }" class="summary-day day">
                 {{$index + 1}}
               </th>
-              </tr>
-              <tr>
-              <!--   <th></th> -->
-              <th ng-repeat='trip in route.tripsByDay track by $index'
-                  ng-class="{ 'has-trip': route.tripsByDay[$index],
-                          today: $index === today
-                        }"
-                  class="weekday day"
-              >
-              {{
-                weekDays[$index] === 0 ? 'Su' :
-                weekDays[$index] === 1 ? 'Mo' :
-                weekDays[$index] === 2 ? 'Tu' :
-                weekDays[$index] === 3 ? 'We' :
-                weekDays[$index] === 4 ? 'Th' :
-                weekDays[$index] === 5 ? 'Fr' :
-                weekDays[$index] === 6 ? 'Sa' : ''
-              }}
+            </tr>
+            <tr> <!-- 3/4 row of span -->
+              <th ng-repeat='trip in route.tripsByDay track by $index' ng-class="{ 'has-trip': route.tripsByDay[$index],
+                              today: $index === today,
+                              void: route.tripsByDay[$index].status === 'void',
+                              cancelled: route.tripsByDay[$index].status === 'cancelled'
+                            }" class="weekday day">
+                {{ weekDays[$index] === 0 ? 'Su' : weekDays[$index] === 1 ? 'Mo' : weekDays[$index] === 2 ? 'Tu' : weekDays[$index] === 3 ? 'We' : weekDays[$index] === 4 ? 'Th' : weekDays[$index] === 5 ? 'Fr' : weekDays[$index] === 6 ? 'Sa' : '' }}
               </th>
 
-              </tr>
-              <tr>
-              <!--   <td></td> -->
-                <td ng-repeat='trip in route.tripsByDay track by $index'
-                    ng-class="{ 'has-trip': route.tripsByDay[$index],
-                                today: $index === today,
-                                cancelled: route.tripsByDay[$index].status === 'cancelled'
-                              }"
-                    class="passenger-count day"
-                >
-                  <a href="#/bookings?tripId={{trip.id}}">
-                  {{trip ? trip.availability.seatsBooked || '0' : ''}}
-                  </a>
-                </td>
-              </tr>
-            </table>
-          </div>
+            </tr>
+            <tr> <!-- 4/4 row of span -->
+              <td ng-repeat='trip in route.tripsByDay track by $index' ng-class="{ 'has-trip': route.tripsByDay[$index],
+                              today: $index === today,
+                              cancelled: route.tripsByDay[$index].status === 'cancelled',
+                              void: route.tripsByDay[$index].status === 'void'
+                            }" class="passenger-count day">
+                <a href="#/bookings?tripId={{trip.id}}">
+                {{trip ? trip.availability.seatsBooked || '0' : ''}}
+                </a>
+              </td>
+            </tr>
+          </table>
+        </div>
       </div>
     </div>
-    </div>
   </div>
+</div>
