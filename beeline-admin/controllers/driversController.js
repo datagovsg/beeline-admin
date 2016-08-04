@@ -33,7 +33,7 @@ export default function ($scope, AdminService) {
   };
 
   $scope.updateDriverName = (did) => {
-    var newName = prompt('Name?');
+    var newName = prompt('Please enter the name of the Driver.');
 
     if (!newName) return;
 
@@ -52,7 +52,7 @@ export default function ($scope, AdminService) {
   }
 
   $scope.addDriver = (did) => {
-    var phoneNumber = prompt("Phone number?");
+    var phoneNumber = prompt("Please enter the 8-digit Mobile No. starting with the digit 8 or 9.");
 
     if (!phoneNumber) return;
 
