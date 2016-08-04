@@ -7,7 +7,8 @@ label.superAdmin{
 .form-control-condensed {
   display: inline;
   width:auto;
-  height: $input-height-small;
+  height: auto;
+  color: $gray-base;
   padding: $padding-small-vertical $padding-small-horizontal;
   font-size: $font-size-small;
 }
