@@ -1,7 +1,7 @@
 import querystring from 'querystring';
 import _ from 'lodash';
 
-export default function ($scope, AdminService, LoadingSpinner) {
+export default function ($scope, AdminService, LoadingSpinner, commonModals) {
   $scope.admins = [];
 
   function query() {
@@ -14,8 +14,8 @@ export default function ($scope, AdminService, LoadingSpinner) {
     }))
   }
 
-  $scope.deleteAdmin = (admin) => {
-    if (!confirm(`Are you sure you want to delete ${admin.email}?`))
+  $scope.deleteAdmin = async (admin) => {
+    if (!await commonModals.confirm(`Are you sure you want to delete ${admin.email}?`))
       return;
     AdminService.beeline({
       method: 'DELETE',

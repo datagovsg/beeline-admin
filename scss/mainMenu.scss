@@ -1,4 +1,14 @@
 label.superAdmin{
+  display: inline;
   margin-bottom: 0px;
   margin-right: $padding-large-horizontal;
+}
+
+.form-control-condensed {
+  display: inline;
+  width:auto;
+  height: auto;
+  color: $gray-base;
+  padding: $padding-small-vertical $padding-small-horizontal;
+  font-size: $font-size-small;
 }

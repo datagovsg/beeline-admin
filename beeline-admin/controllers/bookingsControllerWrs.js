@@ -1,7 +1,7 @@
 import querystring from 'querystring'
 
 export default function($scope, AdminService, RoutesService, LoadingSpinner,
-  $state, $stateParams, issueTicketModal) {
+  $state, $stateParams, issueTicketModal, commonModals) {
   $scope.tickets = [];
   $scope.currentPage = 1;
 
@@ -93,15 +93,15 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
       url: `/custom/wrs/email/${ticketId}`
     })
     .then(() => {
-      alert("Email sent. Please check your inbox");
+      return commonModals.alert("Email sent to your Beeline Admin Login Email ID. Please check your inbox");
     })
     .then(null, () => {
-      alert("Email sending failed");
+      return commonModals.alert("Email sending failed");
     })
   }
 
-  $scope.refund = function (ticket) {
-    if (confirm("Confirm refund?")) {
+  $scope.refund = async function (ticket) {
+    if (await commonModals.confirm("Confirm refund?")) {
       AdminService.beeline({
         method: 'POST',
         url: '/transactions/refund',
@@ -114,13 +114,11 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
         var txn = response.data;
         var payment = txn.transactionItems.find(ts => ts.itemType == 'refundPayment' && ts.refundPayment)
 
-        console.log(txn)
-
-        alert( parseFloat(payment.credit).toFixed(2) + " refunded.")
+        return commonModals.alert( parseFloat(payment.credit).toFixed(2) + " refunded.")
       })
       .then(null, (response) => {
         console.log(response);
-        alert("Failed...")
+        return commonModals.alert("Failed...")
       })
     }
   }
@@ -160,6 +158,8 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
     }
     if ($scope.filter.tripId) {
       queryOptions.tripId = $scope.filter.tripId
+      delete queryOptions.tripStartDate;
+      delete queryOptions.tripEndDate;
     }
     if ($scope.filter.userQuery) {
       queryOptions.userQuery = $scope.filter.userQuery

@@ -48,6 +48,7 @@ $selected: #CCC;
 @import 'scss/tags';
 @import 'scss/issueTicket';
 @import 'scss/mainMenu';
+@import 'scss/drivers';
 
 html, body {
   height: 100%;
@@ -77,9 +78,9 @@ ui-gmap-google-map {
   display: block;
 }
 
-li.active {
+/* li.active {
   background-color: $selected;
-}
+} */
 
 .flex-row {
   display: flex;

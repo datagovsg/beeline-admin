@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import assert from 'assert';
 
-export default function (AdminService, RoutesService, $rootScope) {
+export default function (AdminService, RoutesService, $rootScope, commonModals) {
   return {
     template: require('./routeEditor.html'),
     scope: {
@@ -38,9 +38,9 @@ export default function (AdminService, RoutesService, $rootScope) {
         })
       }
 
-      scope.deleteRoute = function() {
+      scope.deleteRoute = async function() {
         if (scope.route && scope.route.id &&
-          confirm(`Are you sure you want to delete Route ${scope.route.label}?`)) {
+          await commonModals.confirm(`Are you sure you want to delete Route ${scope.route.label}?`)) {
           RoutesService.deleteRoute(scope.route.id)
           .then(() => {
             scope.route = null
