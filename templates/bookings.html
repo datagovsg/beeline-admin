@@ -7,16 +7,16 @@
       </multiple-date-picker>
 
       <label>
-        Route:
+        Route:</label>
         <select ng-options="route.id as route.name for route in disp.availableRoutes"
           ng-model="filter.routeId"
           ng-required="false">
           <option value="">(All)</option>
         </select>
-      </label>
+
 
       <label>
-        Route:
+        Route:</label>
         <select ng-model="filter.statuses"
           multiple
         >
@@ -30,7 +30,7 @@
           <option value="refunded">Refunded</option>
           <option value="cancelled">Cancelled</option>
         </select>
-      </label>
+
 
       <label>
         <input type="checkbox" ng-model="filter.showPartial">
@@ -38,10 +38,9 @@
       </label>
 
       <label>
-        Order:
+        Order:</label>
         <input type="text" disabled ng-model="filter.orderBy">
         <input type="text" disabled ng-model="filter.orderDirection">
-      </label>
     </nav>
 
 
