@@ -105,7 +105,6 @@ angular.module('beeline-admin', [
   });
 })
 
-
 function configureGoogleMaps(uiGmapGoogleMapApiProvider) {
   uiGmapGoogleMapApiProvider.configure({
     key: 'AIzaSyBkFH42PlbFrsfdAnjw37qMLAxjhkMT-54',
@@ -120,21 +119,12 @@ function configureAuth0(authProvider) {
     loginUrl: '/login'
   })
 
-  authProvider.on('authenticated', function ($location, idToken, profilePromise,
-    jwtHelper, $cookies) {
-
-
-      console.log('authenticated!')
-  })
-
   authProvider.on('loginFailure', function ($location, error) {
     alert(error);
   })
 
   authProvider.on('loginSuccess', function($location, profilePromise,
     jwtHelper, idToken, store, AdminService, auth, $cookies) {
-    console.log("Login Success");
-    console.log(jwtHelper.decodeToken(idToken))
     store.set('sessionToken', idToken)
     $cookies.put('sessionToken', idToken)
 
