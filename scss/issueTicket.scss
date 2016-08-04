@@ -1,0 +1,12 @@
+.issue-ticket-popup {
+  .user-selectors {
+    li {
+      display: flex;
+      flex-direction: row;
+
+      user-selector {
+        flex: 1 1 auto;
+      }
+    }
+  }
+}
