@@ -1,29 +1,122 @@
+//datepicker variables in bookingDates.scss
 
-//used in the general select
-  .datepicker-wrap {
-    width: 350px;
-    float: right;
-  }
+$picker-date-color: #000;
+$picker-header-bg: $gray-lightest;
+$empty-day-background: $body-bg;
+$picker-day-today: #000;
+$non-pickable-day-background: $empty-day-background;
+$non-pickable-day-color: $picker-date-color;
+$pickable-day-non-picked-background: $empty-day-background;
+$pickable-day-non-picked-color: #000;
+$pickable-day-picked-background: $body-bg;
+$pickable-day-picked-color: $brand-primary;
+$annotation: $brand-danger;
 
-  .picker-day {
-    position: relative;
-    text-align: left;
-    padding: 5px 0 5px 5px;
+.datepicker-wrap {
+  width: 500px;
+  float: right;
+}
 
-    .annotation {
-      background-color: #F9F;
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      padding: 2px 5px 0;
-    }
+
+.multiple-date-picker {
+  user-select: none;
+  background-color: $picker-header-bg;
+  width: 100%;
+  border: 1px solid $picker-header-bg;
+
+  .picker-days-row,
+  .picker-days-week-row,
+  .picker-top-row {
+    width: 100%;
   }
   .picker-top-row {
     display: flex;
-    .picker-navigate {
-      flex: 0 0 auto;
-    }
+
     .picker-month {
       flex: 1 1 auto;
     }
   }
+
+  .picker-navigate {
+    width: 16.66%;
+    font-size: 2em;
+
+    &:hover {
+      cursor: pointer;
+    }
+    &.disabled,
+    &.disabled:hover {
+      color: #ddd;
+      cursor: default;
+    }
+  }
+  .picker-days-week-row {
+    div {
+      width: 14.28%;
+      display: inline-block;
+      padding-bottom: 5px;
+      border-bottom: 1px solid #ddd;
+    }
+  }
+  .picker-days-row {
+    div {
+      display: inline-block;
+    }
+  }
+}
+
+.picker-day,
+.picker-top-row {
+  padding: 10px 0;
+}
+
+.picker-day {
+  background-color: $pickable-day-non-picked-background;
+  border: 1px solid transparent;
+  font-size: $font-size-base;
+  box-sizing: border-box;
+  color: $pickable-day-non-picked-color;
+  position: relative;
+  text-align: left;
+  padding: 10px;
+
+  .annotation {
+  background-color: $annotation;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 1px 5px;
+  font-size: $font-size-small;
+  color: $white;
+  text-align: left;
+  }
+
+  &.today {
+    color: $picker-day-today;
+    text-decoration: underline;
+  }
+
+  &:not(.picker-off):not(.picker-empty):not(.picker-selected):hover {
+    background-color: $gray_lightest;
+    color: $picker-date-color;
+  }
+
+  &.picker-off {
+    background-color: $non-pickable-day-background;
+    color: $non-pickable-day-color;
+  }
+
+  &.picker-selected {
+    background-color: $body-bg;
+    border: 1px solid $picker-date-color;
+    color: $picker-date-color;
+
+    &:hover {
+      background-color: $gray_lightest!important;
+      color: $picker-date-color!important;
+    }
+  }
+  &.picker-empty {
+    background-color: $empty-day-background;
+  }
+}
