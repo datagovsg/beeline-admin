@@ -1,50 +1,113 @@
-
+$summaryTableBG: #eee;
 
 .summary-page {
-  td.day, th.day {
-    text-align: center;
-    min-width: 2.2em;
-    padding: 0.5em;
-
-    &::after {
-      content: '\a0';
-    }
-  }
-  td.day.has-trip {
-    &.mon-wed-fri {
-      background-color: #EEEEFF;
-      &.today {
-        background-color: #FDD;
-      }
-    }
-    &:not(.mon-wed-fri) {
-      background-color: #EEEEEE;
-      &.today {
-        background-color: #FDD;
-      }
-    }
-  }
-  td.day, th.day {
-    &.sun, &.fri {
-      border-right: solid 1px #888;
-    }
-    &.sat, &.mon {
-      border-left: solid 1px #888;
-    }
-    &.today {
-      background-color: #FDD;
-    }
-  }
-  td.passenger-count {
-    font-weight: bold;
-  }
-  td.day:not(.has-trip), th.day:not(.has-trip) {
-    background-color: #CCC;
-    color: #DDD;
+  .uib-datepicker{
+    margin-bottom: $padding-large-vertical*4;
+    clear: both;
   }
 
-  th.summary-day {
-    font-weight: normal;
-    font-size: 80%;
+  .company-logo {
+    float: right;
+    max-width: 100px;
+    max-height: 100px;
   }
+
+  .route-summaries {
+
+    table{
+      &.routeInfo{
+        width: 100%;
+        margin-bottom: 0;
+        margin-top: $padding-large-vertical*2;
+        border: 1px solid $gray-lightest;
+        border-bottom: none;
+        .purpleID {
+          background-color: $brand-primary;
+          color: $white;
+          h2 {
+            font-size: $font-size-large*1.5;
+            margin: 0;
+            padding: 0;
+          }
+        }
+        tr{
+          th{
+            vertical-align: bottom;
+            padding: $padding-base-vertical $padding_base_horizontal;
+            color: $gray_light;
+            background-color: $body-bg;
+            border: none;
+          }
+          td{
+            vertical-align: top;
+            padding: 5px 10px;
+            border: none;
+          }
+        }
+      }
+    }
+    table{
+      &.routeSummary{
+        width: 100%;
+        margin-bottom: $padding-large-vertical*6;
+        border: 1px solid $gray-lightest;
+        border-top: none;
+        th{
+          text-align: center;
+        }
+        tr{
+          th,td{
+            border: 1px solid $gray-lightest;
+          }
+        }
+      }
+    }
+
+    .today {
+      border: solid 2px $gray-lighter !important;
+      font-weight: bold;
+    }
+    td.day, th.day {
+      text-align: center;
+      min-width: 2.2em;
+    }
+    td.day {
+      height: 50px;
+    }
+    td.day.has-trip {
+      background-color: $body-bg;
+    }
+    th {
+      padding: 0;
+      font-size: 80%;
+      font-weight: normal;
+    }
+    th.price-summary {
+      text-align: center;
+      border-left: solid 1px $gray-lightest !important;
+      background-color: $body-bg;
+      padding: $padding-xs-horizontal;
+      .priceSummaryInfo{
+        padding: 0 $padding-base-horizontal;
+        .glyphicon-user {
+          padding-left: $padding-xs-horizontal;
+        }
+      }
+
+    }
+    td.passenger-count {
+      font-weight: bold;
+
+    }
+    td.day:not(.has-trip), th.day:not(.has-trip) {
+      background: repeating-linear-gradient(
+        135deg,
+        $gray-lightest,
+        $gray-lightest 2px,
+        darken($gray-lightest, 10%) 2px,
+        darken($gray-lightest, 10%) 4px
+      );
+    }
+  }
+
 }

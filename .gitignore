@@ -5,7 +5,7 @@ node_modules/
 platforms/
 plugins/
 beeline-admin/env.json
-www/css
+www/css/**/*.css
 www/lib/beeline-admin/bundle.js.map
 www/lib/beeline-admin/bundle.js
 build

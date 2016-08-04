@@ -38,6 +38,7 @@ angular.module('beeline-admin', [
 .directive('tripStatusSelector', require('./directives/tripsEditor/tripStatusSelector').default)
 .directive('tripsEditor', require('./directives/tripsEditor/tripsEditor').default)
 .directive('companySelector', require('./directives/companySelector/companySelector').default)
+.directive('companyLogo', require('./directives/companyLogo').default)
 .directive('tripSelector', require('./directives/tripSelector/tripSelector').default)
 .directive('stopSelector', require('./directives/stopSelector/stopSelector').default)
 .directive('superAdminCompanySelector', require('./directives/companySelector/superAdminCompanySelector').default)
