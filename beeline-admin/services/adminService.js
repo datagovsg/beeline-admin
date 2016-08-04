@@ -39,11 +39,6 @@ export default function ($http, $location, store, jwtHelper, auth) {
       authParams: {
         scope: 'openid name email app_metadata user_id'
       }
-    }, function (result) {
-      window.location.reload();
-    }, function (error) {
-      alert(JSON.stringify(error, null, 2));
-      console.log(error);
     })
   }
 

@@ -10,6 +10,7 @@ var sourcemaps = require('gulp-sourcemaps');
 var fs = require('fs')
 var child_process = require('child_process')
 var path = require('path')
+var request = require('request');
 
 var paths = {
   sass: ['./scss/**/*.scss']
@@ -50,16 +51,35 @@ gulp.task('sass', function(done) {
 
 function webpackPrefix(PREFIX, done) {
   return gulp.src(['beeline-admin/main.js', '!node_modules/**/*.js', '!www/**/*.js'])
-  .pipe(sourcemaps.init())
-  .pipe(webpack(require('./webpack.config.js'))
-      .on('error', errHandler))
-  .pipe(sourcemaps.write())
-  .pipe(gulp.dest((PREFIX || 'www') + '/lib/beeline-admin'))
-  .on('error', errHandler)
+    .pipe(sourcemaps.init())
+    .pipe(webpack(require('./webpack.config.js'))
+        .on('error', done || errHandler))
+    .pipe(sourcemaps.write())
+    .pipe(gulp.dest((PREFIX || 'www') + '/lib/beeline-admin'))
+    .on('error', done || errHandler)
 }
 
-gulp.task('webpack', function(done) {
-  return webpackPrefix(null,done);
+gulp.task('webpack', function() {
+  process.env.BACKEND_URL = process.env.BACKEND_URL || 'https://beeline-server-dev.herokuapp.com';
+
+  return new Promise((resolve, reject) => {
+    request.get(`${process.env.BACKEND_URL}/auth/credentials`, (err, response, body) => {
+      if (err) {
+        console.log(err);
+        return reject(err);
+      }
+
+      resolve(JSON.parse(body));
+    })
+  })
+  .then((result) => {
+    process.env.AUTH0_CID = result.cid;
+    process.env.AUTH0_DOMAIN = result.domain;
+
+    return new Promise((resolve, reject) => {
+      webpackPrefix(null).on('end', resolve);
+    });
+  })
 });
 
 gulp.task('watch', ['sass', 'webpack', 'js-libraries'], function() {

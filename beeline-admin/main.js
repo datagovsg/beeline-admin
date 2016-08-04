@@ -7,7 +7,6 @@ require('beeline-calendar')
 require('angular-storage')
 require('angular-cookies')
 require('angular-jwt')
-require('auth0-angular')
 require('multiple-date-picker')
 require('ui-select/dist/select')
 require('../ngTagEditor/ngTagEditor')
@@ -26,8 +25,8 @@ angular.module('beeline-admin', [
   'ui.select', 'ngTagEditor'])
 .config(require('./router').default)
 .config(configureGoogleMaps)
-.config(configureLoginPage)
 .config(configureUrlWhitelist)
+.config(configureAuth0)
 .directive('adminNav', require('./directives/adminNav/adminNav').default)
 .directive('accountView', require('./directives/accountView/accountView').default)
 .directive('paymentView', require('./directives/paymentView/paymentView').default)
@@ -71,69 +70,37 @@ angular.module('beeline-admin', [
 .run(function (auth, $rootScope, store, jwtHelper, $window, AdminService) {
   auth.hookEvents();
 
-  /* initialize Auth0 by pulling Auth0 domain information from server */
-  var authInitPromise = AdminService.beeline({
-    method: 'GET', url: '/auth/credentials'
-  })
-  .then((response) => {
-    var {domain, cid} = response.data;
-    auth.init({
-      domain: domain, clientId: cid, loginState: 'login'
-    })
-
-    // This events gets triggered on refresh or URL change
-    $rootScope.$on('$locationChangeStart', checkLogin);
-    checkLogin()
-
-    function checkLogin() {
-      var token = store.get('sessionToken');
-      if (token) {
-        if (!jwtHelper.isTokenExpired(token)) {
-          if (!auth.isAuthenticated) {
-            auth.authenticate(store.get('profile'), token);
-          }
-          return;
-        }
-      }
-      AdminService.login();
-    }
-  });
-
-
-  // Unfortunately the auth0 library does not handle redirect errors!
-  // WTF!
-  // For redirect mode
-  var notifiedLoginError = false;
-  $rootScope.$on('$locationChangeStart', function() {
-    if (notifiedLoginError) return;
-
-    // decode and try to trap authentication errors
+  // Handle the case when Auth0 login fails
+  if (window.location.hash.startsWith('#/')) {
     try {
-      var hash = $window.location.hash.substr(1);
-      if (hash.startsWith('/')) {
-        hash = hash.substr(1);
+      let parts = _(window.location.hash.substr(2).split('&'))
+        .map(keyvalue => keyvalue.split('='))
+        .keyBy(keyvalue => keyvalue[0])
+        .mapValues(keyvalue => decodeURIComponent(keyvalue[1]))
+        .value()
+
+      if (parts.error) {
+        alert(`${parts.error} - ${parts.error_description}`)
       }
-      if (!hash)
-        return;
+    }
+    catch (err) {
+      console.log(err)
+    }
+  }
 
-      var bits = hash.split('&').map(b => b.split('='))
-      bits = _.keyBy(bits, b => b[0])
-      bits = _.mapValues(bits, v => decodeURIComponent(v[1]))
 
-      if (bits.error) {
-        auth.signout()
-        alert(
-      `${bits.error}
-
-${bits.error_description}`
-        );
+  $rootScope.$on('$locationChangeStart', function() {
+    var token = store.get('sessionToken');
+    if (token) {
+      if (!jwtHelper.isTokenExpired(token)) {
+        if (!auth.isAuthenticated) {
+          //Re-authenticate user if token is valid
+          auth.authenticate(store.get('profile'), token);
+        }
+      } else {
+        // Either show the login page or use the refresh token to get a new idToken
+        AdminService.login();
       }
-
-      // Because we only need this handler when there's
-      // a failure after redirect, after checking at the start
-      // of page load, we don't need this handler any more.
-      notifiedLoginError = true;
-    } catch (error) {
     }
   });
 })
@@ -146,22 +113,22 @@ function configureGoogleMaps(uiGmapGoogleMapApiProvider) {
   })
 }
 
-function configureLoginPage(authProvider) {
-  authProvider.on('loginFailure', function(error) {
-    alert(
-`${error.error}
+function configureAuth0(authProvider) {
+  authProvider.init({
+    domain: env.AUTH0_DOMAIN,
+    clientID: env.AUTH0_CID,
+    loginUrl: '/login'
+  })
 
-${error.error_description}`
-    );
-    console.log(error)
-    // $location.path('/login');
-  });
-
-  authProvider.on('authenticated', function($location, idToken, profilePromise,
+  authProvider.on('authenticated', function ($location, idToken, profilePromise,
     jwtHelper, $cookies) {
-    console.log('I am authenticated')
-    console.log(jwtHelper.decodeToken(idToken))
-    $cookies.put('sessionToken', idToken)
+
+
+      console.log('authenticated!')
+  })
+
+  authProvider.on('loginFailure', function ($location, error) {
+    alert(error);
   })
 
   authProvider.on('loginSuccess', function($location, profilePromise,
@@ -172,7 +139,6 @@ ${error.error_description}`
     $cookies.put('sessionToken', idToken)
 
     profilePromise.then((p) =>{
-      console.log(p)
       store.set('profile', p)
     })
   })
