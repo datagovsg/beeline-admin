@@ -6,8 +6,11 @@ export default function ($rootScope, $uibModal) {
     var modalScope = $rootScope.$new();
 
     _.assign(modalScope, _.pick(options, [
-      'userId', 'user', 'boardStopId', 'alightStopId', 'routeId'
+      'boardStopId', 'alightStopId', 'routeId'
     ]))
+    modalScope.users = [
+      options.user || {id: options.userId}
+    ]
 
     var modalOptions = {
       controller: IssueTicketController,
@@ -18,28 +21,35 @@ export default function ($rootScope, $uibModal) {
 
     console.log(options);
 
-    $uibModal.open(modalOptions);
+    var modal = $uibModal.open(modalOptions);
+    modal.result.then(() => {
+      modalScope.$destroy();
+    }, () => {
+      modalScope.$destroy();
+    })
   }
 }
 
-function IssueTicketController($scope, AdminService) {
+function IssueTicketController($scope, AdminService, LoadingSpinner) {
   $scope.issue = function () {
     if (!confirm("Are you sure you want to issue these tickets?")) {
       return;
     }
 
     var issueRequest = {
-      trips: $scope.trips.map(tr =>
-        _.assign(
-          _.pick(tr, ['boardStopId', 'alightStopId', 'tripId']),
-          {userId: $scope.userId}
+      trips: _.flatten($scope.users.map(user => /* for each user */
+        $scope.trips.map(tr => /* for each trip */
+          _.assign(
+            _.pick(tr, ['boardStopId', 'alightStopId', 'tripId']),
+            {userId: user.id}
+          )
         )
-      ),
+      )),
       description: $scope.reason
     }
     console.log(issueRequest);
 
-    AdminService.beeline({
+    LoadingSpinner.watchPromise(AdminService.beeline({
       method: 'POST',
       url: '/transactions/issueFreeTicket',
       data: issueRequest,
@@ -50,6 +60,6 @@ function IssueTicketController($scope, AdminService) {
     })
     .catch((err) => {
       alert('Error: ' + err.data);
-    })
+    }))
   }
 }

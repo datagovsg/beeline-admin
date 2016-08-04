@@ -8,8 +8,24 @@
     </trip-selector>
 
     <h3>Issue to</h3>
-    <user-selector ng-model="userId" user="user">
-    </user-selector>
+    <table class="table">
+      <tr ng-repeat="user in users">
+        <td>{{$index}}</td>
+        <td>
+          <user-selector ng-model="user.id" initial-user="user">
+          </user-selector>
+        </td>
+        <td>
+          <button class="btn btn-default glyphicon glyphicon-minus" ng-click="users.splice(users.indexOf(user), 1)"></button>
+        </td>
+      </li>
+      </tr>
+      <tr>
+        <td colspan="3">
+          <button class="btn btn-default glyphicon glyphicon-plus" ng-click="users.push({})"></button>
+        </td>
+      </tr>
+    </table>
   </div>
   <div class="modal-footer">
     <button class="btn btn-default" ng-click="$dismiss()">

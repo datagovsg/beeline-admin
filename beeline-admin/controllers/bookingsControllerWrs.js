@@ -125,7 +125,6 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
     }
   }
   $scope.replace = function (ticket) {
-    console.log(ticket);
     issueTicketModal.open({
       user: ticket.user,
       userId: ticket.userId,
@@ -161,6 +160,8 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
     }
     if ($scope.filter.tripId) {
       queryOptions.tripId = $scope.filter.tripId
+      delete queryOptions.tripStartDate;
+      delete queryOptions.tripEndDate;
     }
     if ($scope.filter.userQuery) {
       queryOptions.userQuery = $scope.filter.userQuery
