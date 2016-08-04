@@ -22,9 +22,9 @@ export default function ($rootScope, $uibModal) {
   }
 }
 
-function IssueTicketController($scope, AdminService) {
-  $scope.issue = function () {
-    if (!confirm("Are you sure you want to issue these tickets?")) {
+function IssueTicketController($scope, AdminService, commonModals) {
+  $scope.issue = async function () {
+    if (!await commonModals.confirm("Are you sure you want to issue these tickets?")) {
       return;
     }
 
@@ -45,11 +45,14 @@ function IssueTicketController($scope, AdminService) {
       data: issueRequest,
     })
     .then(() => {
-      alert('Tickets created!');
       $scope.$close();
+      return commonModals.alert('Tickets created!');
     })
     .catch((err) => {
-      alert('Error: ' + err.data);
+      return commonModals.alert({
+        title: 'Error',
+        message: err.data
+      });
     })
   }
 }
