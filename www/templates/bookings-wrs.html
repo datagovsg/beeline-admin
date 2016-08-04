@@ -73,13 +73,13 @@
       </div>
     </div>
     <!-- <div>
-  <span class="btn-group">
-    <button class="btn btn-default"
-      ng-click="showRefundModal()"
-    >
-      Refund...
-    </button>
-  </span>
+    <span class="btn-group">
+      <button class="btn btn-default"
+        ng-click="showRefundModal()"
+      >
+        Refund...
+      </button>
+    </span>
 </div> -->
     <div class="row">
       <div class="col-lg-12">
@@ -108,37 +108,38 @@
 
             <tbody>
               <tr ng-repeat="ticket in tickets" ng-class="{
-          valid: ticket.status == 'valid',
-          refunded: ticket.status == 'refunded',
-          failed: ticket.status == 'failed',
-            }">
+            valid: ticket.status == 'valid',
+            refunded: ticket.status == 'refunded',
+            failed: ticket.status == 'failed',
+              }">
                 <td>
                   <input type="checkbox" ng-model="selectedTickets[ticket.id]" style="height: 100%;" />
                 </td>
                 <td>
                   <a ui-sref="transactions({id: ticket.ticketSale.transactionId})">
-                {{ticket.ticketSale.transactionId}}
-              </a>
+                  {{ticket.ticketSale.transactionId}}
+                </a>
                 </td>
                 <td>
                   {{ticket.paymentResource}}
                   <span ng-if="ticket.refundResource"><br/>{{ticket.refundResource}}</span>
                   <span ng-if="ticket.paymentData.transfer.destination_payment">
-                <br/>{{ticket.paymentData.transfer.destination_payment}}
-              </span>
+                  <br/>{{ticket.paymentData.transfer.destination_payment}}
+                </span>
                   <span ng-if="ticket.refundData.transfer.destination_payment">
-                <br/>{{ticket.refundData.transfer.destination_payment}}
-              </span>
+                  <br/>{{ticket.refundData.transfer.destination_payment}}
+                </span>
                 </td>
                 <td>
                   <strong>{{ticket.user.json.name ? (ticket.user.json.name + ' #' + ticket.user.json.index) : ticket.user.name}} </strong>
+                  <br> (UID: {{ticket.user.id}})
                   <br> {{ticket.user.json.telephone || ticket.user.telephone}}
                   <br> {{ticket.user.json.email || ticket.user.email}}
                 </td>
                 <td>
                   <a ui-sref="transactions({ticketId: ticket.id})">
-          {{ticket.id}}
-        </a>
+                    {{ticket.id}}
+                  </a>
 
                   <a ng-click="sendWrsEmail(ticket.ticketSale.transactionId)">
                     <i class="glyphicon glyphicon-envelope"></i>
@@ -187,11 +188,8 @@
               </tr>
             </tbody>
           </table>
-        </div>
-      </div>
-
-
-    </div>
-
-  </div>
-</div>
+        </div> <!-- table-responsive -->
+      </div> <!-- col-lg-12 -->
+    </div> <!-- row -->
+  </div> <!-- container-fluid -->
+</div> <!-- .booking-page -->

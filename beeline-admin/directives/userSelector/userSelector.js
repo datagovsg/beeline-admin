@@ -6,6 +6,7 @@ export default function (AdminService) {
 <ui-select ng-model="data.user">
   <ui-select-match placeholder="Enter a name or telephone">
     <span>
+      ({{$select.selected.id}})
       {{$select.selected.name}}
       {{$select.selected.telephone}}
     </span>
@@ -14,6 +15,7 @@ export default function (AdminService) {
      refresh="refreshUsers($select.search)"
      refresh-delay="300">
     <span>
+      ({{user.id}})
       {{user.name}}
       {{user.telephone}}
     </span>
@@ -27,7 +29,7 @@ export default function (AdminService) {
     `,
     scope: {
       ngModel: '=?',
-      user: '<?',
+      user: '<initialUser',
     },
     link(scope, elem, attr) {
       var displayUser =
@@ -47,7 +49,8 @@ export default function (AdminService) {
         var promise = AdminService.beeline({
           method: 'GET',
           url: `/users/search?` + querystring.stringify({
-            q: search
+            q: search,
+            includeEphemeral: true,
           })
         })
         .then((response) => {
