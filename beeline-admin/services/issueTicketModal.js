@@ -21,7 +21,12 @@ export default function ($rootScope, $uibModal) {
 
     console.log(options);
 
-    $uibModal.open(modalOptions);
+    var modal = $uibModal.open(modalOptions);
+    modal.result.then(() => {
+      modalScope.$destroy();
+    }, () => {
+      modalScope.$destroy();
+    })
   }
 }
 
