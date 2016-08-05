@@ -106,6 +106,7 @@ gulp.task('deploy-prepare-git', function (done) {
     fs.mkdir(path.resolve('build'), (err) => err ? resolve() : reject(err))
   })
   .then(() => promiseExec('git init .', {cwd: path.resolve('build')}))
+  .then(() => promiseExec('git checkout -f HEAD', {cwd: path.resolve('build')}))
   .then(() => promiseExec('git pull', {cwd: path.resolve('build')}))
   // Pull the latest (avoid conflicts)
   .then(() => {
