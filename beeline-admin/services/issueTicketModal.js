@@ -9,9 +9,8 @@ export default function ($rootScope, $uibModal) {
     modalScope.data.routeId = options.routeId;
     modalScope.data.boardStopId = options.boardStopStopId;
     modalScope.data.alightStopId = options.alightStopStopId;
-    modalScope.data.users = [
-      options.user || {id: options.userId}
-    ]
+    modalScope.data.cancelledTicketIds = options.cancelledTicketIds;
+    modalScope.data.users = options.users;
 
     var modalOptions = {
       controller: IssueTicketController,
@@ -65,9 +64,9 @@ function IssueTicketController($scope, AdminService, LoadingSpinner) {
           )
         )
       )),
+      cancelledTicketIds: $scope.data.cancelledTicketIds,
       description: $scope.reason
     }
-    console.log(issueRequest);
 
     LoadingSpinner.watchPromise(AdminService.beeline({
       method: 'POST',

@@ -56,6 +56,15 @@
       </select>
     </label>
 
+    <div ng-if="data.cancelledTicketIds">
+      Tickets being cancelled:
+      <ul class="selected-dates">
+        <li ng-repeat="ticketId in data.cancelledTicketIds">
+          {{ticketId}}
+        </li>
+      </ul>
+    </div>
+
     <div>
       <label>
         Reason

@@ -1,4 +1,5 @@
 import querystring from 'querystring'
+import assert from 'assert';
 
 export default function($scope, AdminService, RoutesService, LoadingSpinner,
   $state, $stateParams, issueTicketModal) {
@@ -87,7 +88,10 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
   //   })
   // }
 
-  $scope.sendWrsEmail = function (ticketId) {
+  $scope.sendWrsEmail = function (ticket) {
+    var transactionId = ticket.ticketSale.transactionId ||
+      ticket.ticketExpense.transactionId;
+
     AdminService.beeline({
       method: 'POST',
       url: `/custom/wrs/email/${ticketId}`
@@ -124,14 +128,34 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
       })
     }
   }
-  $scope.replace = function (ticket) {
-    issueTicketModal.open({
-      user: ticket.user,
-      userId: ticket.userId,
-      routeId: ticket.boardStop.trip.routeId,
-      boardStopStopId: ticket.boardStop.stopId,
-      alightStopStopId: ticket.alightStop.stopId,
-    })
+  $scope.issueTickets = function () {
+    var selectedTicketIds = _($scope.selectedTickets)
+      .keys()
+      .filter(key => $scope.selectedTickets[key])
+      .value();
+    var selectedTickets = selectedTicketIds.map(tid =>
+      $scope.tickets.find(t => t.id.toString() === tid))
+    var firstTicket = selectedTickets.length > 0 ? selectedTickets[0] : null;
+    var issueTicketModalOptions = {};
+
+    assert(selectedTickets.length === 0 || firstTicket);
+
+    issueTicketModalOptions.users = _(selectedTickets)
+      .filter()
+      .map(t => t.user)
+      .uniqBy('id')
+      .value()
+
+    if (firstTicket) {
+      Object.assign(issueTicketModalOptions, {
+        routeId: firstTicket.boardStop.trip.routeId,
+        boardStopStopId: firstTicket.boardStop.stopId,
+        alightStopStopId: firstTicket.alightStop.stopId,
+        cancelledTicketIds: selectedTicketIds
+      })
+    }
+
+    issueTicketModal.open(issueTicketModalOptions);
   }
 
   function buildQuery(override) {
@@ -233,6 +257,10 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
       }
     })
   })
+
+  $scope.$watchCollection('selectedTickets', (tickets) => {
+    $scope.disp.selectedTicketsCount = _.filter(tickets).length
+  }, true);
 
   $scope.$watch(() => [
       $scope.filter.startDate.getTime(),

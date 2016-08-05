@@ -21,7 +21,14 @@
     margin-top: $padding-large-vertical;
     margin-right: $padding-base-horizontal;
   }
+
+  tr.selected td {
+    background-color: #008;
+    color: #FFF;
+  }
 }
+
+
 
 .actions{
   &.btn{
