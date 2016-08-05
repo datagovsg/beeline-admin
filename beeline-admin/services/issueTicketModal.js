@@ -50,8 +50,8 @@ function IssueTicketController($scope, AdminService, LoadingSpinner) {
     }
   };
 
-  $scope.issue = function () {
-    if (!confirm("Are you sure you want to issue these tickets?")) {
+  $scope.issue = async function () {
+    if (!await commonModals.confirm("Are you sure you want to issue these tickets?")) {
       return;
     }
 
@@ -74,12 +74,15 @@ function IssueTicketController($scope, AdminService, LoadingSpinner) {
       data: issueRequest,
     })
     .then(() => {
-      alert('Tickets created!');
       $scope.$close();
-    })
-    .catch((err) => {
-      alert('Error: ' + err.data);
+      return commonModals.alert('Tickets created!');
     }))
+    .catch((err) => {
+      return commonModals.alert({
+        title: 'Error',
+        message: err.data
+      });
+    })
   }
   // Event handler
   $scope.removeTrip = function(date) {

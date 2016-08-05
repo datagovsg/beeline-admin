@@ -11,7 +11,8 @@ export default function($http, companiesSvc) {
     link(scope, elem, attr) {
       scope.statuses = [
         [null, '(Normal)'],
-        ['cancelled', 'cancelled']
+        ['cancelled', 'Cancelled (Unexpected)'],
+        ['void', 'Cancelled (Planned)']
       ];
     },
   }

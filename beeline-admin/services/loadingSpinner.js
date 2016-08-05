@@ -22,7 +22,9 @@ export default function() {
   this.watchPromise = function(p) {
     show()
 
-    p.then(hide, hide)
+    p.then(hide, hide);
+    
+    return p;
   }
 
   hide()

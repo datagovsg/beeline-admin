@@ -59,9 +59,9 @@ export default function(AdminService, RoutesService, $rootScope, LoadingSpinner)
           startDate: today.getTime()
         })
         .then((route) => {
-          scope.trips = route.trips
+          scope.trips = route.trips.filter(t => t.isRunning);
 
-          scope.datepickerDaysAllowed = route.trips.map(trip =>
+          scope.datepickerDaysAllowed = scope.trips.map(trip =>
             new Date(
                 trip.date.getFullYear(),
                 trip.date.getMonth(),
