@@ -1,4 +1,6 @@
-$summaryTableBG: #eee;
+$summaryTableBG:   #eee;
+$cancelledBG:      #fcdada;
+$cancelledLine:    #ffc7c7;
 
 .summary-page {
   .uib-datepicker{
@@ -60,11 +62,36 @@ $summaryTableBG: #eee;
             border: 1px solid $gray-lightest;
           }
         }
+
+        .void{
+          background: repeating-linear-gradient(
+            135deg,
+            $cancelledBG,
+            $cancelledBG 2px,
+            $cancelledLine 2px,
+            $cancelledLine 4px
+            );
+        }
+
+        td.passenger-count.day.has-trip.cancelled {
+          background: $cancelledBG;
+        }
+
+        th.has-trip {
+          background-color: $gray_light;
+          color: $white;
+        }
+
+        th.summary-day.day.has-trip.void,
+        th.weekday.day.ng-scope.has-trip.void {
+          color: $gray-base;
+        }
+
       }
     }
 
     .today {
-      border: solid 2px $gray-lighter !important;
+      border: solid 2px $gray_light !important;
       font-weight: bold;
     }
     td.day, th.day {
