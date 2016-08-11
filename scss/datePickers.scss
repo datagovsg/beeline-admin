@@ -80,6 +80,8 @@ $annotation: $brand-danger;
   text-align: left;
   padding: 10px;
 
+
+
   .annotation {
   background-color: $annotation;
   position: absolute;
@@ -119,4 +121,16 @@ $annotation: $brand-danger;
   &.picker-empty {
     background-color: $empty-day-background;
   }
+
+  &.holiday {
+    background: repeating-linear-gradient(
+      135deg,
+      $cancelledBG,
+      $cancelledBG 2px,
+      $cancelledLine 2px,
+      $cancelledLine 4px
+      );
+    color: red;
+  }
+
 }
