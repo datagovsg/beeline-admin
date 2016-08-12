@@ -2,7 +2,6 @@
 /*
   Extends the multiple-date-picker to support span select.
 */
-var offset = new Date().getTimezoneOffset() * 60000;
 export default function (AdminService) {
   return {
     scope: {
