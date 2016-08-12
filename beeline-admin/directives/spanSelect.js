@@ -29,7 +29,8 @@ export default function (AdminService) {
       });
 
       scope.$watch('highlightDays',(hds)=>{
-        var phs = scope.phs;
+        //deep copy of scope.phs into phs
+        var phs = JSON.parse(JSON.stringify(scope.phs));
         for (var ph in phs){
           for (var hd in hds){
             if (moment(phs[ph].date).isSame(hds[hd].date,'day')){
