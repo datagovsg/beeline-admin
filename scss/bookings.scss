@@ -1,4 +1,5 @@
 .bookings-page {
+  margin-bottom: $padding-large-vertical*5;
   nav {
     .uib-datepicker {
       float: left;
@@ -27,4 +28,14 @@
   &.btn{
     margin: $padding_small_vertical 0;
   }
+}
+
+.borderless table {
+  background-color: transparent !important;
+}
+.borderless td, .borderless th {
+    border: none;
+    vertical-align: top;
+    padding: 0px 5px;
+
 }
