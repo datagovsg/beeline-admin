@@ -1,8 +1,23 @@
 
 
 .companies {
+  margin-bottom: $padding-large-vertical*10;
   .logo {
     max-width: 300px;
     max-height: 300px;
+    background-color: $gray-lightest;
+    border: 1px solid $gray_lighter;
+  }
+
+  .row{
+    .col-lg-12{
+      .form-group{
+        margin-bottom: 50px;
+      }
+    }
+  }
+
+  button {
+    margin: 20px 0px;
   }
 }
