@@ -22,20 +22,18 @@
     margin-top: $padding-large-vertical;
     margin-right: $padding-base-horizontal;
   }
-}
-
-.actions{
-  &.btn{
-    margin: $padding_small_vertical 0;
+  .borderless table {
+    background-color: transparent !important;
   }
-}
+  .borderless td, .borderless th {
+      border: none;
+      vertical-align: top;
+      padding: 0px 2px;
 
-.borderless table {
-  background-color: transparent !important;
-}
-.borderless td, .borderless th {
-    border: none;
-    vertical-align: top;
-    padding: 0px 5px;
-
+  }
+  .actions{
+    &.btn{
+      margin: $padding_small_vertical 0;
+    }
+  }
 }

@@ -1,21 +1,32 @@
 table.transactions-view {
   tr {
+    td{
+      max-width: 35ch;
+    }
     th.id, td.id {
       width: 100px;
-      background-color: $light;
+      /* background-color: $light; */
     }
     td.item-type {
       width: 100px;
     }
     td.item-description {
-      width: 300px;
+      width: 250px;
     }
     td.debit-credit {
       text-align: right;
       width: 50px;
     }
+    td.item-info {
+      width: 200px;
+      vertical-align: middle;
+    }
   }
   th {
-    text-align: center;
+    text-align: left;
+    &:active,:hover{
+      background-color: #ddd;
+    }
   }
+
 }

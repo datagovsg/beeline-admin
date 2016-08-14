@@ -127,6 +127,9 @@
                   <span ng-if="ticket.refundData.transfer.destination_payment">
                   <br/>{{ticket.refundData.transfer.destination_payment}}
                 </span>
+                <button class="btn btn-danger actions" ng-click="refund(ticket)" ng-disabled="ticket.status != 'valid'">
+                   <span class="glyphicon glyphicon-credit-card" aria-hidden="true"></span> Refund
+                </button>
                 </td>
                 <td>
                   <strong>{{ticket.user.json.name ? (ticket.user.json.name + ' #' + ticket.user.json.index) : ticket.user.name}} </strong>
@@ -199,9 +202,6 @@
                         Edit
                       </button>
                   </div>
-                  <button class="btn btn-danger actions" ng-click="refund(ticket)" ng-disabled="ticket.status != 'valid'">
-                     <span class="glyphicon glyphicon-credit-card" aria-hidden="true"></span> Refund
-                  </button>
                 </td>
               </tr>
             </tbody>
