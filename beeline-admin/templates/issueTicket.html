@@ -1,37 +1,37 @@
 <div class="issue-ticket-popup">
   <div class="modal-header">
-    <h3>Issue Tickets</h3>
+    <h4>Issue A New Ticket</h4>
   </div>
   <div class="modal-body">
     <trip-selector trip-id="tripId" trips="trips" board-stop-id="boardStopId"
       alight-stop-id="alightStopId" route-id="routeId" reason="reason">
     </trip-selector>
 
-    <h3>Issue to</h3>
+    <h3>Select Users</h3>
     <table class="table">
       <tr ng-repeat="user in users">
-        <td>{{$index}}</td>
+        <td>{{$index+1}}</td>
         <td>
           <user-selector ng-model="user.id" initial-user="user">
           </user-selector>
         </td>
         <td>
-          <button class="btn btn-default glyphicon glyphicon-minus" ng-click="users.splice(users.indexOf(user), 1)"></button>
+          <button class="btn btn-default" ng-click="users.splice(users.indexOf(user), 1)"><span class=" glyphicon glyphicon-minus" aria-hidden="true"></span>Remove User</button>
         </td>
       </li>
       </tr>
       <tr>
         <td colspan="3">
-          <button class="btn btn-default glyphicon glyphicon-plus" ng-click="users.push({})"></button>
+          <button class="btn btn-default" ng-click="users.push({})"><span class=" glyphicon glyphicon-plus" aria-hidden="true"></span>Add another user</button>
         </td>
       </tr>
     </table>
   </div>
   <div class="modal-footer">
-    <button class="btn btn-default" ng-click="$dismiss()">
+    <button class="btn btn-default btn-lg" ng-click="$dismiss()">
       Cancel
     </button>
-    <button class="btn btn-primary" ng-click="issue()">
+    <button class="btn btn-primary btn-lg" ng-click="issue()">
       Issue
     </button>
   </div>
