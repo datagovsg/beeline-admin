@@ -3,18 +3,20 @@
   .date-picker {
     width: 400px;
     float: right;
-    border: solid 1px black;
-    margin: 1em;
+    margin: 0 1em;
+    padding: 20px;
   }
 
   ul.selected-dates {
+    padding: 0;
+    margin: 0;
     li {
       padding: 0.5em;
       list-style-type: none;
       display: inline-block;
-      border: solid 1px black;
+      border: solid 1px $gray-lighter;
       border-radius: 0.5em;
-      margin: 0 0.5em;
+      margin: 0.5em;
     }
   }
 }
