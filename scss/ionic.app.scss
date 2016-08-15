@@ -49,6 +49,7 @@ $selected: #CCC;
 @import 'scss/issueTicket';
 @import 'scss/mainMenu';
 @import 'scss/drivers';
+@import 'scss/admin';
 
 html, body {
   height: 100%;
@@ -152,4 +153,8 @@ tr.failed {
 
 tr.refunded {
   color: #888;
+}
+
+hr {
+  border-top: 1px solid $gray-lightest;
 }
