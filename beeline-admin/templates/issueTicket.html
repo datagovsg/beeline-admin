@@ -1,38 +1,50 @@
 <div class="issue-ticket-popup">
   <div class="modal-header">
-    <h3>Issue Tickets</h3>
+    <h3>Issue A New Ticket</h3>
   </div>
   <div class="modal-body">
-    <trip-selector trip-id="tripId" trips="trips" board-stop-id="boardStopId"
-      alight-stop-id="alightStopId" route-id="routeId" reason="reason">
-    </trip-selector>
+    <div class="row">
+      <div class="col-sm-12">
+        <trip-selector trip-id="tripId" trips="trips" board-stop-id="boardStopId" alight-stop-id="alightStopId" route-id="routeId" reason="reason">
+        </trip-selector>
+      </div>
+    </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <h4>Select Users</h4>
+      <table class="table">
+        <tr ng-repeat="user in users">
+          <td>{{$index+1}}</td>
+          <td>
+            <user-selector ng-model="user.id" initial-user="user">
+            </user-selector>
+          </td>
+          <td>
+            <button class="btn btn-default" ng-click="users.splice(users.indexOf(user), 1)"><span class=" glyphicon glyphicon-minus" aria-hidden="true"></span>Remove User</button>
+          </td>
+          </li>
+        </tr>
+        <tr>
+          <td colspan="3">
+            <button class="btn btn-default" ng-click="users.push({})"><span class=" glyphicon glyphicon-plus" aria-hidden="true"></span>Add another user</button>
+          </td>
+        </tr>
+      </table>
+    </div>  
+  </div>
 
-    <h3>Issue to</h3>
-    <table class="table">
-      <tr ng-repeat="user in users">
-        <td>{{$index}}</td>
-        <td>
-          <user-selector ng-model="user.id" initial-user="user">
-          </user-selector>
-        </td>
-        <td>
-          <button class="btn btn-default glyphicon glyphicon-minus" ng-click="users.splice(users.indexOf(user), 1)"></button>
-        </td>
-      </li>
-      </tr>
-      <tr>
-        <td colspan="3">
-          <button class="btn btn-default glyphicon glyphicon-plus" ng-click="users.push({})"></button>
-        </td>
-      </tr>
-    </table>
+
   </div>
   <div class="modal-footer">
-    <button class="btn btn-default" ng-click="$dismiss()">
-      Cancel
-    </button>
-    <button class="btn btn-primary" ng-click="issue()">
-      Issue
-    </button>
+    <div class="row">
+      <div class="col-sm-12">
+        <button class="btn btn-default" ng-click="$dismiss()">
+          Cancel
+        </button>
+        <button class="btn btn-primary" ng-click="issue()">
+          Create Ticket
+        </button>
+      </div>
+    </div>
   </div>
 </div>
