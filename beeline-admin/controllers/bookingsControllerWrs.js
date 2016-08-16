@@ -89,19 +89,19 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
   // }
 
   $scope.sendWrsEmail = function (ticket) {
-    var transactionId = ticket.ticketSale.transactionId ||
-      ticket.ticketExpense.transactionId;
+    var transactionId = _.get(ticket, 'ticketSale.transactionId') ||
+      _.get(ticket, 'ticketExpense.transactionId')
 
-    AdminService.beeline({
+    LoadingSpinner.watchPromise(AdminService.beeline({
       method: 'POST',
-      url: `/custom/wrs/email/${ticketId}`
-    })
+      url: `/custom/wrs/email/${transactionId}`
+    }))
     .then(() => {
       return commonModals.alert("Email sent to your Beeline Admin Login Email ID. Please check your inbox");
     })
     .then(null, () => {
       return commonModals.alert("Email sending failed");
-    })
+    });
   }
 
   $scope.refund = async function (ticket) {
