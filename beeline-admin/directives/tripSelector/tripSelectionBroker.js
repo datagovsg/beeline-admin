@@ -11,7 +11,7 @@ export default function(AdminService, RoutesService, $rootScope, LoadingSpinner)
       alightStopId: '=?',
       boardStopId: '=?',
       routeId: '<?',
-      selectedDates: '<?',
+      selectedDates: '=?',
 
       /* Update these */
       boardStops: '=',
@@ -75,6 +75,12 @@ export default function(AdminService, RoutesService, $rootScope, LoadingSpinner)
               selectable: true,
               annotation: `${trip.availability.seatsAvailable}`
             }))
+
+          // Unselect the dates that are now unselectable
+          var offset = new Date().getTimezoneOffset() * 60000;
+          scope.selectedDates = scope.selectedDates.filter(
+            d => route.trips.some(t => t.date.valueOf() + offset === d.valueOf())
+          )
         })
       });
 

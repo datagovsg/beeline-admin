@@ -126,6 +126,8 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
       })
     }
   }
+
+  // Unused
   $scope.issueTickets = function () {
     var selectedTicketIds = _($scope.selectedTickets)
       .keys()
@@ -153,6 +155,32 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
       })
     }
 
+    issueTicketModal.open(issueTicketModalOptions);
+  }
+
+  // Edit ticket button
+  $scope.editTicket = function (ticket) {
+    var selectedTicketIds = [ticket.id];
+    var selectedTickets = [ticket];
+    var issueTicketModalOptions = {
+      users: [ticket.user],
+      routeId: ticket.boardStop.trip.routeId,
+      boardStopStopId: ticket.boardStop.stopId,
+      alightStopStopId: ticket.alightStop.stopId,
+      cancelledTicketIds: selectedTicketIds
+    };
+    issueTicketModal.open(issueTicketModalOptions);
+  }
+  // Add ticket button -- don't cancel earlier ticket
+  $scope.addTicket = function (ticket) {
+    var selectedTicketIds = [ticket.id];
+    var selectedTickets = [ticket];
+    var issueTicketModalOptions = {
+      users: [ticket.user],
+      routeId: ticket.boardStop.trip.routeId,
+      boardStopStopId: ticket.boardStop.stopId,
+      alightStopStopId: ticket.alightStop.stopId,
+    };
     issueTicketModal.open(issueTicketModalOptions);
   }
 
