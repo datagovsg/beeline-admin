@@ -52,6 +52,10 @@
             </label>
 
             <label class="ticketCheckbox">
+              <input type="checkbox" ng-model="filter.status.cancelled" /> Cancelled
+            </label>
+
+            <label class="ticketCheckbox">
               <input type="checkbox" ng-model="filter.status.failed" /> Failed
             </label>
 
@@ -97,7 +101,7 @@
             <tbody>
               <tr ng-repeat="ticket in tickets" ng-class="{
                 valid: ticket.status == 'valid',
-                refunded: ticket.status == 'refunded' || ticket.status == 'replaced',
+                refunded: ticket.status == 'refunded' || ticket.status == 'cancelled',
                 failed: ticket.status == 'failed',
                 selected: !!selectedTickets[ticket.id]
               }">
