@@ -1,6 +1,6 @@
 <div class="issue-ticket-popup">
   <div class="modal-header">
-    <h3>Issue Tickets</h3>
+    <h3>Issue A New Ticket</h3>
   </div>
   <div class="modal-body form-inline trip-selector">
     <!-- Brokers the linkage between routes and trips, routes and tripstops -->
@@ -117,11 +117,15 @@
     </table>
   </div>
   <div class="modal-footer">
-    <button class="btn btn-default" ng-click="$dismiss()">
-      Cancel
-    </button>
-    <button class="btn btn-primary" ng-click="issue()">
-      Issue
-    </button>
+    <div class="row">
+      <div class="col-sm-12">
+        <button class="btn btn-default" ng-click="$dismiss()">
+          Cancel
+        </button>
+        <button class="btn btn-primary" ng-click="issue()">
+          Create Ticket
+        </button>
+      </div>
+    </div>
   </div>
 </div>

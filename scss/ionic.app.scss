@@ -158,3 +158,14 @@ tr.refunded {
 hr {
   border-top: 1px solid $gray-lightest;
 }
+
+.btn {
+  .glyphicon{
+    margin-right: $padding-xs-horizontal;
+  }
+  &.btn-icon{
+    .glyphicon {
+      margin-right: 0;
+    }
+  }
+}
