@@ -8,6 +8,7 @@
             <h4 class="text-center">Select the start date, and the end date:</h4>
             <span-select highlight-days="disp.highlightDays" first-date="filter.startDate" last-date="filter.endDate">
             </span-select>
+            <span class="red-text">Total Valid Bookings: {{disp.validBookings}}</span>
           </div>
 
         </div>
@@ -127,7 +128,7 @@
                   <span ng-if="ticket.refundData.transfer.destination_payment">
                   <br/>{{ticket.refundData.transfer.destination_payment}}
                 </span>
-                <button class="btn btn-danger actions" ng-click="refund(ticket)" ng-disabled="ticket.status != 'valid'">
+                <button class="btn btn-danger actions" ng-click="refund(ticket)" ng-if="ticket.status == 'valid' && ticket.paymentResource">
                    <span class="glyphicon glyphicon-credit-card" aria-hidden="true"></span> Refund
                 </button>
                 </td>

@@ -41,6 +41,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
     datesBetween: [],
     counts: {},
     dates: [],
+    validBookings: 0
   }
 
   $scope.selectedTickets = {};
@@ -75,17 +76,17 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
       window.location.href = AdminService.serverUrl() + '/downloadLink?token=' + result.data.token;
     })
   }
-  //
-  // $scope.showRefundModal = function() {
-  //   var ticketsById = _.keyBy($scope.tickets, t => t.id)
-  //   var ticketsToCancel = Object.keys($scope.selectedTickets)
-  //     .filter(ticketId => $scope.selectedTickets[ticketId])
-  //     .map(ticketId => ticketsById[ticketId])
-  //
-  //   BookingRefund.open({
-  //     cancelledTickets: ticketsToCancel,
-  //   })
-  // }
+
+  $scope.showRefundModal = function() {
+    var ticketsById = _.keyBy($scope.tickets, t => t.id)
+    var ticketsToCancel = Object.keys($scope.selectedTickets)
+      .filter(ticketId => $scope.selectedTickets[ticketId])
+      .map(ticketId => ticketsById[ticketId])
+
+    BookingRefund.open({
+      cancelledTickets: ticketsToCancel,
+    })
+  }
 
   $scope.sendWrsEmail = function (ticketId) {
     AdminService.beeline({
@@ -114,9 +115,10 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
         var txn = response.data;
         var payment = txn.transactionItems.find(ts => ts.itemType == 'refundPayment' && ts.refundPayment)
 
+        query()
         return commonModals.alert( parseFloat(payment.credit).toFixed(2) + " refunded.")
       })
-      .then(null, (response) => {
+      .catch(null, (response) => {
         console.log(response);
         return commonModals.alert("Failed...")
       })
@@ -129,7 +131,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
       routeId: ticket.boardStop.trip.routeId,
       boardStopId: ticket.boardStop.stopId,
       alightStopId: ticket.alightStop.stopId,
-    })
+    }).then(query)
   }
 
   function buildQuery(override) {
@@ -189,9 +191,9 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
     })
     .then((result) => {
       $scope.tickets = result.data.rows;
+      $scope.disp.validBookings = result.data.rows.filter(r => r.status === 'valid').length
       $scope.pageCount = Math.ceil(result.data.count / result.data.perPage);
 
-      $scope.disp.counts = result.data.countByDate;
       for (let ticket of $scope.tickets) {
         try {
           ticket.user.json = JSON.parse(ticket.user.name)
@@ -207,6 +209,22 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
       console.log(err)
     });
 
+    var requestUrlOR = buildQuery({
+      tripStartDate: startOfMonth.getTime(),
+      tripEndDate: endOfMonth.getTime()
+    });
+
+    AdminService.beeline({
+      method: 'GET',
+      url: requestUrlOR,
+    })
+    .then((result) => {
+      $scope.disp.counts = result.data.countByDate;
+    })
+    .catch((err) => {
+      console.error(err.stack);
+      console.log(err)
+    });
 
     LoadingSpinner.watchPromise(queryPromise)
   }

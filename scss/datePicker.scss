@@ -36,6 +36,7 @@ beeline-datepicker {
 
   table.dates {
     width: 100%;
+    table-layout: fixed;
 
     td.invalid {
       background-color: $datepicker-default-bg;
