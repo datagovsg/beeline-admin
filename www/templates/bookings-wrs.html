@@ -44,15 +44,19 @@
           <div class="pull-left">
             <span class="ticketCheckbox">Ticket Status:</span>
             <label class="ticketCheckbox">
-              <input type="checkbox" ng-model="filter.status.valid" /> Valid
+              <input type="checkbox" ng-model="filter.status.valid" /> <a href="#" uib-tooltip="Valid - Paid and Free Tickets">Valid</a>
             </label>
 
             <label class="ticketCheckbox">
-              <input type="checkbox" ng-model="filter.status.refunded" /> Refunded
+              <input type="checkbox" ng-model="" /> <a href="#" uib-tooltip="Void - Cancelled tickets due to void trips and tickets that are edited. When a ticket is edited, the old ticket is voided and a new ticket with the changes is created. Void trips are trips that are created wrongly."> Void </a>
             </label>
 
             <label class="ticketCheckbox">
-              <input type="checkbox" ng-model="filter.status.failed" /> Failed
+              <input type="checkbox" ng-model="filter.status.refunded" /> <a href="#" uib-tooltip="Refunded - Tickets that are refunded to the user."> Refunded</a>
+            </label>
+
+            <label class="ticketCheckbox">
+              <input type="checkbox" ng-model="filter.status.failed" /> <a href="#" uib-tooltip="Failed - Tickets due to failed payments."> Failed</a>
             </label>
 
             <br clear="both">
