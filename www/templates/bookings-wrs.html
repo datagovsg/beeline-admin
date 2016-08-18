@@ -6,9 +6,8 @@
         <div class="col-lg-4 pull-right">
           <div class="datepicker-wrap">
             <h4 class="text-center">Select the start date, and the end date:</h4>
-            <span-select highlight-days="disp.highlightDays" first-date="filter.startDate" last-date="filter.endDate">
+            <span-select highlight-days="disp.highlightDays" first-date="filter.startDate" last-date="filter.endDate" month-changed="monthChanged">
             </span-select>
-            <span class="red-text">Total Valid Bookings: {{disp.validBookings}}</span>
           </div>
 
         </div>
@@ -52,6 +51,10 @@
               <input type="checkbox" ng-model="filter.status.refunded" /> Refunded
             </label>
 
+            <label class="ticketCheckbox red-text">
+              <input type="checkbox" ng-model="filter.status.void" /> Void
+            </label>
+
             <label class="ticketCheckbox">
               <input type="checkbox" ng-model="filter.status.failed" /> Failed
             </label>
@@ -69,6 +72,7 @@
     <div class="row">
       <div class="col-lg-12">
         <uib-pagination boundary-links="true" ng-model="currentPage" total-items="pageCount * perPage" items-per-page="perPage"></uib-pagination>
+        <div class="red-text">{{disp.paginationText}}</div>
       </div>
     </div>
     <!-- <div>

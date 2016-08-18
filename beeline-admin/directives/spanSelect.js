@@ -9,12 +9,14 @@ export default function () {
     scope: {
       firstDate: '=?',
       lastDate: '=?',
+      monthChanged: '=?',
       ngModel: '=?',
       highlightDays: '=?',
     },
     template: `<multiple-date-picker
       highlight-days="highlightDays"
-      ng-model="ngModel">
+      ng-model="ngModel"
+      month-changed="monthChanged">
     </multiple-date-picker>`,
     link(scope, elem, attr) {
       let firstPick;

@@ -13,12 +13,12 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
     now.getFullYear(),
     now.getMonth(),
     1
-  )
+  );
   var endOfMonth = new Date(
     now.getFullYear(),
     now.getMonth() + 1,
     0
-  )
+  );
 
   $scope.filter = {
     showPartial: false,
@@ -28,6 +28,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
     status: {
       valid: true,
       refunded: true,
+      void: true,
       failed: false,
     },
     startDate: startOfMonth,
@@ -41,7 +42,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
     datesBetween: [],
     counts: {},
     dates: [],
-    validBookings: 0
+    paginationText: ''
   }
 
   $scope.selectedTickets = {};
@@ -136,6 +137,8 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
 
   function buildQuery(override) {
     // update the request and CSV url
+    // tripStartDate & tripEndDate should be converted to
+    // UTC midnight of the intended dates
     var queryOptions = {
       page: $scope.currentPage || 1,
       perPage: $scope.perPage,
@@ -150,11 +153,12 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
       tripEndDate: Date.UTC(
         $scope.filter.endDate.getFullYear(),
         $scope.filter.endDate.getMonth(),
-        $scope.filter.endDate.getDate()
-      ) + 24*60*60*1000,
+        $scope.filter.endDate.getDate() + 1
+      ),
       statuses: JSON.stringify(Object.keys($scope.filter.status)
         .filter(key => $scope.filter.status[key]))
     }
+
     if ($scope.filter.routeId) {
       queryOptions.routeId = $scope.filter.routeId
     }
@@ -177,6 +181,13 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
     return requestUrl;
   }
 
+  $scope.monthChanged = function (newMonth) {
+    startOfMonth = newMonth.clone().startOf('month').toDate()
+    endOfMonth = newMonth.clone().endOf('month').startOf('day').toDate()
+    $scope.filter.startDate = startOfMonth;
+    $scope.filter.endDate = endOfMonth;
+  }
+
   function query(newV, oldV) {
     var requestUrl = buildQuery();
     $scope.csvUrl = buildQuery({
@@ -191,7 +202,9 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
     })
     .then((result) => {
       $scope.tickets = result.data.rows;
-      $scope.disp.validBookings = result.data.rows.filter(r => r.status === 'valid').length
+      let firstRow = ($scope.currentPage - 1) * result.data.perPage + 1;
+      let lastRow = Math.min($scope.currentPage * result.data.perPage, result.data.count)
+      $scope.disp.paginationText = `Showing ${firstRow} to ${lastRow} of ${result.data.count}`
       $scope.pageCount = Math.ceil(result.data.count / result.data.perPage);
 
       for (let ticket of $scope.tickets) {
@@ -210,8 +223,16 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
     });
 
     var requestUrlOR = buildQuery({
-      tripStartDate: startOfMonth.getTime(),
-      tripEndDate: endOfMonth.getTime()
+      tripStartDate: Date.UTC(
+        startOfMonth.getFullYear(),
+        startOfMonth.getMonth(),
+        startOfMonth.getDate()
+      ),
+      tripEndDate: Date.UTC(
+        endOfMonth.getFullYear(),
+        endOfMonth.getMonth(),
+        endOfMonth.getDate()
+      )
     });
 
     AdminService.beeline({
@@ -236,7 +257,6 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
       includeTrips: false,
       includeAvailability: false,
     }).then((routes) => {
-      console.log(routes)
       $scope.disp.availableRoutes = routes
     })
   }
