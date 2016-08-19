@@ -42,7 +42,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
     datesBetween: [],
     counts: {},
     dates: [],
-    paginationText: ''
+    pagination: {firstRow: 1, lastRow: 1, totalRows: 1}
   }
 
   $scope.selectedTickets = {};
@@ -78,17 +78,6 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
     })
   }
 
-  $scope.showRefundModal = function() {
-    var ticketsById = _.keyBy($scope.tickets, t => t.id)
-    var ticketsToCancel = Object.keys($scope.selectedTickets)
-      .filter(ticketId => $scope.selectedTickets[ticketId])
-      .map(ticketId => ticketsById[ticketId])
-
-    BookingRefund.open({
-      cancelledTickets: ticketsToCancel,
-    })
-  }
-
   $scope.sendWrsEmail = function (ticketId) {
     AdminService.beeline({
       method: 'POST',
@@ -119,8 +108,8 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
         query()
         return commonModals.alert( parseFloat(payment.credit).toFixed(2) + " refunded.")
       })
-      .catch(null, (response) => {
-        console.log(response);
+      .catch(err => {
+        console.log(err);
         return commonModals.alert("Failed...")
       })
     }
@@ -202,9 +191,9 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
     })
     .then((result) => {
       $scope.tickets = result.data.rows;
-      let firstRow = ($scope.currentPage - 1) * result.data.perPage + 1;
-      let lastRow = Math.min($scope.currentPage * result.data.perPage, result.data.count)
-      $scope.disp.paginationText = `Showing ${firstRow} to ${lastRow} of ${result.data.count}`
+      $scope.disp.pagination.firstRow = ($scope.currentPage - 1) * result.data.perPage + 1;
+      $scope.disp.pagination.lastRow = Math.min($scope.currentPage * result.data.perPage, result.data.count)
+      $scope.disp.pagination.totalRows = result.data.count
       $scope.pageCount = Math.ceil(result.data.count / result.data.perPage);
 
       for (let ticket of $scope.tickets) {
