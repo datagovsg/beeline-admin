@@ -2,8 +2,7 @@
 /*
   Extends the multiple-date-picker to support span select.
 */
-
-export default function () {
+export default function (AdminService) {
   return {
     scope: {
       firstDate: '=?',
@@ -12,13 +11,39 @@ export default function () {
       highlightDays: '=?',
     },
     template: `<multiple-date-picker
-      highlight-days="highlightDays"
+      highlight-days="combineHD"
       ng-model="ngModel">
     </multiple-date-picker>`,
     link(scope, elem, attr) {
+      scope.phs = [];
+      var promise = AdminService.beeline({
+        method: 'GET',
+        url: `/publicHolidays`
+      })
+      .then((response) => {
+        var rs = response.data;
+        for (var index in rs) {
+          var ph = {date: rs[index].date, css: 'holiday', selectable: true, title: rs[index].summary};
+          scope.phs.push(ph);
+        }
+      });
+
+      scope.$watch('highlightDays',(hds)=>{
+        //deep copy of scope.phs into phs
+        var phs = JSON.parse(JSON.stringify(scope.phs));
+        for (var ph in phs){
+          for (var hd in hds){
+            if (moment(phs[ph].date).isSame(hds[hd].date,'day')){
+              _.assign(phs[ph], hds[hd]);
+              hds.splice(hd,1);
+              break;
+            }
+          }
+        }
+        scope.combineHD = _.concat(phs, hds);
+      },true);
       scope.$watch('ngModel', (newValue, oldValue) => {
         console.log(newValue);
-
 
         if (!newValue || newValue.length === 0) {
           if (scope.firstDate && scope.lastDate) {
