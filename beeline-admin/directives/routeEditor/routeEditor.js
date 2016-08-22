@@ -50,9 +50,9 @@ export default function (AdminService, RoutesService, $rootScope, commonModals) 
 
       scope.$watch('route', () => {
         scope.route && scope.route.id &&
-        RoutesService.getRoute(scope.route.id, {includeTrips: true})
+        RoutesService.getRoute(scope.route.id, {includeIndicative: true})
         .then((route) => {
-          scope.tripStops = route.trips && route.trips.length && _.maxBy(route.trips, 'date').tripStops
+          scope.tripStops = route.indicativeTrip && route.indicativeTrip.tripStops
           scope.disp.routeTags = scope.route.tags && scope.route.tags.map(t => ({name: t}));
           // quick hack to convert arrays to polyline string
           if (google.maps.geometry && scope.route.path instanceof Array) {

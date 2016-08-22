@@ -69,11 +69,11 @@
           </label>
 
           <label>
-            Trip capacity: <input type="number" class="form-control" ng-model="disp.trip.capacity" />
+            Trip capacity: <input type="number" class="form-control" min="0" ng-model="disp.trip.capacity" />
           </label>
 
           <label>
-            Trip price: <input type="number" class="form-control" step="0.01" ng-model="disp.trip.price" />
+            Trip price: <input type="number" class="form-control" min="0" step="0.01" ng-model="disp.trip.price" />
           </label>
 
           <label ng-if="adminService.session().role == 'superadmin'">
@@ -117,9 +117,7 @@
         <tbody>
           <tr ng-repeat="tripStop in disp.trip.tripStops">
             <td>
-              <uib-timepicker ng-model="tripStop.time"
-              show-spinners="false" show-meridian="false">
-              </uib-timepicker>
+              <input type="time" ng-model="tripStop.time" />
             </td>
             <td class="form-inline">
               <!-- <input type="text" ng-model="tripStop.stopId"> -->

@@ -114,7 +114,7 @@ export default function ($rootScope, $location, uiGmapGoogleMapApi, $q) {
             let lastOrigin = stopsLatLng[i]
             let lastDestination = stopsLatLng[i + 1]
 
-            renderer.directions_changed = () => {
+            renderer.addListener('directions_changed', () => {
               const directions = renderer.getDirections()
               console.log(directions)
               legs[i] = directions.routes[0].overview_path
@@ -133,7 +133,7 @@ export default function ($rootScope, $location, uiGmapGoogleMapApi, $q) {
                 let points = legs.reduce((all, leg) => all.concat(leg))
                 scope.newPath = google.maps.geometry.encoding.encodePath(points)
               }
-            }
+            })
 
             await updateDirections(renderer, lastOrigin, lastDestination)
 

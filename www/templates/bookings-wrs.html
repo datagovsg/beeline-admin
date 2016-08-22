@@ -6,7 +6,7 @@
         <div class="col-lg-4 pull-right">
           <div class="datepicker-wrap">
             <h4 class="text-center">Select the start date, and the end date:</h4>
-            <span-select highlight-days="disp.highlightDays" first-date="filter.startDate" last-date="filter.endDate">
+            <span-select highlight-days="disp.highlightDays" first-date="filter.startDate" last-date="filter.endDate" month-changed="monthChanged">
             </span-select>
           </div>
 
@@ -51,6 +51,10 @@
               <input type="checkbox" ng-model="" /> <a href="#" uib-tooltip="Void - Cancelled tickets due to void trips and tickets that are edited. When a ticket is edited, the old ticket is voided and a new ticket with the changes is created. Void trips are trips that are created wrongly."> Void </a>
             </label>
 
+            <label class="ticketCheckbox red-text">
+              <input type="checkbox" ng-model="filter.status.void" /> Void
+            </label>
+
             <label class="ticketCheckbox">
               <input type="checkbox" ng-model="filter.status.refunded" /> <a href="#" uib-tooltip="Refunded - Tickets that are refunded to the user."> Refunded</a>
             </label>
@@ -72,6 +76,9 @@
     <div class="row">
       <div class="col-lg-12">
         <uib-pagination boundary-links="true" ng-model="currentPage" total-items="pageCount * perPage" items-per-page="perPage"></uib-pagination>
+        <div class="red-text">
+          Showing {{disp.pagination.firstRow}} to {{disp.pagination.lastRow}}  of {{disp.pagination.totalRows}}
+        </div>
       </div>
     </div>
     <!-- <div>
@@ -131,7 +138,7 @@
                   <span ng-if="ticket.refundData.transfer.destination_payment">
                   <br/>{{ticket.refundData.transfer.destination_payment}}
                 </span>
-                <button class="btn btn-danger actions" ng-click="refund(ticket)" ng-disabled="ticket.status != 'valid'">
+                <button class="btn btn-danger actions" ng-click="refund(ticket)" ng-if="ticket.status == 'valid' && ticket.paymentResource">
                    <span class="glyphicon glyphicon-credit-card" aria-hidden="true"></span> Refund
                 </button>
                 </td>
