@@ -5,6 +5,8 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner) {
   $scope.routes = [];
 
   function refresh() {
+    if (!AdminService.getCompanyId()) return;
+    
     var options = {
       includeAvailability: true,
       includeTrips: true,
@@ -20,10 +22,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner) {
       ).getTime(),
     }
 
-    if (!AdminService.isSuperAdmin() || AdminService.getCompanyId()) {
-      options.transportCompanyId = AdminService.getCompanyId();
-      $scope.companyId = options.transportCompanyId;
-    }
+    $scope.companyId = options.transportCompanyId = AdminService.getCompanyId();
 
     // preprocess the routes to track all days...
     var numDays = (options.endDate - options.startDate)

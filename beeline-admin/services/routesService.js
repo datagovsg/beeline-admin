@@ -57,9 +57,6 @@ export default function (AdminService, DriverService, $q, LoadingSpinner) {
     }
     else {
       const _options = options || {}
-      if (AdminService.session() && AdminService.session().role == 'admin') {
-        _options.transportCompanyId = AdminService.session().transportCompanyId
-      }
       var query = makeRouteQuery(_options);
 
       var promise = AdminService.beeline({
