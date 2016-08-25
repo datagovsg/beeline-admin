@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import {timeSinceMidnight} from '../../shared/filters';
 
 export default function(RoutesService, TripsService, AdminService, DriverService,
   StopsPopup, LoadingSpinner, commonModals) {
@@ -75,7 +76,7 @@ export default function(RoutesService, TripsService, AdminService, DriverService
           }
 
           var stopsList = _.values(stopsSet);
-          stopsList = _.sortBy(stopsList, s => s.time)
+          stopsList = _.sortBy(stopsList, s => timeSinceMidnight(s.time))
           scope.disp.stopsList = stopsList;
 
         });
