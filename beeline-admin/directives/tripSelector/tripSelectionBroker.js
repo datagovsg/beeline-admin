@@ -85,7 +85,8 @@ export default function(AdminService, RoutesService, $rootScope, LoadingSpinner)
       });
 
       // Get stops
-      scope.$watch('selectedDates', (selectedDates) => {
+      function updateStops() {
+        var {selectedDates} = scope;
         if (!selectedDates || selectedDates.length === 0) {
           scope.selectedTrips = [];
           scope.info.tripStops = null;
@@ -129,7 +130,10 @@ export default function(AdminService, RoutesService, $rootScope, LoadingSpinner)
           scope.alightStop = tripStops.find(ts =>
             ts.stopId === scope.alightStopId)
         }
-      }, true);
+      }
+      // Both deep and shallow watch selected dates
+      scope.$watch('selectedDates', updateStops, true);
+      scope.$watch('selectedDates', updateStops, false);
 
       scope.$watchGroup(['boardStop', 'alightStop', 'selectedTrips'], () => {
         if (scope.boardStop) {
