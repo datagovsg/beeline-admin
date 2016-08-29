@@ -4,36 +4,124 @@
   </div>
   <div class="modal-body">
     <div class="row">
-      <div class="col-sm-12">
-        <trip-selector trip-id="tripId" trips="trips" board-stop-id="boardStopId" alight-stop-id="alightStopId" route-id="routeId" reason="reason">
-        </trip-selector>
+      <div class="col-lg-4">
+        <div class="date-picker">
+          <h4>Dates Available</h4>
+          <multiple-date-picker
+            days-allowed="disp.datepicker.daysAllowed"
+            highlight-days="disp.datepicker.highlightDays"
+            ng-model="data.selectedDates"
+            sunday-first-day="true">
+          </multiple-date-picker>
+        </div>
       </div>
+      <div class="col-lg-8 pull-right">
+        <h4> Select Route</h4>
+        <div class="trip-selector">
+          <!-- Brokers the linkage between routes and trips, routes and tripstops -->
+          <trip-selection-broker  purchase-order="purchaseOrder"
+                                  trips="disp.trips"
+                                  board-stops="disp.boardStops"
+                                  alight-stops="disp.alightStops"
+                                  datepicker-highlight-days="disp.datepicker.highlightDays"
+                                  datepicker-days-allowed="disp.datepicker.daysAllowed"
+                                  selected-dates="data.selectedDates"
+                                  selected-trips="disp.selectedTrips"
+                                  routes="disp.routes"
+                                  route-id="data.routeId"
+                                  board-stop-id="data.boardStopId"
+                                  alight-stop-id="data.alightStopId"
+                                  board-stop="data.boardStop"
+                                  alight-stop="data.alightStop">
+          </trip-selection-broker>
+
+          <!-- Route Selection -->
+                              <form class="form-horizontal">
+                                <div class="form-group">
+                                  <label ng-if="data.cancelledTicketIds" class="control-label col-sm-2">Tickets to edit</label>
+                                  <div class="col-sm-10">
+                                    <ul class="selected-dates">
+                                      <li ng-repeat="ticketId in data.cancelledTicketIds">
+                                        {{ticketId}}
+                                      </li>
+                                    </ul>
+                                  </div>
+                             </div>
+                                <div class="form-group">
+                                  <label class="control-label col-sm-2">Route</label>
+                                  <div class="col-sm-10">
+                                    <select ng-options="route.id as f.displayRoute(route) for route in disp.routes | orderBy:'label'"
+                                            ng-model="data.routeId"
+                                            class="form-control">
+                                    </select>
+                                  </div>
+                             </div>
+                             <div class="form-group">
+                                   <label class="control-label col-sm-2">Selected Date(s)</label>
+                                 <div class="col-sm-10">
+                                   <ul class="selected-dates">
+                                     <li ng-repeat="trip in disp.selectedTrips">
+                                       {{trip.date | date:'dd MMM yyyy'}}
+                                       <button ng-click="removeTrip(trip.date)"
+                                         class="btn btn-link"><span class="glyphicon glyphicon-remove text-danger" aria-hidden="true"></span>
+                                       </button>
+                                     </li>
+                                   </ul>
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                 <label class="control-label col-sm-2">Boarding Stop</label>
+                                  <div class="col-sm-10">
+                                    <select ng-options="tripStop as f.displayStop(tripStop) for tripStop in disp.boardStops"
+                                            ng-model="data.boardStop" class="form-control">
+                                    </select>
+                                 </div>
+                               </div>
+                           <div class="form-group">
+                               <label class="control-label col-sm-2">Alighting Stop</label>
+                              <div class="col-sm-10">
+                                <select ng-options="tripStop as f.displayStop(tripStop) for tripStop in disp.alightStops"
+                                        ng-model="data.alightStop" class="form-control">
+                                </select>
+                                </div>
+                             </div>
+                            <div class="form-group">
+                              <label class="control-label col-sm-2">Reason</label>
+                              <div class="col-sm-10">
+                                <textarea class="form-control" ng-model="data.reason">e.g. Bus did not turn up</textarea>
+                                </div>
+                             </div>
+                           </form>
+
+          <!-- User selection -->
+
+          <h4>Select User</h4>
+          <table class="table user-selectors">
+              <tr ng-repeat="user in data.users">
+                <td>{{$index+1}}</td>
+                <td>
+                    <user-selector ng-model="user.id" initial-user="user"></user-selector>
+                    <div class="conflicts" ng-if="conflictsByUid[user.id]">
+                      This user already has a trip on
+                      <span ng-repeat="conflict in conflictsByUid[user.id]">{{
+                        $index ? ',' : ''
+                      }} {{disp.tripsById[conflict.tripId].date | date:'dd MMM yy'}}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <button class="btn btn-default" ng-click="data.users.splice(users.indexOf(user), 1)"><span class=" glyphicon glyphicon-minus" aria-hidden="true"></span>Remove User</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="3">
+                    <button class="btn btn-default" ng-click="data.users.push({})"><span class=" glyphicon glyphicon-plus" aria-hidden="true"></span>Add user</button>
+                  </td>
+                </tr>
+           </table>
+        </div>
+      </div>
+
     </div>
-  <div class="row">
-    <div class="col-sm-12">
-      <h4>Select Users</h4>
-      <table class="table">
-        <tr ng-repeat="user in users">
-          <td>{{$index+1}}</td>
-          <td>
-            <user-selector ng-model="user.id" initial-user="user">
-            </user-selector>
-          </td>
-          <td>
-            <button class="btn btn-default" ng-click="users.splice(users.indexOf(user), 1)"><span class=" glyphicon glyphicon-minus" aria-hidden="true"></span>Remove User</button>
-          </td>
-          </li>
-        </tr>
-        <tr>
-          <td colspan="3">
-            <button class="btn btn-default" ng-click="users.push({})"><span class=" glyphicon glyphicon-plus" aria-hidden="true"></span>Add another user</button>
-          </td>
-        </tr>
-      </table>
-    </div>  
-  </div>
-
-
   </div>
   <div class="modal-footer">
     <div class="row">

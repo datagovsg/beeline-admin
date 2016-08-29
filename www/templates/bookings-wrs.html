@@ -59,11 +59,11 @@
               <input type="checkbox" ng-model="filter.status.failed" /> <a href="#" uib-tooltip="Failed - Tickets due to failed payments."> Failed</a>
             </label>
 
-            <br clear="both">
+            <br clear="both" />
             <button class="btn btn-primary bookingNav" ng-click="downloadCsv()">
-              <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Download CSV
+              <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
+              Download CSV
             </button>
-
           </div>
         </div>
       </nav>
@@ -77,15 +77,6 @@
         </div>
       </div>
     </div>
-    <!-- <div>
-    <span class="btn-group">
-      <button class="btn btn-default"
-        ng-click="showRefundModal()"
-      >
-        Refund...
-      </button>
-    </span>
-</div> -->
     <div class="row">
       <div class="col-lg-12">
         <div class="table-responsive">
@@ -112,31 +103,42 @@
 
             <tbody>
               <tr ng-repeat="ticket in tickets" ng-class="{
-            valid: ticket.status == 'valid',
-            refunded: ticket.status == 'refunded',
-            failed: ticket.status == 'failed',
+                valid: ticket.status == 'valid',
+                refunded: ticket.status == 'refunded' || ticket.status == 'void',
+                failed: ticket.status == 'failed',
+                selected: !!selectedTickets[ticket.id]
               }">
-              <td>
-              <!-- <input type="checkbox" ng-model="selectedTickets[ticket.id]" style="height: 100%;" /> -->
-              {{$index + 1}}
+                <td>
+                  {{ $index + 1 + (currentPage-1) * perPage }}
                 </td>
                 <td>
-                  <a ui-sref="transactions({id: ticket.ticketSale.transactionId})">
-                  {{ticket.ticketSale.transactionId}}
-                </a>
+                  <a ng-if="ticket.ticketSale"
+                      ui-sref="transactions({id: ticket.ticketSale.transactionId})">
+                    {{ticket.ticketSale.transactionId}}<br/>
+                  </a>
+                  <a ng-if="ticket.ticketExpense"
+                      ui-sref="transactions({id: ticket.ticketExpense.transactionId})">
+                    (Issue: {{ticket.ticketExpense.transactionId}})<br/>
+                  </a>
+                  <a ng-if="ticket.ticketRefund"
+                      ui-sref="transactions({id: ticket.ticketRefund.transactionId})">
+                    (Refund: {{ticket.ticketRefund.transactionId}})<br/>
+                  </a>
                 </td>
                 <td class="item-description">
-                  {{ticket.paymentResource}}
-                  <span ng-if="ticket.refundResource"><br/>{{ticket.refundResource}}</span>
+                  <span ng-if="ticket.paymentResource">{{ticket.paymentResource}}<br/></span>
+                  <span ng-if="ticket.ticketExpense">{{ticket.ticketExpense.transaction.description}}<br/></span>
+                  <span ng-if="ticket.refundResource">{{ticket.refundResource}}<br/></span>
                   <span ng-if="ticket.paymentData.transfer.destination_payment">
-                  <br/>{{ticket.paymentData.transfer.destination_payment}}
-                </span>
+                    {{ticket.paymentData.transfer.destination_payment}}<br/>
+                  </span>
                   <span ng-if="ticket.refundData.transfer.destination_payment">
-                  <br/>{{ticket.refundData.transfer.destination_payment}}
-                </span>
-                <button class="btn btn-danger actions" ng-click="refund(ticket)" ng-if="ticket.status == 'valid' && ticket.paymentResource">
+                    {{ticket.refundData.transfer.destination_payment}}<br/>
+                  </span>
+                  <button class="btn btn-danger actions" ng-click="refund(ticket)"
+                      ng-if="ticket.status == 'valid' && ticket.paymentResource">
                    <span class="glyphicon glyphicon-credit-card" aria-hidden="true"></span> Refund
-                </button>
+                 </button>
                 </td>
                 <td>
                   <strong>{{ticket.user.json.name ? (ticket.user.json.name + ' #' + ticket.user.json.index) : ticket.user.name}} </strong>
@@ -148,7 +150,6 @@
                   <a ui-sref="transactions({ticketId: ticket.id})">
                     {{ticket.id}}
                   </a>
-                  <br>
                   <button class="btn btn-default btn-icon" ng-click="sendWrsEmail(ticket.ticketSale.transactionId)">
                     <i class="glyphicon glyphicon-envelope"></i>
                   </button>
@@ -171,22 +172,22 @@
                 <td class="item-description">
                   <table class="borderless">
                     <tr>
-                      <td>
-                        {{ticket.boardStop.time | date:'HH:mm'}}
-                      </td>
-                      <td>
-                        {{ticket.boardStop.stop.description}}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        {{ticket.alightStop.time | date:'HH:mm'}}
-                      </td>
-                      <td>
-                        {{ticket.alightStop.stop.description}}
-                      </td>
-                    </tr>
-                  </table>
+                <td>
+                  {{ticket.boardStop.time | date:'HH:mm'}}
+                </td>
+                <td>
+                  {{ticket.boardStop.stop.description}}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  {{ticket.alightStop.time | date:'HH:mm'}}
+                </td>
+                <td>
+                  {{ticket.alightStop.stop.description}}
+                </td>
+              </tr>
+            </table>
                 </td>
                 <td>
                   &dollar;{{ticket.boardStop.trip.price}}
@@ -200,14 +201,14 @@
                 </td>
                 <td class="item-info text-center">
                   <div class="btn-group" role="group" aria-label="...">
-                      <button type="button" class="btn btn-default" ng-click="" ng-disabled="ticket.status != 'valid'">
-                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
-                        Add
-                      </button>
-                      <button type="button" class="btn btn-default" ng-click="replace(ticket)" ng-disabled="ticket.status != 'valid'">
-                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                        Edit
-                      </button>
+                    <button type="button" class="btn btn-default" ng-click="addTicket(ticket)" ng-disabled="ticket.status != 'valid'">
+                      <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                      Add
+                    </button>
+                    <button type="button" class="btn btn-default" ng-click="editTicket(ticket)" ng-disabled="ticket.status != 'valid'">
+                      <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                      Edit
+                    </button>
                   </div>
                 </td>
               </tr>

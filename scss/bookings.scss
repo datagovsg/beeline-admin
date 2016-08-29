@@ -22,6 +22,11 @@
     margin-top: $padding-large-vertical;
     margin-right: $padding-base-horizontal;
   }
+  tr.selected td {
+    background-color: #008;
+    color: #FFF;
+  }
+
   .borderless table {
     background-color: transparent !important;
   }
@@ -31,9 +36,7 @@
       padding: 0px 2px;
 
   }
-  .actions{
-    &.btn{
-      margin: $padding_small_vertical 0;
-    }
+  .actions.btn {
+    margin: $padding_small_vertical 0;
   }
 }

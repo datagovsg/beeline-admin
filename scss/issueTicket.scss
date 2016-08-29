@@ -1,12 +1,9 @@
 .issue-ticket-popup {
+  ul.selected-dates {
+    padding: 0;
+    margin: 0;
+  }
   .user-selectors {
-    li {
-      display: flex;
-      flex-direction: row;
-
-      user-selector {
-        flex: 1 1 auto;
-      }
-    }
+    min-width: 400px;
   }
 }

@@ -1,4 +1,5 @@
 import querystring from 'querystring'
+import assert from 'assert';
 
 export default function($scope, AdminService, RoutesService, LoadingSpinner,
   $state, $stateParams, issueTicketModal, commonModals) {
@@ -78,17 +79,20 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
     })
   }
 
-  $scope.sendWrsEmail = function (ticketId) {
-    AdminService.beeline({
+  $scope.sendWrsEmail = function (ticket) {
+    var transactionId = _.get(ticket, 'ticketSale.transactionId') ||
+      _.get(ticket, 'ticketExpense.transactionId')
+
+    LoadingSpinner.watchPromise(AdminService.beeline({
       method: 'POST',
-      url: `/custom/wrs/email/${ticketId}`
-    })
+      url: `/custom/wrs/email/${transactionId}`
+    }))
     .then(() => {
       return commonModals.alert("Email sent to your Beeline Admin Login Email ID. Please check your inbox");
     })
     .then(null, () => {
       return commonModals.alert("Email sending failed");
-    })
+    });
   }
 
   $scope.refund = async function (ticket) {
@@ -114,14 +118,62 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
       })
     }
   }
-  $scope.replace = function (ticket) {
-    issueTicketModal.open({
-      user: ticket.user,
-      userId: ticket.userId,
+
+  // Unused
+  $scope.issueTickets = function () {
+    var selectedTicketIds = _($scope.selectedTickets)
+      .keys()
+      .filter(key => $scope.selectedTickets[key])
+      .value();
+    var selectedTickets = selectedTicketIds.map(tid =>
+      $scope.tickets.find(t => t.id.toString() === tid))
+    var firstTicket = selectedTickets.length > 0 ? selectedTickets[0] : null;
+    var issueTicketModalOptions = {};
+
+    assert(selectedTickets.length === 0 || firstTicket);
+
+    issueTicketModalOptions.users = _(selectedTickets)
+      .filter()
+      .map(t => t.user)
+      .uniqBy('id')
+      .value()
+
+    if (firstTicket) {
+      Object.assign(issueTicketModalOptions, {
+        routeId: firstTicket.boardStop.trip.routeId,
+        boardStopStopId: firstTicket.boardStop.stopId,
+        alightStopStopId: firstTicket.alightStop.stopId,
+        cancelledTicketIds: selectedTicketIds
+      })
+    }
+
+    issueTicketModal.open(issueTicketModalOptions);
+  }
+
+  // Edit ticket button
+  $scope.editTicket = function (ticket) {
+    var selectedTicketIds = [ticket.id];
+    var selectedTickets = [ticket];
+    var issueTicketModalOptions = {
+      users: [ticket.user],
       routeId: ticket.boardStop.trip.routeId,
-      boardStopId: ticket.boardStop.stopId,
-      alightStopId: ticket.alightStop.stopId,
-    }).then(query)
+      boardStopStopId: ticket.boardStop.stopId,
+      alightStopStopId: ticket.alightStop.stopId,
+      cancelledTicketIds: selectedTicketIds
+    };
+    issueTicketModal.open(issueTicketModalOptions).then(query);
+  }
+  // Add ticket button -- don't cancel earlier ticket
+  $scope.addTicket = function (ticket) {
+    var selectedTicketIds = [ticket.id];
+    var selectedTickets = [ticket];
+    var issueTicketModalOptions = {
+      users: [ticket.user],
+      routeId: ticket.boardStop.trip.routeId,
+      boardStopStopId: ticket.boardStop.stopId,
+      alightStopStopId: ticket.alightStop.stopId,
+    };
+    issueTicketModal.open(issueTicketModalOptions).then(query);
   }
 
   function buildQuery(override) {
@@ -263,6 +315,10 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
       }
     })
   })
+
+  $scope.$watchCollection('selectedTickets', (tickets) => {
+    $scope.disp.selectedTicketsCount = _.filter(tickets).length
+  }, true);
 
   $scope.$watch(() => [
       $scope.filter.startDate.getTime(),
