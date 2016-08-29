@@ -2,4 +2,12 @@
   .addAdmin{
     margin: $padding-large-vertical*2 0;
   }
+
+  table thead th {
+    vertical-align: top;
+
+    .permission-details {
+      font-weight: normal;
+    }
+  }
 }

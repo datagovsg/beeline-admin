@@ -27,7 +27,6 @@ export default function ($rootScope, $uibModal) {
     }, () => {
       modalScope.$destroy();
     })
-
     return modal.result;
   }
 }

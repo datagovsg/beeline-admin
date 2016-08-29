@@ -6,7 +6,7 @@
         <div class="col-lg-4 pull-right">
           <div class="datepicker-wrap">
             <h4 class="text-center">Select the start date, and the end date:</h4>
-            <span-select highlight-days="disp.highlightDays" first-date="filter.startDate" last-date="filter.endDate">
+            <span-select highlight-days="disp.highlightDays" first-date="filter.startDate" last-date="filter.endDate" month-changed="monthChanged">
             </span-select>
           </div>
 
@@ -44,19 +44,19 @@
           <div class="pull-left">
             <span class="ticketCheckbox">Ticket Status:</span>
             <label class="ticketCheckbox">
-              <input type="checkbox" ng-model="filter.status.valid" /> Valid
+              <input type="checkbox" ng-model="filter.status.valid" /> <a href="#" uib-tooltip="Valid - Paid and Free Tickets">Valid</a>
             </label>
 
             <label class="ticketCheckbox">
-              <input type="checkbox" ng-model="filter.status.refunded" /> Refunded
+              <input type="checkbox" ng-model="filter.status.void" /> Void
             </label>
 
             <label class="ticketCheckbox">
-              <input type="checkbox" ng-model="filter.status.cancelled" /> Cancelled
+              <input type="checkbox" ng-model="filter.status.refunded" /> <a href="#" uib-tooltip="Refunded - Tickets that are refunded to the user."> Refunded</a>
             </label>
 
             <label class="ticketCheckbox">
-              <input type="checkbox" ng-model="filter.status.failed" /> Failed
+              <input type="checkbox" ng-model="filter.status.failed" /> <a href="#" uib-tooltip="Failed - Tickets due to failed payments."> Failed</a>
             </label>
 
             <br clear="both" />
@@ -72,6 +72,9 @@
     <div class="row">
       <div class="col-lg-12">
         <uib-pagination boundary-links="true" ng-model="currentPage" total-items="pageCount * perPage" items-per-page="perPage"></uib-pagination>
+        <div>
+          Showing {{disp.pagination.firstRow}} to {{disp.pagination.lastRow}}  of {{disp.pagination.totalRows}}
+        </div>
       </div>
     </div>
     <div class="row">
@@ -133,8 +136,7 @@
                     {{ticket.refundData.transfer.destination_payment}}<br/>
                   </span>
                   <button class="btn btn-danger actions" ng-click="refund(ticket)"
-                          ng-if="ticket.paymentResource"
-                          ng-disabled="ticket.status != 'valid'">
+                      ng-if="ticket.status == 'valid' && ticket.paymentResource">
                    <span class="glyphicon glyphicon-credit-card" aria-hidden="true"></span> Refund
                  </button>
                 </td>

@@ -14,12 +14,12 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
     now.getFullYear(),
     now.getMonth(),
     1
-  )
+  );
   var endOfMonth = new Date(
     now.getFullYear(),
     now.getMonth() + 1,
     0
-  )
+  );
 
   $scope.filter = {
     showPartial: false,
@@ -29,6 +29,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
     status: {
       valid: true,
       refunded: true,
+      void: true,
       failed: false,
     },
     startDate: startOfMonth,
@@ -42,6 +43,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
     datesBetween: [],
     counts: {},
     dates: [],
+    pagination: {firstRow: 1, lastRow: 1, totalRows: 1}
   }
 
   $scope.selectedTickets = {};
@@ -76,17 +78,6 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
       window.location.href = AdminService.serverUrl() + '/downloadLink?token=' + result.data.token;
     })
   }
-  //
-  // $scope.showRefundModal = function() {
-  //   var ticketsById = _.keyBy($scope.tickets, t => t.id)
-  //   var ticketsToCancel = Object.keys($scope.selectedTickets)
-  //     .filter(ticketId => $scope.selectedTickets[ticketId])
-  //     .map(ticketId => ticketsById[ticketId])
-  //
-  //   BookingRefund.open({
-  //     cancelledTickets: ticketsToCancel,
-  //   })
-  // }
 
   $scope.sendWrsEmail = function (ticket) {
     var transactionId = _.get(ticket, 'ticketSale.transactionId') ||
@@ -118,10 +109,11 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
         var txn = response.data;
         var payment = txn.transactionItems.find(ts => ts.itemType == 'refundPayment' && ts.refundPayment)
 
+        query()
         return commonModals.alert( parseFloat(payment.credit).toFixed(2) + " refunded.")
       })
-      .then(null, (response) => {
-        console.log(response);
+      .catch(err => {
+        console.log(err);
         return commonModals.alert("Failed...")
       })
     }
@@ -169,7 +161,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
       alightStopStopId: ticket.alightStop.stopId,
       cancelledTicketIds: selectedTicketIds
     };
-    issueTicketModal.open(issueTicketModalOptions);
+    issueTicketModal.open(issueTicketModalOptions).then(query);
   }
   // Add ticket button -- don't cancel earlier ticket
   $scope.addTicket = function (ticket) {
@@ -181,11 +173,13 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
       boardStopStopId: ticket.boardStop.stopId,
       alightStopStopId: ticket.alightStop.stopId,
     };
-    issueTicketModal.open(issueTicketModalOptions);
+    issueTicketModal.open(issueTicketModalOptions).then(query);
   }
 
   function buildQuery(override) {
     // update the request and CSV url
+    // tripStartDate & tripEndDate should be converted to
+    // UTC midnight of the intended dates
     var queryOptions = {
       page: $scope.currentPage || 1,
       perPage: $scope.perPage,
@@ -200,11 +194,12 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
       tripEndDate: Date.UTC(
         $scope.filter.endDate.getFullYear(),
         $scope.filter.endDate.getMonth(),
-        $scope.filter.endDate.getDate()
-      ) + 24*60*60*1000,
+        $scope.filter.endDate.getDate() + 1
+      ),
       statuses: JSON.stringify(Object.keys($scope.filter.status)
         .filter(key => $scope.filter.status[key]))
     }
+
     if ($scope.filter.routeId) {
       queryOptions.routeId = $scope.filter.routeId
     }
@@ -220,11 +215,22 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
       queryOptions.stopQuery = $scope.filter.stopQuery
     }
 
+    if (AdminService.getCompanyId()) {
+      queryOptions.transportCompanyId = AdminService.getCompanyId();
+    }
+
     _.assign(queryOptions, override);
 
     var requestUrl = `/custom/wrs/report?` + querystring.stringify(queryOptions)
 
     return requestUrl;
+  }
+
+  $scope.monthChanged = function (newMonth) {
+    startOfMonth = newMonth.clone().startOf('month').toDate()
+    endOfMonth = newMonth.clone().endOf('month').startOf('day').toDate()
+    $scope.filter.startDate = startOfMonth;
+    $scope.filter.endDate = endOfMonth;
   }
 
   function query(newV, oldV) {
@@ -241,9 +247,11 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
     })
     .then((result) => {
       $scope.tickets = result.data.rows;
+      $scope.disp.pagination.firstRow = ($scope.currentPage - 1) * result.data.perPage + 1;
+      $scope.disp.pagination.lastRow = Math.min($scope.currentPage * result.data.perPage, result.data.count)
+      $scope.disp.pagination.totalRows = result.data.count
       $scope.pageCount = Math.ceil(result.data.count / result.data.perPage);
 
-      $scope.disp.counts = result.data.countByDate;
       for (let ticket of $scope.tickets) {
         try {
           ticket.user.json = JSON.parse(ticket.user.name)
@@ -259,6 +267,30 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
       console.log(err)
     });
 
+    var requestUrlOR = buildQuery({
+      tripStartDate: Date.UTC(
+        startOfMonth.getFullYear(),
+        startOfMonth.getMonth(),
+        startOfMonth.getDate()
+      ),
+      tripEndDate: Date.UTC(
+        endOfMonth.getFullYear(),
+        endOfMonth.getMonth(),
+        endOfMonth.getDate()
+      )
+    });
+
+    AdminService.beeline({
+      method: 'GET',
+      url: requestUrlOR,
+    })
+    .then((result) => {
+      $scope.disp.counts = result.data.countByDate;
+    })
+    .catch((err) => {
+      console.error(err.stack);
+      console.log(err)
+    });
 
     LoadingSpinner.watchPromise(queryPromise)
   }
@@ -293,10 +325,11 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
       $scope.filter.endDate.getTime()],
     queryRoutes, true)
   $scope.$watch(() =>
-    [_.assign({}, $scope.filter, {
+    [_.defaults({
         startDate: $scope.filter.startDate.getTime(),
         endDate: $scope.filter.endDate.getTime(),
-      }),
+        companyId: AdminService.getCompanyId()
+      }, $scope.filter),
       $scope.currentPage,
       $scope.perPage],
     query, true)

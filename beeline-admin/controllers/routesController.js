@@ -15,6 +15,8 @@ export default function($scope, $state, $urlRouter, AdminService, LoadingSpinner
   };
 
   function refreshRoutes() {
+    if (!$scope.filter.transportCompanyId) return;
+    
     var promise = AdminService.beeline({
       method: 'GET',
       url: '/routes/report?' + querystring.stringify($scope.filter)
@@ -34,4 +36,8 @@ export default function($scope, $state, $urlRouter, AdminService, LoadingSpinner
   }
 
   $scope.$watch('filter', refreshRoutes, true)
+  $scope.$watch(() => AdminService.getCompanyId(), (companyId) => {
+    if (companyId)
+      $scope.filter.transportCompanyId = companyId
+  });
 }

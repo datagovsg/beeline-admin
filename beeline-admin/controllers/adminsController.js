@@ -2,24 +2,65 @@ import querystring from 'querystring';
 import _ from 'lodash';
 
 export default function ($scope, AdminService, LoadingSpinner, commonModals) {
+  const PermissionsMap = {
+    basic: ['view-drivers', 'view-admins', 'view-transactions'],
+    refund: ['refund'],
+    operations: ['manage-routes', 'manage-drivers', 'drive', 'update-trip-status', 'message-passengers'],
+    manageCompany: ['manage-company'],
+    manageAdmins: ['manage-admins'],
+  }
   $scope.admins = [];
 
+  $scope.$watch(() => AdminService.getCompanyId(), query);
+
+  function mapPermissions(permissions) {
+    return _(permissions)
+      .keys()
+      .filter(key => permissions[key])
+      .map(value => PermissionsMap[value])
+      .flatten()
+      .value()
+  }
+  function reverseMapPermissions(permissionList) {
+    var permissions = {};
+    
+    if (!permissionList)  return permissions;
+
+    _.each(PermissionsMap, (permissionGroup, groupName) => {
+      if (_.every(permissionGroup, p => permissionList.indexOf(p) !== -1)) {
+        permissions[groupName] = true;
+      }
+      else {
+        permissions[groupName] = false;
+      }
+    });
+    return permissions;
+  }
+
   function query() {
+    if (!AdminService.getCompanyId()) return;
+
     LoadingSpinner.watchPromise(AdminService.beeline({
       method: 'GET',
-      url: '/admins',
+      url: `/companies/${AdminService.getCompanyId()}/admins`,
     })
     .then((response) => {
       $scope.admins = response.data;
+      console.log($scope.admins)
+      for (let admin of $scope.admins) {
+        admin.permissions = reverseMapPermissions(admin.transportCompanies[0].adminCompany.permissions)
+      }
     }))
   }
 
   $scope.deleteAdmin = async (admin) => {
+    if (!AdminService.getCompanyId()) return;
+
     if (!await commonModals.confirm(`Are you sure you want to delete ${admin.email}?`))
       return;
     AdminService.beeline({
       method: 'DELETE',
-      url: `/admins/${admin.id}`,
+      url: `/companies/${AdminService.getCompanyId()}/admins/${admin.id}`,
     })
     .then(query)
     .then(null, err => {
@@ -28,16 +69,14 @@ export default function ($scope, AdminService, LoadingSpinner, commonModals) {
   };
 
   $scope.updateAdmin = (admin, form) => {
+    if (!AdminService.getCompanyId()) return;
+
     if (admin.id) {
       AdminService.beeline({
         method: 'PUT',
-        url: `/admins/${admin.id}`,
+        url: `/companies/${AdminService.getCompanyId()}/admins/${admin.id}`,
         data: {
-          name: admin.name,
-          telephone: admin.telephone || null,
-          receiveAlerts: admin.receiveAlerts ? 'true' : 'false',
-          isCompanyAdmin: admin.isCompanyAdmin ? 'true' : 'false',
-          transportCompanyId: admin.transportCompanyId
+          permissions: mapPermissions(admin.permissions)
         }
       })
       .then(query)
@@ -51,14 +90,11 @@ export default function ($scope, AdminService, LoadingSpinner, commonModals) {
     else {
       AdminService.beeline({
         method: 'POST',
-        url: `/admins`,
+        url: `/companies/${AdminService.getCompanyId()}/admins`,
         data: {
           name: admin.name,
           email: admin.email,
-          telephone: admin.telephone || null,
-          receiveAlerts: admin.receiveAlerts ? 'true' : 'false',
-          isCompanyAdmin: admin.isCompanyAdmin ? 'true' : 'false',
-          transportCompanyId: admin.transportCompanyId,
+          permissions: mapPermissions(admin.permissions)
         }
       })
       .then(query)
@@ -73,7 +109,9 @@ export default function ($scope, AdminService, LoadingSpinner, commonModals) {
   }
 
   $scope.addAdmin = () => {
-    $scope.admins.push({})
+    $scope.admins.push({
+      permissions: {}
+    })
   };
 
   query();

@@ -16,6 +16,8 @@ export default function (AdminService, DriverService, $q, LoadingSpinner) {
         query.start_date = options.startDate;
       if (options.endDate)
         query.end_date = options.endDate;
+      if (options.includeIndicative)
+          query.include_indicative = options.includeIndicative;
       if (options.includeTrips)
         query.include_trips = options.includeTrips;
       if (options.includeAvailability)
@@ -54,11 +56,8 @@ export default function (AdminService, DriverService, $q, LoadingSpinner) {
       return routesPromise;
     }
     else {
-      options = options || {}
-      if (AdminService.session() && AdminService.session().role == 'admin') {
-        options.transportCompanyId = AdminService.session().transportCompanyId
-      }
-      var query = makeRouteQuery(options);
+      const _options = options || {}
+      var query = makeRouteQuery(_options);
 
       var promise = AdminService.beeline({
         method: 'GET',
