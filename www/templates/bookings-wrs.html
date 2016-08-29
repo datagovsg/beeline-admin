@@ -104,7 +104,7 @@
             <tbody>
               <tr ng-repeat="ticket in tickets" ng-class="{
                 valid: ticket.status == 'valid',
-                refunded: ticket.status == 'refunded' || ticket.status == 'cancelled',
+                refunded: ticket.status == 'refunded' || ticket.status == 'void',
                 failed: ticket.status == 'failed',
                 selected: !!selectedTickets[ticket.id]
               }">
