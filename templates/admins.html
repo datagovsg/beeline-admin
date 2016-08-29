@@ -1,72 +1,70 @@
+<div class="container withnav admin">
+  <div class="row">
+    <div class="col-lg-12">
+        <h1>Admins</h1>
+      <button ng-click="addAdmin()" class="btn btn-primary btn-lg addAdmin">
+        Add a new Admin
+      </button>
+      <table class="table table-condensed table-striped table-bordered">
+        <thead>
+          <tr>
+            <th></th>
+            <th colspan="5">Permissions</th>
+            <th></th>
+          </tr>
+          <tr>
+            <th>Email</th>
+            <th>
+              Basic permissions
+              <div class="permission-details">
+                View drivers, transactions
+              </div>
+            </th>
+            <th>Execute refunds</th>
+            <th>
+              Manage operations
+              <div class="permission-details">
+                Edit routes, manage drivers, update trip status, SMS passengers
+              </div>
+            </th>
+            <th>Change company information</th>
+            <th>Manage administrators</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="admin in admins | orderBy:'id' track by admin.id" ng-form name="adminForm">
+            <td ng-if="admin.id">
+              {{admin.email}}
+              <br/>
+              {{admin.name}}
+            </td>
+            <td ng-if="!admin.id" class="form-inline">
+              <input type="email" ng-model="admin.email" class="form-control" ng-required="true"
+                placeholder="Email address">
+              <br/>
+              <input type="text" ng-model="admin.name" class="form-control"
+                placeholder="Name">
+            </td>
 
-<div class="container-fluid withnav">
-  <div class="col-lg-12">
+            <td><input type="checkbox" ng-model="admin.permissions.basic"></td>
+            <td><input type="checkbox" ng-model="admin.permissions.refund"></td>
+            <td><input type="checkbox" ng-model="admin.permissions.operations"></td>
+            <td><input type="checkbox" ng-model="admin.permissions.manageCompany"></td>
+            <td><input type="checkbox" ng-model="admin.permissions.manageAdmins"></td>
 
-    <table class="table table-condensed table-striped table-bordered">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Telephone</th>
-          <th>Receive alerts</th>
-          <th>Company Admin</th>
-          <th>Company</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-repeat="admin in admins | orderBy:'id' track by admin.id" ng-form name="adminForm">
-          <td>
-            <input type="name" ng-model="admin.name" class="form-control"
-              ng-required="true">
-          </td>
-          <td ng-if="admin.id">
-            {{admin.email}}
-          </td>
-          <td ng-if="!admin.id">
-            <input type="email" ng-model="admin.email" class="form-control"
-              ng-required="true">
-          </td>
-          <td>
-            <input type="tel" ng-model="admin.telephone" class="form-control">
-          </td>
-          <td>
-            <label>
-              <input type="checkbox" ng-model="admin.receiveAlerts">
-              Alerts
-            </label>
-          </td>
-          <td>
-            <label>
-              <input type="checkbox" ng-model="admin.isCompanyAdmin">
-              Admin
-            </label>
-          </td>
-          <td>
-            <label>
-              <company-selector ng-model="admin.transportCompanyId">
-              </company-selector>
-            </label>
-          </td>
-          <td>
-            <button class="btn btn-success" ng-click="updateAdmin(admin, adminForm)"
-              ng-if="adminForm.$dirty"
-              ng-disabled="adminForm.$invalid">
-              Update
-            </button>
-            <button class="btn btn-danger" ng-click="deleteAdmin(admin)"
-              ng-show="adminForm.$pristine && admin.id">
-              Delete
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <button ng-click="addAdmin()" class="btn btn-primary">
-    Add
-    </button>
-
-
+            <td>
+              <button class="btn btn-success" ng-click="updateAdmin(admin, adminForm)" ng-if="adminForm.$dirty" ng-disabled="adminForm.$invalid">
+                Update
+              </button>
+              <button class="btn btn-danger" ng-click="deleteAdmin(admin)" ng-show="adminForm.$pristine && admin.id">
+                Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
+
 </div>
