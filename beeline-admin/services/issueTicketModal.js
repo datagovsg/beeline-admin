@@ -32,7 +32,7 @@ export default function ($rootScope, $uibModal) {
   }
 }
 
-function IssueTicketController($scope, AdminService, LoadingSpinner) {
+function IssueTicketController($scope, AdminService, LoadingSpinner, commonModals) {
   // Display functions
   // Get routes
   function formatTime(tm) {
