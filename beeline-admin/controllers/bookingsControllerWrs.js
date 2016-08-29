@@ -163,6 +163,10 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
       queryOptions.stopQuery = $scope.filter.stopQuery
     }
 
+    if (AdminService.getCompanyId()) {
+      queryOptions.transportCompanyId = AdminService.getCompanyId();
+    }
+
     _.assign(queryOptions, override);
 
     var requestUrl = `/custom/wrs/report?` + querystring.stringify(queryOptions)
@@ -265,10 +269,11 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
       $scope.filter.endDate.getTime()],
     queryRoutes, true)
   $scope.$watch(() =>
-    [_.assign({}, $scope.filter, {
+    [_.defaults({
         startDate: $scope.filter.startDate.getTime(),
         endDate: $scope.filter.endDate.getTime(),
-      }),
+        companyId: AdminService.getCompanyId()
+      }, $scope.filter),
       $scope.currentPage,
       $scope.perPage],
     query, true)

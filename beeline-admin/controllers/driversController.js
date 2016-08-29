@@ -1,18 +1,17 @@
 import querystring from 'querystring'
 
-export default function ($scope, AdminService) {
+export default function ($scope, AdminService, LoadingSpinner) {
   $scope.drivers = [];
 
   function query() {
     if (!AdminService.getCompanyId()) {
       return;
     }
-    AdminService.beeline({
+
+    LoadingSpinner.watchPromise(AdminService.beeline({
       method: 'GET',
-      url: '/drivers?' + querystring.stringify({
-        transportCompanyId: AdminService.getCompanyId(),
-      }),
-    })
+      url: `/companies/${AdminService.getCompanyId()}/drivers`,
+    }))
     .then((response) => {
       $scope.drivers = response.data;
     })
@@ -20,12 +19,10 @@ export default function ($scope, AdminService) {
 
   $scope.deleteDriver = (did) => {
     console.log(did);
-    AdminService.beeline({
+    LoadingSpinner.watchPromise(AdminService.beeline({
       method: 'DELETE',
-      url: `/drivers/${did}?` + querystring.stringify({
-        transportCompanyId: AdminService.getCompanyId(),
-      })
-    })
+      url: `/companies/${AdminService.getCompanyId()}/drivers/${did}?`
+    }))
     .then(query)
     .then(null, err => {
       console.log(err);
@@ -37,14 +34,13 @@ export default function ($scope, AdminService) {
 
     if (!newName) return;
 
-    AdminService.beeline({
+    LoadingSpinner.watchPromise(AdminService.beeline({
       method: 'PUT',
-      url: `/drivers/${did}`,
+      url: `/companies/${AdminService.getCompanyId()}/drivers/${did}`,
       data: {
-        name: newName,
-        transportCompanyId: AdminService.getCompanyId(),
+        name: newName
       }
-    })
+    }))
     .then(query)
     .then(null, err => {
       console.log(err);
@@ -60,20 +56,19 @@ export default function ($scope, AdminService) {
 
     if (!name) return;
 
-    AdminService.beeline({
+    LoadingSpinner.watchPromise(AdminService.beeline({
       method: 'POST',
-      url: `/drivers`,
+      url: `/companies/${AdminService.getCompanyId()}/drivers`,
       data: {
         telephone: phoneNumber,
         name: name,
-        transportCompanyId: AdminService.getCompanyId()
       }
-    })
+    }))
     .then(query)
     .then(null, err => {
       console.log(err);
     });
   };
 
-  $scope.$watch(() => AdminService.actingCompany, query)
+  $scope.$watch(() => AdminService.getCompanyId(), query)
 }

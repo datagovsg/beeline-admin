@@ -80,17 +80,6 @@ export default function ($http, $location, store, jwtHelper, auth, commonModals)
   }
 
   this.getCompanyId = function() {
-    var profile = store.get('profile')
-
-    if (profile.app_metadata.roles.indexOf('superadmin') != -1) {
-      if (!this.actingCompany) console.log("You need to choose the company you're acting on behalf of")
-      return this.actingCompany;
-    }
-    else if (profile.app_metadata.roles.indexOf('admin') != -1) {
-      return profile.app_metadata.transportCompanyId;
-    }
-    else {
-      assert(false);
-    }
+    return this.actingCompany || null;
   }
 }
