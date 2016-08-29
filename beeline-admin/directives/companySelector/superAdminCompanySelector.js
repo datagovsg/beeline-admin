@@ -6,7 +6,9 @@ export default function($http, AdminService, store, jwtHelper) {
 <select
   ng-options="company.id as company.name for company in (companies | orderBy:'name')"
   ng-model="adminService.actingCompany"
-  class="form-control-condensed"></select>
+  class="form-control-condensed">
+  <option value="">(All)</option>
+</select>
     `,
     link(scope, elem, attr) {
       // Get a list of companies you work for
