@@ -5,7 +5,7 @@ export default function ($scope, AdminService, LoadingSpinner, commonModals) {
   const PermissionsMap = {
     basic: ['view-drivers', 'view-admins', 'view-transactions'],
     refund: ['refund'],
-    operations: ['manage-routes', 'manage-drivers', 'drive', 'update-trip-status', 'message-passengers'],
+    operations: ['manage-routes', 'manage-drivers', 'drive', 'update-trip-status', 'message-passengers', 'view-passengers'],
     manageCompany: ['manage-company'],
     manageAdmins: ['manage-admins'],
   }
@@ -23,7 +23,7 @@ export default function ($scope, AdminService, LoadingSpinner, commonModals) {
   }
   function reverseMapPermissions(permissionList) {
     var permissions = {};
-    
+
     if (!permissionList)  return permissions;
 
     _.each(PermissionsMap, (permissionGroup, groupName) => {
