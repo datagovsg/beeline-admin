@@ -84,16 +84,16 @@
         </div>
         <div class="flex-grow">
           <label>
-            Booking Window Type:
-            <select class="form-control" ng-model="disp.trip.bookingInfo.windowType">
-              <option value="stop">Stop</option>
-              <option value="firstStop">First stop</option>
+            Close booking
+            <select class="form-control" ng-model="disp.trip.bookingInfo.windowSize"
+              ng-options="opt.size as opt.label for opt in disp.windowSizeOptions">
             </select>
           </label>
           <label>
-            Close booking:
-            <select class="form-control" ng-model="disp.trip.bookingInfo.windowSize"
-              ng-options="opt.size as opt.label for opt in disp.windowSizeOptions">
+            ... before
+            <select class="form-control" ng-model="disp.trip.bookingInfo.windowType">
+              <option value="stop">passenger's pick-up stop</option>
+              <option value="firstStop">first stop of trip</option>
             </select>
           </label>
           <label>

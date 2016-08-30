@@ -22,16 +22,16 @@ export default function(RoutesService, TripsService, AdminService, DriverService
         newDates: [],
         existingDates: [],
         validDates: [],
-        trip: {
-          routeId: scope.routeId,
-          tripStops: [],
-        },
         windowSizeOptions: [
-          {size: 0, label: '0 mins before'},
-          {size: -300000, label: '5 mins before'},
-          {size: -600000, label: '10 mins before'},
-          {size: -12 * 60 * 60 * 1000, label: '12 hrs before'},
+          {size: 0, label: '0 mins'},
+          {size: -300000, label: '5 mins'},
+          {size: -15 * 60 * 1000, label: '15 mins'},
+          {size: -30 * 60 * 1000, label: '30 mins'},
+          {size: -1 * 60 * 60 * 1000, label: '1 hr'},
+          {size: -3 * 60 * 60 * 1000, label: '3 hrs'},
+          {size: -6 * 60 * 60 * 1000, label: '6 hrs'},
         ],
+        trip: defaultTrip(),
 
         addTripStop() {
           this.trip.tripStops = this.trip.tripStops || [];
@@ -44,7 +44,7 @@ export default function(RoutesService, TripsService, AdminService, DriverService
         deleteTripStop(index) {
           this.trip.tripStops.splice(index, 1)
         }
-      }
+      }; /* scope.disp */
       scope.refreshTrips = function() {
         var promise = TripsService.getTrips({
           routeId: scope.routeId,
@@ -84,7 +84,7 @@ export default function(RoutesService, TripsService, AdminService, DriverService
       }
       scope.resetTrips = function() {
         scope.disp.newDates = [];
-        scope.disp.trip.tripStops = [];
+        scope.disp.trip = defaultTrip();
       }
       scope.findStop = function(trip, stopId) {
         return trip.tripStops.find(ts => ts.stop.id == stopId)
@@ -108,9 +108,7 @@ export default function(RoutesService, TripsService, AdminService, DriverService
         scope.disp.trip.tripStops = _.cloneDeep(trip.tripStops);
       }
       scope.clearEdit = function() {
-        scope.disp.trip = {};
-        scope.disp.trip.routeId = scope.routeId;
-        scope.disp.trip.tripStops = [];
+        scope.disp.trip = defaultTrip();
       }
       scope.saveTrips = function() {
         return LoadingSpinner.watchPromise((async function() {
@@ -232,8 +230,7 @@ export default function(RoutesService, TripsService, AdminService, DriverService
         if (!_.every(_.values(scope.selection.selected))
           || _.keys(scope.selection.selected).length == 0
         ) {
-          scope.disp.trip = {};
-          scope.disp.trip.tripStops = [];
+          scope.disp.trip = defaultTrip();
         }
       }; /* selectTrips() */
 
@@ -243,6 +240,17 @@ export default function(RoutesService, TripsService, AdminService, DriverService
         scope.disp.validDates = _.range(0, 365)
           .map(i => new Date(now.getTime() + i * 24 * 3600 * 1000));
       })
+
+      function defaultTrip() {
+        return {
+          routeId: scope.routeId,
+          tripStops: [],
+          bookingInfo: {
+            windowSize: -6 * 3600 * 1000,
+            windowType: 'firstStop'
+          }
+        };
+      }
     }
   }
 }
