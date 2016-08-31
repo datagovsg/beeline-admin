@@ -46,6 +46,8 @@ angular.module('beeline-admin', [
 .directive('userSelector', require('./directives/selectors/user').default)
 .directive('superAdminCompanySelector', require('./directives/selectors/superAdminCompany').default)
 .directive('companySelector', require('./directives/selectors/company').default)
+.directive('multipleCompanySelector', require('./directives/selectors/companyMultiple').default)
+.directive('eventSubscriptionEditor', require('./directives/eventSubscriptionEditor/eventSubscriptionEditor').default)
 .service('AdminService', require('./services/adminService').default)
 .service('TripsService', require('./services/tripsService').default)
 .service('RoutesService', require('./services/routesService').default)
@@ -68,6 +70,7 @@ angular.module('beeline-admin', [
 .controller('companies', require('./controllers/companiesController.js').default)
 .controller('assets', require('./controllers/assetsController.js').default)
 .controller('admins', require('./controllers/adminsController.js').default)
+.controller('profile', require('./controllers/profileController.js').default)
 .filter('makeRoutePath', require('./shared/filters.js').makeRoutePath)
 .filter('intervalToTime', require('./shared/filters.js').intervalToTime)
 .run(function (auth, $rootScope, store, jwtHelper, $window, AdminService) {

@@ -50,6 +50,13 @@ export default function ($http, $location, store, jwtHelper, auth, commonModals)
     })
   }
 
+  this.whoami = function () {
+    return this.beeline({
+      url: '/admins/whoami',
+    })
+    .then((response) => response.data)
+  }
+
   var lastSessionToken = null;
   var lastSession;
 
@@ -70,16 +77,14 @@ export default function ($http, $location, store, jwtHelper, auth, commonModals)
   }
 
   this.isSuperAdmin = function () {
-    if (!auth.isAuthenticated) return false;
-
-    var profile = store.get('profile')
-
-    if (!profile) return false;
-
-    return (profile.app_metadata.roles.indexOf('superadmin') != -1);
+    return _.get(this.session(), 'app_metadata.roles', []).indexOf('superadmin') != -1;
   }
 
   this.getCompanyId = function() {
     return this.actingCompany || null;
+  }
+
+  this.getAdminId = function() {
+    return this.session().app_metadata.adminId;
   }
 }

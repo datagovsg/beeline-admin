@@ -2,9 +2,9 @@
 export default function($http, companiesSvc) {
   return {
     template: `
-<select
+<select multiple
     ng-options="company.id as company.name for company in (companies | orderBy:'name')"
-    class="form-control-condensed"> <option value="">- Select a Company -</option>
+    class="form-control-condensed">
 </select>
     `,
     scope: {
@@ -18,7 +18,7 @@ export default function($http, companiesSvc) {
           scope.ngModel = companies[0].id
         }
 
-        return scope.companies = [{id:0, name: '(All)'}].concat(companies)
+        return scope.companies = companies
       })
     },
   }

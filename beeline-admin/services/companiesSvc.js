@@ -15,14 +15,25 @@ export default function (AdminService, DriverService, $q) {
   this.getCompanies = function(options) {
     if (!options && companiesCache) return companiesCache;
 
-    companiesCache = AdminService.beeline({
-      method: 'GET',
-      url: `/companies`,
-    })
-    .then((response) => {
-      return response.data;
-    })
+    var session = AdminService.session();
 
-    return companiesCache;
+    if (session.app_metadata.roles.indexOf('superadmin') !== -1) {
+      return companiesCache = AdminService.beeline({
+        url: `/companies`
+      })
+      .then((result) => {
+        return result.data;
+      })
+    }
+    else {
+      var adminId = session.app_metadata.adminId;
+
+      return companiesCache = AdminService.beeline({
+        url: `/admins/${adminId}`
+      })
+      .then((result) => {
+        return result.data.transportCompanies;
+      })
+    }
   }
 }
