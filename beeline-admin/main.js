@@ -73,7 +73,7 @@ angular.module('beeline-admin', [
 .controller('profile', require('./controllers/profileController.js').default)
 .filter('makeRoutePath', require('./shared/filters.js').makeRoutePath)
 .filter('intervalToTime', require('./shared/filters.js').intervalToTime)
-.run(function (auth, $rootScope, store, jwtHelper, $window, AdminService) {
+.run(function (auth, $rootScope, store, jwtHelper, $window, AdminService, commonModals) {
   auth.hookEvents();
 
   // Handle the case when Auth0 login fails
@@ -86,7 +86,11 @@ angular.module('beeline-admin', [
         .value()
 
       if (parts.error) {
-        alert(`${parts.error} - ${parts.error_description}`)
+        commonModals.alert(`${parts.error} - ${parts.error_description}`)
+      }
+
+      if (parts.id_token && parts.refresh_token) {
+        store.set('refreshToken', parts.refresh_token)
       }
     }
     catch (err) {
@@ -95,15 +99,48 @@ angular.module('beeline-admin', [
   }
 
 
-  $rootScope.$on('$locationChangeStart', function() {
+  $rootScope.$on('$locationChangeStart', async function() {
     var token = store.get('sessionToken');
-    if (token) {
-      if (!jwtHelper.isTokenExpired(token)) {
-        if (!auth.isAuthenticated) {
+    var refreshToken = store.get('refreshToken');
+
+    async function authenticateWithToken() {
+      try {
+        if (!jwtHelper.isTokenExpired(token)) {
           //Re-authenticate user if token is valid
-          auth.authenticate(store.get('profile'), token);
+          if (!auth.isAuthenticated) {
+            var l = await auth.authenticate(store.get('profile'), token);
+            return true;
+          }
         }
-      } else {
+        return false;
+      } catch (err) {
+        console.log(err);
+        return false;
+      }
+    }
+
+    async function authenticateWithRefreshToken() {
+      try {
+        if (refreshToken) {
+          var idToken = await auth.refreshIdToken(refreshToken);
+          await auth.authenticate(store.get('profile'), idToken);
+          return true;
+        }
+        return false;
+      } catch (err) {
+        console.log(err);
+        return false;
+      }
+    }
+
+    if (token) {
+      try {
+        if (await authenticateWithToken() || await authenticateWithRefreshToken()) {
+          await AdminService.whoami();
+        } else {
+          throw new Error('Could not log in');
+        }
+      } catch (err) {
         // Either show the login page or use the refresh token to get a new idToken
         AdminService.login();
       }

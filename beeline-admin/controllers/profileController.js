@@ -4,7 +4,6 @@ import _ from 'lodash';
 export default function ($scope, AdminService, LoadingSpinner, commonModals) {
   var adminId;
 
-  whoami();
   requery();
 
   ////// Data declarations
