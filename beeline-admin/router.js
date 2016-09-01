@@ -114,7 +114,15 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
       requiresLogin: true,
     }
   })
-  
+
+  .state('profile', {
+    url: '/profile',
+    templateUrl: 'templates/profile.html',
+    controller: 'profile',
+    data: {
+      requiresLogin: true,
+    }
+  })
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/bookings');
 }

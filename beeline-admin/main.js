@@ -46,6 +46,8 @@ angular.module('beeline-admin', [
 .directive('userSelector', require('./directives/selectors/user').default)
 .directive('superAdminCompanySelector', require('./directives/selectors/superAdminCompany').default)
 .directive('companySelector', require('./directives/selectors/company').default)
+.directive('multipleCompanySelector', require('./directives/selectors/companyMultiple').default)
+.directive('eventSubscriptionEditor', require('./directives/eventSubscriptionEditor/eventSubscriptionEditor').default)
 .service('AdminService', require('./services/adminService').default)
 .service('TripsService', require('./services/tripsService').default)
 .service('RoutesService', require('./services/routesService').default)
@@ -68,9 +70,10 @@ angular.module('beeline-admin', [
 .controller('companies', require('./controllers/companiesController.js').default)
 .controller('assets', require('./controllers/assetsController.js').default)
 .controller('admins', require('./controllers/adminsController.js').default)
+.controller('profile', require('./controllers/profileController.js').default)
 .filter('makeRoutePath', require('./shared/filters.js').makeRoutePath)
 .filter('intervalToTime', require('./shared/filters.js').intervalToTime)
-.run(function (auth, $rootScope, store, jwtHelper, $window, AdminService) {
+.run(function (auth, $rootScope, store, jwtHelper, $window, AdminService, commonModals) {
   auth.hookEvents();
 
   // Handle the case when Auth0 login fails
@@ -83,7 +86,11 @@ angular.module('beeline-admin', [
         .value()
 
       if (parts.error) {
-        alert(`${parts.error} - ${parts.error_description}`)
+        commonModals.alert(`${parts.error} - ${parts.error_description}`)
+      }
+
+      if (parts.id_token && parts.refresh_token) {
+        store.set('refreshToken', parts.refresh_token)
       }
     }
     catch (err) {
@@ -92,15 +99,48 @@ angular.module('beeline-admin', [
   }
 
 
-  $rootScope.$on('$locationChangeStart', function() {
+  $rootScope.$on('$locationChangeStart', async function() {
     var token = store.get('sessionToken');
-    if (token) {
-      if (!jwtHelper.isTokenExpired(token)) {
-        if (!auth.isAuthenticated) {
+    var refreshToken = store.get('refreshToken');
+
+    async function authenticateWithToken() {
+      try {
+        if (!jwtHelper.isTokenExpired(token)) {
           //Re-authenticate user if token is valid
-          auth.authenticate(store.get('profile'), token);
+          if (!auth.isAuthenticated) {
+            var l = await auth.authenticate(store.get('profile'), token);
+            return true;
+          }
         }
-      } else {
+        return false;
+      } catch (err) {
+        console.log(err);
+        return false;
+      }
+    }
+
+    async function authenticateWithRefreshToken() {
+      try {
+        if (refreshToken) {
+          var idToken = await auth.refreshIdToken(refreshToken);
+          await auth.authenticate(store.get('profile'), idToken);
+          return true;
+        }
+        return false;
+      } catch (err) {
+        console.log(err);
+        return false;
+      }
+    }
+
+    if (token) {
+      try {
+        if (await authenticateWithToken() || await authenticateWithRefreshToken()) {
+          await AdminService.whoami();
+        } else {
+          throw new Error('Could not log in');
+        }
+      } catch (err) {
         // Either show the login page or use the refresh token to get a new idToken
         AdminService.login();
       }

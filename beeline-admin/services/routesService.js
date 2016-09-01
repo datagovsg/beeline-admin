@@ -2,9 +2,9 @@ import _ from 'lodash'
 import querystring from 'querystring'
 import assert from 'assert'
 
-export default function (AdminService, DriverService, $q, LoadingSpinner) {
+export default function (AdminService, DriverService, $q, LoadingSpinner, companiesSvc) {
 
-  var routesPromise = null;
+  var routesPromiseCache = null, currentRoutesPromiseCache = null;
   var routesById = null;
   var routesCache;
 
@@ -24,6 +24,8 @@ export default function (AdminService, DriverService, $q, LoadingSpinner) {
         query.include_availability = options.includeAvailability;
       if (options.transportCompanyId)
         query.transportCompanyId = options.transportCompanyId;
+      if (options.limit)
+        query.limit = options.limit
     }
     query = querystring.stringify(query)
     return query
@@ -44,6 +46,23 @@ export default function (AdminService, DriverService, $q, LoadingSpinner) {
     return route;
   }
 
+  this.getCurrentRoutes = function (options) {
+    if (!options && currentRoutesPromiseCache) {
+      return currentRoutesPromiseCache;
+    }
+    else {
+      var promise = this.getRoutes(_.defaults({
+        includeTrips: false,
+        startDate: Date.now()
+      }, options))
+
+      if (!options) {
+        currentRoutesPromiseCache = promise;
+      }
+      return promise;
+    }
+  }
+
   /**
     @param options -- options to pass in query string to /routes
       @prop startDate : string | int
@@ -52,19 +71,25 @@ export default function (AdminService, DriverService, $q, LoadingSpinner) {
       @prop includeTrips : boolean
   **/
   this.getRoutes = function(options) {
-    if (!options && routesPromise) {
-      return routesPromise;
+    if (!options && routesPromiseCache) {
+      return routesPromiseCache;
     }
     else {
       const _options = options || {}
       var query = makeRouteQuery(_options);
 
-      var promise = AdminService.beeline({
+      var companiesPromise = companiesSvc.getCompanies()
+        .then((companies => _.keyBy(companies, 'id')))
+
+      var routesPromise = AdminService.beeline({
         method: 'GET',
         url: `/routes?${query}`,
       })
-      .then((response) => {
-        routesCache = response.data;
+
+      var promise = Promise.all([companiesPromise, routesPromise])
+      .then(([companiesById, response]) => {
+        routesCache = response.data.filter(r => !r.transportCompanyId ||
+              r.transportCompanyId in companiesById);
 
         for (let route of response.data) {
           postProcessRoute(route);
@@ -75,8 +100,8 @@ export default function (AdminService, DriverService, $q, LoadingSpinner) {
 
       // Cache -- only if we use default options
       if (!options) {
-        routesPromise = promise;
-        routesPromise.then(() => {
+        routesPromiseCache = promise;
+        routesPromiseCache.then(() => {
           routesById = _.keyBy(routesCache, (r) => r.id)
         })
       }
