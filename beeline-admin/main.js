@@ -13,7 +13,6 @@ require('../ngTagEditor/ngTagEditor')
 
 const env = require('./env')
 
-
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
@@ -70,50 +69,47 @@ angular.module('beeline-admin', [
 .controller('admins', require('./controllers/adminsController.js').default)
 .filter('makeRoutePath', require('./shared/filters.js').makeRoutePath)
 .filter('intervalToTime', require('./shared/filters.js').intervalToTime)
-.run(function (auth, store, $cookies) {
-  auth.ready
-  .then((args) => {
-    if (!args) return;
+// Handle what happens when the callback is called
+// TODO: Use angular dependency injection to invoke the authenticateToken fn
+.run(function ($rootScope, auth, store, $cookies, AdminService, jwtHelper) {
+  if (auth.authResult) {
+    if (auth.authResult.error) {
+      return alert(auth.authResult.error_description);
+    }
+    store.set('sessionToken', auth.authResult.idToken)
+    store.set('refreshToken', auth.authResult.refreshToken)
+    $cookies.put('sessionToken', auth.authResult.idToken)
+  }
+  else {
+    authenticateToken(store.get('sessionToken'))
+  }
 
-    store.set('sessionToken', args.idToken)
-    store.set('refreshToken', args.refreshToken)
-    $cookies.put('sessionToken', args.idToken)
-
-    auth.lock.getProfile(auth.credentials.idToken, (err, profile) => {
-      store.set('profile', profile)
-
-      window.location.reload();
-    })
-  })
-  .catch((err) => {
-    alert(err);
-  });
-})
-.run(function (auth, $rootScope, store, jwtHelper, $window, AdminService) {
   $rootScope.$on('$locationChangeStart', function() {
-    var token = store.get('sessionToken');
+    authenticateToken(store.get('sessionToken'))
+  });
+
+  function authenticateToken(token) {
     if (token) {
       if (!jwtHelper.isTokenExpired(token)) {
         if (!auth.isAuthenticated) {
           //Re-authenticate user if token is valid
-          auth.authenticate(store.get('profile'), token);
+          auth.authenticate(token);
         }
-      } else {
-        if (auth.credentials.refreshToken) {
-          auth0.refreshToken(auth.credentials.refreshToken, (err, delegationResult) => {
-            if (err) {
-              return AdminService.login()
-            }
-            store.set('sessionToken', delegationResult.id_token);
-          })
-        }
-        else {
-          // Either show the login page or use the refresh token to get a new idToken
-          AdminService.login();
-        }
+        return;
+      }
+
+      if (auth.credentials.refreshToken) {
+        auth0.refreshToken(auth.credentials.refreshToken, (err, delegationResult) => {
+          if (err) {
+            return AdminService.login()
+          }
+          store.set('sessionToken', delegationResult.id_token);
+        })
+        return;
       }
     }
-  });
+    AdminService.login();
+  }
 })
 
 function configureGoogleMaps(uiGmapGoogleMapApiProvider) {

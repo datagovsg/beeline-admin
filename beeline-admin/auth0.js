@@ -3,6 +3,12 @@ import env from './env';
 
 var lock;
 
+// Parse the hash if it exists
+var auth0 = new Auth0({
+  clientID: env.AUTH0_CID,
+  domain: env.AUTH0_DOMAIN
+})
+
 lock = new Auth0Lock(
   env.AUTH0_CID,
   env.AUTH0_DOMAIN,
@@ -13,25 +19,16 @@ lock = new Auth0Lock(
       }
     }
   });
-var authPromise = new Promise((resolve, reject) => {
-  lock.on('authenticated', resolve);
-  lock.on('authorization_error', reject);
-  lock.on('hash_parsed', (e) => {
-    if (e === null) resolve(null);
-  });
-})
 
+var authResult = auth0.parseHash();
 
 export default function() {
   this.lock = lock;
   this.credentials = {};
 
-  this.ready = authPromise;
-
   this.isAuthenticated = false;
 
-  this.authenticate = function (profile, token) {
-    this.profile = profile;
+  this.authenticate = function (token) {
     this.idToken = token;
     this.isAuthenticated = true;
   }
@@ -45,9 +42,9 @@ export default function() {
     this.profile = this.idToken = null;
   }
 
-  this.ready.then((auth) => {
-    if (auth) {
-      this.credentials = auth;
-    }
-  })
+  this.authResult = authResult;
+
+  if (authResult && !authResult.error) {
+    this.authenticate(authResult.idToken);
+  }
 }
