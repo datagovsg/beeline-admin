@@ -113,18 +113,18 @@ export default function(RoutesService, TripsService, AdminService, DriverService
       scope.saveTrips = function() {
         return LoadingSpinner.watchPromise((async function() {
           // get the driver id... and create the driver if non-existent
-          var driver = await DriverService.fetchDriverIds([scope.disp.trip])
-
-          if (scope.disp.trip.driverTelephone && !scope.disp.trip.driverId) {
-            driver = await DriverService.createDriver({
-              telephone: '+65' + scope.disp.trip.driverTelephone,
-              name: scope.disp.trip.driverTelephone,
-            })
-            scope.disp.trip.driverId = driver.id;
-          }
-          else if (!scope.disp.trip.driverTelephone) {
-            scope.disp.trip.driverId = null;
-          }
+          // var driver = await DriverService.fetchDriverIds([scope.disp.trip])
+          //
+          // if (scope.disp.trip.driverTelephone && !scope.disp.trip.driverId) {
+          //   driver = await DriverService.createDriver({
+          //     telephone: '+65' + scope.disp.trip.driverTelephone,
+          //     name: scope.disp.trip.driverTelephone,
+          //   })
+          //   scope.disp.trip.driverId = driver.id;
+          // }
+          // else if (!scope.disp.trip.driverTelephone) {
+          //   scope.disp.trip.driverId = null;
+          // }
 
           if (scope.disp.trip.id) {
             // get a list of the trips to update
