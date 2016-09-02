@@ -21,12 +21,12 @@ const env = require('./env')
 // 'starter.controllers' is found in controllers.js
 angular.module('beeline-admin', [
   'uiGmapgoogle-maps', 'ui.router', 'ui.bootstrap', 'beeline.calendar',
-  'auth0', 'angular-storage', 'angular-jwt', 'ngCookies', 'multipleDatePicker',
+  'angular-storage', 'angular-jwt', 'ngCookies', 'multipleDatePicker',
   'ui.select', 'ngTagEditor'])
+.service('auth', require('./auth0').default)
 .config(require('./router').default)
 .config(configureGoogleMaps)
 .config(configureUrlWhitelist)
-.config(configureAuth0)
 .directive('adminNav', require('./directives/adminNav/adminNav').default)
 .directive('accountView', require('./directives/accountView/accountView').default)
 .directive('paymentView', require('./directives/paymentView/paymentView').default)
@@ -70,28 +70,24 @@ angular.module('beeline-admin', [
 .controller('admins', require('./controllers/adminsController.js').default)
 .filter('makeRoutePath', require('./shared/filters.js').makeRoutePath)
 .filter('intervalToTime', require('./shared/filters.js').intervalToTime)
+.run(function (auth, store, $cookies) {
+  auth.ready
+  .then((args) => {
+    if (!args) return;
+
+    store.set('sessionToken', args.idToken)
+    store.set('refreshToken', args.refreshToken)
+    $cookies.put('sessionToken', args.idToken)
+
+    auth.lock.getProfile(auth.credentials.idToken, (err, profile) => {
+      store.set('profile', profile)
+    })
+  })
+  .catch((err) => {
+    alert(err);
+  });
+})
 .run(function (auth, $rootScope, store, jwtHelper, $window, AdminService) {
-  auth.hookEvents();
-
-  // Handle the case when Auth0 login fails
-  if (window.location.hash.startsWith('#/')) {
-    try {
-      let parts = _(window.location.hash.substr(2).split('&'))
-        .map(keyvalue => keyvalue.split('='))
-        .keyBy(keyvalue => keyvalue[0])
-        .mapValues(keyvalue => decodeURIComponent(keyvalue[1]))
-        .value()
-
-      if (parts.error) {
-        alert(`${parts.error} - ${parts.error_description}`)
-      }
-    }
-    catch (err) {
-      console.log(err)
-    }
-  }
-
-
   $rootScope.$on('$locationChangeStart', function() {
     var token = store.get('sessionToken');
     if (token) {
@@ -101,8 +97,18 @@ angular.module('beeline-admin', [
           auth.authenticate(store.get('profile'), token);
         }
       } else {
-        // Either show the login page or use the refresh token to get a new idToken
-        AdminService.login();
+        if (auth.credentials.refreshToken) {
+          auth0.refreshToken(auth.credentials.refreshToken, (err, delegationResult) => {
+            if (err) {
+              return AdminService.login()
+            }
+            store.set('sessionToken', delegationResult.id_token);
+          })
+        }
+        else {
+          // Either show the login page or use the refresh token to get a new idToken
+          AdminService.login();
+        }
       }
     }
   });
@@ -112,28 +118,6 @@ function configureGoogleMaps(uiGmapGoogleMapApiProvider) {
   uiGmapGoogleMapApiProvider.configure({
     key: 'AIzaSyBkFH42PlbFrsfdAnjw37qMLAxjhkMT-54',
     libraries: 'geometry',
-  })
-}
-
-function configureAuth0(authProvider) {
-  authProvider.init({
-    domain: env.AUTH0_DOMAIN,
-    clientID: env.AUTH0_CID,
-    loginUrl: '/login'
-  })
-
-  authProvider.on('loginFailure', function ($location, error) {
-    alert(error);
-  })
-
-  authProvider.on('loginSuccess', function($location, profilePromise,
-    jwtHelper, idToken, store, AdminService, auth, $cookies) {
-    store.set('sessionToken', idToken)
-    $cookies.put('sessionToken', idToken)
-
-    profilePromise.then((p) =>{
-      store.set('profile', p)
-    })
   })
 }
 
