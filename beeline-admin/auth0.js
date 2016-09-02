@@ -28,6 +28,12 @@ export default function() {
 
   this.ready = authPromise;
 
+  this.isAuthenticated = false;
+
+  this.authenticate = function (profile, token) {
+    this.isAuthenticated = true;
+  }
+
   this.refreshToken = function () {
     this.lock.refreshToken()
   }
