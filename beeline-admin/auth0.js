@@ -31,11 +31,18 @@ export default function() {
   this.isAuthenticated = false;
 
   this.authenticate = function (profile, token) {
+    this.profile = profile;
+    this.idToken = token;
     this.isAuthenticated = true;
   }
 
   this.refreshToken = function () {
     this.lock.refreshToken()
+  }
+
+  this.signout = function () {
+    this.isAuthenticated = false;
+    this.profile = this.idToken = null;
   }
 
   this.ready.then((auth) => {

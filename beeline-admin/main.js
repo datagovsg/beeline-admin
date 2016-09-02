@@ -81,6 +81,8 @@ angular.module('beeline-admin', [
 
     auth.lock.getProfile(auth.credentials.idToken, (err, profile) => {
       store.set('profile', profile)
+
+      window.location.reload();
     })
   })
   .catch((err) => {
