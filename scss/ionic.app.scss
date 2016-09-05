@@ -55,6 +55,10 @@ html, body {
   height: 100%;
 }
 
+body {
+  padding-top: $navbar-height; 
+}
+
 table td,
 table th {
   border: solid 1px #CCC;
