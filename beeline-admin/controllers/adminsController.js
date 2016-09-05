@@ -3,7 +3,7 @@ import _ from 'lodash';
 
 export default function ($scope, AdminService, LoadingSpinner, commonModals) {
   const PermissionsMap = {
-    basic: ['view-drivers', 'view-admins', 'view-transactions'],
+    basic: ['view-drivers', 'view-admins', 'view-transactions', 'monitor-operations'],
     refund: ['refund'],
     operations: ['manage-routes', 'manage-drivers', 'drive', 'update-trip-status', 'message-passengers', 'view-passengers'],
     manageCompany: ['manage-company'],
