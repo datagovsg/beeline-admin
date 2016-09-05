@@ -1,9 +1,16 @@
 <div>
-  <button class="glyphicon glyphicon-duplicate btn btn-default"
-    title="copy"
-    ng-click="copySelected()"
-    ng-disabled="!selectedRoute">
-  </button>
+
+  <div class="btn-group" role="group" aria-label="...">
+    <button title="copy" type="button" class="btn btn-default"   ng-click="copySelected()" ng-disabled="!selectedRoute">
+      <span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span>
+     Copy Route
+    </button>
+    <button type="button" class="btn btn-default" ng-click="selectRoute({})">
+      <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+      Create New
+    </button>
+  </div>
+
   <ul class="nav nav-sidebar">
     <li ng-repeat="route in availableRoutes | orderBy:'label' track by route.id"
     ng-click="selectRoute(route)"
@@ -11,13 +18,10 @@
       active: selectedRoute == route
     }"
     > <a>
-        <small>(~{{route.id}})</small> 
+        <small>(~{{route.id}})</small>
         {{route.label}}:
         {{route.from}} to {{route.to}}
       </a>
-    </li>
-    <li ng-click="selectRoute({})"> <a><em>New route!</em></a>
-
     </li>
   </ul>
 </div>
