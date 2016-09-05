@@ -169,3 +169,14 @@ hr {
     }
   }
 }
+
+
+  .borderless table {
+    background-color: transparent !important;
+  }
+  .borderless td, .borderless th {
+      border: none;
+      vertical-align: top;
+      padding: 0px 2px;
+
+  }

@@ -17,10 +17,12 @@
     ng-class="{
       active: selectedRoute == route
     }"
-    > <a>
-        <small>(~{{route.id}})</small>
-        {{route.label}}:
-        {{route.from}} to {{route.to}}
+    > <a class="">
+      {{route.label}}:   <small>(~{{route.id}})</small>
+            <br />
+            {{route.from}} to
+            <br />
+            {{route.to}}
       </a>
     </li>
   </ul>

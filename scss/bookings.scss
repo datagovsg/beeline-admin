@@ -27,15 +27,6 @@
     color: #FFF;
   }
 
-  .borderless table {
-    background-color: transparent !important;
-  }
-  .borderless td, .borderless th {
-      border: none;
-      vertical-align: top;
-      padding: 0px 2px;
-
-  }
   .actions.btn {
     margin: $padding_small_vertical 0;
   }
