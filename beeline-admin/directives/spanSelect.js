@@ -9,13 +9,16 @@ export default function (AdminService) {
       lastDate: '=?',
       ngModel: '=?',
       highlightDays: '=?',
+      // optional variables
+      daysAllowed: '=?',
     },
     template: `<multiple-date-picker
-      highlight-days="combineHD"
-      ng-model="ngModel">
+      highlight-days="combinedHD"
+      ng-model="ngModel"
+      days-allowed="daysAllowed">
     </multiple-date-picker>`,
     link(scope, elem, attr) {
-      scope.phs = [];
+      scope.publicHolidays = [];
       var promise = AdminService.beeline({
         method: 'GET',
         url: `/publicHolidays`
@@ -23,25 +26,40 @@ export default function (AdminService) {
       .then((response) => {
         var rs = response.data;
         for (var index in rs) {
-          var ph = {date: rs[index].date, css: 'holiday', selectable: true, title: rs[index].summary};
-          scope.phs.push(ph);
+          var ph = {date: rs[index].date, css: 'holiday', title: rs[index].summary, isMatched: false};
+          scope.publicHolidays.push(ph);
         }
       });
 
-      scope.$watch('highlightDays',(hds)=>{
-        //deep copy of scope.phs into phs
-        var phs = JSON.parse(JSON.stringify(scope.phs));
-        for (var ph in phs){
+      scope.$watchGroup(['highlightDays','publicHolidays'],(hds, phs)=>{
+        //deep copy of scope.publicHolidays into publicHolidays
+        var publicHolidays = _.cloneDeep(phs);
+        for (var ph in publicHolidays){
           for (var hd in hds){
-            if (moment(phs[ph].date).isSame(hds[hd].date,'day')){
-              _.assign(phs[ph], hds[hd]);
-              hds.splice(hd,1);
+            if (!publicHolidays[ph].isMatched) break;
+            else if (moment(publicHolidays[ph].date).isSame(hds[hd].date,'day')){
+              hds[hd].css += 'holiday';
+              publicHolidays[ph].isMatched = true;
               break;
             }
           }
         }
-        scope.combineHD = _.concat(phs, hds);
-      },true);
+        // scope.daysAllowed = [ Mon, Fri ]
+        // Tue Wed Thu are NOT allowed, Mon Fri are allowed
+
+        // scope.daysAllowed = null
+        // Mon - Fri are all allowed
+        for (var ph in publicHolidays) {
+          if (!publicHolidays[ph].isMatched) {
+            var isAllowed = true;
+            if (scope.daysAllowed) {
+              isAllowed = scope.daysAllowed.index(publicHolidays[ph])==-1 ? false : true;
+            }
+            var hd = {date: publicHolidays[[ph].date], css: 'holiday', selectable: isAllowed, title: publicHolidays[[ph].summary]};
+            scope.highlightDays.push(hd);
+          }
+        }
+      });
       scope.$watch('ngModel', (newValue, oldValue) => {
         console.log(newValue);
 
