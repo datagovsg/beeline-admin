@@ -33,7 +33,6 @@
         </tr>
       </table>
     </div>
-    <div class="row">
       <uib-tabset active="active">
         <uib-tab index="0" heading="Edit Route Description">
           <div class="editor-tabs-content">
@@ -41,55 +40,55 @@
               <div class="col-lg-6">
                 <form class="form-horizontal">
                   <div class="form-group">
-                    <label for="inputPassword3" class="col-sm-2 control-label">Bus Company</label>
+                    <label class="col-sm-2 control-label" ng-if="adminService.session().role == 'superadmin'">Bus Company</label>
                     <div class="col-sm-10">
-                      <input type="password" class="form-control" id="inputPassword3" placeholder="Route Name">
+                      <company-selector class="form-control" ng-model="$parent.route.transportCompanyId">
+                      </company-selector>
                     </div>
                   </div>
                   <div class="form-group">
-                    <label for="inputPassword3" class="col-sm-2 control-label">Route Label</label>
+                    <label class="col-sm-2 control-label">Route Label</label>
                     <div class="col-sm-10">
-                      <input type="password" class="form-control" id="inputPassword3" placeholder="B01">
+                      <input type="text" class="form-control" ng-model="route.label" placeholder="B01">
                     </div>
                   </div>
                   <div class="form-group">
-                    <label for="inputPassword3" class="col-sm-2 control-label">Route Name</label>
+                    <label class="col-sm-2 control-label">Route Name</label>
                     <div class="col-sm-10">
-                      <input type="password" class="form-control" id="inputPassword3" placeholder="Route Name">
+                      <input type="text" class="form-control" ng-model="route.name" placeholder="Route Name">
                     </div>
                   </div>
                   <div class="form-group">
-                    <label for="inputEmail3" class="col-sm-2 control-label">From</label>
+                    <label class="col-sm-2 control-label">From</label>
                     <div class="col-sm-10">
-                      <input type="email" class="form-control" id="inputEmail3" placeholder="From">
+                      <input type="text" class="form-control" ng-model="route.from" placeholder="Origin">
                     </div>
                   </div>
                   <div class="form-group">
-                    <label for="inputPassword3" class="col-sm-2 control-label">To</label>
+                    <label class="col-sm-2 control-label">To</label>
                     <div class="col-sm-10">
-                      <input type="password" class="form-control" id="inputPassword3" placeholder="To">
+                      <input type="text" class="form-control" ng-model="route.to" placeholder="Destination">
                     </div>
                   </div>
                   <div class="form-group">
-                    <label for="inputEmail3" class="col-sm-2 control-label">Signage</label>
+                    <label class="col-sm-2 control-label">Signage</label>
                     <div class="col-sm-10">
-                      <input type="email" class="form-control" id="inputEmail3" placeholder="From X to Y">
+                      <input type="text" class="form-control" ng-model="#" placeholder="Bus Signage">
                     </div>
                   </div>
                   <div class="form-group">
-                    <label for="inputEmail3" class="col-sm-2 control-label">Schedule</label>
+                    <label class="col-sm-2 control-label">Schedule</label>
                     <div class="col-sm-10">
-                      <input type="email" class="form-control" id="inputEmail3" placeholder="AM, Mon to Fri except P.H.">
+                      <input type="text" class="form-control" ng-model="route.schedule" placeholder="AM, Mon to Fri except P.H.">
                     </div>
                   </div>
                   <div class="form-group">
-                    <label for="inputPassword3" class="col-sm-2 control-label">Tags</label>
-                    <div class="col-sm-10">
-                      <input type="password" class="form-control" id="inputPassword3" placeholder="Tags">
-                    </div>
+                      <label class="col-sm-2 control-label">Tags:</label>
+                      <tag-editor ng-model="disp.routeTags">
+                      </tag-editor>
                   </div>
                   <div class="form-group">
-                    <label for="inputPassword3" class="col-sm-2 control-label">Notes</label>
+                    <label class="col-sm-2 control-label">Notes</label>
                     <div class="col-sm-10">
                       <textarea
                         class="form-control"
@@ -106,65 +105,28 @@
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col-md-6 form-horizontal">
-                <label>
-                  Label:  </label>
-                <input type="text" class="form-control" ng-model="route.label">
-
-
-                <label>
-                  Name:   </label>
-                <input type="text" class="form-control" ng-model="route.name">
-
-
-                <label>
-                  From:  </label>
-                <input type="text" class="form-control" ng-model="route.from">
-
-
-                <label>
-                  To:</label>
-                <input type="text" class="form-control" ng-model="route.to">
-
-              </div>
-
-              <div class="col-md-6 form-inline">
-                <label>
-                  Schedule:  </label>
-                <input type="text" class="form-control" ng-model="route.schedule">
-
-
-                <label>Tags:</label>
-                <tag-editor ng-model="disp.routeTags">
-                </tag-editor>
-
-                <!-- ng-if creates a scope -->
-                <label ng-if="adminService.session().role == 'superadmin'">
-                  Company:</label>
-                <company-selector class="form-control" ng-model="$parent.route.transportCompanyId">
-                </company-selector>
-              </div>
-
-
-
+                <hr />
               <div class="row">
-                <div class="route-buttons">
-                  <div class="btn-group">
-                    <button class="btn btn-primary" ng-click="saveRoute()" ng-disabled="!route">
-                      Save
+                <div class="col-lg-12">
+                  <div class="route-buttons">
+                    <button class="btn btn-primary"
+                      ng-click="saveRoute()" ng-disabled="!route">
+                      Save Route Changes
                     </button>
-                    <button class="btn btn-default" ng-click="resetRoute()">
-                      Reset
-                    </button>
+                      <span class="btn-group">
+                        <button class="btn btn-default"
+                          ng-click="resetRoute()">
+                          Reset Route
+                        </button>
+                        <button class="btn btn-danger"
+                          ng-click="deleteRoute()">
+                          Delete Route
+                        </button>
+                      </span>
                   </div>
-                  <button class="btn btn-danger" ng-click="deleteRoute()" ng-disabled="!route || !route.id">
-                    Delete
-                  </button>
                 </div>
               </div>
             </div>
-          </div>
         </uib-tab>
         <uib-tab index="1" heading="Edit Trips">
           <trips-editor route-id="route.id" ng-if="route.id">
@@ -173,5 +135,3 @@
       </uib-tabset>
     </div>
   </div>
-
-</div>
