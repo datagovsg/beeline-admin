@@ -11,12 +11,11 @@ route-editor {
   .route-buttons {
     margin-top: 20px;
     margin-bottom: 50px;
-    margin-left: 10px;
-    .btn-group{
+    .btn-group {
       margin-left: 20px;
     }
   }
-
+  
   .route-display {
     margin-top: $padding-large-vertical*2;
     margin-bottom: $padding-large-vertical*2;
@@ -26,5 +25,4 @@ route-editor {
   .editor-tabs-content{
     margin-top: $padding-large-vertical*4;
   }
-
 }
