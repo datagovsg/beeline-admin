@@ -1,4 +1,4 @@
-<div class="container-fluid route-editor">
+<div class="container-fluid">
   <div ng-show="!route">
     <h4>Please select a route</h4>
   </div>
@@ -33,7 +33,6 @@
         </tr>
       </table>
     </div>
-    <div class="row">
       <uib-tabset active="active">
         <uib-tab index="0" heading="Edit Route Description">
           <div class="editor-tabs-content">
@@ -84,7 +83,7 @@
                     </div>
                   </div>
                   <div class="form-group">
-                    <label class="col-sm-2 control-label">Tags</label>
+                      <label class="col-sm-2 control-label">Tags:</label>
                       <tag-editor ng-model="disp.routeTags">
                       </tag-editor>
                   </div>
@@ -128,7 +127,6 @@
                 </div>
               </div>
             </div>
-          </div>
         </uib-tab>
         <uib-tab index="1" heading="Edit Trips">
           <trips-editor route-id="route.id" ng-if="route.id">
@@ -137,5 +135,3 @@
       </uib-tabset>
     </div>
   </div>
-
-</div>
