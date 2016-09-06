@@ -3,11 +3,23 @@
     margin: $padding-large-vertical*2 0;
   }
 
-  table thead th {
-    vertical-align: top;
+  .admin-table {
+    .permissions{
+      /* background-color: red; */
 
+    }
+    .permission-type{
+      width: 15%;
+      vertical-align: top;
+    }
+    th{
+      vertical-align: top;
+      font-weight: bold;
+      border: 1px solid lighten($gray-light, 30%);;
+    }
     .permission-details {
       font-weight: normal;
+      color: $gray-light;
     }
   }
 }

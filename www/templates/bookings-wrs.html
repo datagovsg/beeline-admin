@@ -76,7 +76,7 @@
             </label>
 
             <label class="ticketCheckbox">
-              <input type="checkbox" ng-model="filter.status.void" /> Void
+              <input type="checkbox" ng-model="filter.status.void" /> <a href="#" uib-tooltip="Void - Tickets that are cancelled. Includes tickets that are edited as new tickets are issued during the edit.">Void</a>
             </label>
 
             <label class="ticketCheckbox">
@@ -97,8 +97,8 @@
       </nav>
     </div>
 
-    <div class="row">
-      <div class="col-lg-12">
+    <div class="row text-center">
+      <div class="col-lg-12 ">
         <uib-pagination boundary-links="true" ng-model="currentPage" total-items="pageCount * perPage" items-per-page="perPage"></uib-pagination>
         <div>
           Showing {{disp.pagination.firstRow}} to {{disp.pagination.lastRow}}  of {{disp.pagination.totalRows}}

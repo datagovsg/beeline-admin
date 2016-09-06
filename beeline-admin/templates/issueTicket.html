@@ -34,11 +34,15 @@
                                   board-stop="data.boardStop"
                                   alight-stop="data.alightStop">
           </trip-selection-broker>
-
+          <div>
+            <p class="text-danger" ng-if="data.cancelledTicketIds">
+              Note: When you edit a ticket, the ticket you edit will be "void" and a new ticket with the new changes will be issued.
+            </p>
+          </div>
           <!-- Route Selection -->
                               <form class="form-horizontal">
                                 <div class="form-group">
-                                  <label ng-if="data.cancelledTicketIds" class="control-label col-sm-2">Tickets to edit</label>
+                                  <label ng-if="data.cancelledTicketIds" class="control-label col-sm-2">Ticket you are editing</label>
                                   <div class="col-sm-10">
                                     <ul class="selected-dates">
                                       <li ng-repeat="ticketId in data.cancelledTicketIds">
@@ -99,7 +103,7 @@
           <table class="table user-selectors">
               <tr ng-repeat="user in data.users">
                 <td>{{$index+1}}</td>
-                <td>
+                <td class="user-text-wrap">
                     <user-selector ng-model="user.id" initial-user="user"></user-selector>
                     <div class="conflicts" ng-if="conflictsByUid[user.id]">
                       This user already has a trip on
@@ -130,7 +134,7 @@
           Cancel
         </button>
         <button class="btn btn-primary" ng-click="issue()">
-          Create Ticket
+          {{data.cancelledTicketIds ? 'Confirm Changes' : 'Create Ticket'}}
         </button>
       </div>
     </div>
