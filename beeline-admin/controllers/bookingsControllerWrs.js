@@ -244,7 +244,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
 
   $scope.monthChanged = function (newMonth) {
     startOfMonth = newMonth.clone().startOf('month').toDate()
-    endOfMonth = newMonth.clone().endOf('month').startOf('day').toDate()
+    endOfMonth = newMonth.clone().startOf('month').add(1, 'month').add(-1, 'day').toDate()
     $scope.filter.startDate = startOfMonth;
     $scope.filter.endDate = endOfMonth;
   }
@@ -283,6 +283,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
       console.log(err)
     });
 
+    // Update the annotations for the month
     var requestUrlOR = buildQuery({
       tripStartDate: Date.UTC(
         startOfMonth.getFullYear(),
@@ -292,7 +293,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
       tripEndDate: Date.UTC(
         endOfMonth.getFullYear(),
         endOfMonth.getMonth(),
-        endOfMonth.getDate()
+        endOfMonth.getDate() + 1
       )
     });
 
