@@ -41,15 +41,17 @@
               <div class="col-lg-6">
                 <form class="form-horizontal">
                   <div class="form-group">
-                    <label for="inputPassword3" class="col-sm-2 control-label">Bus Company</label>
+                    <label ng-if="adminService.session().role == 'superadmin'" class="col-sm-2 control-label">
+                      Company</label>
                     <div class="col-sm-10">
-                      <input type="password" class="form-control" id="inputPassword3" placeholder="Route Name">
+                      <company-selector class="form-control" ng-model="$parent.route.transportCompanyId">
+                      </company-selector>
                     </div>
                   </div>
                   <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">Route Label</label>
                     <div class="col-sm-10">
-                      <input type="password" class="form-control" id="inputPassword3" placeholder="B01">
+                      <input type="text" class="form-control" ng-model="route.label" placeholder="Route Label">
                     </div>
                   </div>
                   <div class="form-group">
@@ -139,11 +141,7 @@
                 <tag-editor ng-model="disp.routeTags">
                 </tag-editor>
 
-                <!-- ng-if creates a scope -->
-                <label ng-if="adminService.session().role == 'superadmin'">
-                  Company:</label>
-                <company-selector class="form-control" ng-model="$parent.route.transportCompanyId">
-                </company-selector>
+
               </div>
                 <hr />
               <div class="row">
