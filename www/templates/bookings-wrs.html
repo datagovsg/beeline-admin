@@ -40,6 +40,34 @@
               <input type="text" ng-model="filter.userQuery" ng-model-options="{ updateOn: 'blur' }" class="form-control" />
             </label>
           </div>
+          <!-- txn query -->
+          <div class="form-group pull-left ticketSearch">
+            <label>
+              Search by Transaction ID
+              <input type="text" ng-model="filter.transactionId" ng-model-options="{ updateOn: 'blur' }" class="form-control" />
+            </label>
+          </div>
+          <!-- charge query -->
+          <div class="form-group pull-left ticketSearch">
+            <label>
+              Search by Charge ID
+              <input type="text" ng-model="filter.chargeId" ng-model-options="{ updateOn: 'blur' }" class="form-control" />
+            </label>
+          </div>
+          <!-- payment query -->
+          <div class="form-group pull-left ticketSearch">
+            <label>
+              Search by Payment ID
+              <input type="text" ng-model="filter.paymentId" ng-model-options="{ updateOn: 'blur' }" class="form-control" />
+            </label>
+          </div>
+          <!-- Ticket query -->
+          <div class="form-group pull-left ticketSearch">
+            <label>
+              Search by Ticket ID
+              <input type="text" ng-model="filter.ticketId" ng-model-options="{ updateOn: 'blur' }" class="form-control" />
+            </label>
+          </div>
           <br clear="both">
           <div class="pull-left">
             <span class="ticketCheckbox">Ticket Status:</span>

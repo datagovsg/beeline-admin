@@ -11,6 +11,10 @@ route-editor {
   .route-buttons {
     margin-top: 20px;
     margin-bottom: 50px;
+    margin-left: 10px;
+    .btn-group{
+      margin-left: 20px;
+    }
   }
 
   .route-display {
