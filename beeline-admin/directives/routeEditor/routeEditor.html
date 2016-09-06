@@ -1,84 +1,117 @@
-<div>
-  <span class="btn-group">
-    <button class="btn btn-default"
-      ng-click="edit = 'route'">
-      Edit Route Description
-    </button>
-    <button class="btn btn-default"
-      ng-click="edit = 'trips'"
-      >
-      Edit Trips
-    </button>
-  </span>
-</div>
-
-<div ng-show="route">
-  <div ng-show="edit == 'route'" class="container">
-    <h2>{{route.label}}</h2>
-
+<div class="container-fluid">
+  <div ng-show="!route">
+    <h4>Please select a route</h4>
+  </div>
+  <div ng-show="route">
+    <div class="row route-display">
+      <table class="borderless">
+        <tr>
+          <td>
+            <div class="route-label">
+              {{route.label}}
+            </div>
+          </td>
+          <td>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            From
+          </td>
+          <td>
+            {{route.from}}
+          </td>
+        </tr>
+        <tr>
+          <!-- <td>
+          </td> -->
+          <td>
+            To
+          </td>
+          <td>
+            {{route.to}}
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            Route ID to ping : {{route.id}}
+          </td>
+        </tr>
+      </table>
+    </div>
     <div class="row">
-      <div class="col-md-6 form-inline">
-        <label>
-          Label:
-          <input type="text" class="form-control" ng-model="route.label">
-        </label>
+      <uib-tabset active="active">
+        <uib-tab index="0" heading="Edit Route Description">
+          <div class="editor-tabs-content">
+            <div class="row">
+              <div class="col-md-6 form-horizontal">
+                <label>
+                  Label:  </label>
+                <input type="text" class="form-control" ng-model="route.label">
 
-        <label>
-          Name:
-          <input type="text" class="form-control" ng-model="route.name">
-        </label>
 
-        <label>
-          From:
-          <input type="text" class="form-control" ng-model="route.from">
-        </label>
+                <label>
+                  Name:   </label>
+                <input type="text" class="form-control" ng-model="route.name">
 
-        <label>
-          To:
-          <input type="text" class="form-control" ng-model="route.to">
-        </label>
-      </div>
 
-      <div class="col-md-6 form-inline">
-        <label>
-          Schedule:
-          <input type="text" class="form-control" ng-model="route.schedule">
-        </label>
+                <label>
+                  From:  </label>
+                <input type="text" class="form-control" ng-model="route.from">
 
-        <label>Tags:
-        <tag-editor ng-model="disp.routeTags">
-        </tag-editor></label>
 
-        <!-- ng-if creates a scope -->
-        <label ng-if="adminService.session().role == 'superadmin'">
-          Company:
-          <company-selector class="form-control" ng-model="$parent.route.transportCompanyId">
-          </company-selector>
-        </label>
-      </div>
+                <label>
+                  To:</label>
+                <input type="text" class="form-control" ng-model="route.to">
+
+              </div>
+
+              <div class="col-md-6 form-inline">
+                <label>
+                  Schedule:  </label>
+                <input type="text" class="form-control" ng-model="route.schedule">
+
+
+                <label>Tags:</label>
+                <tag-editor ng-model="disp.routeTags">
+                </tag-editor>
+
+                <!-- ng-if creates a scope -->
+                <label ng-if="adminService.session().role == 'superadmin'">
+                  Company:</label>
+                <company-selector class="form-control" ng-model="$parent.route.transportCompanyId">
+                </company-selector>
+              </div>
+
+              <div class="path-editor">
+                <path-editor path="route.path" trip-stops="tripStops">
+                </path-editor>
+              </div>
+
+              <div class="row">
+                <div class="route-buttons">
+                  <div class="btn-group">
+                    <button class="btn btn-primary" ng-click="saveRoute()" ng-disabled="!route">
+                      Save
+                    </button>
+                    <button class="btn btn-default" ng-click="resetRoute()">
+                      Reset
+                    </button>
+                  </div>
+                  <button class="btn btn-danger" ng-click="deleteRoute()" ng-disabled="!route || !route.id">
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </uib-tab>
+        <uib-tab index="1" heading="Edit Trips">
+          <trips-editor route-id="route.id" ng-if="route.id">
+          </trips-editor>
+        </uib-tab>
+      </uib-tabset>
     </div>
-
-    <label>Path:</label>
-    <path-editor path="route.path" trip-stops="tripStops">
-    </path-editor>
-
-    <div class="btn-group">
-      <button class="btn btn-primary" ng-click="saveRoute()"
-        ng-disabled="!route">
-        Save
-      </button>
-      <button class="btn btn-default" ng-click="resetRoute()">
-        Reset
-      </button>
-    </div>
-    <button class="btn btn-danger" ng-click="deleteRoute()"
-      ng-disabled="!route || !route.id">
-      Delete
-    </button>
   </div>
 
-  <div ng-show="edit == 'trips'">
-    <trips-editor route-id="route.id" ng-if="route.id">
-    </trips-editor>
-  </div>
 </div>

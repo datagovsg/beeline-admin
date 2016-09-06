@@ -1,11 +1,10 @@
 <div>
-
   <div class="btn-group" role="group" aria-label="...">
     <button title="copy" type="button" class="btn btn-default"   ng-click="copySelected()" ng-disabled="!selectedRoute">
       <span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span>
      Copy Route
     </button>
-    <button type="button" class="btn btn-default" ng-click="selectRoute({})">
+    <button type="button" class="btn btn-default btn-primary" ng-click="selectRoute({})">
       <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
       Create New
     </button>
@@ -17,8 +16,9 @@
     ng-class="{
       active: selectedRoute == route
     }"
-    > <a class="">
-      {{route.label}}:   <small>(~{{route.id}})</small>
+    > <a>
+      {{route.label}}
+      <small> (ID: {{route.id}}) </small>
             <br />
             {{route.from}} to
             <br />

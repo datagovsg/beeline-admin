@@ -1,9 +1,24 @@
-
-route-editor {
-  label {
-    display: block;
-  }
+.route-editor {
   width: 100%;
   height: 400px;
   display: block;
+
+  label {
+    display: block;
+  }
+
+  .route-buttons {
+    margin-top: 20px;
+    margin-bottom: 50px;
+  }
+}
+
+.route-display {
+  margin-top: $padding-large-vertical*2;
+  margin-bottom: $padding-large-vertical*2;
+  font-size: $font-size-base;
+}
+
+.editor-tabs-content{
+  margin-top: $padding-large-vertical*4;
 }

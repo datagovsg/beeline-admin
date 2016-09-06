@@ -56,7 +56,7 @@ html, body {
 }
 
 body {
-  padding-top: $navbar-height; 
+  padding-top: $navbar-height;
 }
 
 table td,
@@ -184,3 +184,11 @@ hr {
       padding: 0px 2px;
 
   }
+
+
+.route-label {
+  background-color: $brand-primary;
+  color: $white;
+  border-radius: 5px;
+  text-align: center;
+}
