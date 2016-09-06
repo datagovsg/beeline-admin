@@ -1,20 +1,13 @@
-  <br clear="both">
   <div class="path-editor container-fluid">
     <div class="row">
-      <h4>Route Path</h4>
-      <div class="col-lg-6 map-container"></div>
-      <div class="col-lg-6">
+    <label class="control-label">Route Path</label>
+      <div class="col-lg-12 map-container"></div>
+      <div class="col-lg-12">
         <div class="path-buttons">
           <button class="btn btn-default"
             ng-click="googlePath(tripStops)">
             Regenerate Path
           </button>
-        </div>
-        <textarea class="form-control"
-          ng-model="path"
-          placeholder="Path encoded as polyline"
-          rows=10></textarea>
-          <div class="path-buttons">
             <span class="btn-group">
               <button class="btn btn-primary"
                 ng-click="updatePath()">
@@ -25,7 +18,11 @@
                 Clear path
               </button>
             </span>
-          </div>
+        </div>
+        <textarea class="form-control"
+          ng-model="path"
+          placeholder="Path encoded as polyline"
+          rows=8></textarea>
       </div>
     </div>
   </div>

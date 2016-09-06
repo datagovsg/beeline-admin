@@ -187,8 +187,11 @@ hr {
 
 
 .route-label {
+  display: inline-block;
   background-color: $brand-primary;
   color: $white;
-  border-radius: 5px;
+  border-radius: $padding-small-vertical;
+  padding: $padding-small-vertical;
   text-align: center;
+  margin-bottom: $padding-large-vertical;
 }
