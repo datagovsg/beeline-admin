@@ -35,6 +35,10 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
     startDate: startOfMonth,
     endDate: endOfMonth,
     userQuery: null,
+    transactionId: null,
+    chargeId: null,
+    paymentId: null,
+    ticketId: null
   }
 
   $scope.disp = {
@@ -213,6 +217,18 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
     }
     if ($scope.filter.stopQuery) {
       queryOptions.stopQuery = $scope.filter.stopQuery
+    }
+    if ($scope.filter.transactionId) {
+      queryOptions.transactionId = $scope.filter.transactionId;
+    }
+    if ($scope.filter.chargeId) {
+      queryOptions.chargeId = $scope.filter.chargeId
+    }
+    if ($scope.filter.paymentId) {
+      queryOptions.paymentId = $scope.filter.paymentId
+    }
+    if ($scope.filter.ticketId) {
+      queryOptions.ticketId = $scope.filter.ticketId
     }
 
     if (AdminService.getCompanyId()) {
