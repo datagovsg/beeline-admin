@@ -1,6 +1,6 @@
 import _ from 'lodash'
 
-export default function(RoutesService, LoadingSpinner) {
+export default function(RoutesService, LoadingSpinner, $rootScope, commonModals) {
 
   return {
     template: require('./routeSelector.html'),
@@ -16,12 +16,24 @@ export default function(RoutesService, LoadingSpinner) {
         scope.selectedRoute = route
         if (route) scope.selectedRouteId = route.id;
       };
-      scope.copySelected = function() {
+      scope.copySelected = async function() {
         if (scope.selectedRoute) {
-          var newRoute = _.assign({}, scope.selectedRoute);
+          var newRoute = _.omit(scope.selectedRoute, ['id']);
 
-          delete newRoute.id;
-          RoutesService.saveRoute(newRoute);
+          // Prompt for a new label
+          newRoute.label = await commonModals.prompt({
+            message: 'New route label',
+            'default': newRoute.label
+          })
+
+          if (!newRoute.label) {return;}
+
+          var createdRoute = await RoutesService.saveRoute(newRoute);
+
+          scope.availableRoutes.push(createdRoute);
+          scope.selectRoute(createdRoute)
+
+          scope.$apply();
         }
       }
       scope.refreshList = function() {

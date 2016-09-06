@@ -108,6 +108,7 @@ export default function ($rootScope, $uibModal) {
     }
     else {
       _.assign(modalScope, _.pick(options, ['title', 'message']))
+      modalScope.input = options.default;
     }
 
     var dialog = $uibModal.open({
