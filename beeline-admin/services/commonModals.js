@@ -35,6 +35,38 @@ export default function ($rootScope, $uibModal) {
     return dialog.result;
   }
 
+  this.flash = function (options) {
+    var modalScope = $rootScope.$new();
+
+    if (typeof options === 'string') {
+      _.assign(modalScope, {
+        title: 'Alert',
+        message: options
+      })
+    }
+    else {
+      _.assign(modalScope, _.pick(options, ['title', 'message']))
+    }
+
+    var dialog = $uibModal.open({
+      template: alertModalTemplate,
+      scope: modalScope,
+      keyboard: false,
+      backdrop: 'static'
+    });
+
+    setTimeout(() => dialog.close(), (options && options.duration) || 1000);
+
+    dialog.result.then(() => {
+      modalScope.$destroy();
+    }, (err) => {
+      modalScope.$destroy();
+      throw err;
+    })
+
+    return dialog.result;
+  }
+
   this.confirm = function (options) {
     var modalScope = $rootScope.$new();
 

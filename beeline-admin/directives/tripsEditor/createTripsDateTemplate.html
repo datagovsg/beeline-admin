@@ -1,0 +1,33 @@
+
+<div class="create-trips-date-popup">
+  <div class="modal-header">
+    <h3>Select dates</h3>
+  </div>
+  <div class="modal-body">
+    <multiple-date-picker
+      highlight-days="datepicker.highlightDays"
+      ng-model="data.selectedDates"
+      month="datepicker.month"
+      sunday-first-day="true"
+      month-changed="monthChanged">
+    </multiple-date-picker>
+
+    <ul class="date-list">
+      <li ng-repeat="date in data.selectedDates | orderBy:date.valueOf()">
+        {{date.format('DD-MMM-YYYY')}}
+      </li>
+    </ul>
+  </div> <!-- modal-body -->
+  <div class="modal-footer">
+    <div class="row">
+      <div class="col-sm-12">
+        <button class="btn btn-default" ng-click="$dismiss()">
+          Cancel
+        </button>
+        <button class="btn btn-primary" ng-click="$close(data.selectedDates)">
+          Create Trips
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

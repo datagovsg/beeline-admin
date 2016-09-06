@@ -1,21 +1,22 @@
 import _ from 'lodash'
 
 export default function(RoutesService, TripsService, AdminService, DriverService,
-  StopsPopup, LoadingSpinner, commonModals) {
+  StopsPopup, LoadingSpinner, commonModals, $uibModal) {
 
   return {
     scope: {
-      routeId: '=',
+      route: '=',
     },
     template: require('./tripsEditor.html'),
     link(scope, elem, attr) {
       scope.adminService = AdminService;
+      scope.selection = {};
 
       /* Date filters require UTC time */
       var now = new Date()
       now.setUTCHours(0, 0, 0, 0)
       scope.filter = {
-        startDate: now,
+        filterMonth: now,
       }
       scope.disp = {
         stopsList: [],
@@ -31,219 +32,230 @@ export default function(RoutesService, TripsService, AdminService, DriverService
           {size: -3 * 60 * 60 * 1000, label: '3 hrs'},
           {size: -6 * 60 * 60 * 1000, label: '6 hrs'},
         ],
-        trip: defaultTrip(),
-
-        addTripStop() {
-          this.trip.tripStops = this.trip.tripStops || [];
-          this.trip.tripStops.push({
-            time: new Date(2015,1,1,8,30,0),
-            canBoard: true,
-            canAlight: false
-          })
-        },
-        deleteTripStop(index) {
-          this.trip.tripStops.splice(index, 1)
-        }
       }; /* scope.disp */
-      scope.refreshTrips = function() {
+
+      function reloadTrips() {
         var promise = TripsService.getTrips({
-          routeId: scope.routeId,
-          startDate: new Date(scope.filter.startDate.getTime() - 8*60*60*1000 /* timezone offset */),
-          endDate: new Date(scope.filter.startDate.getTime() + 365 * 24 * 60 * 60 * 1000 - 8*60*60*1000 /* timezone offset */),
+          routeId: scope.route.id,
+          startDate: new Date(
+            scope.filter.filterMonth.getFullYear(),
+            scope.filter.filterMonth.getMonth(),
+            1
+          ),
+          endDate: new Date(
+            scope.filter.filterMonth.getFullYear(),
+            scope.filter.filterMonth.getMonth() + 1,
+            1
+          ),
           includeAvailability: true,
         })
         .then((trips) => {
-          // Add driver info to trips
-          return DriverService.fetchDriverInfo(trips)
-        })
-        .then((trips) => {
-          scope.trips = trips;
+          scope.trips = _.sortBy(trips, 'date');
 
           // populate dates
           scope.disp.existingDates = _.uniq(trips.map(tr => tr.date.getTime()))
             .map(dtStr => new Date(dtStr));
 
           // populate stops
-          var stopsSet = {}
+          // stops are keyed by (1) their stop id, (2) order of appearance
+          // Need to record the order of appearance in each tripStop
+          var stopsSet = {};
 
           for (let trip of trips) {
-            for (let tripStop of trip.tripStops) {
-              if (!(tripStop.stop.id in stopsSet)) {
-                stopsSet[tripStop.stop.id] = tripStop
-              }
-            }
+            var tsSet = _.groupBy(trip.tripStops, 'stopId');
+
+            _.mapValues(tsSet, (tripStops, stopId) => {
+
+              tripStops.forEach((tripStop, index) => {
+                tripStop.orderOfAppearance = index;
+                stopsSet[tripStop.stopId] = stopsSet[tripStop.stopId] || [];
+                stopsSet[tripStop.stopId][index] = stopsSet[tripStop.stopId][index]
+                  || tripStop;
+              })
+            })
           }
 
-          var stopsList = _.values(stopsSet);
+          var stopsList = _.flatten(_.values(stopsSet));
           stopsList = _.sortBy(stopsList, s => s.time)
           scope.disp.stopsList = stopsList;
-
         });
-
         LoadingSpinner.watchPromise(promise)
       }
-      scope.resetTrips = function() {
-        scope.disp.newDates = [];
-        scope.disp.trip = defaultTrip();
+      scope.findStop = (trip, stopId, ooA) => {
+        return trip.tripStops.find(ts => ts.stopId === stopId && ts.orderOfAppearance === ooA);
       }
-      scope.findStop = function(trip, stopId) {
-        return trip.tripStops.find(ts => ts.stop.id == stopId)
-      }
-      scope.referenceTrip = function(trip) {
-        scope.disp.trip = _.clone(trip);
-        scope.disp.trip.tripStops = _.cloneDeep(trip.tripStops);
-        delete scope.disp.trip.id;
-      }
-      scope.deleteTrip = async function(trip) {
-        if (await commonModals.confirm("Are you sure you want to delete?")) {
-          TripsService.deleteTrip(trip.id)
-          .then(scope.refreshTrips)
-          .catch((error) => {
-            console.error(error);
+      scope.currentTrip = {
+        data: {
+          trip: null,
+          newDates: [],
+          editingTrips: null
+        },
+
+        reset() {
+          this.data.newDates = [];
+          this.data.trip = defaultTrip();
+        },
+        takeReference(trip) {
+          if (trip) {
+            this.data.trip = _.clone(trip);
+            this.data.trip.tripStops = _.cloneDeep(trip.tripStops);
+          }
+          else {
+            this.data.trip = defaultTrip();
+          }
+          this.data.editingTrips = null;
+        },
+
+        edit(trip) {
+          this.data.trip = _.clone(trip);
+          this.data.trip.tripStops = _.cloneDeep(trip.tripStops);
+          this.data.newDates = [];
+          this.data.editingTrips = _(scope.selection.selected)
+            .values()
+            .sortBy('date')
+            .value();
+        },
+        save() {
+          return LoadingSpinner.watchPromise((() => {
+            if (this.data.editingTrips) {
+              // update the trips...
+              return TripsService.updateTrips(this.data.editingTrips, this.data.trip)
+                .then(reloadTrips)
+                .then(() => {
+                  return commonModals.flash("Trips updated")
+                })
+                .catch((error) => {
+                  console.log(error)
+                  commonModals.alert({
+                    title: error.data.error,
+                    message: error.data.message
+                  });
+                  throw error;
+                })
+            }
+            else {
+              return TripsService.createTrips(
+                this.data.newDates,
+                this.data.trip)
+              .then(reloadTrips)
+              .then(() => this.reset())
+              .then(() => {
+                return commonModals.flash("Trips created")
+              })
+              .catch((error) => {
+                console.log(error)
+                commonModals.alert({
+                  title: error.data.error,
+                  message: error.data.message
+                });
+                throw error;
+              })
+            }
+          })())
+        },
+
+        addTripStop() {
+          this.data.trip.tripStops = this.data.trip.tripStops || [];
+          this.data.trip.tripStops.push({
+            time: new Date(2015,1,1,8,30,0),
+            canBoard: true,
+            canAlight: true
           })
+        },
+        deleteTripStop(index) {
+          this.data.trip.tripStops.splice(index, 1)
         }
       }
-      scope.editTrip = function(trip) {
-        scope.disp.trip = _.clone(trip);
-        scope.disp.trip.tripStops = _.cloneDeep(trip.tripStops);
-      }
-      scope.clearEdit = function() {
-        scope.disp.trip = defaultTrip();
-      }
-      scope.saveTrips = function() {
-        return LoadingSpinner.watchPromise((async function() {
-          // get the driver id... and create the driver if non-existent
-          var driver = await DriverService.fetchDriverIds([scope.disp.trip])
 
-          if (scope.disp.trip.driverTelephone && !scope.disp.trip.driverId) {
-            driver = await DriverService.createDriver({
-              telephone: '+65' + scope.disp.trip.driverTelephone,
-              name: scope.disp.trip.driverTelephone,
-            })
-            scope.disp.trip.driverId = driver.id;
-          }
-          else if (!scope.disp.trip.driverTelephone) {
-            scope.disp.trip.driverId = null;
-          }
-
-          if (scope.disp.trip.id) {
-            // get a list of the trips to update
-            var trips = scope.trips.filter(tr => tr.id in scope.selection.selected)
-
-            // update the trips...
-            return TripsService.updateTrips(
-              trips,
-              scope.disp.trip)
-              .then(scope.refreshTrips)
-          }
-          else {
-            return TripsService.createTrips(
-              scope.disp.newDates,
-              scope.disp.trip)
-            .then(scope.refreshTrips)
-            .then(scope.resetTrips)
-            .then(() => {
-              return commonModals.alert("Trips created")
-            })
+      scope.tripList = {
+        async deleteTrip(trip) {
+          if (await commonModals.confirm("Are you sure you want to delete?")) {
+            TripsService.deleteTrip(trip.id)
+            .then(reloadTrips)
             .catch((error) => {
-              console.log(error)
-              commonModals.alert({
-                title: error.data.error,
-                message: error.data.message
-              });
+              console.error(error);
             })
           }
-        })())
-      }
-      scope.showPopupFor = function (ts) {
-        StopsPopup.show({
-          title: 'Select a Stop!'
-        })
-        .then((x) => {
-          ts.stopId = x.id;
-        })
-      }
-
-      //// Logic to handle trip selection (using Ctrl, Shift etc)
-      scope.selection = {
-        selected: {},
-        lastSelected: null,
-        listStart: null
-      }
-      scope.selectTrips = function (list, index, event) {
-        var id = list[index].id;
-
-        function toggle(index) {
-          if (list[index].id in scope.selection.selected) {
-            delete scope.selection.selected[list[index].id]
-          }
-          else {
-            scope.selection.selected[list[index].id] = list[index];
-          }
         }
+      }
 
-        if (event.ctrlKey) {
-          event.preventDefault();
-          toggle(index);
-          scope.selection.listStart = index;
-          scope.selection.lastSelected = index;
-        }
-        else if (event.shiftKey) {
-          // FIXME: This is still not entirely intuitive
-          event.preventDefault();
-
-          if (index < scope.selection.lastSelected) {
-            for (let i=scope.selection.lastSelected - (
-                    (scope.selection.lastSelected == scope.selection.listStart) ? 1
-                    : (scope.selection.lastSelected < scope.selection.listStart) ? 1
-                    : 0);
-                  i >= index;
-                  i--) {
-              toggle(i)
-            }
-          }
-          else if (index > scope.selection.lastSelected) {
-            for (let i = scope.selection.lastSelected + (
-                    (scope.selection.lastSelected == scope.selection.listStart) ? 1
-                    : (scope.selection.lastSelected > scope.selection.listStart) ? 1
-                    : 0);
-                  i <= index;
-                  i++) {
-              toggle(i)
-            }
-          }
-
-          scope.selection.lastSelected = index;
+      scope.showCreateTripDialog = async function() {
+        if (typeof scope.selection.lastSelectedIndex === 'number') {
+          scope.currentTrip.takeReference(scope.trips[scope.selection.lastSelectedIndex]);
         }
         else {
-          event.preventDefault();
-          scope.selection.selected = {}
-          toggle(index)
-          scope.selection.listStart = index;
-          scope.selection.lastSelected = index;
+          scope.currentTrip.reset();
         }
-        if (scope.selection.selected[id]) {
-          scope.editTrip(list[index])
-        }
-        // if nothing is selected clear the trip
-        console.log(scope.selection.selected)
-        if (!_.every(_.values(scope.selection.selected))
-          || _.keys(scope.selection.selected).length == 0
-        ) {
-          scope.disp.trip = defaultTrip();
-        }
-      }; /* selectTrips() */
 
-      scope.$watchGroup(['filter.startDate', 'filter.endDate'], scope.refreshTrips)
-      scope.$watch('routeId', scope.refreshTrips)
-      scope.$watch('startDate', () => {
-        scope.disp.validDates = _.range(0, 365)
-          .map(i => new Date(now.getTime() + i * 24 * 3600 * 1000));
-      })
+        // show the dates
+        var childScope = scope.$new();
+        var modal = $uibModal.open({
+          controller: CreateTripsDateController,
+          keyboard: false,
+          backdrop: 'static',
+          template: require('./createTripsDateTemplate.html'),
+          scope: childScope
+        })
+
+        try {
+          scope.currentTrip.data.newDates = await modal.result;
+          console.log(scope.disp.newDates);
+        }
+        catch (err) {
+          // Dismissed without reason
+          return;
+        }
+        finally {
+          childScope.$destroy()
+        }
+
+        showTripDataEditor();
+      }
+      scope.showEditTripDialog = async function () {
+        scope.currentTrip.edit(scope.trips[scope.selection.lastSelectedIndex]);
+
+        showTripDataEditor();
+      }
+
+      async function showTripDataEditor() {
+        // Loop repeatedly until the save succeeds (to avoid losing data)
+        while (true) {
+          var childScope = scope.$new();
+          var modal = $uibModal.open({
+            controller: TripDataEditorController,
+            keyboard: false,
+            backdrop: 'static',
+            template: require('./tripDataEditor.html'),
+            scope: childScope,
+            windowClass: 'wide-modal'
+          })
+
+          try {
+            var tripData = await modal.result;
+          }
+          catch (err) {
+            break;
+          }
+
+          try {
+            await scope.currentTrip.save();
+            break;
+          }
+          catch (err) {
+            continue;
+          }
+          finally {
+            childScope.$destroy();
+          }
+        }
+      }
+
+      scope.$watchGroup(['filter.filterMonth', 'route.id'], reloadTrips)
 
       function defaultTrip() {
         return {
-          routeId: scope.routeId,
+          routeId: scope.route.id,
+          transportCompanyId: scope.route.transportCompanyId,
           tripStops: [],
           bookingInfo: {
             windowSize: -6 * 3600 * 1000,
@@ -253,4 +265,54 @@ export default function(RoutesService, TripsService, AdminService, DriverService
       }
     }
   }
+}
+
+function CreateTripsDateController($scope, TripsService) {
+  var lastPromise = null;
+  var now = new Date();
+
+  $scope.datepicker = {
+    highlightDays: [],
+    daysAllowed: null,
+    month: moment(
+      Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()), 'x'
+    ).utcOffset(0)
+  }
+
+  $scope.monthChanged = function (newMonth) {
+    $scope.datepicker.daysAllowed = [];
+
+    var promise = lastPromise = TripsService.getTrips({
+      routeId: $scope.route.id,
+      startDate: new Date(
+        newMonth.year(),
+        newMonth.month(),
+        1
+      ),
+      endDate: new Date(
+        newMonth.year(),
+        newMonth.month() + 1,
+        1
+      ),
+    })
+    .then((trips) => {
+      if (promise !== lastPromise) return;
+
+      $scope.datepicker.daysAllowed = null;
+      // block out the days with trips
+      $scope.datepicker.highlightDays = trips.map(
+        trip => ({
+          date: moment(trip.date),
+          css: 'trip-exists',
+          selectable: true,
+          title: `Trip exists (ID #${trip.id})`
+        })
+      )
+    });
+  }
+  $scope.monthChanged(moment())
+}
+
+function TripDataEditorController($scope) {
+
 }
