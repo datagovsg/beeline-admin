@@ -35,6 +35,7 @@ angular.module('beeline-admin', [
 .directive('pathEditor', require('./directives/pathEditor/pathEditor').default)
 .directive('tripsEditor', require('./directives/tripsEditor/tripsEditor').default)
 .directive('tripSelectionBroker', require('./directives/tripSelector/tripSelectionBroker').default)
+.directive('multiSelectBroker', require('./directives/multiSelectBroker').default)
 .directive('companyLogo', require('./directives/companyLogo').default)
 .directive('mySort', require('./directives/mySort').default)
 .directive('spanSelect', require('./directives/spanSelect').default)
@@ -42,6 +43,7 @@ angular.module('beeline-admin', [
 /* Selectors */
 .directive('tripStatusSelector', require('./directives/selectors/tripStatus').default)
 .directive('stopSelector', require('./directives/selectors/stop').default)
+.directive('stopSelectorPopup', require('./directives/selectors/stopPopup').default)
 .directive('userSelector', require('./directives/selectors/user').default)
 .directive('superAdminCompanySelector', require('./directives/selectors/superAdminCompany').default)
 .directive('companySelector', require('./directives/selectors/company').default)
