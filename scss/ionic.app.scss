@@ -55,6 +55,10 @@ html, body {
   height: 100%;
 }
 
+body {
+  padding-top: $navbar-height;
+}
+
 table td,
 table th {
   border: solid 1px #CCC;
@@ -168,4 +172,26 @@ hr {
       margin-right: 0;
     }
   }
+}
+
+
+  .borderless table {
+    background-color: transparent !important;
+  }
+  .borderless td, .borderless th {
+      border: none;
+      vertical-align: top;
+      padding: 0px 2px;
+
+  }
+
+
+.route-label {
+  display: inline-block;
+  background-color: $brand-primary;
+  color: $white;
+  border-radius: $padding-small-vertical;
+  padding: $padding-small-vertical;
+  text-align: center;
+  margin-bottom: $padding-large-vertical;
 }
