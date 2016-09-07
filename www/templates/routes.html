@@ -1,4 +1,4 @@
-<div class="container-fluid withnav">
+<div class="container-fluid withnav routes-page">
   <h1>Routes</h1>
 
   <div>
@@ -23,8 +23,8 @@
         <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="from">Route<br />Description</th>
         <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="startDate">Start date</th>
         <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="endDate">End date</th>
-        <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastStartTime">Start time</th>
-        <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastEndTime">End time</th>
+        <!-- <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastStartTime">Start time</th> -->
+        <!-- <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastEndTime">End time</th> -->
         <th sort-direction='filter.order' sort-model="filter.orderBy" >Status</th>
         <th sort-direction='filter.order' sort-model="filter.orderBy" >Boarding</th>
         <th sort-direction='filter.order' sort-model="filter.orderBy" >Alighting</th>
@@ -61,16 +61,16 @@
             </tr>
           </table>
         </td>
-        <td>{{route.startDate | date:'dd MMM yyyy (EEE)'}}</td>
-        <td>{{route.endDate   | date:'dd MMM yyyy (EEE)'}}</td>
-        <td>{{route.lastStartTime | intervalToTime | date:'HH:mm'}}</td>
-        <td>{{route.lastEndTime   | intervalToTime | date:'HH:mm'}}</td>
+        <td>{{route.startDate | date:'dd MMM yyyy'}}<br />{{route.startDate | date:'(EEE)'}}</td>
+        <td>{{route.endDate | date:'dd MMM yyyy'}}<br />{{route.endDate | date:'(EEE)'}}</td>
+        <!-- <td>{{route.lastStartTime | intervalToTime | date:'HH:mm'}}</td> -->
+        <!-- <td>{{route.lastEndTime   | intervalToTime | date:'HH:mm'}}</td> -->
         <td>Status</td>
-        <td width="12%">
+        <td width="15%">
           <table class="borderless">
             <tr>
-              <td>
-                HH:MM am
+              <td class="text-nowrap">
+                HH:mm
               </td>
               <td>
                 Stop Name Description Lorem Ipsum
@@ -78,11 +78,11 @@
             </tr>
           </table>
         </td>
-        <td width="12%">
+        <td width="15%">
           <table class="borderless">
             <tr>
-              <td>
-                HH:MM am
+              <td class="text-nowrap">
+                HH:mm
               </td>
               <td>
                 Stop Name Description Lorem Ipsum
@@ -93,7 +93,7 @@
         <td><button ng-click="viewRoute(route.id)">View</button></td>
         <td>{{route.lastDriverName}}</td>
         <td>{{route.lastPrice}}</td>
-        <td>{{route.lastCapacity}}</td>
+        <td>{{route.lastCapacity}}<span class="glyphicon glyphicon-user" aria-hidden="true"></span></td>
         <td>
           <ul class="tags">
             <li ng-repeat="tag in route.tags">{{tag}}</li>
