@@ -33,8 +33,15 @@ export default function() {
     this.isAuthenticated = true;
   }
 
-  this.refreshToken = function () {
-    this.lock.refreshToken()
+  this.refreshToken = function (refreshToken) {
+    return new Promise((resolve, reject) => {
+      auth0.refreshToken(refreshToken, (err, delegationResult) => {
+        if (err) return reject(err);
+
+        this.authenticate(delegationResult.idToken);
+        resolve(delegationResult);
+      })
+    })
   }
 
   this.signout = function () {
