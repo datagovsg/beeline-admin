@@ -24,6 +24,7 @@
       <table class="table table-condensed table-striped table-hover">
         <thead>
           <tr>
+            <th></th>
             <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="id">Route<br />ID</th>
             <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="label">Route<br />label</th>
             <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Company</th>
@@ -45,6 +46,9 @@
         </thead>
         <tbody>
           <tr ng-repeat="route in data.rows">
+            <td>
+              {{ $index + 1 }}
+            </td>
             <td>{{route.id}}</td>
             <td><span class="route-label">{{route.label}}</span></td>
             <td style="width:6%">{{route.transportCompany.name}}</td>
