@@ -65,7 +65,9 @@
         <td>{{route.endDate | date:'dd MMM yyyy'}}<br />{{route.endDate | date:'(EEE)'}}</td>
         <!-- <td>{{route.lastStartTime | intervalToTime | date:'HH:mm'}}</td> -->
         <!-- <td>{{route.lastEndTime   | intervalToTime | date:'HH:mm'}}</td> -->
-        <td>Status</td>
+        <td><span class="label route-active">Active</span><br />
+            <span class="label route-notstarted">Not Started</span><br />
+            <span class="label route-ended">Ended</span></td>
         <td width="15%">
           <table class="borderless">
             <tr>
