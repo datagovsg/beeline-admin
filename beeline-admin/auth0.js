@@ -44,6 +44,15 @@ export default function() {
     })
   }
 
+  this.getProfile = function () {
+    return new Promise((resolve, reject) => {
+      auth0.getProfile(this.idToken, (err, profile) => {
+        if (err) return reject(err);
+        resolve(profile);
+      })
+    });
+  }
+
   this.signout = function () {
     this.isAuthenticated = false;
     this.profile = this.idToken = null;
