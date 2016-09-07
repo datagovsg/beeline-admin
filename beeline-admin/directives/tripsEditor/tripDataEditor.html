@@ -1,0 +1,129 @@
+<div class="trip-data-editor">
+  <!-- If creating trips, tripIds doesn't exist -->
+  <div class="modal-header" ng-if="!currentTrip.data.editingTrips">
+    <h3>Create trips</h3>
+    <ul class="date-list">
+      <li ng-repeat="date in currentTrip.data.newDates | orderBy:date.valueOf()">
+        {{date.format('DD-MMM-YYYY')}}
+      </li>
+    </ul>
+  </div>
+
+  <!-- If editing trips, tripIds exist -->
+  <div class="modal-header" ng-if="currentTrip.data.editingTrips">
+    <h3>Edit trips</h3>
+    <ul class="date-list">
+      <li ng-repeat="trip in currentTrip.data.editingTrips">
+        {{trip.id}} ({{trip.date | date: 'dd-MMM-yyyy'}})
+      </li>
+    </ul>
+  </div>
+
+  <div class="modal-body">
+    <div class="flex-grow overflow-scroll">
+      <div class="flex-row form-inline">
+        <div class="flex-grow">
+          <label>
+            Driver Id: <input type="tel" class="form-control" ng-model="currentTrip.data.trip.driverId" />
+          </label>
+
+          <label>
+            Trip capacity: <input type="number" class="form-control" min="0" ng-model="currentTrip.data.trip.capacity" />
+          </label>
+
+          <label>
+            Trip price: <input type="number" class="form-control" min="0" step="0.01" ng-model="currentTrip.data.trip.price" />
+          </label>
+
+          <label ng-if="adminService.session().role == 'superadmin'">
+            Company:
+            <company-selector class="form-control" ng-model="currentTrip.data.trip.transportCompanyId">
+            </company-selector>
+          </label>
+        </div>
+        <div class="flex-grow">
+          <label>
+            Close booking
+            <select class="form-control" ng-model="currentTrip.data.trip.bookingInfo.windowSize"
+              ng-options="opt.size as opt.label for opt in disp.windowSizeOptions">
+            </select>
+          </label>
+          <label>
+            ... before
+            <select class="form-control" ng-model="currentTrip.data.trip.bookingInfo.windowType">
+              <option value="stop">passenger's pick-up stop</option>
+              <option value="firstStop">first stop of trip</option>
+            </select>
+          </label>
+          <label>
+            Notes to passenger:
+            <input type="text" class="form-control" ng-model="currentTrip.data.trip.bookingInfo.notes">
+          </label>
+          <label>
+            Current Status
+            <trip-status-selector class="form-control" ng-model="currentTrip.data.trip.status"></trip-status-selector>
+          </label>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Stop</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="tripStop in currentTrip.data.trip.tripStops">
+            <td>
+              <input type="time" ng-model="tripStop.time" />
+            </td>
+            <td class="form-inline">
+              <!-- <input type="text" ng-model="tripStop.stopId"> -->
+              <stop-selector class="form-control" ng-model="tripStop.stopId"
+              ></stop-selector>
+              <stop-selector-popup ng-model="tripStop.stopId" class="btn btn-default">
+                ?
+              </stop-selector-popup>
+            </td>
+            <td>
+              <label>
+                <input type="checkbox" ng-model="tripStop.canBoard" />
+                Boarding
+              </label>
+            </td>
+            <td>
+              <label>
+                <input type="checkbox" ng-model="tripStop.canAlight" />
+                Alighting
+              </label>
+            </td>
+            <td>
+              <button class="btn btn-default glyphicon glyphicon-trash"
+                ng-click="currentTrip.deleteTripStop($index)"
+              ></button>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td>
+              <button class="btn btn-default glyphicon glyphicon-plus"
+                ng-click="currentTrip.addTripStop()"
+              ></button>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div> <!-- trip-data-editor -->
+
+  <div class="modal-footer">
+    <button class="btn btn-primary" ng-click="$close(currentTrip.data)">
+      Save
+    </button>
+    <button class="btn btn-default" ng-click="$dismiss()">
+      Cancel
+    </button>
+  </div>
+</div>
