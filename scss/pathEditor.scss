@@ -2,4 +2,10 @@ path-editor {
   .map-container {
     min-height: 400px;
   }
+  .path-buttons {
+    margin: $padding-large-vertical*2 0;
+    .btn-default{
+      margin-right: 10px;
+    }
+  }
 }

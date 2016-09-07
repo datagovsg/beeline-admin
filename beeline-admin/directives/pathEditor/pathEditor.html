@@ -1,21 +1,28 @@
-<div class="path-editor">
-  <button class="btn btn-default"
-    ng-click="googlePath(tripStops)">
-    Google path
-  </button>
-  <span class="btn-group">
-    <button class="btn btn-primary"
-      ng-click="updatePath()">
-      Update path
-    </button>
-    <button class="btn btn-danger"
-      ng-click="clearPath()">
-      Clear path
-    </button>
-  </span>
-  <div class="map-container"></div>
-  <textarea class="form-control"
-    ng-model="path"
-    placeholder="Path encoded as polyline"
-    rows=7></textarea>
-</div>
+  <div class="path-editor container-fluid">
+    <div class="row">
+    <label class="control-label">Route Path</label>
+      <div class="col-lg-12 map-container"></div>
+      <div class="col-lg-12">
+        <div class="path-buttons">
+          <button class="btn btn-default"
+            ng-click="googlePath(tripStops)">
+            Regenerate Path
+          </button>
+            <span class="btn-group">
+              <button class="btn btn-primary"
+                ng-click="updatePath()">
+                Save route path
+              </button>
+              <button class="btn btn-danger"
+                ng-click="clearPath()">
+                Clear path
+              </button>
+            </span>
+        </div>
+        <textarea class="form-control"
+          ng-model="path"
+          placeholder="Path encoded as polyline"
+          rows=8></textarea>
+      </div>
+    </div>
+  </div>

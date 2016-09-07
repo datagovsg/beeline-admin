@@ -101,11 +101,12 @@ angular.module('beeline-admin', [
       }
 
       if (auth.credentials.refreshToken) {
-        auth0.refreshToken(auth.credentials.refreshToken, (err, delegationResult) => {
-          if (err) {
-            return AdminService.login()
-          }
+        auth.refreshToken(auth.credentials.refreshToken)
+        .then((delegationResult) => {
           store.set('sessionToken', delegationResult.id_token);
+        })
+        .catch((err) => {
+          AdminService.login();
         })
         return;
       }
