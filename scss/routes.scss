@@ -11,4 +11,8 @@
   .route-notstarted {
     @include label-variant($label-warning-bg);
   }
+  .create-button {
+    margin-bottom: 20px;
+    margin-right: 20px;
+  }
 }
