@@ -93,7 +93,7 @@ angular.module('beeline-admin', [
     if (token) {
       if (!jwtHelper.isTokenExpired(token)) {
         if (!auth.isAuthenticated) {
-          auth.authenticate(idToken);
+          auth.authenticate(token);
           auth.getProfile().then((profile) => {
             store.set('profile', profile);
           })
@@ -104,7 +104,7 @@ angular.module('beeline-admin', [
       if (refreshToken) {
         auth.refreshToken(refreshToken)
         .then((delegationResult) => {
-          auth.authenticate(idToken);
+          auth.authenticate(delegationResult.idToken);
           auth.getProfile().then((profile) => {
             store.set('profile', profile);
           })
