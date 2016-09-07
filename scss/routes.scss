@@ -6,9 +6,9 @@
     @include label-variant($label-success-bg);
   }
   .route-ended {
-    @include label-variant($gray-darker);
+    @include label-variant($label-info-bg);
   }
   .route-notstarted {
-    @include label-variant($label-info-bg);
+    @include label-variant($label-warning-bg);
   }
 }
