@@ -18,9 +18,9 @@ export default function ($http, $location, store, jwtHelper, auth, commonModals)
   this.beeline = function(options) {
     options.url = env.BACKEND_URL + options.url
 
-    if (store.get('sessionToken')) {
+    if (auth.idToken) {
       options.headers = options.headers || {};
-      options.headers.authorization = 'Bearer ' + store.get('sessionToken');
+      options.headers.authorization = 'Bearer ' + auth.idToken;
     }
 
     return $http(options);
@@ -35,19 +35,11 @@ export default function ($http, $location, store, jwtHelper, auth, commonModals)
   }
 
   this.login = function() {
-    auth.signin({
-      authParams: {
-        scope: 'openid name email app_metadata user_id'
-      }
-    })
+    auth.lock.show()
   }
 
   this.signup = function() {
-    auth.signup({
-      authParams: {
-        scope: 'openid name email app_metadata user_id'
-      }
-    })
+    auth.lock.show()
   }
 
   var lastSessionToken = null;
