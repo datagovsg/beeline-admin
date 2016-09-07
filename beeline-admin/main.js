@@ -79,29 +79,35 @@ angular.module('beeline-admin', [
     store.set('sessionToken', auth.authResult.idToken)
     store.set('refreshToken', auth.authResult.refreshToken)
     $cookies.put('sessionToken', auth.authResult.idToken)
+    auth.getProfile().then((profile) => {
+      store.set('profile', profile);
+    })
   }
-  else {
-    authenticateToken(store.get('sessionToken'))
-  }
+  authenticateToken(store.get('sessionToken'), store.get('refreshToken'))
 
   $rootScope.$on('$locationChangeStart', function() {
-    authenticateToken(store.get('sessionToken'))
+    authenticateToken(store.get('sessionToken'), store.get('refreshToken'))
   });
 
-  function authenticateToken(token) {
+  function authenticateToken(token, refreshToken) {
     if (token) {
       if (!jwtHelper.isTokenExpired(token)) {
         if (!auth.isAuthenticated) {
-          //Re-authenticate user if token is valid
-          auth.authenticate(token);
+          auth.authenticate(idToken);
+          auth.getProfile().then((profile) => {
+            store.set('profile', profile);
+          })
         }
         return;
       }
 
-      if (auth.credentials.refreshToken) {
-        auth.refreshToken(auth.credentials.refreshToken)
+      if (refreshToken) {
+        auth.refreshToken(refreshToken)
         .then((delegationResult) => {
-          store.set('sessionToken', delegationResult.id_token);
+          auth.authenticate(idToken);
+          auth.getProfile().then((profile) => {
+            store.set('profile', profile);
+          })
         })
         .catch((err) => {
           AdminService.login();
