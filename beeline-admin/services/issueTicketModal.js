@@ -56,18 +56,20 @@ function IssueTicketController($scope, AdminService, LoadingSpinner, commonModal
     }
 
     const oldTransactionIds = $scope.data.cancelledTickets &&
-        $scope.data.cancelledTickets
+        _($scope.data.cancelledTickets)
           .map(tkt => (tkt.ticketSale && tkt.ticketSale.transactionId) ||
               (tkt.ticketExpense && tkt.ticketExpense.transactionId) || false
           )
-          .filter(tid => tid !== false);
+          .filter(tid => tid !== false)
+          .uniq()
+          .value();
     const cancelledTicketIds = $scope.data.cancelledTickets &&
         $scope.data.cancelledTickets.map(ticket => ticket.id)
 
     const oldTransactionDescription = oldTransactionIds && oldTransactionIds.length ?
-        `(Original Txn #${oldTransactionIds.join(',#')})` : '';
+        `(Original Txn #${oldTransactionIds.join(', #')})` : '';
     const oldTicketDescription = cancelledTicketIds && cancelledTicketIds.length ?
-        `(Replacing tickets #${cancelledTicketIds.join(',#')})` : '';
+        `(Replacing tickets #${cancelledTicketIds.join(', #')})` : '';
     const description = $scope.data.reason || '';
 
     var issueRequest = {
