@@ -72,4 +72,14 @@ trips-editor {
   .reset-buttons {
     margin-bottom: $padding-large-vertical*1;
   }
+
+  .trip-normal {
+     @include label-variant($label-success-bg);
+   }
+  .trip-cancelled {
+     @include label-variant($label-danger-bg);
+   }
+  .trip-void {
+     @include label-variant($label-default-bg);
+   }
 }
