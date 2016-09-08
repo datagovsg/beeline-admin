@@ -100,10 +100,10 @@ table.trips-list {
   }
 }
 
-.select-company{
-  margin: 20px;
-  display: inline-block;
-  .control-label{
-    margin-right: 40px;
+.trip-data-editor-nav{
+  margin: $padding-large-vertical*2 0;
+
+  .form-control{
+  margin-left: $padding-small-horizontal;
   }
 }

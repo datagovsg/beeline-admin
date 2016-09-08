@@ -13,214 +13,137 @@
   <div class="modal-header" ng-if="currentTrip.data.editingTrips">
     <h3>Edit trips</h3>
     <ul class="date-list">
+      <p>
+        Trip ID:
+      </p>
       <li ng-repeat="trip in currentTrip.data.editingTrips">
-        Trip ID: {{trip.id}} - ({{trip.date | date: 'dd-MMM-yyyy'}})
+      {{trip.id}} ({{trip.date | date: 'dd-MMM-yyyy'}})
       </li>
     </ul>
   </div>
-
   <div class="modal-body">
-
-
-
     <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-10 col-lg-offset-1">
-          <div class="row select-company">
-                <label class="control-label" ng-if="adminService.session().role == 'superadmin'"> Company </label>
-                <company-selector class="form-control" ng-model="currentTrip.data.trip.transportCompanyId">
-                </company-selector>
+      <div class="overflow-scroll">
+        <div class=" trip-data-editor-nav">
+          <div class="row">
+            <div class="col-lg-10 col-lg-offset-1">
+              <label ng-if="adminService.session().role == 'superadmin'">
+            Company:
+            <company-selector class="form-control" ng-model="currentTrip.data.trip.transportCompanyId">
+            </company-selector>
+            </label>
+            </div>
           </div>
           <div class="row">
-            <div class="col-lg-6">
-              <form class="form-horizontal">
-                <div class="form-group">
-                  <label class="col-sm-2 control-label">Bus Capacity</label>
-                  <div class="col-sm-10">
-                    <input type="number" class="form-control" min="0" ng-model="currentTrip.data.trip.capacity" placeholder="Bus Capacity" />
+            <div class="col-lg-10 col-lg-offset-1">
+              <div class="flex-grow">
+                <div class="flex-row form-inline">
+                  <div class="flex-grow">
+                    <label>
+                    Trip capacity: <input type="number" class="form-control" min="0" ng-model="currentTrip.data.trip.capacity" />
+                  </label>
+                    <br />
+                    <label>
+                    Trip price: <input type="number" class="form-control" min="0" step="0.01" ng-model="currentTrip.data.trip.price" />
+                  </label>
                   </div>
-                </div>
-                <div class="form-group">
-                  <label class="col-sm-2 control-label">Trip Price ($)</label>
-                  <div class="col-sm-10">
-                    <input type="number" class="form-control" min="0" step="0.01" ng-model="currentTrip.data.trip.price" placeholder="Trip Price" />
+                  <div class="flex-grow">
+                    <label>
+                    Driver Id: <input type="tel" class="form-control" ng-model="currentTrip.data.trip.driverId" />
+                  </label>
+                    <br />
+                    <label>
+                    Trip Status
+                      <trip-status-selector class="form-control" ng-model="currentTrip.data.trip.status"></trip-status-selector>
+                    </label>
                   </div>
-                </div>
-              </form>
-              <form class="form-horizontal">
-                <div class="form-group">
-                  <label class="col-sm-2 control-label">Driver ID</label>
-                  <div class="col-sm-10">
-                    <input type="tel" class="form-control" ng-model="currentTrip.data.trip.driverId" placeholder="Driver ID (Optional)" />
-                  </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="row">
-                <div class="flex-grow">
-                  <label>
+                  <div class="flex-grow">
+                    <label>
                     Close booking
                     <select class="form-control" ng-model="currentTrip.data.trip.bookingInfo.windowSize"
                       ng-options="opt.size as opt.label for opt in disp.windowSizeOptions">
                     </select>
                   </label>
-                  <label>
+                    <label>
                     ... before
                     <select class="form-control" ng-model="currentTrip.data.trip.bookingInfo.windowType">
                       <option value="stop">passenger's pick-up stop</option>
                       <option value="firstStop">first stop of trip</option>
                     </select>
                   </label>
-                  <label>
+
+                    <br />
+                    <label>
                     Notes to passenger:
                     <input type="text" class="form-control" ng-model="currentTrip.data.trip.bookingInfo.notes">
                   </label>
-                  <label>
-                    Current Status
-                    <trip-status-selector class="form-control" ng-model="currentTrip.data.trip.status"></trip-status-selector>
-                  </label>
+                  </div>
                 </div>
               </div>
-              <form class="form-horizontal">
-                <div class="form-group">
-                  <label for="inputEmail3" class="col-sm-2 control-label">Window</label>
-                  <div class="col-sm-10">
-                    <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="inputPassword3" class="col-sm-2 control-label">Trip Status</label>
-                  <div class="col-sm-10">
-                    <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
-                  </div>
-                </div>
-              </form>
-              <form class="form-horizontal">
-                <div class="form-group">
-                  <label for="inputEmail3" class="col-sm-2 control-label"> Notes</label>
-                  <div class="col-sm-10">
-                    <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
-                  </div>
-                </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-10 col-lg-offset-1">
+            <div class="add-stop-button">
+              <button class="btn btn-primary btn-lg" ng-click="currentTrip.addTripStop()">
+              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>Add a Stop
+            </button>
+            </div>
+          </div>
+          <div class="col-lg-10 col-lg-offset-1">
+            <div class="table-responsive">
+              <table class="table table-striped table-bordered table-condensed table-hover">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Time</th>
+                    <th>Stop</th>
+                    <th>Boarding</th>
+                    <th>Alighting</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="tripStop in currentTrip.data.trip.tripStops">
+                    <td>
+                      {{ $index + 1 }}
+                    </td>
+                    <td>
+                      <input class="form-control" type="time" ng-model="tripStop.time" />
+                    </td>
+                    <td class="form-inline">
+                      <!-- <input type="text" ng-model="tripStop.stopId"> -->
+                      <stop-selector class="form-control" ng-model="tripStop.stopId"></stop-selector>
+                      <stop-selector-popup ng-model="tripStop.stopId" class="btn btn-default btn-icon">
+                        <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Add on Map
+                      </stop-selector-popup>
+                    </td>
+                    <td>
+                      <label>
+                      <input type="checkbox" ng-model="tripStop.canBoard" />
+                      Boarding
+                    </label>
+                    </td>
+                    <td>
+                      <label>
+                      <input type="checkbox" ng-model="tripStop.canAlight" />
+                      Alighting
+                    </label>
+                    </td>
+                    <td class="text-center">
+                      <button class="btn btn-danger btn-icon" ng-click="currentTrip.deleteTripStop($index)">
+                      <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                    </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-lg-12">
-          <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
-          <textarea class="form-control" rows="1"></textarea>
-        </div>
-      </div>
-    </div>
 
-
-
-
-
-
-
-
-    <div class="flex-grow overflow-scroll">
-      <div class="flex-row form-inline">
-        <div class="flex-grow">
-          <label>
-            Driver Id: <input type="tel" class="form-control" ng-model="currentTrip.data.trip.driverId" />
-          </label>
-
-          <label>
-            Trip capacity: <input type="number" class="form-control" min="0" ng-model="currentTrip.data.trip.capacity" />
-          </label>
-
-          <label>
-            Trip price: <input type="number" class="form-control" min="0" step="0.01" ng-model="currentTrip.data.trip.price" />
-          </label>
-
-
-        </div>
-        <div class="flex-grow">
-          <label>
-            Close booking
-            <select class="form-control" ng-model="currentTrip.data.trip.bookingInfo.windowSize"
-              ng-options="opt.size as opt.label for opt in disp.windowSizeOptions">
-            </select>
-          </label>
-          <label>
-            ... before
-            <select class="form-control" ng-model="currentTrip.data.trip.bookingInfo.windowType">
-              <option value="stop">passenger's pick-up stop</option>
-              <option value="firstStop">first stop of trip</option>
-            </select>
-          </label>
-          <label>
-            Notes to passenger:
-            <input type="text" class="form-control" ng-model="currentTrip.data.trip.bookingInfo.notes">
-          </label>
-          <label>
-            Current Status
-            <trip-status-selector class="form-control" ng-model="currentTrip.data.trip.status"></trip-status-selector>
-          </label>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-10 col-lg-offset-1">
-          <div class="add-stop-button">
-            <button class="btn btn-primary btn-lg" ng-click="currentTrip.addTripStop()">
-              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>Add a Stop
-            </button>
-          </div>
-        </div>
-        <div class="col-lg-10 col-lg-offset-1">
-          <div class="table-responsive">
-            <table class="table table-striped table-bordered table-condensed table-hover">
-              <thead>
-                <tr>
-                  <th></th>
-                  <th>Time</th>
-                  <th>Stop</th>
-                  <th>Boarding</th>
-                  <th>Alighting</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr ng-repeat="tripStop in currentTrip.data.trip.tripStops">
-                  <td>
-                    {{ $index + 1 }}
-                  </td>
-                  <td>
-                    <input class="form-control" type="time" ng-model="tripStop.time" />
-                  </td>
-                  <td class="form-inline">
-                    <!-- <input type="text" ng-model="tripStop.stopId"> -->
-                    <stop-selector class="form-control" ng-model="tripStop.stopId"></stop-selector>
-                    <stop-selector-popup ng-model="tripStop.stopId" class="btn btn-default btn-icon">
-                      <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Add on Map
-                    </stop-selector-popup>
-                  </td>
-                  <td>
-                    <label>
-                      <input type="checkbox" ng-model="tripStop.canBoard" />
-                      Boarding
-                    </label>
-                  </td>
-                  <td>
-                    <label>
-                      <input type="checkbox" ng-model="tripStop.canAlight" />
-                      Alighting
-                    </label>
-                  </td>
-                  <td class="text-center">
-                    <button class="btn btn-danger btn-icon" ng-click="currentTrip.deleteTripStop($index)">
-                      <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
   <!-- trip-data-editor -->
