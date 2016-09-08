@@ -45,6 +45,7 @@ angular.module('beeline-admin', [
 .directive('stopSelector', require('./directives/selectors/stop').default)
 .directive('stopSelectorPopup', require('./directives/selectors/stopPopup').default)
 .directive('userSelector', require('./directives/selectors/user').default)
+.directive('prettyCompanySelector', require('./directives/selectors/prettyCompany').default)
 .directive('superAdminCompanySelector', require('./directives/selectors/superAdminCompany').default)
 .directive('companySelector', require('./directives/selectors/company').default)
 .service('AdminService', require('./services/adminService').default)

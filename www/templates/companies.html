@@ -1,11 +1,6 @@
 <div class="companies container withnav">
-  <div class="row" ng-if="!company.id">
-    <div class="col-lg-12">
-      <h4 class="text-danger">
-        You are Superadmin! Pick the company you would like to edit from the top right hand corner
-      </h4>
-  </div>
-    </div>
+  <pretty-company-selector></pretty-company-selector>
+
   <div class="companyInformation" ng-if="company.id">
     <div class="row">
       <div class"col-sm-12">
