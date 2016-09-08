@@ -3,8 +3,8 @@
     <div class="row">
       <div class="col-lg-4 pull-left">
         <div class="row">
-          <div class="col-lg-8 text-right">
-            <h4>Show trips created for the month of</h4>
+          <div class="col-lg-6 text-left">
+            <h4>Show trips for the month of</h4>
           </div>
           <div class="col-lg-4 pull-left">
             <div class="input-group">
@@ -27,8 +27,8 @@
   </div>
   <div class="row">
     <div class="col-lg-12 reset-buttons">
-      <button type="submit" class="btn btn-default btn-xs" >Unselect All</button>
-      <button type="submit" class="btn btn-default btn-xs">Select All</button>
+      <button type="submit" class="btn btn-default btn-xs">Refresh</button>
+      <button type="submit" class="btn btn-default btn-xs select-all-button">Select All</button>
     </div>
   </div>
 
@@ -97,7 +97,9 @@
                 {{trip.date | date:'dd/MM/yy EEE'}}
               </td>
               <td>
-                <span class="label label-default">Status</span>
+                <span class="label trip-normal">Normal</span>
+                <span class="label trip-cancelled">Emergency</span>
+                <span class="label trip-void">Void</span>
               </td>
               <td>
                 {{trip.capacity}}

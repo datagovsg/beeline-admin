@@ -11,75 +11,81 @@ trips-editor {
     .edit-trip-button {
       margin-left: $padding-small-horizontal;
     }
-
-    h3,
-    h4 {
-      display: inline;
-    }
-
-    tr.selected td {
-      background-color: #acf4ed;
-    }
-
-    section.add-trips {
-      border: solid 1px black;
-      padding: 1em;
-
-      .add-trips-components {
-        max-height: 300px;
-
-        .selected-dates {
-          overflow-y: scroll;
-        }
-      }
-    }
-
-    table.trips-list {
-      width: auto;
-      min-width: 100%;
-    }
   }
 
-  .date-list li {
-    display: inline-block;
-    margin: 0;
-    padding: 0;
+  h3,
+  h4 {
+    display: inline;
+  }
+}
 
-    &:after {
-      content: ", ";
+section.add-trips {
+  border: solid 1px black;
+  padding: 1em;
+
+  .add-trips-components {
+    max-height: 300px;
+
+    .selected-dates {
+      overflow-y: scroll;
     }
   }
+}
 
-  .wide-modal .modal-dialog {
-    width: 95vw;
+table.trips-list {
+  width: auto;
+  min-width: 100%;
+
+  tr.selected td {
+    background-color: #acf4ed;
   }
+}
 
-  .create-trips-date-popup {
-    .multiple-date-picker {
-      .trip-exists {
-        background-color: #CCC;
-        color: #666;
-      }
+.date-list li {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+
+  &:after {
+    content: ", ";
+  }
+}
+
+.wide-modal .modal-dialog {
+  width: 95vw;
+}
+
+.create-trips-date-popup {
+  .multiple-date-picker {
+    .trip-exists {
+      background-color: #CCC;
+      color: #666;
     }
   }
+}
 
-  .add-stop-button {
-    button {
-      margin-bottom: $padding-large-vertical*2;
-    }
+.add-stop-button {
+  button {
+    margin-bottom: $padding-large-vertical*2;
   }
+}
 
-  .reset-buttons {
-    margin-bottom: $padding-large-vertical*1;
-  }
+.select-all-button {
+  margin-left: $padding-xs-horizontal;
+}
 
-  .trip-normal {
-     @include label-variant($label-success-bg);
-   }
-  .trip-cancelled {
-     @include label-variant($label-danger-bg);
-   }
-  .trip-void {
-     @include label-variant($label-default-bg);
-   }
+.reset-buttons {
+  margin-bottom: $padding-large-vertical*1;
+}
+
+.trip-normal {
+  @include label-variant($label-success-bg);
+}
+
+.trip-cancelled {
+  @include label-variant($label-danger-bg);
+}
+
+.trip-void {
+  @include label-variant($label-default-bg);
 }
