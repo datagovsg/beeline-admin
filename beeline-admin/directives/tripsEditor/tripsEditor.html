@@ -86,7 +86,7 @@
           <tbody>
             <tr ng-repeat="trip in trips track by trip.id" ng-class="{selected: selection.selected[trip.id] }" ng-mousedown="selection.$mousedown($event, $index)">
               <td>
-                <input type="radio">
+                <input type="checkbox">
                 <!-- help me show as selected when row is selected -->
               </td>
               <td>
