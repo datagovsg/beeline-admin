@@ -123,7 +123,8 @@
                 {{ findStop(trip, stop.stopId, stop.orderOfAppearance).time | date:'HH:mm'}}
               </td>
               <td>
-                <button class="btn btn-default glyphicon glyphicon-trash" ng-click='tripList.deleteTrip(trip)'>
+                <button class="btn btn-danger btn-icon" ng-click="tripList.deleteTrip(trip)">
+                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
               </button>
               </td>
             </tr>
