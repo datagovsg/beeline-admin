@@ -5,12 +5,13 @@ export default function ($rootScope, $uibModal) {
   this.open = function (options) {
     var modalScope = $rootScope.$new();
 
-    modalScope.data = {};
-    modalScope.data.routeId = options.routeId;
-    modalScope.data.boardStopId = options.boardStopStopId;
-    modalScope.data.alightStopId = options.alightStopStopId;
-    modalScope.data.cancelledTicketIds = options.cancelledTicketIds;
-    modalScope.data.users = options.users;
+    modalScope.data = {
+      routeId: options.routeId,
+      boardStopId: options.boardStopStopId,
+      alightStopId: options.alightStopStopId,
+      cancelledTickets: options.cancelledTickets,
+      users: options.users,
+    };
 
     var modalOptions = {
       controller: IssueTicketController,
@@ -54,6 +55,18 @@ function IssueTicketController($scope, AdminService, LoadingSpinner, commonModal
       return;
     }
 
+    const oldTransactionIds = $scope.data.cancelledTickets &&
+        $scope.data.cancelledTickets
+          .map(tkt => (tkt.ticketSale && tkt.ticketSale.transactionId) ||
+              (tkt.ticketExpense && tkt.ticketExpense.transactionId) || false
+          )
+          .filter(tid => tid !== false);
+    const oldTransactionDescription = oldTransactionIds && oldTransactionIds.length ?
+        `(Original Txn #${oldTransactionIds.join(',#')})` : '';
+    const description = $scope.data.reason || '';
+    const cancelledTicketIds = $scope.data.cancelledTickets &&
+        $scope.data.cancelledTickets.map(ticket => ticket.id)
+
     var issueRequest = {
       trips: _.flatten($scope.data.users.map(user => /* for each user */
         $scope.purchaseOrder.map(po => /* for each trip */
@@ -63,8 +76,8 @@ function IssueTicketController($scope, AdminService, LoadingSpinner, commonModal
           )
         )
       )),
-      cancelledTicketIds: $scope.data.cancelledTicketIds,
-      description: $scope.reason
+      cancelledTicketIds,
+      description: description + ' ' + oldTransactionDescription
     }
 
     LoadingSpinner.watchPromise(AdminService.beeline({
