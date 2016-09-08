@@ -61,11 +61,14 @@ function IssueTicketController($scope, AdminService, LoadingSpinner, commonModal
               (tkt.ticketExpense && tkt.ticketExpense.transactionId) || false
           )
           .filter(tid => tid !== false);
-    const oldTransactionDescription = oldTransactionIds && oldTransactionIds.length ?
-        `(Original Txn #${oldTransactionIds.join(',#')})` : '';
-    const description = $scope.data.reason || '';
     const cancelledTicketIds = $scope.data.cancelledTickets &&
         $scope.data.cancelledTickets.map(ticket => ticket.id)
+
+    const oldTransactionDescription = oldTransactionIds && oldTransactionIds.length ?
+        `(Original Txn #${oldTransactionIds.join(',#')})` : '';
+    const oldTicketDescription = cancelledTicketIds && cancelledTicketIds.length ?
+        `(Replacing tickets #${cancelledTicketIds.join(',#')})` : '';
+    const description = $scope.data.reason || '';
 
     var issueRequest = {
       trips: _.flatten($scope.data.users.map(user => /* for each user */
@@ -77,7 +80,7 @@ function IssueTicketController($scope, AdminService, LoadingSpinner, commonModal
         )
       )),
       cancelledTicketIds,
-      description: description + ' ' + oldTransactionDescription
+      description: description + ' ' + oldTransactionDescription + ' ' + oldTicketDescription
     }
 
     LoadingSpinner.watchPromise(AdminService.beeline({
