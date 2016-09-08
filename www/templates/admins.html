@@ -40,7 +40,7 @@
         <tbody>
           <tr ng-repeat="admin in admins | orderBy:'id' track by admin.id" ng-form name="adminForm">
             <td>
-              1
+              {{$index + 1}}
             </td>
             <td ng-if="admin.id">
               {{admin.email}}
