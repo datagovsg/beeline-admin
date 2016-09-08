@@ -1,6 +1,11 @@
 
 
 .stops-popup {
+
+  .modal-dialog {
+    min-width: 80vw;
+  }
+
   ui-gmap-google-map {
     width: 100%;
     height: 400px;

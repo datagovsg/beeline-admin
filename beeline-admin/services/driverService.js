@@ -3,17 +3,25 @@ import qs from 'querystring'
 
 export default function (AdminService) {
   this.fetchDriverInfo = function (trips) {
-    var driverIds = _.uniq(trips.map(tr => tr.driverId))
-      .filter(tr => tr != null)
+    var tripsWithDrivers = _(trips)
+      .uniqBy(tr => tr.driverId)
+      .filter(tr => tr.driverId)
+      .value()
 
-    var driverInfoPromise = AdminService.beeline({
-      url: '/drivers?' + qs.stringify({
-        ids: JSON.stringify(driverIds)
-      }),
-      method: 'GET',
-    })
+    var driverInfoPromise = Promise.all(
+      tripsWithDrivers.map(trip => AdminService.beeline({
+          url: `/companies/${trip.transportCompanyId}/drivers/${trip.driverId}`,
+          method: 'GET',
+        })
+        .then((resp) => {
+          console.log(resp.data);
+          return resp.data
+        })
+        .catch(() => ({id: trip.driverId, telephone: '??'}))
+      )
+    )
     .then((response) => {
-      var driversById = _.keyBy(response.data, d => d.id)
+      var driversById = _.keyBy(response, d => d.id)
 
       for (let trip of trips) {
         if (!trip.driverId) continue;

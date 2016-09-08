@@ -5,36 +5,43 @@
       <button ng-click="addAdmin()" class="btn btn-primary btn-lg addAdmin">
         Add a new Admin
       </button>
-      <table class="table table-condensed table-striped table-bordered">
+      <table class="table table-condensed table-striped table-bordered admin-table">
         <thead>
           <tr>
-            <th colspan="2"></th>
-            <th colspan="5">Permissions</th>
-            <th></th>
+            <th rowspan="2">No.</th>
+            <th rowspan="2">Email<br> Name</th>
+            <th colspan="5" class="permissions">Permissions</th>
+            <th rowspan="2">Actions</th>
           </tr>
           <tr>
-            <th>Email</th>
-            <th>Telephone</th>
-            <th>
+            <!-- <th></th> -->
+            <!-- <th></th> -->
+            <th class="permission-type">
               Basic permissions
               <div class="permission-details">
                 View drivers, transactions
               </div>
             </th>
-            <th>Execute refunds</th>
-            <th>
+            <th class="permission-type">Issue refunds</th>
+            <th class="permission-type">
               Manage operations
               <div class="permission-details">
                 Edit routes, manage drivers, update trip status, SMS passengers
               </div>
             </th>
-            <th>Change company information</th>
-            <th>Manage administrators</th>
-            <th>Actions</th>
+            <th class="permission-type">Edit company information</th>
+            <th class="permission-type">Manage administrators
+              <div class="permission-details">
+                Add, edit, remove admin users
+              </div></th>
+            <!-- <th></th> -->
           </tr>
         </thead>
         <tbody>
           <tr ng-repeat="admin in admins | orderBy:'id' track by admin.id" ng-form name="adminForm">
+            <td>
+              1
+            </td>
             <td ng-if="admin.id">
               {{admin.email}}
               <br/>
@@ -65,7 +72,7 @@
                 Update
               </button>
               <button class="btn btn-danger" ng-click="deleteAdmin(admin)" ng-show="adminForm.$pristine && admin.id">
-                Delete
+                Remove
               </button>
             </td>
           </tr>

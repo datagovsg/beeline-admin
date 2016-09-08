@@ -35,6 +35,10 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
     startDate: startOfMonth,
     endDate: endOfMonth,
     userQuery: null,
+    transactionId: null,
+    chargeId: null,
+    paymentId: null,
+    ticketId: null
   }
 
   $scope.disp = {
@@ -214,6 +218,18 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
     if ($scope.filter.stopQuery) {
       queryOptions.stopQuery = $scope.filter.stopQuery
     }
+    if ($scope.filter.transactionId) {
+      queryOptions.transactionId = $scope.filter.transactionId;
+    }
+    if ($scope.filter.chargeId) {
+      queryOptions.chargeId = $scope.filter.chargeId
+    }
+    if ($scope.filter.paymentId) {
+      queryOptions.paymentId = $scope.filter.paymentId
+    }
+    if ($scope.filter.ticketId) {
+      queryOptions.ticketId = $scope.filter.ticketId
+    }
 
     if (AdminService.getCompanyId()) {
       queryOptions.transportCompanyId = AdminService.getCompanyId();
@@ -228,7 +244,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
 
   $scope.monthChanged = function (newMonth) {
     startOfMonth = newMonth.clone().startOf('month').toDate()
-    endOfMonth = newMonth.clone().endOf('month').startOf('day').toDate()
+    endOfMonth = newMonth.clone().startOf('month').add(1, 'month').add(-1, 'day').toDate()
     $scope.filter.startDate = startOfMonth;
     $scope.filter.endDate = endOfMonth;
   }
@@ -267,6 +283,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
       console.log(err)
     });
 
+    // Update the annotations for the month
     var requestUrlOR = buildQuery({
       tripStartDate: Date.UTC(
         startOfMonth.getFullYear(),
@@ -276,7 +293,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
       tripEndDate: Date.UTC(
         endOfMonth.getFullYear(),
         endOfMonth.getMonth(),
-        endOfMonth.getDate()
+        endOfMonth.getDate() + 1
       )
     });
 

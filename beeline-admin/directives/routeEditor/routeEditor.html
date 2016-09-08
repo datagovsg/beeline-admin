@@ -1,84 +1,138 @@
-<div>
-  <span class="btn-group">
-    <button class="btn btn-default"
-      ng-click="edit = 'route'">
-      Edit Route Description
-    </button>
-    <button class="btn btn-default"
-      ng-click="edit = 'trips'"
-      >
-      Edit Trips
-    </button>
-  </span>
-</div>
-
-<div ng-show="route">
-  <div ng-show="edit == 'route'" class="container">
-    <h2>{{route.label}}</h2>
-
-    <div class="row">
-      <div class="col-md-6 form-inline">
-        <label>
-          Label:
-          <input type="text" class="form-control" ng-model="route.label">
-        </label>
-
-        <label>
-          Name:
-          <input type="text" class="form-control" ng-model="route.name">
-        </label>
-
-        <label>
-          From:
-          <input type="text" class="form-control" ng-model="route.from">
-        </label>
-
-        <label>
-          To:
-          <input type="text" class="form-control" ng-model="route.to">
-        </label>
-      </div>
-
-      <div class="col-md-6 form-inline">
-        <label>
-          Schedule:
-          <input type="text" class="form-control" ng-model="route.schedule">
-        </label>
-
-        <label>Tags:
-        <tag-editor ng-model="disp.routeTags">
-        </tag-editor></label>
-
-        <!-- ng-if creates a scope -->
-        <label ng-if="adminService.session().role == 'superadmin'">
-          Company:
-          <company-selector class="form-control" ng-model="$parent.route.transportCompanyId">
-          </company-selector>
-        </label>
-      </div>
-    </div>
-
-    <label>Path:</label>
-    <path-editor path="route.path" trip-stops="tripStops">
-    </path-editor>
-
-    <div class="btn-group">
-      <button class="btn btn-primary" ng-click="saveRoute()"
-        ng-disabled="!route">
-        Save
-      </button>
-      <button class="btn btn-default" ng-click="resetRoute()">
-        Reset
-      </button>
-    </div>
-    <button class="btn btn-danger" ng-click="deleteRoute()"
-      ng-disabled="!route || !route.id">
-      Delete
-    </button>
+<div class="container-fluid">
+  <div ng-show="!route">
+    <h4>Please select a route</h4>
   </div>
+  <div ng-show="route">
+    <div class="row route-display">
+      <div class="route-label">
+        {{route.label}}
+      </div>
+      <table class="borderless">
+        <tr>
+          <td>
+            From
+          </td>
+          <td>
+            {{route.from}}
+          </td>
+        </tr>
+        <tr>
+          <!-- <td>
+          </td> -->
+          <td>
+            To
+          </td>
+          <td>
+            {{route.to}}
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            Route ID to ping : {{route.id}}
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="row">
+      <uib-tabset active="active">
+        <uib-tab index="0" heading="Edit Route Description">
+          <div class="editor-tabs-content">
+            <div class="row">
+              <div class="col-lg-6">
+                <form class="form-horizontal">
+                  <div class="form-group">
+                    <label ng-if="adminService.session().role == 'superadmin'" class="col-sm-2 control-label">
+                      Company</label>
+                    <div class="col-sm-10">
+                      <company-selector class="form-control" ng-model="$parent.route.transportCompanyId">
+                      </company-selector>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">Route Label</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" ng-model="route.label" placeholder="Route Label">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">Route Name</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" ng-model="route.name" placeholder="Route Name">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">From</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" ng-model="route.from" placeholder="Start Address">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">To</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" ng-model="route.to" placeholder="End Address">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">Signage</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" placeholder="Signage">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">Schedule</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" ng-model="route.schedule" placeholder="AM, Mon to Fri except P.H.">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">Tags</label>
+                    <div class="col-sm-10">
+                      <tag-editor ng-model="disp.routeTags">
+                      </tag-editor>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputPassword3" class="col-sm-2 control-label">Notes</label>
+                    <div class="col-sm-10">
+                      <textarea class="form-control" placeholder="Important Notes in Markdown" rows=12></textarea>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class="col-lg-6">
+                <div class="path-editor">
+                  <path-editor path="route.path" trip-stops="tripStops">
+                  </path-editor>
+                </div>
+              </div>
+            </div>
+            <hr />
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="route-buttons">
+                  <button class="btn btn-primary" ng-click="saveRoute()" ng-disabled="!route">
+                      Save Route Changes
+                    </button>
 
-  <div ng-show="edit == 'trips'">
-    <trips-editor route-id="route.id" ng-if="route.id">
-    </trips-editor>
+                  <div class="btn-group">
+                    <button class="btn btn-default" ng-click="resetRoute()">
+                        Reset Route
+                      </button>
+                      <button class="btn btn-danger" ng-click="deleteRoute()" ng-disabled="!route || !route.id">
+                        Delete this Route
+                      </button>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </uib-tab>
+        <uib-tab index="1" heading="Edit Trips">
+          <trips-editor route="route" ng-if="route.id">
+          </trips-editor>
+        </uib-tab>
+      </uib-tabset>
+    </div>
   </div>
 </div>

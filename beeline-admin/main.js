@@ -13,7 +13,6 @@ require('../ngTagEditor/ngTagEditor')
 
 const env = require('./env')
 
-
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
@@ -21,12 +20,12 @@ const env = require('./env')
 // 'starter.controllers' is found in controllers.js
 angular.module('beeline-admin', [
   'uiGmapgoogle-maps', 'ui.router', 'ui.bootstrap', 'beeline.calendar',
-  'auth0', 'angular-storage', 'angular-jwt', 'ngCookies', 'multipleDatePicker',
+  'angular-storage', 'angular-jwt', 'ngCookies', 'multipleDatePicker',
   'ui.select', 'ngTagEditor'])
+.service('auth', require('./auth0').default)
 .config(require('./router').default)
 .config(configureGoogleMaps)
 .config(configureUrlWhitelist)
-.config(configureAuth0)
 .directive('adminNav', require('./directives/adminNav/adminNav').default)
 .directive('accountView', require('./directives/accountView/accountView').default)
 .directive('paymentView', require('./directives/paymentView/paymentView').default)
@@ -36,6 +35,7 @@ angular.module('beeline-admin', [
 .directive('pathEditor', require('./directives/pathEditor/pathEditor').default)
 .directive('tripsEditor', require('./directives/tripsEditor/tripsEditor').default)
 .directive('tripSelectionBroker', require('./directives/tripSelector/tripSelectionBroker').default)
+.directive('multiSelectBroker', require('./directives/multiSelectBroker').default)
 .directive('companyLogo', require('./directives/companyLogo').default)
 .directive('mySort', require('./directives/mySort').default)
 .directive('spanSelect', require('./directives/spanSelect').default)
@@ -43,6 +43,7 @@ angular.module('beeline-admin', [
 /* Selectors */
 .directive('tripStatusSelector', require('./directives/selectors/tripStatus').default)
 .directive('stopSelector', require('./directives/selectors/stop').default)
+.directive('stopSelectorPopup', require('./directives/selectors/stopPopup').default)
 .directive('userSelector', require('./directives/selectors/user').default)
 .directive('superAdminCompanySelector', require('./directives/selectors/superAdminCompany').default)
 .directive('companySelector', require('./directives/selectors/company').default)
@@ -73,70 +74,60 @@ angular.module('beeline-admin', [
 .controller('profile', require('./controllers/profileController.js').default)
 .filter('makeRoutePath', require('./shared/filters.js').makeRoutePath)
 .filter('intervalToTime', require('./shared/filters.js').intervalToTime)
-.run(function (auth, $rootScope, store, jwtHelper, $window, AdminService) {
-  auth.hookEvents();
-
-  // Handle the case when Auth0 login fails
-  if (window.location.hash.startsWith('#/')) {
-    try {
-      let parts = _(window.location.hash.substr(2).split('&'))
-        .map(keyvalue => keyvalue.split('='))
-        .keyBy(keyvalue => keyvalue[0])
-        .mapValues(keyvalue => decodeURIComponent(keyvalue[1]))
-        .value()
-
-      if (parts.error) {
-        alert(`${parts.error} - ${parts.error_description}`)
-      }
+// Handle what happens when the callback is called
+// TODO: Use angular dependency injection to invoke the authenticateToken fn
+.run(function ($rootScope, auth, store, $cookies, AdminService, jwtHelper) {
+  if (auth.authResult) {
+    if (auth.authResult.error) {
+      return alert(auth.authResult.error_description);
     }
-    catch (err) {
-      console.log(err)
-    }
+    store.set('sessionToken', auth.authResult.idToken)
+    store.set('refreshToken', auth.authResult.refreshToken)
+    $cookies.put('sessionToken', auth.authResult.idToken)
+    auth.getProfile().then((profile) => {
+      store.set('profile', profile);
+    })
   }
-
+  authenticateToken(store.get('sessionToken'), store.get('refreshToken'))
 
   $rootScope.$on('$locationChangeStart', function() {
-    var token = store.get('sessionToken');
+    authenticateToken(store.get('sessionToken'), store.get('refreshToken'))
+  });
+
+  function authenticateToken(token, refreshToken) {
     if (token) {
       if (!jwtHelper.isTokenExpired(token)) {
         if (!auth.isAuthenticated) {
-          //Re-authenticate user if token is valid
-          auth.authenticate(store.get('profile'), token);
+          auth.authenticate(token);
+          auth.getProfile().then((profile) => {
+            store.set('profile', profile);
+          })
         }
-      } else {
-        // Either show the login page or use the refresh token to get a new idToken
-        AdminService.login();
+        return;
+      }
+
+      if (refreshToken) {
+        auth.refreshToken(refreshToken)
+        .then((delegationResult) => {
+          auth.authenticate(delegationResult.idToken);
+          auth.getProfile().then((profile) => {
+            store.set('profile', profile);
+          })
+        })
+        .catch((err) => {
+          AdminService.login();
+        })
+        return;
       }
     }
-  });
+    AdminService.login();
+  }
 })
 
 function configureGoogleMaps(uiGmapGoogleMapApiProvider) {
   uiGmapGoogleMapApiProvider.configure({
     key: 'AIzaSyBkFH42PlbFrsfdAnjw37qMLAxjhkMT-54',
     libraries: 'geometry',
-  })
-}
-
-function configureAuth0(authProvider) {
-  authProvider.init({
-    domain: env.AUTH0_DOMAIN,
-    clientID: env.AUTH0_CID,
-    loginUrl: '/login'
-  })
-
-  authProvider.on('loginFailure', function ($location, error) {
-    alert(error);
-  })
-
-  authProvider.on('loginSuccess', function($location, profilePromise,
-    jwtHelper, idToken, store, AdminService, auth, $cookies) {
-    store.set('sessionToken', idToken)
-    $cookies.put('sessionToken', idToken)
-
-    profilePromise.then((p) =>{
-      store.set('profile', p)
-    })
   })
 }
 

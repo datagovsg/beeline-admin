@@ -7,6 +7,7 @@ export default function (RoutesService, $uibModal, mapService) {
     return new Promise((resolve, reject) => {
 
       var inst = $uibModal.open({
+        windowClass: 'stops-popup',
         template: stopsPopupTemplate,
         controller: function ($scope, RoutesService, $uibModalInstance) {
           $scope.newStop = {}
@@ -16,7 +17,6 @@ export default function (RoutesService, $uibModal, mapService) {
             },
             events: {
               click(map, event, args) {
-                console.log(arguments)
                 $scope.$apply(() => {
                   $scope.selectedStop = $scope.newStop
                   $scope.selectedStop.$latlng = {

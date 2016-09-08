@@ -9,6 +9,15 @@ export function makeRoutePath() {
   }
 }
 
+export function timeSinceMidnight(date) {
+  if (!(date instanceof Date)) {
+    date = new Date(date);
+  }
+  return date.getHours() * 3600000 +
+    date.getMinutes() * 60000 +
+    date.getSeconds() * 1000 +
+    date.getMilliseconds();
+}
 
 export function makeRange() {
   return (i) => _.range(i)

@@ -124,7 +124,11 @@ export default function (AdminService, DriverService, $q) {
 
   this.createTrips = async function(dates, options) {
     var createOptions = dates.map((date) => {
-      date = validateDate(date);
+      date = new Date(Date.UTC(
+        date.year(),
+        date.month(),
+        date.date()
+      ));
 
       // must be round...
       assert.equal(date.getTime() % (24 * 3600 * 1000), 0)
@@ -144,7 +148,7 @@ export default function (AdminService, DriverService, $q) {
       }
     });
 
-    // FIXME this will be bloody slow
+    // FIXME this will be bloody slow. Create a bulk-create function!
     var createRequests = createOptions.map((opts) => AdminService.beeline(opts))
     var result = await Promise.all(createRequests);
 
@@ -163,23 +167,48 @@ export default function (AdminService, DriverService, $q) {
         // must be round...
         assert.equal(date.getTime() % (24 * 3600 * 1000), 0)
 
+        // // check for a tripStop with matching stop
+        var assignTripStopIds = (original, reference) => {
+          //
+          var referenceStops = _(reference)
+            // clone the tripStops because we'll be mutating them with an id
+            .map(ts => {
+              var update = _.pick(ts, updatableTripStopFields);
+              update.time = dateTime(date, ts.time).getTime();
+              return update;
+            })
+            .groupBy('stopId')
+            .value();
+
+          //
+          var originalStops = _(original)
+            .groupBy('stopId')
+            .value();
+
+          // Give the reference stops an id
+          // For now, match old and new by order of appearance
+          // TODO: more intelligent matching
+          _.each(referenceStops, (tss, stopId) => {
+            _.each(tss, (ts, index) => {
+              if (originalStops[stopId] && originalStops[stopId][index]) {
+                ts.id = originalStops[stopId][index].id;
+              }
+              else {
+                ts.id = null
+              }
+            })
+          })
+
+          return _.flatten(_.values(referenceStops));
+        };
+
         var request = {
           method: 'PUT',
           url: `/trips/${tripId}`,
           data: _.assign(
             _.pick(options, updatableFields),
             {
-              tripStops: options.tripStops.map(tsRef => {
-                var tripStopUpdate = _.pick(tsRef, updatableTripStopFields);
-
-                tripStopUpdate.time = dateTime(date, tsRef.time).getTime();
-
-                // check for a tripStop with matching stop
-                var modifyingTripStop = trip.tripStops.find(ts => ts.stopId == tsRef.stopId)
-                tripStopUpdate.id = modifyingTripStop ? modifyingTripStop.id : null;
-
-                return tripStopUpdate
-              })
+              tripStops: assignTripStopIds(trip.tripStops, options.tripStops)
             }),
         };
 
