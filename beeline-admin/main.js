@@ -30,7 +30,6 @@ angular.module('beeline-admin', [
 .directive('accountView', require('./directives/accountView/accountView').default)
 .directive('paymentView', require('./directives/paymentView/paymentView').default)
 .directive('ticketView', require('./directives/ticketView/ticketView').default)
-.directive('routeSelector', require('./directives/routeSelector/routeSelector').default)
 .directive('routeEditor', require('./directives/routeEditor/routeEditor').default)
 .directive('pathEditor', require('./directives/pathEditor/pathEditor').default)
 .directive('tripsEditor', require('./directives/tripsEditor/tripsEditor').default)
