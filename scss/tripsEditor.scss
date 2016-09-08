@@ -74,11 +74,11 @@ table.trips-list {
   margin-left: $padding-xs-horizontal;
 }
 
-.label{
-  &.reset-buttons {
-    margin-bottom: $padding-large-vertical*1;
-  }
+.reset-buttons {
+  margin-bottom: $padding-large-vertical*1;
+}
 
+.label{
   &.trip-normal {
     @include label-variant($label-success-bg);
   }
@@ -97,5 +97,13 @@ table.trips-list {
 
   &.stop-alight{
     @include label-variant($label-danger-bg);
+  }
+}
+
+.select-company{
+  margin: 20px;
+  display: inline-block;
+  .control-label{
+    margin-right: 40px;
   }
 }

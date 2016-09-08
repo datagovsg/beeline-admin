@@ -20,6 +20,107 @@
   </div>
 
   <div class="modal-body">
+
+
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-10 col-lg-offset-1">
+          <div class="row select-company">
+                <label class="control-label" ng-if="adminService.session().role == 'superadmin'"> Company </label>
+                <company-selector class="form-control" ng-model="currentTrip.data.trip.transportCompanyId">
+                </company-selector>
+          </div>
+          <div class="row">
+            <div class="col-lg-6">
+              <form class="form-horizontal">
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">Bus Capacity</label>
+                  <div class="col-sm-10">
+                    <input type="number" class="form-control" min="0" ng-model="currentTrip.data.trip.capacity" placeholder="Bus Capacity" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">Trip Price ($)</label>
+                  <div class="col-sm-10">
+                    <input type="number" class="form-control" min="0" step="0.01" ng-model="currentTrip.data.trip.price" placeholder="Trip Price" />
+                  </div>
+                </div>
+              </form>
+              <form class="form-horizontal">
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">Driver ID</label>
+                  <div class="col-sm-10">
+                    <input type="tel" class="form-control" ng-model="currentTrip.data.trip.driverId" placeholder="Driver ID (Optional)" />
+                  </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="row">
+                <div class="flex-grow">
+                  <label>
+                    Close booking
+                    <select class="form-control" ng-model="currentTrip.data.trip.bookingInfo.windowSize"
+                      ng-options="opt.size as opt.label for opt in disp.windowSizeOptions">
+                    </select>
+                  </label>
+                  <label>
+                    ... before
+                    <select class="form-control" ng-model="currentTrip.data.trip.bookingInfo.windowType">
+                      <option value="stop">passenger's pick-up stop</option>
+                      <option value="firstStop">first stop of trip</option>
+                    </select>
+                  </label>
+                  <label>
+                    Notes to passenger:
+                    <input type="text" class="form-control" ng-model="currentTrip.data.trip.bookingInfo.notes">
+                  </label>
+                  <label>
+                    Current Status
+                    <trip-status-selector class="form-control" ng-model="currentTrip.data.trip.status"></trip-status-selector>
+                  </label>
+                </div>
+              </div>
+              <form class="form-horizontal">
+                <div class="form-group">
+                  <label for="inputEmail3" class="col-sm-2 control-label">Window</label>
+                  <div class="col-sm-10">
+                    <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="inputPassword3" class="col-sm-2 control-label">Trip Status</label>
+                  <div class="col-sm-10">
+                    <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+                  </div>
+                </div>
+              </form>
+              <form class="form-horizontal">
+                <div class="form-group">
+                  <label for="inputEmail3" class="col-sm-2 control-label"> Notes</label>
+                  <div class="col-sm-10">
+                    <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+                  </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+          <textarea class="form-control" rows="1"></textarea>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+
     <div class="flex-grow overflow-scroll">
       <div class="flex-row form-inline">
         <div class="flex-grow">
@@ -35,11 +136,7 @@
             Trip price: <input type="number" class="form-control" min="0" step="0.01" ng-model="currentTrip.data.trip.price" />
           </label>
 
-          <label ng-if="adminService.session().role == 'superadmin'">
-            Company:
-            <company-selector class="form-control" ng-model="currentTrip.data.trip.transportCompanyId">
-            </company-selector>
-          </label>
+
         </div>
         <div class="flex-grow">
           <label>
