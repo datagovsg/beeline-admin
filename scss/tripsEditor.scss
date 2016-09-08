@@ -74,18 +74,28 @@ table.trips-list {
   margin-left: $padding-xs-horizontal;
 }
 
-.reset-buttons {
-  margin-bottom: $padding-large-vertical*1;
-}
+.label{
+  &.reset-buttons {
+    margin-bottom: $padding-large-vertical*1;
+  }
 
-.trip-normal {
-  @include label-variant($label-success-bg);
-}
+  &.trip-normal {
+    @include label-variant($label-success-bg);
+  }
 
-.trip-cancelled {
-  @include label-variant($label-danger-bg);
-}
+  &.trip-cancelled {
+    @include label-variant($label-danger-bg);
+  }
 
-.trip-void {
-  @include label-variant($label-default-bg);
+  &.trip-void {
+    @include label-variant($label-default-bg);
+  }
+
+  &.stop-board{
+    @include label-variant($label-success-bg);
+  }
+
+  &.stop-alight{
+    @include label-variant($label-danger-bg);
+  }
 }

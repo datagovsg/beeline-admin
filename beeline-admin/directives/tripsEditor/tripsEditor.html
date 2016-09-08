@@ -70,12 +70,14 @@
               <th>Trip ID</th>
               <th>Date</th>
               <th>Status</th>
-              <th>Cap</th>
+              <th>Capacity</th>
               <th>Booked</th>
               <th>Price</th>
               <th>Driver</th>
               <th ng-repeat="stop in disp.stopsList track by $index" title="{{stop.stop.description}}">
                 <small>{{stop.stop.description}}</small>
+                <span class="label stop-board">Board</span>
+                <span class="label stop-alight">Alight</span>
               </th>
               <th>Delete<br />Trip</be>
               </th>
