@@ -10,6 +10,7 @@
           <tr>
             <th rowspan="2">No.</th>
             <th rowspan="2">Email<br> Name</th>
+            <th rowspan="2" class="permission-type">Telephone</th>
             <th colspan="5" class="permissions">Permissions</th>
             <th rowspan="2">Actions</th>
           </tr>
@@ -55,10 +56,9 @@
                 placeholder="John Doe">
             </td>
             <td>
-              <input type="tel" ng-model="admin.telephone" class="form-control" placeholder="9XXX XXXX" />
-              <label>
-                <input type="checkbox" ng-model="admin.receiveAlerts" ng-disabled="!admin.telephone" /> Receive alerts
-              </label>
+              {{admin.telephone}}
+              <br/>
+              {{admin.telephone ? admin.receiveAlerts ? 'Receiving alerts' : 'Not receiving alerts' : ''}}
             </td>
 
             <td><input type="checkbox" ng-model="admin.permissions.basic"></td>

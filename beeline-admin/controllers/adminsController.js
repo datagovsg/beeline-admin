@@ -76,7 +76,7 @@ export default function ($scope, AdminService, LoadingSpinner, commonModals) {
         method: 'PUT',
         url: `/companies/${AdminService.getCompanyId()}/admins/${admin.id}`,
         data: {
-          permissions: mapPermissions(admin.permissions)
+          permissions: mapPermissions(admin.permissions),
         }
       })
       .then(query)
