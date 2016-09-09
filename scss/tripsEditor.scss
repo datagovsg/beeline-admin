@@ -11,11 +11,6 @@ trips-editor {
     background-color: #66C;
   }
 
-  tr.not-running {
-    color: #888;
-    text-decoration: line-through;
-  }
-
   section.add-trips {
     border: solid 1px black;
     padding: 1em;
@@ -31,6 +26,16 @@ trips-editor {
   table.trips-list {
     width: auto;
     min-width: 100%;
+  }
+
+  .trip-normal {
+    @include label-variant($label-success-bg);
+  }
+  .trip-void {
+    @include label-variant($label-info-bg);
+  }
+  .trip-cancelled {
+    @include label-variant($label-warning-bg);
   }
 }
 

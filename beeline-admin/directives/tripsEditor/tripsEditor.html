@@ -29,6 +29,7 @@
       <tr>
         <th></th> <!-- selection button -->
         <th></th> <!-- actions (delete, use) -->
+        <th></th> <!-- status -->
         <th></th> <!-- pax -->
         <th></th> <!-- booked -->
         <th></th> <!-- price -->
@@ -39,6 +40,7 @@
       <tr>
         <th></th>
         <th></th>
+        <th>Status</th>
         <th>Cap</th>
         <th>Booked</th>
         <th>Price</th>
@@ -54,7 +56,6 @@
       <tr ng-repeat="trip in trips track by trip.id"
           ng-class="{
             selected: selection.selected[trip.id],
-            'not-running': !trip.isRunning
           }">
         <td ng-mousedown="selection.$mousedown($event, $index)">
           <input type="checkbox" ng-model="selection.selected[trip.id]"
@@ -66,6 +67,14 @@
             ng-click='tripList.deleteTrip(trip)'
           >
           </button>
+        </td>
+        <td>
+          <span class="label trip-normal"
+              ng-if="trip.isRunning">Normal</span>
+          <span class="label trip-void"
+              ng-if="trip.status == 'void'">Void</span>
+          <span class="label trip-cancelled"
+              ng-if="trip.status == 'cancelled'">Cancelled</span>
         </td>
         <td>
           {{trip.capacity}}
