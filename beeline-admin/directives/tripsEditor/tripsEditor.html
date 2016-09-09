@@ -53,7 +53,8 @@
     <tbody>
       <tr ng-repeat="trip in trips track by trip.id"
           ng-class="{
-            selected: selection.selected[trip.id]
+            selected: selection.selected[trip.id],
+            'not-running': !trip.isRunning
           }">
         <td ng-mousedown="selection.$mousedown($event, $index)">
           <input type="checkbox" ng-model="selection.selected[trip.id]"

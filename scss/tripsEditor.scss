@@ -7,8 +7,13 @@ trips-editor {
     background-color: #CCC;
   }
 
-  tr.selected td{
+  tr.selected td {
     background-color: #66C;
+  }
+
+  tr.not-running {
+    color: #888;
+    text-decoration: line-through;
   }
 
   section.add-trips {
