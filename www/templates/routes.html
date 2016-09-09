@@ -76,29 +76,54 @@
             <td>{{route.endDate | date:'dd MMM yyyy'}}<br />{{route.endDate | date:'(EEE)'}}</td>
             <!-- <td>{{route.lastStartTime | intervalToTime | date:'HH:mm'}}</td> -->
             <!-- <td>{{route.lastEndTime   | intervalToTime | date:'HH:mm'}}</td> -->
-            <td><span class="label route-active">Active</span><br />
-              <span class="label route-notstarted">Not Started</span><br />
-              <span class="label route-ended">Ended</span></td>
+            <td>
+              <span class="label route-active"
+                  ng-if="route.startDate.getTime() <= now && now <= route.endDate.getTime() + 24*3600*1000">Active</span>
+              <span class="label route-notstarted"
+                  ng-if="now < route.startDate.getTime()">Not Started</span>
+              <span class="label route-ended"
+                  ng-if="now > route.endDate.getTime() + 24*3600*1000">Ended</span>
+            </td>
             <td style="width:15%">
-              <table class="borderless">
+              <table class="borderless" ng-if="route.indicativeTrip.nextTripId">
                 <tr>
                   <td class="text-nowrap">
-                    HH:mm
+                    {{route.indicativeTrip.nextStartTime | intervalToTime | date:'HH:mm'}}
                   </td>
                   <td>
-                    Stop Name Description Lorem Ipsum
+                    {{route.indicativeTrip.nextStartDescription}}
+                  </td>
+                </tr>
+              </table>
+              <table class="borderless" ng-if="!route.indicativeTrip.nextTripId">
+                <tr>
+                  <td class="text-nowrap">
+                    {{route.indicativeTrip.lastStartTime | intervalToTime | date:'HH:mm'}}
+                  </td>
+                  <td>
+                    {{route.indicativeTrip.lastStartDescription}}
                   </td>
                 </tr>
               </table>
             </td>
             <td style="width:15%">
-              <table class="borderless">
+              <table class="borderless" ng-if="route.indicativeTrip.nextTripId">
                 <tr>
                   <td class="text-nowrap">
-                    HH:mm
+                    {{route.indicativeTrip.nextEndTime | intervalToTime | date:'HH:mm'}}
                   </td>
                   <td>
-                    Stop Name Description Lorem Ipsum
+                    {{route.indicativeTrip.nextEndDescription}}
+                  </td>
+                </tr>
+              </table>
+              <table class="borderless" ng-if="!route.indicativeTrip.nextTripId">
+                <tr>
+                  <td class="text-nowrap">
+                    {{route.indicativeTrip.lastEndTime | intervalToTime | date:'HH:mm'}}
+                  </td>
+                  <td>
+                    {{route.indicativeTrip.lastEndDescription}}
                   </td>
                 </tr>
               </table>

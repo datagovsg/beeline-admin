@@ -13,6 +13,7 @@ export default function($scope, $state, $urlRouter, AdminService, LoadingSpinner
     perPage: 20,
     page: 1,
   };
+  $scope.now = Date.now();
 
   function refreshRoutes() {
     if (!$scope.filter.transportCompanyId) return;
@@ -22,6 +23,10 @@ export default function($scope, $state, $urlRouter, AdminService, LoadingSpinner
       url: '/routes/report?' + querystring.stringify($scope.filter)
     })
     .then((response) => {
+      for (let route of response.data.rows) {
+        route.startDate = new Date(route.startDate);
+        route.endDate = new Date(route.endDate);
+      }
       $scope.data = response.data;
     })
     .then(null, (error) => {
