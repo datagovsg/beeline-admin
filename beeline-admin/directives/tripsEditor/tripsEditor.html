@@ -56,6 +56,8 @@
             selected: selection.selected[trip.id]
           }">
         <td ng-mousedown="selection.$mousedown($event, $index)">
+          <input type="checkbox" ng-model="selection.selected[trip.id]"
+            ng-mousedown="$event.stopPropagation()">
           <small>{{trip.id}}</small>
         </td>
         <td>
