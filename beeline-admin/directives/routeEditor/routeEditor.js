@@ -13,8 +13,11 @@ export default function (AdminService, RoutesService, $rootScope, commonModals) 
       scope.adminService = AdminService;
       scope.disp = {
         routeTags: [],
-        signage: "Signage"
+        signage: null
       }
+      scope.form ={
+        routeEditorForm : {}
+      };
 
 
       var checkDefaultSignage = function() {
@@ -44,9 +47,6 @@ export default function (AdminService, RoutesService, $rootScope, commonModals) 
       scope.saveRoute = function() {
         if (!scope.route)
           return;
-        if (!scope.route.notes || !scope.route.notes.signage) {
-          checkDefaultSignage();
-        }
         RoutesService.saveRoute(scope.route)
         .then((route) => {
           scope.route = route;
@@ -76,15 +76,19 @@ export default function (AdminService, RoutesService, $rootScope, commonModals) 
               scope.route.path.map(latlng => new google.maps.LatLng(latlng.lat, latlng.lng)))
           }
           scope.$broadcast('mapLoaded');
-
-          if (!scope.route.notes || !scope.route.notes.signage) {
-            checkDefaultSignage()
-          }
         })
       })
       scope.$watchCollection('disp.routeTags', (rawTags) => {
         if (!scope.route) return;
         scope.route.tags = rawTags ? rawTags.map(t => t.name) : [];
+      })
+      scope.$watch('route.to', (destination)=>{
+        if (!destination) return;
+        scope.disp.signage = "To "+destination;
+        if (scope.form.routeEditorForm.signage.$pristine) {
+          scope.route.notes = scope.route.notes || {};
+          scope.route.notes.signage = scope.disp.signage;
+        }
       })
     },
   }
