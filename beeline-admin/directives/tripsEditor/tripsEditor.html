@@ -47,8 +47,9 @@
         <th>Date</th>
         <th>Driver</th>
         <th ng-repeat="stop in disp.stopsList track by $index"
+            class="clip-text"
             title="{{stop.stop.description}}">
-          {{stop.stop.description.substr(0,5)}}
+          {{stop.stop.description}}
         </th>
       </tr>
     </thead>
@@ -97,6 +98,11 @@
         </td>
         <td ng-repeat="stop in disp.stopsList">
           {{ findStop(trip, stop.stopId, stop.orderOfAppearance).time | date:'HH:mm'}}
+
+          <span class="label trip-stop-can-board" title="Boarding Stop"
+              ng-if="findStop(trip, stop.stopId, stop.orderOfAppearance).canBoard">B</span>
+          <span class="label trip-stop-can-alight" title="Alighting Stop"
+              ng-if="findStop(trip, stop.stopId, stop.orderOfAppearance).canAlight">A</span>
         </td>
       </tr>
     </tbody>

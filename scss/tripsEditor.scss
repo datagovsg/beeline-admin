@@ -28,13 +28,20 @@ trips-editor {
     min-width: 100%;
   }
 
-  .trip-normal {
+  th.clip-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 4em;
+  }
+
+  .trip-normal, .trip-stop-can-board {
     @include label-variant($label-success-bg);
   }
   .trip-void {
     @include label-variant($label-info-bg);
   }
-  .trip-cancelled {
+  .trip-cancelled, .trip-stop-can-alight {
     @include label-variant($label-warning-bg);
   }
 }
