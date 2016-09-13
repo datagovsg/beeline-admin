@@ -4,20 +4,32 @@
     <h3>Select dates</h3>
   </div>
   <div class="modal-body">
-    <multiple-date-picker
-      days-allowed="datepicker.daysAllowed"
-      highlight-days="datepicker.highlightDays"
-      ng-model="data.selectedDates"
-      month="datepicker.month"
-      sunday-first-day="true"
-      month-changed="monthChanged">
-    </multiple-date-picker>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-12">
+          <multiple-date-picker
+            days-allowed="datepicker.daysAllowed"
+            highlight-days="datepicker.highlightDays"
+            ng-model="data.selectedDates"
+            month="datepicker.month"
+            sunday-first-day="true"
+            month-changed="monthChanged">
+          </multiple-date-picker>
 
-    <ul class="date-list">
-      <li ng-repeat="date in data.selectedDates | orderBy:date.valueOf()">
-        {{date.format('DD-MMM-YYYY')}}
-      </li>
-    </ul>
+        </div>
+      </div>
+      <br />
+      <div class="row">
+        <div class="col-lg-12">
+          <strong>Trips to create:</strong>
+          <ul class="date-list">
+            <li ng-repeat="date in data.selectedDates | orderBy:date.valueOf()">
+              {{date.format('DD-MMM-YYYY')}}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div> <!-- modal-body -->
   <div class="modal-footer">
     <div class="row">
