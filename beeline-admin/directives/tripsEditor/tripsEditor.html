@@ -26,13 +26,6 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-lg-12 reset-buttons">
-      <button class="btn btn-default btn-xs">Refresh List</button>
-      <button class="btn btn-default btn-xs select-all-button">Select All</button>
-    </div>
-    </div>
-
-  <div class="row">
     <div class="col-lg-12">
       <multi-select-broker collection="trips" selection="selection" track-by="'id'">
       </multi-select-broker>
@@ -53,7 +46,7 @@
             <th></th> <!-- actions (delete, use) -->
           </tr>
           <tr>
-            <th></th> <!-- radio -->
+            <th><button ng-click="selection.$selectAll()">&nbsp;</button></th> <!-- radio -->
             <th></th> <!-- index -->
             <th>Trip ID</th>
             <th>Date</th>

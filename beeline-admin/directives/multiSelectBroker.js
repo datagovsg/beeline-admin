@@ -48,6 +48,12 @@ export default function() {
             return scope.trackBy;
           },
 
+          $selectAll() {
+            for (let item of scope.collection) {
+              scope.selection.selected[item[scope.trackBy]] = true;
+            }
+          },
+
           $shiftMousedown(index) {
             if (index < scope.selection.lastSelectedIndex) {
               for (let i=scope.selection.lastSelectedIndex - (
