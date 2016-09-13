@@ -52,6 +52,7 @@ export default function() {
             for (let item of scope.collection) {
               scope.selection.selected[item[scope.trackBy]] = true;
             }
+            scope.selection.lastSelectedIndex = 0;
           },
 
           $shiftMousedown(index) {
