@@ -53,7 +53,7 @@ export default function (AdminService, RoutesService, $rootScope, commonModals) 
 
       scope.$watch('route', () => {
         scope.route && scope.route.id &&
-        RoutesService.getRoute(scope.route.id, {includeIndicative: true})
+        RoutesService.getRoute(scope.route.id, {includeIndicative: true, includeFeatures: true})
         .then((route) => {
           scope.tripStops = route.indicativeTrip && route.indicativeTrip.tripStops
           scope.disp.routeTags = scope.route.tags && scope.route.tags.map(t => ({name: t}));
