@@ -13,7 +13,11 @@ export default function (AdminService, RoutesService, $rootScope, commonModals) 
       scope.adminService = AdminService;
       scope.disp = {
         routeTags: [],
+        signage: null
       }
+      scope.form ={
+        routeEditorForm : {}
+      };
 
       scope.resetRoute = function() {
         if (scope.route && scope.route.id) {
@@ -30,7 +34,6 @@ export default function (AdminService, RoutesService, $rootScope, commonModals) 
       scope.saveRoute = function() {
         if (!scope.route)
           return;
-
         RoutesService.saveRoute(scope.route)
         .then((route) => {
           scope.route = route;
@@ -59,12 +62,20 @@ export default function (AdminService, RoutesService, $rootScope, commonModals) 
             scope.route.path = google.maps.geometry.encoding.encodePath(
               scope.route.path.map(latlng => new google.maps.LatLng(latlng.lat, latlng.lng)))
           }
-          scope.$broadcast('mapLoaded')
+          scope.$broadcast('mapLoaded');
         })
       })
       scope.$watchCollection('disp.routeTags', (rawTags) => {
         if (!scope.route) return;
         scope.route.tags = rawTags ? rawTags.map(t => t.name) : [];
+      })
+      scope.$watch('route.to', (destination)=>{
+        if (!destination) return;
+        scope.disp.signage = "To "+destination;
+        if (scope.form.routeEditorForm.signage.$pristine) {
+          scope.route.notes = scope.route.notes || {};
+          scope.route.notes.signage = scope.disp.signage;
+        }
       })
     },
   }
