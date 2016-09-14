@@ -19,19 +19,6 @@ export default function (AdminService, RoutesService, $rootScope, commonModals) 
         routeEditorForm : {}
       };
 
-
-      var checkDefaultSignage = function() {
-        if (!scope.route.notes) {
-          scope.route.notes = {};
-        }
-        if (scope.route.to) {
-          scope.route.notes.signage = scope.disp.signage =  "To "+scope.route.to;
-        }
-        else {
-          scope.route.notes.signage = "";
-        }
-      }
-
       scope.resetRoute = function() {
         if (scope.route && scope.route.id) {
           RoutesService.getRoute(scope.route.id)
