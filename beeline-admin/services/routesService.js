@@ -24,6 +24,8 @@ export default function (AdminService, DriverService, $q, LoadingSpinner) {
         query.include_availability = options.includeAvailability;
       if (options.transportCompanyId)
         query.transportCompanyId = options.transportCompanyId;
+      if (options.includeFeatures)
+        query.include_features = options.includeFeatures;
     }
     query = querystring.stringify(query)
     return query
