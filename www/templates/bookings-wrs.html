@@ -234,7 +234,14 @@
                   &dollar;{{ticket.boardStop.trip.price}}
                 </td>
                 <td>
-                  {{ticket.status}}
+                  <span class="label ticket-valid"
+                      ng-if="ticket.status == 'valid'">Valid</span>
+                  <span class="label ticket-void"
+                      ng-if="ticket.status == 'void'">Void</span>
+                  <span class="label ticket-refunded"
+                      ng-if="ticket.status == 'refunded'">Refunded</span>
+                  <span class="label ticket-failed"
+                      ng-if="ticket.status == 'failed'">Failed</span>
                 </td>
                 <td>
                   {{ticket.createdAt | date:'dd-MMM-yy'}} <br>
