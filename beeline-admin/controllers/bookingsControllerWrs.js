@@ -123,36 +123,36 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
     }
   }
 
-  // Unused
-  $scope.issueTickets = function () {
-    var selectedTicketIds = _($scope.selectedTickets)
-      .keys()
-      .filter(key => $scope.selectedTickets[key])
-      .value();
-    var selectedTickets = selectedTicketIds.map(tid =>
-      $scope.tickets.find(t => t.id.toString() === tid))
-    var firstTicket = selectedTickets.length > 0 ? selectedTickets[0] : null;
-    var issueTicketModalOptions = {};
-
-    assert(selectedTickets.length === 0 || firstTicket);
-
-    issueTicketModalOptions.users = _(selectedTickets)
-      .filter()
-      .map(t => t.user)
-      .uniqBy('id')
-      .value()
-
-    if (firstTicket) {
-      Object.assign(issueTicketModalOptions, {
-        routeId: firstTicket.boardStop.trip.routeId,
-        boardStopStopId: firstTicket.boardStop.stopId,
-        alightStopStopId: firstTicket.alightStop.stopId,
-        cancelledTicketIds: selectedTicketIds
-      })
-    }
-
-    issueTicketModal.open(issueTicketModalOptions);
-  }
+  // // Unused -- for replacing multiple tickets
+  // $scope.issueTickets = function () {
+  //   var selectedTicketIds = _($scope.selectedTickets)
+  //     .keys()
+  //     .filter(key => $scope.selectedTickets[key])
+  //     .value();
+  //   var selectedTickets = selectedTicketIds.map(tid =>
+  //     $scope.tickets.find(t => t.id.toString() === tid))
+  //   var firstTicket = selectedTickets.length > 0 ? selectedTickets[0] : null;
+  //   var issueTicketModalOptions = {};
+  //
+  //   assert(selectedTickets.length === 0 || firstTicket);
+  //
+  //   issueTicketModalOptions.users = _(selectedTickets)
+  //     .filter()
+  //     .map(t => t.user)
+  //     .uniqBy('id')
+  //     .value()
+  //
+  //   if (firstTicket) {
+  //     Object.assign(issueTicketModalOptions, {
+  //       routeId: firstTicket.boardStop.trip.routeId,
+  //       boardStopStopId: firstTicket.boardStop.stopId,
+  //       alightStopStopId: firstTicket.alightStop.stopId,
+  //       cancelledTicketIds: selectedTicketIds
+  //     })
+  //   }
+  //
+  //   issueTicketModal.open(issueTicketModalOptions);
+  // }
 
   // Edit ticket button
   $scope.editTicket = function (ticket) {
@@ -163,7 +163,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
       routeId: ticket.boardStop.trip.routeId,
       boardStopStopId: ticket.boardStop.stopId,
       alightStopStopId: ticket.alightStop.stopId,
-      cancelledTicketIds: selectedTicketIds
+      cancelledTickets: selectedTickets
     };
     issueTicketModal.open(issueTicketModalOptions).then(query);
   }
