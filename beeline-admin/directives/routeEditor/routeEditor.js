@@ -1,15 +1,14 @@
 import _ from 'lodash';
 import assert from 'assert';
 
-export default function (AdminService, RoutesService, $rootScope, commonModals) {
+export default function (AdminService, RoutesService, $rootScope, commonModals, $state) {
   return {
     template: require('./routeEditor.html'),
     scope: {
       route: '=',
-      edit: '=?',
+      tab: '=',
     },
     link(scope, elem, attr) {
-      scope.edit = scope.edit || 'route'
       scope.adminService = AdminService;
       scope.disp = {
         routeTags: [],
@@ -37,7 +36,6 @@ export default function (AdminService, RoutesService, $rootScope, commonModals) 
         RoutesService.saveRoute(scope.route)
         .then((route) => {
           scope.route = route;
-          scope.edit.routeId = route.id;
         })
       }
 
@@ -48,6 +46,7 @@ export default function (AdminService, RoutesService, $rootScope, commonModals) 
           .then(() => {
             scope.route = null
           })
+          $state.go('routes')
         }
       }
 

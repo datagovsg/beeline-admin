@@ -3,7 +3,6 @@
 // require('../scss/ionic.app.scss');
 global.moment = require('moment')
 
-require('beeline-calendar')
 require('angular-storage')
 require('angular-cookies')
 require('angular-jwt')
@@ -19,7 +18,7 @@ const env = require('./env')
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
 angular.module('beeline-admin', [
-  'uiGmapgoogle-maps', 'ui.router', 'ui.bootstrap', 'beeline.calendar',
+  'uiGmapgoogle-maps', 'ui.router', 'ui.bootstrap',
   'angular-storage', 'angular-jwt', 'ngCookies', 'multipleDatePicker',
   'ui.select', 'ngTagEditor'])
 .service('auth', require('./auth0').default)
@@ -30,10 +29,10 @@ angular.module('beeline-admin', [
 .directive('accountView', require('./directives/accountView/accountView').default)
 .directive('paymentView', require('./directives/paymentView/paymentView').default)
 .directive('ticketView', require('./directives/ticketView/ticketView').default)
-.directive('routeSelector', require('./directives/routeSelector/routeSelector').default)
 .directive('routeEditor', require('./directives/routeEditor/routeEditor').default)
 .directive('pathEditor', require('./directives/pathEditor/pathEditor').default)
 .directive('tripsEditor', require('./directives/tripsEditor/tripsEditor').default)
+.directive('tripInfoBroker', require('./directives/tripInfoBroker').default)
 .directive('tripSelectionBroker', require('./directives/tripSelector/tripSelectionBroker').default)
 .directive('multiSelectBroker', require('./directives/multiSelectBroker').default)
 .directive('companyLogo', require('./directives/companyLogo').default)
@@ -71,6 +70,7 @@ angular.module('beeline-admin', [
 .controller('admins', require('./controllers/adminsController.js').default)
 .filter('makeRoutePath', require('./shared/filters.js').makeRoutePath)
 .filter('intervalToTime', require('./shared/filters.js').intervalToTime)
+.filter('leftPad', () => require('left-pad'))
 // Handle what happens when the callback is called
 // TODO: Use angular dependency injection to invoke the authenticateToken fn
 .run(function ($rootScope, auth, store, $cookies, AdminService, jwtHelper) {
