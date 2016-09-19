@@ -124,35 +124,32 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
   }
 
   // // Unused -- for replacing multiple tickets
-  // $scope.issueTickets = function () {
-  //   var selectedTicketIds = _($scope.selectedTickets)
-  //     .keys()
-  //     .filter(key => $scope.selectedTickets[key])
-  //     .value();
-  //   var selectedTickets = selectedTicketIds.map(tid =>
-  //     $scope.tickets.find(t => t.id.toString() === tid))
-  //   var firstTicket = selectedTickets.length > 0 ? selectedTickets[0] : null;
-  //   var issueTicketModalOptions = {};
-  //
-  //   assert(selectedTickets.length === 0 || firstTicket);
-  //
-  //   issueTicketModalOptions.users = _(selectedTickets)
-  //     .filter()
-  //     .map(t => t.user)
-  //     .uniqBy('id')
-  //     .value()
-  //
-  //   if (firstTicket) {
-  //     Object.assign(issueTicketModalOptions, {
-  //       routeId: firstTicket.boardStop.trip.routeId,
-  //       boardStopStopId: firstTicket.boardStop.stopId,
-  //       alightStopStopId: firstTicket.alightStop.stopId,
-  //       cancelledTicketIds: selectedTicketIds
-  //     })
-  //   }
-  //
-  //   issueTicketModal.open(issueTicketModalOptions);
-  // }
+  $scope.issueTickets = function () {
+    var selectedTickets = _.keys($scope.selectedTickets.selected)
+      .filter(key => $scope.selectedTickets.selected[key])
+      .map(key => $scope.tickets.find(tkt => tkt.id === parseInt(key)));
+    var firstTicket = selectedTickets.length > 0 ? selectedTickets[0] : null;
+    var issueTicketModalOptions = {};
+
+    assert(selectedTickets.length === 0 || firstTicket);
+
+    issueTicketModalOptions.users = _(selectedTickets)
+      .filter()
+      .map(t => t.user)
+      .uniqBy('id')
+      .value()
+
+    if (firstTicket) {
+      Object.assign(issueTicketModalOptions, {
+        routeId: firstTicket.boardStop.trip.routeId,
+        boardStopStopId: firstTicket.boardStop.stopId,
+        alightStopStopId: firstTicket.alightStop.stopId,
+        cancelledTickets: selectedTickets
+      })
+    }
+
+    issueTicketModal.open(issueTicketModalOptions).then(query);
+  }
 
   // Edit ticket button
   $scope.editTicket = function (ticket) {
