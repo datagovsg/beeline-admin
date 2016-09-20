@@ -3,8 +3,13 @@ export default function($scope, $state, $urlRouter, AdminService, RoutesService)
   var myState = $state.current.name;
 
   //
-  RoutesService.getRoute($state.params.routeId)
-  .then((route) => $scope.selectedRoute = route);
+  if ($state.params.routeId) {
+    RoutesService.getRoute($state.params.routeId)
+    .then((route) => $scope.selectedRoute = route);
+  }
+  else {
+    $scope.selectedRoute = {};
+  }
 
   $scope.action = $state.params.action;
 

@@ -124,9 +124,11 @@ export default function (AdminService, DriverService, $q, LoadingSpinner) {
        data: route,
       })
       .then((response) => {
-        var index = routesCache.findIndex((r) => r.id == route.id)
-        routesCache.splice(index, 1, response.data)
-        routesById[route.id] = response.data
+        if (routesCache) {
+          var index = routesCache.findIndex((r) => r.id == route.id)
+          routesCache.splice(index, 1, response.data)
+        }
+        if (routesById) routesById[route.id] = response.data
         return response.data
       }));
     }
@@ -137,8 +139,8 @@ export default function (AdminService, DriverService, $q, LoadingSpinner) {
        data: route
       })
       .then((response) => {
-        routesCache.push(response.data)
-        routesById[response.data.id] = response.data
+        if (routesCache) routesCache.push(response.data)
+        if (routesById) routesById[response.data.id] = response.data
         return response.data
       }));
     }
