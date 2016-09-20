@@ -55,7 +55,7 @@ export default function ($scope, AdminService, LoadingSpinner) {
     var name = prompt("Name?");
     if (!name) return;
 
-    var notes = prompt("Notes?");
+    var remarks = prompt("Remarks?");
 
     LoadingSpinner.watchPromise(AdminService.beeline({
       method: 'POST',
@@ -63,7 +63,7 @@ export default function ($scope, AdminService, LoadingSpinner) {
       data: {
         telephone: phoneNumber,
         name: name,
-        notes: notes
+        remarks: remarks
       }
     }))
     .then(query)
