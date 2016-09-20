@@ -26,6 +26,7 @@
             <th>Name</th>
             <th>Telephone</th>
             <th>Vehicle</th>
+            <th>Remarks</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -47,12 +48,19 @@
               {{driver.vehicle}}
             </td>
             <td>
-              <button class="btn btn-primary" ng-click="updateDriverName(driver.id)">
-                Edit Name or Phone No.
-              </button>
-              <button class="btn btn-danger" ng-click="deleteDriver(driver.id)">
-                Delete Driver
-              </button>
+              {{driver.remarks}}
+            </td>
+            <td>
+              <div class="btn-group" role="group" aria-label="...">
+                <button type="button" class="btn btn-default" ng-click="updateDriverName(driver.id)">
+                  <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                  Edit Name or Phone No.
+                </button>
+                <button type="button" class="btn btn-danger" ng-click="deleteDriver(driver.id)">
+                  <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
+                  Delete Driver
+                </button>
+              </div>
             </td>
           </tr>
         </tbody>
