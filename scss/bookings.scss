@@ -31,3 +31,21 @@
     margin: $padding_small_vertical 0;
   }
 }
+
+.label{
+  &.ticket-valid {
+    @include label-variant($label-success-bg);
+  }
+
+  &.ticket-void {
+    @include label-variant($label-default-bg);
+  }
+
+  &.ticket-refunded {
+    @include label-variant($label-danger-bg);
+  }
+
+  &.ticket-failed{
+    @include label-variant($gray-darker);
+  }
+}

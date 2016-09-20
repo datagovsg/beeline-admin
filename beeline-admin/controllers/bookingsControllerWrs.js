@@ -125,9 +125,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
 
   // // Unused -- for replacing multiple tickets
   $scope.issueTickets = function () {
-    var selectedTickets = _.keys($scope.selectedTickets.selected)
-      .filter(key => $scope.selectedTickets.selected[key])
-      .map(key => $scope.tickets.find(tkt => tkt.id === parseInt(key)));
+    var selectedTickets = $scope.selectedTickets.$selectedObjects();
     var firstTicket = selectedTickets.length > 0 ? selectedTickets[0] : null;
     var issueTicketModalOptions = {};
 

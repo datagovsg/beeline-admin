@@ -1,40 +1,60 @@
-
 trips-editor {
-  nav {
-    .date-filter-popup {
-      display: inline-block;
+  .date-filter-popup {
+    width: auto;
+    margin-top: $padding-large-vertical*3;
+    margin-bottom: $padding-large-vertical*2;
+
+    .create-trip-button {
+      margin-left: $padding-small-horizontal*2;
     }
-    background-color: #CCC;
+
+    .edit-trip-button {
+      margin-left: $padding-small-horizontal;
+    }
   }
 
-  tr.selected td{
-    background-color: #66C;
+  h3,
+  h4 {
+    display: inline;
   }
+}
 
-  section.add-trips {
+section.add-trips {
     border: solid 1px black;
     padding: 1em;
 
     .add-trips-components {
       max-height: 300px;
+
       .selected-dates {
         overflow-y: scroll;
       }
     }
-  }
+}
 
-  table.trips-list {
+table.trips-list {
     width: auto;
     min-width: 100%;
+
+  tr.selected td {
+    background-color: #acf4ed;
+  }
+
+  th.clip-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 4em;
   }
 }
 
 .date-list li {
-  display: inline;
+  display: inline-block;
   margin: 0;
   padding: 0;
+
   &:after {
-    content: ", "
+    content: ", ";
   }
 }
 
@@ -48,5 +68,49 @@ trips-editor {
       background-color: #CCC;
       color: #666;
     }
+  }
+}
+
+.add-stop-button {
+  button {
+    margin-bottom: $padding-large-vertical*2;
+  }
+}
+
+.select-all-button {
+  margin-left: $padding-xs-horizontal;
+}
+
+.reset-buttons {
+  margin-bottom: $padding-large-vertical*1;
+}
+
+.label{
+  &.trip-normal {
+    @include label-variant($label-success-bg);
+  }
+
+  &.trip-cancelled {
+    @include label-variant($label-danger-bg);
+  }
+
+  &.trip-void {
+    @include label-variant($label-default-bg);
+  }
+
+  &.stop-board{
+    @include label-variant($label-success-bg);
+  }
+
+  &.stop-alight{
+    @include label-variant($label-danger-bg);
+  }
+}
+
+.trip-data-editor-nav{
+  margin: $padding-large-vertical*2 0;
+
+  .form-control{
+  margin-left: $padding-small-horizontal;
   }
 }

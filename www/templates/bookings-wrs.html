@@ -115,7 +115,7 @@
     <div class="row">
       <div class="col-lg-12">
         <div class="table-responsive">
-          <multi-select-broker collection="tickets" track-by="id" selection="selectedTickets">
+          <multi-select-broker collection="tickets" track-by="'id'" selection="selectedTickets">
           </multi-select-broker>
           <table class="table table-striped table-bordered table-condensed table-hover transactions-view">
             <thead>
@@ -234,7 +234,14 @@
                   &dollar;{{ticket.boardStop.trip.price}}
                 </td>
                 <td>
-                  {{ticket.status}}
+                  <span class="label ticket-valid"
+                      ng-if="ticket.status == 'valid'">Valid</span>
+                  <span class="label ticket-void"
+                      ng-if="ticket.status == 'void'">Void</span>
+                  <span class="label ticket-refunded"
+                      ng-if="ticket.status == 'refunded'">Refunded</span>
+                  <span class="label ticket-failed"
+                      ng-if="ticket.status == 'failed'">Failed</span>
                 </td>
                 <td>
                   {{ticket.createdAt | date:'dd-MMM-yy'}} <br>
