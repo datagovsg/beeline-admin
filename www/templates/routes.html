@@ -15,7 +15,7 @@
         <uib-pagination boundary-links="true" ng-model="filter.page" total-items="data.count" items-per-page="filter.perPage"></uib-pagination>
       </div>
       <div class="pull-right create-button">
-        <button class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>Create a new route</button>
+        <button class="btn btn-primary btn-lg" ui-sref="trips({routeId:0, action: 'route'})"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>Create a new route</button>
       </div>
     </div>
   </div>
