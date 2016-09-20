@@ -26,6 +26,7 @@
             <th>Name</th>
             <th>Telephone</th>
             <th>Vehicle</th>
+            <th>Notes</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -45,6 +46,9 @@
             </td>
             <td>
               {{driver.vehicle}}
+            </td>
+            <td>
+              {{driver.notes}}
             </td>
             <td>
               <button class="btn btn-primary" ng-click="updateDriverName(driver.id)">
