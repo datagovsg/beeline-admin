@@ -40,8 +40,8 @@ table.trips-list {
     background-color: #acf4ed;
   }
 
-  th.clip-text {
-    white-space: nowrap;
+  th.stop-text {
+    /* white-space: nowrap; */
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 4em;
