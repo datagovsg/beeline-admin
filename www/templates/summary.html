@@ -1,17 +1,163 @@
 <div class="container-fluid withnav">
   <div class="summary-page">
     <div class="row">
-      <div class="col-lg-12">
+      <div class="col-lg-4">
         <h1>Booking Summary</h1>
         <nav>
           <div class="pull-left">
             <uib-datepicker ng-model="selectedMonth" datepicker-options="{ minMode: 'month' }">
             </uib-datepicker>
           </div>
-          <div class="pull-right">
-            <company-logo ng-if="companyId" company-id="companyId" class="company-logo"></company-logo>
-          </div>
+
         </nav>
+      </div>
+      <div class="col-lg-6 route-summaries">
+        <h3>Trip Legend</h3>
+          <table class="summaryLegend">
+            <tr>
+              <td>
+                Trips
+              </td>
+              <td>
+                Normal
+              </td>
+              <td>
+                No Trips
+              </td>
+              <td>
+                <span uib-tooltip="Cancelled due to Emergency">Cancelled</span>
+              </td>
+              <td>
+                <span uib-tooltip="Void due to wrong trips created">Void</span>
+              </td>
+              <td>
+                Today
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <table class="routeSummary">
+                  <tr>
+                    <th>
+                      Date
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      Day
+                    </th>
+                  </tr>
+                  <tr>
+                    <td class="passenger-count day has-trip">
+                      <small>Passengers</small>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+              <td>
+                <table class="routeSummary">
+                  <tr>
+                    <th class="summary-day day has-trip">
+                      1
+                    </th>
+                  </tr>
+                  <tr>
+                    <th class="weekday day has-trip">
+                      Mon
+                    </th>
+                  </tr>
+                  <tr>
+                    <td class="passenger-count day has-trip">
+                      0
+                    </td>
+                  </tr>
+                </table>
+              </td>
+              <td>
+                <table class="routeSummary">
+                  <tr>
+                    <th class="summary-day day">
+                      2
+                    </th>
+                  </tr>
+                  <tr>
+                    <th class="weekday day">
+                      Tues
+                    </th>
+                  </tr>
+                  <tr>
+                    <td class="passenger-count day">
+                      0
+                    </td>
+                  </tr>
+                </table>
+              </td>
+              <td>
+                <table class="routeSummary">
+                  <tr>
+                    <th class="summary-day day has-trip cancelled">
+                      3
+                    </th>
+                  </tr>
+                  <tr>
+                    <th class="weekday day has-trip cancelled">
+                      Wed
+                    </th>
+                  </tr>
+                  <tr>
+                    <td class="passenger-count day has-trip cancelled">
+                      0
+                    </td>
+                  </tr>
+                </table>
+              </td>
+              <td>
+                <table class="routeSummary">
+                  <tr>
+                    <th class="summary-day day has-trip void">
+                      4
+                    </th>
+                  </tr>
+                  <tr>
+                    <th class="weekday day has-trip void">
+                      Thurs
+                    </th>
+                  </tr>
+                  <tr>
+                    <td class="passenger-count day has-trip void">
+                      0
+                    </td>
+                  </tr>
+                </table>
+              </td>
+              <td>
+                <table class="routeSummary">
+                  <tr>
+                    <th class="summary-day day has-trip today">
+                      5
+                    </th>
+                  </tr>
+                  <tr>
+                    <th class="weekday day has-trip today">
+                      Fri
+                    </th>
+                  </tr>
+                  <tr>
+                    <td class="passenger-count day has-trip today">
+                      0
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+
+      </div>
+      <div class="col-lg-2">
+        <h3>Company</h3>
+        <div class="pull-left">
+          <company-logo ng-if="companyId" company-id="companyId" class="company-logo"></company-logo>
+        </div>
       </div>
     </div>
     <div class="row">
