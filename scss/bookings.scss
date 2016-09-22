@@ -45,7 +45,8 @@
     @include label-variant($label-danger-bg);
   }
 
-  &.ticket-failed{
+  &.ticket-failed, &.discount-code {
     @include label-variant($gray-darker);
   }
+
 }
