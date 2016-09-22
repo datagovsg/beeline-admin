@@ -33,7 +33,14 @@ export default function (AdminService, RoutesService, $rootScope, commonModals, 
       scope.saveRoute = function() {
         if (!scope.route)
           return;
-        RoutesService.saveRoute(scope.route)
+
+        // Process the route tags and all other processed data
+        // here
+        let routeDataToSave = _.defaults({
+          tags: scope.disp.routeTags.map(t => t.name)
+        }, scope.route);
+        
+        RoutesService.saveRoute(routeDataToSave)
         .then((route) => {
           scope.route = route;
         })
@@ -51,9 +58,11 @@ export default function (AdminService, RoutesService, $rootScope, commonModals, 
       }
 
       scope.$watch('route', () => {
-        scope.route && scope.route.id &&
+        if (!(scope.route && scope.route.id)) return;
+
         RoutesService.getRoute(scope.route.id, {includeIndicative: true, includeFeatures: true})
         .then((route) => {
+
           scope.tripStops = route.indicativeTrip && route.indicativeTrip.tripStops
           scope.disp.routeTags = scope.route.tags && scope.route.tags.map(t => ({name: t}));
           // quick hack to convert arrays to polyline string
@@ -63,10 +72,6 @@ export default function (AdminService, RoutesService, $rootScope, commonModals, 
           }
           scope.$broadcast('mapLoaded');
         })
-      })
-      scope.$watchCollection('disp.routeTags', (rawTags) => {
-        if (!scope.route) return;
-        scope.route.tags = rawTags ? rawTags.map(t => t.name) : [];
       })
       scope.$watch('route.to', (destination)=>{
         if (!destination) return;
