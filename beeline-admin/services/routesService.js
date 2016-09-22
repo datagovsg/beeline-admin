@@ -32,6 +32,7 @@ export default function (AdminService, DriverService, $q, LoadingSpinner) {
   }
 
   function postProcessRoute(route) {
+    route.notes = route.notes || {};
     if (route.trips) {
       for (let trip of route.trips) {
         trip.date = new Date(trip.date)
