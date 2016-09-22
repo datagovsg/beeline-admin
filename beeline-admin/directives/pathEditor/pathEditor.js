@@ -24,16 +24,24 @@ export default function ($rootScope, $location, uiGmapGoogleMapApi, $q) {
           googleMaps.event.trigger(map, 'resize');
         })
 
+        // one-way binding path --> mapPath
         scope.$watch('path', (path) => {
-          if (!path) return
-          mapPath.setMap(map)
+          if (!path) {
+            if (mapPath) {
+              mapPath.setMap(null);
+            }
+            return;
+          }
+
           if (typeof path === 'string') {
             mapPath.setPath(googleMaps.geometry.encoding.decodePath(path))
           } else {
             mapPath.setPath(path)
           }
+          mapPath.setMap(map)
         })
 
+        // one-way binding tripStops --> tripStops
         let markers = []
 
         scope.$watch('tripStops', (tripStops) => {
@@ -90,8 +98,8 @@ export default function ($rootScope, $location, uiGmapGoogleMapApi, $q) {
         scope.googlePath = async (tripStops) => {
           if (!tripStops) return
           const stopsLatLng = tripStops.map((tripStop) => {
-            const {stop: {coordinates: {coordinates}}} = tripStop
-            return new googleMaps.LatLng(coordinates[1], coordinates[0])
+            const [lng, lat] = tripStop.stop.coordinates.coordinates;
+            return new googleMaps.LatLng(lat, lng)
           })
 
           dirRenderers.forEach((renderer) => { renderer.setMap(null) })
