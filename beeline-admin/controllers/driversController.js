@@ -34,11 +34,16 @@ export default function ($scope, AdminService, LoadingSpinner) {
 
     if (!newName) return;
 
+    var newRemarks = prompt("Remarks?");
+
+    if (!newRemarks) return;
+
     LoadingSpinner.watchPromise(AdminService.beeline({
       method: 'PUT',
       url: `/companies/${AdminService.getCompanyId()}/drivers/${did}`,
       data: {
-        name: newName
+        name: newName,
+        remarks: newRemarks
       }
     }))
     .then(query)
