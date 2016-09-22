@@ -46,6 +46,14 @@ table.trips-list {
     text-overflow: ellipsis;
     max-width: 4em;
   }
+  th.radio-column {
+    width: 50px;
+  }
+  td{
+    .trip-index{
+      margin-left: $padding-base-horizontal;
+    }
+  }
 }
 
 .date-list li {

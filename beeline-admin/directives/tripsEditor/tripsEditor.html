@@ -33,8 +33,7 @@
       <table class="table table-striped trips-list">
         <thead>
           <tr>
-            <th></th>  <!-- radio -->
-            <th></th>  <!-- index -->
+            <th></th>  <!-- radio and index-->
             <th></th>  <!-- trip ID -->
             <th></th>  <!--date -->
             <th></th>  <!-- pax -->
@@ -46,8 +45,7 @@
             <th></th> <!-- actions (delete, use) -->
           </tr>
           <tr>
-            <th><button ng-click="selection.$selectAll()">&nbsp;</button></th> <!-- radio -->
-            <th></th> <!-- index -->
+            <th class="radio-column"><button class="btn btn-default btn-sm" ng-click="selection.$selectAll()">Select all</button></th> <!-- radio -->
             <th>Trip ID</th>
             <th>Date</th>
             <th>Status</th>
@@ -71,10 +69,7 @@
               }">
             <td ng-mousedown="selection.$mousedown($event, $index)">
               <input type="checkbox" ng-model="selection.selected[trip.id]"
-                ng-mousedown="$event.stopPropagation()">
-            </td>
-            <td>
-              {{ $index + 1 }}
+                ng-mousedown="$event.stopPropagation()">  <span class="trip-index">{{ $index + 1 }}</span>
             </td>
             <td>
               <small>{{trip.id}}</small>
