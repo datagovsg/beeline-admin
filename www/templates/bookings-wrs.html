@@ -186,6 +186,9 @@
                   <br> (UID: {{ticket.user.id}})
                   <br> {{ticket.user.json.telephone || ticket.user.telephone}}
                   <br> {{ticket.user.json.email || ticket.user.email}}
+                  <span ng-repeat="discountCode in ticket.notes.discountCodes">
+                    <br> <span class="discount-code label">{{discountCode}}</span>
+                  </span>
                 </td>
                 <td class="text-center">
                   <a ui-sref="transactions({ticketId: ticket.id})">
@@ -232,6 +235,9 @@
                 </td>
                 <td>
                   &dollar;{{ticket.boardStop.trip.price}}
+                  <span ng-if="ticket.notes.discountValue">
+                    <br>-&dollar;{{ticket.notes.discountValue | number:2}}
+                  </span>
                 </td>
                 <td>
                   <span class="label ticket-valid"
