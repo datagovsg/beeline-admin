@@ -16,7 +16,7 @@ export default function (StopsPopup) {
     link(scope, elem, attr) {
       scope.showPopup = function () {
         StopsPopup.show({
-          title: 'Select a Stop!'
+          title: 'Stop Editor'
         })
         .then((x) => {
           scope.ngModel = x.id;
