@@ -66,6 +66,7 @@ $voidBG:           #f7dada;
         }
 
         .void{
+          color: $gray-base;
           background: repeating-linear-gradient(
             135deg,
             $voidBG,
@@ -85,7 +86,7 @@ $voidBG:           #f7dada;
         }
 
         th.summary-day.day.has-trip.void,
-        th.weekday.day.ng-scope.has-trip.void {
+        th.weekday.day.has-trip.void {
           color: $gray-base;
         }
 
