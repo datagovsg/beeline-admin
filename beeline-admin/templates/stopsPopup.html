@@ -1,6 +1,9 @@
 <div class="stops-popup">
   <div class="modal-header">
     <h3>{{title}}</h3>
+    <p>
+      Select an existing stop or pin a new stop location on the map
+    </p>
   </div>
   <div class="modal-body">
     <div class="row">
@@ -17,10 +20,10 @@
           <div class="col-lg-5">
             <form name="stopForm">
               <div ng-show="selectedStop">
-                <h3>
+                <h4>
                   <span ng-if="!selectedStop.id">New Stop</span>
                   <span ng-if="selectedStop.id">{{selectedStop.description}}</span>
-                </h3>
+                </h4>
                 <div class="row">
                   <div class="form-horizontal stop-form">
                     <div class="form-group">
