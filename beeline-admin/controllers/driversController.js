@@ -1,6 +1,6 @@
 import querystring from 'querystring'
 
-export default function ($scope, AdminService, LoadingSpinner) {
+export default function ($scope, AdminService, LoadingSpinner, commonModals) {
   $scope.drivers = [];
 
   function query() {
@@ -29,16 +29,27 @@ export default function ($scope, AdminService, LoadingSpinner) {
     });
   };
 
-  $scope.updateDriverName = (did) => {
-    var newName = prompt('Please enter the name of the Driver.');
+  $scope.updateDriverName = async (driver) => {
+    var newName = await commonModals.prompt({
+      message: 'Please enter the name of the Driver.',
+      default: driver.name
+    });
 
     if (!newName) return;
 
+    var newRemarks = await commonModals.prompt({
+      message: 'Remarks?',
+      default: driver.transportCompanies[0].driverCompany.remarks
+    });
+
+    if (!newRemarks) return;
+
     LoadingSpinner.watchPromise(AdminService.beeline({
       method: 'PUT',
-      url: `/companies/${AdminService.getCompanyId()}/drivers/${did}`,
+      url: `/companies/${AdminService.getCompanyId()}/drivers/${driver.id}`,
       data: {
-        name: newName
+        name: newName,
+        remarks: newRemarks
       }
     }))
     .then(query)
