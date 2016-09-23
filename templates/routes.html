@@ -14,7 +14,7 @@
       <div class="pull-left">
         <uib-pagination boundary-links="true" ng-model="filter.page" total-items="data.count" items-per-page="filter.perPage"></uib-pagination>
       </div>
-      <div class="pull-right create-button">
+      <div class="pull-right create-button" ng-if="adminService.isSuperAdmin()">
         <button class="btn btn-primary btn-lg" ui-sref="trips({routeId:0, action: 'route'})"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>Create a new route</button>
       </div>
     </div>
@@ -120,11 +120,11 @@
             </td>
             <td>
               <div class="btn-group" role="group" aria-label="...">
-                <button type="button" class="btn btn-default" ng-click="copy(route)">
+                <button type="button" class="btn btn-default" ng-click="copy(route)" ng-if="adminService.isSuperAdmin()">
                   <span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span>
                   Copy
                 </button>
-                <button type="button" class="btn btn-default"
+                <button type="button" class="btn btn-default" ng-if="adminService.isSuperAdmin()"
                   ui-sref="trips({routeId: route.id, action: 'route'})">
                   <span class="glyphicon glyphicon-edit" aria-hidden="true" ui-sref="trips({routeId: route.id, action: 'trips'})" ></span>
                   Edit
