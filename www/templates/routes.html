@@ -110,9 +110,9 @@
               </table>
             </td>
             <td><button class="btn btn-default" ng-click="viewRoute(route.id)">View</button></td>
-            <td>{{route.lastDriverName}}</td>
-            <td>{{route.lastPrice}}</td>
-            <td>{{route.lastCapacity}}<span class="glyphicon glyphicon-user" aria-hidden="true"></span></td>
+            <td>{{route.indicativeTrip.lastDriverName}}</td>
+            <td>{{route.indicativeTrip.lastPrice}}</td>
+            <td>{{route.indicativeTrip.lastCapacity}}<span class="glyphicon glyphicon-user" aria-hidden="true"></span></td>
             <td>
               <ul class="tags">
                 <li ng-repeat="tag in route.tags">{{tag}}</li>

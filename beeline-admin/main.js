@@ -106,7 +106,7 @@ angular.module('beeline-admin', [
       if (refreshToken) {
         auth.refreshToken(refreshToken)
         .then((delegationResult) => {
-          auth.authenticate(delegationResult.idToken);
+          auth.authenticate(delegationResult.id_token);
           auth.getProfile().then((profile) => {
             store.set('profile', profile);
           })
