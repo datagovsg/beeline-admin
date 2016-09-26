@@ -32,7 +32,7 @@ export default function ($scope, AdminService, LoadingSpinner, commonModals) {
   $scope.updateDriverName = async (driver) => {
     var newName = await commonModals.prompt({
       message: 'Please enter the name of the Driver.',
-      default: driver.name
+      default: driver.transportCompanies[0].driverCompany.name
     });
 
     if (!newName) return;
