@@ -178,7 +178,7 @@
                     {{ticket.refundData.transfer.destination_payment}}<br/>
                   </span>
                   <button class="btn btn-danger actions" ng-click="refund(ticket)"
-                      ng-if="ticket.status == 'valid' && ticket.paymentResource">
+                      ng-if="(ticket.status == 'valid' || ticket.status == 'void') && ticket.paymentResource">
                    <span class="glyphicon glyphicon-credit-card" aria-hidden="true"></span> Refund
                  </button>
                 </td>
