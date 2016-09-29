@@ -23,8 +23,7 @@
     margin-right: $padding-base-horizontal;
   }
   tr.selected td {
-    background-color: #008;
-    color: #FFF;
+    background-color: $table-bg-hover;
   }
 
   .actions.btn {

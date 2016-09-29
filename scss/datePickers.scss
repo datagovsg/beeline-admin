@@ -13,7 +13,7 @@ $pickable-day-picked-color: $brand-primary;
 $annotation: $brand-danger;
 
 .datepicker-wrap {
-  width: 500px;
+  width: 420px;
   float: right;
 }
 
@@ -23,6 +23,7 @@ $annotation: $brand-danger;
   background-color: $picker-header-bg;
   width: 100%;
   border: 1px solid $picker-header-bg;
+  z-index: 20;
 
   .picker-days-row,
   .picker-days-week-row,
@@ -72,7 +73,7 @@ $annotation: $brand-danger;
 
 .picker-day {
   background-color: $pickable-day-non-picked-background;
-  border: 1px solid transparent;
+  border: 1px solid lighten($gray-lightest, 5%);
   font-size: $font-size-base;
   box-sizing: border-box;
   color: $pickable-day-non-picked-color;
