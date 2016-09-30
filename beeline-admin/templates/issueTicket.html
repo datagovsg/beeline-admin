@@ -42,12 +42,46 @@
           <!-- Route Selection -->
           <form class="form-horizontal">
             <div class="form-group">
-              <label ng-if="data.cancelledTicketIds" class="control-label col-sm-2">Ticket you are editing</label>
+              <label ng-if="data.cancelledTickets" class="control-label col-sm-2">Ticket you are editing</label>
               <div class="col-sm-10">
                 <ul class="selected-dates">
                   <li ng-repeat="ticket in data.cancelledTickets">
-                    {{ticket.id}}
+                    <table class="borderless">
+                      <tr>
+                        <td>
+                          <span class="label label-default">{{ticket.id}}</span>
+                        </td>
+                        <td>
+                          {{ticket.boardStop.trip.date | date:'dd-MMM-yy':'UTC'}}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          {{ticket.boardStop.trip.route.label}}
+                        </td>
+                        <td>
+
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          {{ticket.boardStop.time | date:'HH:mm'}}
+                        </td>
+                        <td>
+                          {{ticket.boardStop.stop.description}}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          {{ticket.alightStop.time | date:'HH:mm'}}
+                        </td>
+                        <td>
+                          {{ticket.alightStop.stop.description}}
+                        </td>
+                      </tr>
+                    </table>
                   </li>
+
                 </ul>
               </div>
             </div>
@@ -90,9 +124,9 @@
              </div>
            </div>
            <div class="form-group">
-            <label class="control-label col-sm-2">Reason</label>
+            <label class="control-label col-sm-2">Reason (Required)</label>
             <div class="col-sm-10">
-              <textarea class="form-control" ng-model="data.reason">e.g. Bus did not turn up</textarea>
+              <textarea class="form-control" ng-model="data.reason" placeholder="Reason for changing or editing tickets - e.g. Monthly pass, Cancelled trip on DD/MM/YY"></textarea>
               </div>
            </div>
           </form>
