@@ -21,6 +21,7 @@
           <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
             <li><a ui-sref="companies">Edit Profile</a></li>
             <li><a ui-sref="admins">Add Admin Users</a></li>
+            <li><a ui-sref="notifications">Event Notifications</a></li>
             <li ng-if="adminService.isSuperAdmin()"><a ui-sref="transactions">Transactions</a></li>
           </ul>
         </li>
@@ -36,7 +37,7 @@
       </ul>
       <ul class="nav navbar-nav pull-right">
         <li>
-            <a><super-admin-company-selector></super-admin-company-selector></a>
+          <a><super-admin-company-selector></super-admin-company-selector></a>
         </li>
 
         <li ng-if="!auth.isAuthenticated">

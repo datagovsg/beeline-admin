@@ -156,7 +156,7 @@ function IssueTicketController($scope, AdminService, LoadingSpinner, commonModal
     _.forEach(tripIds, (tripId, index) => {
       this.requests[tripId] = this.requests[tripId] || AdminService.beeline({
         method: 'GET',
-        url: `/trips/${tripId}/get_passengers`,
+        url: `/trips/${tripId}/passengers`,
       })
 
       this.requests[tripId].then((response) => {

@@ -1,0 +1,79 @@
+<div ng-switch="type">
+  <div ng-switch-when="lifecycle">
+    You will be notified when a server is spawned
+  </div>
+
+  <div ng-switch-when="transactionFailure">
+    You will be notified when transactions fail
+  </div>
+
+  <div ng-switch-when="newBooking">
+    <label>
+      <input type="checkbox" ng-model="options.setRouteIds" />
+      Filter by routes
+    </label>
+    <br/>
+    <label>
+      Routes:<br/>
+      <select multiple
+        ng-options="route.id as (route.label + ': ' + route.from + ' to ' + route.to)
+        for route in routes"
+        ng-model="ngModel.routeIds" ng-disabled="!options.setRouteIds">
+      </select>
+    </label>
+  </div>
+
+  <div ng-switch-when="urgentBooking">
+    <label>
+      <input type="checkbox" ng-model="options.setRouteIds" />
+      Filter by routes
+    </label>
+    <br/>
+    <label>
+      Routes:<br/>
+      <select multiple
+        ng-options="route.id as (route.label + ': ' + route.from + ' to ' + route.to)
+        for route in routes"
+        ng-model="ngModel.routeIds" ng-disabled="!options.setRouteIds">
+      </select>
+    </label>
+    <label>
+      Notify when no pings received
+      <select ng-model="ngModel.timeToTrip" class="form-control">
+        <option ng-value="5 * 60000">5 minutes before trip</option>
+        <option ng-value="15 * 60000">15 minutes before trip</option>
+        <option ng-value="30 * 60000">30 minutes before trip</option>
+      </select>
+    </label>
+  </div>
+
+  <div ng-switch-when="noPings">
+    <div>
+      <label>
+        <input type="checkbox" ng-model="options.setRouteIds" />
+        Filter by routes
+      </label>
+      <br/>
+      <label>
+        Routes:<br/>
+        <select multiple
+          ng-options="route.id as (route.label + ': ' + route.from + ' to ' + route.to)
+          for route in routes"
+          ng-model="ngModel.routeIds" ng-disabled="!options.setRouteIds">
+        </select>
+      </label>
+      <label>
+        Notify when no pings received
+        <select ng-model="ngModel.timeBefore" class="form-control">
+          <option ng-value="5 * 60000">5 minutes before trip</option>
+          <option ng-value="15 * 60000">15 minutes before trip</option>
+          <option ng-value="30 * 60000">30 minutes before trip</option>
+        </select>
+      </label>
+    </div>
+  </div>
+
+  <div ng-switch-default>
+    Please select an event type
+  </div>
+</div>

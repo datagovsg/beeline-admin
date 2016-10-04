@@ -32,12 +32,9 @@ export default function(AdminService, RoutesService, $rootScope, LoadingSpinner)
       }
 
       // Pull the list of routes
-      var routesPromise = RoutesService.getRoutes({
-        includeTrips: false,
-        startDate: Date.now()
-      })
+      var routesPromise = RoutesService.getCurrentRoutes()
       .then((routes) => {
-        scope.routes = routes;
+        scope.routes = routes
       })
       LoadingSpinner.watchPromise(routesPromise);
 

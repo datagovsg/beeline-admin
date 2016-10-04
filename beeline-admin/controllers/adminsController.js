@@ -5,7 +5,7 @@ export default function ($scope, AdminService, LoadingSpinner, commonModals) {
   const PermissionsMap = {
     basic: ['view-drivers', 'view-admins', 'view-transactions', 'monitor-operations'],
     refund: ['refund'],
-    operations: ['manage-routes', 'manage-drivers', 'drive', 'update-trip-status', 'message-passengers', 'view-passengers'],
+    operations: ['manage-routes', 'manage-drivers', 'drive', 'update-trip-status', 'message-passengers', 'view-passengers', 'manage-notifications'],
     manageCompany: ['manage-company'],
     manageAdmins: ['manage-admins'],
   }
@@ -76,7 +76,7 @@ export default function ($scope, AdminService, LoadingSpinner, commonModals) {
         method: 'PUT',
         url: `/companies/${AdminService.getCompanyId()}/admins/${admin.id}`,
         data: {
-          permissions: mapPermissions(admin.permissions)
+          permissions: mapPermissions(admin.permissions),
         }
       })
       .then(query)

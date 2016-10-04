@@ -115,6 +115,14 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
     }
   })
 
+  .state('notifications', {
+    url: '/notifications',
+    templateUrl: 'templates/notifications.html',
+    controller: 'notifications',
+    data: {
+      requiresLogin: true,
+    }
+  })
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/bookings');
 }
