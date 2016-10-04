@@ -59,7 +59,7 @@
         <select multiple
           ng-options="route.id as (route.label + ': ' + route.from + ' to ' + route.to)
           for route in routes"
-          ng-model="ngModel.routeIds" ng-disabled="options.setRouteIds">
+          ng-model="ngModel.routeIds" ng-disabled="!options.setRouteIds">
         </select>
       </label>
       <label>
