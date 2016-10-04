@@ -33,6 +33,7 @@ angular.module('beeline-admin', [
 .directive('pathEditor', require('./directives/pathEditor/pathEditor').default)
 .directive('tripsEditor', require('./directives/tripsEditor/tripsEditor').default)
 .directive('tripInfoBroker', require('./directives/tripInfoBroker').default)
+.directive('companyInfoBroker', require('./directives/companyInfoBroker').default)
 .directive('tripSelectionBroker', require('./directives/tripSelector/tripSelectionBroker').default)
 .directive('multiSelectBroker', require('./directives/multiSelectBroker').default)
 .directive('companyLogo', require('./directives/companyLogo').default)
@@ -46,8 +47,8 @@ angular.module('beeline-admin', [
 .directive('userSelector', require('./directives/selectors/user').default)
 .directive('superAdminCompanySelector', require('./directives/selectors/superAdminCompany').default)
 .directive('companySelector', require('./directives/selectors/company').default)
-.directive('multipleCompanySelector', require('./directives/selectors/companyMultiple').default)
 .directive('eventSubscriptionEditor', require('./directives/eventSubscriptionEditor/eventSubscriptionEditor').default)
+.directive('notificationMethodEditor', require('./directives/notificationMethod/notificationMethod').default)
 .service('AdminService', require('./services/adminService').default)
 .service('TripsService', require('./services/tripsService').default)
 .service('RoutesService', require('./services/routesService').default)
@@ -70,7 +71,7 @@ angular.module('beeline-admin', [
 .controller('companies', require('./controllers/companiesController.js').default)
 .controller('assets', require('./controllers/assetsController.js').default)
 .controller('admins', require('./controllers/adminsController.js').default)
-.controller('profile', require('./controllers/profileController.js').default)
+.controller('notifications', require('./controllers/notificationsController.js').default)
 .filter('makeRoutePath', require('./shared/filters.js').makeRoutePath)
 .filter('intervalToTime', require('./shared/filters.js').intervalToTime)
 .filter('leftPad', () => require('left-pad'))
@@ -110,6 +111,7 @@ angular.module('beeline-admin', [
         auth.refreshToken(refreshToken)
         .then((delegationResult) => {
           auth.authenticate(delegationResult.id_token);
+          store.set('sessionToken', delegationResult.id_token)
           auth.getProfile().then((profile) => {
             store.set('profile', profile);
           })

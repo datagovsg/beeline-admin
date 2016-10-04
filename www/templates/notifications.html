@@ -1,54 +1,8 @@
 <div class="container withnav admin">
   <div class="row">
-    <h1>Profile</h1>
+    <company-info-broker company-id="companyId" company="company"></company-info-broker>
 
-    <form ng-submit="saveProfile()">
-      <div>
-        <label>
-          Name:
-          <input type="text" ng-model="data.name" placeholder="John Doe" />
-        </label>
-      </div>
-      <div>
-        <label>
-          Email address:
-          <input type="email" ng-model="data.email" placeholder="john@example.com" />
-
-          <span class="warning">
-            <i class="glyphicon glyphicon-warning-sign"></i>
-            Please ensure that you can access this email address
-          </span>
-        </label>
-      </div>
-
-      <div>
-        <label>
-          Telephone:
-          <input type="tel" ng-model="data.telephone" placeholder="9XXX XXXX" />
-        </label>
-      </div>
-
-      <h1>Alert media</h1>
-
-      <h2>Email</h2>
-      {{data.email}}
-      <h2>Telegram</h2>
-      <div>
-        To get your chat id, please talk to @beeline_server_bot.
-      </div>
-      <div>
-        <label>
-          Chat ID
-          <input type="tel" ng-model="data.notes.telegramChatId" placeholder="12345" />
-        </label>
-      </div>
-
-      <button type="submit" class="btn btn-primary">
-        Save
-      </button>
-    </form>
-
-    <h1>Notifications</h1>
+    <h1>Event Notifications for {{company.name}}</h1>
 
     <table class="table">
       <thead>
@@ -72,9 +26,9 @@
             </event-subscription-editor>
           </td>
           <td>
-            <select ng-options="notificationMethod for notificationMethod in disp.notificationMethods"
-              ng-model="eventSubscription.handler" class="form-control" ng-required="true">
-            </select>
+            <notification-method-editor ng-model="eventSubscription.handler"
+              agent="eventSubscription.agent" ng-required="true">
+            </notification-method-editor>
           </td>
           <td>
             <button ng-click="subscriptions.saveOne(eventSubscription)" class="btn btn-default glyphicon glyphicon-save"

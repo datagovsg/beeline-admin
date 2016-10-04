@@ -2,16 +2,17 @@ import querystring from 'querystring';
 import _ from 'lodash';
 
 export default function ($scope, AdminService, LoadingSpinner, commonModals) {
-  var adminId;
+  var companyId;
 
-  whoami();
+  $scope.$watch(() => AdminService.getCompanyId(), (cid) => {
+    $scope.companyId = companyId = cid;
+    requery();
+  })
+
   requery();
 
   ////// Data declarations
   $scope.disp = {
-    notificationMethods: [
-      'telegram', 'email', 'sms'
-    ],
     eventTypes: [
       'lifecycle', 'transactionFailure', 'newBooking', 'urgentBooking', 'noPings'
     ]
@@ -20,45 +21,24 @@ export default function ($scope, AdminService, LoadingSpinner, commonModals) {
 
   ////// Function declarations
   async function requery() {
-    await LoadingSpinner.watchPromise(AdminService.whoami())
-    .then((profile) => {
-      adminId = profile.adminId;
-    })
-    if (adminId) {
-      LoadingSpinner.watchPromise(AdminService.beeline({
-        url: `/admins/${adminId}`
-      }))
-      .then((response) => {
-        $scope.data = response.data;
-      });
+    if (!companyId) return;
 
-      LoadingSpinner.watchPromise(AdminService.beeline({
-        url: `/admins/${adminId}/eventSubscriptions`
-      }))
-      .then((response) => {
-        $scope.eventSubscriptions = response.data;
-      })
-    }
-  }
-  function whoami() {
     LoadingSpinner.watchPromise(AdminService.beeline({
-      url: `/admins/whoami`
+      url: `/companies/${companyId}/eventSubscriptions`
     }))
     .then((response) => {
-      adminId = response.data.adminId;
-    });
+      $scope.eventSubscriptions = response.data;
+    })
   }
+
   function defaultEventSubscription() {
     return {
       formatter: '0'
     }
   }
 
-  var updatableFields = [
-    'name', 'email', 'telephone', 'notes'
-  ]
   var updatableSubscriptionFields = [
-    'params', 'event', 'handler', 'formatter'
+    'params', 'event', 'handler', 'formatter', 'agent'
   ]
 
   $scope.subscriptions = {
@@ -70,14 +50,14 @@ export default function ($scope, AdminService, LoadingSpinner, commonModals) {
       if (subscr.id) {
         promise = AdminService.beeline({
           method: 'PUT',
-          url: `/admins/${adminId}/eventSubscriptions/${subscr.id}`,
+          url: `/companies/${companyId}/eventSubscriptions/${subscr.id}`,
           data: _.pick(subscr, updatableSubscriptionFields)
         })
       }
       else {
         promise = AdminService.beeline({
           method: 'POST',
-          url: `/admins/${adminId}/eventSubscriptions`,
+          url: `/companies/${companyId}/eventSubscriptions`,
           data: _.pick(subscr, updatableSubscriptionFields)
         })
       }
@@ -96,7 +76,7 @@ export default function ($scope, AdminService, LoadingSpinner, commonModals) {
       if (subscr.id) {
         LoadingSpinner.watchPromise(AdminService.beeline({
           method: 'DELETE',
-          url: `/admins/${adminId}/eventSubscriptions/${subscr.id}`
+          url: `/companies/${companyId}/eventSubscriptions/${subscr.id}`
         }))
         .then(() => {
           $scope.eventSubscriptions.splice($scope.eventSubscriptions.indexOf(subscr), 1)
@@ -106,34 +86,6 @@ export default function ($scope, AdminService, LoadingSpinner, commonModals) {
       else {
         $scope.eventSubscriptions.splice($scope.eventSubscriptions.indexOf(subscr), 1)
       }
-    }
-  }
-
-  $scope.saveProfile = function () {
-    if (adminId) {
-      LoadingSpinner.watchPromise(AdminService.beeline({
-        method: 'PUT',
-        url: `/admins/${adminId}`,
-        data: _.pick($scope.data, updatableFields)
-      }))
-      .then(requery)
-      .catch((err) => {
-        commonModals.alert(err.data.message);
-      });
-    }
-    else {
-      LoadingSpinner.watchPromise(AdminService.beeline({
-        method: 'POST',
-        url: `/admins`,
-        data: _.pick($scope.data, updatableFields)
-      }))
-      .then((response) => {
-        adminId = response.data.id;
-        requery();
-      })
-      .catch((err) => {
-        commonModals.alert(err.data.message);
-      });
     }
   }
 }

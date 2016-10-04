@@ -1,5 +1,5 @@
 export default function ($rootScope, $location, uiGmapGoogleMapApi, $q,
-  RoutesService) {
+  RoutesService, AdminService) {
   return {
     template: require('./eventSubscriptionEditor.html'),
     scope: {
@@ -29,6 +29,10 @@ export default function ($rootScope, $location, uiGmapGoogleMapApi, $q,
           _.set(scope, 'ngModel.routeIds', undefined);
         }
       });
+
+      scope.$watch(() => AdminService.getCompanyId(), (cid) => {
+        _.set(scope, 'ngModel.transportCompanyIds', [cid]);
+      })
     }
   }
 }

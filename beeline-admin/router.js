@@ -115,10 +115,10 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
     }
   })
 
-  .state('profile', {
-    url: '/profile',
-    templateUrl: 'templates/profile.html',
-    controller: 'profile',
+  .state('notifications', {
+    url: '/notifications',
+    templateUrl: 'templates/notifications.html',
+    controller: 'notifications',
     data: {
       requiresLogin: true,
     }
