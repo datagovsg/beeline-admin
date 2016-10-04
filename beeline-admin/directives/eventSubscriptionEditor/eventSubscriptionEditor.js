@@ -23,8 +23,6 @@ export default function ($rootScope, $location, uiGmapGoogleMapApi, $q,
         }
       });
       scope.$watch('options.setRouteIds', (isSet) => {
-        console.log(isSet, scope);
-
         if (!isSet) {
           _.set(scope, 'ngModel.routeIds', undefined);
         }

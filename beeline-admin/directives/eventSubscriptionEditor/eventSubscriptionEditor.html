@@ -39,7 +39,7 @@
     </label>
     <label>
       Notify when no pings received
-      <select ng-model="timeToTrip" class="form-control">
+      <select ng-model="ngModel.timeToTrip" class="form-control">
         <option ng-value="5 * 60000">5 minutes before trip</option>
         <option ng-value="15 * 60000">15 minutes before trip</option>
         <option ng-value="30 * 60000">30 minutes before trip</option>
@@ -64,7 +64,7 @@
       </label>
       <label>
         Notify when no pings received
-        <select ng-model="timeBefore" class="form-control">
+        <select ng-model="ngModel.timeBefore" class="form-control">
           <option ng-value="5 * 60000">5 minutes before trip</option>
           <option ng-value="15 * 60000">15 minutes before trip</option>
           <option ng-value="30 * 60000">30 minutes before trip</option>
