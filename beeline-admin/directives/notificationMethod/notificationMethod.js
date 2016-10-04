@@ -19,6 +19,11 @@ export default function ($rootScope, $location, uiGmapGoogleMapApi, $q,
     <label  ng-if="ngModel === 'sms'">
       <input type="tel" ng-model="agent.telephone" placeholder="+65 8111 2222"  ng-required="ngRequired" />
     </label>
+
+    <label >
+      Name (optional):
+      <input type="text" ng-model="agent.name" placeholder="John"  ng-required="false" />
+    </label>
     `,
     scope: {
       ngModel: '=',
