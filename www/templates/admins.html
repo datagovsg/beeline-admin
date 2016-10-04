@@ -10,7 +10,6 @@
           <tr>
             <th rowspan="2">No.</th>
             <th rowspan="2">Email<br> Name</th>
-            <th rowspan="2" class="permission-type">Telephone</th>
             <th colspan="5" class="permissions">Permissions</th>
             <th rowspan="2">Actions</th>
           </tr>
@@ -55,11 +54,6 @@
               <input type="text" ng-model="admin.name" class="form-control"
                 placeholder="John Doe">
             </td>
-            <td>
-              {{admin.telephone}}
-              <br/>
-              {{admin.telephone ? admin.receiveAlerts ? 'Receiving alerts' : 'Not receiving alerts' : ''}}
-            </td>
 
             <td><input type="checkbox" ng-model="admin.permissions.basic"></td>
             <td><input type="checkbox" ng-model="admin.permissions.refund"></td>
@@ -80,4 +74,5 @@
       </table>
     </div>
   </div>
+
 </div>
