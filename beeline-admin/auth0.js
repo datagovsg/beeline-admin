@@ -38,7 +38,7 @@ export default function() {
       auth0.refreshToken(refreshToken, (err, delegationResult) => {
         if (err) return reject(err);
 
-        this.authenticate(delegationResult.idToken);
+        this.authenticate(delegationResult.id_token);
         resolve(delegationResult);
       })
     })

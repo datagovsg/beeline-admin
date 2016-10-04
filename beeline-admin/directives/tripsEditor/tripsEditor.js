@@ -111,8 +111,7 @@ export default function(RoutesService, TripsService, AdminService, DriverService
           this.data.trip = _.clone(trip);
           this.data.trip.tripStops = _.cloneDeep(trip.tripStops);
           this.data.newDates = [];
-          this.data.editingTrips = _(scope.selection.selected)
-            .values()
+          this.data.editingTrips = _(scope.selection.$selectedObjects())
             .sortBy('date')
             .value();
         },

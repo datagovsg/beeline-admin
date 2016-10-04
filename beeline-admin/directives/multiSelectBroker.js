@@ -13,13 +13,13 @@ export default function() {
           delete scope.selection.selected[scope.collection[index][scope.trackBy]]
         }
         else {
-          scope.selection.selected[scope.collection[index][scope.trackBy]] = scope.collection[index];
+          scope.selection.selected[scope.collection[index][scope.trackBy]] = true;
         }
       }
 
       scope.$watchCollection('selection.selected', () => {
         if (!scope.selection || !scope.selection.selected) return;
-        scope.selection.length = Object.keys(scope.selection.selected).length;
+        scope.selection.length = _(scope.selection.selected).values().filter().size();
       })
 
       // Need to ensure the selection object has all the properties it needs
@@ -33,11 +33,26 @@ export default function() {
           listStart: null,
           length: 0,
 
+          $selectedObjects() {
+            return _(scope.selection.selected)
+              .keys()
+              .filter(key => scope.selection.selected[key])
+              .map(key => scope.collection.find(item => item[scope.trackBy].toString() === key))
+              .value()
+          },
+
           $getCollection() {
             return scope.collection;
           },
           $getTrackBy() {
             return scope.trackBy;
+          },
+
+          $selectAll() {
+            for (let item of scope.collection) {
+              scope.selection.selected[item[scope.trackBy]] = true;
+            }
+            scope.selection.lastSelectedIndex = 0;
           },
 
           $shiftMousedown(index) {

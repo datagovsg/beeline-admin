@@ -35,67 +35,67 @@
                                   alight-stop="data.alightStop">
           </trip-selection-broker>
           <div>
-            <p class="text-danger" ng-if="data.cancelledTicketIds">
+            <p class="text-danger" ng-if="data.cancelledTickets">
               Note: When you edit a ticket, the ticket you edit will be "void" and a new ticket with the new changes will be issued.
             </p>
           </div>
           <!-- Route Selection -->
-                              <form class="form-horizontal">
-                                <div class="form-group">
-                                  <label ng-if="data.cancelledTicketIds" class="control-label col-sm-2">Ticket you are editing</label>
-                                  <div class="col-sm-10">
-                                    <ul class="selected-dates">
-                                      <li ng-repeat="ticketId in data.cancelledTicketIds">
-                                        {{ticketId}}
-                                      </li>
-                                    </ul>
-                                  </div>
-                             </div>
-                                <div class="form-group">
-                                  <label class="control-label col-sm-2">Route</label>
-                                  <div class="col-sm-10">
-                                    <select ng-options="route.id as f.displayRoute(route) for route in disp.routes | orderBy:'label'"
-                                            ng-model="data.routeId"
-                                            class="form-control">
-                                    </select>
-                                  </div>
-                             </div>
-                             <div class="form-group">
-                                   <label class="control-label col-sm-2">Selected Date(s)</label>
-                                 <div class="col-sm-10">
-                                   <ul class="selected-dates">
-                                     <li ng-repeat="trip in disp.selectedTrips">
-                                       {{trip.date | date:'dd MMM yyyy'}}
-                                       <button ng-click="removeTrip(trip.date)"
-                                         class="btn btn-link"><span class="glyphicon glyphicon-remove text-danger" aria-hidden="true"></span>
-                                       </button>
-                                     </li>
-                                   </ul>
-                                  </div>
-                                </div>
-                                <div class="form-group">
-                                 <label class="control-label col-sm-2">Boarding Stop</label>
-                                  <div class="col-sm-10">
-                                    <select ng-options="tripStop as f.displayStop(tripStop) for tripStop in disp.boardStops"
-                                            ng-model="data.boardStop" class="form-control">
-                                    </select>
-                                 </div>
-                               </div>
-                           <div class="form-group">
-                               <label class="control-label col-sm-2">Alighting Stop</label>
-                              <div class="col-sm-10">
-                                <select ng-options="tripStop as f.displayStop(tripStop) for tripStop in disp.alightStops"
-                                        ng-model="data.alightStop" class="form-control">
-                                </select>
-                                </div>
-                             </div>
-                            <div class="form-group">
-                              <label class="control-label col-sm-2">Reason</label>
-                              <div class="col-sm-10">
-                                <textarea class="form-control" ng-model="data.reason">e.g. Bus did not turn up</textarea>
-                                </div>
-                             </div>
-                           </form>
+          <form class="form-horizontal">
+            <div class="form-group">
+              <label ng-if="data.cancelledTicketIds" class="control-label col-sm-2">Ticket you are editing</label>
+              <div class="col-sm-10">
+                <ul class="selected-dates">
+                  <li ng-repeat="ticket in data.cancelledTickets">
+                    {{ticket.id}}
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label col-sm-2">Route</label>
+              <div class="col-sm-10">
+                <select ng-options="route.id as f.displayRoute(route) for route in disp.routes | orderBy:'label'"
+                        ng-model="data.routeId"
+                        class="form-control">
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label col-sm-2">Selected Date(s)</label>
+             <div class="col-sm-10">
+               <ul class="selected-dates">
+                 <li ng-repeat="trip in disp.selectedTrips">
+                   {{trip.date | date:'dd MMM yyyy'}}
+                   <button ng-click="removeTrip(trip.date)"
+                     class="btn btn-link"><span class="glyphicon glyphicon-remove text-danger" aria-hidden="true"></span>
+                   </button>
+                 </li>
+               </ul>
+              </div>
+            </div>
+            <div class="form-group">
+             <label class="control-label col-sm-2">Boarding Stop</label>
+              <div class="col-sm-10">
+                <select ng-options="tripStop as f.displayStop(tripStop) for tripStop in disp.boardStops"
+                        ng-model="data.boardStop" class="form-control">
+                </select>
+             </div>
+           </div>
+           <div class="form-group">
+             <label class="control-label col-sm-2">Alighting Stop</label>
+             <div class="col-sm-10">
+               <select ng-options="tripStop as f.displayStop(tripStop) for tripStop in disp.alightStops"
+                        ng-model="data.alightStop" class="form-control">
+                </select>
+             </div>
+           </div>
+           <div class="form-group">
+            <label class="control-label col-sm-2">Reason</label>
+            <div class="col-sm-10">
+              <textarea class="form-control" ng-model="data.reason">e.g. Bus did not turn up</textarea>
+              </div>
+           </div>
+          </form>
 
           <!-- User selection -->
 
@@ -134,7 +134,7 @@
           Cancel
         </button>
         <button class="btn btn-primary" ng-click="issue()">
-          {{data.cancelledTicketIds ? 'Confirm Changes' : 'Create Ticket'}}
+          {{data.cancelledTickets ? 'Confirm Changes' : 'Create Ticket'}}
         </button>
       </div>
     </div>

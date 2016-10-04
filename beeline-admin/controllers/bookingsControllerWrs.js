@@ -123,14 +123,9 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
     }
   }
 
-  // Unused
+  // // Unused -- for replacing multiple tickets
   $scope.issueTickets = function () {
-    var selectedTicketIds = _($scope.selectedTickets)
-      .keys()
-      .filter(key => $scope.selectedTickets[key])
-      .value();
-    var selectedTickets = selectedTicketIds.map(tid =>
-      $scope.tickets.find(t => t.id.toString() === tid))
+    var selectedTickets = $scope.selectedTickets.$selectedObjects();
     var firstTicket = selectedTickets.length > 0 ? selectedTickets[0] : null;
     var issueTicketModalOptions = {};
 
@@ -147,11 +142,11 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
         routeId: firstTicket.boardStop.trip.routeId,
         boardStopStopId: firstTicket.boardStop.stopId,
         alightStopStopId: firstTicket.alightStop.stopId,
-        cancelledTicketIds: selectedTicketIds
+        cancelledTickets: selectedTickets
       })
     }
 
-    issueTicketModal.open(issueTicketModalOptions);
+    issueTicketModal.open(issueTicketModalOptions).then(query);
   }
 
   // Edit ticket button
@@ -163,7 +158,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
       routeId: ticket.boardStop.trip.routeId,
       boardStopStopId: ticket.boardStop.stopId,
       alightStopStopId: ticket.alightStop.stopId,
-      cancelledTicketIds: selectedTicketIds
+      cancelledTickets: selectedTickets
     };
     issueTicketModal.open(issueTicketModalOptions).then(query);
   }

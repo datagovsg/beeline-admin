@@ -1,62 +1,139 @@
-<div class="container-fluid withnav">
+<div class="container-fluid withnav routes-page">
   <h1>Routes</h1>
-
-  <div>
-    <uib-pagination
-      boundary-links="true"
-      ng-model="filter.page"
-      total-items="data.count"
-      items-per-page="filter.perPage"
-    ></uib-pagination>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="pull-left">
+        <p class="text-info">
+          Trips stops, time, price and capacity is based on next available trip for each route.<br />Last driver indicates the last driver that pinged this route.
+        </p>
+      </div>
+    </div>
   </div>
-
-  <table class="table table-condensed table-striped">
-    <thead>
-      <tr>
-        <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="id">Route ID</th>
-        <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="label">Route label</th>
-        <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Company</th>
-        <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="from">From</th>
-        <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="to">To</th>
-        <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="startDate">Start date</th>
-        <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="endDate">End date</th>
-        <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastStartTime">Start time</th>
-        <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastEndTime">End time</th>
-        <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Route path</th>
-        <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastDriverName">Last driver</th>
-        <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastPrice">Price</th>
-        <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastCapacity">Cap</th>
-        <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Tags</th>
-        <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Trips</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr ng-repeat="route in data.rows">
-        <td>{{route.id}}</td>
-        <td>{{route.label}}</td>
-        <td>{{route.transportCompany.name}}</td>
-        <td>{{route.from}}</td>
-        <td>{{route.to}}</td>
-        <td>{{route.startDate | date:'dd MMM yyyy (EEE)'}}</td>
-        <td>{{route.endDate   | date:'dd MMM yyyy (EEE)'}}</td>
-        <td>{{route.lastStartTime | intervalToTime | date:'HH:mm'}}</td>
-        <td>{{route.lastEndTime   | intervalToTime | date:'HH:mm'}}</td>
-        <td><button ng-click="viewRoute(route.id)">View</button></td>
-        <td>{{route.lastDriverName}}</td>
-        <td>{{route.lastPrice}}</td>
-        <td>{{route.lastCapacity}}</td>
-        <td>
-          <ul class="tags">
-            <li ng-repeat="tag in route.tags">{{tag}}</li>
-          </ul>
-        </td>
-        <td>
-          <a ui-sref="trips({routeId: route.id, action: 'trips'})">
-            View
-          </a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="pull-left">
+        <uib-pagination boundary-links="true" ng-model="filter.page" total-items="data.count" items-per-page="filter.perPage"></uib-pagination>
+      </div>
+      <div class="pull-right create-button" ng-if="adminService.isSuperAdmin()">
+        <button class="btn btn-primary btn-lg" ui-sref="trips({routeId:0, action: 'route'})"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>Create a new route</button>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <table class="table table-condensed table-striped table-hover">
+        <thead>
+          <tr>
+            <th></th>
+            <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="id">Route<br />ID</th>
+            <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="label">Route<br />label</th>
+            <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Company</th>
+            <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="from">Route<br />Description</th>
+            <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="startDate">Start date</th>
+            <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="endDate">End date</th>
+            <!-- <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastStartTime">Start time</th> -->
+            <!-- <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastEndTime">End time</th> -->
+            <th sort-direction='filter.order' sort-model="filter.orderBy">Status</th>
+            <th sort-direction='filter.order' sort-model="filter.orderBy">Boarding</th>
+            <th sort-direction='filter.order' sort-model="filter.orderBy">Alighting</th>
+            <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Route path</th>
+            <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastDriverName">Last driver</th>
+            <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastPrice">Price</th>
+            <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastCapacity">Capacity</th>
+            <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Tags</th>
+            <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="route in data.rows">
+            <td>
+              {{ $index + 1 }}
+            </td>
+            <td>{{route.id}}</td>
+            <td><span class="route-label">{{route.label}}</span></td>
+            <td style="width:6%">{{route.transportCompany.name}}</td>
+            <td style="width:12%">
+              <table class="borderless">
+                <tr>
+                  <td>
+                    From
+                  </td>
+                  <td>
+                    {{route.from}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    To
+                  </td>
+                  <td>
+                    {{route.to}}
+                  </td>
+                </tr>
+              </table>
+            </td>
+            <td>{{route.startDate | date:'dd MMM yyyy'}}<br />{{route.startDate | date:'(EEE)'}}</td>
+            <td>{{route.endDate | date:'dd MMM yyyy'}}<br />{{route.endDate | date:'(EEE)'}}</td>
+            <!-- <td>{{route.lastStartTime | intervalToTime | date:'HH:mm'}}</td> -->
+            <!-- <td>{{route.lastEndTime   | intervalToTime | date:'HH:mm'}}</td> -->
+            <td>
+              <span class="label route-active"
+                  ng-if="route.startDate.getTime() <= now && now <= route.endDate.getTime() + 24*3600*1000">Active</span>
+              <span class="label route-notstarted"
+                  ng-if="now < route.startDate.getTime()">Not Started</span>
+              <span class="label route-ended"
+                  ng-if="now > route.endDate.getTime() + 24*3600*1000">Ended</span>
+            </td>
+            <td style="width:15%">
+              <trip-info-broker trip-id="route.indicativeTrip.nextTripId || route.indicativeTrip.lastTripId || route.indicativeTrip.tripId" trip="nextTrip"></trip-info-broker>
+              <table class="borderless" ng-if="nextTrip">
+                <tr ng-repeat="tripStop in nextTrip.tripStops | filter:{canBoard: true}">
+                  <td class="text-nowrap">
+                    {{tripStop.time | date:'HH:mm'}}
+                  </td>
+                  <td>
+                    {{tripStop.stop.description}}
+                  </td>
+                </tr>
+              </table>
+            </td>
+            <td style="width:15%">
+              <table class="borderless" ng-if="nextTrip">
+                <tr ng-repeat="tripStop in nextTrip.tripStops | filter:{canAlight: true}">
+                  <td class="text-nowrap">
+                    {{tripStop.time | date:'HH:mm'}}
+                  </td>
+                  <td>
+                    {{tripStop.stop.description}}
+                  </td>
+                </tr>
+              </table>
+            </td>
+            <td><button class="btn btn-default" ng-click="viewRoute(route.id)">View</button></td>
+            <td>{{route.indicativeTrip.lastDriverName}}</td>
+            <td>{{route.indicativeTrip.lastPrice}}</td>
+            <td>{{route.indicativeTrip.lastCapacity}}<span class="glyphicon glyphicon-user" aria-hidden="true"></span></td>
+            <td>
+              <ul class="tags">
+                <li ng-repeat="tag in route.tags">{{tag}}</li>
+              </ul>
+            </td>
+            <td>
+              <div class="btn-group" role="group" aria-label="...">
+                <button type="button" class="btn btn-default" ng-click="copy(route)" ng-if="adminService.isSuperAdmin()">
+                  <span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span>
+                  Copy
+                </button>
+                <button type="button" class="btn btn-default" ng-if="adminService.isSuperAdmin()"
+                  ui-sref="trips({routeId: route.id, action: 'route'})">
+                  <span class="glyphicon glyphicon-edit" aria-hidden="true" ui-sref="trips({routeId: route.id, action: 'trips'})" ></span>
+                  Edit
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>

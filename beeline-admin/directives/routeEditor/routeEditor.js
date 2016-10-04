@@ -1,19 +1,22 @@
 import _ from 'lodash';
 import assert from 'assert';
 
-export default function (AdminService, RoutesService, $rootScope, commonModals) {
+export default function (AdminService, RoutesService, $rootScope, commonModals, $state) {
   return {
     template: require('./routeEditor.html'),
     scope: {
       route: '=',
-      edit: '=?',
+      tab: '=',
     },
     link(scope, elem, attr) {
-      scope.edit = scope.edit || 'route'
       scope.adminService = AdminService;
       scope.disp = {
         routeTags: [],
+        signage: null
       }
+      scope.form ={
+        routeEditorForm : {}
+      };
 
       scope.resetRoute = function() {
         if (scope.route && scope.route.id) {
@@ -31,10 +34,15 @@ export default function (AdminService, RoutesService, $rootScope, commonModals) 
         if (!scope.route)
           return;
 
-        RoutesService.saveRoute(scope.route)
+        // Process the route tags and all other processed data
+        // here
+        let routeDataToSave = _.defaults({
+          tags: scope.disp.routeTags.map(t => t.name)
+        }, scope.route);
+        
+        RoutesService.saveRoute(routeDataToSave)
         .then((route) => {
           scope.route = route;
-          scope.edit.routeId = route.id;
         })
       }
 
@@ -45,26 +53,36 @@ export default function (AdminService, RoutesService, $rootScope, commonModals) 
           .then(() => {
             scope.route = null
           })
+          $state.go('routes')
         }
       }
 
       scope.$watch('route', () => {
-        scope.route && scope.route.id &&
-        RoutesService.getRoute(scope.route.id, {includeIndicative: true})
+        if (!(scope.route && scope.route.id)) return;
+
+        RoutesService.getRoute(scope.route.id, {
+          includeFeatures: true,
+          includeTrips: true,
+          limit: 1,
+        })
         .then((route) => {
-          scope.tripStops = route.indicativeTrip && route.indicativeTrip.tripStops
+          scope.tripStops = route.trips[0].tripStops;
           scope.disp.routeTags = scope.route.tags && scope.route.tags.map(t => ({name: t}));
           // quick hack to convert arrays to polyline string
           if (google.maps.geometry && scope.route.path instanceof Array) {
             scope.route.path = google.maps.geometry.encoding.encodePath(
               scope.route.path.map(latlng => new google.maps.LatLng(latlng.lat, latlng.lng)))
           }
-          scope.$broadcast('mapLoaded')
+          scope.$broadcast('mapLoaded');
         })
       })
-      scope.$watchCollection('disp.routeTags', (rawTags) => {
-        if (!scope.route) return;
-        scope.route.tags = rawTags ? rawTags.map(t => t.name) : [];
+      scope.$watch('route.to', (destination)=>{
+        if (!destination) return;
+        scope.disp.signage = "To "+destination;
+        if (scope.form.routeEditorForm.signage.$pristine) {
+          scope.route.notes = scope.route.notes || {};
+          scope.route.notes.signage = scope.disp.signage;
+        }
       })
     },
   }

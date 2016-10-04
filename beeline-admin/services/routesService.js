@@ -26,12 +26,15 @@ export default function (AdminService, DriverService, $q, LoadingSpinner, compan
         query.transportCompanyId = options.transportCompanyId;
       if (options.limit)
         query.limit = options.limit
+      if (options.includeFeatures)
+        query.include_features = options.includeFeatures;
     }
     query = querystring.stringify(query)
     return query
   }
 
   function postProcessRoute(route) {
+    route.notes = route.notes || {};
     if (route.trips) {
       for (let trip of route.trips) {
         trip.date = new Date(trip.date)
@@ -147,9 +150,11 @@ export default function (AdminService, DriverService, $q, LoadingSpinner, compan
        data: route,
       })
       .then((response) => {
-        var index = routesCache.findIndex((r) => r.id == route.id)
-        routesCache.splice(index, 1, response.data)
-        routesById[route.id] = response.data
+        if (routesCache) {
+          var index = routesCache.findIndex((r) => r.id == route.id)
+          routesCache.splice(index, 1, response.data)
+        }
+        if (routesById) routesById[route.id] = response.data
         return response.data
       }));
     }
@@ -160,8 +165,8 @@ export default function (AdminService, DriverService, $q, LoadingSpinner, compan
        data: route
       })
       .then((response) => {
-        routesCache.push(response.data)
-        routesById[response.data.id] = response.data
+        if (routesCache) routesCache.push(response.data)
+        if (routesById) routesById[response.data.id] = response.data
         return response.data
       }));
     }

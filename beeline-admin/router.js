@@ -36,7 +36,7 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
   })
 
   .state('routes', {
-    url: '/routes/{routeId:int}/{action}',
+    url: '/routes',
     templateUrl: 'templates/routes.html',
     controller: 'routes',
     data: {

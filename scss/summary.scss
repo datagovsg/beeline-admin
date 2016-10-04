@@ -1,6 +1,8 @@
-$summaryTableBG:   #eee;
-$cancelledBG:      #fcdada;
-$cancelledLine:    #ffc7c7;
+
+
+$cancelledBG:      $brand-danger;
+$voidLine:         #ffe9e9;
+$voidBG:           #f7dada;
 
 .summary-page {
   .uib-datepicker{
@@ -66,10 +68,10 @@ $cancelledLine:    #ffc7c7;
         .void{
           background: repeating-linear-gradient(
             135deg,
-            $cancelledBG,
-            $cancelledBG 2px,
-            $cancelledLine 2px,
-            $cancelledLine 4px
+            $voidBG,
+            $voidBG 2px,
+            $voidLine 2px,
+            $voidLine 4px
             );
         }
 
@@ -83,7 +85,7 @@ $cancelledLine:    #ffc7c7;
         }
 
         th.summary-day.day.has-trip.void,
-        th.weekday.day.ng-scope.has-trip.void {
+        th.weekday.day.has-trip.void {
           color: $gray-base;
         }
 
@@ -137,4 +139,17 @@ $cancelledLine:    #ffc7c7;
     }
   }
 
+}
+
+.summaryLegend {
+  border: none;
+
+  td, th{
+    width: 80px;
+    /* padding: $padding-xs-vertical; */
+    text-align: center;
+    border: none;
+    vertical-align: middle;
+    padding: 0px;
+  }
 }
