@@ -43,13 +43,6 @@ export default function ($http, $location, store, jwtHelper, auth, commonModals)
     auth.lock.show()
   }
 
-  this.whoami = function () {
-    return this.beeline({
-      url: '/admins/whoami',
-    })
-    .then((response) => response.data)
-  }
-
   var lastSessionToken = null;
   var lastSession;
 
@@ -75,9 +68,5 @@ export default function ($http, $location, store, jwtHelper, auth, commonModals)
 
   this.getCompanyId = function() {
     return this.actingCompany || null;
-  }
-
-  this.getAdminId = function() {
-    return this.session().app_metadata.adminId;
   }
 }
