@@ -5,7 +5,10 @@ export default function($scope, $state, $urlRouter, AdminService, RoutesService)
   //
   if ($state.params.routeId) {
     RoutesService.getRoute($state.params.routeId)
-    .then((route) => $scope.selectedRoute = route);
+    .then((route) => {
+      $scope.selectedRoute = route;
+      $scope.$digest();
+    });
   }
   else {
     $scope.selectedRoute = {};
