@@ -14,8 +14,10 @@ export default function ($scope, AdminService, LoadingSpinner, commonModals) {
   ////// Data declarations
   $scope.disp = {
     eventTypes: [
-      'lifecycle', 'transactionFailure', 'newBooking', 'urgentBooking', 'noPings'
-    ]
+      'noPings', 'tripCancelled', 'newBooking', 'urgentBooking'
+    ].concat( AdminService.isSuperAdmin() ? [
+      'lifecycle', 'transactionFailure'
+    ] : [])
   }
   $scope.eventSubscriptions = [];
 

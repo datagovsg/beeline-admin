@@ -13,7 +13,7 @@
       Filter by routes
     </label>
     <br/>
-    <label>
+    <label ng-show="options.setRouteIds">
       Routes:<br/>
       <select multiple
         ng-options="route.id as (route.label + ': ' + route.from + ' to ' + route.to)
@@ -29,7 +29,7 @@
       Filter by routes
     </label>
     <br/>
-    <label>
+    <label ng-show="options.setRouteIds">
       Routes:<br/>
       <select multiple
         ng-options="route.id as (route.label + ': ' + route.from + ' to ' + route.to)
@@ -39,10 +39,8 @@
     </label>
     <label>
       Notify when no pings received
-      <select ng-model="ngModel.timeToTrip" class="form-control">
-        <option ng-value="5 * 60000">5 minutes before trip</option>
-        <option ng-value="15 * 60000">15 minutes before trip</option>
-        <option ng-value="30 * 60000">30 minutes before trip</option>
+      <select ng-model="ngModel.timeToTrip" class="form-control"
+        ng-options="t[0] as t[1] for t in disp.timeOptions">
       </select>
     </label>
   </div>
@@ -54,7 +52,7 @@
         Filter by routes
       </label>
       <br/>
-      <label>
+      <label ng-show="options.setRouteIds">
         Routes:<br/>
         <select multiple
           ng-options="route.id as (route.label + ': ' + route.from + ' to ' + route.to)
@@ -64,10 +62,29 @@
       </label>
       <label>
         Notify when no pings received
-        <select ng-model="ngModel.timeBefore" class="form-control">
-          <option ng-value="5 * 60000">5 minutes before trip</option>
-          <option ng-value="15 * 60000">15 minutes before trip</option>
-          <option ng-value="30 * 60000">30 minutes before trip</option>
+        <select ng-model="ngModel.timeBefore" class="form-control"
+          ng-options="t[0] as t[1] for t in disp.timeOptions">
+        </select>
+      </label>
+    </div>
+  </div>
+
+  <div ng-switch-when="tripCancelled">
+    <div>
+      Receive notifications when trips are cancelled
+    </div>
+    <div>
+      <label>
+        <input type="checkbox" ng-model="options.setRouteIds" />
+        Filter by routes
+      </label>
+      <br/>
+      <label ng-show="options.setRouteIds">
+        Routes:<br/>
+        <select multiple
+          ng-options="route.id as (route.label + ': ' + route.from + ' to ' + route.to)
+          for route in routes"
+          ng-model="ngModel.routeIds" ng-disabled="!options.setRouteIds">
         </select>
       </label>
     </div>
