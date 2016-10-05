@@ -180,8 +180,9 @@ export default function(RoutesService, TripsService, AdminService, DriverService
       }
 
       scope.showCreateTripDialog = async function() {
-        if (typeof scope.selection.lastSelectedIndex === 'number') {
-          scope.currentTrip.takeReference(scope.trips[scope.selection.lastSelectedIndex]);
+        const lastSelected = scope.selection.$lastSelected();
+        if (lastSelected) {
+          scope.currentTrip.takeReference(lastSelected);
         }
         else {
           scope.currentTrip.reset();
@@ -212,7 +213,7 @@ export default function(RoutesService, TripsService, AdminService, DriverService
         showTripDataEditor();
       }
       scope.showEditTripDialog = async function () {
-        scope.currentTrip.edit(scope.trips[scope.selection.lastSelectedIndex]);
+        scope.currentTrip.edit(scope.selection.$lastSelected());
 
         showTripDataEditor();
       }
