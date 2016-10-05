@@ -1,0 +1,53 @@
+<div class="container withnav admin">
+  <div class="row">
+    <company-info-broker company-id="companyId" company="company"></company-info-broker>
+
+    <h1>Event Notifications for {{company.name}}</h1>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Event Type</th>
+          <th>Options</th>
+          <th>Notification method</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="eventSubscription in eventSubscriptions" ng-form="form">
+          <td>
+            <select ng-options="eventType for eventType in disp.eventTypes"
+                ng-model="eventSubscription.event" class="form-control" ng-required="true">
+            </select>
+          </td>
+          <td>
+            <event-subscription-editor type="eventSubscription.event"
+              ng-model="eventSubscription.params">
+            </event-subscription-editor>
+          </td>
+          <td>
+            <notification-method-editor ng-model="eventSubscription.handler"
+              agent="eventSubscription.agent" ng-required="true">
+            </notification-method-editor>
+          </td>
+          <td>
+            <button ng-click="subscriptions.saveOne(eventSubscription)" class="btn btn-default glyphicon glyphicon-save"
+              ng-disabled="form.$pristine || form.$invalid">
+            </button>
+            <button ng-click="subscriptions.deleteOne(eventSubscription)" class="btn btn-danger glyphicon glyphicon-trash">
+            </button>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="4">
+            <button ng-click="subscriptions.add()" class="glyphicon glyphicon-plus btn btn-default">
+            </button>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+
+  </div>
+</div>
