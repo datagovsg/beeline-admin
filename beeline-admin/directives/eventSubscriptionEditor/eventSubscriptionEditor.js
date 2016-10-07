@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export default function ($rootScope, $location, uiGmapGoogleMapApi, $q,
   RoutesService, AdminService) {
   return {
@@ -18,10 +20,13 @@ export default function ($rootScope, $location, uiGmapGoogleMapApi, $q,
         [60000 * 30, '30 minutes before trip'],
       ]
 
-      RoutesService.getCurrentRoutes()
-      .then((routes) => {
-        scope.routes = routes
-      })
+
+      scope.$watch(() => AdminService.getCompanyId(), (cid) => {
+        RoutesService.getCurrentRoutes()
+        .then((routes) => {
+          scope.routes = _.sortBy(routes.filter(r => r.transportCompanyId == cid), 'label')
+        })
+      });
 
       scope.options.setTransportCompanyIds = _.get(scope, 'ngModel.transportCompanyIds', false) && true
       scope.options.setRouteIds = _.get(scope, 'ngModel.routeIds', false) && true

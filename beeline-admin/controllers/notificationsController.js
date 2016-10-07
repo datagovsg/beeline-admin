@@ -29,7 +29,7 @@ export default function ($scope, AdminService, LoadingSpinner, commonModals) {
       url: `/companies/${companyId}/eventSubscriptions`
     }))
     .then((response) => {
-      $scope.eventSubscriptions = response.data;
+      $scope.eventSubscriptions = _.sortBy(response.data, r => r.agent && r.agent.name);
     })
   }
 
