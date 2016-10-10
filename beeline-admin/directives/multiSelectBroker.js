@@ -17,9 +17,23 @@ export default function() {
         }
       }
 
-      scope.$watchCollection('selection.selected', () => {
+      scope.$watchCollection('selection.selected', (newVal, oldVal) => {
         if (!scope.selection || !scope.selection.selected) return;
         scope.selection.length = _(scope.selection.selected).values().filter().size();
+
+
+        const newKeys = _.keys(newVal).filter(k => newVal[k])
+        const oldKeys = oldVal ? _.keys(oldVal).filter(k => oldVal[k]) : [];
+        const newSelected = _.difference(newKeys, oldKeys);
+        const newDeselected = _.difference(oldKeys, newKeys);
+
+        for (let k of newSelected) {
+          scope.selection.selectTimestamps[k] = Date.now();
+        }
+        for (let k of newDeselected) {
+          delete scope.selection.selectTimestamps[k];
+        }
+
       })
 
       // Need to ensure the selection object has all the properties it needs
@@ -29,9 +43,23 @@ export default function() {
         }
         Object.assign(scope.selection, {
           selected: {},
+          selectTimestamps: {},
           lastSelectedIndex: null,
           listStart: null,
           length: 0,
+
+          $lastSelected() {
+            const minItem = _(this.selectTimestamps)
+              .toPairs()
+              .maxBy(x => x[1]);
+
+            if (minItem) {
+              return scope.collection.find(s => s[scope.trackBy].toString() === minItem[0])
+            }
+            else {
+              return null;
+            }
+          },
 
           $selectedObjects() {
             return _(scope.selection.selected)
