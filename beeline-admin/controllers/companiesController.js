@@ -1,8 +1,9 @@
 
 const env = require('../env.json')
+const _ = require('lodash');
 
 export default function($scope, $state, $urlRouter, AdminService, store,
-  LoadingSpinner) {
+  LoadingSpinner, commonModals) {
   $scope.company = {};
   $scope.AdminService = AdminService;
 
@@ -35,7 +36,10 @@ export default function($scope, $state, $urlRouter, AdminService, store,
     .then((response) => {
       $scope.company = response.data;
     })
-    LoadingSpinner.watchPromise(updatePromise);
+    LoadingSpinner.watchPromise(updatePromise)
+    .catch((err) => {
+      commonModals.alert(_.get(err, 'data.message'))
+    });
   }
 
   $scope.stripeConnect = function() {
@@ -49,6 +53,9 @@ export default function($scope, $state, $urlRouter, AdminService, store,
     })
     .then((response) => {
       window.location.href = response.data;
+    })
+    .catch((err) => {
+      commonModals.alert(_.get(err, 'data.message'))
     })
   }
 
