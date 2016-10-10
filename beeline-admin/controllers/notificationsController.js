@@ -14,9 +14,14 @@ export default function ($scope, AdminService, LoadingSpinner, commonModals) {
   ////// Data declarations
   $scope.disp = {
     eventTypes: [
-      'noPings', 'tripCancelled', 'newBooking', 'urgentBooking'
+      ['noPings', 'Driver App not switched on'],
+      ['tripCancelled', 'Trip cancelled by driver'],
+      ['passengersMessaged', 'Message broadcast to passengers'],
+      ['newBooking', 'New booking made'],
+      ['urgentBooking', 'Last minute booking made'],
     ].concat( AdminService.isSuperAdmin() ? [
-      'lifecycle', 'transactionFailure'
+      ['lifecycle', 'Server started'],
+      ['transactionFailure', 'Payment problems']
     ] : [])
   }
   $scope.eventSubscriptions = [];
@@ -29,7 +34,7 @@ export default function ($scope, AdminService, LoadingSpinner, commonModals) {
       url: `/companies/${companyId}/eventSubscriptions`
     }))
     .then((response) => {
-      $scope.eventSubscriptions = response.data;
+      $scope.eventSubscriptions = _.sortBy(response.data, r => r.agent && r.agent.name);
     })
   }
 

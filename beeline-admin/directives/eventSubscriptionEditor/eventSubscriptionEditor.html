@@ -38,9 +38,8 @@
       </select>
     </label>
     <label>
-      Notify when no pings received
-      <select ng-model="ngModel.timeToTrip" class="form-control"
-        ng-options="t[0] as t[1] for t in disp.timeOptions">
+      <select ng-model="ngModel.maxTimeToTrip" class="form-control"
+        ng-options="t[0] as t[1] for t in disp.urgentBookingTimeOptions">
       </select>
     </label>
   </div>
@@ -61,9 +60,51 @@
         </select>
       </label>
       <label>
-        Notify when no pings received
+        Notification thresholds
         <select ng-model="ngModel.timeBefore" class="form-control"
-          ng-options="t[0] as t[1] for t in disp.timeOptions">
+          ng-options="t[0] as t[1] for t in disp.noPingTimeOptions" multiple>
+        </select>
+      </label>
+    </div>
+  </div>
+
+  <div ng-switch-when="lateArrival">
+    <div>
+      <label>
+        <input type="checkbox" ng-model="options.setRouteIds" />
+        Filter by routes
+      </label>
+      <br/>
+      <label ng-show="options.setRouteIds">
+        Routes:<br/>
+        <select multiple
+          ng-options="route.id as (route.label + ': ' + route.from + ' to ' + route.to)
+          for route in routes"
+          ng-model="ngModel.routeIds" ng-disabled="!options.setRouteIds">
+        </select>
+      </label>
+      <label>
+        Lateness threshold
+        <select ng-model="ngModel.timeAfter" class="form-control"
+          ng-options="t[0] as t[1] for t in disp.lateArrivalTimeOptions">
+        </select>
+      </label>
+    </div>
+  </div>
+
+  <div ng-switch-when="passengersMessaged">
+    <div>
+      <label>
+        <input type="checkbox" ng-model="options.setRouteIds" />
+        Filter by routes
+      </label>
+      <br/>
+      <label ng-show="options.setRouteIds">
+        Routes:<br/>
+        <select multiple
+          ng-options="route.id as (route.label + ': ' + route.from + ' to ' + route.to)
+          for route in routes"
+          ng-model="ngModel.routeIds" ng-disabled="!options.setRouteIds">
         </select>
       </label>
     </div>
