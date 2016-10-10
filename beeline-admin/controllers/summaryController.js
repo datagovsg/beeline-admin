@@ -73,6 +73,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner) {
       }
 
       $scope.routes = routes;
+      $scope.$digest();
     }))
   }
 
