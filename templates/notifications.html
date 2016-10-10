@@ -16,7 +16,7 @@
       <tbody>
         <tr ng-repeat="eventSubscription in eventSubscriptions" ng-form="form">
           <td>
-            <select ng-options="eventType for eventType in disp.eventTypes"
+            <select ng-options="eventType[1] as eventType[0] for eventType in disp.eventTypes"
                 ng-model="eventSubscription.event" class="form-control" ng-required="true">
             </select>
           </td>
