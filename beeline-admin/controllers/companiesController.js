@@ -1,5 +1,6 @@
 
 const env = require('../env.json')
+const _ = require('lodash');
 
 export default function($scope, $state, $urlRouter, AdminService, store,
   LoadingSpinner, commonModals) {
@@ -37,7 +38,7 @@ export default function($scope, $state, $urlRouter, AdminService, store,
     })
     LoadingSpinner.watchPromise(updatePromise)
     .catch((err) => {
-      commonModals.alert(err.data.message)
+      commonModals.alert(_.get(err, 'data.message'))
     });
   }
 
@@ -54,7 +55,7 @@ export default function($scope, $state, $urlRouter, AdminService, store,
       window.location.href = response.data;
     })
     .catch((err) => {
-      commonModals.alert(err.data.message)
+      commonModals.alert(_.get(err, 'data.message'))
     })
   }
 
