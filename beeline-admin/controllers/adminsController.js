@@ -11,8 +11,6 @@ export default function ($scope, AdminService, LoadingSpinner, commonModals) {
   }
   $scope.admins = [];
 
-  $scope.$watch(() => AdminService.getCompanyId(), query);
-
   function mapPermissions(permissions) {
     return _(permissions)
       .keys()

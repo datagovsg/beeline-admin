@@ -9,24 +9,22 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
   // Each state's controller can be found in controllers.js
   $stateProvider
 
-  .state('default', {
-    url: '/',
-    template: '',
-    data: {
-      requiresLogin: false,
+  .state('c', {
+    url: '/c/:companyId',
+    template: '<ui-view></ui-view>',
+    controller(AdminService, $stateParams) {
+      AdminService.actingCompany = $stateParams.companyId ?
+        parseInt($stateParams.companyId) : null;
+    },
+    resolve: {
+      companyId($stateParams) {
+        return $stateParams.companyId ?
+          parseInt($stateParams.companyId) : null;
+      }
     }
   })
 
-  .state('login', {
-    url: '/login',
-    templateUrl: 'templates/login.html',
-    data: {
-      requiresLogin: false,
-    },
-    controller: 'login',
-  })
-
-  .state('transactions', {
+  .state('c.transactions', {
     url: '/transactions?id&ticketId',
     templateUrl: 'templates/transactions.html',
     controller: 'transactions',
@@ -35,7 +33,7 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
     },
   })
 
-  .state('routes', {
+  .state('c.routes', {
     url: '/routes',
     templateUrl: 'templates/routes.html',
     controller: 'routes',
@@ -44,7 +42,7 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
     }
   })
 
-  .state('companies', {
+  .state('c.companies', {
     url: '/companies',
     templateUrl: 'templates/companies.html',
     controller: 'companies',
@@ -60,7 +58,7 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
       requiresLogin: true,
     }
   })
-  .state('admins', {
+  .state('c.admins', {
     url: '/admins',
     templateUrl: 'templates/admins.html',
     controller: 'admins',
@@ -69,7 +67,7 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
     }
   })
 
-  .state('trips', {
+  .state('c.trips', {
     url: '/trips/{routeId:int}/{action}',
     templateUrl: 'templates/trips.html',
     controller: 'trips',
@@ -78,7 +76,7 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
     }
   })
 
-  .state('summary', {
+  .state('c.summary', {
     url: '/summary',
     templateUrl: 'templates/summary.html',
     controller: 'summary',
@@ -87,7 +85,7 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
     }
   })
 
-  .state('bookings', {
+  .state('c.bookings', {
     url: '/bookings?routeId&tripId',
     templateUrl: 'templates/bookings-wrs.html',
     controller: 'bookingsWrs',
@@ -96,7 +94,7 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
     }
   })
 
-  .state('driver', {
+  .state('c.driver', {
     url: '/drivers',
     templateUrl: 'templates/drivers.html',
     controller: 'drivers',
@@ -105,7 +103,7 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
     }
   })
 
-  .state('test', {
+  .state('c.test', {
     url: '/test',
     templateUrl: 'templates/test.html',
     controller: function ($scope) {
@@ -115,7 +113,7 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
     }
   })
 
-  .state('notifications', {
+  .state('c.notifications', {
     url: '/notifications',
     templateUrl: 'templates/notifications.html',
     controller: 'notifications',
@@ -124,5 +122,5 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
     }
   })
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/bookings');
+  $urlRouterProvider.otherwise('/c//bookings');
 }

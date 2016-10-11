@@ -12,26 +12,24 @@
     <div id="navbar" class="navbar-collapse collapse">
       <a class="navbar-brand" href="#">Beeline Admin</a>
       <ul class="nav navbar-nav">
-        <li><a ui-sref="bookings">Bookings</a></li>
-        <li><a ui-sref="routes({routeId: 0, action: 'route'})">Routes</a></li>
-        <li><a ui-sref="driver">Drivers</a></li>
-        <li><a ui-sref="summary">Summary</a></li>
+        <li><a ui-sref="c.bookings({companyId: adminService.actingCompany})">Bookings</a></li>
+        <li><a ui-sref="c.routes({companyId: adminService.actingCompany, routeId: 0, action: 'route'})">Routes</a></li>
+        <li><a ui-sref="c.driver({companyId: adminService.actingCompany})">Drivers</a></li>
+        <li><a ui-sref="c.summary({companyId: adminService.actingCompany})">Summary</a></li>
         <li uib-dropdown on-toggle="toggled(open)">
           <a href id="simple-dropdown" uib-dropdown-toggle>Company <span class="caret"></span></a>
           <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
-            <li><a ui-sref="companies">Edit Profile</a></li>
-            <li><a ui-sref="admins">Add Admin Users</a></li>
-            <li><a ui-sref="notifications">Event Notifications</a></li>
-            <li ng-if="adminService.isSuperAdmin()"><a ui-sref="transactions">Transactions</a></li>
+            <li><a ui-sref="c.companies({companyId: adminService.actingCompany})">Edit Profile</a></li>
+            <li><a ui-sref="c.admins({companyId: adminService.actingCompany})">Add Admin Users</a></li>
+            <li><a ui-sref="c.notifications({companyId: adminService.actingCompany})">Event Notifications</a></li>
+            <li ng-if="adminService.isSuperAdmin()"><a ui-sref="c.transactions({companyId: adminService.actingCompany})">Transactions</a></li>
           </ul>
         </li>
         <li  ng-if="adminService.isSuperAdmin()" uib-dropdown on-toggle="toggled(open)">
           <a href id="simple-dropdown" uib-dropdown-toggle>Super Admin <span class="caret"></span></a>
           <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
-            <li ng-if="adminService.isSuperAdmin()"><a ui-sref="trips({routeId: 0, action: 'route'})">Create a new route</a></li>
+            <li ng-if="adminService.isSuperAdmin()"><a ui-sref="c.trips({companyId: adminService.actingCompany, routeId: 0, action: 'route'})">Create a new route</a></li>
             <li ng-if="adminService.isSuperAdmin()"><a ui-sref="assets">Assets</a></li>
-
-
           </ul>
         </li>
       </ul>

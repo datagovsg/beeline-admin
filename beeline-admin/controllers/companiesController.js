@@ -3,15 +3,12 @@ const env = require('../env.json')
 const _ = require('lodash');
 
 export default function($scope, $state, $urlRouter, AdminService, store,
-  LoadingSpinner, commonModals) {
+  LoadingSpinner, commonModals, companyId) {
   $scope.company = {};
   $scope.AdminService = AdminService;
 
-  $scope.$watch(() => AdminService.getCompanyId(), () => {
-    var companyId = AdminService.getCompanyId();
 
-    if (!companyId) return;
-
+  if (companyId) {
     AdminService.beeline({
       method: 'GET',
       url: `/companies/${companyId}`,
@@ -19,9 +16,8 @@ export default function($scope, $state, $urlRouter, AdminService, store,
     .then((response) => {
       $scope.company = response.data;
     })
-
     $scope.companyLogoUrl = `${env.BACKEND_URL}/companies/${companyId}/logo`
-  })
+  }
 
   $scope.$watch(() => store.get('sessionToken'), sessionToken => {
     $scope.sessionToken = sessionToken;

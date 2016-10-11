@@ -6,7 +6,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner) {
 
   function refresh() {
     if (!AdminService.getCompanyId()) return;
-    
+
     var options = {
       includeAvailability: true,
       includeTrips: true,
@@ -77,6 +77,5 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner) {
     }))
   }
 
-  $scope.$watch(() => AdminService.getCompanyId(), refresh)
   $scope.$watch('selectedMonth', refresh)
 }
