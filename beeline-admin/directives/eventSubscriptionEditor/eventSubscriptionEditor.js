@@ -1,4 +1,15 @@
 import _ from 'lodash';
+import leftPad from 'left-pad';
+
+function formatTime(tm) {
+  if (!tm) return '';
+
+  var time = (tm.hours || 0) * 60 + (tm.minutes || 0) + 8*60;
+  var hours = Math.floor(time / 60);
+  var minutes = Math.floor(time % 60);
+
+  return `${leftPad(hours)}:${leftPad(minutes, 2, '0')}`
+}
 
 export default function ($rootScope, $location, uiGmapGoogleMapApi, $q,
   RoutesService, AdminService) {
@@ -48,6 +59,10 @@ export default function ($rootScope, $location, uiGmapGoogleMapApi, $q,
         RoutesService.getCurrentRoutes()
         .then((routes) => {
           scope.routes = _.sortBy(routes.filter(r => r.transportCompanyId == cid), 'label')
+          scope.routes.forEach((route) => {
+            route._description  = scope.renderRoute(route);
+          })
+          scope.$apply();
         })
       });
 
@@ -66,6 +81,9 @@ export default function ($rootScope, $location, uiGmapGoogleMapApi, $q,
       scope.$watch(() => AdminService.getCompanyId(), (cid) => {
         _.set(scope, 'ngModel.transportCompanyIds', [cid]);
       })
+
+      scope.renderRoute = (route) =>
+        `${route.label}: ${route.from.substr(0,15)} to ${route.to.substr(0,15)} (${formatTime(route.indicativeTrip && (route.indicativeTrip.nextStartTime || route.indicativeTrip.lastStartTime))})`
     }
   }
 }

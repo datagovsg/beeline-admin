@@ -2,11 +2,14 @@
 
 .event-notifications.table {
   tbody td {
-    width: 25%;
 
     event-subscription-editor label {
-      max-width: 25vw;
       overflow-x: auto;
+      display: block;
+
+      select {
+        max-width: 25vw;
+      }
 
       select[multiple]:focus {
         height: 20em;
@@ -16,6 +19,9 @@
         height: 4em;
         transition: all 0.1s ease;
       }
+    }
+    notification-method-editor label {
+      display: block;
     }
   }
 }
