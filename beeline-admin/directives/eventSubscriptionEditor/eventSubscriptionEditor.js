@@ -13,6 +13,18 @@ export default function ($rootScope, $location, uiGmapGoogleMapApi, $q,
       scope.options = {};
       scope.disp = {};
 
+      scope.data = {}
+
+      // The event definitions strictly don't allow unknown fields
+      // Strictly separate the settings for each event type, don't allow
+      // one event's unknown fields to mess with that of another
+      if (scope.type) scope.data[scope.type] = scope.ngModel;
+      scope.$watch('type', (type) => {
+        if (!type) return;
+
+        scope.ngModel = scope.data[type] = scope.data[type] || {}
+      })
+
       scope.disp.noPingTimeOptions = [
         [5, '5 minutes before trip'],
         [15, '15 minutes before trip'],
