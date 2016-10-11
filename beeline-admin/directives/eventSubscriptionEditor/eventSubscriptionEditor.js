@@ -83,7 +83,7 @@ export default function ($rootScope, $location, uiGmapGoogleMapApi, $q,
       })
 
       scope.renderRoute = (route) =>
-        `${route.label}: ${route.from.substr(0,15)} to ${route.to.substr(0,15)} (${formatTime(route.indicativeTrip && (route.indicativeTrip.nextStartTime || route.indicativeTrip.lastStartTime))})`
+        `${route.label}: ${route.from} to ${route.to} (${formatTime(route.indicativeTrip && (route.indicativeTrip.nextStartTime || route.indicativeTrip.lastStartTime))})`
     }
   }
 }
