@@ -11,7 +11,10 @@
         <div class="row">
           <div class="col-lg-7">
             <ui-gmap-google-map center="map.center" zoom="map.zoom" control="map.control" options="map.options" events="map.events">
-              <ui-gmap-markers models="allStops" coords="'$latlng'" idKey="'id'" doCluster="true" click="stopClicked" dorebuildall="true" modelsbyref="true" control="map.markersControl">
+              <ui-gmap-markers models="allStops" coords="'$latlng'" idKey="'id'"
+                type="'cluster'" typeOptions="{maxZoom: 18}" click="stopClicked"
+                dorebuildall="true" modelsbyref="true"
+                control="map.markersControl">
               </ui-gmap-markers>
               <ui-gmap-marker idkey="'newstop'" coords="selectedStop.$latlng" ng-if="!selectedStop.id" options="map.newStopOptions">
               </ui-gmap-marker>
