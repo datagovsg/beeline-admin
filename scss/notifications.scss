@@ -1,0 +1,27 @@
+
+
+.event-notifications.table {
+  tbody td {
+
+    event-subscription-editor label {
+      overflow-x: auto;
+      display: block;
+
+      select {
+        max-width: 25vw;
+      }
+
+      select[multiple]:focus {
+        height: 20em;
+        transition: all 0.1s ease;
+      }
+      select[multiple]:not(:focus) {
+        height: 4em;
+        transition: all 0.1s ease;
+      }
+    }
+    notification-method-editor label {
+      display: block;
+    }
+  }
+}

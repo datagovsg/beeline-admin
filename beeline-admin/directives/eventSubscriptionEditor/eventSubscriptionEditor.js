@@ -1,4 +1,15 @@
 import _ from 'lodash';
+import leftPad from 'left-pad';
+
+function formatTime(tm) {
+  if (!tm) return '';
+
+  var time = (tm.hours || 0) * 60 + (tm.minutes || 0) + 8*60;
+  var hours = Math.floor(time / 60);
+  var minutes = Math.floor(time % 60);
+
+  return `${leftPad(hours)}:${leftPad(minutes, 2, '0')}`
+}
 
 export default function ($rootScope, $location, uiGmapGoogleMapApi, $q,
   RoutesService, AdminService) {
@@ -12,6 +23,18 @@ export default function ($rootScope, $location, uiGmapGoogleMapApi, $q,
     link (scope, elem, attr) {
       scope.options = {};
       scope.disp = {};
+
+      scope.data = {}
+
+      // The event definitions strictly don't allow unknown fields
+      // Strictly separate the settings for each event type, don't allow
+      // one event's unknown fields to mess with that of another
+      if (scope.type) scope.data[scope.type] = scope.ngModel;
+      scope.$watch('type', (type) => {
+        if (!type) return;
+
+        scope.ngModel = scope.data[type] = scope.data[type] || {}
+      })
 
       scope.disp.noPingTimeOptions = [
         [5, '5 minutes before trip'],
@@ -36,6 +59,10 @@ export default function ($rootScope, $location, uiGmapGoogleMapApi, $q,
         RoutesService.getCurrentRoutes()
         .then((routes) => {
           scope.routes = _.sortBy(routes.filter(r => r.transportCompanyId == cid), 'label')
+          scope.routes.forEach((route) => {
+            route._description  = scope.renderRoute(route);
+          })
+          scope.$apply();
         })
       });
 
@@ -54,6 +81,9 @@ export default function ($rootScope, $location, uiGmapGoogleMapApi, $q,
       scope.$watch(() => AdminService.getCompanyId(), (cid) => {
         _.set(scope, 'ngModel.transportCompanyIds', [cid]);
       })
+
+      scope.renderRoute = (route) =>
+        `${route.label}: ${route.from} to ${route.to} (${formatTime(route.indicativeTrip && (route.indicativeTrip.nextStartTime || route.indicativeTrip.lastStartTime))})`
     }
   }
 }

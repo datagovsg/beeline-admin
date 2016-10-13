@@ -54,6 +54,7 @@ export default function (AdminService, DriverService, $q, LoadingSpinner, compan
     else {
       var promise = this.getRoutes(_.defaults({
         includeTrips: false,
+        includeIndicative: true,
         startDate: Date.now()
       }, options))
 

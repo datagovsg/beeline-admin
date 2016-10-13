@@ -12,11 +12,10 @@
       <input type="checkbox" ng-model="options.setRouteIds" />
       Filter by routes
     </label>
-    <br/>
     <label ng-show="options.setRouteIds">
       Routes:<br/>
       <select multiple
-        ng-options="route.id as (route.label + ': ' + route.from + ' to ' + route.to)
+        ng-options="route.id as route._description
         for route in routes"
         ng-model="ngModel.routeIds" ng-disabled="!options.setRouteIds">
       </select>
@@ -28,11 +27,10 @@
       <input type="checkbox" ng-model="options.setRouteIds" />
       Filter by routes
     </label>
-    <br/>
     <label ng-show="options.setRouteIds">
       Routes:<br/>
       <select multiple
-        ng-options="route.id as (route.label + ': ' + route.from + ' to ' + route.to)
+        ng-options="route.id as route._description
         for route in routes"
         ng-model="ngModel.routeIds" ng-disabled="!options.setRouteIds">
       </select>
@@ -50,11 +48,10 @@
         <input type="checkbox" ng-model="options.setRouteIds" />
         Filter by routes
       </label>
-      <br/>
       <label ng-show="options.setRouteIds">
         Routes:<br/>
         <select multiple
-          ng-options="route.id as (route.label + ': ' + route.from + ' to ' + route.to)
+          ng-options="route.id as route._description
           for route in routes"
           ng-model="ngModel.routeIds" ng-disabled="!options.setRouteIds">
         </select>
@@ -74,11 +71,10 @@
         <input type="checkbox" ng-model="options.setRouteIds" />
         Filter by routes
       </label>
-      <br/>
       <label ng-show="options.setRouteIds">
         Routes:<br/>
         <select multiple
-          ng-options="route.id as (route.label + ': ' + route.from + ' to ' + route.to)
+          ng-options="route.id as route._description
           for route in routes"
           ng-model="ngModel.routeIds" ng-disabled="!options.setRouteIds">
         </select>
@@ -98,11 +94,10 @@
         <input type="checkbox" ng-model="options.setRouteIds" />
         Filter by routes
       </label>
-      <br/>
       <label ng-show="options.setRouteIds">
         Routes:<br/>
         <select multiple
-          ng-options="route.id as (route.label + ': ' + route.from + ' to ' + route.to)
+          ng-options="route.id as route._description
           for route in routes"
           ng-model="ngModel.routeIds" ng-disabled="!options.setRouteIds">
         </select>
@@ -119,11 +114,10 @@
         <input type="checkbox" ng-model="options.setRouteIds" />
         Filter by routes
       </label>
-      <br/>
       <label ng-show="options.setRouteIds">
         Routes:<br/>
         <select multiple
-          ng-options="route.id as (route.label + ': ' + route.from + ' to ' + route.to)
+          ng-options="route.id as route._description
           for route in routes"
           ng-model="ngModel.routeIds" ng-disabled="!options.setRouteIds">
         </select>
