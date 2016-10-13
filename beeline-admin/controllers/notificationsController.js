@@ -1,14 +1,7 @@
 import querystring from 'querystring';
 import _ from 'lodash';
 
-export default function ($scope, AdminService, LoadingSpinner, commonModals) {
-  var companyId;
-
-  $scope.$watch(() => AdminService.getCompanyId(), (cid) => {
-    $scope.companyId = companyId = cid;
-    requery();
-  })
-
+export default function ($scope, AdminService, LoadingSpinner, commonModals, companyId) {
   requery();
 
   ////// Data declarations

@@ -1,7 +1,8 @@
 import querystring from 'querystring';
 
 export default function($scope, $state, $urlRouter, AdminService, LoadingSpinner,
-  RoutePopup, commonModals, RoutesService, $rootScope, $uibModal, TripsService) {
+  RoutePopup, commonModals, RoutesService, $rootScope, $uibModal, TripsService,
+  companyId) {
 
   $scope.selectedRoute = null;
 
@@ -14,6 +15,9 @@ export default function($scope, $state, $urlRouter, AdminService, LoadingSpinner
     page: 1,
   };
   $scope.now = Date.now();
+
+  if (companyId)
+    $scope.filter.transportCompanyId = companyId
 
   function refreshRoutes() {
     if (!$scope.filter.transportCompanyId) return;
@@ -77,10 +81,6 @@ export default function($scope, $state, $urlRouter, AdminService, LoadingSpinner
   }
 
   $scope.$watch('filter', refreshRoutes, true)
-  $scope.$watch(() => AdminService.getCompanyId(), (companyId) => {
-    if (companyId)
-      $scope.filter.transportCompanyId = companyId
-  });
 
   ///////// Additional helper functions
 

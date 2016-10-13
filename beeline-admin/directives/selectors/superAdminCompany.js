@@ -1,11 +1,11 @@
 
-export default function($http, AdminService, store, jwtHelper) {
+export default function($http, AdminService, store, jwtHelper, $stateParams, $state) {
   return {
     replace: true,
     template: `
 <select
   ng-options="company.id as company.name for company in (companies | orderBy:'name')"
-  ng-model="adminService.actingCompany"
+  ng-model="selectedCompanyId"
   class="form-control-condensed">
   <option value="">(All)</option>
 </select>
@@ -14,6 +14,23 @@ export default function($http, AdminService, store, jwtHelper) {
       // Get a list of companies you work for
       scope.companies = [];
       scope.adminService = AdminService;
+
+      scope.$watch('selectedCompanyId', (newVal, oldVal) => {
+        if (newVal === oldVal) return;
+        if (newVal === AdminService.actingCompany) {
+          $state.go(
+            $state.current.name,
+            _.defaults({companyId: newVal}, $stateParams),
+            {notify: false, reload: false}
+          )
+        }
+        else {
+          $state.go(
+            $state.current.name,
+            _.defaults({companyId: newVal}, $stateParams)
+          )
+        }
+      })
 
       // Read id from profile
       scope.$watch(() => store.get('sessionToken'), (token) => {
@@ -38,7 +55,7 @@ export default function($http, AdminService, store, jwtHelper) {
           .then((result) => {
             scope.companies = result.data.transportCompanies;
             if (scope.companies.length === 1) {
-              AdminService.actingCompany = scope.companies[0].id;
+              scope.selectedCompanyId = AdminService.actingCompany = scope.companies[0].id;
             }
           })
         }

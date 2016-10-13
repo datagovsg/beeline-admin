@@ -340,7 +340,6 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
     [_.defaults({
         startDate: $scope.filter.startDate.getTime(),
         endDate: $scope.filter.endDate.getTime(),
-        companyId: AdminService.getCompanyId()
       }, $scope.filter),
       $scope.currentPage,
       $scope.perPage],
