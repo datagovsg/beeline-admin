@@ -247,7 +247,7 @@
                               cancelled: route.tripsByDay[$index].status === 'cancelled',
                               void: route.tripsByDay[$index].status === 'void'
                             }" class="passenger-count day">
-                <a href="#/bookings?tripId={{trip.id}}">
+                <a ui-sref="^.bookings({tripId: trip.id})">
                 {{trip ? trip.availability.seatsBooked || '0' : ''}}
                 </a>
               </td>
