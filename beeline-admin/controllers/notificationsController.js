@@ -12,6 +12,8 @@ export default function ($scope, AdminService, LoadingSpinner, commonModals, com
       ['passengersMessaged', 'Message broadcast to passengers'],
       ['newBooking', 'New booking made'],
       ['urgentBooking', 'Last minute booking made'],
+      ['lateETA', 'Bus predicted to arrive late'],
+      ['lateArrival', 'Bus arrives late at destination'],
     ].concat( AdminService.isSuperAdmin() ? [
       ['lifecycle', 'Server started'],
       ['transactionFailure', 'Payment problems']

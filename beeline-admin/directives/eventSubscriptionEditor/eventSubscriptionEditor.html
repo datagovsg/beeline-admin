@@ -87,7 +87,28 @@
       </label>
     </div>
   </div>
-
+  <div ng-switch-when="lateETA">
+    <div>
+      <label>
+        <input type="checkbox" ng-model="options.setRouteIds" />
+        Filter by routes
+      </label>
+      <label ng-show="options.setRouteIds">
+        Routes:<br/>
+        <select multiple
+          ng-options="route.id as route._description
+          for route in routes"
+          ng-model="ngModel.routeIds" ng-disabled="!options.setRouteIds">
+        </select>
+      </label>
+      <label>
+        Lateness threshold
+        <select ng-model="ngModel.timeAfter" class="form-control"
+          ng-options="t[0] as t[1] for t in disp.lateArrivalTimeOptions">
+        </select>
+      </label>
+    </div>
+  </div>
   <div ng-switch-when="passengersMessaged">
     <div>
       <label>
