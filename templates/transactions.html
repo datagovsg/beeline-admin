@@ -157,11 +157,11 @@
       <td ng-if="item.itemType == 'ticketSale'">{{item.ticketSale.boardStop.stop.description}}</td>
       <td ng-if="item.itemType == 'ticketSale'">{{item.ticketSale.alightStop.stop.description}}</td>
       <td ng-if="item.itemType == 'ticketSale'">
-        <a ui-sref="^.bookings({routeId: item.ticketSale.boardStop.trip.routeId})">
+        <a ui-sref="bookings({routeId: item.ticketSale.boardStop.trip.routeId})">
           {{item.ticketSale.boardStop.trip.route.label}}
         </a>
         -
-        <a ui-sref="^.bookings({tripId: item.ticketSale.boardStop.tripId})">
+        <a ui-sref="bookings({tripId: item.ticketSale.boardStop.tripId})">
           Trip #{{item.ticketSale.boardStop.tripId}}
         </a>
       </td>
@@ -173,11 +173,11 @@
       <td ng-if="item.itemType == 'ticketRefund'">{{item.ticketRefund.boardStop.stop.description}}</td>
       <td ng-if="item.itemType == 'ticketRefund'">{{item.ticketRefund.alightStop.stop.description}}</td>
       <td ng-if="item.itemType == 'ticketRefund'">
-        <a ui-sref="^.bookings({routeId: item.ticketRefund.boardStop.trip.routeId})">
+        <a ui-sref="bookings({routeId: item.ticketRefund.boardStop.trip.routeId})">
           {{item.ticketRefund.boardStop.trip.route.label}}
         </a>
         -
-        <a ui-sref="^.bookings({tripId: item.ticketRefund.boardStop.tripId})">
+        <a ui-sref="bookings({tripId: item.ticketRefund.boardStop.tripId})">
           Trip #{{item.ticketRefund.boardStop.tripId}}
         </a>
       </td>
@@ -189,11 +189,11 @@
       <td ng-if="item.itemType == 'ticketExpense'">{{item.ticketExpense.boardStop.stop.description}}</td>
       <td ng-if="item.itemType == 'ticketExpense'">{{item.ticketExpense.alightStop.stop.description}}</td>
       <td ng-if="item.itemType == 'ticketExpense'">
-        <a ui-sref="^.bookings({routeId: item.ticketExpense.boardStop.trip.routeId})">
+        <a ui-sref="bookings({routeId: item.ticketExpense.boardStop.trip.routeId})">
           {{item.ticketExpense.boardStop.trip.route.label}}
         </a>
         -
-        <a ui-sref="^.bookings({tripId: item.ticketExpense.boardStop.tripId})">
+        <a ui-sref="bookings({tripId: item.ticketExpense.boardStop.tripId})">
           Trip #{{item.ticketExpense.boardStop.tripId}}
         </a>
       </td>
