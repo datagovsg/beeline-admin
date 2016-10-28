@@ -55,6 +55,10 @@ export default function ($rootScope, $location, uiGmapGoogleMapApi, $q,
         [60000 * 15, 'more than 15 mins late'],
       ]
 
+      scope.disp.lateETATimeOptions = [
+        [60000 * 10, 'more than 10 mins late'],
+      ]
+
       scope.$watch(() => AdminService.getCompanyId(), (cid) => {
         RoutesService.getCurrentRoutes()
         .then((routes) => {
