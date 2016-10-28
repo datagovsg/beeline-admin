@@ -1,10 +1,9 @@
-<div class="container withnav admin">
-  <div class="row">
+<div class="container-fluid withnav admin">
     <company-info-broker company-id="companyId" company="company"></company-info-broker>
 
     <h1>Event Notifications for {{company.name}}</h1>
 
-    <table class="table">
+    <table class="table event-notifications">
       <thead>
         <tr>
           <th>Event Type</th>
@@ -16,7 +15,7 @@
       <tbody>
         <tr ng-repeat="eventSubscription in eventSubscriptions" ng-form="form">
           <td>
-            <select ng-options="eventType for eventType in disp.eventTypes"
+            <select ng-options="eventType[0] as eventType[1] for eventType in disp.eventTypes"
                 ng-model="eventSubscription.event" class="form-control" ng-required="true">
             </select>
           </td>
@@ -49,5 +48,4 @@
       </tfoot>
     </table>
 
-  </div>
 </div>

@@ -155,15 +155,15 @@
                 </td>
                 <td>
                   <a ng-if="ticket.ticketSale"
-                      ui-sref="transactions({id: ticket.ticketSale.transactionId})">
+                      ui-sref="^.transactions({id: ticket.ticketSale.transactionId})">
                     {{ticket.ticketSale.transactionId}}<br/>
                   </a>
                   <a ng-if="ticket.ticketExpense"
-                      ui-sref="transactions({id: ticket.ticketExpense.transactionId})">
+                      ui-sref="^.transactions({id: ticket.ticketExpense.transactionId})">
                     (Issue: {{ticket.ticketExpense.transactionId}})<br/>
                   </a>
                   <a ng-if="ticket.ticketRefund"
-                      ui-sref="transactions({id: ticket.ticketRefund.transactionId})">
+                      ui-sref="^.transactions({id: ticket.ticketRefund.transactionId})">
                     (Related Txn ID: {{ticket.ticketRefund.transactionId}})<br/>
                   </a>
                 </td>
@@ -192,7 +192,7 @@
                   </span>
                 </td>
                 <td class="text-center">
-                  <a ui-sref="transactions({ticketId: ticket.id})">
+                  <a ui-sref="^.transactions({ticketId: ticket.id})">
                     {{ticket.id}}
                   </a>
                   <button class="btn btn-default btn-icon" ng-click="sendWrsEmail(ticket)">
