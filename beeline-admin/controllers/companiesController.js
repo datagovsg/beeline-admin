@@ -42,7 +42,7 @@ export default function($scope, $state, $urlRouter, AdminService, store,
     // Get the redirect URL from server
     AdminService.beeline({
       method: 'POST',
-      url: `/companies/stripeConnect`,
+      url: `/companies/${companyId}/stripeConnect`,
       data: {
         redirect: window.location.href
       }
