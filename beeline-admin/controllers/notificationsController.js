@@ -55,7 +55,6 @@ export default function ($scope, AdminService, LoadingSpinner, commonModals, com
       })
     },
     saveOne(subscr) {
-      console.log('save one?')
       var newEntries = RouteNotifications.serialize(subscr);
 
       // insert the new entries, then delete the old ones
@@ -71,14 +70,10 @@ export default function ($scope, AdminService, LoadingSpinner, commonModals, com
           entry.id = response.data.id;
         })
 
-        console.log('test?')
-
         $scope.subscriptions.splice(
           $scope.subscriptions.indexOf(subscr), 1,
           RouteNotifications.parse(responses.map(r => r.data))[0]
         )
-
-        console.log(_.uniqBy(subscr.ids))
 
         return Promise.all(_.uniqBy(subscr.ids).map(id =>
           AdminService.beeline({
@@ -244,8 +239,6 @@ const RouteNotifications = {
       })
       .values()
       .value();
-
-    console.log(groupedByRoutes)
 
     return groupedByRoutes
   },
