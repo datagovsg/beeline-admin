@@ -2,7 +2,63 @@
     <company-info-broker company-id="companyId" company="company"></company-info-broker>
 
     <h1>Event Notifications for {{company.name}}</h1>
+    <table class="table event-notifications route-notifications table-striped">
+      <thead>
+        <tr>
+          <th>Notification Method</th>
+          <th>Options</th>
+          <th class="event-type">New Booking</th>
+          <!-- <th class="event-type">Urgent Booking</th> -->
+          <th class="event-type"><div>Driver app not switched on (T-5mins)</div></th>
+          <th class="event-type"><div>Driver app not switched on (T-15mins)</div></th>
+          <th class="event-type"><div>Driver app not switched on (T-25mins)</div></th>
+          <th class="event-type"><div>Late arrival (T+10mins)</div></th>
+          <th class="event-type"><div>Predicted late arrival (T+10mins)</div></th>
+          <th class="event-type"><div>Message to passengers</div></th>
+          <th class="event-type"><div>Trip cancelled</div></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="subscription in subscriptions" ng-form="form">
+          <td>
+            {{subscription.handler}}
+            <notification-method-editor ng-model="subscription.handler"
+              agent="subscription.agent" ng-required="true">
+            </notification-method-editor>
+          </td>
+          <td>
+            <event-subscription-editor type="'tripCancelled'"
+              ng-model="subscription.options">
+            </event-subscription-editor>
+          </td>
+          <td><input type="checkbox" ng-model="subscription.events.newBooking" /></td>
+          <td><input type="checkbox" ng-model="subscription.events.noPings5" /></td>
+          <td><input type="checkbox" ng-model="subscription.events.noPings15" /></td>
+          <td><input type="checkbox" ng-model="subscription.events.noPings25" /></td>
+          <td><input type="checkbox" ng-model="subscription.events.lateArrival" /></td>
+          <td><input type="checkbox" ng-model="subscription.events.lateETA" /></td>
+          <td><input type="checkbox" ng-model="subscription.events.passengersMessaged" /></td>
+          <td><input type="checkbox" ng-model="subscription.events.tripCancelled" /></td>
+          <td>
+            <button ng-click="routeSubscriptions.saveOne(subscription)" class="btn btn-default glyphicon glyphicon-save"
+              ng-disabled="form.$pristine || form.$invalid">
+            </button>
+            <button ng-click="routeSubscriptions.deleteOne(subscription)" class="btn btn-danger glyphicon glyphicon-trash">
+            </button>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="4">
+            <button ng-click="routeSubscriptions.add()" class="glyphicon glyphicon-plus btn btn-default">
+            </button>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
 
+    <h1>Other notifications</h1>
     <table class="table event-notifications">
       <thead>
         <tr>
@@ -30,10 +86,10 @@
             </notification-method-editor>
           </td>
           <td>
-            <button ng-click="subscriptions.saveOne(eventSubscription)" class="btn btn-default glyphicon glyphicon-save"
+            <button ng-click="subscriptionMethods.saveOne(eventSubscription)" class="btn btn-default glyphicon glyphicon-save"
               ng-disabled="form.$pristine || form.$invalid">
             </button>
-            <button ng-click="subscriptions.deleteOne(eventSubscription)" class="btn btn-danger glyphicon glyphicon-trash">
+            <button ng-click="subscriptionMethods.deleteOne(eventSubscription)" class="btn btn-danger glyphicon glyphicon-trash">
             </button>
           </td>
         </tr>
@@ -41,7 +97,7 @@
       <tfoot>
         <tr>
           <td colspan="4">
-            <button ng-click="subscriptions.add()" class="glyphicon glyphicon-plus btn btn-default">
+            <button ng-click="subscriptionMethods.add()" class="glyphicon glyphicon-plus btn btn-default">
             </button>
           </td>
         </tr>
