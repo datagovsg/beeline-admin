@@ -1,6 +1,21 @@
 
 
 .event-notifications.table {
+  .event-type {
+    div {
+      width: 2em;
+      height: 8em;
+      overflow: visible;
+      transform:  rotate(-30deg) translateY(7em);
+      transform-origin: 0em 8em;
+
+      span {
+        background-color: #ddd;
+        white-space: nowrap;
+        width: 100px;
+      }
+    }
+  }
   tbody td {
 
     event-subscription-editor label {
@@ -22,6 +37,14 @@
     }
     notification-method-editor label {
       display: block;
+    }
+
+    &.with-label {
+      position: relative;
+      label {
+        position: absolute;
+        left: 0; right: 0; top: 0; bottom: 0;
+      }
     }
   }
 }

@@ -7,21 +7,17 @@
         <tr>
           <th>Notification Method</th>
           <th>Options</th>
-          <th class="event-type">New Booking</th>
+          <th class="event-type"><div><span>New Booking</span></div></th>
           <!-- <th class="event-type">Urgent Booking</th> -->
-          <th class="event-type"><div>Driver app not switched on (T-5mins)</div></th>
-          <th class="event-type"><div>Driver app not switched on (T-15mins)</div></th>
-          <th class="event-type"><div>Driver app not switched on (T-25mins)</div></th>
-          <th class="event-type"><div>Late arrival (T+10mins)</div></th>
-          <th class="event-type"><div>Predicted late arrival (T+10mins)</div></th>
-          <th class="event-type"><div>Message to passengers</div></th>
-          <th class="event-type"><div>Trip cancelled</div></th>
+          <th class="event-type"><div><span>Driver app not switched on</span></div></th>
+          <th class="event-type"><div><span>Predicted late arrival</span></div></th>
+          <th class="event-type"><div><span>Message to passengers</span></div></th>
+          <th class="event-type"><div><span>Trip cancelled</span></div></th>
         </tr>
       </thead>
       <tbody>
         <tr ng-repeat="subscription in subscriptions" ng-form="form">
           <td>
-            {{subscription.handler}}
             <notification-method-editor ng-model="subscription.handler"
               agent="subscription.agent" ng-required="true">
             </notification-method-editor>
@@ -31,14 +27,11 @@
               ng-model="subscription.options">
             </event-subscription-editor>
           </td>
-          <td><input type="checkbox" ng-model="subscription.events.newBooking" /></td>
-          <td><input type="checkbox" ng-model="subscription.events.noPings5" /></td>
-          <td><input type="checkbox" ng-model="subscription.events.noPings15" /></td>
-          <td><input type="checkbox" ng-model="subscription.events.noPings25" /></td>
-          <td><input type="checkbox" ng-model="subscription.events.lateArrival" /></td>
-          <td><input type="checkbox" ng-model="subscription.events.lateETA" /></td>
-          <td><input type="checkbox" ng-model="subscription.events.passengersMessaged" /></td>
-          <td><input type="checkbox" ng-model="subscription.events.tripCancelled" /></td>
+          <td class="with-label"><label><input type="checkbox" ng-model="subscription.events.newBooking" /></label></td>
+          <td class="with-label"><label><input type="checkbox" ng-model="subscription.events.noPings" /></label></td>
+          <td class="with-label"><label><input type="checkbox" ng-model="subscription.events.lateETA" /></label></td>
+          <td class="with-label"><label><input type="checkbox" ng-model="subscription.events.passengersMessaged" /></label></td>
+          <td class="with-label"><label><input type="checkbox" ng-model="subscription.events.tripCancelled" /></label></td>
           <td>
             <button ng-click="routeSubscriptions.saveOne(subscription)" class="btn btn-default glyphicon glyphicon-save"
               ng-disabled="form.$pristine || form.$invalid">

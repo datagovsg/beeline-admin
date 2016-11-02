@@ -29,8 +29,10 @@ export default function ($scope, AdminService, LoadingSpinner, commonModals, com
       url: `/companies/${companyId}/eventSubscriptions`
     }))
     .then((response) => {
-      $scope.eventSubscriptions = _.sortBy(response.data, r => r.agent && r.agent.name);
-      $scope.subscriptions = RouteNotifications.parse($scope.eventSubscriptions);
+      $scope.eventSubscriptions = _.filter(response.data,
+        e => !_.some(events, (v, k) => satisfiesEvent(e, v))
+      );
+      $scope.subscriptions = RouteNotifications.parse(response.data);
     })
   }
 
@@ -69,6 +71,8 @@ export default function ($scope, AdminService, LoadingSpinner, commonModals, com
         _.zip(newEntries, responses).forEach(([entry, response]) => {
           entry.id = response.data.id;
         })
+
+        responses.map(r => r.data), RouteNotifications.parse(responses.map(r => r.data)))
 
         $scope.subscriptions.splice(
           $scope.subscriptions.indexOf(subscr), 1,
@@ -155,28 +159,10 @@ const events = {
   newBooking: {
     event: 'newBooking',
   },
-  noPings5: {
+  noPings: {
     event: 'noPings',
     defaultParams: {
-      minsBefore: [5],
-    }
-  },
-  noPings15: {
-    event: 'noPings',
-    defaultParams: {
-      minsBefore: [15],
-    }
-  },
-  noPings25: {
-    event: 'noPings',
-    defaultParams: {
-      minsBefore: [25],
-    }
-  },
-  lateArrival: {
-    event: 'lateArrival',
-    defaultParams: {
-      timeAfter: [10*60000],
+      minsBefore: [5, 15, 25],
     }
   },
   lateETA: {
@@ -192,6 +178,17 @@ const events = {
     event: 'tripCancelled',
   },
 }
+
+function satisfiesEvent(e, eventConditions) {
+  // Ensure that array keys are superset of the same
+  // key in e
+
+  return e.event == eventConditions.event &&
+    _.keys(eventConditions.defaultParams)
+    .filter(k => eventConditions.defaultParams[k] instanceof Array)
+    .every(k => _.difference(eventConditions.defaultParams[k], e.params[k]).length == 0)
+}
+
 
 const RouteNotifications = {
   // Convert from human-unreadable database entries
@@ -209,17 +206,6 @@ const RouteNotifications = {
       })
       .mapValues((es, g) => {
         const ev = _(events).keys().map((key) => {
-          function satisfiesEvent(e, eventConditions) {
-            // Ensure that array keys are superset of the same
-            // key in e
-
-            return e.event == eventConditions.event &&
-              _.keys(eventConditions.defaultParams)
-              .filter(k => eventConditions.defaultParams[k] instanceof Array)
-              .every(k => _.intersection(eventConditions.defaultParams[k], e.params[k]).length
-                == eventConditions.defaultParams[k].length)
-          }
-
           // Check if this key applies to some of the event subscriptions
           return [key,
             es.find(e => satisfiesEvent(e, events[key]))
@@ -229,7 +215,9 @@ const RouteNotifications = {
         return {
           options: _(es[0].params)
             .pick(['routeIds', 'ignoreIfEmpty'])
-            .filter(v => v !== undefined)
+            .toPairs()
+            .filter(v => v[1] !== undefined)
+            .fromPairs()
             .value(), /* no undefined route ids */
           handler: es[0].handler,
           agent: es[0].agent,
@@ -238,6 +226,7 @@ const RouteNotifications = {
         }
       })
       .values()
+      .filter(v => v.ids.length)
       .value();
 
     return groupedByRoutes
