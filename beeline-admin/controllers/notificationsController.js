@@ -184,7 +184,7 @@ const events = {
   lateETA: {
     event: 'lateETA',
     defaultParams: {
-      timeAfter: [10*60000],
+      timeAfter: 10*60000,
     }
   },
   passengersMessaged: {
@@ -199,10 +199,17 @@ function satisfiesEvent(e, eventConditions) {
   // Ensure that array keys are superset of the same
   // key in e
 
-  return e.event == eventConditions.event &&
+  const arrayKeysMatch = e.event == eventConditions.event &&
     _.keys(eventConditions.defaultParams)
     .filter(k => eventConditions.defaultParams[k] instanceof Array)
-    .every(k => _.difference(eventConditions.defaultParams[k], e.params[k]).length == 0)
+    .every(k => _.difference(eventConditions.defaultParams[k], e.params[k]).length == 0);
+
+  const valueKeysMatch = e.event == eventConditions.event &&
+    _.keys(eventConditions.defaultParams)
+    .filter(k => !(eventConditions.defaultParams[k] instanceof Array))
+    .every(k => eventConditions.defaultParams[k] === e.params[k]);
+
+  return valueKeysMatch && arrayKeysMatch;
 }
 
 
