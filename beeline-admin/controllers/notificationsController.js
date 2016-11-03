@@ -86,8 +86,17 @@ export default function ($scope, AdminService, LoadingSpinner, commonModals, com
           })))
           .then(() => $scope.$digest())
       }))
+      .catch((err) => {
+        commonModals.alert({
+          title: 'Error',
+          message: _.get(err, 'data.message')
+        })
+      })
     },
-    deleteOne(subscr) {
+    async deleteOne(subscr) {
+      if (!(await commonModals.confirm("Are you sure you want to delete this?"))) {
+        return;
+      }
       if (subscr.ids) {
         LoadingSpinner.watchPromise(Promise.all(_.uniqBy(subscr.ids).map(id =>
           AdminService.beeline({
@@ -126,7 +135,13 @@ export default function ($scope, AdminService, LoadingSpinner, commonModals, com
           data: _.pick(subscr, updatableSubscriptionFields)
         })
       }
-      LoadingSpinner.watchPromise(promise);
+      LoadingSpinner.watchPromise(promise)
+      .catch((err) => {
+        commonModals.alert({
+          title: 'Error',
+          message: _.get(err, 'data.message')
+        })
+      });
 
       promise.then((response) => {
         _.assign(subscr, _.omit(response.data, ['createdAt', 'updatedAt']));
@@ -137,7 +152,10 @@ export default function ($scope, AdminService, LoadingSpinner, commonModals, com
         commonModals.alert(error.data.message)
       })
     },
-    deleteOne(subscr) {
+    async deleteOne(subscr) {
+      if (!(await commonModals.confirm("Are you sure you want to delete this?"))) {
+        return;
+      }
       if (subscr.id) {
         LoadingSpinner.watchPromise(AdminService.beeline({
           method: 'DELETE',
