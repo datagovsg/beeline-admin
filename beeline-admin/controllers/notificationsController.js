@@ -72,8 +72,6 @@ export default function ($scope, AdminService, LoadingSpinner, commonModals, com
           entry.id = response.data.id;
         })
 
-        responses.map(r => r.data), RouteNotifications.parse(responses.map(r => r.data)))
-
         $scope.subscriptions.splice(
           $scope.subscriptions.indexOf(subscr), 1,
           RouteNotifications.parse(responses.map(r => r.data))[0]
