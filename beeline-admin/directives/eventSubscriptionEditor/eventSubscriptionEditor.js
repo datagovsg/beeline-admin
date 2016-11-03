@@ -33,7 +33,7 @@ export default function ($rootScope, $location, uiGmapGoogleMapApi, $q,
       scope.$watch('type', (type) => {
         if (!type) return;
 
-        scope.ngModel = scope.data[type] = scope.data[type] || {}
+        scope.ngModel = _.defaults(scope.data[type] || {}, scope.defaults[type])
       })
 
       scope.disp.noPingTimeOptions = [
@@ -58,6 +58,13 @@ export default function ($rootScope, $location, uiGmapGoogleMapApi, $q,
       scope.disp.lateETATimeOptions = [
         [60000 * 10, 'more than 10 mins late'],
       ]
+
+      scope.defaults = {
+        noPings: { ignoreIfEmpty: true },
+        lateArrival: { ignoreIfEmpty: true },
+        lateETA: { ignoreIfEmpty: true },
+        tripCancelled: { ignoreIfEmpty: true },
+      }
 
       scope.$watch(() => AdminService.getCompanyId(), (cid) => {
         RoutesService.getCurrentRoutes()

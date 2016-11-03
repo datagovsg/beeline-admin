@@ -2,7 +2,56 @@
     <company-info-broker company-id="companyId" company="company"></company-info-broker>
 
     <h1>Event Notifications for {{company.name}}</h1>
+    <table class="table event-notifications route-notifications table-striped">
+      <thead>
+        <tr>
+          <th>Notification Method</th>
+          <th>Options</th>
+          <th class="event-type"><div><span>New Booking</span></div></th>
+          <!-- <th class="event-type">Urgent Booking</th> -->
+          <th class="event-type"><div><span>Driver app not switched on</span></div></th>
+          <th class="event-type"><div><span>Predicted late arrival</span></div></th>
+          <th class="event-type"><div><span>Message to passengers</span></div></th>
+          <th class="event-type"><div><span>Trip cancelled</span></div></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="subscription in subscriptions" ng-form="form">
+          <td>
+            <notification-method-editor ng-model="subscription.handler"
+              agent="subscription.agent" ng-required="true">
+            </notification-method-editor>
+          </td>
+          <td>
+            <event-subscription-editor type="'tripCancelled'"
+              ng-model="subscription.options">
+            </event-subscription-editor>
+          </td>
+          <td class="with-label"><label><input type="checkbox" ng-model="subscription.events.newBooking" /></label></td>
+          <td class="with-label"><label><input type="checkbox" ng-model="subscription.events.noPings" /></label></td>
+          <td class="with-label"><label><input type="checkbox" ng-model="subscription.events.lateETA" /></label></td>
+          <td class="with-label"><label><input type="checkbox" ng-model="subscription.events.passengersMessaged" /></label></td>
+          <td class="with-label"><label><input type="checkbox" ng-model="subscription.events.tripCancelled" /></label></td>
+          <td>
+            <button ng-click="routeSubscriptions.saveOne(subscription)" class="btn btn-default glyphicon glyphicon-save"
+              ng-disabled="form.$pristine || form.$invalid">
+            </button>
+            <button ng-click="routeSubscriptions.deleteOne(subscription)" class="btn btn-danger glyphicon glyphicon-trash">
+            </button>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="4">
+            <button ng-click="routeSubscriptions.add()" class="glyphicon glyphicon-plus btn btn-default">
+            </button>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
 
+    <h1>Other notifications</h1>
     <table class="table event-notifications">
       <thead>
         <tr>
@@ -30,10 +79,10 @@
             </notification-method-editor>
           </td>
           <td>
-            <button ng-click="subscriptions.saveOne(eventSubscription)" class="btn btn-default glyphicon glyphicon-save"
+            <button ng-click="subscriptionMethods.saveOne(eventSubscription)" class="btn btn-default glyphicon glyphicon-save"
               ng-disabled="form.$pristine || form.$invalid">
             </button>
-            <button ng-click="subscriptions.deleteOne(eventSubscription)" class="btn btn-danger glyphicon glyphicon-trash">
+            <button ng-click="subscriptionMethods.deleteOne(eventSubscription)" class="btn btn-danger glyphicon glyphicon-trash">
             </button>
           </td>
         </tr>
@@ -41,7 +90,7 @@
       <tfoot>
         <tr>
           <td colspan="4">
-            <button ng-click="subscriptions.add()" class="glyphicon glyphicon-plus btn btn-default">
+            <button ng-click="subscriptionMethods.add()" class="glyphicon glyphicon-plus btn btn-default">
             </button>
           </td>
         </tr>
