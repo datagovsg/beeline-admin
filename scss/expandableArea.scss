@@ -1,0 +1,25 @@
+
+
+.expandable-area {
+  overflow: hidden;
+  max-height: 100px;
+  transition: max-height 0.1s linear;
+
+  &.expanded {
+    max-height: 9999px;
+    transition: max-height 0.1s linear;
+  }
+}
+
+.expand-button {
+  opacity: 0;
+  background-color: transparent;
+  cursor: pointer;
+  text-align: center;
+
+  &:hover {
+    background-color: #9FF;
+    opacity: 1.0;
+    transition: all .1s linear;
+  }
+}
