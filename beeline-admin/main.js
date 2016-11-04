@@ -49,6 +49,7 @@ angular.module('beeline-admin', [
 .directive('companySelector', require('./directives/selectors/company').default)
 .directive('eventSubscriptionEditor', require('./directives/eventSubscriptionEditor/eventSubscriptionEditor').default)
 .directive('notificationMethodEditor', require('./directives/notificationMethod/notificationMethod').default)
+.directive('expandableArea', require('./directives/expandableArea').default)
 .service('AdminService', require('./services/adminService').default)
 .service('TripsService', require('./services/tripsService').default)
 .service('RoutesService', require('./services/routesService').default)
