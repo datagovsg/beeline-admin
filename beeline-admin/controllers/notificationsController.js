@@ -84,8 +84,17 @@ export default function ($scope, AdminService, LoadingSpinner, commonModals, com
           })))
           .then(() => $scope.$digest())
       }))
+      .catch((err) => {
+        commonModals.alert({
+          title: 'Error',
+          message: _.get(err, 'data.message')
+        })
+      })
     },
-    deleteOne(subscr) {
+    async deleteOne(subscr) {
+      if (!(await commonModals.confirm("Are you sure you want to delete this?"))) {
+        return;
+      }
       if (subscr.ids) {
         LoadingSpinner.watchPromise(Promise.all(_.uniqBy(subscr.ids).map(id =>
           AdminService.beeline({
@@ -124,7 +133,13 @@ export default function ($scope, AdminService, LoadingSpinner, commonModals, com
           data: _.pick(subscr, updatableSubscriptionFields)
         })
       }
-      LoadingSpinner.watchPromise(promise);
+      LoadingSpinner.watchPromise(promise)
+      .catch((err) => {
+        commonModals.alert({
+          title: 'Error',
+          message: _.get(err, 'data.message')
+        })
+      });
 
       promise.then((response) => {
         _.assign(subscr, _.omit(response.data, ['createdAt', 'updatedAt']));
@@ -135,7 +150,10 @@ export default function ($scope, AdminService, LoadingSpinner, commonModals, com
         commonModals.alert(error.data.message)
       })
     },
-    deleteOne(subscr) {
+    async deleteOne(subscr) {
+      if (!(await commonModals.confirm("Are you sure you want to delete this?"))) {
+        return;
+      }
       if (subscr.id) {
         LoadingSpinner.watchPromise(AdminService.beeline({
           method: 'DELETE',
@@ -166,7 +184,7 @@ const events = {
   lateETA: {
     event: 'lateETA',
     defaultParams: {
-      timeAfter: [10*60000],
+      timeAfter: 10*60000,
     }
   },
   passengersMessaged: {
@@ -181,10 +199,17 @@ function satisfiesEvent(e, eventConditions) {
   // Ensure that array keys are superset of the same
   // key in e
 
-  return e.event == eventConditions.event &&
+  const arrayKeysMatch = e.event == eventConditions.event &&
     _.keys(eventConditions.defaultParams)
     .filter(k => eventConditions.defaultParams[k] instanceof Array)
-    .every(k => _.difference(eventConditions.defaultParams[k], e.params[k]).length == 0)
+    .every(k => _.difference(eventConditions.defaultParams[k], e.params[k]).length == 0);
+
+  const valueKeysMatch = e.event == eventConditions.event &&
+    _.keys(eventConditions.defaultParams)
+    .filter(k => !(eventConditions.defaultParams[k] instanceof Array))
+    .every(k => eventConditions.defaultParams[k] === e.params[k]);
+
+  return valueKeysMatch && arrayKeysMatch;
 }
 
 
