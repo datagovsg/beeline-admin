@@ -28,16 +28,9 @@
 		<li ng-if="adminService.isSuperAdmin()"><a ui-sref="assets">Assets</a></li>
       </ul>
       <ul class="nav navbar-nav pull-right">
-        <li>
-          <a><super-admin-company-selector></super-admin-company-selector></a>
-        </li>
-
         <li ng-if="!auth.isAuthenticated">
-          <a ng-click="adminService.login()">
-            Login
-          </a>
+          <a ng-click="adminService.login()">Login</a>
         </li>
-
         <li ng-if="auth.isAuthenticated">
           <a ng-click="adminService.logout()">Log out</a>
         </li>
