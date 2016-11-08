@@ -17,33 +17,20 @@
         <li><a ui-sref="c.driver({companyId: adminService.actingCompany})">Drivers</a></li>
         <li><a ui-sref="c.summary({companyId: adminService.actingCompany})">Summary</a></li>
         <li uib-dropdown on-toggle="toggled(open)">
-          <a href id="simple-dropdown" uib-dropdown-toggle>Company <span class="caret"></span></a>
+          <a href id="simple-dropdown" uib-dropdown-toggle>Company<span class="caret"></span></a>
           <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
             <li><a ui-sref="c.companies({companyId: adminService.actingCompany})">Edit Profile</a></li>
-            <li><a ui-sref="c.admins({companyId: adminService.actingCompany})">Add Admin Users</a></li>
-            <li><a ui-sref="c.notifications({companyId: adminService.actingCompany})">Event Notifications</a></li>
+            <li><a ui-sref="c.admins({companyId: adminService.actingCompany})">Manage Admin Users</a></li>
+            <li><a ui-sref="c.notifications({companyId: adminService.actingCompany})">Manage Event Notifications</a></li>
             <li ng-if="adminService.isSuperAdmin()"><a ui-sref="c.transactions({companyId: adminService.actingCompany})">Transactions</a></li>
           </ul>
         </li>
-        <li  ng-if="adminService.isSuperAdmin()" uib-dropdown on-toggle="toggled(open)">
-          <a href id="simple-dropdown" uib-dropdown-toggle>Super Admin <span class="caret"></span></a>
-          <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
-            <li ng-if="adminService.isSuperAdmin()"><a ui-sref="c.trips({companyId: adminService.actingCompany, routeId: 0, action: 'route'})">Create a new route</a></li>
-            <li ng-if="adminService.isSuperAdmin()"><a ui-sref="assets">Assets</a></li>
-          </ul>
-        </li>
+		<li ng-if="adminService.isSuperAdmin()"><a ui-sref="assets">Assets</a></li>
       </ul>
       <ul class="nav navbar-nav pull-right">
-        <li>
-          <a><super-admin-company-selector></super-admin-company-selector></a>
-        </li>
-
         <li ng-if="!auth.isAuthenticated">
-          <a ng-click="adminService.login()">
-            Login
-          </a>
+          <a ng-click="adminService.login()">Login</a>
         </li>
-
         <li ng-if="auth.isAuthenticated">
           <a ng-click="adminService.logout()">Log out</a>
         </li>
