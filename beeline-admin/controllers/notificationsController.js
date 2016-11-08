@@ -20,6 +20,7 @@ export default function ($scope, AdminService, LoadingSpinner, commonModals, com
     ] : [])
   }
   $scope.eventSubscriptions = [];
+  $scope.companyId = companyId;
 
   ////// Function declarations
   async function requery() {
@@ -175,10 +176,22 @@ const events = {
   newBooking: {
     event: 'newBooking',
   },
-  noPings: {
+  noPings5: {
     event: 'noPings',
     defaultParams: {
-      minsBefore: [5, 15, 25],
+      minsBefore: [5],
+    }
+  },
+  noPings15: {
+    event: 'noPings',
+    defaultParams: {
+      minsBefore: [15],
+    }
+  },
+  noPings25: {
+    event: 'noPings',
+    defaultParams: {
+      minsBefore: [25],
     }
   },
   lateETA: {

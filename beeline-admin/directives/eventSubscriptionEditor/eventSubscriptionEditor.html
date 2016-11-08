@@ -62,10 +62,10 @@
           ng-options="t[0] as t[1] for t in disp.noPingTimeOptions" multiple>
         </select>
       </label>
-      <label>
+      <!-- <label>
         <input type="checkbox" ng-model="ngModel.ignoreIfEmpty" />
         Ignore if there are no booked passengers
-      </label>
+      </label> -->
     </div>
   </div>
 
@@ -89,10 +89,10 @@
           ng-options="t[0] as t[1] for t in disp.lateArrivalTimeOptions">
         </select>
       </label>
-      <label>
+      <!-- <label>
         <input type="checkbox" ng-model="ngModel.ignoreIfEmpty" />
         Ignore if there are no booked passengers
-      </label>
+      </label> -->
     </div>
   </div>
   <div ng-switch-when="lateETA">
@@ -115,10 +115,10 @@
           ng-options="t[0] as t[1] for t in disp.lateETATimeOptions">
         </select>
       </label>
-      <label>
+      <!-- <label>
         <input type="checkbox" ng-model="ngModel.ignoreIfEmpty" />
         Ignore if there are no booked passengers
-      </label>
+      </label> -->
     </div>
   </div>
   <div ng-switch-when="passengersMessaged">
@@ -155,10 +155,10 @@
           ng-model="ngModel.routeIds" ng-disabled="!options.setRouteIds">
         </select>
       </label>
-      <label>
+      <!-- <label>
         <input type="checkbox" ng-model="ngModel.ignoreIfEmpty" />
         Ignore if there are no booked passengers
-      </label>
+      </label> -->
     </div>
   </div>
 
