@@ -28,7 +28,11 @@
             </event-subscription-editor>
           </td>
           <td class="with-label"><label><input type="checkbox" ng-model="subscription.events.newBooking" /></label></td>
-          <td class="with-label"><label><input type="checkbox" ng-model="subscription.events.noPings" /></label></td>
+          <td>
+            <label><input type="checkbox" ng-model="subscription.events.noPings5" /> T-5mins</label><br/>
+            <label><input type="checkbox" ng-model="subscription.events.noPings15" /> T-15mins</label><br/>
+            <label><input type="checkbox" ng-model="subscription.events.noPings25" /> T-25mins</label><br/>
+          </td>
           <td class="with-label"><label><input type="checkbox" ng-model="subscription.events.lateETA" /></label></td>
           <td class="with-label"><label><input type="checkbox" ng-model="subscription.events.passengersMessaged" /></label></td>
           <td class="with-label"><label><input type="checkbox" ng-model="subscription.events.tripCancelled" /></label></td>
