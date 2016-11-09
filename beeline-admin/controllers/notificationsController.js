@@ -225,32 +225,59 @@ function satisfiesEvent(e, eventConditions) {
   return valueKeysMatch && arrayKeysMatch;
 }
 
+function stringify(object) {
+  if (typeof(object) !== 'object' || object === null) {
+    return object;
+  } else {
+    return _(object)
+      .toPairs()
+      .sortBy(x => x[0])
+      .map(([x,y]) => `${x}:${stringify(y)}`)
+      .join('\n')
+  }
+}
 
 const RouteNotifications = {
   // Convert from human-unreadable database entries
   // to a human-summarizable entries
   parse(eventSubscriptions) {
+    // { noPings, newBooking, lateArrival ... }
     var relevantKeys = _(events).values().map(e => e.event).keyBy().value();
 
     var groupedByRoutes = _(eventSubscriptions)
-      .filter(e => e.event in relevantKeys)
-      .groupBy(e => {
-        return _.sortBy(e.params.routeIds || []).join(',') + '|' +
-          e.params.ignoreIfEmpty + '|' +
+      .filter(e => e.event in relevantKeys) // filter out { lifecycle, ... }
+      .groupBy(e => { // group by handler, agent and filter
+        return _.sortBy(_.uniq(e.params.routeIds) || []).join(',') + '|' +
           e.handler + '|' +
-          JSON.stringify(e.agent) // FIXME: this is not guaranteed to work reliably?
+          stringify(e.agent)
       })
       .mapValues((es, g) => {
+        /*
+          ev(1): (handler, agent, filter) --> [
+            [noPings5, [object]],
+            [noPings15, [object]],
+            [noPings25, [object]],
+            [...]
+          ]
+        */
         const ev = _(events).keys().map((key) => {
           // Check if this key applies to some of the event subscriptions
           return [key,
             es.find(e => satisfiesEvent(e, events[key]))
           ]
-        }).fromPairs().value()
+        })
+        /*
+        ev(2): (handler, agent, filter) --> {
+          noPings5, [object],
+          noPings15, [object],
+          noPings25, [object],
+          ...
+        }*/
+        .fromPairs().value()
 
         return {
           options: _(es[0].params)
-            .pick(['routeIds', 'ignoreIfEmpty'])
+            .pick(['routeIds'])
             .toPairs()
             .filter(v => v[1] !== undefined)
             .fromPairs()
