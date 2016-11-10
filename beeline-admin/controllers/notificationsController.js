@@ -1,5 +1,6 @@
 import querystring from 'querystring';
 import _ from 'lodash';
+import assert from 'assert';
 
 export default function ($scope, AdminService, LoadingSpinner, commonModals, companyId) {
   requery();
@@ -69,21 +70,27 @@ export default function ($scope, AdminService, LoadingSpinner, commonModals, com
         })
       ))
       .then((responses) => {
-        _.zip(newEntries, responses).forEach(([entry, response]) => {
-          entry.id = response.data.id;
-        })
+        const parsed = RouteNotifications.parse(responses.map(r => r.data));
+        const idsToDelete = subscr.ids;
 
-        $scope.subscriptions.splice(
-          $scope.subscriptions.indexOf(subscr), 1,
-          RouteNotifications.parse(responses.map(r => r.data))[0]
-        )
+        assert(parsed.length <= 1, "[AssertionError] entries should map to one group")
 
-        return Promise.all(_.uniqBy(subscr.ids).map(id =>
+        if (parsed.length == 1) {
+          $scope.subscriptions.splice(
+            $scope.subscriptions.indexOf(subscr), 1,
+            parsed[0]
+          )
+        }
+
+        return Promise.all(idsToDelete.map(id =>
           AdminService.beeline({
             method: 'DELETE',
             url: `/companies/${companyId}/eventSubscriptions/${id}`
           })))
-          .then(() => $scope.$digest())
+          .then(() => {
+            subscr.ids = [];
+            $scope.$digest();
+          })
       }))
       .catch((err) => {
         commonModals.alert({
@@ -285,7 +292,7 @@ const RouteNotifications = {
           handler: es[0].handler,
           agent: es[0].agent,
           events: _.mapValues(ev, e => !!e),
-          ids: _(ev).mapValues(e => e && e.id).filter(x => x).value(),
+          ids: _(ev).mapValues(e => e && e.id).filter(x => x).uniq().value(),
         }
       })
       .values()
@@ -305,8 +312,8 @@ const RouteNotifications = {
             subscription.options),
         agent: subscription.agent,
         handler: subscription.handler,
-        id: subscription.ids && subscription.ids[key]
       }))
+
     var mergedSubscriptions = _(eventSubscriptions)
       .groupBy('event')
        // merge the array-valued params
@@ -324,7 +331,6 @@ const RouteNotifications = {
                 acc.params[key] = acc.params[key].concat(v.params[key])
               }
             }
-            acc.params = params
 
             return acc;
           }
