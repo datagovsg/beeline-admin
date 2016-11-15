@@ -2,9 +2,7 @@
 export default function($http, companiesSvc) {
   return {
     template: `
-<select
-    ng-options="status[0] as status[1] for status in statuses"
-    >
+<select ng-options="status[0] as status[1] for status in statuses" ng-model="selectedStatus">
 </select>
     `,
     replace: true,
@@ -14,6 +12,7 @@ export default function($http, companiesSvc) {
         ['cancelled', 'Cancelled due to Emergency'],
         ['void', 'Void']
       ];
+	  scope.selectedStatus = scope.statuses[0][0];
     },
   }
 }
