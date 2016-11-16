@@ -86,32 +86,28 @@
             </td>
             <td style="width:15%">
               <trip-info-broker trip-id="route.indicativeTrip.nextTripId || route.indicativeTrip.lastTripId || route.indicativeTrip.tripId" trip="nextTrip"></trip-info-broker>
-              <expandable-area>
-                <table class="borderless" ng-if="nextTrip">
-                  <tr ng-repeat="tripStop in nextTrip.tripStops | filter:{canBoard: true}">
-                    <td class="text-nowrap">
-                      {{tripStop.time | date:'HH:mm'}}
-                    </td>
-                    <td>
-                      {{tripStop.stop.description}}
-                    </td>
-                  </tr>
-                </table>
-              </expandable-area>
+              <table class="borderless" ng-if="nextTrip">
+                <tr ng-repeat="tripStop in nextTrip.tripStops | filter:{canBoard: true}">
+                  <td class="text-nowrap">
+                    {{tripStop.time | date:'HH:mm'}}
+                  </td>
+                  <td>
+                    {{tripStop.stop.description}}
+                  </td>
+                </tr>
+              </table>
             </td>
             <td style="width:15%">
-              <expandable-area>
-                <table class="borderless" ng-if="nextTrip">
-                  <tr ng-repeat="tripStop in nextTrip.tripStops | filter:{canAlight: true}">
-                    <td class="text-nowrap">
-                      {{tripStop.time | date:'HH:mm'}}
-                    </td>
-                    <td>
-                      {{tripStop.stop.description}}
-                    </td>
-                  </tr>
-                </table>
-              </expandable-area>
+              <table class="borderless" ng-if="nextTrip">
+                <tr ng-repeat="tripStop in nextTrip.tripStops | filter:{canAlight: true}">
+                  <td class="text-nowrap">
+                    {{tripStop.time | date:'HH:mm'}}
+                  </td>
+                  <td>
+                    {{tripStop.stop.description}}
+                  </td>
+                </tr>
+              </table>
             </td>
             <td><button class="btn btn-default" ng-click="viewRoute(route.id)">View</button></td>
             <td>{{route.indicativeTrip.lastDriverName}}</td>
