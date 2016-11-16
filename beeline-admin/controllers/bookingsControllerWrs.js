@@ -202,10 +202,15 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
     if ($scope.filter.routeId) {
       queryOptions.routeId = $scope.filter.routeId
     }
-    if ($scope.filter.tripId) {
-      queryOptions.tripId = $scope.filter.tripId
+
+    if ($scope.filter.tripId || $scope.filter.paymentId ||
+        $scope.filter.chargeId || $scope.filter.ticketId) {
       delete queryOptions.tripStartDate;
       delete queryOptions.tripEndDate;
+    }
+
+    if ($scope.filter.tripId) {
+      queryOptions.tripId = $scope.filter.tripId
     }
     if ($scope.filter.userQuery) {
       queryOptions.userQuery = $scope.filter.userQuery
