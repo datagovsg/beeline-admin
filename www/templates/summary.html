@@ -202,10 +202,10 @@
                 <br> {{route.trips[0].tripStops[route.trips[0].tripStops.length-1].time | date:'HH:mm a'}} - {{route.to}}
               </td>
               <td>
-                (First Trip Date)
+                {{route.startDate | date:'dd MMM yyyy'}}
               </td>
               <td>
-                (Last Trip Date)
+                {{route.endDate | date:'dd MMM yyyy'}}
               </td>
             </tr>
           </table>
