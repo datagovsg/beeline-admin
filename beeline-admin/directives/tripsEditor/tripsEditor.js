@@ -255,6 +255,7 @@ export default function(RoutesService, TripsService, AdminService, DriverService
 
       function defaultTrip() {
         return {
+          status: null,
           routeId: scope.route.id,
           transportCompanyId: scope.route.transportCompanyId,
           tripStops: [],

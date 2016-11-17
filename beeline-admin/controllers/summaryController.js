@@ -1,4 +1,5 @@
-
+import querystring from 'querystring';
+import _ from 'lodash';
 
 export default function($scope, AdminService, RoutesService, LoadingSpinner) {
   $scope.selectedMonth = new Date();
@@ -34,7 +35,33 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner) {
                day + 1).getDay());
     $scope.today = Math.floor((Date.now() - options.startDate) / (24*60*60*1000))
 
-    LoadingSpinner.watchPromise(RoutesService.getRoutes(options)
+    // We are also interested in the start/end dates. Hence we need to query
+    // the report
+    let reportPromise = AdminService.beeline({
+      method: 'GET',
+      url: '/routes/report?' + querystring.stringify(
+        _.assign({},
+          _.pick(options, 'startDate', 'endDate', 'transportCompanyId'),
+          {perPage: 100, page: 1} // FIXME: but how?
+        )
+      )
+    })
+
+    let routesPromise = RoutesService.getRoutes(options);
+    let augmentedRoutesPromise = Promise.all([
+      routesPromise,
+      reportPromise
+    ]).then(([routes, report]) => {
+      let routeDataById = _.keyBy(report.data.rows, 'id');
+
+      for (let route of routes) {
+        route.startDate = routeDataById[route.id].startDate;
+        route.endDate = routeDataById[route.id].endDate;
+      }
+      return routes;
+    })
+
+    LoadingSpinner.watchPromise(routesPromise
     .then((routes) => {
       for (let route of routes) {
         route.tripsByDay = new Array(numDays)
