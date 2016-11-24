@@ -10,6 +10,7 @@
 
   <div class="modal-body">
     <select ng-options="trip.date | date:'d MMM yyyy' for trip in trips | orderBy:'date':1"
+            ng-change="zoomInOnStops()"
             ng-model="trip">
     </select>
 
