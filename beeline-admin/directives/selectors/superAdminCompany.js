@@ -6,6 +6,7 @@ export default function($http, AdminService, store, jwtHelper, $stateParams, $st
 <select
   ng-options="company.id as company.name for company in (companies | orderBy:'name')"
   ng-model="selectedCompanyId"
+  ng-change="updateCompany()"
   class="form-control-condensed">
   <option value="">(All)</option>
 </select>
@@ -14,22 +15,17 @@ export default function($http, AdminService, store, jwtHelper, $stateParams, $st
       // Get a list of companies you work for
       scope.companies = [];
       scope.adminService = AdminService;
+      scope.selectedCompanyId = AdminService.actingCompany;
 
-      scope.$watch('selectedCompanyId', (newVal, oldVal) => {
-        if (newVal === oldVal) return;
-        if (newVal === AdminService.actingCompany) {
-          $state.go(
-            $state.current.name,
-            _.defaults({companyId: newVal}, $stateParams),
-            {notify: false, reload: false}
-          )
-        }
-        else {
-          $state.go(
-            $state.current.name,
-            _.defaults({companyId: newVal}, $stateParams)
-          )
-        }
+      scope.updateCompany = function () {
+        $state.go(
+          $state.current.name,
+          _.defaults({companyId: scope.selectedCompanyId}, $stateParams)
+        )
+      }
+
+      scope.$watch('adminService.actingCompany', (newVal) => {
+        scope.selectedCompanyId = newVal
       })
 
       // Read id from profile
