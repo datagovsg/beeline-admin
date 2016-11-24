@@ -86,11 +86,14 @@ export default function (RoutesService, $uibModal, mapService, TripsService) {
           $scope.$watchGroup(['route'], (route) => {
             if (!$scope.route) return;
 
+            // We only need trips till today
+            var today = new Date();
+
             // get all trips
             TripsService.getTrips({
               routeId: $scope.route.id,
-              startDate: new Date(2015,1,1),
-              endDate: new Date(2060,1,1),
+              startDate: new Date(Date.UTC(2015,1,1)),
+              endDate: new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()))
             })
             .then((trips) => {
               $scope.trips = trips;
