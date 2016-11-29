@@ -74,9 +74,13 @@
 
                     <br />
                     <label>
-                    Notes to passenger:
-                    <input type="text" class="form-control" ng-model="currentTrip.data.trip.bookingInfo.notes">
-                  </label>
+                      Notes to passenger:
+                      <input type="text" class="form-control" ng-model="currentTrip.data.trip.bookingInfo.notes">
+                    </label>
+                    <label>
+                      Child ticket price (WRS)
+                      <input type="number" step="0.01" class="form-control" ng-model="currentTrip.data.trip.bookingInfo.childTicketPrice">
+                    </label>
                   </div>
                 </div>
               </div>
