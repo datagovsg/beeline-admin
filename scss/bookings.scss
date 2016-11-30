@@ -31,6 +31,13 @@
   }
 }
 
+.loading {
+  background-image: url("../img/spinner.svg");
+  background-position: top right;
+  background-repeat: no-repeat;
+  background-size: 200px 200px;
+}
+
 .label{
   &.ticket-valid {
     @include label-variant($label-success-bg);

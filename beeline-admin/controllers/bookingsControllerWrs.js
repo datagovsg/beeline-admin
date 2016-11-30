@@ -23,8 +23,6 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
 
   $scope.filter = {
     showPartial: false,
-    orderBy: 'createdAt',
-    order: 'desc',
     routeId: false,
     status: {
       valid: true,
@@ -47,7 +45,8 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
     datesBetween: [],
     counts: {},
     dates: [],
-    pagination: {firstRow: 1, lastRow: 1, totalRows: 1}
+    pagination: {firstRow: 1, lastRow: 1, totalRows: 1},
+    isLoading: 0,
   }
 
   $scope.selectedTickets = {};
@@ -183,8 +182,6 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
       page: $scope.currentPage || 1,
       perPage: $scope.perPage,
 
-      order: $scope.filter.order,
-      orderBy: $scope.filter.orderBy,
       tripStartDate: Date.UTC(
         $scope.filter.startDate.getFullYear(),
         $scope.filter.startDate.getMonth(),
@@ -309,7 +306,9 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
       console.log(err)
     });
 
-    LoadingSpinner.watchPromise(queryPromise)
+    $scope.disp.isLoading++;
+    queryPromise
+    queryPromise.finally(() => $scope.disp.isLoading--);
   }
 
   function queryRoutes(newV, oldV) {
@@ -341,6 +340,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
       $scope.filter.startDate.getTime(),
       $scope.filter.endDate.getTime()],
     queryRoutes, true)
+
   $scope.$watch(() =>
     [_.defaults({
         startDate: $scope.filter.startDate.getTime(),
@@ -348,5 +348,5 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
       }, $scope.filter),
       $scope.currentPage,
       $scope.perPage],
-    query, true)
+    _.debounce(query, 1000, {leading: false, trailing: true}), true)
 }
