@@ -78,7 +78,7 @@ angular.module('beeline-admin', [
 .filter('leftPad', () => require('left-pad'))
 // Handle what happens when the callback is called
 // TODO: Use angular dependency injection to invoke the authenticateToken fn
-.run(function ($rootScope, auth, store, $cookies, AdminService, jwtHelper) {
+.run(function ($rootScope, auth, store, $cookies, AdminService, jwtHelper, $state) {
   if (auth.authResult) {
     if (auth.authResult.error) {
       return alert(auth.authResult.error_description);
@@ -90,13 +90,18 @@ angular.module('beeline-admin', [
       store.set('profile', profile);
     })
   }
-  authenticateToken(store.get('sessionToken'), store.get('refreshToken'))
 
-  $rootScope.$on('$locationChangeStart', function() {
-    authenticateToken(store.get('sessionToken'), store.get('refreshToken'))
+  $rootScope.$on('$stateChangeStart', function($event, newState, newParams, oldState, oldParams) {
+    authenticateToken(
+      store.get('sessionToken'),
+      store.get('refreshToken'),
+      $event,
+      newState, newParams,
+      oldState, oldParams)
   });
 
-  function authenticateToken(token, refreshToken) {
+  function authenticateToken(token, refreshToken, $event,
+      newState, newParams, oldState, oldParams) {
     if (token) {
       if (!jwtHelper.isTokenExpired(token)) {
         if (!auth.isAuthenticated) {
@@ -109,6 +114,11 @@ angular.module('beeline-admin', [
       }
 
       if (refreshToken) {
+        // Stop it from continuing to the page until we have successfully
+        // authenticated...
+        $event.preventDefault();
+
+        // Refresh the token
         auth.refreshToken(refreshToken)
         .then((delegationResult) => {
           auth.authenticate(delegationResult.id_token);
@@ -116,7 +126,11 @@ angular.module('beeline-admin', [
           auth.getProfile().then((profile) => {
             store.set('profile', profile);
           })
+
+          // Resume loading the page
+          $state.go(newState.name, newParams)
         })
+        // Continue
         .catch((err) => {
           AdminService.login();
         })
