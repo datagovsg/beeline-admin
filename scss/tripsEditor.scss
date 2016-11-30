@@ -122,3 +122,15 @@ table.trips-list {
   margin-left: $padding-small-horizontal;
   }
 }
+
+.trip-data-editor {
+  .stop-selector-cell {
+    display: flex;
+    stop-selector {
+      flex: 1 1 auto;
+    }
+    stop-selector-popup {
+      flex: 0 0 auto;
+    }
+  }
+}

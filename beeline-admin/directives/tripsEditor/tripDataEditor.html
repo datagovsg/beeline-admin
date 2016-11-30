@@ -116,12 +116,13 @@
                     <td>
                       <input class="form-control" type="time" ng-model="tripStop.time" />
                     </td>
-                    <td class="form-inline">
-                      <!-- <input type="text" ng-model="tripStop.stopId"> -->
-                      <stop-selector class="form-control" ng-model="tripStop.stopId"></stop-selector>
-                      <stop-selector-popup ng-model="tripStop.stopId" class="btn btn-default btn-icon">
-                        <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Add/Edit Stop
-                      </stop-selector-popup>
+                    <td>
+                      <div class="stop-selector-cell">
+                        <stop-selector ng-model="tripStop.stopId"></stop-selector>
+                        <stop-selector-popup ng-model="tripStop.stopId" class="btn btn-default btn-icon">
+                          <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Add/Edit Stop
+                        </stop-selector-popup>
+                      </div>
                     </td>
                     <td>
                       <label>
