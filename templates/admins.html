@@ -10,7 +10,7 @@
           <tr>
             <th rowspan="2">No.</th>
             <th rowspan="2">Email<br> Name</th>
-            <th colspan="5" class="permissions">Permissions</th>
+            <th colspan="6" class="permissions">Permissions</th>
             <th rowspan="2">Actions</th>
           </tr>
           <tr>
@@ -23,6 +23,7 @@
               </div>
             </th>
             <th class="permission-type">Issue refunds</th>
+            <th class="permission-type">Issue tickets</th>
             <th class="permission-type">
               Manage operations
               <div class="permission-details">
@@ -57,6 +58,7 @@
 
             <td><input type="checkbox" ng-model="admin.permissions.basic"></td>
             <td><input type="checkbox" ng-model="admin.permissions.refund"></td>
+            <td><input type="checkbox" ng-model="admin.permissions.issueTickets"></td>
             <td><input type="checkbox" ng-model="admin.permissions.operations"></td>
             <td><input type="checkbox" ng-model="admin.permissions.manageCompany"></td>
             <td><input type="checkbox" ng-model="admin.permissions.manageAdmins"></td>
