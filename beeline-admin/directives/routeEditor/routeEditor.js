@@ -39,7 +39,7 @@ export default function (AdminService, RoutesService, $rootScope, commonModals, 
         let routeDataToSave = _.defaults({
           tags: scope.disp.routeTags.map(t => t.name)
         }, scope.route);
-        
+
         RoutesService.saveRoute(routeDataToSave)
         .then((route) => {
           scope.route = route;
@@ -72,6 +72,8 @@ export default function (AdminService, RoutesService, $rootScope, commonModals, 
           if (google.maps.geometry && scope.route.path instanceof Array) {
             scope.route.path = google.maps.geometry.encoding.encodePath(
               scope.route.path.map(latlng => new google.maps.LatLng(latlng.lat, latlng.lng)))
+          } else {
+            scope.route.path = route.path;
           }
           scope.$broadcast('mapLoaded');
         })
