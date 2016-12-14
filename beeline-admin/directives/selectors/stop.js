@@ -6,7 +6,7 @@ export default function(RoutesService) {
   <ui-select-match placeholder="Select a bus stop...">
     {{$select.selected.description}}
   </ui-select-match>
-  <ui-select-choices repeat="stop in stops"
+  <ui-select-choices repeat="stop in stops.slice(0, 20)"
     refresh="updateSearch($select.search)"
     refresh-delay="150">
     <div>{{stop.description}}</div>
