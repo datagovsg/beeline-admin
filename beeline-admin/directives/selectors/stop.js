@@ -40,6 +40,7 @@ export default function(RoutesService) {
       scope.updateSearch = function (search) {
         scope.stops = allStops.filter(s =>
           s.description.toUpperCase().indexOf(search.toUpperCase()) !== -1)
+          .slice(0, 20)
       }
 
       // Load the data
