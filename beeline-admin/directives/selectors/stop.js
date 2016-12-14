@@ -6,7 +6,7 @@ export default function(RoutesService) {
   <ui-select-match placeholder="Select a bus stop...">
     {{$select.selected.description}}
   </ui-select-match>
-  <ui-select-choices repeat="stop in stops.slice(0, 20)"
+  <ui-select-choices repeat="stop in stops"
     refresh="updateSearch($select.search)"
     refresh-delay="150">
     <div>{{stop.description}}</div>
@@ -40,6 +40,7 @@ export default function(RoutesService) {
       scope.updateSearch = function (search) {
         scope.stops = allStops.filter(s =>
           s.description.toUpperCase().indexOf(search.toUpperCase()) !== -1)
+          .slice(0, 20)
       }
 
       // Load the data
