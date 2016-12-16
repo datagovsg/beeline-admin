@@ -184,9 +184,12 @@ export default function (AdminService, DriverService, $q, LoadingSpinner, compan
       })
       .then((response) => {
         this.stopsById = _.keyBy(response.data, x => x.id)
-        return response.data
+        return _.sortBy(response.data, 'description')
       })
     }
+  }
+  this.getStopById = (id) => {
+    return this.getStops().then(() => this.stopsById[id])
   }
   this.createStop = function(stop) {
     return AdminService.beeline({
