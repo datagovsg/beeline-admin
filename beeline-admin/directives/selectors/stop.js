@@ -38,19 +38,18 @@ export default function(RoutesService) {
       }
 
       scope.updateSearch = function (search) {
-        scope.stops = allStops.filter(s =>
-          s.description.toUpperCase().indexOf(search.toUpperCase()) !== -1)
-          .slice(0, 20)
+        RoutesService.stopsPromise.then((allStops) => {
+          scope.stops = allStops.filter(s =>
+            s.description.toUpperCase().indexOf(search.toUpperCase()) !== -1)
+            .slice(0, 20)
+        });
       }
 
       // Load the data
-      scope.$watch(() => RoutesService.stopsPromise, () => {
-        RoutesService.stopsPromise.then((stops) => {
-          scope.stops = allStops = _.sortBy(stops, 'description')
-          if (scope.data.stop) {
-            scope.data.stop = allStops.find(s => s.id === scope.data.stop.id)
-          }
-        })
+      scope.$watch(() => RoutesService.stopsById, () => {
+        if (scope.data.stop) {
+          scope.data.stop = RoutesService.stopsById[scope.data.stop.id]
+        }
       })
     },
   }
