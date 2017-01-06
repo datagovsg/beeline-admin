@@ -93,6 +93,13 @@
               <input type="checkbox" ng-model="filter.status.failed" /> <a href="#" uib-tooltip="Failed - Tickets due to failed payments."> Failed</a>
             </label>
 
+            <label class="ticketCheckbox">
+              <input type="checkbox" ng-model="filter.status.bidded" /> <a href="#" uib-tooltip="Kickstart bids"> Bidded</a>
+            </label>
+            <label class="ticketCheckbox">
+              <input type="checkbox" ng-model="filter.status.pending" /> <a href="#" uib-tooltip="Pending - in the middle of a transaction"> Pending</a>
+            </label>
+
             <br clear="both" />
             <div class="bookingNav">
               <button class="btn btn-default" ng-click="downloadCsv()">
