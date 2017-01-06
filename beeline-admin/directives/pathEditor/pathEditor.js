@@ -1,3 +1,5 @@
+import leftPad from 'left-pad';
+
 export default function ($rootScope, $location, uiGmapGoogleMapApi, $q) {
   return {
     template: require('./pathEditor.html'),
@@ -58,7 +60,7 @@ export default function ($rootScope, $location, uiGmapGoogleMapApi, $q) {
               icon: {
                 scaledSize: new googleMaps.Size(30, 30),
                 anchor: new googleMaps.Point(15, 15),
-                url: `img/stop${canBoard ? 'Board' : 'Alight'}${i + 1}.png`
+                url: `img/stop${canBoard ? 'Board' : 'Alight'}${leftPad(i + 1, 3, '0')}.png`
               },
               map: map
             })
