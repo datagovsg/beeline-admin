@@ -105,9 +105,6 @@ gulp.task('deploy-prepare-git', function (done) {
   new Promise((resolve, reject) => {
     fs.mkdir(path.resolve('build'), (err) => err ? resolve() : reject(err))
   })
-  .then(() => promiseExec('git init .', {cwd: path.resolve('build')}))
-  .then(() => promiseExec('git checkout -f HEAD', {cwd: path.resolve('build')}))
-  .then(() => promiseExec('git pull', {cwd: path.resolve('build')}))
   // Pull the latest (avoid conflicts)
   .then(() => {
     fs.writeFileSync(path.resolve('build') + '/CNAME', 'admin.beeline.sg')
@@ -136,9 +133,12 @@ gulp.task('deploy!', ['deploy'], function (done) {
   fs.writeFileSync(path.resolve('.tmp-commit-message'),
                     'Deploy on ' + new Date().toISOString() + ' by ')
 
-  promiseExec('git add .', {cwd: path.resolve('build')})
-  .then(() => promiseExec(`git commit -m "Deployed on ${new Date().toISOString()}"`, {cwd: path.resolve('build')}))
-  .then(() => promiseExec('git push', {cwd: path.resolve('build')}))
-  .catch(errHandler)
-  .then(done)
+  var ghPages = require('gh-pages')
+  
+  return new Promise((resolve, reject) =>
+	ghPages.publish(path.join(__dirname, 'build'), (err) => {
+	  if (err) reject(err)
+	  else resolve()
+	})
+  )
 });
