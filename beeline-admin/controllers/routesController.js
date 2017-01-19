@@ -13,6 +13,8 @@ export default function($scope, $state, $urlRouter, AdminService, LoadingSpinner
   $scope.filter = {
     perPage: 20,
     page: 1,
+	orderBy: 'label',
+	order: 'asc',
   };
   $scope.now = Date.now();
 
