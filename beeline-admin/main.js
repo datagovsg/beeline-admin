@@ -50,6 +50,7 @@ angular.module('beeline-admin', [
 .directive('eventSubscriptionEditor', require('./directives/eventSubscriptionEditor/eventSubscriptionEditor').default)
 .directive('notificationMethodEditor', require('./directives/notificationMethod/notificationMethod').default)
 .directive('expandableArea', require('./directives/expandableArea').default)
+.directive('phDatePicker', require('./directives/phDatePicker').default)
 .service('AdminService', require('./services/adminService').default)
 .service('TripsService', require('./services/tripsService').default)
 .service('RoutesService', require('./services/routesService').default)
