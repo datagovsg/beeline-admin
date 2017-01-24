@@ -12,11 +12,12 @@ export default function () {
       monthChanged: '=?',
       ngModel: '=?',
       highlightDays: '=?',
+      combinedHL: '<',
     },
-    template: `<multiple-date-picker
-      highlight-days="highlightDays"
+    template: `<multiple-date-picker ph-date-picker
       ng-model="ngModel"
-      month-changed="monthChanged">
+      month-changed="monthChanged"
+      highlight-days="combinedHL">
     </multiple-date-picker>`,
     link(scope, elem, attr) {
       let firstPick;
@@ -47,7 +48,22 @@ export default function () {
             }
           }
         }
-      }, true)
+      }, true);
+      scope.$watchGroup(['publicHolidays','highlightDays'],([ph, hl])=>{
+        if (ph && hl) {
+          let phByDate = _.keyBy(ph, 'date');
+          let hlByDate = _.keyBy(hl, 'date');
+          let is = _.intersection(_.keys(phByDate), _.keys(hlByDate));
+          if (is && is.length > 0) {
+            for (let i of is) {
+              //combine 2 entries and reomve the one in highlightDays
+              _.extend(phByDate[i],hlByDate[i]);
+              hlByDate = _.omit(hlByDate,[i]);
+            }
+          }
+          scope.combinedHL = _.concat(_.values(phByDate), _.values(hlByDate));
+        }
+      })
     }
   }
 }
