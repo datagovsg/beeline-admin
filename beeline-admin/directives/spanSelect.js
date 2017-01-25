@@ -53,15 +53,11 @@ export default function () {
         if (ph && hl) {
           let phByDate = _.keyBy(ph, 'date');
           let hlByDate = _.keyBy(hl, 'date');
-          let is = _.intersection(_.keys(phByDate), _.keys(hlByDate));
-          if (is && is.length > 0) {
-            for (let i of is) {
-              //combine 2 entries and reomve the one in highlightDays
-              _.extend(phByDate[i],hlByDate[i]);
-              hlByDate = _.omit(hlByDate,[i]);
-            }
+          scope.combinedHL = [];
+          let combinedKeys = _.union(_.keys(phByDate), _.keys(hlByDate));
+          for (let key of combinedKeys) {
+            scope.combinedHL.push(_.extend(phByDate[key], hlByDate[key]))
           }
-          scope.combinedHL = _.concat(_.values(phByDate), _.values(hlByDate));
         }
       })
     }
