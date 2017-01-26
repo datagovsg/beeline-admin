@@ -11,6 +11,7 @@ $pickable-day-non-picked-color: #000;
 $pickable-day-picked-background: $body-bg;
 $pickable-day-picked-color: $brand-primary;
 $annotation: $brand-danger;
+$holiday-color:  #ff0000;
 
 .datepicker-wrap {
   width: 420px;
@@ -119,5 +120,11 @@ $annotation: $brand-danger;
   }
   &.picker-empty {
     background-color: $empty-day-background;
+  }
+  &.holiday {
+    // background-color: #00ffa2;
+    color: $holiday-color !important;
+    text-decoration: underline;
+
   }
 }
