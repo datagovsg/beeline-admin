@@ -11,7 +11,7 @@
           </div>
 
         </div>
-        <form class="col-lg-8 pull-left" ng-class="{loading: disp.isLoading}" ng-submit="submitSearch()">
+        <form class="col-lg-8 pull-left" ng-class="{loading: disp.isLoading}">
           <h1>Bookings</h1>
           <h2>Search selected dates by:</h2>
           <div class="form-group pull-left ticketSearch">
@@ -102,7 +102,7 @@
 
             <br clear="both" />
             <div class="bookingNav">
-              <button class="btn btn-default" ng-click="downloadCsv()">
+              <button class="btn btn-default" ng-click="downloadCsv()" type="button">
                 <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
                 Download CSV
               </button>
