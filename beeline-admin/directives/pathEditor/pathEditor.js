@@ -1,14 +1,32 @@
 import leftPad from 'left-pad';
 
-export default function ($rootScope, $location, uiGmapGoogleMapApi, $q) {
+export default function (uiGmapGoogleMapApi, $q, TripsService) {
   return {
     template: require('./pathEditor.html'),
     scope: {
       path: '=',
-      tripStops: '='
+      routeId: '='
     },
     link (scope, elem, attr) {
-      scope.newPath = ''
+      scope.newPath = '';
+      scope.trip = null;
+
+      scope.$watch('routeId', (id) => {
+        // get all trips
+        TripsService.getTrips({
+          routeId: id,
+          startDate: new Date(Date.now() - 180*24*60*60*1000),
+          endDate: new Date(Date.now() + 365*24*60*60*1000),
+        })
+        .then((trips) => {
+          scope.trips = trips;
+
+          if (scope.trip === null) {
+            scope.trip = trips[0]
+          }
+        })
+      })
+
       uiGmapGoogleMapApi.then((googleMaps) => {
         const SINGAPORE = new googleMaps.LatLng(1.352083, 103.819836)
         const map = new googleMaps.Map(document.querySelector('.map-container'), {
@@ -46,7 +64,7 @@ export default function ($rootScope, $location, uiGmapGoogleMapApi, $q) {
         // one-way binding tripStops --> tripStops
         let markers = []
 
-        scope.$watch('tripStops', (tripStops) => {
+        scope.$watch('trip.tripStops', (tripStops) => {
           map.setCenter(SINGAPORE)
           map.setZoom(11)
           dirRenderers.forEach((renderer) => { renderer.setMap(null) })
