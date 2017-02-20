@@ -27,7 +27,8 @@ export default function($scope, $state, $urlRouter, AdminService, store,
     var updatePromise = AdminService.beeline({
       method: 'PUT',
       url: `/companies/${$scope.company.id}`,
-      data: _.pick($scope.company, ['terms', 'features', 'email', 'contactNo'])
+      data: _.pick($scope.company, ['terms', 'features', 'email', 'contactNo',
+        'smsOpCode'])
     })
     .then((response) => {
       $scope.company = response.data;
