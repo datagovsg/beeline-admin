@@ -120,7 +120,7 @@
             <td>{{route.indicativeTrip.lastCapacity}}<span class="glyphicon glyphicon-user" aria-hidden="true"></span></td>
             <td>
               <ul class="tags">
-                <li ng-repeat="tag in route.tags">{{tag}}</li>
+                <li ng-repeat="tag in route.tags track by $index">{{tag}}</li>
               </ul>
             </td>
             <td>
