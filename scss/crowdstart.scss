@@ -1,0 +1,24 @@
+.crowdstart-summary {
+  ul.tiers {
+    display: block;
+    margin: 0;
+    padding: 0;
+
+    li.tier-status {
+      display: block;
+      margin: 0;
+      padding: 0;
+    }
+  }
+
+  .expired td {
+    // text-decoration: line-through;
+    color: #999;
+  }
+  .failure {
+    color: red;
+  }
+  .success {
+    color: #090;
+  }
+}
