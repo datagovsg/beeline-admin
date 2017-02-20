@@ -28,9 +28,11 @@
             <input type="hidden" name="sessionToken" value="{{sessionToken}}">
             <button type="submit" class="btn btn-primary btn-lg">Submit</button>
           </div>
+        </div>
+        </form>
       </div>
-      </form>
-      </div>
+
+      <hr/>
 
       <form class="form-horizontal" ng-if="company.id" ng-submit="updateCompanyInfo()" name="updateCompany">
         <div class="form-group">
@@ -51,6 +53,13 @@
             <input type="text" ng-model="company.contactNo" class="form-control" />
           </div>
         </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">SMS Operator Code</label>
+          <div class="col-sm-10">
+            <input type="text" ng-model="company.smsOpCode" class="form-control"
+              ng-pattern="'[a-zA-Z0-9]{0,11}'"/>
+          </div>
+        </div>
         <div class="col-sm-12">
           <div class="form-group">
             <label>Terms and Conditions</label>
@@ -65,6 +74,9 @@
           <button type="submit" class="btn btn-primary btn-lg" ng-disabled="updateCompany.$invalid">Submit</button>
         </div>
       </form>
+
+      <br clear="both" />
+      <hr/>
 
     <div class="row">
       <div class="col-lg-12">
@@ -88,7 +100,6 @@
               Connect Stripe account
             </button>
           </div>
-
         </form>
       </div>
     </div>
