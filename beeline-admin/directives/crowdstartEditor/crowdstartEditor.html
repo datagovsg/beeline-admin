@@ -83,7 +83,10 @@
       </table>
     </div>
     <div class="form-group">
-      <button class="btn btn-primary">
+      <span ng-if="editRoute.tags.indexOf('lelong') == -1">
+        This is not a crowdstart route
+      </span>
+      <button class="btn btn-primary" ng-disabled="editRoute.tags.indexOf('lelong') == -1">
         Save
       </button>
     </div>
