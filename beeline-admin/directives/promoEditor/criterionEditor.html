@@ -2,12 +2,12 @@
   <label>
     Type
     <select ng-options="type for type in criterionTypes"
-      ng-model="editCriterion.type">
+      ng-model="editCriterion.type" class="form-control" >
     </select>
   </label>
   <label ng-if="editCriterion.type == 'limitByCompany'">
     Company:
-    <company-selector ng-model="params.limitByCompany.companyId">
+    <company-selector ng-model="params.limitByCompany.companyId" class="form-control" >
     </company-selector>
   </label>
   <label ng-if="editCriterion.type == 'limitByRoute'">

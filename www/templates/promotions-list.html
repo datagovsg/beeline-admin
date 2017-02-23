@@ -10,11 +10,12 @@
           <th my-sort="id" sort-direction="filter.order" sort-model="filter.orderBy" style="width: 5%">ID</th>
           <th my-sort="type" sort-direction="filter.order" sort-model="filter.orderBy" style="width: 5%">Type</th>
           <th my-sort="code" sort-direction="filter.order" sort-model="filter.orderBy" style="width: 10%">Code</th>
-          <th my-sort="description" sort-direction="filter.order" sort-model="filter.orderBy" style="width: 20%">Description</th>
-          <th my-sort="" sort-direction="filter.order" sort-model="filter.orderBy" style="width: 20%">Criteria</th>
-          <th my-sort="" sort-direction="filter.order" sort-model="filter.orderBy" style="width: 20%">Discount</th>
-          <th my-sort="createdAt" sort-direction="filter.order" sort-model="filter.orderBy" style="width: 5%"></th>
-          <th my-sort="updatedAt" sort-direction="filter.order" sort-model="filter.orderBy" style="width: 5%"></th>
+          <th my-sort="description" sort-direction="filter.order" sort-model="filter.orderBy" style="width: 15%">Description</th>
+          <th my-sort="" sort-direction="filter.order" sort-model="filter.orderBy" style="width: 15%">Limits</th>
+          <th my-sort="" sort-direction="filter.order" sort-model="filter.orderBy" style="width: 15%">Criteria</th>
+          <th my-sort="" sort-direction="filter.order" sort-model="filter.orderBy" style="width: 15%">Discount</th>
+          <th my-sort="createdAt" sort-direction="filter.order" sort-model="filter.orderBy" style="width: 5%">Created at</th>
+          <th my-sort="updatedAt" sort-direction="filter.order" sort-model="filter.orderBy" style="width: 5%">Updated at</th>
           <th my-sort="" sort-direction="filter.order" sort-model="filter.orderBy" style="width: 7%"></th>
         </tr>
       </thead>
@@ -27,6 +28,16 @@
           <td>{{promotion.type}}</td>
           <td>{{promotion.code}}</td>
           <td>{{promotion.description}}</td>
+          <td>
+            <div ng-if="promotion.params.usageLimit.userLimit">
+              <b>Per User:</b> {{promotion.params.usageLimit.userLimit}}
+              <br/>
+            </div>
+            <div ng-if="promotion.params.usageLimit.globalLimit">
+              <b>All Redemptions:</b> {{promotion.params.usageLimit.globalLimit}}
+              <br/>
+            </div>
+          </td>
           <td>
             <ol class="criteria">
               <li ng-repeat="criterion in promotion.params.qualifyingCriteria track by id">
@@ -46,6 +57,12 @@
                 {{key}}: {{value}}
               </li>
             </ul>
+          </td>
+          <td>
+            {{promotion.createdAt | date:'dd MMM yyyy HH:mm:ss':'+0800'}}
+          </td>
+          <td>
+            {{promotion.updatedAt | date:'dd MMM yyyy HH:mm:ss':'+0800'}}
           </td>
           <td>
             <button ng-click="destroy(promotion)" class="btn btn-danger">

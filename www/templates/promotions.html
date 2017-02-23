@@ -7,29 +7,55 @@
       Error loading promotion
     </div>
     <div ng-if="editPromoCode">
-      <div class="form-group">
-        <label>
-          Code
-          <input type="text" ng-model="editPromoCode.code"
-            placeholder="HARIRAYA" />
-        </label>
-      </div>
+      <table>
+        <tr>
+          <th>General</th>
+          <th>Redemption Limits</th>
+        </tr>
+        <tr>
+          <td>
+            <div class="form-group">
+              <label>
+                Code
+                <input type="text" ng-model="editPromoCode.code"
+                  placeholder="HARIRAYA" class="form-control" />
+              </label>
+            </div>
 
-      <div class="form-group">
-        <label>
-          Description
-          <input type="text" ng-model="editPromoCode.description"
-            placeholder="Hari Raya promotion" />
-        </label>
-      </div>
+            <div class="form-group">
+              <label>
+                Description (shown to user)
+                <input type="text" ng-model="editPromoCode.description"
+                  placeholder="Hari Raya promotion" class="form-control"  />
+              </label>
+            </div>
 
-      <div class="form-group">
-        <label>
-          Type
-          <select ng-options="type for type in promoTypes" ng-model="editPromoCode.type">
-          </select>
-        </label>
-      </div>
+            <div class="form-group">
+              <label>
+                Type
+                <select ng-options="type for type in promoTypes" ng-model="editPromoCode.type"
+                  class="form-control" >
+                </select>
+              </label>
+            </div>
+          </td>
+          <td>
+            <div class="form-group">
+              <label>
+                Max redemptions per user:
+                <input type="number" class="form-control" ng-model="editPromoCode.params.usageLimit.userLimit" />
+              </label>
+            </div>
+
+            <div class="form-group">
+              <label>
+                Max redemptions by all users:
+                <input type="number" class="form-control" ng-model="editPromoCode.params.usageLimit.globalLimit" />
+              </label>
+            </div>
+          </td>
+        </tr>
+      </table>
 
       <table class="table table-striped">
         <tr>

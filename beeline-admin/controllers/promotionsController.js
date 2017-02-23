@@ -42,16 +42,17 @@ angular.module('beeline-admin')
 
     function makeEditable(promo) {
       return _.cloneDeep({
-        params: {
-          refundFunction: { type: 'refundDiscountedAmt' },
-          qualifyingCriteria: [],
-          discountFunction: {type: 'simpleRate', rate: 0},
-          ...(promo.params),
-        },
         type: 'Promotion',
         code: 'HELLOW',
         description: 'Hello world!',
-        ...promo
+        ...promo,
+        params: {
+          ...promo.params,
+          refundFunction: promo.params.refundFunction || { type: 'refundDiscountedAmt' },
+          qualifyingCriteria: promo.params.qualifyingCriteria || [],
+          discountFunction: promo.params.discountFunction || {type: 'simpleRate', rate: 0},
+          usageLimit: promo.params.usageLimit || { userLimit: null, globalLimit: null },
+        },
       })
     }
 });
