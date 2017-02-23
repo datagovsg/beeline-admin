@@ -1,0 +1,88 @@
+<div>
+  <label>
+    Type
+    <select ng-options="type for type in criterionTypes"
+      ng-model="editCriterion.type">
+    </select>
+  </label>
+  <label ng-if="editCriterion.type == 'limitByCompany'">
+    Company:
+    <company-selector ng-model="params.limitByCompany.companyId">
+    </company-selector>
+  </label>
+  <label ng-if="editCriterion.type == 'limitByRoute'">
+    Routes:
+    <select multiple
+      ng-options="route.id as route._description for route in disp.routes"
+      ng-model="params.limitByRoute.routeIds">
+    </select>
+  </label>
+
+  <label ng-if="editCriterion.type == 'limitByRouteTags'">
+    Tags:
+    <tag-editor ng-model="params.limitByRouteTags.$$tags">
+    </tag-editor>
+  </label>
+
+  <div ng-if="editCriterion.type == 'limitByPurchaseDate'">
+    <label>
+      Start date (inclusive):
+
+      <input type="text" class="form-control" ng-model="params.limitByPurchaseDate.$$startDate"
+        uib-datepicker-popup="dd MMM yyyy"
+        ng-model-options="{timezone: 'Z'}"
+        is-open="disp.limitByPurchaseDate.$startDateOpen" />
+      <span class="input-group-btn">
+        <button class="btn btn-primary btn-icon" type="button"
+          ng-click="disp.limitByPurchaseDate.$startDateOpen = !disp.limitByPurchaseDate.$startDateOpen">
+          <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+        </button>
+      </span>
+    </label>
+    <label>
+      End date (inclusive):
+
+      <input type="text" class="form-control" ng-model="params.limitByPurchaseDate.$$endDate"
+        uib-datepicker-popup="dd MMM yyyy"
+        ng-model-options="{timezone: 'Z'}"
+        is-open="disp.limitByPurchaseDate.$endDateOpen" />
+      <span class="input-group-btn">
+        <button class="btn btn-primary btn-icon" type="button"
+          ng-click="disp.limitByPurchaseDate.$endDateOpen = !disp.limitByPurchaseDate.$endDateOpen">
+          <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+        </button>
+      </span>
+    </label>
+  </div>
+
+  <div ng-if="editCriterion.type == 'limitByTripDate'">
+    <label>
+      Start date (inclusive):
+
+      <input type="text" class="form-control" ng-model="params.limitByTripDate.$$startDate"
+        uib-datepicker-popup="dd MMM yyyy"
+        ng-model-options="{timezone: 'Z'}"
+        is-open="disp.limitByTripDate.$startDateOpen" />
+      <span class="input-group-btn">
+        <button class="btn btn-primary btn-icon" type="button"
+          ng-click="disp.limitByTripDate.$startDateOpen = !disp.limitByTripDate.$startDateOpen">
+          <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+        </button>
+      </span>
+    </label>
+    <label>
+      End date (inclusive):
+
+      <input type="text" class="form-control" ng-model="params.limitByTripDate.$$endDate"
+      uib-datepicker-popup="dd MMM yyyy"
+      ng-model-options="{timezone: 'Z'}"
+        is-open="disp.limitByTripDate.$endDateOpen" />
+      <span class="input-group-btn">
+        <button class="btn btn-primary btn-icon" type="button"
+          ng-click="disp.limitByTripDate.$endDateOpen = !disp.limitByTripDate.$endDateOpen">
+          <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+        </button>
+      </span>
+    </label>
+  </div>
+</div>

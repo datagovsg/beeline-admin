@@ -1,6 +1,9 @@
-//require css for webpack
-// require('../node_modules/bootstrap/dist/css/bootstrap.min.css');
-// require('../scss/ionic.app.scss');
+
+angular.module('beeline-admin', [
+  'uiGmapgoogle-maps', 'ui.router', 'ui.bootstrap',
+  'angular-storage', 'angular-jwt', 'ngCookies', 'multipleDatePicker',
+  'ui.select', 'ngTagEditor'])
+
 global.moment = require('moment')
 
 require('angular-storage')
@@ -9,18 +12,13 @@ require('angular-jwt')
 require('multiple-date-picker')
 require('ui-select/dist/select')
 require('../ngTagEditor/ngTagEditor')
+require('./controllers/promotionsController')
+require('./directives/promoEditor/criterionEditor')
+require('./directives/promoEditor/discountEditor')
 
 const env = require('./env')
 
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-// 'starter.services' is found in services.js
-// 'starter.controllers' is found in controllers.js
-angular.module('beeline-admin', [
-  'uiGmapgoogle-maps', 'ui.router', 'ui.bootstrap',
-  'angular-storage', 'angular-jwt', 'ngCookies', 'multipleDatePicker',
-  'ui.select', 'ngTagEditor'])
+angular.module('beeline-admin')
 .service('auth', require('./auth0').default)
 .config(require('./router').default)
 .config(configureGoogleMaps)

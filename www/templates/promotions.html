@@ -1,0 +1,73 @@
+
+<div class="container-fluid withnav">
+  <div class="col-lg-12">
+    <h1>Promotion</h1>
+
+    <div class="form-group">
+      <label>
+        Code
+        <input type="text" ng-model="editPromoCode.code"
+          placeholder="HARIRAYA" />
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label>
+        Description
+        <input type="text" ng-model="editPromoCode.description"
+          placeholder="Hari Raya promotion" />
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label>
+        Type
+        <select ng-options="type for type in promoTypes" ng-model="editPromoCode.type">
+        </select>
+      </label>
+    </div>
+
+    <table class="table table-striped">
+      <tr>
+        <th>
+          Apply promo code if...
+        </th>
+        <th>
+          Give the user...
+        </th>
+        <th>
+          When refunding...
+        </th>
+      </tr>
+      <tr>
+        <td>
+          <ul>
+            <li ng-repeat="criterion in editPromoCode.params.qualifyingCriteria">
+              <promo-criterion-editor ng-model="criterion">
+              </promo-criterion-editor>
+
+              <button ng-click="editPromoCode.params.qualifyingCriteria.splice($index, 1)"
+                class="btn btn-danger">
+                <span class="glyphicon glyphicon-minus"></span>
+              </button>
+            </li>
+            <li>
+              <button ng-click="editPromoCode.params.qualifyingCriteria.push({})"
+                class="btn btn-default">
+                <span class="glyphicon glyphicon-plus"></span>
+              </button>
+            </li>
+          </ul>
+        </td>
+        <td>
+          <promo-discount-editor ng-model="editPromoCode.params.discountFunction">
+          </promo-discount-editor>
+        </td>
+        <td>
+          {{editPromoCode.params.refundFunction.type}}
+        </td>
+      </tr>
+    </table>
+    <button ng-click="save()">Save</button>
+  </div>
+</div>
