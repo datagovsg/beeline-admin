@@ -13,6 +13,7 @@ require('multiple-date-picker')
 require('ui-select/dist/select')
 require('../ngTagEditor/ngTagEditor')
 require('./controllers/promotionsController')
+require('./controllers/promotionsListController')
 require('./directives/promoEditor/criterionEditor')
 require('./directives/promoEditor/discountEditor')
 

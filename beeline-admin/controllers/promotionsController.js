@@ -34,10 +34,10 @@ angular.module('beeline-admin')
     }
 
     function preSaveTransform(e) {
-      return {
+      return _.omit({
         ...e,
         code: e.code.toUpperCase()
-      }
+      }, ['id', 'createdAt', 'updatedAt'])
     }
 
     function makeEditable(promo) {
@@ -45,7 +45,7 @@ angular.module('beeline-admin')
         params: {
           refundFunction: { type: 'refundDiscountedAmt' },
           qualifyingCriteria: [],
-          discountFunction: {type: 'tieredRateByQty'},
+          discountFunction: {type: 'simpleRate', rate: 0},
           ...(promo.params),
         },
         type: 'Promotion',

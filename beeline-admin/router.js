@@ -122,6 +122,15 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
     }
   })
 
+  .state('c.promotions-list', {
+    url: '/promotions',
+    templateUrl: 'templates/promotions-list.html',
+    controller: 'promotionsListController',
+    data: {
+      requiresLogin: true,
+    }
+  })
+
   .state('c.notifications', {
     url: '/notifications',
     templateUrl: 'templates/notifications.html',

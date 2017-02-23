@@ -1,0 +1,68 @@
+
+<div class="container-fluid withnav promotions-list">
+  <div class="col-lg-12">
+    <h1>Promotions</h1>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th my-sort="" sort-direction="filter.order" sort-model="filter.orderBy" style="width: 3%"></th>
+          <th my-sort="id" sort-direction="filter.order" sort-model="filter.orderBy" style="width: 5%">ID</th>
+          <th my-sort="type" sort-direction="filter.order" sort-model="filter.orderBy" style="width: 5%">Type</th>
+          <th my-sort="code" sort-direction="filter.order" sort-model="filter.orderBy" style="width: 10%">Code</th>
+          <th my-sort="description" sort-direction="filter.order" sort-model="filter.orderBy" style="width: 20%">Description</th>
+          <th my-sort="" sort-direction="filter.order" sort-model="filter.orderBy" style="width: 20%">Criteria</th>
+          <th my-sort="" sort-direction="filter.order" sort-model="filter.orderBy" style="width: 20%">Discount</th>
+          <th my-sort="createdAt" sort-direction="filter.order" sort-model="filter.orderBy" style="width: 5%"></th>
+          <th my-sort="updatedAt" sort-direction="filter.order" sort-model="filter.orderBy" style="width: 5%"></th>
+          <th my-sort="" sort-direction="filter.order" sort-model="filter.orderBy" style="width: 7%"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="promotion in sortedPromotions">
+          <td>
+            {{$index + 1}}
+          </td>
+          <td><a ui-sref="^.promotions({promoId: promotion.id})">{{promotion.id}}</a></td>
+          <td>{{promotion.type}}</td>
+          <td>{{promotion.code}}</td>
+          <td>{{promotion.description}}</td>
+          <td>
+            <ol class="criteria">
+              <li ng-repeat="criterion in promotion.params.qualifyingCriteria track by id">
+                <b>{{criterion.type}}</b>
+                <ul>
+                  <li ng-repeat="(key, value) in criterion.params">
+                    {{key}}: {{value}}
+                  </li>
+                </ul>
+              </li>
+            </ol>
+          </td>
+          <td>
+            <b>{{promotion.params.discountFunction.type}}</b>
+            <ul class="discount">
+              <li ng-repeat="(key, value) in promotion.params.discountFunction.params track by key">
+                {{key}}: {{value}}
+              </li>
+            </ul>
+          </td>
+          <td>
+            <button ng-click="destroy(promotion)" class="btn btn-danger">
+              <span class="glyphicon glyphicon-minus"></span>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="5">
+            <button ng-click="postNew()" class="btn btn-default">
+              <span class="glyphicon glyphicon-plus"></span>
+            </button>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>

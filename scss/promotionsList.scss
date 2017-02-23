@@ -1,0 +1,22 @@
+.promotions-list {
+  .criteria, .discount {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    & > li {
+      padding: 0;
+      margin: 0;
+
+      & >ul, &>ol {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+
+        li {
+          padding: 0;
+          margin: 0 0 0 1em;
+        }
+      }
+    }
+  }
+}
