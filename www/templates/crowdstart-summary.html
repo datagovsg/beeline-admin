@@ -12,19 +12,19 @@
             <thead>
               <tr>
                 <th>&#10003;</th>
-                <th my-sort="route.id" sort-model="filter.orderBy" sort-direction="filter.order">Route ID</th>
-                <th my-sort="route.description" sort-model="filter.orderBy" sort-direction="filter.order">Route</th>
-                <th my-sort="route.label" sort-model="filter.orderBy" sort-direction="filter.order">Label</th>
-                <th my-sort="route.notes.lelongExpiry" sort-model="filter.orderBy" sort-direction="filter.order">Campaign End Date</th>
-                <th>First Trip Date</th>
+                <th my-sort="id" sort-model="filter.orderBy" sort-direction="filter.order">Route ID</th>
+                <th my-sort="name" sort-model="filter.orderBy" sort-direction="filter.order">Route</th>
+                <th my-sort="label" sort-model="filter.orderBy" sort-direction="filter.order">Label</th>
+                <th my-sort="notes.lelongExpiry" sort-model="filter.orderBy" sort-direction="filter.order">Campaign End Date</th>
+                <th my-sort="trips[0].date" sort-model="filter.orderBy" sort-direction="filter.order">First Trip Date</th>
                 <th>Tags</th>
-                <th># Route Passes</th>
-                <th my-sort="route._meta.fraction" sort-model="filter.orderBy" sort-direction="filter.order">Tiers</th>
+                <th my-sort="notes.noPasses" sort-model="filter.orderBy" sort-direction="filter.order">Route Passes per Bid</th>
+                <th my-sort="_meta.tiers[0].fraction" sort-model="filter.orderBy" sort-direction="filter.order">Tiers</th>
               </tr>
             </thead>
 
             <tbody>
-              <tr ng-repeat="route in routes" ng-class="{
+              <tr ng-repeat="route in sortedRoutes" ng-class="{
                 expired: route._meta.isExpired
               }">
                 <td>

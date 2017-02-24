@@ -16,7 +16,7 @@ function($scope, AdminService, RoutesService, LoadingSpinner,
   $scope.$watchGroup(['routes', 'filter.order', 'filter.orderBy'], () => {
     $scope.sortedRoutes = _.orderBy(
       $scope.routes,
-      [$scope.filter.orderBy],
+      [r => _.get(r, $scope.filter.orderBy)],
       [$scope.filter.order]
     )
   })
