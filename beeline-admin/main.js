@@ -13,6 +13,7 @@ require('multiple-date-picker')
 require('ui-select/dist/select')
 require('../ngTagEditor/ngTagEditor')
 require('./controllers/crowdstartSummary')
+require('./directives/crowdstartEditor/crowdstartEditor')
 
 const env = require('./env')
 

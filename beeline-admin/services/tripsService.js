@@ -156,8 +156,6 @@ export default function (AdminService, DriverService, $q) {
   }
 
   this.updateTrips = function (trips, options) {
-    console.log(trips);
-    console.log(options);
     try {
       var tripRequests = trips.map((trip) => {
         var {date, id: tripId} = trip;

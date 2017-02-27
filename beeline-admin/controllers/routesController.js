@@ -9,14 +9,23 @@ export default function($scope, $state, $urlRouter, AdminService, LoadingSpinner
   $scope.params = _.assign({}, $state.params);
   var myState = $state.current.name;
 
+  const tagPresets = [
+    { name: 'All', tags: null },
+    { name: 'Crowdstart', tags: ['lelong'] },
+    { name: 'Lite', tags: ['lite'] },
+    { name: 'Regular', tags: ['public'] },
+  ]
+
   $scope.data = [];
   $scope.filter = {
     perPage: 20,
     page: 1,
-	orderBy: 'label',
-	order: 'asc',
+  	orderBy: 'label',
+  	order: 'asc',
+    preset: tagPresets[0],
   };
   $scope.now = Date.now();
+  $scope.tagPresets = tagPresets;
 
   if (companyId)
     $scope.filter.transportCompanyId = companyId
@@ -24,9 +33,15 @@ export default function($scope, $state, $urlRouter, AdminService, LoadingSpinner
   function refreshRoutes() {
     if (!$scope.filter.transportCompanyId) return;
 
+    const options = _.assign(
+      _.pick($scope.filter, ['perPage', 'page', 'orderBy', 'order']),
+      {transportCompanyId: $scope.filter.transportCompanyId},
+      $scope.filter.preset.tags ? {tags: JSON.stringify($scope.filter.preset.tags)} : {}
+    )
+
     var promise = AdminService.beeline({
       method: 'GET',
-      url: '/routes/report?' + querystring.stringify($scope.filter)
+      url: '/routes/report?' + querystring.stringify(options)
     })
     .then((response) => {
       for (let route of response.data.rows) {

@@ -104,7 +104,7 @@
               </div>
               <div class="col-lg-6">
                 <div class="path-editor">
-                  <path-editor path="route.path" trip-stops="tripStops">
+                  <path-editor path="route.path" route-id="route.id">
                   </path-editor>
                 </div>
               </div>
@@ -134,6 +134,10 @@
         <uib-tab index="'trips'" heading="Edit Trips">
           <trips-editor route="route" ng-if="route.id">
           </trips-editor>
+        </uib-tab>
+        <uib-tab index="'crowdstart'" heading="Edit Crowdstart Parameters">
+          <crowdstart-editor route="route" ng-if="route.id">
+          </crowdstart-editor>
         </uib-tab>
       </uib-tabset>
     </div>
