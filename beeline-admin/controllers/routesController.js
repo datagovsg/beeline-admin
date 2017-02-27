@@ -35,6 +35,7 @@ export default function($scope, $state, $urlRouter, AdminService, LoadingSpinner
 
     const options = _.assign(
       _.pick($scope.filter, ['perPage', 'page', 'orderBy', 'order']),
+      {transportCompanyId: $scope.filter.transportCompanyId},
       $scope.filter.preset.tags ? {tags: JSON.stringify($scope.filter.preset.tags)} : {}
     )
 

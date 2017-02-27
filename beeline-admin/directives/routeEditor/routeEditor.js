@@ -44,6 +44,10 @@ export default function (AdminService, RoutesService, $rootScope, commonModals, 
         .then((route) => {
           scope.route = route;
         })
+        .then(() => {
+          // Force a reload so that the entire interface is synchronized
+          window.location.reload();
+        });
       }
 
       scope.deleteRoute = async function() {

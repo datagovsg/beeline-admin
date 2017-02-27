@@ -14,8 +14,10 @@ require('ui-select/dist/select')
 require('../ngTagEditor/ngTagEditor')
 require('./controllers/promotionsController')
 require('./controllers/promotionsListController')
+require('./controllers/crowdstartSummary')
 require('./directives/promoEditor/criterionEditor')
 require('./directives/promoEditor/discountEditor')
+require('./directives/crowdstartEditor/crowdstartEditor')
 
 const env = require('./env')
 

@@ -103,6 +103,14 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
     }
   })
 
+  .state('c.crowdstart-summary', {
+    url: '/crowdstart-summary',
+    templateUrl: 'templates/crowdstart-summary.html',
+    controller: 'CrowdstartSummaryCtrl',
+    data: {
+      requiresLogin: true,
+    }
+  })
   .state('c.test', {
     url: '/test',
     templateUrl: 'templates/test.html',
