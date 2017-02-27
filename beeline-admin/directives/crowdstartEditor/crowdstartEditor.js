@@ -50,7 +50,7 @@ angular.module('beeline-admin').directive('crowdstartEditor', function () {
           .then((response) => {
             const bidsSoFar = bids.concat(response.data.rows);
             $scope.bids = bidsSoFar;
-            if (response.data.rows.length == batchSize) {
+            if (response.data.rows.length === batchSize) {
               return findBids(
                 bidsSoFar,
                 page + 1
