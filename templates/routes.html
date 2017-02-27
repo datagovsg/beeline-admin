@@ -10,12 +10,23 @@
     </div>
   </div>
   <div class="row">
+    <div class="col-lg-12 btn-group">
+      <button class="btn" ng-repeat="tagPreset in tagPresets"
+        ng-class="{'btn-primary': tagPreset == filter.preset, 'btn-default': tagPreset != filter.preset}"
+        ng-click="filter.preset = tagPreset">
+        {{tagPreset.name}}
+      </button>
+    </div>
+  </div>
+  <div class="row">
     <div class="col-lg-12">
       <div class="pull-left">
         <uib-pagination boundary-links="true" ng-model="filter.page" total-items="data.count" items-per-page="filter.perPage"></uib-pagination>
       </div>
       <div class="pull-right create-button" ng-if="adminService.isSuperAdmin()">
-        <button class="btn btn-primary btn-lg" ui-sref="^.trips({routeId:0, action: 'route'})"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>Create a new route</button>
+        <button class="btn btn-primary btn-lg" ui-sref="^.trips({routeId:0, action: 'route'})">
+          <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>Create a new route
+        </button>
       </div>
     </div>
   </div>
@@ -120,7 +131,7 @@
             <td>{{route.indicativeTrip.lastCapacity}}<span class="glyphicon glyphicon-user" aria-hidden="true"></span></td>
             <td>
               <ul class="tags">
-                <li ng-repeat="tag in route.tags">{{tag}}</li>
+                <li ng-repeat="tag in route.tags track by $index">{{tag}}</li>
               </ul>
             </td>
             <td>
