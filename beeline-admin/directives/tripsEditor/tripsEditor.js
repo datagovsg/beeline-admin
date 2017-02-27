@@ -9,17 +9,17 @@ export default function(RoutesService, TripsService, AdminService, DriverService
       route: '=',
     },
     template: require('./tripsEditor.html'),
-    link(scope, elem, attr) {
-      scope.adminService = AdminService;
-      scope.selection = {};
+    controller($scope) {
+      $scope.adminService = AdminService;
+      $scope.selection = {};
 
       /* Date filters require UTC time */
       var now = new Date()
       now.setUTCHours(0, 0, 0, 0)
-      scope.filter = {
+      $scope.filter = {
         filterMonth: now,
       }
-      scope.disp = {
+      $scope.disp = {
         stopsList: [],
         newDates: [],
         existingDates: [],
@@ -33,28 +33,28 @@ export default function(RoutesService, TripsService, AdminService, DriverService
           {size: -3 * 60 * 60 * 1000, label: '3 hrs'},
           {size: -6 * 60 * 60 * 1000, label: '6 hrs'},
         ],
-      }; /* scope.disp */
+      }; /* $scope.disp */
 
       function reloadTrips() {
         var promise = TripsService.getTrips({
-          routeId: scope.route.id,
+          routeId: $scope.route.id,
           startDate: new Date(
-            scope.filter.filterMonth.getFullYear(),
-            scope.filter.filterMonth.getMonth(),
+            $scope.filter.filterMonth.getFullYear(),
+            $scope.filter.filterMonth.getMonth(),
             1
           ),
           endDate: new Date(
-            scope.filter.filterMonth.getFullYear(),
-            scope.filter.filterMonth.getMonth() + 1,
+            $scope.filter.filterMonth.getFullYear(),
+            $scope.filter.filterMonth.getMonth() + 1,
             1
           ),
           includeAvailability: true,
         })
         .then((trips) => {
-          scope.trips = _.sortBy(trips, 'date');
+          $scope.trips = _.sortBy(trips, 'date');
 
           // populate dates
-          scope.disp.existingDates = _.uniq(trips.map(tr => tr.date.getTime()))
+          $scope.disp.existingDates = _.uniq(trips.map(tr => tr.date.getTime()))
             .map(dtStr => new Date(dtStr));
 
           // populate stops
@@ -78,14 +78,14 @@ export default function(RoutesService, TripsService, AdminService, DriverService
 
           var stopsList = _.flatten(_.values(stopsSet));
           stopsList = _.sortBy(stopsList, s => timeSinceMidnight(s.time))
-          scope.disp.stopsList = stopsList;
+          $scope.disp.stopsList = stopsList;
         });
         LoadingSpinner.watchPromise(promise)
       }
-      scope.findStop = (trip, stopId, ooA) => {
+      $scope.findStop = (trip, stopId, ooA) => {
         return trip.tripStops.find(ts => ts.stopId === stopId && ts.orderOfAppearance === ooA);
       }
-      scope.currentTrip = {
+      $scope.currentTrip = {
         data: {
           trip: null,
           newDates: [],
@@ -111,7 +111,7 @@ export default function(RoutesService, TripsService, AdminService, DriverService
           this.data.trip = _.clone(trip);
           this.data.trip.tripStops = _.cloneDeep(trip.tripStops);
           this.data.newDates = [];
-          this.data.editingTrips = _(scope.selection.$selectedObjects())
+          this.data.editingTrips = _($scope.selection.$selectedObjects())
             .sortBy('date')
             .value();
         },
@@ -167,7 +167,7 @@ export default function(RoutesService, TripsService, AdminService, DriverService
         }
       }
 
-      scope.tripList = {
+      $scope.tripList = {
         async deleteTrip(trip) {
           if (await commonModals.confirm("Are you sure you want to delete?")) {
             TripsService.deleteTrip(trip.id)
@@ -179,17 +179,17 @@ export default function(RoutesService, TripsService, AdminService, DriverService
         }
       }
 
-      scope.showCreateTripDialog = async function() {
-        const lastSelected = scope.selection.$lastSelected();
+      $scope.showCreateTripDialog = async function() {
+        const lastSelected = $scope.selection.$lastSelected();
         if (lastSelected) {
-          scope.currentTrip.takeReference(lastSelected);
+          $scope.currentTrip.takeReference(lastSelected);
         }
         else {
-          scope.currentTrip.reset();
+          $scope.currentTrip.reset();
         }
 
         // show the dates
-        var childScope = scope.$new();
+        var childScope = $scope.$new();
         var modal = $uibModal.open({
           controller: CreateTripsDateController,
           keyboard: false,
@@ -199,8 +199,8 @@ export default function(RoutesService, TripsService, AdminService, DriverService
         })
 
         try {
-          scope.currentTrip.data.newDates = await modal.result;
-          console.log(scope.disp.newDates);
+          $scope.currentTrip.data.newDates = await modal.result;
+          console.log($scope.disp.newDates);
         }
         catch (err) {
           // Dismissed without reason
@@ -212,8 +212,8 @@ export default function(RoutesService, TripsService, AdminService, DriverService
 
         showTripDataEditor();
       }
-      scope.showEditTripDialog = async function () {
-        scope.currentTrip.edit(scope.selection.$lastSelected());
+      $scope.showEditTripDialog = async function () {
+        $scope.currentTrip.edit($scope.selection.$lastSelected());
 
         showTripDataEditor();
       }
@@ -221,7 +221,7 @@ export default function(RoutesService, TripsService, AdminService, DriverService
       async function showTripDataEditor() {
         // Loop repeatedly until the save succeeds (to avoid losing data)
         while (true) {
-          var childScope = scope.$new();
+          var childScope = $scope.$new();
           var modal = $uibModal.open({
             controller: TripDataEditorController,
             keyboard: false,
@@ -239,7 +239,7 @@ export default function(RoutesService, TripsService, AdminService, DriverService
           }
 
           try {
-            await scope.currentTrip.save();
+            await $scope.currentTrip.save();
             break;
           }
           catch (err) {
@@ -251,13 +251,13 @@ export default function(RoutesService, TripsService, AdminService, DriverService
         }
       }
 
-      scope.$watchGroup(['filter.filterMonth', 'route.id'], reloadTrips)
+      $scope.$watchGroup(['filter.filterMonth', 'route.id'], reloadTrips)
 
       function defaultTrip() {
         return {
           status: null,
-          routeId: scope.route.id,
-          transportCompanyId: scope.route.transportCompanyId,
+          routeId: $scope.route.id,
+          transportCompanyId: $scope.route.transportCompanyId,
           tripStops: [],
           bookingInfo: {
             windowSize: -6 * 3600 * 1000,
