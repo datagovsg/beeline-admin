@@ -7,7 +7,7 @@
       Error loading promotion
     </div>
     <div ng-if="editPromoCode">
-      <table>
+      <table class="table">
         <tr>
           <th>General</th>
           <th>Redemption Limits</th>
@@ -18,7 +18,8 @@
               <label>
                 Code
                 <input type="text" ng-model="editPromoCode.code"
-                  placeholder="HARIRAYA" class="form-control" />
+                  placeholder="HARIRAYA" class="form-control"
+                  ng-blur="editPromoCode.code = editPromoCode.code.toUpperCase()" />
               </label>
             </div>
 
@@ -52,6 +53,10 @@
                 Max redemptions by all users:
                 <input type="number" class="form-control" ng-model="editPromoCode.params.usageLimit.globalLimit" />
               </label>
+            </div>
+
+            <div>
+              <b>Note:</b> '0' to disable the promotion, blank to have no limit
             </div>
           </td>
         </tr>

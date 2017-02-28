@@ -20,7 +20,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="promotion in sortedPromotions">
+        <tr ng-repeat="promotion in sortedPromotions track by promotion.id">
           <td>
             {{$index + 1}}
           </td>
@@ -40,7 +40,7 @@
           </td>
           <td>
             <ol class="criteria">
-              <li ng-repeat="criterion in promotion.params.qualifyingCriteria track by id">
+              <li ng-repeat="criterion in promotion.params.qualifyingCriteria track by $index">
                 <b>{{criterion.type}}</b>
                 <ul>
                   <li ng-repeat="(key, value) in criterion.params">

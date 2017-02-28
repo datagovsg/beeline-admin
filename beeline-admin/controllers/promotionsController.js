@@ -19,7 +19,6 @@ angular.module('beeline-admin')
     }))
 
     $scope.save = function () {
-      console.log(preSaveTransform($scope.editPromoCode))
       LoadingSpinner.watchPromise(AdminService.beeline({
         method: 'PUT',
         url: `/companies/${companyId}/promotions/${$stateParams.promoId}`,
@@ -34,13 +33,30 @@ angular.module('beeline-admin')
     }
 
     function preSaveTransform(e) {
-      return _.omit({
-        ...e,
-        code: e.code.toUpperCase()
-      }, ['id', 'createdAt', 'updatedAt'])
+      return {
+        code: e.code.toUpperCase(),
+        params: _.omit(e.params, ['companyId']),
+        description: e.description,
+        type: e.type,
+      }
     }
 
     function makeEditable(promo) {
+
+      /* We need to add limitByCompany for all promotions
+      created by a company */
+      function addCompanyCriteria(qc) {
+        const criterion = {
+          type: 'limitByCompany',
+          params: {companyId}
+        }
+        if (_.some(qc, criterion)) {
+          return qc;
+        } else {
+          return [criterion].concat(qc)
+        }
+      }
+
       return _.cloneDeep({
         type: 'Promotion',
         code: 'HELLOW',
@@ -48,9 +64,9 @@ angular.module('beeline-admin')
         ...promo,
         params: {
           ...promo.params,
-          refundFunction: promo.params.refundFunction || { type: 'refundDiscountedAmt' },
-          qualifyingCriteria: promo.params.qualifyingCriteria || [],
-          discountFunction: promo.params.discountFunction || {type: 'simpleRate', rate: 0},
+          refundFunction: _.defaults(promo.params.refundFunction, { type: 'refundDiscountedAmt', params: {} }),
+          qualifyingCriteria: addCompanyCriteria(promo.params.qualifyingCriteria),
+          discountFunction: promo.params.discountFunction || {type: 'simpleRate', params: {rate: 0}},
           usageLimit: promo.params.usageLimit || { userLimit: null, globalLimit: null },
         },
       })

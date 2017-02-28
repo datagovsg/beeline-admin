@@ -39,13 +39,13 @@ angular.module('beeline-admin')
             $scope.params.limitByRouteTags.$$tags = $scope.params.limitByRouteTags.tags
               .map((t, k) => ({id: k, name: t}))
           }
-          if ($scope.params.limitByTripDate.tags) {
+          if ($scope.params.limitByTripDate) {
             $scope.params.limitByTripDate.$$startDate = $scope.params.limitByTripDate.startDate
               && new Date($scope.params.limitByTripDate.startDate)
             $scope.params.limitByTripDate.$$endDate = $scope.params.limitByTripDate.endDate
               && new Date($scope.params.limitByTripDate.endDate)
           }
-          if ($scope.params.limitByPurchaseDate.tags) {
+          if ($scope.params.limitByPurchaseDate) {
             $scope.params.limitByPurchaseDate.$$startDate = $scope.params.limitByPurchaseDate.startDate
               && new Date($scope.params.limitByPurchaseDate.startDate)
             $scope.params.limitByPurchaseDate.$$endDate = $scope.params.limitByPurchaseDate.endDate
