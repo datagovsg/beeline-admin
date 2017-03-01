@@ -96,11 +96,6 @@
             <label class="ticketCheckbox">
               <input type="checkbox" ng-model="filter.status.bidded" /> <a href="#" uib-tooltip="Kickstart bids"> Bidded</a>
             </label>
-
-            <label class="ticketCheckbox">
-              <input type="checkbox" ng-model="filter.status.withdrawn" /> <a href="#" uib-tooltip="Kickstart bids"> Withdrawn</a>
-            </label>
-
             <label class="ticketCheckbox">
               <input type="checkbox" ng-model="filter.status.pending" /> <a href="#" uib-tooltip="Pending - in the middle of a transaction"> Pending</a>
             </label>
@@ -240,22 +235,22 @@
                 <td class="item-description">
                   <table class="borderless">
                     <tr>
-                      <td>
-                        {{ticket.boardStop.time | date:'HH:mm'}}
-                      </td>
-                      <td>
-                        {{ticket.boardStop.stop.description}}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        {{ticket.alightStop.time | date:'HH:mm'}}
-                      </td>
-                      <td>
-                        {{ticket.alightStop.stop.description}}
-                      </td>
-                    </tr>
-                  </table>
+                <td>
+                  {{ticket.boardStop.time | date:'HH:mm'}}
+                </td>
+                <td>
+                  {{ticket.boardStop.stop.description}}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  {{ticket.alightStop.time | date:'HH:mm'}}
+                </td>
+                <td>
+                  {{ticket.alightStop.stop.description}}
+                </td>
+              </tr>
+            </table>
                 </td>
                 <td>
                   &dollar;{{ticket.boardStop.trip.price}}
