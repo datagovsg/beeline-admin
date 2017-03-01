@@ -252,7 +252,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
     var requestUrl = buildQuery();
     $scope.csvUrl = buildQuery({
                       page: 1,
-                      perPage: 10000000, // it's a happy problem
+                      perPage: 10,
                       format: 'csv',
                     })
 
