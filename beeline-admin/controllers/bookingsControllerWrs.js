@@ -250,11 +250,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
 
   function query(newV, oldV) {
     var requestUrl = buildQuery();
-    $scope.csvUrl = buildQuery({
-                      page: 1,
-                      perPage: 10000000, // it's a happy problem
-                      format: 'csv',
-                    })
+    $scope.csvUrl = buildQuery({format: 'csv'})
 
     var queryPromise = AdminService.beeline({
       method: 'GET',
