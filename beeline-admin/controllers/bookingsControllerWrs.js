@@ -3,7 +3,7 @@ import assert from 'assert';
 const pickOneModalTemplate = require('../templates/modals/pickOne.html')
 
 export default function($scope, AdminService, RoutesService, LoadingSpinner,
-  $state, $stateParams, issueTicketModal, commonModals, $uibModal) {
+  $state, $stateParams, issueTicketModal, issueRoutePassModal, commonModals, $uibModal) {
   $scope.tickets = [];
   $scope.currentPage = 1;
 
@@ -230,6 +230,16 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
     }
 
     issueTicketModal.open(issueTicketModalOptions).then(query);
+  }
+
+  $scope.issueRoutePass = function (options) {
+    console.log(options)
+    let data = {
+      user: options.user,
+      price: options.boardStop.trip.priceF,
+      route: options.boardStop.trip.route,
+    }
+    issueRoutePassModal.open(data)
   }
 
   // Edit ticket button
