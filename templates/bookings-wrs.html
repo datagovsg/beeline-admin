@@ -204,6 +204,9 @@
                       ng-if="(ticket.status == 'valid' || ticket.status == 'void') && ticket.paymentResource">
                    <span class="glyphicon glyphicon-credit-card" aria-hidden="true"></span> Refund
                  </button>
+                 <button class="btn btn-primary" ng-click="issueRoutePass(ticket)" ng-if="adminService.isSuperAdmin()">
+                   <span class="glyphicon glyphicon-plus-sign"></span> Issue Pass
+                 </button>
                 </td>
                 <td>
                   <strong>{{ticket.user.json.name ? (ticket.user.json.name + ' #' + ticket.user.json.index) : ticket.user.name}} </strong>
