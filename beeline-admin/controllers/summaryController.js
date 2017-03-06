@@ -63,6 +63,13 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner) {
 
     LoadingSpinner.watchPromise(routesPromise
     .then((routes) => {
+      return Promise.all(routes.map(r => RoutesService.getRoute(r.id, {
+        startDate: options.startDate,
+        endDate: options.endDate,
+        includeTrips: true,
+      })))
+    })
+    .then((routes) => {
       for (let route of routes) {
         route.tripsByDay = new Array(numDays)
 
