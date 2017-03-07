@@ -19,6 +19,8 @@ export default function($scope, $state, $stateParams, $http, AdminService, Loadi
       transfer: true,
       refundPayment: true,
       account: true,
+      discount: true,
+      routeCredits: true,
     },
     startDate: new Date(),
     endDate: new Date(),
