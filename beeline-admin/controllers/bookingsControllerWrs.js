@@ -100,17 +100,21 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
     });
   }
 
-  $scope.refund = async function (ticket) {
+  $scope.refundPayment = async function (ticket) {
+    const originalPrice = ticket.boardStop.trip.priceF
+    const discount = ticket.notes.discountValue || 0
+
     if (await commonModals.confirm("Confirm refund?")) {
-      AdminService.beeline({
-        method: 'POST',
-        url: '/transactions/refund',
-        data: {
-          ticketId: ticket.id,
-          // dryRun: true,
-        }
-      })
-      .then((response) => {
+      LoadingSpinner.watchPromise(
+        AdminService.beeline({
+          method: 'POST',
+          url: '/transactions/refund/payment',
+          data: {
+            ticketId: ticket.id,
+            targetAmt: originalPrice - discount,
+          }
+        })
+      ).then((response) => {
         var txn = response.data;
         var payment = txn.transactionItems.find(ts => ts.itemType == 'refundPayment' && ts.refundPayment)
 

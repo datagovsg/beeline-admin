@@ -200,9 +200,9 @@
                   <span ng-if="ticket.paymentData.message">
                     {{ticket.paymentData.message}}<br/>
                   </span>
-                  <button class="btn btn-danger actions" ng-click="refund(ticket)"
+                  <button class="btn btn-danger actions" ng-click="refundPayment(ticket)"
                       ng-if="(ticket.status == 'valid' || ticket.status == 'void') && ticket.paymentResource">
-                   <span class="glyphicon glyphicon-credit-card" aria-hidden="true"></span> Refund
+                   <span class="glyphicon glyphicon-credit-card" aria-hidden="true"></span> Refund Payment
                  </button>
                 </td>
                 <td>
