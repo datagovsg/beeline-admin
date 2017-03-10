@@ -1,8 +1,9 @@
 import querystring from 'querystring'
 import assert from 'assert';
+const pickOneModalTemplate = require('../templates/modals/pickOne.html')
 
 export default function($scope, AdminService, RoutesService, LoadingSpinner,
-  $state, $stateParams, issueTicketModal, commonModals) {
+  $state, $stateParams, issueTicketModal, commonModals, $uibModal) {
   $scope.tickets = [];
   $scope.currentPage = 1;
 
@@ -100,22 +101,103 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
     });
   }
 
-  $scope.refund = async function (ticket) {
+  $scope.refundPayment = async function (ticket) {
+    const originalPrice = ticket.boardStop.trip.priceF
+    const discount = ticket.notes.discountValue || 0
+
     if (await commonModals.confirm("Confirm refund?")) {
-      AdminService.beeline({
-        method: 'POST',
-        url: '/transactions/refund',
-        data: {
-          ticketId: ticket.id,
-          // dryRun: true,
-        }
-      })
-      .then((response) => {
+      LoadingSpinner.watchPromise(
+        AdminService.beeline({
+          method: 'POST',
+          url: '/transactions/refund/payment',
+          data: {
+            ticketId: ticket.id,
+            targetAmt: originalPrice - discount,
+          }
+        })
+      ).then((response) => {
         var txn = response.data;
         var payment = txn.transactionItems.find(ts => ts.itemType == 'refundPayment' && ts.refundPayment)
 
         query()
         return commonModals.alert( parseFloat(payment.credit).toFixed(2) + " refunded.")
+      })
+      .catch(err => {
+        console.log(err);
+        return commonModals.alert("Failed...")
+      })
+    }
+  }
+
+  $scope.refundRoutePass = async function (ticket) {
+    const originalPrice = ticket.boardStop.trip.priceF
+    const routeId = ticket.boardStop.trip.routeId
+
+    if (await commonModals.confirm("Confirm refund?")) {
+      // get route
+      let route = await LoadingSpinner.watchPromise(
+        RoutesService.getRoute(routeId)
+      )
+      const invalidCreditTags = [
+        'public', 'lite', 'mandai', 'lelong', 
+        'notify-when-empty', 'success', 'failed',
+      ]
+
+      let tags = _.difference(route.tags, invalidCreditTags)
+      var creditTag
+
+      if(tags.length === 0){
+        await commonModals.alert({
+          title: 'Error',
+          message: 
+          `The route for the selected ticket does not have suitable credit tags.`
+        })
+        return 
+
+      } else if(tags.length > 1){
+        let dialog = $uibModal.open({
+          template: pickOneModalTemplate,
+          keyboard: false,
+          backdrop: 'static',
+          controller: function ($scope) {
+            $scope.title = 'Pick a creditTag to issue to:'
+            $scope.choices = tags
+            $scope.data = {result: tags[0]}
+          }
+        })
+
+        let result = await dialog.result
+
+        if(result){
+          creditTag = result
+        } else {
+          return
+        }
+
+      } else {
+        creditTag = tags[0]
+      }
+
+      LoadingSpinner.watchPromise(
+        AdminService.beeline({
+          method: 'POST',
+          url: '/transactions/refund/routePass',
+          data: {
+            ticketId: ticket.id,
+            targetAmt: originalPrice,
+            creditTag
+          }
+        })
+      ).then((response) => {
+        var txn = response.data;
+        var creditRefund = txn.transactionItems.find(ts => ts.itemType == 'routeCredits')
+
+        const refundAmt = parseFloat(creditRefund.credit).toFixed(2)
+
+        query()
+        return commonModals.alert(
+          `1 Route Pass ($${refundAmt}) refunded to ${ticket.user.name} (id ${ticket.user.id})
+          for route ${route.label} (id ${route.id}) on tag ${creditTag}`)
       })
       .catch(err => {
         console.log(err);
