@@ -6,7 +6,12 @@ export default function ($scope, AdminService, LoadingSpinner, commonModals) {
     basic: ['view-drivers', 'view-admins', 'view-transactions', 'monitor-operations'],
     refund: ['refund'],
     issueTickets: ['issue-tickets'],
-    operations: ['manage-routes', 'manage-drivers', 'drive', 'update-trip-status', 'message-passengers', 'view-passengers', 'manage-notifications'],
+    operations: [
+      'manage-routes', 'manage-drivers',
+      'drive', 'update-trip-status',
+      'message-passengers', 'view-passengers',
+      'manage-notifications', 'manage-customers',
+    ],
     manageCompany: ['manage-company'],
     manageAdmins: ['manage-admins'],
   }
