@@ -204,6 +204,10 @@
                       ng-if="(ticket.status == 'valid' || ticket.status == 'void') && ticket.paymentResource">
                    <span class="glyphicon glyphicon-credit-card" aria-hidden="true"></span> Refund Payment
                  </button>
+                 <button class="btn btn-danger actions" ng-click="refundRoutePass(ticket)"
+                      ng-if="(ticket.status == 'valid' || ticket.status == 'void')">
+                   <span class="glyphicon glyphicon-credit-card" aria-hidden="true"></span> Refund Route Pass
+                 </button>
                 </td>
                 <td>
                   <strong>{{ticket.user.json.name ? (ticket.user.json.name + ' #' + ticket.user.json.index) : ticket.user.name}} </strong>
