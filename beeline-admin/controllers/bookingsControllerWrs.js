@@ -130,7 +130,6 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
   }
 
   $scope.refundRoutePass = async function (ticket) {
-    console.log(ticket)
     const originalPrice = ticket.boardStop.trip.priceF
     const routeId = ticket.boardStop.trip.routeId
 
