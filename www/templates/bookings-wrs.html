@@ -278,8 +278,16 @@
                       ng-if="ticket.status == 'failed'">Failed</span>
                 </td>
                 <td>
-                  {{ticket.createdAt | date:'dd-MMM-yy'}} <br>
-                  {{ticket.createdAt | date:'HH:mm:ss'}}
+                  <span>
+                    Bought:<br>
+                    {{ticket.createdAt | date:'dd-MMM-yy'}} <br>
+                    {{ticket.createdAt | date:'HH:mm:ss'}} <br>
+                  </span><br>
+                  <span ng-if="ticket.ticketRefund">
+                    Refunded:<br>
+                    {{ ticket.refundData.created * 1000 || ticket.ticketRefund.createdAt | date:'dd-MMM-yy'}} <br>
+                    {{ ticket.refundData.created * 1000 || ticket.ticketRefund.createdAt | date:'HH:mm:ss'}} <br>
+                  </span>
                 </td>
                 <td class="item-info text-center">
                   <div class="btn-group" role="group" aria-label="...">
