@@ -200,13 +200,13 @@
                   <span ng-if="ticket.paymentData.message">
                     {{ticket.paymentData.message}}<br/>
                   </span>
-                  <button class="btn btn-danger actions" ng-click="refundPayment(ticket)"
+                  <button class="btn btn-warning actions" ng-click="refundPayment(ticket)"
                       ng-if="(ticket.status == 'valid' || ticket.status == 'void') && ticket.paymentResource">
                    <span class="glyphicon glyphicon-credit-card" aria-hidden="true"></span> Refund Payment
                  </button>
-                 <button class="btn btn-danger actions" ng-click="refundRoutePass(ticket)"
+                 <button class="btn btn-warning actions" ng-click="refundRoutePass(ticket)"
                       ng-if="(ticket.status == 'valid' || ticket.status == 'void')">
-                   <span class="glyphicon glyphicon-credit-card" aria-hidden="true"></span> Refund Route Pass
+                   <span class="glyphicon glyphicon-credit-card" aria-hidden="true"></span> Refund as Credits
                  </button>
                 </td>
                 <td>
@@ -278,8 +278,16 @@
                       ng-if="ticket.status == 'failed'">Failed</span>
                 </td>
                 <td>
-                  {{ticket.createdAt | date:'dd-MMM-yy'}} <br>
-                  {{ticket.createdAt | date:'HH:mm:ss'}}
+                  <span>
+                    Bought:<br>
+                    {{ticket.createdAt | date:'dd-MMM-yy'}} <br>
+                    {{ticket.createdAt | date:'HH:mm:ss'}} <br>
+                  </span><br>
+                  <span ng-if="ticket.ticketRefund">
+                    Refunded:<br>
+                    {{ ticket.refundData.created * 1000 || ticket.ticketRefund.createdAt | date:'dd-MMM-yy'}} <br>
+                    {{ ticket.refundData.created * 1000 || ticket.ticketRefund.createdAt | date:'HH:mm:ss'}} <br>
+                  </span>
                 </td>
                 <td class="item-info text-center">
                   <div class="btn-group" role="group" aria-label="...">
