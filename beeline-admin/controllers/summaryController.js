@@ -70,6 +70,8 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner) {
       })))
     })
     .then((routes) => {
+      //only show public and wrs routes
+      routes = routes.filter((r)=>{return _.intersection(["public","mandai"], r.tags).length > 0});
       for (let route of routes) {
         route.tripsByDay = new Array(numDays)
 
@@ -105,7 +107,6 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner) {
           [{price: undefined, capacity: undefined, count: 0}])
           .filter(s => s.count)
       }
-
       $scope.routes = routes;
       $scope.$digest();
     }))
