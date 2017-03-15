@@ -204,12 +204,8 @@
                       ng-if="(ticket.status == 'valid' || ticket.status == 'void') && ticket.paymentResource">
                    <span class="glyphicon glyphicon-credit-card" aria-hidden="true"></span> Refund Payment
                  </button>
-                 <button class="btn btn-warning actions" ng-click="refundRoutePass(ticket)"
-                      ng-if="(ticket.status == 'valid' || ticket.status == 'void')">
-                   <span class="glyphicon glyphicon-credit-card" aria-hidden="true"></span> Refund as Credits
-                 </button>
-                 <button class="btn btn-primary" ng-click="issueRoutePass(ticket)">
-                   <span class="glyphicon glyphicon-plus-sign"></span> Issue Pass
+                 <button class="btn btn-warning" ng-click="issueRoutePass(ticket)">
+                   <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Issue Credits
                  </button>
                 </td>
                 <td>

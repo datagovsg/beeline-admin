@@ -1,12 +1,31 @@
 const issueRoutePassTemplate = require('../templates/issueRoutePassModal.html');
 import leftPad from 'left-pad';
 
-export default function ($rootScope, $uibModal) {
-  this.open = function (options) {
+export default function ($rootScope, $uibModal, TagsService, commonModals) {
+  this.open = async function (params) {
     var modalScope = $rootScope.$new();
-    modalScope.data = options;
-    modalScope.data.numPasses = 1;
-    modalScope.data.creditAmt = modalScope.data.numPasses * modalScope.data.price
+    modalScope.data = {
+      user: params.user,
+      price: params.boardStop.trip.priceF,
+      route: params.boardStop.trip.route,
+      ticket: params, 
+      numPasses: 1,
+      creditAmt: params.boardStop.trip.priceF,
+      tags: null,
+      tag: null,
+      refundTicket: false,
+    }
+    modalScope.data.tags = TagsService.getCreditTags(modalScope.data.route.tags)
+    modalScope.data.tag = modalScope.data.tags[0] || ''
+
+    if(!modalScope.data.tag){
+      await commonModals.alert({
+        title: 'Error',
+        message: 
+        `The route for the selected ticket does not have suitable credit tags.`
+      })
+      return 
+    }
 
     var modalOptions = {
       controller: IssueRoutePassController,
@@ -18,42 +37,12 @@ export default function ($rootScope, $uibModal) {
     };
 
     var modal = $uibModal.open(modalOptions);
+    return modal.result
   }
 }
 
-function IssueRoutePassController($scope, AdminService, LoadingSpinner, commonModals) {
+function IssueRoutePassController($scope) {
   $scope.$watch('data.numPasses', () => {
-    $scope.data.creditAmt = $scope.data.numPasses * $scope.data.price 
+    $scope.data.creditAmt = Math.round($scope.data.numPasses * $scope.data.price * 100)/100
   })
-
-  $scope.issue = async function () {
-    if (!await commonModals.confirm("Are you sure you want to issue these passes?")) {
-      return;
-    }
-
-    var issueRequest = {
-      userId: $scope.data.user.id,
-      amount: $scope.data.creditAmt,
-      routeId: $scope.data.route.id,
-      tag: $scope.data.tag,
-      description: $scope.data.description,
-    }
-
-    LoadingSpinner.watchPromise(AdminService.beeline({
-      method: 'POST',
-      url: '/transactions/issueFreeRoutePass',
-      data: issueRequest,
-    })
-    .then(() => {
-      $scope.$close();
-      return commonModals.alert('Passes Issued!');
-    }))
-    .catch((err) => {
-      return commonModals.alert({
-        title: 'Error',
-        message: err.data
-      });
-    })
-  }
-
 }
