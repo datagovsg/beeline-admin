@@ -2,7 +2,7 @@ import querystring from 'querystring'
 import assert from 'assert';
 const pickOneModalTemplate = require('../templates/modals/pickOne.html')
 
-export default function($scope, AdminService, RoutesService, LoadingSpinner,
+export default function($scope, AdminService, RoutesService, LoadingSpinner, TagsService,
   $state, $stateParams, issueTicketModal, issueRoutePassModal, commonModals, $uibModal) {
   $scope.tickets = [];
   $scope.currentPage = 1;
@@ -138,12 +138,8 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
       let route = await LoadingSpinner.watchPromise(
         RoutesService.getRoute(routeId)
       )
-      const invalidCreditTags = [
-        'public', 'lite', 'mandai', 'lelong', 
-        'notify-when-empty', 'success', 'failed',
-      ]
 
-      let tags = _.difference(route.tags, invalidCreditTags)
+      let tags = TagsService.getCreditTags(route.tags)
       var creditTag
 
       if(tags.length === 0){
