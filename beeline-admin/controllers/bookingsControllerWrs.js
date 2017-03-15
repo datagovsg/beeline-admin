@@ -193,7 +193,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner, Tag
           }))
         }
 
-        return commonModals.alert(`${numPassesToRefund} Passes Issued!`);
+        return commonModals.alert(`Credits issued!`);
 
       } catch (err) {
         return commonModals.alert({
