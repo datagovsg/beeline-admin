@@ -1,4 +1,4 @@
-const issueRoutePassTemplate = require('../templates/issueRoutePassModal.html');
+const issueRouteCreditsTemplate = require('../templates/issueRouteCreditsModal.html');
 import leftPad from 'left-pad';
 
 export default function ($rootScope, $uibModal, TagsService, commonModals) {
@@ -28,8 +28,8 @@ export default function ($rootScope, $uibModal, TagsService, commonModals) {
     }
 
     var modalOptions = {
-      controller: IssueRoutePassController,
-      template: issueRoutePassTemplate,
+      controller: IssueRouteCreditsController,
+      template: issueRouteCreditsTemplate,
       scope: modalScope,
       // windowClass: 'full-width',
       backdrop: 'static',
@@ -41,7 +41,7 @@ export default function ($rootScope, $uibModal, TagsService, commonModals) {
   }
 }
 
-function IssueRoutePassController($scope) {
+function IssueRouteCreditsController($scope) {
   $scope.$watch('data.numPasses', () => {
     $scope.data.creditAmt = Math.round($scope.data.numPasses * $scope.data.price * 100)/100
   })

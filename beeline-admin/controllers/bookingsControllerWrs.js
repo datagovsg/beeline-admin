@@ -3,7 +3,7 @@ import assert from 'assert';
 const pickOneModalTemplate = require('../templates/modals/pickOne.html')
 
 export default function($scope, AdminService, RoutesService, LoadingSpinner, TagsService,
-  $state, $stateParams, issueTicketModal, issueRoutePassModal, commonModals, $uibModal) {
+  $state, $stateParams, issueTicketModal, issueRouteCreditsModal, commonModals, $uibModal) {
   $scope.tickets = [];
   $scope.currentPage = 1;
 
@@ -155,8 +155,8 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner, Tag
     issueTicketModal.open(issueTicketModalOptions).then(query);
   }
 
-  $scope.issueRoutePass = async function (ticket) {
-    issueRoutePassModal.open(ticket)
+  $scope.issueRouteCredits = async function (ticket) {
+    issueRouteCreditsModal.open(ticket)
     .then(async (data)=>{
       if(!data) return
       const numPassesToRefund = data.numPasses
