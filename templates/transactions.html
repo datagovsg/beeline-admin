@@ -47,7 +47,7 @@
         <input type="checkbox"
           ng-model="filter.itemTypes.refundPayment"
           />
-          Payments
+          Refunds
       </label>
       <label>
         <input type="checkbox"
@@ -60,6 +60,18 @@
           ng-model="filter.itemTypes.account"
           />
           Account
+      </label>
+      <label>
+        <input type="checkbox"
+          ng-model="filter.itemTypes.discount"
+          />
+          Discount
+      </label>
+      <label>
+        <input type="checkbox"
+          ng-model="filter.itemTypes.routeCredits"
+          />
+          Route Credits
       </label>
     </div>
 
@@ -140,7 +152,10 @@
     >
       <td ng-if="adminService.isSuperAdmin()">
       </td>
-      <td>{{item.transaction.id}}<br/>
+      <td>
+        <a ui-sref="^.transactions({id: item.transactionId})">
+          {{item.transactionId}}<br/>
+        </a>
       </td>
       <td>{{item.transaction.createdAt | date:'dd-MMM-yy HH:mm:ss'}}</td>
       <td>{{item.transaction.description}}</td>
@@ -229,6 +244,22 @@
       <td ng-if="item.itemType == 'transfer'"></td>
       <td ng-if="item.itemType == 'transfer'"></td>
       <td ng-if="item.itemType == 'transfer'"></td>
+
+      <!-- transfers -->
+      <td ng-if="item.itemType == 'routeCredits'">{{item.routeCredits.tag}}</td>
+      <td ng-if="item.itemType == 'routeCredits'">{{item.routeCredits.userId}}</td>
+      <td ng-if="item.itemType == 'routeCredits'"></td>
+      <td ng-if="item.itemType == 'routeCredits'"></td>
+      <td ng-if="item.itemType == 'routeCredits'"></td>
+      <td ng-if="item.itemType == 'routeCredits'"></td>
+
+      <!-- transfers -->
+      <td ng-if="item.itemType == 'discount'">{{item.discount.code}}</td>
+      <td ng-if="item.itemType == 'discount'"></td>
+      <td ng-if="item.itemType == 'discount'"></td>
+      <td ng-if="item.itemType == 'discount'"></td>
+      <td ng-if="item.itemType == 'discount'"></td>
+      <td ng-if="item.itemType == 'discount'"></td>
 
       <!-- debit/credit -->
       <td>{{item.debit >= 0 ? item.debit : ''}}</td>
