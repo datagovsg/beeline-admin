@@ -159,7 +159,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner, Tag
     issueRouteCreditsModal.open(ticket)
     .then(async (data)=>{
       if(!data) return
-      const numPassesToRefund = data.numPasses
+      let numPassesToRefund = data.numPasses
 
       try {
         if(data.refundTicket){
@@ -175,8 +175,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner, Tag
             })
           )
 
-          data.numPasses--
-          data.creditAmt = Math.round(data.numPasses * data.price * 100)/100
+          numPassesToRefund--
         }
 
         if(data.numPasses > 0){
@@ -185,7 +184,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner, Tag
             url: '/transactions/issueFreeRoutePass',
             data: {
               userId: data.user.id,
-              amount: data.creditAmt,
+              amount: numPassesToRefund * data.price,
               routeId: data.route.id,
               tag: data.tag,
               description: data.description,
