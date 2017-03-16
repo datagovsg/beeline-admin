@@ -202,11 +202,11 @@
                   </span>
                   <button class="btn btn-danger actions" ng-click="refundPayment(ticket)"
                       ng-if="(ticket.status == 'valid' || ticket.status == 'void') && ticket.paymentResource">
-                   <span class="glyphicon glyphicon-credit-card" aria-hidden="true"></span> Refund Payment
+                   <span class="glyphicon glyphicon-usd" aria-hidden="true"></span> 
+                   Refund {{ticket.boardStop.trip.priceF - ticket.notes.discountValue || 0 | currency}}
                  </button>
-                 <button class="btn btn-warning actions" ng-click="refundRoutePass(ticket)"
-                      ng-if="(ticket.status == 'valid' || ticket.status == 'void')">
-                   <span class="glyphicon glyphicon-credit-card" aria-hidden="true"></span> Refund as Credits
+                 <button class="btn btn-warning" ng-click="issueRoutePass(ticket)">
+                   <span class="glyphicon glyphicon-piggy-bank" aria-hidden="true"></span> Issue Credits
                  </button>
                 </td>
                 <td>
