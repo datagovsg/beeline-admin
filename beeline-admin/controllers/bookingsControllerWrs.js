@@ -178,7 +178,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner, Tag
           numPassesToRefund--
         }
 
-        if(data.numPasses > 0){
+        if(numPassesToRefund > 0){
           await LoadingSpinner.watchPromise(AdminService.beeline({
             method: 'POST',
             url: '/transactions/issueFreeRoutePass',
