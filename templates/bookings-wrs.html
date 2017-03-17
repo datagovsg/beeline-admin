@@ -200,13 +200,9 @@
                   <span ng-if="ticket.paymentData.message">
                     {{ticket.paymentData.message}}<br/>
                   </span>
-                  <button class="btn btn-danger actions" ng-click="refundPayment(ticket)"
+                  <button class="btn btn-danger actions" ng-click="refund(ticket)"
                       ng-if="(ticket.status == 'valid' || ticket.status == 'void') && ticket.paymentResource">
-                   <span class="glyphicon glyphicon-usd" aria-hidden="true"></span> 
-                   Refund {{ticket.boardStop.trip.priceF - ticket.notes.discountValue || 0 | currency}}
-                 </button>
-                 <button class="btn btn-warning" ng-click="issueRouteCredits(ticket)">
-                   <span class="glyphicon glyphicon-piggy-bank" aria-hidden="true"></span> Issue Credits
+                   <span class="glyphicon glyphicon-credit-card" aria-hidden="true"></span> Refund
                  </button>
                 </td>
                 <td>
@@ -278,14 +274,8 @@
                       ng-if="ticket.status == 'failed'">Failed</span>
                 </td>
                 <td>
-                  <span>
-                    {{ticket.createdAt | date:'dd-MMM-yy'}} <br>
-                    {{ticket.createdAt | date:'HH:mm:ss'}} <br>
-                  </span><br>
-                  <span ng-if="ticket.ticketRefund">
-                    {{ ticket.ticketRefund.createdAt | date:'dd-MMM-yy'}} <br>
-                    {{ ticket.ticketRefund.createdAt | date:'HH:mm:ss'}} <br>
-                  </span>
+                  {{ticket.createdAt | date:'dd-MMM-yy'}} <br>
+                  {{ticket.createdAt | date:'HH:mm:ss'}}
                 </td>
                 <td class="item-info text-center">
                   <div class="btn-group" role="group" aria-label="...">
