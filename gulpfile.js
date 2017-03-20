@@ -60,7 +60,7 @@ function webpackPrefix(PREFIX, done) {
 }
 
 gulp.task('webpack', function() {
-  process.env.BACKEND_URL = process.env.BACKEND_URL || 'https://beeline-server-admin.herokuapp.com';
+  process.env.BACKEND_URL = process.env.BACKEND_URL || 'https://beeline-server-dev.herokuapp.com';
 
   return new Promise((resolve, reject) => {
     request.get(`${process.env.BACKEND_URL}/auth/credentials`, (err, response, body) => {
@@ -118,7 +118,7 @@ gulp.task('deploy-copy', ['deploy-prepare-git', 'sass', 'js-libraries'], functio
 })
 
 gulp.task('deploy-build', ['deploy-copy'], function (done) {
-  process.env.BACKEND_URL='https://beeline-monitoring-api.herokuapp.com'
+  process.env.BACKEND_URL='https://beeline-server-admin.herokuapp.com'
   process.env.AUTH0_CID='BslsfnrdKMedsmr9GYkTv7ejJPReMgcE'
   process.env.AUTH0_DOMAIN='beeline.au.auth0.com'
 
