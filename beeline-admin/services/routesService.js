@@ -142,6 +142,10 @@ export default function (AdminService, DriverService, $q, LoadingSpinner, compan
   }
 
   this.saveRoute = function (route) {
+    // sensible defaults
+    route.companyTags = route.companyTags || [];
+    route.tags = route.tags || [];
+
     if (route.id) {
       return LoadingSpinner.watchPromise(AdminService.beeline({
        method: 'PUT',
