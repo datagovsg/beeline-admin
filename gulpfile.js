@@ -60,7 +60,7 @@ function webpackPrefix(PREFIX, done) {
 }
 
 gulp.task('webpack', function() {
-  process.env.BACKEND_URL = process.env.BACKEND_URL || 'https://beeline-server-dev.herokuapp.com';
+  process.env.BACKEND_URL = process.env.BACKEND_URL || 'https://beeline-server-admin.herokuapp.com';
 
   return new Promise((resolve, reject) => {
     request.get(`${process.env.BACKEND_URL}/auth/credentials`, (err, response, body) => {
