@@ -118,7 +118,7 @@ gulp.task('deploy-copy', ['deploy-prepare-git', 'sass', 'js-libraries'], functio
 })
 
 gulp.task('deploy-build', ['deploy-copy'], function (done) {
-  process.env.BACKEND_URL='https://api.beeline.sg'
+  process.env.BACKEND_URL='https://beeline-monitoring-api.herokuapp.com'
   process.env.AUTH0_CID='BslsfnrdKMedsmr9GYkTv7ejJPReMgcE'
   process.env.AUTH0_DOMAIN='beeline.au.auth0.com'
 
