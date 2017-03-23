@@ -151,7 +151,7 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
   .state('c.users', {
     url: '/users/{userId}',
     templateUrl: 'templates/users.html',
-    controller: 'users',
+    controller: 'usersController',
     data: {
       requiresLogin: true,
     }

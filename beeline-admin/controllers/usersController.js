@@ -1,7 +1,8 @@
 import assert from 'assert';
 
-export default function($scope, AdminService, RoutesService, LoadingSpinner,
-  $state, $stateParams, issueTicketModal, commonModals, $uibModal) {
+angular.module('beeline-admin')
+  .controller('usersController', function ($scope, AdminService, RoutesService, 
+    LoadingSpinner, $state, $stateParams, issueTicketModal, commonModals, $uibModal) {
 
   $scope.user = null
   $scope.selector = { userId: null }
@@ -38,7 +39,9 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner,
           message: pin.data
         })
       }
-    )
-  }  
+    ).catch(err => {
+      console.log(err)
+    })
+  }
 
-}
+})
