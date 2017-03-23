@@ -86,7 +86,7 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
   })
 
   .state('c.bookings', {
-    url: '/bookings?routeId&tripId',
+    url: '/bookings?routeId&tripId&userId',
     templateUrl: 'templates/bookings-wrs.html',
     controller: 'bookingsWrs',
     data: {
@@ -147,6 +147,16 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
       requiresLogin: true,
     }
   })
+
+  .state('c.users', {
+    url: '/users/{userId}',
+    templateUrl: 'templates/users.html',
+    controller: 'users',
+    data: {
+      requiresLogin: true,
+    }
+  })
+
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/c//bookings');
 }

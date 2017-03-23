@@ -58,6 +58,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner, Tag
   $scope.$watch(() => $stateParams.id, () => {
     $scope.filter.routeId = parseInt($stateParams.routeId);
     $scope.filter.tripId = parseInt($stateParams.tripId);
+    $scope.filter.userQuery = parseInt($stateParams.userId);
   })
   var myState = $state.current.name;
   $scope.$watchGroup(['filter.routeId', 'filter.tripId'], () => {
