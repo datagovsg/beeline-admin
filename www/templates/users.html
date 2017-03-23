@@ -32,6 +32,18 @@
             <th>Telephone:</th>
             <td>{{user.telephone}}</td>
           </tr>
+          <tr>
+            <th>Registered:</th>
+            <td>{{user.createdAt | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+          </tr>
+          <tr>
+            <th>Last Login:</th>
+            <td>{{user.lastLogin | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+          </tr>
+          <tr>
+            <th>Last App Used:</th>
+            <td>{{user.lastUsedAppName}}</td>
+          </tr>
         </table>
         <button class="btn btn-primary" ng-click="getUserPin()" ng-if="adminService.isSuperAdmin()">Get PIN</button>
         
