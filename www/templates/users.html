@@ -83,13 +83,14 @@
           <tr ng-repeat="credit in routeCredits">
             <td>{{ credit.tag }}</td>
             <td>{{ credit.balance | currency }}</td>
-            <td><button class="btn btn-primary">Add credit</button></td>
+            <td><!-- <button class="btn btn-primary btn-sm">Add credit</button> --></td>
           </tr>
         </tbody>
       </table>
     </div>
     <div class="col-sm-7" ng-if="!routeCredits || routeCredits.length == 0">
-      <h3>No data to display</h3>
+      <h3 ng-if="companyId">No data to display</h3>
+      <h3 ng-if="!companyId">Please select a company to display data</h3>
     </div>
     <div class="col-sm-2">
       <h2>Navigation</h2>
