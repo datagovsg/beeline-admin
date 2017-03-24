@@ -5,19 +5,25 @@ export default function (AdminService) {
     template: `
 <ui-select ng-model="data.user">
   <ui-select-match placeholder="Enter a name or telephone">
-    <span>
+    <span ng-if=$select.selected.id>
       ({{$select.selected.id}})
       {{$select.selected.name}}
       {{$select.selected.telephone}}
+    </span>
+    <span ng-if=!$select.selected.id>
+      {{$select.selected.searchStatus}}
     </span>
   </ui-select-match>
   <ui-select-choices repeat="user in users track by user.id"
      refresh="refreshUsers($select.search)"
      refresh-delay="300">
-    <span>
+    <span ng-if="user.id">
       ({{user.id}})
       {{user.name}}
       {{user.telephone}}
+    </span>
+    <span ng-if="!user.id">
+      {{user.searchStatus}}
     </span>
   </ui-select-choices>
   <ui-select-no-choice>
@@ -30,6 +36,7 @@ export default function (AdminService) {
     scope: {
       ngModel: '=?',
       user: '<initialUser',
+      includeEphemeral: '<includeEphemeral'
     },
     link(scope, elem, attr) {
       var displayUser =
@@ -45,18 +52,25 @@ export default function (AdminService) {
 
       var lastPromise = null;
       scope.refreshUsers = function (search) {
-        console.log(search);
+        if(search.length < 3) return
+        scope.users = [{searchStatus: 'Searching...'}]
+
         var promise = AdminService.beeline({
           method: 'GET',
           url: `/users/search?` + querystring.stringify({
             q: search,
-            includeEphemeral: true,
+            includeEphemeral: scope.includeEphemeral,
           })
         })
         .then((response) => {
           if (lastPromise === promise) {
-            scope.users = response.data;
-
+            if(response.data.length > 0){
+              scope.users = response.data;
+            } else {
+              const noResultsStatus = {searchStatus: 'No results found'}
+              scope.users = [noResultsStatus]
+              scope.data.user = noResultsStatus
+            }
             // // If there's a pre-set user id
             // scope.data.ngModal = scope.users.find(u => u.id === scope.userId)
           }

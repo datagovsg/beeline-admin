@@ -3,16 +3,36 @@
     word-wrap: break-word;
     word-break: break-all;
   }
+
+  user-selector .ui-select-container {
+    padding-top: 33px;
+  }
+
+  user-selector input.ui-select-search {
+    width: 100% !important;
+  }
+
+  ul li {
+    list-style: none;
+    padding-left: 10px;
+  }
+
+  .table > tbody > tr > td {
+    vertical-align: middle;
+  }
+
+  .ui-select-bootstrap .ui-select-choices-row>a{
+    padding-left: 2px
+  }
 </style>
 
 <div class="container-fluid withnav">
   <div class="row">
-    <div class="col-sm-10">
+    <div class="col-sm-3">
       <h1>{{'User #' + user.id}}</h1>    
     </div>
-    <div class="col-sm-2">
-      <label>User Search</label>
-      <user-selector ng-model="selector.userId" initial-user="user"></user-selector>
+    <div class="col-sm-7">
+      <user-selector ng-model="selector.userId" initial-user="user" include-ephemeral="false" theme="bootstrap" spinner-enabled="true"></user-selector>
     </div>
   </div>
   <div class="row">

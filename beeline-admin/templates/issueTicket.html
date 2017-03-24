@@ -138,7 +138,7 @@
               <tr ng-repeat="user in data.users">
                 <td>{{$index+1}}</td>
                 <td class="user-text-wrap">
-                    <user-selector ng-model="user.id" initial-user="user"></user-selector>
+                    <user-selector ng-model="user.id" initial-user="user" include-ephemeral="true"></user-selector>
                     <div class="conflicts" ng-if="conflictsByUid[user.id]">
                       This user already has a trip on
                       <span ng-repeat="conflict in conflictsByUid[user.id]">{{
