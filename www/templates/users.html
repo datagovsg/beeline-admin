@@ -65,11 +65,12 @@
             <td>{{user.lastUsedAppName}}</td>
           </tr>
         </table>
+        <a ui-sref="^.bookings({userId: user.id})" title=""><button class="btn btn-primary">View Bookings</button></a>
         <button class="btn btn-primary" ng-click="getUserPin()" ng-if="adminService.isSuperAdmin()">Get PIN</button>
         
       </div>
     </div>
-    <div class="col-sm-7" ng-if="routeCredits && routeCredits.length > 0">
+    <div class="col-sm-9" ng-if="routeCredits && routeCredits.length > 0">
       <h2>Route Credits</h2>
       <table class="table">
         <thead>
@@ -88,15 +89,9 @@
         </tbody>
       </table>
     </div>
-    <div class="col-sm-7" ng-if="!routeCredits || routeCredits.length == 0">
+    <div class="col-sm-9" ng-if="!routeCredits || routeCredits.length == 0">
       <h3 ng-if="companyId">No data to display</h3>
       <h3 ng-if="!companyId">Please select a company to display data</h3>
-    </div>
-    <div class="col-sm-2">
-      <h2>Navigation</h2>
-      <ul class="nav">
-        <li><a ui-sref="^.bookings({userId: user.id})" title="">Bookings</a></li>
-      </ul>
     </div>
   </div>
 </div>

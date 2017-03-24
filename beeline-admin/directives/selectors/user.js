@@ -12,6 +12,7 @@ export default function (AdminService) {
     </span>
     <span ng-if=!$select.selected.id>
       {{$select.selected.searchStatus}}
+      {{$select.selected.email}}
     </span>
   </ui-select-match>
   <ui-select-choices repeat="user in users track by user.id"
@@ -24,6 +25,7 @@ export default function (AdminService) {
     </span>
     <span ng-if="!user.id">
       {{user.searchStatus}}
+      {{user.email}}
     </span>
   </ui-select-choices>
   <ui-select-no-choice>
