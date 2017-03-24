@@ -18,10 +18,14 @@ angular.module('beeline-admin')
           url: `/user/${userId}`
         })
       ).then(resp => {
-        $scope.user = resp.data;
+        if(resp){
+          $scope.user = resp.data;
+        }
       }).catch(err => {
-        console.log(err)
-        // popup of error, then redirect back to main page
+        commonModals.alert(`${err && err.data && err.data.message}`)
+        .then(()=>{
+          $state.go('c.users', { userId: null })
+        })
       })
 
       if($scope.companyId){
@@ -41,12 +45,11 @@ angular.module('beeline-admin')
     })
     
     pinPromise.then(pin => {
-        commonModals.alert({
-          title: 'User Login PIN',
-          message: pin.data
-        })
-      }
-    ).catch(err => {
+      commonModals.alert({
+        title: 'User Login PIN',
+        message: pin.data
+      })
+    }).catch(err => {
       console.log(err)
     })
   }
