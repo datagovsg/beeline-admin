@@ -210,8 +210,8 @@
                  </button>
                 </td>
                 <td>
-                  <strong>{{ticket.user.json.name ? (ticket.user.json.name + ' #' + ticket.user.json.index) : ticket.user.name}} </strong>
-                  <br> (UID: {{ticket.user.id}})
+                  <a ui-sref="^.users({userId: ticket.user.id})"><strong>{{ticket.user.json.name ? (ticket.user.json.name + ' #' + ticket.user.json.index) : ticket.user.name}} </strong>
+                  <br> (UID: {{ticket.user.id}})</a>
                   <br> {{ticket.user.json.telephone || ticket.user.telephone}}
                   <br> {{ticket.user.json.email || ticket.user.email}}
                   <span ng-repeat="discountCode in ticket.notes.discountCodes">

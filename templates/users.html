@@ -1,0 +1,78 @@
+<div class="container-fluid withnav users">
+  <div class="row">
+    <div class="col-sm-3">
+      <h1>Users</h1>    
+    </div>
+    <div class="col-sm-6">
+      <user-selector ng-model="selector.userId" initial-user="user" include-ephemeral="false"></user-selector>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-3">
+      <div>
+        <table class="table">
+          <h2>Information</h2>
+          <tr>
+            <th>UserId:</th>
+            <td>{{user.id}}</td>
+          </tr>
+          <tr>
+            <th>Name:</th>
+            <td>{{user.name}}</td>
+          </tr>
+          <tr>
+            <th>Email:</th>
+            <td>{{user.email}}</td>
+          </tr>
+          <tr>
+            <th>Telephone:</th>
+            <td>{{user.telephone}}</td>
+          </tr>
+          <tr>
+            <th>Registered:</th>
+            <td>{{user.createdAt | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+          </tr>
+          <tr>
+            <th>Last Login:</th>
+            <td>{{user.lastLogin | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+          </tr>
+          <tr>
+            <th>Last App Used:</th>
+            <td>{{user.lastUsedAppName}}</td>
+          </tr>
+        </table>
+        <div class="row">
+          <div class="col-sm-12">
+            <a ui-sref="^.bookings({userId: user.id})"><button class="btn btn-primary btn-block btm-offset">Bookings for this month</button></a>
+          </div>
+          <!-- <div class="col-sm-12">
+            <a title=""><button class="btn btn-primary btn-block btm-offset">Credits for this month</button></a> 
+          </div> -->
+          <div class="col-sm-12">
+            <button class="btn btn-primary btn-block btm-offset" ng-click="getUserPin()" ng-if="adminService.isSuperAdmin()" ng-disabled="!user">Get PIN</button>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+    <div class="col-sm-9">
+      <h2>Route Credits</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Tags</th>
+            <th>Amount</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="credit in routeCredits">
+            <td>{{ credit.tag }}</td>
+            <td>{{ credit.balance | currency }}</td>
+            <td><!-- <button class="btn btn-primary btn-sm">Add credit</button> --></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
