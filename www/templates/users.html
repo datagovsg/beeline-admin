@@ -1,0 +1,69 @@
+<div class="container-fluid withnav users">
+  <div class="row">
+    <div class="col-sm-3">
+      <h1>{{'User #' + user.id}}</h1>    
+    </div>
+    <div class="col-sm-6">
+      <user-selector ng-model="selector.userId" initial-user="user" include-ephemeral="false"></user-selector>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-3">
+      <div>
+        <table class="table">
+          <h2>Information</h2>
+          <tr>
+            <th>Name:</th>
+            <td>{{user.name}}</td>
+          </tr>
+          <tr>
+            <th>Email:</th>
+            <td>{{user.email}}</td>
+          </tr>
+          <tr>
+            <th>Telephone:</th>
+            <td>{{user.telephone}}</td>
+          </tr>
+          <tr>
+            <th>Registered:</th>
+            <td>{{user.createdAt | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+          </tr>
+          <tr>
+            <th>Last Login:</th>
+            <td>{{user.lastLogin | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+          </tr>
+          <tr>
+            <th>Last App Used:</th>
+            <td>{{user.lastUsedAppName}}</td>
+          </tr>
+        </table>
+        <a ui-sref="^.bookings({userId: user.id})" title=""><button class="btn btn-primary">View Bookings</button></a>
+        <button class="btn btn-primary" ng-click="getUserPin()" ng-if="adminService.isSuperAdmin()">Get PIN</button>
+        
+      </div>
+    </div>
+    <div class="col-sm-9" ng-if="routeCredits && routeCredits.length > 0">
+      <h2>Route Credits</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Tags</th>
+            <th>Amount</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="credit in routeCredits">
+            <td>{{ credit.tag }}</td>
+            <td>{{ credit.balance | currency }}</td>
+            <td><!-- <button class="btn btn-primary btn-sm">Add credit</button> --></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-sm-9" ng-if="!routeCredits || routeCredits.length == 0">
+      <h3 ng-if="companyId">No data to display</h3>
+      <h3 ng-if="!companyId">Please select a company to display data</h3>
+    </div>
+  </div>
+</div>

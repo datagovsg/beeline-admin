@@ -9,6 +9,7 @@ export default function (AdminService) {
       ({{$select.selected.id}})
       {{$select.selected.name}}
       {{$select.selected.telephone}}
+      {{$select.selected.email}}
     </span>
   </ui-select-match>
   <ui-select-choices repeat="user in users track by user.id"
@@ -18,47 +19,48 @@ export default function (AdminService) {
       ({{user.id}})
       {{user.name}}
       {{user.telephone}}
+      {{user.email}}
     </span>
   </ui-select-choices>
   <ui-select-no-choice>
-    <span>
-      No results
-    </span>
+    No results found
   </ui-select-no-choice>
 </ui-select>
     `,
     scope: {
       ngModel: '=?',
       user: '<initialUser',
+      includeEphemeral: '<includeEphemeral'
     },
-    link(scope, elem, attr) {
+    controller($scope) {
       var displayUser =
-        scope.user ? scope.user
-        : scope.ngModel ? {id: scope.ngModel, name: `(User #${scope.ngModel})`}
+        $scope.user ? $scope.user
+        : $scope.ngModel ? {id: $scope.ngModel, name: `(User #${$scope.ngModel})`}
         : null;
-      scope.users = [displayUser];
-      scope.data = {
-        user: displayUser
+      $scope.users = [displayUser];
+      $scope.data = {
+        user: displayUser,
       };
 
-      scope.$watch('data.user', (val) => scope.ngModel = val ? val.id : val);
+      $scope.$watch('data.user', (val) => $scope.ngModel = val ? val.id : val);
 
       var lastPromise = null;
-      scope.refreshUsers = function (search) {
-        console.log(search);
+      $scope.refreshUsers = function (search) {
+        if(search.length < 3) return 
+
         var promise = AdminService.beeline({
           method: 'GET',
           url: `/users/search?` + querystring.stringify({
             q: search,
-            includeEphemeral: true,
+            includeEphemeral: $scope.includeEphemeral,
           })
         })
         .then((response) => {
           if (lastPromise === promise) {
-            scope.users = response.data;
+            $scope.users = response.data;
 
             // // If there's a pre-set user id
-            // scope.data.ngModal = scope.users.find(u => u.id === scope.userId)
+            // $scope.data.ngModal = scope.users.find(u => u.id === scope.userId)
           }
         });
         lastPromise = promise;
