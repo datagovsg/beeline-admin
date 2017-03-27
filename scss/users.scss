@@ -4,36 +4,43 @@
     word-break: break-all;
   }
 
-  user-selector .ui-select-container {
-    padding-top: 33px;
-  }
+  user-selector {
+    .ui-select-container {
+      padding-top: 33px;
+    }
 
-  user-selector input.ui-select-search {
-    width: 100% !important;
-  }
+    .ui-select-search {
+      width: 100% !important;
+    }
 
-  ul.ui-select-no-choice {
-    width: 100%;
-  }
+    ul.ui-select-no-choice {
+      width: 100%;
+    }
 
-  ul.ui-select-no-choice li {
-    list-style: none;
-    padding-left: 10px;
-    padding-bottom: 0px;
-  }
+    ul.ui-select-no-choice li {
+      list-style: none;
+      padding-left: 12px;
+      padding-bottom: 0px;
+    }
 
-  ul li.ui-select-choices-group{
-    list-style: none;
-    padding-left: 10px;
-    padding-bottom: 0px;
-    width: 100%;
+    ul li.ui-select-choices-group{
+      list-style: none;
+      padding-left: 10px;
+      padding-bottom: 0px;
+      width: 100%;
+    }
+
+    ul li.ui-select-choices-group .ui-select-choices-row-inner {
+      padding-left: 2px
+    }
+
   }
 
   .table > tbody > tr > td {
     vertical-align: middle;
   }
 
-  .ui-select-bootstrap .ui-select-choices-row>a{
-    padding-left: 2px
+  .btm-offset {
+    margin-bottom: 2px
   }
 }

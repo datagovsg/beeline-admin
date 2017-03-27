@@ -4,7 +4,7 @@ export default function (AdminService) {
   return {
     template: `
 <ui-select ng-model="data.user">
-  <ui-select-match placeholder="Enter a name or telephone">
+  <ui-select-match placeholder="Enter a name or telephone or email">
     <span>
       ({{$select.selected.id}})
       {{$select.selected.name}}
@@ -37,7 +37,7 @@ export default function (AdminService) {
         $scope.user ? $scope.user
         : $scope.ngModel ? {id: $scope.ngModel, name: `(User #${$scope.ngModel})`}
         : null;
-      $scope.users = [displayUser];
+      $scope.users = displayUser ? [displayUser] : [];
       $scope.data = {
         user: displayUser,
       };

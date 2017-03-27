@@ -38,6 +38,8 @@ angular.module('beeline-admin')
   })
 
   $scope.getUserPin = async function (){
+    if(!$scope.user) return
+      
     const userId = $scope.user.id
     let pinPromise = AdminService.beeline({
       method: 'GET',
