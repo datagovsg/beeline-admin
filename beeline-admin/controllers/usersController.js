@@ -29,10 +29,26 @@ angular.module('beeline-admin')
       })
 
       if($scope.companyId){
-        RoutesService.fetchRouteCredits(userId, $scope.companyId)
-        .then(routeCredits => {
-          $scope.routeCredits = routeCredits
-        })
+        LoadingSpinner.watchPromise(
+          Promise.all([
+            RoutesService.fetchRouteCredits(userId, $scope.companyId),
+            RoutesService.getRoutes({includeTrips: true})
+          ]).then(([routeCredits, routes]) => {
+            let companyRoutes = routes.filter(
+              r => r.transportCompanyId == $scope.companyId
+            )
+
+            for(let rc of routeCredits){
+              rc.routes = companyRoutes.filter(
+                r => r.tags.indexOf(rc.tag) !== -1
+              )
+            }
+
+            $scope.routeCredits = routeCredits
+
+            $scope.$apply()
+          })
+        )
       }
     }
   })

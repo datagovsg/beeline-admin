@@ -61,7 +61,10 @@
         <thead>
           <tr>
             <th>Tags</th>
-            <th>Amount</th>
+            <th>Balance</th>
+            <th>Route Label</th>
+            <th>Route Description</th>
+            <th>Price</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -69,6 +72,21 @@
           <tr ng-repeat="credit in routeCredits">
             <td>{{ credit.tag }}</td>
             <td>{{ credit.balance | currency }}</td>
+            <td>
+              <p ng-repeat="route in credit.routes">
+                {{ route.label }}
+              </p>
+            </td>
+            <td>
+              <p ng-repeat="route in credit.routes">
+                {{ route.name }}
+              </p>
+            </td>
+            <td>
+              <p ng-repeat="route in credit.routes">
+                {{ route.trips[0].price | currency }}
+              </p>
+            </td>
             <td><!-- <button class="btn btn-primary btn-sm">Add credit</button> --></td>
           </tr>
         </tbody>
