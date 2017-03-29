@@ -157,54 +157,17 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner, Tag
   }
 
   $scope.issueRouteCredits = async function (ticket) {
-    issueRouteCreditsModal.open(ticket)
-    .then(async (data)=>{
-      if(!data) return
-      let numPassesToRefund = data.numPasses
+    let context = {
+      user: ticket.user,
+      price: ticket.boardStop.trip.priceF,
+      route: ticket.boardStop.trip.route,
+      ticket
+    }
 
-      try {
-        if(data.refundTicket){
-          await LoadingSpinner.watchPromise(
-            AdminService.beeline({
-              method: 'POST',
-              url: '/transactions/refund/routePass',
-              data: {
-                ticketId: data.ticket.id,
-                targetAmt: data.price,
-                creditTag: data.tag
-              }
-            })
-          )
-
-          numPassesToRefund--
-        }
-
-        if(numPassesToRefund > 0){
-          await LoadingSpinner.watchPromise(AdminService.beeline({
-            method: 'POST',
-            url: '/transactions/issueFreeRoutePass',
-            data: {
-              userId: data.user.id,
-              amount: numPassesToRefund * data.price,
-              routeId: data.route.id,
-              tag: data.tag,
-              description: data.description,
-            }
-          }))
-        }
-
-        return commonModals.alert(`Credits issued!`);
-
-      } catch (err) {
-        return commonModals.alert({
-          title: 'Failed',
-          message: `${err.data.statusCode} 
-            ${err.data.error}: ${err.data.message}`
-        })
-      }
-
-    })
-    .then(query)
+    if(await issueRouteCreditsModal.issueOn(context)){
+      commonModals.alert('Credits issued').then(query)
+    }
+      
   }
 
   // Edit ticket button
