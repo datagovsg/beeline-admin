@@ -9,6 +9,7 @@ angular.module('beeline-admin')
   $scope.routeCredits = null
   $scope.adminService = AdminService
   $scope.companyId = $stateParams.companyId || null
+  $scope.now = Date.now()
 
   $scope.$watch('selector.userId', userId => {
     if(userId){
@@ -90,6 +91,12 @@ angular.module('beeline-admin')
         rc.routes = companyRoutes.filter(
           r => r.tags.indexOf(rc.tag) !== -1
         )
+
+        for(let route of rc.routes){
+          const tripDates = route.trips.map(trip => trip.date)
+          route.startDate = new Date(_.min(tripDates));
+          route.endDate = new Date(_.max(tripDates));
+        }
       }
 
       $scope.routeCredits = routeCredits

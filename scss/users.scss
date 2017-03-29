@@ -1,7 +1,7 @@
 .users {
   td {
-    word-wrap: break-word;
-    word-break: break-all;
+    word-wrap: normal;
+    word-break: break-word;
   }
 
   user-selector {
@@ -36,11 +36,25 @@
 
   }
 
-  .table > tbody > tr > td {
-    vertical-align: middle;
+  .table tbody tr td {
+    // vertical-align: middle;
   }
 
   .btm-offset {
     margin-bottom: 2px
   }
+
+  .width-limit-md {
+    width: 19%;
+  }
+
+  .width-limit-xs {
+    width: 3%
+  }
+
+  .route-header {
+    background-color: #AAA;
+    border-color: #AAA
+  }
+
 }
