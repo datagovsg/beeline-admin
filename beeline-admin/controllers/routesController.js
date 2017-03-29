@@ -18,7 +18,7 @@ export default function($scope, $state, $urlRouter, AdminService, LoadingSpinner
 
   $scope.data = [];
   $scope.filter = {
-    perPage: 20,
+    perPage: 30,
     page: 1,
   	orderBy: 'label',
   	order: 'asc',

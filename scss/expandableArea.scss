@@ -2,7 +2,7 @@
 
 .expandable-area {
   overflow: hidden;
-  max-height: 100px;
+  max-height: 70px;
   transition: max-height 0.1s linear;
 
   &.expanded {
