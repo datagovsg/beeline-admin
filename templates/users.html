@@ -30,11 +30,11 @@
           </tr>
           <tr>
             <th>Registered:</th>
-            <td>{{user.createdAt | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+            <td>{{user.createdAt | date:'dd MMM yyyy HH:mm:ss'}}</td>
           </tr>
           <tr>
             <th>Last Login:</th>
-            <td>{{user.lastLogin | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+            <td>{{user.lastLogin | date:'dd MMM yyyy HH:mm:ss'}}</td>
           </tr>
           <tr>
             <th>Last App Used:</th>
@@ -43,7 +43,7 @@
         </table>
         <div class="row">
           <div class="col-sm-12">
-            <a ui-sref="^.bookings({userId: user.id})"><button class="btn btn-primary btn-block btm-offset">Bookings for this month</button></a>
+            <a ui-sref="^.bookings({userId: user.id})"><button class="btn btn-primary btn-block btm-offset" ng-disabled="!user">User booking for this month</button></a>
           </div>
           <!-- <div class="col-sm-12">
             <a title=""><button class="btn btn-primary btn-block btm-offset">Credits for this month</button></a> 
@@ -60,16 +60,78 @@
       <table class="table">
         <thead>
           <tr>
-            <th>Tags</th>
-            <th>Amount</th>
             <th>Actions</th>
+            <th>Credit Tag</th>
+            <th>Credit Balance</th>
+            <th class="route-header">Route Label</th>
+            <th class="route-header">Route Description</th>
+            <th class="route-header">Route Status</th>
+            <th class="route-header">Boarding</th>
+            <th class="route-header">Alighting</th>
+            <th class="route-header">Route Price</th>
           </tr>
         </thead>
-        <tbody>
-          <tr ng-repeat="credit in routeCredits">
-            <td>{{ credit.tag }}</td>
-            <td>{{ credit.balance | currency }}</td>
-            <td><!-- <button class="btn btn-primary btn-sm">Add credit</button> --></td>
+        <tbody ng-repeat="credit in routeCredits">
+          <tr ng-repeat="route in credit.routes">
+            <td ng-if="$index == 0" rowspan="{{ credit.routes.length }}">
+              <button class="btn btn-warning btn-sm" ng-click="issueRouteCredits(credit)"><span class="glyphicon glyphicon-piggy-bank" aria-hidden="true"></span>Add credit</button>
+            </td>
+            <td ng-if="$index == 0" rowspan="{{ credit.routes.length }}">
+              <ul class="tags"><li class="tags">{{ credit.tag }}</li></ul>
+            </td>
+            <td ng-if="$index == 0" rowspan="{{ credit.routes.length }}" class="width-limit-xs">{{ credit.balance | currency }}</td>
+            <td>
+              <span class="route-label">{{ route.label }}</span>
+            </td>
+            <td class="width-limit-md">
+              <table class="borderless">
+                <tr>
+                  <td style="width:25%">From:</td>
+                  <td>{{ route.from }}</td>
+                </tr>
+                <tr>
+                  <td>To:</td>
+                  <td>{{ route.to }}</td>
+                </tr>
+              </table>
+            </td>
+            <td class="routes-page">
+              <span class="label route-active"
+                  ng-if="route.startDate.getTime() <= now && now <= route.endDate.getTime() + 24*3600*1000">Active</span>
+              <span class="label route-notstarted"
+                  ng-if="now < route.startDate.getTime()">Not Started</span>
+              <span class="label route-ended"
+                  ng-if="now > route.endDate.getTime() + 24*3600*1000">Ended</span>
+            </td>
+            <td class="width-limit-md">
+              <expandable-area>
+                <table class="borderless">
+                  <tr ng-repeat="tripStop in route.trips[0].tripStops | filter: {canBoard: true}">
+                    <td class="text-nowrap">
+                      {{tripStop.time | date:'HH:mm'}}
+                    </td>
+                    <td>
+                      {{tripStop.stop.description}}
+                    </td>
+                  </tr>
+                </table>
+              </expandable-area>
+            </td>
+            <td class="width-limit-md">
+              <expandable-area>
+                <table class="borderless">
+                  <tr ng-repeat="tripStop in route.trips[0].tripStops | filter: {canAlight: true}">
+                    <td class="text-nowrap">
+                      {{tripStop.time | date:'HH:mm'}}
+                    </td>
+                    <td>
+                      {{tripStop.stop.description}}
+                    </td>
+                  </tr>
+                </table>
+              </expandable-area>
+            </td>
+            <td class="width-limit-xs">{{ route.trips[0].price | currency }}</td>
           </tr>
         </tbody>
       </table>
