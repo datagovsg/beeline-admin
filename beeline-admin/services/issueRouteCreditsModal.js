@@ -100,7 +100,7 @@ export default function ($rootScope, $uibModal, AdminService,
       console.log(err)
       await commonModals.alert({
         title: 'Failed',
-        message: err
+        message: `${err && err.data && err.data.message}`
       })
 
       return false
