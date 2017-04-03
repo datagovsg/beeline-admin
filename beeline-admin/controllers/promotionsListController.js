@@ -42,7 +42,7 @@ angular.module('beeline-admin')
             qualifyingCriteria: [{type: 'limitByCompany', params: {companyId}}],
             discountFunction: { type: 'simpleRate', params: {rate: 0.0}},
             refundFunction: { type: 'refundDiscountedAmt', params: {} },
-            usageLimits: {userLimit: 0, globalLimit: 0}
+            usageLimit: {userLimit: 0, globalLimit: 0}
           }
         }
       })
