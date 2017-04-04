@@ -139,6 +139,24 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
     }
   })
 
+  .state('c.telephone-lists', {
+    url: '/telephoneLists',
+    templateUrl: 'templates/telephone-lists.html',
+    controller: 'telephoneListsController',
+    data: {
+      requiresLogin: true,
+    }
+  })
+
+  .state('c.telephone-list', {
+    url: '/telephoneLists/{telephoneListId}',
+    templateUrl: 'templates/telephone-list.html',
+    controller: 'telephoneListController',
+    data: {
+      requiresLogin: true,
+    }
+  })
+
   .state('c.notifications', {
     url: '/notifications',
     templateUrl: 'templates/notifications.html',
