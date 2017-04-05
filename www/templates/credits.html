@@ -1,0 +1,89 @@
+<div class="container-fluid withnav credits">
+  <div class="row">
+    <div class="col-sm-8">
+      <h1>Credits</h1>
+      <form>
+        <label>Filter by:</label>
+        <div class="form-group">
+            <user-selector ng-model="filter.userId" include-ephemeral="false"></user-selector>
+        </div>
+        <div class="form-group">
+          <label>Credit Tag</label>
+          <input type="text" class="form-control" ng-model="filter.tag">
+        </div>
+        <div class="form-group">
+          <label>TransactionType</label>
+          <input type="text" class="form-control" ng-model="filter.transactionType">
+        </div>
+        <div class="form-group">
+          <div class="checkbox">
+            <label><input type="checkbox" ng-model="filter.hideUncommittedTransactions">Hide uncommitted transactions</label>
+          </div>
+        </div>
+        <br>
+
+      </form>
+    </div>
+    <div class="col-sm-4">
+      <div class="datepicker-wrap">
+        <h4 class="text-center">
+          Select the start date, and the end date:
+        </h4>
+        <span-select month-changed="monthChanged" first-date="filter.startDate" last-date="filter.endDate" highlight-days="disp.highlightDays"></span-select>
+      </div>
+    </div>
+  </div>
+  <div class="row text-center">
+    <div class="col-lg-12">
+        <uib-pagination boundary-links="true" ng-model="paging.page" total-items="disp.totalItems" items-per-page="paging.perPage"></uib-pagination>
+        <div>
+          Showing {{(paging.page-1) * paging.perPage + 1}} to {{(paging.page-1) * paging.perPage + disp.transactions.length}} of {{disp.totalItems}}
+        </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>S/N</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Description</th>
+            <th>Type</th>
+            <th>User</th>
+            <th>Tag</th>
+            <th>Amount</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="txn in disp.transactions track by $index">
+            <td>{{$index + 1}}</td>
+            <td>{{txn.createdAt | date:'dd MMM yyyy HH:mm:ss'}}</td>
+            <th>{{txn.transaction.committed ? 'Valid' : 'Failed'}}</th>
+            <td>{{txn.transaction.description}}</td>
+            <td>{{txn.transaction.type}}</td>
+            <td>
+            <a ui-sref="^.users({userId: ticket.user.id})">
+            <strong>{{txn.routeCredits.user.name}}</strong>
+            <br>(UID: {{txn.routeCredits.userId}})</a>
+            <br>{{txn.routeCredits.user.telephone}}
+            <br>{{txn.routeCredits.user.email}}
+            </td>
+            <td><ul class="tags"><li class="tags">{{txn.routeCredits.tag}}</li></ul></td>
+            <td>{{txn.credit | currency}}</td>
+            <td>
+              <!-- <button class="btn btn-primary btn-xs">Dummy</button> -->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="row text-center">
+    <div class="col-lg-12">
+        <uib-pagination boundary-links="true" ng-model="paging.page" total-items="disp.totalItems" items-per-page="paging.perPage"></uib-pagination>
+    </div>
+  </div>
+</div>
