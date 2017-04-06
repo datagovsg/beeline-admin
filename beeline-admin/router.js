@@ -139,19 +139,19 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
     }
   })
 
-  .state('c.telephone-lists', {
-    url: '/telephoneLists',
-    templateUrl: 'templates/telephone-lists.html',
-    controller: 'telephoneListsController',
+  .state('c.contact-lists', {
+    url: '/contactLists',
+    templateUrl: 'templates/contact-lists.html',
+    controller: 'contactListsController',
     data: {
       requiresLogin: true,
     }
   })
 
-  .state('c.telephone-list', {
-    url: '/telephoneLists/{telephoneListId}',
-    templateUrl: 'templates/telephone-list.html',
-    controller: 'telephoneListController',
+  .state('c.contact-list', {
+    url: '/contactLists/{contactListId}',
+    templateUrl: 'templates/contact-list.html',
+    controller: 'contactListController',
     data: {
       requiresLogin: true,
     }

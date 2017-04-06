@@ -16,7 +16,7 @@ angular.module('beeline-admin')
         'limitByRouteTags',
         'limitByTripDate',
         'limitByPurchaseDate',
-        'limitByTelephoneList',
+        'limitBycontactList',
       ];
       // Create a parameter buffer for each type
       $scope.params = _($scope.criterionTypes)

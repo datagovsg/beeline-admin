@@ -2,7 +2,7 @@ const env = require('../env.json')
 const _ = require('lodash');
 
 angular.module('beeline-admin')
-.controller('telephoneListController', function($scope, $state, $stateParams,
+.controller('contactListController', function($scope, $state, $stateParams,
   $urlRouter, AdminService, store, LoadingSpinner, commonModals, companyId) {
     // Fetch the promo codes by company
 
@@ -10,13 +10,13 @@ angular.module('beeline-admin')
 
     function reload() {
       LoadingSpinner.watchPromise(AdminService.beeline({
-        url: `/companies/${companyId}/telephoneLists/${$stateParams.telephoneListId}`
+        url: `/companies/${companyId}/contactLists/${$stateParams.contactListId}`
       })
       .then((response) => {
-        $scope.editTelephoneList = makeEditable(response.data)
+        $scope.editcontactList = makeEditable(response.data)
       })
       .catch((promo) => {
-        $scope.editTelephoneList = makeEditable({})
+        $scope.editcontactList = makeEditable({})
       }))
     }
 
@@ -25,11 +25,11 @@ angular.module('beeline-admin')
     $scope.save = function () {
       LoadingSpinner.watchPromise(AdminService.beeline({
         method: 'PUT',
-        url: `/companies/${companyId}/telephoneLists/${$stateParams.telephoneListId}`,
-        data: preSaveTransform($scope.editTelephoneList)
+        url: `/companies/${companyId}/contactLists/${$stateParams.contactListId}`,
+        data: preSaveTransform($scope.editcontactList)
       })
       .then((response) => {
-        $scope.editTelephoneList = makeEditable(response.data)
+        $scope.editcontactList = makeEditable(response.data)
         return reload()
       })
       .catch(err => {
@@ -40,16 +40,16 @@ angular.module('beeline-admin')
     function preSaveTransform(e) {
       return {
         description: e.description,
-        numbers: e.numbers.split('\n')
+        telephones: e.telephones.split('\n')
           .map(s => s.trim())
           .filter(s => s),
       }
     }
 
-    function makeEditable(telephoneList) {
+    function makeEditable(contactList) {
       return {
-        description: telephoneList.description,
-        numbers: telephoneList.numbers.join('\n')
+        description: contactList.description,
+        telephones: contactList.telephones.join('\n')
       }
     }
 });

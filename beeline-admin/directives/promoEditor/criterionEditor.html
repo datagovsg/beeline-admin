@@ -10,10 +10,10 @@
     <company-selector ng-model="params.limitByCompany.companyId" class="form-control" >
     </company-selector>
   </label>
-  <label ng-if="editCriterion.type == 'limitByTelephoneList'">
+  <label ng-if="editCriterion.type == 'limitBycontactList'">
     Telephone List:
-    <telephone-list-selector ng-model="params.limitByTelephoneList.telephoneListId" class="form-control" >
-    </telephone-list-selector>
+    <contact-list-selector ng-model="params.limitBycontactList.contactListId" class="form-control" >
+    </contact-list-selector>
   </label>
   <label ng-if="editCriterion.type == 'limitByRoute'">
     Routes:

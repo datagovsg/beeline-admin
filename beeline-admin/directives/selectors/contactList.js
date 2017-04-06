@@ -1,20 +1,20 @@
 
 angular.module('beeline-admin')
-.directive('telephoneListSelector', function($http, companiesSvc, AdminService, $rootScope) {
+.directive('contactListSelector', function($http, companiesSvc, AdminService, $rootScope) {
 
-  let telephoneLists = []
+  let contactLists = []
 
   $rootScope.$watch(() => AdminService.getCompanyId(), (companyId) => {
     if (companyId) {
       AdminService.beeline({
         method: 'GET',
-        url: `/companies/${companyId}/telephoneLists`
+        url: `/companies/${companyId}/contactLists`
       })
       .then((response) => {
-        telephoneLists = response.data
+        contactLists = response.data
       })
       .catch((err) => {
-        telephoneLists = [{id: 0, description: 'Error loading list'}]
+        contactLists = [{id: 0, description: 'Error loading list'}]
       })
     }
   })
@@ -22,13 +22,13 @@ angular.module('beeline-admin')
   return {
     template: `
 <select
-    ng-options="telephoneList.id as telephoneList.description for telephoneList in (telephoneLists() | orderBy:'name')"
+    ng-options="contactList.id as contactList.description for contactList in (contactLists() | orderBy:'name')"
     class="form-control-condensed"> <option value="">- Select a Company -</option>
 </select>
     `,
     replace: true,
     controller($scope) {
-      $scope.telephoneLists = () => telephoneLists
+      $scope.contactLists = () => contactLists
     },
   }
 })
