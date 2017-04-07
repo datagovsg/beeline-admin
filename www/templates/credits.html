@@ -3,9 +3,8 @@
     <div class="col-sm-8">
       <h1>Credits</h1>
       <form>
-        <label>Filter by:</label>
         <div class="form-group">
-            <user-selector ng-model="filter.userId" include-ephemeral="false"></user-selector>
+            <user-selector ng-model="filter.user.id" include-ephemeral="false" initial-user="filter.user"></user-selector>
         </div>
         <div class="form-group">
           <label>Credit Tag</label>
@@ -65,7 +64,7 @@
             <td>{{txn.transaction.description}}</td>
             <td>{{txn.transaction.type}}</td>
             <td>
-            <a ui-sref="^.users({userId: ticket.user.id})">
+            <a ui-sref="^.users({userId: filter.user.id})">
             <strong>{{txn.routeCredits.user.name}}</strong>
             <br>(UID: {{txn.routeCredits.userId}})</a>
             <br>{{txn.routeCredits.user.telephone}}

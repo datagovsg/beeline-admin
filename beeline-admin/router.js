@@ -176,7 +176,7 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
   })
 
   .state('c.credits', {
-    url: '/credits',
+    url: '/credits?userId',
     templateUrl: 'templates/credits.html',
     controller: 'creditsController',
     data: {

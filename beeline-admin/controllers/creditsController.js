@@ -12,7 +12,7 @@ angular.module('beeline-admin')
 
   $scope.companyId = $stateParams.companyId || null
   $scope.filter = { 
-    userId: $stateParams.userId || null, 
+    user: { id: $stateParams.userId } || {}, 
     startDate: new Date(now.getFullYear(), now.getMonth(), 1),
     endDate: new Date(now.getFullYear(), now.getMonth() + 1, 0),
     tag: null,
@@ -48,7 +48,11 @@ angular.module('beeline-admin')
     })
   })
 
-  $scope.$watch('paging.page', loadTransactions)
+  $scope.$watch('paging.page', () => {
+    if($scope.companyId){
+      loadTransactions()
+    }
+  })
 
   function loadTransactions () {
     let queryOptions = buildQuery()
@@ -99,8 +103,8 @@ angular.module('beeline-admin')
       queryOptions.perPage = $scope.paging.perPage
     }
 
-    if($scope.filter.userId) {
-      queryOptions.userId = $scope.filter.userId
+    if($scope.filter.user.id) {
+      queryOptions.userId = $scope.filter.user.id
     }
 
     if($scope.filter.startDate) {
@@ -134,6 +138,6 @@ angular.module('beeline-admin')
     $scope.filter.page = 1
   }
 
-  }
+  
 
 })
