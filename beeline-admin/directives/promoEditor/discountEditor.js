@@ -13,6 +13,7 @@ angular.module('beeline-admin')
       $scope.discountTypes = [
         'simpleRate',
         'simpleFixed',
+        'tieredRateByQty'
       ];
       // Create a parameter buffer for each type
       $scope.params = _($scope.discountTypes)
@@ -44,6 +45,13 @@ angular.module('beeline-admin')
           $scope.editDiscount.params = null;
         }
       });
+
+      $scope.addTier = function (obj) {
+        $scope.params[$scope.editDiscount.type][obj] =
+          $scope.params[$scope.editDiscount.type][obj] || []
+
+        $scope.params[$scope.editDiscount.type][obj].push([undefined, undefined])
+      }
     }
   }
 })

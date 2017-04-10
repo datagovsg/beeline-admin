@@ -18,9 +18,13 @@
               <label>
                 Code
                 <input type="text" ng-model="editPromoCode.code"
-                  placeholder="HARIRAYA" class="form-control"
+                  placeholder="HARI-RAYA" class="form-control"
                   ng-blur="editPromoCode.code = editPromoCode.code.toUpperCase()" />
               </label>
+              <div class="alert alert-warning" ng-if="!editPromoCode.code">
+                You have not keyed in a promo code. This promotion will be
+                automatically applied to all transactions without a promo code.
+              </div>
             </div>
 
             <div class="form-group">
