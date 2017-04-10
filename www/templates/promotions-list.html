@@ -12,6 +12,7 @@
           <th my-sort="code" sort-direction="filter.order" sort-model="filter.orderBy" style="width: 10%">Code</th>
           <th my-sort="description" sort-direction="filter.order" sort-model="filter.orderBy" style="width: 15%">Description</th>
           <th my-sort="" sort-direction="filter.order" sort-model="filter.orderBy" style="width: 15%">Limits</th>
+          <th my-sort="promotion.counts.global / promotion.params.usageLimit.globalLimit" sort-direction="filter.order" sort-model="filter.orderBy" style="width: 15%">Usage</th>
           <th my-sort="" sort-direction="filter.order" sort-model="filter.orderBy" style="width: 15%">Criteria</th>
           <th my-sort="" sort-direction="filter.order" sort-model="filter.orderBy" style="width: 15%">Discount</th>
           <th my-sort="createdAt" sort-direction="filter.order" sort-model="filter.orderBy" style="width: 5%">Created at</th>
@@ -36,6 +37,17 @@
             <div ng-if="promotion.params.usageLimit.globalLimit">
               <b>All Redemptions:</b> {{promotion.params.usageLimit.globalLimit}}
               <br/>
+            </div>
+          </td>
+          <td>
+            <div ng-if="promotion.params.usageLimit.globalLimit">
+              {{promotion.counts.global / promotion.params.usageLimit.globalLimit | number:0}}%
+            </div>
+            <div ng-if="promotion.counts && promotion.counts.global !== undefined">
+              {{promotion.counts.global}} redemptions
+            </div>
+            <div ng-if="promotion.params.usageLimit.userLimit">
+              {{promotion.counts.distinctUsers}} unique users
             </div>
           </td>
           <td>
