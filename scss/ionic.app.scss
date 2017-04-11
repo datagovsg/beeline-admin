@@ -200,3 +200,7 @@ hr {
   text-align: center;
   margin-bottom: $padding-large-vertical;
 }
+
+.navbar-nav > li.logout-button > a {
+  padding: 20px;
+}
