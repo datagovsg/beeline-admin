@@ -23,7 +23,7 @@ angular.module('beeline-admin')
     template: `
 <select
     ng-options="contactList.id as contactList.description for contactList in (contactLists() | orderBy:'name')"
-    class="form-control-condensed"> <option value="">- Select a Company -</option>
+    class="form-control-condensed"> <option value="">- Select a Contact List -</option>
 </select>
     `,
     replace: true,

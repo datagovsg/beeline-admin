@@ -13,10 +13,10 @@ angular.module('beeline-admin')
         url: `/companies/${companyId}/contactLists/${$stateParams.contactListId}`
       })
       .then((response) => {
-        $scope.editcontactList = makeEditable(response.data)
+        $scope.editContactList = makeEditable(response.data)
       })
       .catch((promo) => {
-        $scope.editcontactList = makeEditable({})
+        $scope.editContactList = makeEditable({})
       }))
     }
 
@@ -26,10 +26,10 @@ angular.module('beeline-admin')
       LoadingSpinner.watchPromise(AdminService.beeline({
         method: 'PUT',
         url: `/companies/${companyId}/contactLists/${$stateParams.contactListId}`,
-        data: preSaveTransform($scope.editcontactList)
+        data: preSaveTransform($scope.editContactList)
       })
       .then((response) => {
-        $scope.editcontactList = makeEditable(response.data)
+        $scope.editContactList = makeEditable(response.data)
         return reload()
       })
       .catch(err => {
@@ -43,13 +43,17 @@ angular.module('beeline-admin')
         telephones: e.telephones.split('\n')
           .map(s => s.trim())
           .filter(s => s),
+        emails: e.emails.split('\n')
+          .map(s => s.trim())
+          .filter(s => s),
       }
     }
 
     function makeEditable(contactList) {
       return {
         description: contactList.description,
-        telephones: contactList.telephones.join('\n')
+        telephones: contactList.telephones.join('\n'),
+        emails: contactList.emails.join('\n')
       }
     }
 });

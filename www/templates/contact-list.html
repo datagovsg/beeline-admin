@@ -1,28 +1,35 @@
 
 <div class="container-fluid withnav">
   <div class="col-lg-12">
-    <h1>Telephone List</h1>
+    <h1>Contact List</h1>
 
-    <div ng-if="!editTelephoneList">
-      Error loading Telephone List
+    <div ng-if="!editContactList">
+      Error loading Contact List
     </div>
-    <div ng-if="editTelephoneList">
+    <div ng-if="editContactList">
       <div class="form-group">
         <label>
           Code
-          <input type="text" ng-model="editTelephoneList.description"
+          <input type="text" ng-model="editContactList.description"
             class="form-control"
             />
         </label>
       </div>
 
-      <div class="form-group">
-        <label>
+      <div class="flex-row">
+        <div class="form-group flex-grow">
           Telephone numbers (one per line)
-          <textarea type="text" ng-model="editTelephoneList.numbers"
+          <textarea type="text" ng-model="editContactList.telephones"
             class="form-control">
-        </textarea>
-        </label>
+          </textarea>
+        </div>
+
+        <div class="form-group flex-grow">
+          Email addresses (one per line)
+          <textarea type="text" ng-model="editContactList.emails"
+            class="form-control">
+          </textarea>
+        </div>
       </div>
 
       <button ng-click="save()" class="btn btn-primary">Save</button>
