@@ -3,18 +3,19 @@ import querystring from 'querystring';
 
 
 angular.module('beeline-admin')
-  .controller('creditsController', function($scope, $stateParams, AdminService, 
-    LoadingSpinner
-){
+.controller(
+'creditsController',
+function($scope, $stateParams, AdminService, LoadingSpinner, commonModals) {
   const now = new Date()
   const debouncedLoadTransactions = _.debounce(loadTransactions, 1000)
   const debouncedloadTransactionSummary = _.debounce(loadTransactionSummary, 1000)
 
   $scope.companyId = $stateParams.companyId || null
-  $scope.filter = { 
-    user: { id: $stateParams.userId } || {}, 
-    startDate: new Date(now.getFullYear(), now.getMonth(), 1),
-    endDate: new Date(now.getFullYear(), now.getMonth() + 1, 0),
+  $scope.filter = {
+    user: { id: $stateParams.userId } || {},
+    startDate: null,
+    endDate: null,
+    selectedMonth: new Date(),
     tag: null,
     transactionType: null,
     hideUncommittedTransactions: false,
@@ -33,8 +34,6 @@ angular.module('beeline-admin')
     if($scope.companyId){
       debouncedLoadTransactions()
       debouncedloadTransactionSummary()
-    } else {
-      console.log("Select a company")
     }
   })
 
@@ -55,89 +54,104 @@ angular.module('beeline-admin')
   })
 
   function loadTransactions () {
-    let queryOptions = buildQuery()
-    const queryString = querystring.stringify(queryOptions)
+    let queryOptions = buildQuery($scope.paging, $scope.filter)
 
     return LoadingSpinner.watchPromise(
       AdminService.beeline({
         method: 'GET',
-        url: `/companies/${$scope.companyId}/transactionItems/routeCredits?`+queryString
+        url: `/companies/${$scope.companyId}/transactionItems/routeCredits?`
+          + querystring.stringify(queryOptions)
       }).then(resp => {
-        if(resp) {
-          $scope.disp.transactions = resp.data
-        } 
-      }).catch(err => {
+        $scope.disp.transactions = resp.data
+      }).catch(err =>
         commonModals.alert(
           `${err && err.data && err.data.message}`
         )
-      })
+      )
     )
   }
 
   function loadTransactionSummary() {
-    let queryOptions = _.omit(buildQuery(), ['page', 'order', 'orderBy'])
-    const queryString = querystring.stringify(queryOptions)
+    let queryOptions = buildQuery({}, {
+      ...$scope.filter,
+      startDate: new Date(
+        $scope.filter.selectedMonth.getFullYear(),
+        $scope.filter.selectedMonth.getMonth(),
+        1,
+      ),
+      endDate: new Date(
+        $scope.filter.selectedMonth.getFullYear(),
+        $scope.filter.selectedMonth.getMonth() + 1,
+        0,
+      ),
+    })
 
     return AdminService.beeline({
       method: 'GET',
-      url: `/companies/${$scope.companyId}/transactionItems/transactionSummary?`+queryString
+      url: `/companies/${$scope.companyId}/transactionItems/routeCredits/summary?`
+        + querystring.stringify(queryOptions)
     }).then(resp => {
-      if(resp) {
-        $scope.disp = _.assign($scope.disp, resp.data)
-      } 
-    }).catch(err => {
+      _.assign($scope.disp, _.pick(resp.data, ['totalItems', 'txnCountByDay']))
+    }).catch(err =>
       commonModals.alert(
         `${err && err.data && err.data.message}`
       )
-    })
+    )
   }
 
-  function buildQuery (override) {
+  function buildQuery (paging, filter) {
     let queryOptions = {}
 
-    if($scope.paging.page) {
-      queryOptions.page = $scope.paging.page
+    if(paging.page) {
+      queryOptions.page = paging.page
     }
 
-    if($scope.paging.perPage) {
-      queryOptions.perPage = $scope.paging.perPage
+    if(paging.perPage) {
+      queryOptions.perPage = paging.perPage
     }
 
-    if($scope.filter.user.id) {
-      queryOptions.userId = $scope.filter.user.id
+    if(filter.userId) {
+      queryOptions.userId = filter.userId
     }
 
-    if($scope.filter.startDate) {
-      queryOptions.startDate = $scope.filter.startDate.getTime()
+    if(filter.startDate) {
+      queryOptions.startDateTime = filter.startDate.getTime()
+    } else {
+      queryOptions.startDateTime = new Date(
+        $scope.filter.selectedMonth.getFullYear(),
+        $scope.filter.selectedMonth.getMonth(),
+        1
+      ).getTime()
     }
 
-    if($scope.filter.endDate) {
-      queryOptions.endDate = $scope.filter.endDate.getTime()
+    if(filter.endDate) {
+      // Because we want less-then-equals semantics
+      queryOptions.endDateTime = filter.endDate.getTime() + 24 * 3600 * 1000
+    } else {
+      queryOptions.endDateTime = new Date(
+        $scope.filter.selectedMonth.getFullYear(),
+        $scope.filter.selectedMonth.getMonth() + 1,
+        0
+      ).getTime()
     }
 
-    if($scope.filter.tag) {
-      queryOptions.tag = $scope.filter.tag
+    if(filter.tag) {
+      queryOptions.tag = filter.tag
     }
 
-    if($scope.filter.hideUncommittedTransactions){
-      queryOptions.hideUncommittedTransactions = $scope.filter.hideUncommittedTransactions
+    if(filter.hideUncommittedTransactions){
+      queryOptions.hideUncommittedTransactions = filter.hideUncommittedTransactions
     }
 
-    if($scope.filter.transactionType) {
-      queryOptions.transactionType = $scope.filter.transactionType
+    if(filter.transactionType) {
+      queryOptions.transactionType = filter.transactionType
     }
-
 
     return queryOptions
   }
 
   $scope.monthChanged = function(newMonth) {
-    $scope.filter.startDate = newMonth.clone().startOf('month').toDate()
-    $scope.filter.endDate = newMonth.clone().startOf('month')
-                              .add(1, 'month').add(-1, 'day').toDate()
+    $scope.filter.selectedMonth = newMonth.clone().toDate()
     $scope.filter.page = 1
   }
-
-  
-
 })

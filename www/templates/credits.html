@@ -1,10 +1,16 @@
 <div class="container-fluid withnav credits">
-  <div class="row">
+  <div class="row" ng-if="!companyId">
+    Please select a company
+  </div>
+  <div class="row" ng-if="!disp">
+    Loading...
+  </div>
+  <div class="row" ng-if="disp">
     <div class="col-sm-8">
       <h1>Credits</h1>
       <form>
         <div class="form-group">
-            <user-selector ng-model="filter.user.id" include-ephemeral="false" initial-user="filter.user"></user-selector>
+            <user-selector ng-model="filter.userId" include-ephemeral="false" initial-user="filter.user"></user-selector>
         </div>
         <div class="form-group">
           <label>Credit Tag</label>
@@ -28,7 +34,8 @@
         <h4 class="text-center">
           Select the start date, and the end date:
         </h4>
-        <span-select month-changed="monthChanged" first-date="filter.startDate" last-date="filter.endDate" highlight-days="disp.highlightDays"></span-select>
+        <span-select month-changed="monthChanged" first-date="filter.startDate" last-date="filter.endDate"
+          highlight-days="disp.highlightDays"></span-select>
       </div>
     </div>
   </div>
@@ -58,9 +65,9 @@
         </thead>
         <tbody>
           <tr ng-repeat="txn in disp.transactions track by $index">
-            <td>{{$index + 1}}</td>
-            <td>{{txn.createdAt | date:'dd MMM yyyy HH:mm:ss'}}</td>
-            <th>{{txn.transaction.committed ? 'Valid' : 'Failed'}}</th>
+            <td title="Transaction Item ID: {{txn.id}}">{{$index + 1}}</td>
+            <td>{{txn.createdAt | date:'dd MMM yyyy HH:mm:ss':'+0800'}}</td>
+            <td title="Transaction ID: {{txn.transactionId}}">{{txn.transaction.committed ? 'Valid' : 'Failed'}}</td>
             <td>{{txn.transaction.description}}</td>
             <td>{{txn.transaction.type}}</td>
             <td>
