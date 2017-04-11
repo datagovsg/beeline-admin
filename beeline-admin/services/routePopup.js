@@ -1,4 +1,5 @@
 import stopsPopupTemplate from '../templates/routePopup.html'
+import leftPad from 'left-pad'
 
 export default function ($uibModal, $rootScope) {
   /* Create the modal */
@@ -93,21 +94,37 @@ function RoutePopupController($scope, RoutesService, $uibModalInstance,
   })
 
   /* Query the trip */
-  $scope.$watchGroup(['route'], (route) => {
+  $scope.$watch('route', (route) => {
     if (!$scope.route) return;
 
-    // We only need trips till today
-    var today = new Date();
+    let tripsPromise
 
-    // get all trips
-    TripsService.getTrips({
-      routeId: $scope.route.id,
-      startDate: new Date(Date.UTC(2015,1,1)),
-      endDate: new Date(today.setHours(27, 0, 0, 0))
-    })
+    if ($scope.route.tags.indexOf('lelong') !== -1) {
+      tripsPromise = TripsService.getTrips({
+        routeId: $scope.route.id,
+        startDate: new Date(Date.UTC(2015,1,1)),
+        endDate: new Date(Date.UTC(2099,1,1)),
+      })
+    } else {
+      var today = new Date();
+      tripsPromise = TripsService.getTrips({
+        routeId: $scope.route.id,
+        startDate: new Date(Date.UTC(2015,1,1)),
+        endDate: new Date(today.setHours(27, 0, 0, 0))
+      })
+    }
+
+    return tripsPromise
     .then((trips) => {
       $scope.trips = trips;
+
+      if (trips.length === 1) {
+        $scope.trip = trips[0]
+      }
     })
+    .catch((err) =>
+      commonModals.alert(`Error loading trips: ${_.get(err, 'message') || _.get(err, 'data.message')}`)
+    )
   });
 
   $scope.zoomInOnStops = function() {
@@ -141,7 +158,7 @@ function RoutePopupController($scope, RoutesService, $uibModalInstance,
 
       ts._options = {
         icon: {
-          url: './img/stop' + (ts.canBoard ? 'Board' : 'Alight') + (i+1) + '.png',
+          url: `./img/stop${ts.canBoard ? 'Board' : 'Alight'}${leftPad(i + 1, 3, '0')}.png`,
           scaledSize: new google.maps.Size(48,48),
           anchor: new google.maps.Point(24,24),
         }

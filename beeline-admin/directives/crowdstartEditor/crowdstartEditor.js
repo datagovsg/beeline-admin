@@ -12,6 +12,8 @@ angular.module('beeline-admin').directive('crowdstartEditor', function () {
     controller($scope, TripsService, AdminService, commonModals) {
       $scope.disp = {};
       $scope.$watch('route', (r) => {
+        if (!r || !r.id) return
+
         const route = _.cloneDeep(r);
 
         // Prepare the metadata...

@@ -18,6 +18,10 @@ export default function ($http, $location, store, jwtHelper, auth, commonModals)
   this.beeline = function(options) {
     options.url = env.BACKEND_URL + options.url
 
+    if (options.url.indexOf('/routes/undefined') !== -1) {
+      throw new Error();
+    }
+
     if (auth.idToken) {
       options.headers = options.headers || {};
       options.headers.authorization = 'Bearer ' + auth.idToken;
