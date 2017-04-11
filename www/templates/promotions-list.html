@@ -25,10 +25,24 @@
           <td>
             {{$index + 1}}
           </td>
-          <td><a ui-sref="^.promotions({promoId: promotion.id})">{{promotion.id}}</a></td>
-          <td>{{promotion.type}}</td>
-          <td>{{promotion.code}}</td>
-          <td>{{promotion.description}}</td>
+          <td>
+            <a ui-sref="^.promotions({promoId: promotion.id})">
+              {{promotion.id}}
+            </a>
+          </td>
+          <td>
+            {{promotion.type}}
+          </td>
+          <td>
+            <a ui-sref="^.promotions({promoId: promotion.id})">
+              {{promotion.code}}
+            </a>
+          </td>
+          <td>
+            <a ui-sref="^.promotions({promoId: promotion.id})">
+              {{promotion.description}}
+            </a>
+          </td>
           <td>
             <div ng-if="promotion.params.usageLimit.userLimit">
               <b>Per User:</b> {{promotion.params.usageLimit.userLimit}}
@@ -77,8 +91,11 @@
             {{promotion.updatedAt | date:'dd MMM yyyy HH:mm:ss':'+0800'}}
           </td>
           <td>
+            <button class="btn btn-default" ui-sref="^.promotions({promoId: promotion.id})">
+              <span class="glyphicon glyphicon-pencil"></span>
+            </button>
             <button ng-click="destroy(promotion)" class="btn btn-danger">
-              <span class="glyphicon glyphicon-minus"></span>
+              <span class="glyphicon glyphicon-trash"></span>
             </button>
           </td>
         </tr>
@@ -88,6 +105,7 @@
           <td colspan="5">
             <button ng-click="postNew()" class="btn btn-default">
               <span class="glyphicon glyphicon-plus"></span>
+              Add Promo
             </button>
           </td>
         </tr>
