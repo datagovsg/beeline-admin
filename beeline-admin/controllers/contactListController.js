@@ -30,7 +30,6 @@ angular.module('beeline-admin')
       })
       .then((response) => {
         $scope.editContactList = makeEditable(response.data)
-        return reload()
       })
       .catch(err => {
         commonModals.alert(`${err && err.data && err.data.message}`)

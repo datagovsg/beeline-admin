@@ -54,8 +54,6 @@ angular.module('beeline-admin')
           method: `DELETE`,
           url: `/companies/${companyId}/contactLists/${contactList.id}`,
         })
-        .then(response => {
-        })
         .then(refresh))
       })
       .catch((err) => commonModals.alert(`${err && err.data && err.data.message}`))
