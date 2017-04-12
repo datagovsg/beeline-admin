@@ -23,13 +23,13 @@
           <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
             <li><a ui-sref="c.companies({companyId: adminService.actingCompany})">Edit Profile</a></li>
             <li><a ui-sref="c.promotions-list({companyId: adminService.actingCompany})">Manage Promotions</a></li>
+            <li><a ui-sref="c.contact-lists({companyId: adminService.actingCompany})">Manage Telephone Lists</a></li>
             <li><a ui-sref="c.admins({companyId: adminService.actingCompany})">Manage Admin Users</a></li>
             <li><a ui-sref="c.notifications({companyId: adminService.actingCompany})">Manage Event Notifications</a></li>
             <li ng-if="adminService.isSuperAdmin()"><a ui-sref="c.transactions({companyId: adminService.actingCompany})">Transactions</a></li>
           </ul>
         </li>
         <li ng-if="adminService.isSuperAdmin()"><a ui-sref="assets">Assets</a></li>
-
       </ul>
       <ul class="nav navbar-nav pull-right">
         <li>
