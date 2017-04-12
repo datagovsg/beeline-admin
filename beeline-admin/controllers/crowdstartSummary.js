@@ -4,21 +4,33 @@ import _ from 'lodash';
 
 angular.module('beeline-admin').controller('CrowdstartSummaryCtrl',
 function($scope, AdminService, RoutesService, LoadingSpinner,
-  $state, $stateParams, issueTicketModal, commonModals, companyId) {
+  $state, $stateParams, issueTicketModal, commonModals, companyId,
+  RoutePopup) {
 
   $scope.routes = [];
 
   $scope.filter = {
-    order: 'asc',
-    orderBy: 'route.id'
+    order: 'desc',
+    orderBy: '_meta.tiers[0].fraction',
+    showExpiry: 'active'
   }
 
-  $scope.$watchGroup(['routes', 'filter.order', 'filter.orderBy'], () => {
-    $scope.sortedRoutes = _.orderBy(
-      $scope.routes,
-      [r => _.get(r, $scope.filter.orderBy)],
-      [$scope.filter.order]
-    )
+  $scope.viewRoute = function (routeId) {
+    RoutePopup.show({routeId});
+  }
+
+  $scope.$watchGroup(['routes', 'filter.order', 'filter.orderBy', 'filter.showExpiry'], () => {
+    $scope.sortedRoutes = _($scope.routes)
+      .filter(r =>
+        $scope.filter.showExpiry === 'all' ? true :
+        $scope.filter.showExpiry === 'active' ? !r._meta.isExpired :
+          r._meta.isExpired
+      )
+      .orderBy(
+        [r => _.get(r, $scope.filter.orderBy)],
+        [$scope.filter.order]
+      )
+      .value()
   })
 
   AdminService.beeline({

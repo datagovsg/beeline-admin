@@ -36,51 +36,55 @@ export default function(RoutesService, TripsService, AdminService, DriverService
       }; /* $scope.disp */
 
       function reloadTrips() {
-        var promise = TripsService.getTrips({
-          routeId: $scope.route.id,
-          startDate: new Date(
-            $scope.filter.filterMonth.getFullYear(),
-            $scope.filter.filterMonth.getMonth(),
-            1
-          ),
-          endDate: new Date(
-            $scope.filter.filterMonth.getFullYear(),
-            $scope.filter.filterMonth.getMonth() + 1,
-            1
-          ),
-          includeAvailability: true,
-        })
-        .then((trips) => {
-          $scope.trips = _.sortBy(trips, 'date');
+        if (!$scope.route || !$scope.route.id) {
+          $scope.trips = null
+        } else {
+          var promise = TripsService.getTrips({
+            routeId: $scope.route.id,
+            startDate: new Date(
+              $scope.filter.filterMonth.getFullYear(),
+              $scope.filter.filterMonth.getMonth(),
+              1
+            ),
+            endDate: new Date(
+              $scope.filter.filterMonth.getFullYear(),
+              $scope.filter.filterMonth.getMonth() + 1,
+              1
+            ),
+            includeAvailability: true,
+          })
+          .then((trips) => {
+            $scope.trips = _.sortBy(trips, 'date');
 
-          // populate dates
-          $scope.disp.existingDates = _.uniq(trips.map(tr => tr.date.getTime()))
-            .map(dtStr => new Date(dtStr));
+            // populate dates
+            $scope.disp.existingDates = _.uniq(trips.map(tr => tr.date.getTime()))
+              .map(dtStr => new Date(dtStr));
 
-          // populate stops
-          // stops are keyed by (1) their stop id, (2) order of appearance
-          // Need to record the order of appearance in each tripStop
-          var stopsSet = {};
+            // populate stops
+            // stops are keyed by (1) their stop id, (2) order of appearance
+            // Need to record the order of appearance in each tripStop
+            var stopsSet = {};
 
-          for (let trip of trips) {
-            var tsSet = _.groupBy(trip.tripStops, 'stopId');
+            for (let trip of trips) {
+              var tsSet = _.groupBy(trip.tripStops, 'stopId');
 
-            _.mapValues(tsSet, (tripStops, stopId) => {
+              _.mapValues(tsSet, (tripStops, stopId) => {
 
-              tripStops.forEach((tripStop, index) => {
-                tripStop.orderOfAppearance = index;
-                stopsSet[tripStop.stopId] = stopsSet[tripStop.stopId] || [];
-                stopsSet[tripStop.stopId][index] = stopsSet[tripStop.stopId][index]
-                  || tripStop;
+                tripStops.forEach((tripStop, index) => {
+                  tripStop.orderOfAppearance = index;
+                  stopsSet[tripStop.stopId] = stopsSet[tripStop.stopId] || [];
+                  stopsSet[tripStop.stopId][index] = stopsSet[tripStop.stopId][index]
+                    || tripStop;
+                })
               })
-            })
-          }
+            }
 
-          var stopsList = _.flatten(_.values(stopsSet));
-          stopsList = _.sortBy(stopsList, s => timeSinceMidnight(s.time))
-          $scope.disp.stopsList = stopsList;
-        });
-        LoadingSpinner.watchPromise(promise)
+            var stopsList = _.flatten(_.values(stopsSet));
+            stopsList = _.sortBy(stopsList, s => timeSinceMidnight(s.time))
+            $scope.disp.stopsList = stopsList;
+          });
+          LoadingSpinner.watchPromise(promise)
+        }
       }
       $scope.findStop = (trip, stopId, ooA) => {
         return trip.tripStops.find(ts => ts.stopId === stopId && ts.orderOfAppearance === ooA);

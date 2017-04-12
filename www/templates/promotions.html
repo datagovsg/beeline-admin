@@ -35,14 +35,14 @@
               </label>
             </div>
 
-            <div class="form-group">
+            <!-- <div class="form-group">
               <label>
                 Type
                 <select ng-options="type for type in promoTypes" ng-model="editPromoCode.type"
                   class="form-control" >
                 </select>
               </label>
-            </div>
+            </div> -->
           </td>
           <td>
             <div class="form-group">
@@ -68,15 +68,15 @@
 
       <table class="table table-striped">
         <tr>
-          <th style="width: 33%">
+          <th style="width: 50%">
             Apply promo code if...
           </th>
-          <th style="width: 33%">
+          <th style="width: 50%">
             Give the user...
           </th>
-          <th style="width: 34%">
+          <!-- <th style="width: 34%">
             When refunding...
-          </th>
+          </th> -->
         </tr>
         <tr>
           <td>
@@ -86,7 +86,7 @@
 
               <button ng-click="editPromoCode.params.qualifyingCriteria.splice($index, 1)"
                 class="btn btn-danger">
-                <span class="glyphicon glyphicon-minus"></span>
+                <span class="glyphicon glyphicon-trash"></span>
               </button>
             </div>
             <div>
@@ -100,9 +100,9 @@
             <promo-discount-editor ng-model="editPromoCode.params.discountFunction">
             </promo-discount-editor>
           </td>
-          <td>
+          <!-- <td>
             {{editPromoCode.params.refundFunction.type}}
-          </td>
+          </td> -->
         </tr>
       </table>
       <button ng-click="save()" class="btn btn-primary">Save</button>

@@ -12,6 +12,8 @@ export default function (uiGmapGoogleMapApi, $q, TripsService) {
       scope.trip = null;
 
       scope.$watch('routeId', (id) => {
+        if (!id) return
+        
         // get all trips
         TripsService.getTrips({
           routeId: id,
