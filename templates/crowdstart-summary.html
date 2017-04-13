@@ -5,6 +5,26 @@
     <div class="row">
       <div class="col-lg-12">
         <div class="table-responsive">
+
+          <button class="btn btn-primary btn-lg create-route-button" ui-sref="^.trips({routeId:0, action: 'route'})">
+            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>Create a new route
+          </button>
+
+          <label>
+            <input type="radio" ng-model="filter.showExpiry" value="expired" />
+            Show Expired
+          </label>
+          <label>
+            <input type="radio" ng-model="filter.showExpiry" value="active" />
+            Show Active
+          </label>
+          <label>
+            <input type="radio" ng-model="filter.showExpiry" value="all" />
+            Show All
+          </label>
+
+          <br clear="both"/><br/>
+
           <multi-select-broker collection="routes" track-by="'id'" selection="selectedRoutes">
           </multi-select-broker>
 
@@ -13,13 +33,15 @@
               <tr>
                 <th>&#10003;</th>
                 <th my-sort="id" sort-model="filter.orderBy" sort-direction="filter.order">Route ID</th>
-                <th my-sort="name" sort-model="filter.orderBy" sort-direction="filter.order">Route</th>
                 <th my-sort="label" sort-model="filter.orderBy" sort-direction="filter.order">Label</th>
+                <th my-sort="name" sort-model="filter.orderBy" sort-direction="filter.order">Route</th>
+                <th my-sort="createdAt" sort-model="filter.orderBy" sort-direction="filter.order">Campaign Start Date</th>
                 <th my-sort="notes.lelongExpiry" sort-model="filter.orderBy" sort-direction="filter.order">Campaign End Date</th>
-                <th my-sort="trips[0].date" sort-model="filter.orderBy" sort-direction="filter.order">First Trip Date</th>
+                <th my-sort="trips[0].date" sort-model="filter.orderBy" sort-direction="filter.order">Start Date if Activated</th>
                 <th>Tags</th>
                 <th my-sort="notes.noPasses" sort-model="filter.orderBy" sort-direction="filter.order">Route Passes per Bid</th>
                 <th my-sort="_meta.tiers[0].fraction" sort-model="filter.orderBy" sort-direction="filter.order">Tiers</th>
+                <th>Actions</th>
               </tr>
             </thead>
 
@@ -41,9 +63,13 @@
                   <span class="failure glyphicon glyphicon-remove" ng-if="route.tags.indexOf('failed') != -1">
                   </span>
                 </td>
-                <td><a ui-sref="^.trips({routeId: route.id})">{{route.id}}</a></td>
-                <td>{{route.from}} to {{route.to}}</td>
+                <td><a ui-sref="^.trips({routeId: route.id, action: 'trips'})">{{route.id}}</a></td>
                 <td><span class="route-label">{{route.label}}</span></td>
+                <td>
+                  <a ui-sref="^.trips({routeId: route.id, action: 'trips'})">{{route.from}} to {{route.to}}</a>
+                  <button class="btn btn-default" ng-click="viewRoute(route.id)">View</button>
+                </td>
+                <td>{{route.createdAt | date: 'd MMM yyyy'}}</td>
                 <td>{{route.notes.lelongExpiry | date: 'd MMM yyyy'}}</td>
                 <td>{{route.trips[0].date | date: 'd MMM yyyy'}}</td>
                 <td>
@@ -62,6 +88,11 @@
                       <progress value="{{tier.numBids}}" max="{{tier.pax}}"></progress>
                     </li>
                   </ul>
+                </td>
+                <td>
+                  <button class="btn btn-default" ui-sref="^.trips({routeId: route.id, action: 'crowdstart'})">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                  </button>
                 </td>
               </tr>
             </tbody>
