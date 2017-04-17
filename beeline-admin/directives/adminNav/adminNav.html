@@ -30,6 +30,7 @@
           </ul>
         </li>
         <li ng-if="adminService.isSuperAdmin()"><a ui-sref="assets">Assets</a></li>
+        <li><a ui-sref="c.credits({companyId: adminService.actingCompany})">Credits</a></li>
       </ul>
       <ul class="nav navbar-nav pull-right">
         <li>

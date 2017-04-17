@@ -45,9 +45,9 @@
           <div class="col-sm-12">
             <a ui-sref="^.bookings({userId: user.id})"><button class="btn btn-primary btn-block btm-offset" ng-disabled="!user">User booking for this month</button></a>
           </div>
-          <!-- <div class="col-sm-12">
-            <a title=""><button class="btn btn-primary btn-block btm-offset">Credits for this month</button></a> 
-          </div> -->
+          <div class="col-sm-12">
+            <a ui-sref="^.credits({userId: user.id})"><button class="btn btn-primary btn-block btm-offset" ng-disabled="!user">Credits for this month</button></a> 
+          </div>
           <div class="col-sm-12">
             <button class="btn btn-primary btn-block btm-offset" ng-click="getUserPin()" ng-if="adminService.isSuperAdmin()" ng-disabled="!user">Get PIN</button>
           </div>

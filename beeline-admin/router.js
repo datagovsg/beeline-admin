@@ -175,6 +175,15 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
     }
   })
 
+  .state('c.credits', {
+    url: '/credits?userId',
+    templateUrl: 'templates/credits.html',
+    controller: 'creditsController',
+    data: {
+      requiresLogin: true,
+    }
+  })
+
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/c//bookings');
 }
