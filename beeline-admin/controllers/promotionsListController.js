@@ -31,11 +31,13 @@ angular.module('beeline-admin')
     }
 
     $scope.postNew = function () {
+      const code = randomString() + randomString() + randomString()
+
       return LoadingSpinner.watchPromise(AdminService.beeline({
         method: `POST`,
         url: `/companies/${companyId}/promotions`,
         data: {
-          code: randomString() + randomString() + randomString(),
+          code,
           description: `New Promo Code`,
           type: 'Promotion',
           params: {
@@ -47,6 +49,7 @@ angular.module('beeline-admin')
         }
       })
       .then(refresh)
+      .then(() => commonModals.flash(`A new dummy promotion ${code} has been created`))
       .catch((err) => commonModals.alert(`${err && err.data && err.data.message}`)))
     }
 

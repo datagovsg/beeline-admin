@@ -31,6 +31,9 @@ angular.module('beeline-admin')
       .then((response) => {
         $scope.editPromoCode = makeEditable(response.data)
       })
+      .then(err =>
+        commonModals.alert(`Promotion saved`)
+      )
       .catch(err => {
         commonModals.alert(`${err && err.data && err.data.message}`)
       }))
@@ -55,11 +58,7 @@ angular.module('beeline-admin')
       /* We need to add limitByCompany for all promotions
       created by a company */
       function filterCompanyCriteria(qc) {
-        if (AdminService.isSuperAdmin()) {
-          return qc
-        } else {
-          return qc.filter(c => !_.isEqual(c, companyQualifyingCriterion))
-        }
+        return qc.filter(c => !_.isEqual(c, companyQualifyingCriterion))
       }
 
       return _.cloneDeep({

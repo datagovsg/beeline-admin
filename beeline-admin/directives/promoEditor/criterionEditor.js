@@ -60,6 +60,8 @@ angular.module('beeline-admin')
           ...r,
           _description: `${r.label}: ${r.name} from ${r.from} to ${r.to}`
         }))
+
+        $scope.$digest()
       })
 
       // Switch the buffer
