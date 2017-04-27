@@ -83,7 +83,7 @@ export default function (AdminService, DriverService, $q) {
   }
 
   var updatableFields = [
-    'driverId', 'capacity', 'companyId', 'price', 'transportCompanyId',
+    'driverId', 'capacity', 'companyId', 'price',
     'bookingInfo', 'status'
   ];
   var updatableTripStopFields = [
