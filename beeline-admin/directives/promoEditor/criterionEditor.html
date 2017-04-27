@@ -1,10 +1,11 @@
-<div>
+<div class="criterion-editor">
   <label>
     Type
     <select ng-options="type for type in criterionTypes"
       ng-model="editCriterion.type" class="form-control" >
     </select>
   </label>
+  <br/>
   <label ng-if="editCriterion.type == 'limitByCompany'">
     Company:
     <company-selector ng-model="params.limitByCompany.companyId" class="form-control" >
@@ -17,9 +18,11 @@
   </label>
   <label ng-if="editCriterion.type == 'limitByRoute'">
     Routes:
+    <br>
     <select multiple
-      ng-options="route.id as route._description for route in disp.routes"
-      ng-model="params.limitByRoute.routeIds">
+      ng-options="route.id as route._description for route in disp.routes | orderBy:'label'"
+      ng-model="params.limitByRoute.routeIds"
+      class="route-ids-criterion">
     </select>
   </label>
 
