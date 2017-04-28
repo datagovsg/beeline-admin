@@ -1,7 +1,14 @@
 
 <div class="container-fluid withnav promotions-list">
   <div class="col-lg-12">
-    <h1>Promotions</h1>
+    <h1>Manage Promotions</h1>
+
+    <div style="text-align: right">
+      <button ng-click="postNew()" class="btn btn-default">
+        <span class="glyphicon glyphicon-plus"></span>
+        Add Promo Code
+      </button>
+    </div>
 
     <table class="table table-striped">
       <thead>
@@ -100,16 +107,6 @@
           </td>
         </tr>
       </tbody>
-      <tfoot>
-        <tr>
-          <td colspan="5">
-            <button ng-click="postNew()" class="btn btn-default">
-              <span class="glyphicon glyphicon-plus"></span>
-              Add Promo
-            </button>
-          </td>
-        </tr>
-      </tfoot>
     </table>
   </div>
 </div>
