@@ -39,29 +39,15 @@ angular.module('beeline-admin').directive('crowdstartEditor', function () {
         })
 
         // Asynchronously find the bids
-        function findBids(bids = [], page = 1) {
-          const batchSize = 100;
-          return AdminService.beeline({
-            url: '/custom/wrs/report?' + querystring.stringify({
-              routeId: route.id,
-              statuses: JSON.stringify(['bidded', 'void', 'failed']),
-              perPage: batchSize,
-              page,
-            })
+        AdminService.beeline({
+          url: `/custom/lelong/routes/${route.id}/bids?` + querystring.stringify({
+            statuses: JSON.stringify(['bidded', 'void', 'failed']),
           })
-          .then((response) => {
-            const bidsSoFar = bids.concat(response.data.rows);
-            $scope.bids = bidsSoFar;
-            if (response.data.rows.length === batchSize) {
-              return findBids(
-                bidsSoFar,
-                page + 1
-              )
-            }
-          })
-        }
+        })
+        .then((response) => {
+          $scope.bids = response.data;
+        });
 
-        findBids();
       })
       $scope.removeTier = function (index) {
         $scope.editRoute.notes.tier.splice(index, 1)
