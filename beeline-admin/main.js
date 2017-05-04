@@ -23,6 +23,7 @@ require('./directives/promoEditor/criterionEditor')
 require('./directives/selectors/contactList')
 require('./directives/promoEditor/discountEditor')
 require('./directives/crowdstartEditor/crowdstartEditor')
+require('./directives/routeCreditHistoryViewer/routeCreditHistoryViewer')
 
 const env = require('./env')
 
