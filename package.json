@@ -45,6 +45,7 @@
     "request": "^2.74.0",
     "sass-loader": "^3.2.0",
     "style-loader": "^0.13.1",
+    "title-case": "^2.1.1",
     "transform-loader": "^0.2.3",
     "ui-select": "0.16.1",
     "url-loader": "^0.5.7",
