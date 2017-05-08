@@ -1,19 +1,20 @@
 <div class="criterion-editor">
   <label>
     Type
-    <select ng-options="type for type in criterionTypes"
+    <select ng-options="type.type as type.description for type in criterionTypes"
       ng-model="editCriterion.type" class="form-control" >
     </select>
   </label>
+
   <br/>
   <label ng-if="editCriterion.type == 'limitByCompany'">
     Company:
     <company-selector ng-model="params.limitByCompany.companyId" class="form-control" >
     </company-selector>
   </label>
-  <label ng-if="editCriterion.type == 'limitBycontactList'">
+  <label ng-if="editCriterion.type == 'limitByContactList'">
     Telephone List:
-    <contact-list-selector ng-model="params.limitBycontactList.contactListId" class="form-control" >
+    <contact-list-selector ng-model="params.limitByContactList.contactListId" class="form-control" >
     </contact-list-selector>
   </label>
   <label ng-if="editCriterion.type == 'limitByRoute'">
@@ -91,6 +92,38 @@
           <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
         </button>
       </span>
+    </label>
+  </div>
+
+  <div ng-if="editCriterion.type == 'limitByTripDayOfWeek'">
+    Days of week promo is valid for:
+    <label>
+      <input type="checkbox" ng-model="params.limitByTripDayOfWeek[0]" />
+      Sunday
+    </label>
+    <label>
+      <input type="checkbox" ng-model="params.limitByTripDayOfWeek[1]" />
+      Monday
+    </label>
+    <label>
+      <input type="checkbox" ng-model="params.limitByTripDayOfWeek[2]" />
+      Tuesday
+    </label>
+    <label>
+      <input type="checkbox" ng-model="params.limitByTripDayOfWeek[3]" />
+      Wednesday
+    </label>
+    <label>
+      <input type="checkbox" ng-model="params.limitByTripDayOfWeek[4]" />
+      Thursday
+    </label>
+    <label>
+      <input type="checkbox" ng-model="params.limitByTripDayOfWeek[5]" />
+      Friday
+    </label>
+    <label>
+      <input type="checkbox" ng-model="params.limitByTripDayOfWeek[6]" />
+      Saturday
     </label>
   </div>
 </div>
