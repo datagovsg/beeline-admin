@@ -1,7 +1,7 @@
 import assert from 'assert';
 
 angular.module('beeline-admin')
-  .controller('usersController', function ($scope, AdminService, RoutesService, 
+  .controller('usersController', function ($scope, AdminService, RoutesService,
     LoadingSpinner, $state, $stateParams, issueRouteCreditsModal, commonModals, $uibModal) {
 
   $scope.user = null
@@ -13,6 +13,8 @@ angular.module('beeline-admin')
 
   $scope.$watch('selector.userId', userId => {
     if(userId){
+      $scope.showRouteCreditHistory = null;
+
       LoadingSpinner.watchPromise(
         AdminService.beeline({
           method: 'GET',
@@ -24,9 +26,7 @@ angular.module('beeline-admin')
         }
 
         if($scope.companyId){
-          return LoadingSpinner.watchPromise(
-            loadRouteCreditsAndRoutes(userId)
-          )
+          return loadRouteCreditsAndRoutes(userId)
         }
       }).catch(err => {
         commonModals.alert(
@@ -38,13 +38,13 @@ angular.module('beeline-admin')
 
   $scope.getUserPin = async function (){
     if(!$scope.user) return
-      
+
     const userId = $scope.user.id
     let pinPromise = AdminService.beeline({
       method: 'GET',
       url: `/user/${userId}/telephoneCode`,
     })
-    
+
     pinPromise.then(pin => {
       commonModals.alert({
         title: 'User Login PIN',
@@ -58,9 +58,9 @@ angular.module('beeline-admin')
   }
 
   $scope.issueRouteCredits = async function(routeCredit) {
-    assert(routeCredit.routes 
+    assert(routeCredit.routes
         && routeCredit.routes.length > 0)
-    assert(routeCredit.routes[0].trips 
+    assert(routeCredit.routes[0].trips
         && routeCredit.routes[0].trips.length > 0)
 
     let context = {
@@ -68,26 +68,29 @@ angular.module('beeline-admin')
       route: routeCredit.routes[0],
       price: routeCredit.routes[0].trips[0].price
     }
-    
+
     if(await issueRouteCreditsModal.issueOn(context)){
-      await LoadingSpinner.watchPromise(
-        loadRouteCreditsAndRoutes($scope.user.id))
+      loadRouteCreditsAndRoutes($scope.user.id)
       .then(() => commonModals.alert('Credits issued'))
       .catch(err => commonModals.alert(
         `${err && err.data && err.data.message}`))
     }
-    
+  }
+
+  $scope.showHistory = function (credit) {
+    $scope.showRouteCreditHistory = credit;
   }
 
   function loadRouteCreditsAndRoutes(userId){
     let companyRoutesPromise = RoutesService.getRoutes()
       .then(routes => routes.filter(r => r.transportCompanyId == $scope.companyId))
 
-    return Promise.all([
+    return LoadingSpinner.watchPromise(Promise.all([
       RoutesService.fetchRouteCredits(userId, $scope.companyId),
       companyRoutesPromise
-    ]).then(([routeCredits, companyRoutes]) => {
-      let routeCreditsWithRoutes = 
+    ]))
+    .then(([routeCredits, companyRoutes]) => {
+      let routeCreditsWithRoutes =
         routeCredits.map(rc => {
           rc.routes = companyRoutes.filter(
             r => r.tags.indexOf(rc.tag) !== -1)
