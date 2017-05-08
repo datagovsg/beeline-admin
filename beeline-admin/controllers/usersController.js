@@ -2,7 +2,8 @@ import assert from 'assert';
 
 angular.module('beeline-admin')
   .controller('usersController', function ($scope, AdminService, RoutesService,
-    LoadingSpinner, $state, $stateParams, issueRouteCreditsModal, commonModals, $uibModal) {
+    LoadingSpinner, $state, $stateParams, issueRouteCreditsModal,
+    expireRouteCreditsModal, commonModals, $uibModal) {
 
   $scope.user = null
   $scope.selector = { userId: $stateParams.userId || null }
@@ -57,7 +58,7 @@ angular.module('beeline-admin')
     })
   }
 
-  $scope.issueRouteCredits = async function(routeCredit) {
+  $scope.issueRouteCredits = function(routeCredit) {
     assert(routeCredit.routes
         && routeCredit.routes.length > 0)
     assert(routeCredit.routes[0].trips
@@ -69,12 +70,40 @@ angular.module('beeline-admin')
       price: routeCredit.routes[0].trips[0].price
     }
 
-    if(await issueRouteCreditsModal.issueOn(context)){
-      loadRouteCreditsAndRoutes($scope.user.id)
-      .then(() => commonModals.alert('Credits issued'))
-      .catch(err => commonModals.alert(
-        `${err && err.data && err.data.message}`))
+    issueRouteCreditsModal.issueOn(context)
+    .then((issueResult) => {
+      if (issueResult) {
+        return issueRouteCreditsModal.processModalResult(issueResult)
+        .then(() => loadRouteCreditsAndRoutes($scope.user.id))
+        .then(() => commonModals.alert('Credits issued'))
+      }
+    })
+    .catch(err => commonModals.alert(
+      `${err && err.data && err.data.message}`))
+  }
+
+  $scope.expireRouteCredits = function(routeCredit) {
+    assert(routeCredit.routes
+        && routeCredit.routes.length > 0)
+    assert(routeCredit.routes[0].trips
+        && routeCredit.routes[0].trips.length > 0)
+
+    let context = {
+      user: $scope.user,
+      route: routeCredit.routes[0],
+      price: routeCredit.routes[0].trips[0].price
     }
+
+    expireRouteCreditsModal.showExpireModal(context)
+    .then((expireResult) => {
+      if (expireResult) {
+        return expireRouteCreditsModal.processModalResult(expireResult)
+        .then(() => loadRouteCreditsAndRoutes($scope.user.id))
+        .then(() => commonModals.alert('Credits expired'))
+      }
+    })
+    .catch(err => commonModals.alert(
+      `${err && err.data && err.data.message}`))
   }
 
   $scope.showHistory = function (credit) {
@@ -88,7 +117,7 @@ angular.module('beeline-admin')
     return LoadingSpinner.watchPromise(Promise.all([
       RoutesService.fetchRouteCredits(userId, $scope.companyId),
       companyRoutesPromise
-    ]))
+    ])
     .then(([routeCredits, companyRoutes]) => {
       let routeCreditsWithRoutes =
         routeCredits.map(rc => {
@@ -106,7 +135,7 @@ angular.module('beeline-admin')
       $scope.routeCredits = routeCredits
 
       return Promise.all(getRouteWithTrips)
-    }).then(routeTrips => {
+    })).then(routeTrips => {
       let routeWithTripsByRouteId = _.keyBy(routeTrips, r => r.id)
 
       $scope.routeCredits = $scope.routeCredits.map(rc => {
@@ -119,6 +148,10 @@ angular.module('beeline-admin')
         })
         return rc
       })
+
+      if ($scope.showRouteCreditHistory) {
+        $scope.showRouteCreditHistory = $scope.routeCredits.find(r => r.tag == $scope.showRouteCreditHistory.tag)
+      }
 
       $scope.$apply()
     })
