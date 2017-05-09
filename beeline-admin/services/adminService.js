@@ -1,5 +1,4 @@
 import assert from 'assert'
-const env = require('../env.json')
 
 function b64_to_utf8(str) {
     return decodeURIComponent(unescape(window.atob(str)));
@@ -13,10 +12,10 @@ function decodeToken(tk) {
 
 export default function ($http, $location, store, jwtHelper, auth, commonModals) {
 
-  this.serverUrl = () => env.BACKEND_URL;
+  this.serverUrl = () => process.env.BACKEND_URL;
 
   this.beeline = function(options) {
-    options.url = env.BACKEND_URL + options.url
+    options.url = process.env.BACKEND_URL + options.url
 
     if (options.url.indexOf('/routes/undefined') !== -1) {
       throw new Error();
@@ -39,13 +38,8 @@ export default function ($http, $location, store, jwtHelper, auth, commonModals)
     window.location.reload(); // Needed, otherwise Auth0 won't recognize this as a new page
   }
 
-  this.login = function() {
-    auth.lock.show()
-  }
-
-  this.signup = function() {
-    auth.lock.show()
-  }
+  this.login = () => auth.showLoginDialog()
+  this.signup = () => auth.showLoginDialog()
 
   var lastSessionToken = null;
   var lastSession;

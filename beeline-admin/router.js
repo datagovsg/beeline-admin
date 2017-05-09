@@ -1,8 +1,6 @@
 
-const env = require('./env')
-
-export default function($stateProvider, $urlRouterProvider, authProvider) {
-
+angular.module('beeline-admin')
+.config(function ($stateProvider, $urlRouterProvider, authProvider) {
   // Ionic uses AngularUI Router which uses the concept of states
   // Learn more here: https://github.com/angular-ui/ui-router
   // Set up the various states which the app can be in.
@@ -185,5 +183,17 @@ export default function($stateProvider, $urlRouterProvider, authProvider) {
   })
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/c//bookings');
-}
+  $urlRouterProvider.otherwise(function ($injector, $location) {
+    const auth = $injector.get('auth')
+
+    function redirect() {
+      window.location.hash = '#!/c//bookings'
+    }
+
+    // We should not do anything if auth has not been initialized,
+    // because the hash has not been parsed
+    if (auth.initialized) {
+      redirect()
+    }
+  });
+})

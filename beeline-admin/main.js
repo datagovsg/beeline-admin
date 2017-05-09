@@ -24,12 +24,10 @@ require('./directives/selectors/contactList')
 require('./directives/promoEditor/discountEditor')
 require('./directives/crowdstartEditor/crowdstartEditor')
 require('./directives/routeCreditHistoryViewer/routeCreditHistoryViewer')
-
-const env = require('./env')
+require('./auth0')
+require('./router')
 
 angular.module('beeline-admin')
-.service('auth', require('./auth0').default)
-.config(require('./router').default)
 .config(configureGoogleMaps)
 .config(configureUrlWhitelist)
 .directive('adminNav', require('./directives/adminNav/adminNav').default)
@@ -86,68 +84,114 @@ angular.module('beeline-admin')
 .filter('makeRoutePath', require('./shared/filters.js').makeRoutePath)
 .filter('intervalToTime', require('./shared/filters.js').intervalToTime)
 .filter('leftPad', () => require('left-pad'))
-// Handle what happens when the callback is called
-// TODO: Use angular dependency injection to invoke the authenticateToken fn
-.run(function ($rootScope, auth, store, $cookies, AdminService, jwtHelper, $state) {
-  if (auth.authResult) {
-    if (auth.authResult.error) {
-      return alert(auth.authResult.error_description);
+.run(function ($rootScope, auth, store, $cookies, AdminService, jwtHelper, $state,
+               commonModals) {
+  let initialized = false
+
+  $rootScope.$on('$stateChangeStart', function($event, newState, newParams, oldState, oldParams) {
+    // We pause the state change when
+    // 1. Auth is not yet initialized. Initialization comprises two steps:
+    //    a) Fetching the domain & CID
+    //    b) Parsing the hash for the login token
+    //
+    //    .run() functions are run immediately on page load. We
+    //    need to pause any state change until (a) is complete, so that
+    //    we can decide whether the user is visitng the page for the first time,
+    //    or if the user has just been redirected back.
+    //
+    // 2. Refresh token needs to be used.
+    pauseStateChange($event, newState, newParams,
+      initialized ? checkStorageToken()
+        : handleRedirect().then(checkStorageToken)
+    )
+  });
+
+  // If promise is a Promise, pause the state change until it's resolved
+  // else change the state immediately
+  function pauseStateChange($event, newState, newParams, promise) {
+    if (promise) {
+      $event.preventDefault();
+
+      promise.then(() => {
+        $state.go(newState.name, newParams)
+      })
+      .catch((preventLogin) => {
+        if (!preventLogin) {
+          auth.showLoginDialog()
+        }
+      })
+    } else {
+      return Promise.resolve(null)
     }
-    store.set('sessionToken', auth.authResult.idToken)
-    store.set('refreshToken', auth.authResult.refreshToken)
-    $cookies.put('sessionToken', auth.authResult.idToken)
-    auth.getProfile().then((profile) => {
-      store.set('profile', profile);
+  }
+
+  // Handle when the user is redirected back to the page
+  function handleRedirect () {
+    return auth.domainPromise.then(({authResult}) => {
+      // Check if user was redirected from the login screen
+      // If redirected, authResult is set to the login result
+      // Else it will be null
+      initialized = true;
+
+      if (authResult) {
+        if (authResult.error) {
+          return commonModals.alert(auth.authResult.error_description);
+        }
+        else {
+          store.set('sessionToken', authResult.idToken)
+          store.set('refreshToken', authResult.refreshToken)
+          $cookies.put('sessionToken', authResult.idToken)
+          auth.getProfile().then((profile) => {
+            store.set('profile', profile);
+          })
+        }
+
+        if (authResult.state) {
+          window.location.hash = authResult.state
+          return Promise.reject(true) // true to preventLogin
+        }
+      }
     })
   }
 
-  $rootScope.$on('$stateChangeStart', function($event, newState, newParams, oldState, oldParams) {
-    authenticateToken(
-      store.get('sessionToken'),
-      store.get('refreshToken'),
-      $event,
-      newState, newParams,
-      oldState, oldParams)
-  });
+  function checkStorageToken() {
+    // There are three cases:
+    // 1. Has token, not expired
+    // 2. Has token, but expired
+    // 3. No token
+    const token = store.get('sessionToken')
+    const refreshToken = store.get('refreshToken')
 
-  function authenticateToken(token, refreshToken, $event,
-      newState, newParams, oldState, oldParams) {
     if (token) {
-      if (!jwtHelper.isTokenExpired(token)) {
+      if (!jwtHelper.isTokenExpired(token)) { // Case 1
+        // FIXME: when do we deal with this side effect?
         if (!auth.isAuthenticated) {
           auth.authenticate(token);
           auth.getProfile().then((profile) => {
             store.set('profile', profile);
           })
         }
-        return;
+      } else { // Case 2
+        // Two sub-cases
+        // a) With refresh token -- try to refresh
+        // b) No refresh token -- show the login screen
+        if (refreshToken) {
+          // Refresh the token
+          return auth.refreshToken(refreshToken)
+            .then((delegationResult) => {
+              auth.authenticate(delegationResult.id_token);
+              store.set('sessionToken', delegationResult.id_token)
+              auth.getProfile().then((profile) => {
+                store.set('profile', profile);
+              })
+            })
+        } else {
+          return Promise.reject(null);
+        }
       }
-
-      if (refreshToken) {
-        // Stop it from continuing to the page until we have successfully
-        // authenticated...
-        $event.preventDefault();
-
-        // Refresh the token
-        auth.refreshToken(refreshToken)
-        .then((delegationResult) => {
-          auth.authenticate(delegationResult.id_token);
-          store.set('sessionToken', delegationResult.id_token)
-          auth.getProfile().then((profile) => {
-            store.set('profile', profile);
-          })
-
-          // Resume loading the page
-          $state.go(newState.name, newParams)
-        })
-        // Continue
-        .catch((err) => {
-          AdminService.login();
-        })
-        return;
-      }
+    } else {
+      return Promise.reject(null);
     }
-    AdminService.login();
   }
 })
 
@@ -161,6 +205,6 @@ function configureGoogleMaps(uiGmapGoogleMapApiProvider) {
 function configureUrlWhitelist($sceDelegateProvider) {
   $sceDelegateProvider.resourceUrlWhitelist([
     'self',
-    env.BACKEND_URL + '/**'
+    process.env.BACKEND_URL + '/**'
   ])
 }

@@ -1,6 +1,4 @@
 
-const env = require('../env.json')
-
 export default function($http, companiesSvc) {
   return {
     template: `<img ng-src="{{backend}}/companies/{{companyId}}/logo" />`,
@@ -9,7 +7,7 @@ export default function($http, companiesSvc) {
       companyId: '<',
     },
     link(scope, elem, attr) {
-      scope.backend = env.BACKEND_URL;
+      scope.backend = process.env.BACKEND_URL;
     },
   }
 }

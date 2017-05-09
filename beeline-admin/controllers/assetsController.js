@@ -1,6 +1,3 @@
-
-const env = require('../env.json')
-
 export default function($scope, $state, $urlRouter, AdminService, store,
   LoadingSpinner, $uibModal) {
 
@@ -20,7 +17,7 @@ export default function($scope, $state, $urlRouter, AdminService, store,
   }
 
   $scope.assetUrl = (asset, renderMarkdown) => {
-    return `${env.BACKEND_URL}/assets/${asset.id}` +
+    return `${process.env.BACKEND_URL}/assets/${asset.id}` +
       (renderMarkdown ? '/renderMarkdown' : '');
   }
   $scope.deleteAsset = (asset) => {

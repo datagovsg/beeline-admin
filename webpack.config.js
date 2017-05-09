@@ -1,43 +1,33 @@
-var path = require('path');
-var fs = require('fs');
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
-var autoprefixer = require('autoprefixer')
+const path = require('path');
+const fs = require('fs');
+const autoprefixer = require('autoprefixer')
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const InlineEnviromentVariablesPlugin = require('inline-environment-variables-webpack-plugin');
 
-var env = {
-    BACKEND_URL: process.env.BACKEND_URL || 'https://beeline-server-dev.herokuapp.com',
-    AUTH0_CID: process.env.AUTH0_CID || 'BslsfnrdKMedsmr9GYkTv7ejJPReMgcE',
-    AUTH0_DOMAIN: process.env.AUTH0_DOMAIN || 'beeline.au.auth0.com',
+const env = {
+  BACKEND_URL: process.env.BACKEND_URL || 'https://beeline-server-dev.herokuapp.com'
 }
 
-fs.writeFileSync(`${__dirname}/beeline-admin/env.json`, JSON.stringify(env))
+const prefix = path.resolve(process.env.BUILD_PREFIX || 'www')
 
-module.exports = {
+const jsBundle = {
   devtool: 'source-map',
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.html$/,
-        loader: 'html',
+        loader: 'html-loader',
         exclude: /node_modules/,
         include: path.resolve('.'),
-        query: {
+        options: {
           attrs: false, /* disable img:src loading */
         }
       },
       {
-        test: /\.json$/,
-        loader: 'json',
-      },
-      {
         test: /\.js$/,
-        loader: 'babel',
+        loader: 'babel-loader',
         exclude: /node_modules/,
         include: path.resolve('.'),
-        query: {
-          presets: ['es2015', 'stage-3'],
-          sourceMaps: true,
-          plugins: ['transform-runtime'],
-        },
       }
     ],
   },
@@ -62,17 +52,49 @@ module.exports = {
     path.resolve('beeline-admin/main.js'),
   ],
   output: {
-    path: path.resolve('www/lib/beeline-admin'),
-    filename: process.env.OUTPUT_FILENAME || 'bundle.js',
+    path: path.join(prefix, 'lib/beeline-admin'),
+    filename: 'bundle.js',
     pathinfo: true,
   },
   externals: {
     'lodash': '_'
-  }
-  // plugins: [
-  //   new ExtractTextPlugin("../../css/styles.css")
-  // ],
-  // postcss: function () {
-  //   return [autoprefixer];
-  // }
+  },
+  plugins: [
+    new InlineEnviromentVariablesPlugin(env)
+  ]
 };
+
+const cssBundle = {
+  entry: path.resolve('scss/ionic.app.scss'),
+  module: {
+    rules: [{
+      test: /\.scss$/,
+      use: ExtractTextPlugin.extract({
+        use: [
+          {loader: 'css-loader', options: {url: false}},
+          {loader: 'sass-loader'}
+        ],
+      })
+    }]
+  },
+  output: {
+    // This output is entirely superfluous.
+    // We are abusing Webpack so that it will compile the SCSS
+    // What it means is that you can load the style sheet by
+    // both <script src="....XXX.css.js"></script>
+    // and also by <link href="....XXX.css" />
+    path: path.join(__dirname, prefix, `css`),
+    filename: 'styles.css.js',
+    pathinfo: true,
+  },
+  plugins: [
+    new ExtractTextPlugin({
+      filename: 'styles.css',
+    })
+  ]
+}
+
+module.exports = [
+  jsBundle,
+  cssBundle,
+]

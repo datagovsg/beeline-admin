@@ -1,4 +1,3 @@
-const env = require('../env.json')
 const _ = require('lodash');
 
 angular.module('beeline-admin')
