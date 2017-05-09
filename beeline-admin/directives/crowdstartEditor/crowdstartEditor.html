@@ -106,6 +106,7 @@
             <th>Bid Date</th>
             <th>Bid Price</th>
             <th>Status</th>
+            <th>Cancel</th>
           </tr>
         </thead>
         <tbody>
@@ -119,6 +120,12 @@
             <td>{{bid.createdAt | date:'dd MMM yy HH:mm:ss':'+0800'}}</td>
             <td>{{bid.priceF | number:2}}</td>
             <td>{{bid.status}}</td>
+            <td>
+              <button class="btn btn-danger" ng-click="withdrawBid(bid)"
+                  type="button">
+                <span class="glyphicon glyphicon-trash"></span>
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>
