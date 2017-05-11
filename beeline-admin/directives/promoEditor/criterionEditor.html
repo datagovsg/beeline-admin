@@ -36,7 +36,8 @@
   <div ng-if="editCriterion.type == 'limitByPurchaseDate'">
     <label>
       Start date (inclusive):
-
+    </label>
+    <div class="input-group">
       <input type="text" class="form-control" ng-model="params.limitByPurchaseDate.$$startDate"
         uib-datepicker-popup="dd MMM yyyy"
         ng-model-options="{timezone: 'Z'}"
@@ -47,10 +48,11 @@
           <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
         </button>
       </span>
-    </label>
+    </div>
     <label>
       End date (inclusive):
-
+    </label>
+    <div class="input-group">
       <input type="text" class="form-control" ng-model="params.limitByPurchaseDate.$$endDate"
         uib-datepicker-popup="dd MMM yyyy"
         ng-model-options="{timezone: 'Z'}"
@@ -61,13 +63,14 @@
           <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
         </button>
       </span>
-    </label>
+    </div>
   </div>
 
   <div ng-if="editCriterion.type == 'limitByTripDate'">
     <label>
       Start date (inclusive):
-
+    </label>
+    <div class="input-group">
       <input type="text" class="form-control" ng-model="params.limitByTripDate.$$startDate"
         uib-datepicker-popup="dd MMM yyyy"
         ng-model-options="{timezone: 'Z'}"
@@ -78,10 +81,11 @@
           <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
         </button>
       </span>
-    </label>
+    </div>
     <label>
       End date (inclusive):
-
+    </label>
+    <div class="input-group">
       <input type="text" class="form-control" ng-model="params.limitByTripDate.$$endDate"
       uib-datepicker-popup="dd MMM yyyy"
       ng-model-options="{timezone: 'Z'}"
@@ -92,7 +96,7 @@
           <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
         </button>
       </span>
-    </label>
+    </div>
   </div>
 
   <div ng-if="editCriterion.type == 'limitByTripDayOfWeek'">
