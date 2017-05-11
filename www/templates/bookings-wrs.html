@@ -14,13 +14,13 @@
         <form class="col-lg-8 pull-left" ng-class="{loading: disp.isLoading}">
           <h1>Bookings</h1>
           <h2>Search selected dates by:</h2>
-          <div class="form-group pull-left ticketSearch">
+          <div class="ticketSearch">
             <label>
               Filter by Route:
-              <select ng-options="route.id as (route.label + ': ' + route.name) for route in disp.availableRoutes | orderBy:'label'" ng-model="filter.routeId" ng-required="false" class="form-control">
-                <option value="">(All)</option>
-              </select>
             </label>
+            {{filter.routeId}}
+            <route-select2 ng-model="filter.routeId" ng-required="false" transport-company-id="companyId">
+            </route-select2>
           </div>
           <!-- stop query -->
           <div class="form-group pull-left ticketSearch">

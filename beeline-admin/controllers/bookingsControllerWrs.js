@@ -13,6 +13,8 @@ angular.module('beeline-admin')
   $scope.perPage = 50;
   $scope.pageCount = 1;
 
+  $scope.companyId = companyId;
+
   var now = new Date();
   var startOfMonth = new Date(
     now.getFullYear(),
@@ -67,11 +69,8 @@ angular.module('beeline-admin')
   $scope.$watchGroup(['filter.routeId', 'filter.tripId'], () => {
     var params = {}
 
-    if ($scope.filter.routeId)
-      params.routeId = $scope.filter.routeId;
-
-    if ($scope.filter.tripId)
-      params.tripId = $scope.filter.tripId;
+    params.routeId = $scope.filter.routeId || '';
+    params.tripId = $scope.filter.tripId || '';
 
     $state.go(myState, params, {notify: false, reload: false})
   })
