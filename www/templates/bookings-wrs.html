@@ -202,7 +202,7 @@
                   </span>
                   <button class="btn btn-danger actions" ng-click="refundPayment(ticket)"
                       ng-if="(ticket.status == 'valid' || ticket.status == 'void') && ticket.paymentResource">
-                   <span class="glyphicon glyphicon-usd" aria-hidden="true"></span> 
+                   <span class="glyphicon glyphicon-usd" aria-hidden="true"></span>
                    Refund {{ticket.boardStop.trip.priceF - ticket.notes.discountValue || 0 | currency}}
                  </button>
                  <button class="btn btn-warning" ng-click="issueRouteCredits(ticket)">
@@ -214,8 +214,15 @@
                   <br> (UID: {{ticket.user.id}})</a>
                   <br> {{ticket.user.json.telephone || ticket.user.telephone}}
                   <br> {{ticket.user.json.email || ticket.user.email}}
-                  <span ng-repeat="discountCode in ticket.notes.discountCodes">
-                    <br> <span class="discount-code label">{{discountCode}}</span>
+                  <span ng-if="ticket.discount">
+                    <br>
+                    <span class="discount-code label"
+                        ui-sref="^.promotions({companyId: ticket.boardStop.trip.route.transportCompanyId, promoId: ticket.discount.discount.promotionId})">
+                      <span ng-if="ticket.discount.discount.code">{{ticket.discount.discount.code}}</span>
+                      <span ng-if="!ticket.discount.discount.code"><i>(automatic)</i></span>
+
+                      (#{{ticket.discount.discount.promotionId}})
+                    </span>
                   </span>
                 </td>
                 <td class="text-center">
