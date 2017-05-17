@@ -14,13 +14,13 @@
         <form class="col-lg-8 pull-left" ng-class="{loading: disp.isLoading}">
           <h1>Bookings</h1>
           <h2>Search selected dates by:</h2>
-          <div class="form-group pull-left ticketSearch">
+          <div class="ticketSearch">
             <label>
               Filter by Route:
-              <select ng-options="route.id as (route.label + ': ' + route.name) for route in disp.availableRoutes | orderBy:'label'" ng-model="filter.routeId" ng-required="false" class="form-control">
-                <option value="">(All)</option>
-              </select>
             </label>
+            {{filter.routeId}}
+            <route-select2 ng-model="filter.routeId" ng-required="false" transport-company-id="companyId">
+            </route-select2>
           </div>
           <!-- stop query -->
           <div class="form-group pull-left ticketSearch">
@@ -125,10 +125,13 @@
           |
           {{selectedTickets.length}} of {{tickets.length}} tickets selected
           |
-          <button ng-disabled="!selectedTickets.length" ng-click="issueTickets()"
+          <button ng-disabled="!selectedTickets.length || disp.selectedTicketsUniqueTrips.length > 1" ng-click="issueTickets()"
             class="btn btn-default btn-lg">
             Edit Selected Tickets
           </button>
+          <div ng-if="disp.selectedTicketsUniqueTrips.length > 1">
+            You may not simultaneously edit tickets for different routes
+          </div>
         </div>
       </div>
     </div>
@@ -224,6 +227,11 @@
                       (#{{ticket.discount.discount.promotionId}})
                     </span>
                   </span>
+
+                  <button type="button" class="btn btn-default" ng-click="addTicket(ticket)">
+                    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                    Issue another ticket
+                  </button>
                 </td>
                 <td class="text-center">
                   <a ui-sref="^.transactions({ticketId: ticket.id})">
@@ -296,11 +304,8 @@
                 </td>
                 <td class="item-info text-center">
                   <div class="btn-group" role="group" aria-label="...">
-                    <button type="button" class="btn btn-default" ng-click="addTicket(ticket)" ng-disabled="ticket.status != 'valid'">
-                      <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
-                      Add
-                    </button>
-                    <button type="button" class="btn btn-default" ng-click="editTicket(ticket)" ng-disabled="ticket.status != 'valid'">
+                    <button type="button" class="btn btn-default" ng-click="editTicket(ticket)"
+                    ng-disabled="ticket.status != 'valid' || selectedTickets.length > 1">
                       <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                       Edit
                     </button>

@@ -1,14 +1,19 @@
 import querystring from 'querystring'
 import assert from 'assert';
+import _ from 'lodash';
 const pickOneModalTemplate = require('../templates/modals/pickOne.html')
 
-export default function($scope, AdminService, RoutesService, LoadingSpinner, TagsService,
-  $state, $stateParams, issueTicketModal, issueRouteCreditsModal, commonModals, $uibModal) {
+angular.module('beeline-admin')
+.controller('bookingsWrs', function($scope, AdminService, RoutesService, LoadingSpinner, TagsService,
+  $state, $stateParams, issueTicketModal, issueRouteCreditsModal, commonModals, $uibModal,
+  companyId) {
   $scope.tickets = [];
   $scope.currentPage = 1;
 
   $scope.perPage = 50;
   $scope.pageCount = 1;
+
+  $scope.companyId = companyId;
 
   var now = new Date();
   var startOfMonth = new Date(
@@ -64,11 +69,8 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner, Tag
   $scope.$watchGroup(['filter.routeId', 'filter.tripId'], () => {
     var params = {}
 
-    if ($scope.filter.routeId)
-      params.routeId = $scope.filter.routeId;
-
-    if ($scope.filter.tripId)
-      params.tripId = $scope.filter.tripId;
+    params.routeId = $scope.filter.routeId || '';
+    params.tripId = $scope.filter.tripId || '';
 
     $state.go(myState, params, {notify: false, reload: false})
   })
@@ -167,7 +169,7 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner, Tag
     if(await issueRouteCreditsModal.issueOn(context)){
       commonModals.alert('Credits issued').then(query)
     }
-      
+
   }
 
   // Edit ticket button
@@ -351,7 +353,12 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner, Tag
   })
 
   $scope.$watchCollection('selectedTickets', (tickets) => {
-    $scope.disp.selectedTicketsCount = _.filter(tickets).length
+    if (!tickets || !tickets.$selectedObjects) return;
+
+    $scope.disp.selectedTicketsUniqueTrips = _(tickets.$selectedObjects())
+      .map(t => t.boardStop.trip.routeId)
+      .uniq()
+      .value()
   }, true);
 
   $scope.$watch(() => [
@@ -367,4 +374,4 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner, Tag
       $scope.currentPage,
       $scope.perPage],
     _.debounce(query, 1000, {leading: false, trailing: true}), true)
-}
+})

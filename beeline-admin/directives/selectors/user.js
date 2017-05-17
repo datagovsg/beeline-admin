@@ -46,7 +46,7 @@ export default function (AdminService) {
 
       var lastPromise = null;
       $scope.refreshUsers = function (search) {
-        if(search.length < 3) return 
+        if(search.length < 3) return
 
         var promise = AdminService.beeline({
           method: 'GET',
