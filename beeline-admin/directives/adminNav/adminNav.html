@@ -13,11 +13,18 @@
       <a class="navbar-brand" href="#">Beeline Admin</a>
       <ul class="nav navbar-nav">
         <li><a ui-sref="c.bookings({companyId: adminService.actingCompany})">Bookings</a></li>
-        <li><a ui-sref="c.crowdstart-summary({companyId: adminService.actingCompany})">Crowdstart</a></li>
-        <li><a ui-sref="c.routes({companyId: adminService.actingCompany, routeId: 0, action: 'route'})">Routes</a></li>
+
+        <li uib-dropdown on-toggle="toggled(open)">
+          <a href id="simple-dropdown" uib-dropdown-toggle>Routes<span class="caret"></span></a>
+          <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
+            <li><a ui-sref="c.routes({companyId: adminService.actingCompany, routeId: 0, action: 'route'})">All</a></li>
+            <li><a ui-sref="c.crowdstart-summary({companyId: adminService.actingCompany})">Crowdstart</a></li>
+            <li><a ui-sref="c.summary({companyId: adminService.actingCompany})">Ridership Summary</a></li>
+          </ul>
+        </li>
+
         <li><a ui-sref="c.users">Users</a></li>
         <li><a ui-sref="c.driver({companyId: adminService.actingCompany})">Drivers</a></li>
-        <li><a ui-sref="c.summary({companyId: adminService.actingCompany})">Summary</a></li>
         <li uib-dropdown on-toggle="toggled(open)">
           <a href id="simple-dropdown" uib-dropdown-toggle>Company<span class="caret"></span></a>
           <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
@@ -27,10 +34,10 @@
             <li><a ui-sref="c.admins({companyId: adminService.actingCompany})">Manage Admin Users</a></li>
             <li><a ui-sref="c.notifications({companyId: adminService.actingCompany})">Manage Event Notifications</a></li>
             <li ng-if="adminService.isSuperAdmin()"><a ui-sref="c.transactions({companyId: adminService.actingCompany})">Transactions</a></li>
+            <li><a ui-sref="c.credits({companyId: adminService.actingCompany})">Credits Transactions</a></li>
           </ul>
         </li>
         <li ng-if="adminService.isSuperAdmin()"><a ui-sref="assets">Assets</a></li>
-        <li><a ui-sref="c.credits({companyId: adminService.actingCompany})">Credits</a></li>
       </ul>
       <ul class="nav navbar-nav pull-right">
         <li>
