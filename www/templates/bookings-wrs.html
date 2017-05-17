@@ -158,7 +158,7 @@
                 <th>Price<br>per trip</th>
                 <th>Ticket<br>Status</th>
                 <th>Transaction<br>Timestamp</th>
-                <th>Ticket<br>Actions</th>
+                <th>Actions</th>
               </tr>
             </thead>
 
@@ -217,21 +217,6 @@
                   <br> (UID: {{ticket.user.id}})</a>
                   <br> {{ticket.user.json.telephone || ticket.user.telephone}}
                   <br> {{ticket.user.json.email || ticket.user.email}}
-                  <span ng-if="ticket.discount">
-                    <br>
-                    <span class="discount-code label"
-                        ui-sref="^.promotions({companyId: ticket.boardStop.trip.route.transportCompanyId, promoId: ticket.discount.discount.promotionId})">
-                      <span ng-if="ticket.discount.discount.code">{{ticket.discount.discount.code}}</span>
-                      <span ng-if="!ticket.discount.discount.code"><i>(automatic)</i></span>
-
-                      (#{{ticket.discount.discount.promotionId}})
-                    </span>
-                  </span>
-
-                  <button type="button" class="btn btn-default" ng-click="addTicket(ticket)">
-                    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
-                    Issue another ticket
-                  </button>
                 </td>
                 <td class="text-center">
                   <a ui-sref="^.transactions({ticketId: ticket.id})">
@@ -281,6 +266,17 @@
                   <span ng-if="ticket.notes.discountValue">
                     <br>-&dollar;{{ticket.notes.discountValue | number:2}}
                   </span>
+
+                  <span ng-if="ticket.discount && ticket.notes.discountValue">
+                    <br>
+                    <span class="discount-code label"
+                        ui-sref="^.promotions({companyId: ticket.boardStop.trip.route.transportCompanyId, promoId: ticket.discount.discount.promotionId})">
+                      <span ng-if="ticket.discount.discount.code">{{ticket.discount.discount.code}}</span>
+                      <span ng-if="!ticket.discount.discount.code"><i>(automatic)</i></span>
+
+                      (#{{ticket.discount.discount.promotionId}})
+                    </span>
+                  </span>
                 </td>
                 <td>
                   <span class="label ticket-valid"
@@ -303,13 +299,18 @@
                   </span>
                 </td>
                 <td class="item-info text-center">
-                  <div class="btn-group" role="group" aria-label="...">
-                    <button type="button" class="btn btn-default" ng-click="editTicket(ticket)"
-                    ng-disabled="ticket.status != 'valid' || selectedTickets.length > 1">
-                      <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                      Edit
-                    </button>
-                  </div>
+                  <button type="button" class="btn btn-default" ng-click="editTicket(ticket)"
+                  ng-disabled="ticket.status != 'valid' || selectedTickets.length > 1">
+                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                    Edit
+                  </button>
+
+                  <br/>
+
+                  <button type="button" class="btn btn-default" ng-click="addTicket(ticket)">
+                    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                    Issue ticket
+                  </button>
                 </td>
               </tr>
             </tbody>
