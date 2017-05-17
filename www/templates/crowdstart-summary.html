@@ -10,18 +10,26 @@
             <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>Create a new route
           </button>
 
-          <label>
-            <input type="radio" ng-model="filter.showExpiry" value="expired" />
-            Show Expired
-          </label>
-          <label>
-            <input type="radio" ng-model="filter.showExpiry" value="active" />
-            Show Active
-          </label>
-          <label>
-            <input type="radio" ng-model="filter.showExpiry" value="all" />
-            Show All
-          </label>
+          <div class="btn-group">
+            <button class="btn"
+              ng-class="{'btn-primary': filter.showExpiry == 'expired',
+                         'btn-default': filter.showExpiry != 'expired'}"
+              ng-click="filter.showExpiry = 'expired'">
+              Expired Campaigns
+            </button>
+            <button class="btn"
+              ng-class="{'btn-primary': filter.showExpiry == 'active',
+                         'btn-default': filter.showExpiry != 'active'}"
+              ng-click="filter.showExpiry = 'active'">
+              Active Campaigns
+            </button>
+            <button class="btn"
+              ng-class="{'btn-primary': filter.showExpiry == 'all',
+                         'btn-default': filter.showExpiry != 'all'}"
+              ng-click="filter.showExpiry = 'all'">
+              All Campaigns
+            </button>
+          </div>
 
           <br clear="both"/><br/>
 
@@ -35,6 +43,7 @@
                 <th my-sort="id" sort-model="filter.orderBy" sort-direction="filter.order">Route ID</th>
                 <th my-sort="label" sort-model="filter.orderBy" sort-direction="filter.order">Label</th>
                 <th my-sort="name" sort-model="filter.orderBy" sort-direction="filter.order">Route</th>
+                <th my-sort="" sort-model="filter.orderBy" sort-direction="filter.order">View</th>
                 <th my-sort="createdAt" sort-model="filter.orderBy" sort-direction="filter.order">Campaign Start Date</th>
                 <th my-sort="notes.lelongExpiry" sort-model="filter.orderBy" sort-direction="filter.order">Campaign End Date</th>
                 <th my-sort="trips[0].date" sort-model="filter.orderBy" sort-direction="filter.order">Start Date if Activated</th>
@@ -67,6 +76,8 @@
                 <td><span class="route-label">{{route.label}}</span></td>
                 <td>
                   <a ui-sref="^.trips({routeId: route.id, action: 'trips'})">{{route.from}} to {{route.to}}</a>
+                </td>
+                <td>
                   <button class="btn btn-default" ng-click="viewRoute(route.id)">View</button>
                 </td>
                 <td>{{route.createdAt | date: 'd MMM yyyy'}}</td>
@@ -92,6 +103,7 @@
                 <td>
                   <button class="btn btn-default" ui-sref="^.trips({routeId: route.id, action: 'crowdstart'})">
                     <span class="glyphicon glyphicon-pencil"></span>
+                    Edit
                   </button>
                 </td>
               </tr>
