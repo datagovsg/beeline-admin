@@ -14,13 +14,13 @@
         <form class="col-lg-8 pull-left" ng-class="{loading: disp.isLoading}">
           <h1>Bookings</h1>
           <h2>Search selected dates by:</h2>
-          <div class="form-group pull-left ticketSearch">
+          <div class="ticketSearch">
             <label>
               Filter by Route:
-              <select ng-options="route.id as (route.label + ': ' + route.name) for route in disp.availableRoutes | orderBy:'label'" ng-model="filter.routeId" ng-required="false" class="form-control">
-                <option value="">(All)</option>
-              </select>
             </label>
+            {{filter.routeId}}
+            <route-select2 ng-model="filter.routeId" ng-required="false" transport-company-id="companyId">
+            </route-select2>
           </div>
           <!-- stop query -->
           <div class="form-group pull-left ticketSearch">
@@ -78,31 +78,31 @@
           <div class="pull-left">
             <span class="ticketCheckbox">Ticket Status:</span>
             <label class="ticketCheckbox">
-              <input type="checkbox" ng-model="filter.status.valid" /> <a href="#" uib-tooltip="Valid - Paid and Free Tickets">Valid</a>
+              <input type="checkbox" ng-model="filter.status.valid" /> <span uib-tooltip="Valid - Paid and Free Tickets">Valid</span>
             </label>
 
             <label class="ticketCheckbox">
-              <input type="checkbox" ng-model="filter.status.void" /> <a href="#" uib-tooltip="Void - Tickets that are cancelled. Includes tickets that are edited as new tickets are issued during the edit.">Void</a>
+              <input type="checkbox" ng-model="filter.status.void" /> <span uib-tooltip="Void - Tickets that are cancelled. Includes tickets that are edited as new tickets are issued during the edit.">Void</span>
             </label>
 
             <label class="ticketCheckbox">
-              <input type="checkbox" ng-model="filter.status.refunded" /> <a href="#" uib-tooltip="Refunded - Tickets that are refunded to the user."> Refunded</a>
+              <input type="checkbox" ng-model="filter.status.refunded" /> <span uib-tooltip="Refunded - Tickets that are refunded to the user."> Refunded</span>
             </label>
 
             <label class="ticketCheckbox">
-              <input type="checkbox" ng-model="filter.status.failed" /> <a href="#" uib-tooltip="Failed - Tickets due to failed payments."> Failed</a>
+              <input type="checkbox" ng-model="filter.status.failed" /> <span uib-tooltip="Failed - Tickets due to failed payments."> Failed</span>
             </label>
 
             <label class="ticketCheckbox">
-              <input type="checkbox" ng-model="filter.status.bidded" /> <a href="#" uib-tooltip="Kickstart bids"> Bidded</a>
+              <input type="checkbox" ng-model="filter.status.bidded" /> <span uib-tooltip="Kickstart bids"> Bidded</span>
             </label>
 
             <label class="ticketCheckbox">
-              <input type="checkbox" ng-model="filter.status.withdrawn" /> <a href="#" uib-tooltip="Kickstart bids"> Withdrawn</a>
+              <input type="checkbox" ng-model="filter.status.withdrawn" /> <span uib-tooltip="Kickstart bids"> Withdrawn</span>
             </label>
 
             <label class="ticketCheckbox">
-              <input type="checkbox" ng-model="filter.status.pending" /> <a href="#" uib-tooltip="Pending - in the middle of a transaction"> Pending</a>
+              <input type="checkbox" ng-model="filter.status.pending" /> <span uib-tooltip="Pending - in the middle of a transaction"> Pending</span>
             </label>
 
             <br clear="both" />
@@ -125,10 +125,13 @@
           |
           {{selectedTickets.length}} of {{tickets.length}} tickets selected
           |
-          <button ng-disabled="!selectedTickets.length" ng-click="issueTickets()"
+          <button ng-disabled="!selectedTickets.length || disp.selectedTicketsUniqueTrips.length > 1" ng-click="issueTickets()"
             class="btn btn-default btn-lg">
             Edit Selected Tickets
           </button>
+          <div ng-if="disp.selectedTicketsUniqueTrips.length > 1">
+            You may not simultaneously edit tickets for different routes
+          </div>
         </div>
       </div>
     </div>
@@ -202,7 +205,7 @@
                   </span>
                   <button class="btn btn-danger actions" ng-click="refundPayment(ticket)"
                       ng-if="(ticket.status == 'valid' || ticket.status == 'void') && ticket.paymentResource">
-                   <span class="glyphicon glyphicon-usd" aria-hidden="true"></span> 
+                   <span class="glyphicon glyphicon-usd" aria-hidden="true"></span>
                    Refund {{ticket.boardStop.trip.priceF - ticket.notes.discountValue || 0 | currency}}
                  </button>
                  <button class="btn btn-warning" ng-click="issueRouteCredits(ticket)">
@@ -214,9 +217,21 @@
                   <br> (UID: {{ticket.user.id}})</a>
                   <br> {{ticket.user.json.telephone || ticket.user.telephone}}
                   <br> {{ticket.user.json.email || ticket.user.email}}
-                  <span ng-repeat="discountCode in ticket.notes.discountCodes">
-                    <br> <span class="discount-code label">{{discountCode}}</span>
+                  <span ng-if="ticket.discount">
+                    <br>
+                    <span class="discount-code label"
+                        ui-sref="^.promotions({companyId: ticket.boardStop.trip.route.transportCompanyId, promoId: ticket.discount.discount.promotionId})">
+                      <span ng-if="ticket.discount.discount.code">{{ticket.discount.discount.code}}</span>
+                      <span ng-if="!ticket.discount.discount.code"><i>(automatic)</i></span>
+
+                      (#{{ticket.discount.discount.promotionId}})
+                    </span>
                   </span>
+
+                  <button type="button" class="btn btn-default" ng-click="addTicket(ticket)">
+                    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                    Issue another ticket
+                  </button>
                 </td>
                 <td class="text-center">
                   <a ui-sref="^.transactions({ticketId: ticket.id})">
@@ -289,11 +304,8 @@
                 </td>
                 <td class="item-info text-center">
                   <div class="btn-group" role="group" aria-label="...">
-                    <button type="button" class="btn btn-default" ng-click="addTicket(ticket)" ng-disabled="ticket.status != 'valid'">
-                      <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
-                      Add
-                    </button>
-                    <button type="button" class="btn btn-default" ng-click="editTicket(ticket)" ng-disabled="ticket.status != 'valid'">
+                    <button type="button" class="btn btn-default" ng-click="editTicket(ticket)"
+                    ng-disabled="ticket.status != 'valid' || selectedTickets.length > 1">
                       <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                       Edit
                     </button>
