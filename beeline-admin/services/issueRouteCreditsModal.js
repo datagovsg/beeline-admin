@@ -1,61 +1,50 @@
 const issueRouteCreditsTemplate = require('../templates/issueRouteCreditsModal.html');
 import leftPad from 'left-pad';
 
-export default function ($rootScope, $uibModal, AdminService,
-  TagsService, commonModals, LoadingSpinner) {
-  
-  this.issueOn = async function (context) {
-    return await openModal(context).then(processRequest)
-  }
+angular.module('beeline-admin')
+.service('issueRouteCreditsModal',
+function ($rootScope, $uibModal, AdminService, TagsService,
+          commonModals, LoadingSpinner, uibModalPromise) {
+  this.issueOn = function (context) {
+    const tags = TagsService.getCreditTags(context.route.tags)
+    const tag = tags[0]
 
-  function openModal (context) {
-    // format contextual data
-    var modalScope = $rootScope.$new();
-    modalScope.data = {
-      user: context.user,
-      route: context.route,
-      price: context.price,
-      creditAmt: context.price,
-      tag: null,
-      tags: null,
-      numPasses: 1,
-      ticket: context.ticket, 
-      refundTicket: false,
-    }
-    modalScope.data.tags = TagsService.getCreditTags(modalScope.data.route.tags)
-    modalScope.data.tag = modalScope.data.tags[0] || ''
-
-    // check context
-    if(!modalScope.data.tag){
+    if(!tag){
       return commonModals.alert({
         title: 'Error',
-        message: 
+        message:
         `The route for the selected ticket does not have suitable credit tags.`
       })
     }
 
-    var modalOptions = {
+    return uibModalPromise.openModal({
+      data: {
+        user: context.user,
+        route: context.route,
+        price: context.price,
+        creditAmt: context.price,
+        tag: tags[0] || '',
+        tags: tags,
+        numPasses: 1,
+        ticket: context.ticket,
+        refundTicket: false,
+      },
       controller: IssueRouteCreditsController,
       template: issueRouteCreditsTemplate,
-      scope: modalScope,
-      // windowClass: 'full-width',
       backdrop: 'static',
       keyboard: false,
-    };
-
-    var modal = $uibModal.open(modalOptions);
-    return modal.result
+    })
   }
 
   // data properties
   // - numPasses: number of passes to issue
-  // - ticket: 
+  // - ticket:
   // - price: price of a ticket for that route
   // - user: user info
   // - tag: tag to issue to
   // - description: text describing reason for issuing credits
   // - refundTicket: does user want to void the ticket
-  async function processRequest (data) {
+  this.processModalResult = async function (data) {
     // cancel
     if(!data) return false
 
@@ -105,13 +94,11 @@ export default function ($rootScope, $uibModal, AdminService,
 
       return false
     }
-
   }
-
-}
+})
 
 function IssueRouteCreditsController($scope) {
   $scope.$watch('data.numPasses', () => {
-    $scope.data.creditAmt = Math.round($scope.data.numPasses * $scope.data.price * 100)/100
+    $scope.data.creditAmt = Math.round($scope.data.numPasses * $scope.data.price * 100) / 100
   })
 }

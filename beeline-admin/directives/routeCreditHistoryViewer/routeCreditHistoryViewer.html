@@ -10,6 +10,11 @@
     </tr>
   </thead>
   <tbody>
+    <tr ng-if="moreToLoad">
+      <td colspan="5">
+        <button ng-click="loadMoreHistory()" class="btn btn-default">Load more</button>
+      </td>
+    </tr>
     <tr ng-repeat="ti in routeCreditHistory track by ti.id">
       <td>{{ti.createdAt | date:'dd MMM yy HH:mm':'+0800'}}</td>
       <td>{{ti.transaction.description}}</td>
@@ -29,11 +34,6 @@
       <td class="text-right"></td>
       <td class="text-right">{{finalBalance | number:2}}</td>
       <td></td>
-    </tr>
-    <tr ng-if="moreToLoad">
-      <td colspan="5">
-        <button ng-click="loadMoreHistory()" class="btn btn-default">Load more</button>
-      </td>
     </tr>
   </tbody>
 </table>

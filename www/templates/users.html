@@ -7,7 +7,7 @@
       <user-selector ng-model="selector.userId" initial-user="user" include-ephemeral="false"></user-selector>
     </div>
   </div>
-  <div class="row">
+  <div class="row" ng-if="user.id">
     <div class="col-sm-3">
       <div>
         <table class="table">
@@ -56,7 +56,7 @@
       </div>
     </div>
 
-    <div class="col-sm-9" ng-if="showRouteCreditHistory">
+    <div class="col-sm-9" ng-if="user.id && showRouteCreditHistory">
       <h2>History of '{{showRouteCreditHistory.tag}}'</h2>
       <route-credit-history-viewer user-id="user.id"
         credit-tag="showRouteCreditHistory.tag"
@@ -83,14 +83,27 @@
         <tbody ng-repeat="credit in routeCredits">
           <tr ng-repeat="route in credit.routes">
             <td ng-if="$index == 0" rowspan="{{ credit.routes.length }}">
-              <button class="btn btn-warning btn-sm" ng-click="issueRouteCredits(credit)"><span class="glyphicon glyphicon-piggy-bank" aria-hidden="true"></span>Add credit</button>
+              <button class="btn btn-success btn-sm" ng-click="showHistory(credit)">
+                <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+                View History
+              </button>
+              <br/>
+              <button class="btn btn-warning btn-sm" ng-click="issueRouteCredits(credit)">
+                <span class="glyphicon glyphicon-piggy-bank" aria-hidden="true"></span>
+                Add credit...
+              </button>
+              <br/>
+              <button class="btn btn-danger btn-sm" ng-click="expireRouteCredits(credit)">
+                <span class="glyphicon glyphicon-scissors" aria-hidden="true"></span>
+                Expire Credits...
+              </button>
             </td>
             <td ng-if="$index == 0" rowspan="{{ credit.routes.length }}">
-              <ul class="tags"><li class="tags" ng-click="showHistory(credit)">{{ credit.tag }}</li></ul>
+              <ul class="tags"><li class="tags">{{ credit.tag }}</li></ul>
             </td>
             <td ng-if="$index == 0" rowspan="{{ credit.routes.length }}" class="width-limit-xs">{{ credit.balance | currency }}</td>
             <td>
-              <span class="route-label">{{ route.label }}</span>
+              <a ui-sref="^.trips({routeId: route.id, action: 'route'})" class="route-label">{{ route.label }}</a>
             </td>
             <td class="width-limit-md">
               <table class="borderless">
