@@ -1,5 +1,3 @@
-
-const env = require('../env.json')
 const _ = require('lodash');
 
 export default function($scope, $state, $urlRouter, AdminService, store,
@@ -16,7 +14,7 @@ export default function($scope, $state, $urlRouter, AdminService, store,
     .then((response) => {
       $scope.company = response.data;
     })
-    $scope.companyLogoUrl = `${env.BACKEND_URL}/companies/${companyId}/logo`
+    $scope.companyLogoUrl = `${process.env.BACKEND_URL}/companies/${companyId}/logo`
   }
 
   $scope.$watch(() => store.get('sessionToken'), sessionToken => {

@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const titleCase = require('title-case')
 
 angular.module('beeline-admin')
 .directive('promoCriterionEditor', function (RoutesService) {
@@ -11,20 +12,45 @@ angular.module('beeline-admin')
     },
     controller($scope) {
       $scope.criterionTypes = [
-        'limitByCompany',
-        'limitByRoute',
-        'limitByRouteTags',
-        'limitByTripDate',
-        'limitByPurchaseDate',
-        'limitBycontactList',
+        {
+          type: 'limitByCompany',
+          default: {companyId: null}
+        },
+        {
+          type: 'limitByRoute',
+          default: {routeIds: []}
+        },
+        {
+          type: 'limitByRouteTags'
+        },
+        {
+          type: 'limitByTripDate',
+          default: {startDate: null, endDate: null}
+        },
+        {
+          type: 'limitByTripDayOfWeek',
+          default: {0: false, 1: false, 2: false, 3: false, 4: false, 5: false, 6: false}
+        },
+        {
+          type: 'limitByPurchaseDate',
+          default: {startDate: null, endDate: null}
+        },
+        {
+          type: 'limitByContactList',
+          default: {contactListId: null}
+        },
       ];
+      $scope.criterionTypes.forEach(ct => {
+        ct.description = titleCase(ct.type)
+      })
+
       // Create a parameter buffer for each type
       $scope.params = _($scope.criterionTypes)
-        .keyBy(x => x)
-        .mapValues(x => ({}))
+        .keyBy(x => x.type)
+        .mapValues(x => (x.default || {}))
         .value();
       $scope.disp = _($scope.criterionTypes)
-        .keyBy(x => x)
+        .keyBy(x => x.type)
         .mapValues(x => ({}))
         .value();
 

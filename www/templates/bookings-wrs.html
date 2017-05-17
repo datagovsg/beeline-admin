@@ -78,31 +78,31 @@
           <div class="pull-left">
             <span class="ticketCheckbox">Ticket Status:</span>
             <label class="ticketCheckbox">
-              <input type="checkbox" ng-model="filter.status.valid" /> <a href="#" uib-tooltip="Valid - Paid and Free Tickets">Valid</a>
+              <input type="checkbox" ng-model="filter.status.valid" /> <span uib-tooltip="Valid - Paid and Free Tickets">Valid</span>
             </label>
 
             <label class="ticketCheckbox">
-              <input type="checkbox" ng-model="filter.status.void" /> <a href="#" uib-tooltip="Void - Tickets that are cancelled. Includes tickets that are edited as new tickets are issued during the edit.">Void</a>
+              <input type="checkbox" ng-model="filter.status.void" /> <span uib-tooltip="Void - Tickets that are cancelled. Includes tickets that are edited as new tickets are issued during the edit.">Void</span>
             </label>
 
             <label class="ticketCheckbox">
-              <input type="checkbox" ng-model="filter.status.refunded" /> <a href="#" uib-tooltip="Refunded - Tickets that are refunded to the user."> Refunded</a>
+              <input type="checkbox" ng-model="filter.status.refunded" /> <span uib-tooltip="Refunded - Tickets that are refunded to the user."> Refunded</span>
             </label>
 
             <label class="ticketCheckbox">
-              <input type="checkbox" ng-model="filter.status.failed" /> <a href="#" uib-tooltip="Failed - Tickets due to failed payments."> Failed</a>
+              <input type="checkbox" ng-model="filter.status.failed" /> <span uib-tooltip="Failed - Tickets due to failed payments."> Failed</span>
             </label>
 
             <label class="ticketCheckbox">
-              <input type="checkbox" ng-model="filter.status.bidded" /> <a href="#" uib-tooltip="Kickstart bids"> Bidded</a>
+              <input type="checkbox" ng-model="filter.status.bidded" /> <span uib-tooltip="Kickstart bids"> Bidded</span>
             </label>
 
             <label class="ticketCheckbox">
-              <input type="checkbox" ng-model="filter.status.withdrawn" /> <a href="#" uib-tooltip="Kickstart bids"> Withdrawn</a>
+              <input type="checkbox" ng-model="filter.status.withdrawn" /> <span uib-tooltip="Kickstart bids"> Withdrawn</span>
             </label>
 
             <label class="ticketCheckbox">
-              <input type="checkbox" ng-model="filter.status.pending" /> <a href="#" uib-tooltip="Pending - in the middle of a transaction"> Pending</a>
+              <input type="checkbox" ng-model="filter.status.pending" /> <span uib-tooltip="Pending - in the middle of a transaction"> Pending</span>
             </label>
 
             <br clear="both" />
@@ -202,7 +202,7 @@
                   </span>
                   <button class="btn btn-danger actions" ng-click="refundPayment(ticket)"
                       ng-if="(ticket.status == 'valid' || ticket.status == 'void') && ticket.paymentResource">
-                   <span class="glyphicon glyphicon-usd" aria-hidden="true"></span> 
+                   <span class="glyphicon glyphicon-usd" aria-hidden="true"></span>
                    Refund {{ticket.boardStop.trip.priceF - ticket.notes.discountValue || 0 | currency}}
                  </button>
                  <button class="btn btn-warning" ng-click="issueRouteCredits(ticket)">
@@ -214,8 +214,15 @@
                   <br> (UID: {{ticket.user.id}})</a>
                   <br> {{ticket.user.json.telephone || ticket.user.telephone}}
                   <br> {{ticket.user.json.email || ticket.user.email}}
-                  <span ng-repeat="discountCode in ticket.notes.discountCodes">
-                    <br> <span class="discount-code label">{{discountCode}}</span>
+                  <span ng-if="ticket.discount">
+                    <br>
+                    <span class="discount-code label"
+                        ui-sref="^.promotions({companyId: ticket.boardStop.trip.route.transportCompanyId, promoId: ticket.discount.discount.promotionId})">
+                      <span ng-if="ticket.discount.discount.code">{{ticket.discount.discount.code}}</span>
+                      <span ng-if="!ticket.discount.discount.code"><i>(automatic)</i></span>
+
+                      (#{{ticket.discount.discount.promotionId}})
+                    </span>
                   </span>
                 </td>
                 <td class="text-center">

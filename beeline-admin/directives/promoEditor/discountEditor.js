@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const titleCase = require('title-case')
 
 angular.module('beeline-admin')
 .directive('promoDiscountEditor', function (RoutesService) {
@@ -11,17 +12,22 @@ angular.module('beeline-admin')
     },
     controller($scope) {
       $scope.discountTypes = [
-        'simpleRate',
-        'simpleFixed',
-        'tieredRateByQty'
+        {type: 'simpleRate'},
+        {type: 'simpleFixed'},
+        {type: 'flatPrice'},
+        {type: 'tieredRateByQty'},
       ];
+      $scope.discountTypes.forEach(dt => {
+        dt.description = titleCase(dt.type)
+      })
+
       // Create a parameter buffer for each type
       $scope.params = _($scope.discountTypes)
-        .keyBy(x => x)
+        .keyBy(x => x.type)
         .mapValues(x => ({}))
         .value();
       $scope.disp = _($scope.discountTypes)
-        .keyBy(x => x)
+        .keyBy(x => x.type)
         .mapValues(x => ({}))
         .value();
 

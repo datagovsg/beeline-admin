@@ -3,7 +3,8 @@ const assert = require('assert');
 const leftPad = require('left-pad');
 const querystring = require('querystring');
 
-angular.module('beeline-admin').directive('crowdstartEditor', function () {
+angular.module('beeline-admin')
+.directive('crowdstartEditor', function (LoadingSpinner) {
   return {
     template: require('./crowdstartEditor.html'),
     scope: {
@@ -11,63 +12,27 @@ angular.module('beeline-admin').directive('crowdstartEditor', function () {
     },
     controller($scope, TripsService, AdminService, commonModals) {
       $scope.disp = {};
-      $scope.$watch('route', (r) => {
-        if (!r || !r.id) return
+      $scope.$watch('route', requery)
 
-        const route = _.cloneDeep(r);
-
-        // Prepare the metadata...
-        route.notes = route.notes || {};
-        route._meta = {
-          campaignEndDate: new Date(route.notes.lelongExpiry),
-          // firstTripDate: new Date(route.trips[0].date)
-        };
-        route.notes.tier = route.notes.tier || [{price: 10, pax: 13}]
-
-        $scope.editRoute = route
-        $scope.bids = null;
-
-        // Asynchronously find the first trip date
-        TripsService.getTrips({
-          routeId: route.id,
-          startDate: new Date(route._meta.campaignEndDate.getTime() - 180*24*60*60*1000),
-          endDate: new Date(route._meta.campaignEndDate.getTime() + 365*24*60*60*1000),
-        })
-        .then((trips) => {
-          route.trips = trips;
-          route._meta.firstTripDate = trips[0].date
-        })
-
-        // Asynchronously find the bids
-        function findBids(bids = [], page = 1) {
-          const batchSize = 100;
-          return AdminService.beeline({
-            url: '/custom/wrs/report?' + querystring.stringify({
-              routeId: route.id,
-              statuses: JSON.stringify(['bidded', 'void', 'failed']),
-              perPage: batchSize,
-              page,
-            })
-          })
-          .then((response) => {
-            const bidsSoFar = bids.concat(response.data.rows);
-            $scope.bids = bidsSoFar;
-            if (response.data.rows.length === batchSize) {
-              return findBids(
-                bidsSoFar,
-                page + 1
-              )
-            }
-          })
-        }
-
-        findBids();
-      })
       $scope.removeTier = function (index) {
         $scope.editRoute.notes.tier.splice(index, 1)
       }
       $scope.addTier = function () {
         $scope.editRoute.notes.tier.push({price: 10, pax: 13})
+      }
+
+      $scope.withdrawBid = function (bid) {
+        commonModals.confirm('Are you sure you want to cancel this bid?')
+        .then((result) => {
+          if (result) {
+            return LoadingSpinner.watchPromise(AdminService.beeline({
+              method: 'DELETE',
+              url: `/custom/lelong/routes/${$scope.route.id}/bids/${bid.id}`
+            })
+            .then(requery))
+          }
+        })
+        .catch((err) => commonModals.alert(_.get(err, 'data.message')))
       }
 
       $scope.save = function () {
@@ -127,7 +92,46 @@ angular.module('beeline-admin').directive('crowdstartEditor', function () {
         Promise.all([routePromise, tripPromise])
         .then(() => window.location.reload())
         .catch((err) => commonModals.alert(`${err && err.data && err.data.message}`))
-      }
+      } /* $scope.save */
+
+      function requery () {
+        const r = $scope.route
+        if (!r || !r.id) return
+
+        const route = _.cloneDeep(r);
+
+        // Prepare the metadata...
+        route.notes = route.notes || {};
+        route._meta = {
+          campaignEndDate: new Date(route.notes.lelongExpiry),
+          // firstTripDate: new Date(route.trips[0].date)
+        };
+        route.notes.tier = route.notes.tier || [{price: 10, pax: 13}]
+
+        $scope.editRoute = route
+        $scope.bids = null;
+
+        // Asynchronously find the first trip date
+        TripsService.getTrips({
+          routeId: route.id,
+          startDate: new Date(route._meta.campaignEndDate.getTime() - 180*24*60*60*1000),
+          endDate: new Date(route._meta.campaignEndDate.getTime() + 365*24*60*60*1000),
+        })
+        .then((trips) => {
+          route.trips = trips;
+          route._meta.firstTripDate = trips[0].date
+        })
+
+        // Asynchronously find the bids
+        AdminService.beeline({
+          url: `/custom/lelong/routes/${route.id}/bids?` + querystring.stringify({
+            statuses: JSON.stringify(['bidded', 'void', 'failed']),
+          })
+        })
+        .then((response) => {
+          $scope.bids = response.data;
+        });
+      } /* function requery (r) */
     }
   }
 })

@@ -52,7 +52,6 @@
             <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastPrice">Price</th>
             <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastCapacity">Capacity</th>
             <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Tags</th>
-            <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Crowdstart Expiry Date</th>
             <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Actions</th>
           </tr>
         </thead>
@@ -133,9 +132,6 @@
               <ul class="tags">
                 <li ng-repeat="tag in route.tags track by $index">{{tag}}</li>
               </ul>
-            </td>
-            <td>
-              {{route.notes.lelongExpiry | date:'dd MMM yyyy'}}
             </td>
             <td>
               <div class="btn-group" role="group" aria-label="...">
