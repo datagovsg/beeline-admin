@@ -34,6 +34,7 @@
             <li><a ui-sref="c.admins({companyId: adminService.actingCompany})">Manage Admin Users</a></li>
             <li><a ui-sref="c.notifications({companyId: adminService.actingCompany})">Manage Event Notifications</a></li>
             <li ng-if="adminService.isSuperAdmin()"><a ui-sref="c.transactions({companyId: adminService.actingCompany})">Transactions</a></li>
+            <li><a ui-sref="c.credits({companyId: adminService.actingCompany})">Credits Transactions</a></li>
           </ul>
         </li>
         <li ng-if="adminService.isSuperAdmin()"><a ui-sref="assets">Assets</a></li>
