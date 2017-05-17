@@ -71,7 +71,6 @@ angular.module('beeline-admin')
       // OMG this is just bad
       $scope.$watch('disp.ngModel', (v) => {
         $scope.ngModel = v
-        console.log($scope.ngModel)
       })
       $scope.$watch('ngModel', (v) => {
         $scope.disp.ngModel = v
