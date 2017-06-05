@@ -3,7 +3,7 @@ import assert from 'assert';
 angular.module('beeline-admin')
   .controller('usersController', function ($scope, AdminService, RoutesService,
     LoadingSpinner, $state, $stateParams, issueRouteCreditsModal,
-    expireRouteCreditsModal, commonModals, $uibModal) {
+    expireRouteCreditsModal, commonModals, $uibModal, companyId) {
 
   $scope.user = null
   $scope.selector = { userId: $stateParams.userId || null }
@@ -12,30 +12,34 @@ angular.module('beeline-admin')
   $scope.companyId = $stateParams.companyId || null
   $scope.now = Date.now()
 
-  $scope.$watch('selector.userId', userId => {
-    if(userId){
-      $scope.showRouteCreditHistory = null;
-
-      LoadingSpinner.watchPromise(
-        AdminService.beeline({
-          method: 'GET',
-          url: `/user/${userId}`
-        })
-      ).then(resp => {
-        if(resp){
-          $scope.user = resp.data;
-        }
-
-        if($scope.companyId){
-          return loadRouteCreditsAndRoutes(userId)
-        }
-      }).catch(err => {
-        commonModals.alert(
-          `${err && err.data && err.data.message}`
-        )
-      })
+  $scope.$watch('selector.userId', (userId) => {
+    if (userId != $stateParams.userId) {
+      $state.go('c.users', {userId, companyId})
     }
   })
+
+  if ($scope.selector.userId){
+    $scope.showRouteCreditHistory = null;
+
+    LoadingSpinner.watchPromise(
+      AdminService.beeline({
+        method: 'GET',
+        url: `/user/${$scope.selector.userId}`
+      })
+    ).then(resp => {
+      if(resp){
+        $scope.user = resp.data;
+      }
+
+      if($scope.companyId){
+        return loadRouteCreditsAndRoutes($scope.selector.userId)
+      }
+    }).catch(err => {
+      commonModals.alert(
+        `${err && err.data && err.data.message}`
+      )
+    })
+  }
 
   $scope.getUserPin = async function (){
     if(!$scope.user) return

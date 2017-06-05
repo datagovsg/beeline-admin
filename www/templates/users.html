@@ -64,7 +64,10 @@
         company-id="companyId">
       </route-credit-history-viewer>
     </div>
-    <div class="col-sm-9">
+    <div class="col-sm-9" ng-if="!companyId">
+      Please select a company from the top-right hand corner
+    </div>
+    <div class="col-sm-9" ng-if="companyId">
       <h2>Route Credits</h2>
       <table class="table">
         <thead>
