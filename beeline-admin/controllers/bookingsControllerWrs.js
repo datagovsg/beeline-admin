@@ -158,7 +158,7 @@ angular.module('beeline-admin')
     issueTicketModal.open(issueTicketModalOptions).then(query);
   }
 
-  $scope.issueRouteCredits = async function (ticket) {
+  $scope.issueRouteCredits = function (ticket) {
     let context = {
       user: ticket.user,
       price: ticket.boardStop.trip.priceF,
@@ -166,10 +166,15 @@ angular.module('beeline-admin')
       ticket
     }
 
-    if(await issueRouteCreditsModal.issueOn(context)){
-      commonModals.alert('Credits issued').then(query)
-    }
-
+    issueRouteCreditsModal.issueOn(context)
+    .then((issueResult) => {
+      issueRouteCreditsModal.processModalResult(issueResult)
+    })
+    .then(() => commonModals.alert('Credits issued'))
+    .catch((err) => {
+      console.log(err)
+      commonModals.alert(`There was an error issuing credits: ${_.get(err, 'data.message')}`)
+    })
   }
 
   // Edit ticket button
