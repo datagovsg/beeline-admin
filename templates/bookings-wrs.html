@@ -248,7 +248,9 @@
                   {{ticket.boardStop.trip.date | date:'dd-MMM-yy':'UTC'}}
                 </td>
                 <td>
-                  {{ticket.boardStop.trip.routeId}}
+                  <a ui-sref="^.trips({routeId: ticket.boardStop.trip.routeId, action: 'route'})">
+                    {{ticket.boardStop.trip.routeId}}
+                  </a>
                 </td>
                 <td>
                   {{ticket.boardStop.trip.route.label}}
