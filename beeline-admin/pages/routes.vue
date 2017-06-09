@@ -11,6 +11,11 @@
     </div>
     <div class="row">
       <div class="col-lg-12 btn-group">
+        <div class="form-inline">
+          <label>Search for Route</label>
+          <input class="form-control" placeholder="e.g. 123, C10, Bedok" v-model="filter.searchTerms"/>
+        </div>
+
         <button class="btn" v-for="tagPreset in tagPresets"
           :class="{
             'btn-primary': tagPreset == filter.preset,
@@ -132,22 +137,21 @@
                   </table>
                 </expandable-area>
               </td>
-              <td><button class="btn btn-default" ng-click="viewRoute(route.id)">View</button></td>
+              <td><button class="btn btn-default" @click="viewRoute(route.id)">View</button></td>
               <td>{route.indicativeTrip.lastDriverName}}</td>
               <td>{{route.indicativeTrip && route.indicativeTrip.price}}</td>
               <td>{{route.indicativeTrip && route.indicativeTrip.capacity}}<span class="glyphicon glyphicon-user" aria-hidden="true"></span></td>
               <td><TagsView :tags="route.tags" /></td>
               <td>
                 <div class="btn-group" role="group" aria-label="...">
-                  <button type="button" class="btn btn-default" ng-click="copy(route)">
+                  <button type="button" class="btn btn-default" @click="copyRoute(route)">
                     <span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span>
                     Copy
                   </button>
-                  <button type="button" class="btn btn-default"
-                    ui-sref="^.trips({routeId: route.id, action: 'route'})">
-                    <span class="glyphicon glyphicon-edit" aria-hidden="true" ui-sref="^.trips({routeId: route.id, action: 'trips'})" ></span>
+                  <a :href="`#/c/${companyId}/trips/${route.id}/trips`" class="btn btn-default">
+                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                     Edit
-                  </button>
+                  </a>
                 </div>
               </td>
             </tr>
@@ -179,6 +183,7 @@ export default {
       	orderBy: 'label',
       	order: 'asc',
         preset: tagPresets[0],
+        searchTerms: '',
       },
       tagPresets,
     }
@@ -203,6 +208,10 @@ export default {
         this.allRoutes
           .filter(r => !this.companyId || r.transportCompanyId === this.companyId)
           .filter(r => !this.filter.preset.tag || r.tags.indexOf(this.filter.preset.tag) !== -1)
+          .filter(r => !this.filter.searchTerms ||
+              r.label.toLowerCase().startsWith(this.filter.searchTerms.toLowerCase()) ||
+              r.name.toLowerCase().indexOf(this.filter.searchTerms.toLowerCase()) !== -1 ||
+              r.id.toString() == this.filter.searchTerms)
           .map(route => ({
             ...route,
             firstTrip: _.get(route, 'trips.0'),
@@ -217,6 +226,14 @@ export default {
           this.filter.page * this.filter.perPage,
           (this.filter.page + 1) * this.filter.perPage
         )
+    }
+  },
+  methods: {
+    viewRoute() {
+      // UNIMPLEMENTED
+    },
+    copyRoute() {
+      // UNIMPLEMENTED
     }
   }
 }
