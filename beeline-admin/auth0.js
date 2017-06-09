@@ -31,7 +31,7 @@ const domainPromise = axios.get(`${process.env.BACKEND_URL}/auth/credentials`)
 })
 
 angular.module('beeline-admin')
-.service('auth', function() {
+.service('auth', function(vueStore) {
   this.domainPromise = domainPromise
 
   this.isAuthenticated = false;
