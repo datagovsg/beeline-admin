@@ -1,7 +1,6 @@
 
 <template>
   <ul class="pagination">
-    <li>{{pages}} {{totalPages}} {{itemsPerPage}} {{totalItems}}</li>
    <li v-if="boundaryLinks" @click="goTo(0)">
      <span aria-hidden="true">&laquo;</span>
    </li>
@@ -9,8 +8,9 @@
      <span aria-hidden="true">&lsaquo;</span>
    </li>
 
-   <li v-for="page in pages" @click="goTo(page)">
-     {{page + 1}}
+   <li v-for="page in pages" @click="goTo(page)"
+      :class="{active: page === value}">
+     <a>{{page + 1}}</a>
    </li>
 
    <li @click="goTo(value + 1)">

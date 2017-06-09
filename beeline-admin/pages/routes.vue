@@ -21,11 +21,11 @@
         </button>
       </div>
     </div>
-    <div class="row">
+    <div class="row" v-if="routes">
       <div class="col-lg-12">
         <div class="pull-left">
           <uib-pagination :boundary-links="true" v-model="filter.page"
-            :total-items="allRoutes.length" :items-per-page="filter.perPage" />
+            :total-items="routes.length" :items-per-page="filter.perPage" />
         </div>
         <div class="pull-right create-button" ng-if="adminService.isSuperAdmin()">
           <button class="btn btn-primary btn-lg" ui-sref="^.trips({routeId:0, action: 'route'})">
@@ -34,39 +34,40 @@
         </div>
       </div>
     </div>
-    <div class="row">
+    <div class="row" v-if="routes">
       <div class="col-lg-12">
         <table class="table table-condensed table-striped table-hover">
           <thead>
             <tr>
               <th></th>
-              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="id">Route<br />ID</th>
-              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="label">Route<br />label</th>
-              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Company</th>
-              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="from">Route<br />Description</th>
-              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="startDate">Start date</th>
-              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="endDate">End date</th>
-              <!-- <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastStartTime">Start time</th> -->
-              <!-- <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastEndTime">End time</th> -->
-              <th sort-direction='filter.order' sort-model="filter.orderBy">Status</th>
-              <th sort-direction='filter.order' sort-model="filter.orderBy">Boarding</th>
-              <th sort-direction='filter.order' sort-model="filter.orderBy">Alighting</th>
-              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Route path</th>
-              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastDriverName">Last driver</th>
-              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastPrice">Price</th>
-              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="lastCapacity">Capacity</th>
-              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Tags</th>
-              <th sort-direction='filter.order' sort-model="filter.orderBy" my-sort="">Actions</th>
+              <sort-th @sort="filter.order=$event.order, filter.orderBy=$event.orderBy" :order="filter.order" :order-by="filter.orderBy" field="id">Route<br />ID</sort-th>
+              <sort-th @sort="filter.order=$event.order, filter.orderBy=$event.orderBy" :order="filter.order" :order-by="filter.orderBy" field="label">Route<br />label</sort-th>
+              <sort-th @sort="filter.order=$event.order, filter.orderBy=$event.orderBy" :order="filter.order" :order-by="filter.orderBy">Company</sort-th>
+              <sort-th @sort="filter.order=$event.order, filter.orderBy=$event.orderBy" :order="filter.order" :order-by="filter.orderBy" field="from">Route<br />Description</sort-th>
+              <sort-th @sort="filter.order=$event.order, filter.orderBy=$event.orderBy" :order="filter.order" :order-by="filter.orderBy" field="firstTrip.date">Start date</sort-th>
+              <sort-th @sort="filter.order=$event.order, filter.orderBy=$event.orderBy" :order="filter.order" :order-by="filter.orderBy" field="endDate">End date</sort-th>
+              <sort-th>Status</sort-th>
+              <sort-th>Boarding</sort-th>
+              <sort-th>Alighting</sort-th>
+              <sort-th>Route path</sort-th>
+              <sort-th @sort="filter.order=$event.order, filter.orderBy=$event.orderBy" :order="filter.order" :order-by="filter.orderBy" field="lastDriverName">Last driver</sort-th>
+              <sort-th @sort="filter.order=$event.order, filter.orderBy=$event.orderBy" :order="filter.order" :order-by="filter.orderBy" field="lastPrice">Price</sort-th>
+              <sort-th @sort="filter.order=$event.order, filter.orderBy=$event.orderBy" :order="filter.order" :order-by="filter.orderBy" field="lastCapacity">Capacity</sort-th>
+              <sort-th>Tags</sort-th>
+              <sort-th>Actions</sort-th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(route, index) in routes">
+            <tr v-for="(route, index) in sortedRoutes">
               <td>
-                {{ index + 1 }}
+                {{ filter.page * filter.perPage + index + 1 }}
               </td>
               <td>{{route.id}}</td>
               <td><span class="route-label">{{route.label}}</span></td>
-              <td style="width:6%">{{route.transportCompany.name}}</td>
+              <td style="width:6%">
+                {{ companiesById[route.transportCompanyId]
+                  && companiesById[route.transportCompanyId].name}}
+              </td>
               <td style="width:12%">
                 <table class="borderless">
                   <tr>
@@ -87,10 +88,12 @@
                   </tr>
                 </table>
               </td>
-              <td>{route.startDate | date:'dd MMM yyyy'}}<br />{route.startDate | date:'(EEE)'}}</td>
-              <td>{route.endDate | date:'dd MMM yyyy'}}<br />{route.endDate | date:'(EEE)'}}</td>
-              <!-- <td>{{route.lastStartTime | intervalToTime | date:'HH:mm'}}</td> -->
-              <!-- <td>{{route.lastEndTime   | intervalToTime | date:'HH:mm'}}</td> -->
+              <td>
+                {{ route.firstTrip && f.date(route.firstTrip.date, 'dd\u00a0mmm\u00a0yyyy', true) }}
+                <br />
+                {{ route.firstTrip && f.date(route.firstTrip.date, 'ddd', true) }}
+              </td>
+              <td>{route.endDate | date:'dd mmm yyyy'}}<br />{route.endDate | date:'(EEE)'}}</td>
               <td>
                 <span class="label route-active"
                     ng-if="route.startDate.getTime() <= now && now <= route.endDate.getTime() + 24*3600*1000">Active</span>
@@ -100,12 +103,12 @@
                     ng-if="now > route.endDate.getTime() + 24*3600*1000">Ended</span>
               </td>
               <td style="width:15%">
-                <trip-info-broker trip-id="route.indicativeTrip.nextTripId || route.indicativeTrip.lastTripId || route.indicativeTrip.tripId" trip="nextTrip"></trip-info-broker>
                 <expandable-area>
-                  <table class="borderless" ng-if="nextTrip">
-                    <tr ng-repeat="tripStop in nextTrip.tripStops | filter:{canBoard: true}">
+                  <table class="borderless" ng-if="route.indicativeTrip">
+                    <tr v-for="tripStop in route.indicativeTrip.tripStops"
+                        v-if="tripStop.canBoard">
                       <td class="text-nowrap">
-                        {{tripStop.time | date:'HH:mm'}}
+                        {{f.date(tripStop.time, 'HH:mm')}}
                       </td>
                       <td>
                         {{tripStop.stop.description}}
@@ -116,10 +119,11 @@
               </td>
               <td style="width:15%">
                 <expandable-area>
-                  <table class="borderless" ng-if="nextTrip">
-                    <tr ng-repeat="tripStop in nextTrip.tripStops | filter:{canAlight: true}">
+                  <table class="borderless" ng-if="route.indicativeTrip">
+                    <tr v-for="tripStop in route.indicativeTrip.tripStops"
+                        v-if="tripStop.canAlight">
                       <td class="text-nowrap">
-                        {{tripStop.time | date:'HH:mm'}}
+                        {{f.date(tripStop.time, 'HH:mm')}}
                       </td>
                       <td>
                         {{tripStop.stop.description}}
@@ -129,14 +133,10 @@
                 </expandable-area>
               </td>
               <td><button class="btn btn-default" ng-click="viewRoute(route.id)">View</button></td>
-              <td>{{route.indicativeTrip.lastDriverName}}</td>
-              <td>{{route.indicativeTrip.lastPrice}}</td>
-              <td>{{route.indicativeTrip.lastCapacity}}<span class="glyphicon glyphicon-user" aria-hidden="true"></span></td>
-              <td>
-                <ul class="tags">
-                  <li ng-repeat="tag in route.tags track by $index">{{tag}}</li>
-                </ul>
-              </td>
+              <td>{route.indicativeTrip.lastDriverName}}</td>
+              <td>{{route.indicativeTrip && route.indicativeTrip.price}}</td>
+              <td>{{route.indicativeTrip && route.indicativeTrip.capacity}}<span class="glyphicon glyphicon-user" aria-hidden="true"></span></td>
+              <td><TagsView :tags="route.tags" /></td>
               <td>
                 <div class="btn-group" role="group" aria-label="...">
                   <button type="button" class="btn btn-default" ng-click="copy(route)">
@@ -159,15 +159,17 @@
 </template>
 
 <script>
-import {mapGetters, mapActions, mapSetters} from 'vuex'
+import {mapGetters, mapActions, mapState} from 'vuex'
+const filters = require('../filters')
 
 export default {
+  props: ['companyId'],
   data() {
     const tagPresets = [
-      { name: 'All', tags: null },
-      { name: 'Crowdstart', tags: ['lelong'] },
-      { name: 'Lite', tags: ['lite'] },
-      { name: 'Regular', tags: ['public'] },
+      { name: 'All', tag: null },
+      { name: 'Crowdstart', tag: 'lelong' },
+      { name: 'Lite', tag: 'lite' },
+      { name: 'Regular', tag: 'public' },
     ]
 
     return {
@@ -181,11 +183,41 @@ export default {
       tagPresets,
     }
   },
-  created() {
-    this.$store.dispatch('fetchAllRoutes')
+  methods: {
+    getStartDate(r) {
+      return this.f._.get(r, 'firstTrip.date')
+    }
   },
-  computed {
-    ...mapState('shared')
+  created() {
+    this.$store.dispatch('shared/fetch', 'currentRoutes')
+    this.$store.dispatch('shared/fetch', 'allRoutes')
+    this.$store.dispatch('shared/fetch', 'companies')
+  },
+  computed: {
+    ...mapState('shared', ['allRoutes', 'companies']),
+    ...mapGetters('shared', ['companiesById', 'currentRoutesById']),
+    f() { return filters },
+
+    routes() {
+      const routes = this.allRoutes &&
+        this.allRoutes
+          .filter(r => !this.companyId || r.transportCompanyId === this.companyId)
+          .filter(r => !this.filter.preset.tag || r.tags.indexOf(this.filter.preset.tag) !== -1)
+          .map(route => ({
+            ...route,
+            firstTrip: _.get(route, 'trips.0'),
+            lastTrip: null, // No way of getting it yet
+            indicativeTrip: _.get(this.currentRoutesById, `${route.id}.trips[0]`) || route.trips[0],
+          }))
+      return routes
+    },
+    sortedRoutes() {
+      return this.routes && _.orderBy(this.routes, [this.filter.orderBy], [this.filter.order])
+        .slice(
+          this.filter.page * this.filter.perPage,
+          (this.filter.page + 1) * this.filter.perPage
+        )
+    }
   }
 }
 </script>
