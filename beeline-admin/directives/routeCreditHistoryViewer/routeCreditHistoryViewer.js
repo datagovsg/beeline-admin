@@ -25,8 +25,8 @@ angular.module('beeline-admin')
       $scope.loadMoreHistory = function () {
         $scope.loadHistoryPromise = $scope.loadHistoryPromise
         .then((historySoFar) => {
-          const baseUrl = `/companies/${$scope.companyId}/routeCredits/${$scope.creditTag}` +
-            `/userHistory/${$scope.userId}`
+          const baseUrl = `/companies/${$scope.companyId}/route_credits/${$scope.creditTag}` +
+            `/users/${$scope.userId}/history`
           const loadUrl = historySoFar.length === 0 ?
             baseUrl : `${baseUrl}?lastId=${historySoFar[historySoFar.length - 1].id}`
 

@@ -37,10 +37,9 @@ function ($rootScope, $uibModal, AdminService, TagsService,
 
       return AdminService.beeline({
         method: 'POST',
-        url: `/companies/${AdminService.getCompanyId()}/routeCredits/${tag}/expire`,
+        url: `/companies/${AdminService.getCompanyId()}/route_credits/${tag}/users/${user.id}/expire`,
         data: {
-          amount: debitAmt,
-          userId: user.id
+          amount: debitAmt
         }
       })
     }
