@@ -26,6 +26,9 @@ angular.module('beeline-admin')
     mutations: {
       setCompanyId(state, companyId) {
         state.companyId = companyId
+      },
+      setIdToken(state, idToken) {
+        state.idToken = idToken
       }
     },
     actions: {

@@ -39,6 +39,8 @@ angular.module('beeline-admin')
   this.authenticate = function (token) {
     this.idToken = token;
     this.isAuthenticated = true;
+
+    vueStore.dispatch('setIdToken', token)
   }
 
   this.showLoginDialog = () =>
