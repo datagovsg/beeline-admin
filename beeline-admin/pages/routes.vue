@@ -32,10 +32,10 @@
           <uib-pagination :boundary-links="true" v-model="filter.page"
             :total-items="routes.length" :items-per-page="filter.perPage" />
         </div>
-        <div class="pull-right create-button" ng-if="adminService.isSuperAdmin()">
-          <button class="btn btn-primary btn-lg" ui-sref="^.trips({routeId:0, action: 'route'})">
+        <div class="pull-right create-button">
+          <a class="btn btn-primary btn-lg" :href="`#/c/${companyId}/trips/0/route`">
             <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>Create a new route
-          </button>
+          </a>
         </div>
       </div>
     </div>
@@ -101,15 +101,15 @@
               <td>{route.endDate | date:'dd mmm yyyy'}}<br />{route.endDate | date:'(EEE)'}}</td>
               <td>
                 <span class="label route-active"
-                    ng-if="route.startDate.getTime() <= now && now <= route.endDate.getTime() + 24*3600*1000">Active</span>
+                    v-if="route.trips[0].tripStops[0].time.getTime() <= now && route.nextTrip">Active</span>
                 <span class="label route-notstarted"
-                    ng-if="now < route.startDate.getTime()">Not Started</span>
+                    v-if="now < route.trips[0].tripStops[0].time.getTime()">Not Started</span>
                 <span class="label route-ended"
-                    ng-if="now > route.endDate.getTime() + 24*3600*1000">Ended</span>
+                    v-if="!route.nextTrip">Ended</span>
               </td>
               <td style="width:15%">
                 <expandable-area>
-                  <table class="borderless" ng-if="route.indicativeTrip">
+                  <table class="borderless" v-if="route.indicativeTrip">
                     <tr v-for="tripStop in route.indicativeTrip.tripStops"
                         v-if="tripStop.canBoard">
                       <td class="text-nowrap">
@@ -124,7 +124,7 @@
               </td>
               <td style="width:15%">
                 <expandable-area>
-                  <table class="borderless" ng-if="route.indicativeTrip">
+                  <table class="borderless" v-if="route.indicativeTrip">
                     <tr v-for="tripStop in route.indicativeTrip.tripStops"
                         v-if="tripStop.canAlight">
                       <td class="text-nowrap">
@@ -186,6 +186,7 @@ export default {
         searchTerms: '',
       },
       tagPresets,
+      now: Date.now(),
     }
   },
   methods: {
@@ -216,6 +217,7 @@ export default {
             ...route,
             firstTrip: _.get(route, 'trips.0'),
             lastTrip: null, // No way of getting it yet
+            nextTrip: _.get(this.currentRoutesById, `${route.id}.trips[0]`),
             indicativeTrip: _.get(this.currentRoutesById, `${route.id}.trips[0]`) || route.trips[0],
           }))
       return routes

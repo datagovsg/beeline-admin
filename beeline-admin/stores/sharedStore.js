@@ -12,11 +12,41 @@ const fetchJobs = {
       include_trips: true,
       include_indicative: true
     }),
+    postProcess(routes) {
+      return routes.map(r => ({
+        ...r,
+        trips: r.trips.map(trip => ({
+          ...trip,
+          date: new Date(trip.date),
+          tripStops: trip.tripStops.map(ts => ({
+            ...ts,
+            time: new Date(ts.time)
+          }))
+        })),
+        indicativeTrip: {
+          ...r.indicativeTrip,
+        }
+      }))
+    }
   },
   currentRoutes: {
     url: '/routes?' + querystring.stringify({
+      start_date: Date.now(),
       include_trips: true
-    })
+    }),
+    postProcess(routes) {
+      return routes.map(r => ({
+        ...r,
+        trips: r.trips.map(trip => ({
+          ...trip,
+          date: new Date(trip.date),
+          tripStops: trip.tripStops.map(ts => ({
+            ...ts,
+            time: new Date(ts.time)
+          }))
+        })),
+      }))
+    }
   },
   companies: {
     url: '/companies'
@@ -66,7 +96,7 @@ module.exports = {
 
       fetchPromise.then((response) => {
         context.commit('updateShared', {
-          [job]: response.data,
+          [job]: (fetchJobs[job].postProcess || (x => x))(response.data),
         })
       })
     },
