@@ -91,7 +91,7 @@ angular.module('beeline-admin')
 .filter('intervalToTime', require('./shared/filters.js').intervalToTime)
 .filter('leftPad', () => require('left-pad'))
 .run(function ($rootScope, auth, store, $cookies, AdminService, jwtHelper, $state,
-               commonModals) {
+               commonModals, vueStore) {
   let initialized = false
 
   $rootScope.$on('$stateChangeStart', function($event, newState, newParams, oldState, oldParams) {

@@ -4,6 +4,10 @@ export default function($scope, $state, $urlRouter, AdminService, LoadingSpinner
   RoutePopup, commonModals, RoutesService, $rootScope, $uibModal, TripsService,
   companyId) {
 
+  $scope.pageProps = {
+    companyId
+  }
+
   $scope.selectedRoute = null;
 
   $scope.params = _.assign({}, $state.params);
