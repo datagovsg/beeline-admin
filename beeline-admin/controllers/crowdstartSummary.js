@@ -54,7 +54,7 @@ function($scope, AdminService, RoutesService, LoadingSpinner,
 function transformTiers(bids, tiers) {
   // Brute force calculation because the scale should be small
   return tiers.map(tier => {
-    const matchingBids = (bids || []).filter(b => b.userOptions.price < tier.price + 0.00001)
+    const matchingBids = (bids || []).filter(b => b.priceF < tier.price + 0.00001)
     return {
       ...tier,
       numBids: matchingBids.length,
