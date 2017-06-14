@@ -31,9 +31,10 @@
 
       <!-- Trip stops -->
       <template v-if="selectedTrip">
-        <gmap-marker
-            v-for="ts in selectedTrip.tripStops"
-            :position="f.pointToLatLng(ts.stop.coordinates)"
+        <TripStopMarker
+            v-for="(ts, index) in selectedTrip.tripStops"
+            :tripStop="ts"
+            :index="index"
             :key="ts.id"
             @click="selectedStop = ts"
           />

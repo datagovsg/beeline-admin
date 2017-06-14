@@ -16,6 +16,7 @@ Vue.component('TagsView', require('../../beeline-admin/components/TagsView.vue')
 Vue.component('ExpandableArea', require('../../beeline-admin/components/ExpandableArea.vue'))
 Vue.component('Modal', require('vue-strap/src/modal.vue'))
 Vue.component('PingPath', require('../components/PingPath.vue'))
+Vue.component('TripStopMarker', require('../components/TripStopMarker.vue'))
 Vue.component('LoadingSpinner', require('../../beeline-admin/components/LoadingSpinner.vue'))
 
 angular.module('beeline-admin')
