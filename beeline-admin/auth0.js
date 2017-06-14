@@ -40,7 +40,7 @@ angular.module('beeline-admin')
     this.idToken = token;
     this.isAuthenticated = true;
 
-    vueStore.dispatch('setIdToken', token)
+    vueStore.commit('setIdToken', token)
   }
 
   this.showLoginDialog = () =>

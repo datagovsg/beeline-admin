@@ -33,6 +33,17 @@ const jsBundle = {
         test: /\.vue$/,
         loader: 'vue-loader',
         include: path.resolve('.'),
+        options: {
+          loaders: {
+            // scss: {
+            //   loader: [
+            //     {loader: 'style-loader'},
+            //     {loader: 'css-loader', options: {url: false}},
+            //     {loader: 'sass-loader'},
+            //   ]
+            // }
+          }
+        }
       }
     ],
   },

@@ -7,21 +7,21 @@ angular.module('beeline-admin')
 .factory('vueStore', () => {
   const store = new Vuex.Store({
     modules: {
-      shared: require('../stores/sharedStore.js')
+      shared: require('../stores/sharedStore.js'),
+      modals: require('../stores/modals.js'),
+      resources: require('../shared/resources.js').storeModule,
     },
     state: {
       idToken: null,
       companyId: null
     },
     getters: {
-      axios(state) {
-        return axios.create({
-          baseURL: process.env.BACKEND_URL,
-          headers: {
-            authorization: state.idToken ? `Bearer ${state.idToken}` : null
-          }
-        })
-      },
+      axios: state => axios.create({
+        baseURL: process.env.BACKEND_URL,
+        headers: {
+          authorization: state.idToken ? `Bearer ${state.idToken}` : null
+        }
+      })
     },
     mutations: {
       setCompanyId(state, companyId) {

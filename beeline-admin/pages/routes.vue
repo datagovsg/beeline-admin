@@ -1,5 +1,7 @@
 <template>
   <div>
+    <ModalHelper ref="modalHelper"/>
+    <LoadingSpinner ref="loadingSpinner"/>
     <div class="row">
       <div class="col-lg-12">
         <div class="pull-left">
@@ -76,20 +78,12 @@
               <td style="width:12%">
                 <table class="borderless">
                   <tr>
-                    <td>
-                      From
-                    </td>
-                    <td>
-                      {{route.from}}
-                    </td>
+                    <td>From</td>
+                    <td>{{route.from}}</td>
                   </tr>
                   <tr>
-                    <td>
-                      To
-                    </td>
-                    <td>
-                      {{route.to}}
-                    </td>
+                    <td>To</td>
+                    <td>{{route.to}}</td>
                   </tr>
                 </table>
               </td>
@@ -98,19 +92,25 @@
                 <br />
                 {{ route.firstTrip && f.date(route.firstTrip.date, 'ddd', true) }}
               </td>
-              <td>{route.endDate | date:'dd mmm yyyy'}}<br />{route.endDate | date:'(EEE)'}}</td>
               <td>
-                <span class="label route-active"
-                    v-if="route.trips[0].tripStops[0].time.getTime() <= now && route.nextTrip">Active</span>
-                <span class="label route-notstarted"
-                    v-if="now < route.trips[0].tripStops[0].time.getTime()">Not Started</span>
-                <span class="label route-ended"
-                    v-if="!route.nextTrip">Ended</span>
+                {{ route.dates.lastDate && f.date(route.dates.lastDate, 'dd\u00a0mmm\u00a0yyyy', true) }}
+                <br />
+                {{ route.dates.lastDate && f.date(route.dates.lastDate, 'ddd', true) }}
+              </td>
+              <td>
+                <template v-if="route.trips[0]">
+                  <span class="label route-active"
+                      v-if="route.trips[0].tripStops[0].time.getTime() <= now && route.nextTrip">Active</span>
+                  <span class="label route-notstarted"
+                      v-if="now < route.trips[0].tripStops[0].time.getTime()">Not Started</span>
+                  <span class="label route-ended"
+                      v-if="!route.nextTrip">Ended</span>
+                </template>
               </td>
               <td style="width:15%">
                 <expandable-area>
-                  <table class="borderless" v-if="route.indicativeTrip">
-                    <tr v-for="tripStop in route.indicativeTrip.tripStops"
+                  <table class="borderless" v-if="route.recentTrip">
+                    <tr v-for="tripStop in route.recentTrip.tripStops"
                         v-if="tripStop.canBoard">
                       <td class="text-nowrap">
                         {{f.date(tripStop.time, 'HH:mm')}}
@@ -124,8 +124,8 @@
               </td>
               <td style="width:15%">
                 <expandable-area>
-                  <table class="borderless" v-if="route.indicativeTrip">
-                    <tr v-for="tripStop in route.indicativeTrip.tripStops"
+                  <table class="borderless" v-if="route.recentTrip">
+                    <tr v-for="tripStop in route.recentTrip.tripStops"
                         v-if="tripStop.canAlight">
                       <td class="text-nowrap">
                         {{f.date(tripStop.time, 'HH:mm')}}
@@ -137,10 +137,10 @@
                   </table>
                 </expandable-area>
               </td>
-              <td><button class="btn btn-default" @click="viewRoute(route.id)">View</button></td>
-              <td>{route.indicativeTrip.lastDriverName}}</td>
-              <td>{{route.indicativeTrip && route.indicativeTrip.price}}</td>
-              <td>{{route.indicativeTrip && route.indicativeTrip.capacity}}<span class="glyphicon glyphicon-user" aria-hidden="true"></span></td>
+              <td><button class="btn btn-default" @click="viewRoute(route)">View</button></td>
+              <td>{{route.indicativeTrip && route.indicativeTrip.lastDriverName}}</td>
+              <td>{{route.indicativeTrip && route.indicativeTrip.lastPrice}}</td>
+              <td>{{route.indicativeTrip && route.indicativeTrip.lastCapacity}}<span class="glyphicon glyphicon-user" aria-hidden="true"></span></td>
               <td><TagsView :tags="route.tags" /></td>
               <td>
                 <div class="btn-group" role="group" aria-label="...">
@@ -164,6 +164,7 @@
 
 <script>
 import {mapGetters, mapActions, mapState} from 'vuex'
+import * as resources from '../shared/resources'
 const filters = require('../filters')
 
 export default {
@@ -189,6 +190,10 @@ export default {
       now: Date.now(),
     }
   },
+  components: {
+    ModalHelper: require('../components/ModalHelper'),
+    CreateTripsDatePicker: require('../modals/CreateTripsDatePicker.vue')
+  },
   methods: {
     getStartDate(r) {
       return this.f._.get(r, 'firstTrip.date')
@@ -199,9 +204,14 @@ export default {
     this.$store.dispatch('shared/fetch', 'allRoutes')
     this.$store.dispatch('shared/fetch', 'companies')
   },
+  mounted() {
+    this.$refs.loadingSpinner.watch(Promise.all(Object.values(this.$store.state.shared.promises)))
+  },
   computed: {
     ...mapState('shared', ['allRoutes', 'companies']),
     ...mapGetters('shared', ['companiesById', 'currentRoutesById']),
+    ...mapGetters(['axios']),
+
     f() { return filters },
 
     routes() {
@@ -210,15 +220,15 @@ export default {
           .filter(r => !this.companyId || r.transportCompanyId === this.companyId)
           .filter(r => !this.filter.preset.tag || r.tags.indexOf(this.filter.preset.tag) !== -1)
           .filter(r => !this.filter.searchTerms ||
-              r.label.toLowerCase().startsWith(this.filter.searchTerms.toLowerCase()) ||
-              r.name.toLowerCase().indexOf(this.filter.searchTerms.toLowerCase()) !== -1 ||
+              (r.label && r.label.toLowerCase().startsWith(this.filter.searchTerms.toLowerCase())) ||
+              (r.name && r.name.toLowerCase().indexOf(this.filter.searchTerms.toLowerCase()) !== -1) ||
               r.id.toString() == this.filter.searchTerms)
           .map(route => ({
             ...route,
             firstTrip: _.get(route, 'trips.0'),
             lastTrip: null, // No way of getting it yet
             nextTrip: _.get(this.currentRoutesById, `${route.id}.trips[0]`),
-            indicativeTrip: _.get(this.currentRoutesById, `${route.id}.trips[0]`) || route.trips[0],
+            recentTrip: _.get(this.currentRoutesById, `${route.id}.trips[0]`) || _.get(route, 'trips.0')
           }))
       return routes
     },
@@ -231,11 +241,98 @@ export default {
     }
   },
   methods: {
-    viewRoute() {
-      // UNIMPLEMENTED
+    ...mapActions('modals', ['showModal']),
+    ...mapActions('resources', ['getRoute', 'saveRoute', 'createTripForDate']),
+    ...mapActions('shared', ['invalidate', 'refresh']),
+
+    viewRoute(route) {
+      this.$refs.modalHelper.show(
+        require('../modals/ViewRouteTrips.vue'),
+        {route}
+      )
     },
-    copyRoute() {
-      // UNIMPLEMENTED
+    async copyRoute(r) {
+      const routePromise = this.getRoute({
+        id: r.id,
+        options: {
+          include_trips: true,
+          include_dates: true,
+        }
+      })
+
+      const label = await this.$refs.modalHelper.show(
+        'CommonModals',
+        {
+          type: 'prompt',
+          title: 'Copy Route',
+          message: 'New Route Label',
+          defaultValue: `Copy of ${r.label}`,
+        }
+      )
+
+      if (!label) return
+
+      const route = await this.$refs.loadingSpinner.watch(routePromise)
+
+      const newRoute = {
+        ..._.omit(route, ['id']),
+        label
+      }
+
+      // Prompt for the dates
+      let tripDates
+      try {
+        tripDates = await this.$refs.modalHelper.show(
+          'CreateTripsDatePicker',
+          {
+            route
+          }
+        )
+      } catch (err) {
+        console.log(err)
+        return
+      }
+
+      try {
+        const createResponse = await this.saveRoute({
+            ...newRoute,
+            // WORKAROUND FOR OLDER ROUTES
+            companyTags: newRoute.companyTags || [],
+            tags: newRoute.tags || [],
+        })
+
+        const tripPromises = tripDates.map((tripDate) => {
+          const trip = route.trips.find(t => t.date.getTime() === tripDate.getTime())
+
+          const tripData = {
+            ...trip,
+            id: null,
+            routeId: createResponse.data.id,
+            tripStops: trip.tripStops.map(ts => ({
+              ...ts,
+              id: null
+            }))
+          }
+          return this.createTripForDate({
+            date: tripDate,
+            trip: tripData,
+          })
+        })
+
+        await this.$refs.loadingSpinner.watch(Promise.all(tripPromises));
+
+        await this.$refs.loadingSpinner.watch(
+          this.refresh(['allRoutes', 'currentRoutes'])
+        )
+      } catch (err) {
+        await this.$refs.modalHelper.show(
+          'CommonModals',
+          {
+            title: 'Error',
+            message: err.message,
+          }
+        )
+      }
     }
   }
 }

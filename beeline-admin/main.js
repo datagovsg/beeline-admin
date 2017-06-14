@@ -91,7 +91,7 @@ angular.module('beeline-admin')
 .filter('intervalToTime', require('./shared/filters.js').intervalToTime)
 .filter('leftPad', () => require('left-pad'))
 .run(function ($rootScope, auth, store, $cookies, AdminService, jwtHelper, $state,
-               commonModals, vueStore) {
+               commonModals) {
   let initialized = false
 
   $rootScope.$on('$stateChangeStart', function($event, newState, newParams, oldState, oldParams) {
@@ -111,6 +111,9 @@ angular.module('beeline-admin')
         : handleRedirect().then(checkStorageToken)
     )
   });
+
+  checkStorageToken()
+  handleRedirect()
 
   // If promise is a Promise, pause the state change until it's resolved
   // else change the state immediately
