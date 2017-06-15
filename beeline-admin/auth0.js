@@ -31,7 +31,7 @@ const domainPromise = axios.get(`${process.env.BACKEND_URL}/auth/credentials`)
 })
 
 angular.module('beeline-admin')
-.service('auth', function() {
+.service('auth', function(vueStore) {
   this.domainPromise = domainPromise
 
   this.isAuthenticated = false;
@@ -39,6 +39,8 @@ angular.module('beeline-admin')
   this.authenticate = function (token) {
     this.idToken = token;
     this.isAuthenticated = true;
+
+    vueStore.commit('setIdToken', token)
   }
 
   this.showLoginDialog = () =>

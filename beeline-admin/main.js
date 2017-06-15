@@ -23,6 +23,8 @@ require('./controllers/crowdstartSummary')
 require('./services/uibModalPromise')
 require('./services/issueRouteCreditsModal')
 require('./services/expireRouteCreditsModal')
+require('./services/vueStore')
+require('./directives/vue-page')
 require('./directives/percentInput')
 require('./directives/promoEditor/criterionEditor')
 require('./directives/selectors/contactList')
@@ -109,6 +111,9 @@ angular.module('beeline-admin')
         : handleRedirect().then(checkStorageToken)
     )
   });
+
+  checkStorageToken()
+  handleRedirect()
 
   // If promise is a Promise, pause the state change until it's resolved
   // else change the state immediately

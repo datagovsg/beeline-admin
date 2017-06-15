@@ -29,6 +29,10 @@ export function hasStop() {
   }
 }
 
+export function equalsIgnoreCase(a, b) {
+  return (!a && !b) ||
+    (a && b && a.toLowerCase() === b.toLowerCase())
+}
 
 export function intervalToTime() {
   return (interval) => {

@@ -187,7 +187,7 @@ angular.module('beeline-admin')
     const auth = $injector.get('auth')
 
     function redirect() {
-      window.location.hash = '#!/c//bookings'
+      window.location.hash = '#/c//bookings'
     }
 
     // We should not do anything if auth has not been initialized,

@@ -28,6 +28,22 @@ const jsBundle = {
         loader: 'babel-loader',
         exclude: /node_modules/,
         include: path.resolve('.'),
+      },
+      {
+        test: /\.vue$/,
+        loader: 'vue-loader',
+        include: path.resolve('.'),
+        options: {
+          loaders: {
+            // scss: {
+            //   loader: [
+            //     {loader: 'style-loader'},
+            //     {loader: 'css-loader', options: {url: false}},
+            //     {loader: 'sass-loader'},
+            //   ]
+            // }
+          }
+        }
       }
     ],
   },

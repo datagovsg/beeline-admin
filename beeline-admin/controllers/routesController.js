@@ -4,58 +4,11 @@ export default function($scope, $state, $urlRouter, AdminService, LoadingSpinner
   RoutePopup, commonModals, RoutesService, $rootScope, $uibModal, TripsService,
   companyId) {
 
-  $scope.selectedRoute = null;
-
-  $scope.params = _.assign({}, $state.params);
-  var myState = $state.current.name;
-
-  const tagPresets = [
-    { name: 'All', tags: null },
-    { name: 'Crowdstart', tags: ['lelong'] },
-    { name: 'Lite', tags: ['lite'] },
-    { name: 'Regular', tags: ['public'] },
-  ]
+  $scope.pageProps = {
+    companyId
+  }
 
   $scope.data = [];
-  $scope.filter = {
-    perPage: 30,
-    page: 1,
-  	orderBy: 'label',
-  	order: 'asc',
-    preset: tagPresets[0],
-  };
-  $scope.now = Date.now();
-  $scope.tagPresets = tagPresets;
-
-  if (companyId)
-    $scope.filter.transportCompanyId = companyId
-
-  function refreshRoutes() {
-    if (!$scope.filter.transportCompanyId) return;
-
-    const options = _.assign(
-      _.pick($scope.filter, ['perPage', 'page', 'orderBy', 'order']),
-      {transportCompanyId: $scope.filter.transportCompanyId},
-      $scope.filter.preset.tags ? {tags: JSON.stringify($scope.filter.preset.tags)} : {}
-    )
-
-    var promise = AdminService.beeline({
-      method: 'GET',
-      url: '/routes/report?' + querystring.stringify(options)
-    })
-    .then((response) => {
-      for (let route of response.data.rows) {
-        route.startDate = new Date(route.startDate);
-        route.endDate = new Date(route.endDate);
-      }
-      $scope.data = response.data;
-    })
-    .then(null, (error) => {
-      console.log(error)
-    })
-
-    LoadingSpinner.watchPromise(promise);
-  }
 
   $scope.copy = async function(route) {
     // Pull the route from RoutesService to exclude all the extra fields
@@ -89,15 +42,11 @@ export default function($scope, $state, $urlRouter, AdminService, LoadingSpinner
       )
     })
     await LoadingSpinner.watchPromise(Promise.all(tripPromises));
-
-    refreshRoutes();
   }
 
   $scope.viewRoute = function (routeId) {
     RoutePopup.show({routeId});
   }
-
-  $scope.$watch('filter', refreshRoutes, true)
 
   ///////// Additional helper functions
 
