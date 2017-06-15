@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const titleCase = require('title-case')
+const leftPad = require('left-pad')
 
 angular.module('beeline-admin')
 .directive('promoCriterionEditor', function (RoutesService) {
@@ -110,7 +111,11 @@ angular.module('beeline-admin')
       function watchDates(watch) {
         $scope.$watch(watch, dt => {
           if (dt) {
-            _.set($scope, watch.replace('$$', ''), dt.toISOString())
+            _.set($scope, watch.replace('$$', ''), [
+              leftPad(dt.getFullYear(), 4, '0'),
+              leftPad(dt.getMonth() + 1, 2, '0'),
+              leftPad(dt.getDate(), 2, '0'),
+            ].join('-'))
           } else {
             _.set($scope, watch.replace('$$', ''), null)
           }
