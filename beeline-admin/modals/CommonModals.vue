@@ -1,7 +1,7 @@
 <template>
   <Modal :value="!!isShown" :title="title"
       @cancel="reject">
-    {{message()}}
+    {{message}}
 
     <div v-if="type === 'prompt'">
       <input type="text" v-model="value" class="form-control"/>

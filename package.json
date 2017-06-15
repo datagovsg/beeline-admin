@@ -3,14 +3,14 @@
   "version": "1.1.1",
   "description": "beeline-admin: An Ionic project",
   "dependencies": {
-    "angular": "^1.5.6",
-    "angular-animate": "^1.5.5",
-    "angular-cookies": "^1.5.6",
+    "angular": "~1.5.6",
+    "angular-animate": "~1.5.5",
+    "angular-cookies": "~1.5.6",
     "angular-google-maps": "^2.3.2",
     "angular-jwt": "0.0.9",
     "angular-simple-logger": "^0.1.7",
     "angular-storage": "0.0.15",
-    "angular-touch": "^1.5.5",
+    "angular-touch": "~1.5.5",
     "angular-ui-bootstrap": "^2.5.0",
     "angular-ui-router": "^0.2.18",
     "auth0-angular": "^4.2.3",
@@ -59,13 +59,16 @@
     "vue": "^2.3.4",
     "vue-datepicker": "^1.3.0",
     "vue-loader": "^12.2.1",
-    "vue-strap": "github:wffranco/vue-strap",
+    "vue-strap": "git+https://github.com/wffranco/vue-strap.git",
     "vue-template-compiler": "^2.3.4",
     "vue2-google-maps": "^0.7.9",
     "vuex": "^2.3.1",
     "webpack": "^2.5.1",
     "webpack-stream": "^3.2.0"
   },
+"engines": {
+"node": "7.8.x"
+},
   "devDependencies": {
     "babel-core": "^6.7.7",
     "bower": "^1.3.3",
