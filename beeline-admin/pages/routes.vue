@@ -113,7 +113,7 @@
                     <tr v-for="tripStop in route.recentTrip.tripStops"
                         v-if="tripStop.canBoard">
                       <td class="text-nowrap">
-                        {{f.date(tripStop.time, 'HH:mm')}}
+                        {{f.date(tripStop.time, 'HH:MM')}}
                       </td>
                       <td>
                         {{tripStop.stop.description}}
@@ -128,7 +128,7 @@
                     <tr v-for="tripStop in route.recentTrip.tripStops"
                         v-if="tripStop.canAlight">
                       <td class="text-nowrap">
-                        {{f.date(tripStop.time, 'HH:mm')}}
+                        {{f.date(tripStop.time, 'HH:MM')}}
                       </td>
                       <td>
                         {{tripStop.stop.description}}
