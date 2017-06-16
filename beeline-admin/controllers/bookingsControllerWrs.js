@@ -105,7 +105,7 @@ angular.module('beeline-admin')
   }
 
   $scope.refundPayment = async function (ticket) {
-    const originalPrice = ticket.boardStop.trip.priceF
+    const originalPrice = parseFloat(ticket.ticketSale.credit)
     const discount = ticket.notes.discountValue || 0
 
     if (await commonModals.confirm("Confirm refund?")) {
