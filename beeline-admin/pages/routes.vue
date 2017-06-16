@@ -15,7 +15,8 @@
       <div class="col-lg-12 btn-group">
         <div class="form-inline">
           <label>Search for Route</label>
-          <input class="form-control" placeholder="e.g. 123, C10, Bedok" v-model="filter.searchTerms"/>
+          <input class="form-control" placeholder="e.g. 123, C10, Bedok" v-model="filter.searchTerms"
+            @input="filter.page = 0"/>
         </div>
 
         <button class="btn" v-for="tagPreset in tagPresets"
