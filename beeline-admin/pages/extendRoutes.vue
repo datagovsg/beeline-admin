@@ -1,5 +1,8 @@
 <template>
-  <div>
+  <div v-if="!companyId">
+    Please select a company from the top!
+  </div>
+  <div v-else>
     <ModalHelper ref="modalHelper"/>
     <LoadingSpinner ref="loadingSpinner"/>
 
