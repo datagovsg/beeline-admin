@@ -233,7 +233,9 @@ export default {
       immediate: true,
       handler (rp) {
         rp.then(async (routesResponse) => {
-          this.routes = routesResponse.data.map(r => ({
+          this.routes = routesResponse.data
+          .filter(r => r.tags.indexOf('lelong') === -1)
+          .map(r => ({
             ...r,
             selected: false,
             ended: false,
