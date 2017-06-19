@@ -321,7 +321,7 @@ function CreateTripsDateController($scope, TripsService) {
     if (dt && ph) {
       $scope.datepicker.highlightDays = _(dt.concat(ph))
         .groupBy(x => x.date.valueOf())
-        .mapValues(arr => Object.assign.apply(Object, [{}].concat(arr)))
+        .mapValues(arr => arr.reduce((a, b) => _.assign(a, b), {}))
         .values()
         .value()
     }
