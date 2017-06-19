@@ -18,6 +18,7 @@
           <a href id="simple-dropdown" uib-dropdown-toggle>Routes<span class="caret"></span></a>
           <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
             <li><a ui-sref="c.routes({companyId: adminService.actingCompany, routeId: 0, action: 'route'})">All</a></li>
+            <li><a ui-sref="c.extendRoutes({companyId: adminService.actingCompany})">Extend Routes</a></li>
             <li><a ui-sref="c.crowdstart-summary({companyId: adminService.actingCompany})">Crowdstart</a></li>
             <li><a ui-sref="c.summary({companyId: adminService.actingCompany})">Ridership Summary</a></li>
           </ul>

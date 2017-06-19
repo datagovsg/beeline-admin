@@ -1,6 +1,6 @@
 <template>
   <Modal :value="!!isShown" :title="title"
-      @cancel="reject">
+      @cancel="reject()">
     {{message}}
 
     <div v-if="type === 'prompt'">
