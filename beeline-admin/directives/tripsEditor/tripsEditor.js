@@ -306,7 +306,7 @@ function CreateTripsDateController($scope, TripsService) {
 
       $scope.datepicker.daysAllowed = null;
       // block out the days with trips
-      $scope.datepicker.highlightDays = trips.map(
+      $scope.datepicker.dateWithTrips = trips.map(
         trip => ({
           date: moment(trip.date),
           css: 'trip-exists',
@@ -316,6 +316,16 @@ function CreateTripsDateController($scope, TripsService) {
       )
     });
   }
+
+  $scope.$watchGroup(['datepicker.dateWithTrips', 'publicHolidays'], ([dt, ph]) => {
+    if (dt && ph) {
+      $scope.datepicker.highlightDays = _(dt.concat(ph))
+        .groupBy(x => x.date.valueOf())
+        .mapValues(arr => arr.reduce((a, b) => _.assign(a, b), {}))
+        .values()
+        .value()
+    }
+  })
   $scope.monthChanged(moment())
 }
 
