@@ -8,6 +8,7 @@ Vue.use(VueGoogleMaps)
 
 // PAGES
 Vue.component('RoutesPage', require('../../beeline-admin/pages/routes.vue'))
+Vue.component('ExtendRoutesPage', require('../../beeline-admin/pages/extendRoutes.vue'))
 
 // COMPONENTS
 Vue.component('UibPagination', require('../../beeline-admin/components/pagination.vue'))
