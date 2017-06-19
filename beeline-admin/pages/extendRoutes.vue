@@ -384,9 +384,12 @@ export default {
   thead th {
     text-align: center;
     user-select: none;
-    cursor: pointer;
 
     &.date-selector {
+      cursor: pointer;
+      &:hover {
+        background-color: #999;
+      }
       &.selected {
         background-color: #F90;
       }
