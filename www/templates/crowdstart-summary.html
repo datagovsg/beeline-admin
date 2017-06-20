@@ -45,7 +45,7 @@
                 <th my-sort="name" sort-model="filter.orderBy" sort-direction="filter.order">Route</th>
                 <th my-sort="" sort-model="filter.orderBy" sort-direction="filter.order">View</th>
                 <th my-sort="createdAt" sort-model="filter.orderBy" sort-direction="filter.order">Campaign Start Date</th>
-                <th my-sort="notes.lelongExpiry" sort-model="filter.orderBy" sort-direction="filter.order">Campaign End Date</th>
+                <th my-sort="notes.crowdstartExpiry" sort-model="filter.orderBy" sort-direction="filter.order">Campaign End Date</th>
                 <th my-sort="trips[0].date" sort-model="filter.orderBy" sort-direction="filter.order">Start Date if Activated</th>
                 <th>Tags</th>
                 <th my-sort="notes.noPasses" sort-model="filter.orderBy" sort-direction="filter.order">Route Passes per Bid</th>
@@ -81,7 +81,7 @@
                   <button class="btn btn-default" ng-click="viewRoute(route.id)">View</button>
                 </td>
                 <td>{{route.createdAt | date: 'd MMM yyyy'}}</td>
-                <td>{{route.notes.lelongExpiry | date: 'd MMM yyyy'}}</td>
+                <td>{{route.notes.crowdstartExpiry | date: 'd MMM yyyy'}}</td>
                 <td>{{route.trips[0].date | date: 'd MMM yyyy'}}</td>
                 <td>
                   <ul class="tags">
