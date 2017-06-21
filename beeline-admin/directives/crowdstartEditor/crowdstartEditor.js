@@ -40,9 +40,10 @@ angular.module('beeline-admin')
           ...$scope.editRoute,
           notes: _.cloneDeep($scope.editRoute.notes)
         }
-        newRoute.notes.lelongExpiry = $scope.editRoute._meta.campaignEndDate ?
+        newRoute.notes.crowdstartExpiry = $scope.editRoute._meta.campaignEndDate ?
           $scope.editRoute._meta.campaignEndDate.toISOString() : null;
 
+        newRoute.notes.lelongExpiry = newRoute.notes.crowdstartExpiry;
         function formatDate(d) {
           return leftPad(d.getUTCFullYear(), 4, '0') + '-' +
             leftPad(d.getUTCMonth() + 1, 2, '0') + '-' +
@@ -103,8 +104,7 @@ angular.module('beeline-admin')
         // Prepare the metadata...
         route.notes = route.notes || {};
         route._meta = {
-          campaignEndDate: new Date(route.notes.lelongExpiry),
-          // firstTripDate: new Date(route.trips[0].date)
+          campaignEndDate: new Date(route.notes.crowdstartExpiry),
         };
         route.notes.tier = route.notes.tier || [{price: 10, pax: 13}]
 

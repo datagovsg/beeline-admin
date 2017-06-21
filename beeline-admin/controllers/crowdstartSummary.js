@@ -39,14 +39,19 @@ function($scope, AdminService, RoutesService, LoadingSpinner,
   .then((result) => {
     const transformed = result.data
     .filter(r => r.transportCompanyId == companyId)
-    .map(route => ({
-      ...route,
-      _meta: {
-        isConverted: route.tags.find(x => x == 'success' || x == 'failed'),
-        tiers: transformTiers(route.bids, route.notes.tier),
-        isExpired: new Date(route.notes.lelongExpiry).getTime() < Date.now()
+    .map(route => {
+      if (route.notes && !route.notes.crowdstartExpiry) {
+        route.notes.crowdstartExpiry = route.notes.lelongExpiry
       }
-    }))
+      return {
+        ...route,
+        _meta: {
+          isConverted: route.tags.find(x => x == 'success' || x == 'failed'),
+          tiers: transformTiers(route.bids, route.notes.tier),
+          isExpired: new Date(route.notes.crowdstartExpiry).getTime() < Date.now()
+        }
+      }
+    })
     $scope.routes = transformed
   })
 });
