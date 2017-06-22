@@ -290,10 +290,6 @@ export default {
                 .fromPairs()
                 .value()
 
-              if (_.values(trips).length > 0) {
-                console.log(tripHashes, _.keyBy(trips, 'date'))
-              }
-
               trips.forEach(trip => {
                 trip.hashId = tripHashes[trip.hash]
                 trip.hashIdMod5 = tripHashes[trip.hash] % 5
@@ -320,10 +316,6 @@ export default {
     dateClass(route, day) {
       const trip = _.get(route.tripsByDate, day.date.getTime())
       const hashCode = _.get(trip, 'hashIdMod5')
-
-      if (trip) {
-        console.log(trip, route.tripsByDate, hashCode)
-      }
 
       return {
         'has-trip': trip,
@@ -417,10 +409,7 @@ export default {
           .filter(day => !route.tripsByDate[day.date.getTime()])
           .map(day => this.createTripForDate({
             date: day.date,
-            trip: {
-              ...lastTrip,
-              tripStops: lastTrip.tripStops
-            }
+            trip: lastTrip
           }))
         )
         this.extendJobs.done ++
