@@ -124,11 +124,14 @@ angular.module('beeline-admin')
         })
       ])
       .then(([routes, bidsResponse]) => {
-        $scope.crowdstarts = bidsResponse.data.map(b => ({
-          ...b,
-          route: routes.find(r => b.routeId === r.id)
-        }))
-        .filter(b => !$scope.companyId || _.get(b, 'route.transportCompanyId') === +$scope.companyId)
+        $scope.crowdstarts = _(bidsResponse.data)
+          .map(b => ({
+            ...b,
+            route: routes.find(r => b.routeId === r.id)
+          }))
+          .filter(b => !$scope.companyId || _.get(b, 'route.transportCompanyId') === +$scope.companyId)
+          .orderBy(['createdAt'], ['desc'])
+          .value()
         setTimeout(() => $scope.$digest())
       })
     )
