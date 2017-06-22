@@ -91,12 +91,7 @@
             <a :href="`#/c//trips/${route.id}/route`"><span class="glyphicon glyphicon-pencil" /></a>
           </td>
           <td><TagsView :tags="route.tags" /></td>
-          <td v-for="day in days" :key="day.date.getTime()" :class="{
-              'has-trip': route.tripsByDate && route.tripsByDate[day.date.getTime()],
-              'selected': day.selected,
-              'loading': !route.tripsByDate,
-              'ended': route.ended,
-            }">
+          <td v-for="day in days" :key="day.date.getTime()" :class="dateClass(route, day)">
             <!-- <input type="checkbox" v-model="selectedDays[route.id][day.date.getTime()]" /> -->
           </td>
         </tr>
@@ -110,7 +105,18 @@
 import {mapGetters, mapActions, mapState} from 'vuex'
 import * as resources from '../shared/resources'
 import querystring from 'querystring'
+import _ from 'lodash'
 const filters = require('../filters')
+
+function tripHash(trip) {
+  function secondsSinceMidnight(t) {
+    return t.getHours()*3600 + t.getMinutes()*60 + t.getSeconds()
+  }
+
+  return _.map(_.sortBy(trip.tripStops, 'time'), ts =>
+    `${ts.stopId.toString(36)},${secondsSinceMidnight(ts.time).toString(36)}`)
+    .join(';')
+}
 
 export default {
   props: ['companyId'],
@@ -137,6 +143,11 @@ export default {
       // route painting
       isPainting: false,
 
+      // N.B. The reason we need this to be a reactive object is
+      // because we have a `selected` field, and the reason we use a `selected`
+      // field is becase when using some `selectedDates : int -> date` object
+      // it will force the entire
+      // table to re-render
       days: (() => {
         const today = new Date()
         return _.range(0, 65).map(offset => {
@@ -259,11 +270,33 @@ export default {
               ).toISOString(),
             }))
             .then((response) => {
-              route.tripsByDate = _.keyBy(
-                response.data.trips,
-                trip => new Date(trip.date).getTime()
-              ) || {}
-              route.ended = (response.data.trips.length === 0)
+              const trips = response.data.trips.map(trip => ({
+                ...trip,
+                date: new Date(trip.date),
+                tripStops: trip.tripStops.map(ts => ({
+                  ...ts,
+                  time: new Date(ts.time)
+                }))
+              }))
+
+              trips.forEach(trip => {
+                trip.hash = tripHash(trip)
+              })
+
+              const tripHashes = _(trips)
+                .map(t => t.hash)
+                .uniqBy()
+                .map((x, i) => [x, i])
+                .fromPairs()
+                .value()
+
+              trips.forEach(trip => {
+                trip.hashId = tripHashes[trip.hash]
+                trip.hashIdMod5 = tripHashes[trip.hash] % 5
+              })
+
+              route.tripsByDate = _.keyBy(trips, t => t.date.getTime()) || {}
+              route.ended = (trips.length === 0)
             })
           }
         })
@@ -279,6 +312,19 @@ export default {
       this.filteredRoutes = this.routes && this.routes
         .filter(route => this.tags.every(tag => route.tags && route.tags.indexOf(tag) !== -1))
     }, 500, {leading: false, trailing: true}),
+
+    dateClass(route, day) {
+      const trip = _.get(route.tripsByDate, day.date.getTime())
+      const hashCode = _.get(trip, 'hashIdMod5')
+
+      return {
+        'has-trip': trip,
+        [`trip-hash-${hashCode}`]: true,
+        'selected': day.selected,
+        'loading': !route.tripsByDate,
+        'ended': route.ended,
+      }
+    },
 
     // Route painting
     beginPaintRoute (event, route) {
@@ -340,7 +386,7 @@ export default {
 
 
     async confirmAndExtend () {
-      const routesToExtend = this.filteredRoutes.filter(r => r.selected && !r.ended)
+      const routesToExtend = this.filteredRoutes.filter(r => r.selected && !r.ended).reverse()
       const daysToExtend = this.days.filter(r => r.selected)
 
       await this.$refs.modalHelper.show(
@@ -363,13 +409,7 @@ export default {
           .filter(day => !route.tripsByDate[day.date.getTime()])
           .map(day => this.createTripForDate({
             date: day.date,
-            trip: {
-              ...lastTrip,
-              tripStops: lastTrip.tripStops.map(ts => ({
-                ...ts,
-                time: new Date(ts.time)
-              }))
-            }
+            trip: lastTrip
           }))
         )
         this.extendJobs.done ++
@@ -409,14 +449,29 @@ export default {
       background-color: #DDD;
     }
   }
-  tr td {
-    &.has-trip {
-      background-color: #008;
-    }
-  }
 
   tr.ended td {
     text-decoration: line-through;
+  }
+
+  td.has-trip.selected, td.has-trip:not(.selected) {
+    tr.active &, tr.active:hover &, &, &:hover {
+      &.trip-hash-0 {
+        background-color: #008;
+      }
+      &.trip-hash-1 {
+        background-color: #080;
+      }
+      &.trip-hash-2 {
+        background-color: #800;
+      }
+      &.trip-hash-3 {
+        background-color: #088;
+      }
+      &.trip-hash-4 {
+        background-color: #880;
+      }
+    }
   }
 
   tr.active td {
@@ -425,22 +480,15 @@ export default {
     &.has-trip {
       background-color: #008;
     }
-
-    &.selected:not(.has-trip) {
+    &.selected {
       background-color: #F90;
     }
   }
   tr:not(.active):hover td {
     background-color: 0.8 * #FFF + 0.2 * #000;
-    &.has-trip {
-      background-color: 0.8 * #008 + 0.2 * #000;
-    }
   }
   tr.active:hover td {
     background-color: 0.8 * #9CF + 0.2 * #000;
-    &.has-trip {
-      background-color: 0.8 * #008 + 0.2 * #000;
-    }
     &.selected:not(.has-trip) {
       background-color: 0.8 * #F90 + 0.2 * #000;
     }
