@@ -31,9 +31,10 @@ angular.module('beeline-admin')
         $scope.user = resp.data;
       }
 
-      if($scope.companyId){
-        return loadRouteCreditsAndRoutes($scope.selector.userId)
-      }
+      return Promise.all([
+        $scope.companyId ? loadRouteCreditsAndRoutes($scope.selector.userId) : Promise.resolve(),
+        loadBids($scope.selector.userId),
+      ])
     }).catch(err => {
       commonModals.alert(
         `${err && err.data && err.data.message}`
@@ -112,6 +113,25 @@ angular.module('beeline-admin')
 
   $scope.showHistory = function (credit) {
     $scope.showRouteCreditHistory = credit;
+  }
+
+  function loadBids(userId) {
+    LoadingSpinner.watchPromise(
+      Promise.all([
+        RoutesService.getRoutes(),
+        AdminService.beeline({
+          url: `/custom/lelong/users/${userId}/bids`
+        })
+      ])
+      .then(([routes, bidsResponse]) => {
+        $scope.crowdstarts = bidsResponse.data.map(b => ({
+          ...b,
+          route: routes.find(r => b.routeId === r.id)
+        }))
+        .filter(b => !$scope.companyId || _.get(b, 'route.transportCompanyId') === +$scope.companyId)
+        setTimeout(() => $scope.$digest())
+      })
+    )
   }
 
   function loadRouteCreditsAndRoutes(userId){
