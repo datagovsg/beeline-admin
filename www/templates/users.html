@@ -40,6 +40,21 @@
             <th>Last App Used:</th>
             <td>{{user.lastUsedAppName}}</td>
           </tr>
+          <tr>
+            <th>Saved Payment Methods</th>
+            <td>
+              <span ng-if="!user.savedPaymentInfo || !user.savedPaymentInfo.sources.data.length">
+                (none)
+              </span>
+              <div ng-if="user.savedPaymentInfo && user.savedPaymentInfo.sources.data.length">
+                <div ng-repeat="source in user.savedPaymentInfo.sources.data">
+                  {{source.brand}},
+                  <i>...{{source.last4}}</i>
+                </div>
+              </div>
+              {{user.lastUsedAppName}}
+            </td>
+          </tr>
         </table>
         <div class="row">
           <div class="col-sm-12">
