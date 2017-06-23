@@ -58,7 +58,8 @@
                 <label>
                   Max redemptions per user:
                   <input type="number" class="form-control"
-                    v-model.number="promotion.params.usageLimit.userLimit" />
+                    :value="promotion.params.usageLimit.userLimit"
+                    @change="promotion.params.usageLimit.userLimit = $event.target.value ? parseInt($event.target.value) : null" />
                 </label>
               </div>
 
@@ -66,7 +67,8 @@
                 <label>
                   Max redemptions by all users:
                   <input type="number" class="form-control"
-                    v-model.number="promotion.params.usageLimit.globalLimit" />
+                    :value="promotion.params.usageLimit.globalLimit"
+                    @change="promotion.params.usageLimit.globalLimit = $event.target.value ? parseInt($event.target.value) : null" />
                 </label>
               </div>
 
@@ -78,30 +80,54 @@
         </table>
 
         <table class="table table-striped discount-params">
-          <tr>
+          <thead><tr>
             <th style="width: 50%">
               Apply promo code if...
             </th>
             <th style="width: 50%">
               Give the user...
             </th>
-          </tr>
-          <tr>
+          </tr></thead>
+          <tbody>
+            <tr>
             <td>
-              <div v-for="(criterion, index) in promotion.params.qualifyingCriteria"
-                  :key="index">
-                <PromotionCriterionEditor :value="criterion"
-                  :promotionType="promotion.type"
-                  :companyId="companyId"
-                  @input="promotion.params.qualifyingCriteria.splice(index, 1, $event)" />
-
-                <button @click="promotion.params.qualifyingCriteria.splice(index, 1)"
-                  class="btn btn-danger">
-                  <span class="glyphicon glyphicon-trash"></span>
-                </button>
+              <table class="table table-striped criteria-list"><tbody>
+              <tr v-for="(criterion, index) in promotion.params.qualifyingCriteria"
+                  :key="criterion.id">
+                <td>
+                  <PromotionCriterionEditor :value="criterion"
+                    :promotionType="promotion.type"
+                    :companyId="companyId"
+                    @input="promotion.params.qualifyingCriteria.splice(index, 1, $event)" />
+                </td>
+                <td>
+                  <button @click="promotion.params.qualifyingCriteria = f.moveDown(promotion.params.qualifyingCriteria, index)"
+                      class="btn btn-default">
+                    <span class="glyphicon glyphicon-arrow-down"></span>
+                  </button>
+                  <button @click="promotion.params.qualifyingCriteria = f.moveUp(promotion.params.qualifyingCriteria, index)"
+                      class="btn btn-default">
+                    <span class="glyphicon glyphicon-arrow-up"></span>
+                  </button>
+                </td>
+                <td>
+                  <button @click="promotion.params.qualifyingCriteria.splice(index, 1)"
+                    class="btn btn-danger">
+                    <span class="glyphicon glyphicon-trash"></span>
+                  </button>
+                </td>
+              </tr>
+              </tbody></table>
+              <div v-show="checkResults">
+                Errors:
+                <ul>
+                  <li v-for="result in checkResults">
+                    {{result.message}}
+                  </li>
+                </ul>
               </div>
               <div>
-                <button @click="promotion.params.qualifyingCriteria.push(newPromotion())"
+                <button @click="promotion.params.qualifyingCriteria.push(newCriterion())"
                   class="btn btn-default">
                   <span class="glyphicon glyphicon-plus"></span>
                   Add criterion
@@ -115,17 +141,19 @@
               </PromotionDiscountEditor>
             </td>
           </tr>
-        </table>
-        <button @click="save()" class="btn btn-primary">Save</button>
+        </tbody></table>
+        <button :disabled="checkResults" @click="save()" class="btn btn-primary">Save</button>
       </div>
     </div>
   </div>
 </template>
 <style lang="scss">
-table.discount-params {
-  td {
-    vertical-align: top;
-  }
+table.discount-params > tbody > tr > td {
+  padding: 1em;
+  vertical-align: top;
+}
+table.criteria-list > tbody > tr > td {
+  vertical-align: middle;
 }
 </style>
 <script>
@@ -148,6 +176,8 @@ export default {
   },
   computed: {
     ...mapGetters(['axios']),
+    f: () => filters,
+
     promotionPromise() {
       console.log("Promise: ", this.id)
       if (!this.id) return
@@ -163,6 +193,43 @@ export default {
         type: 'limitByCompany',
         params: {companyId: this.companyId}
       }
+    },
+
+    checkResults () {
+      if (!this.promotion) return
+
+      let results = []
+
+      results.push(() => {
+        /* If there is a limitByMinTicketCount, it must be at the end */
+        const invalid = _.filter(this.promotion.params.qualifyingCriteria, (v, index) => {
+          return index !== this.promotion.params.qualifyingCriteria.length - 1 &&
+            v.type === 'limitByMinTicketCount'
+        })
+
+        if (invalid.length) {
+          return {
+            message: `If you are using limitByMinTicketCount it must be placed
+              at the end of the list`
+          }
+        }
+      })
+
+      results.push(() => {
+        /* If there is a limitByMinTicketCount, userLimit must be disabled */
+        const invalid = this.promotion.params.qualifyingCriteria.find(v => v.type === 'limitByMinTicketCount')
+
+        if (invalid && _.get(this.promotion.params, 'usageLimit.userLimit') !== null) {
+          return {
+            message: `limitByMinTicketCount cannot be used with userLimit`
+          }
+        }
+      })
+
+      results = results.map(f => f()).filter(x => x)
+      results = results.length ? results : null
+
+      return results
     }
   },
   watch: {
@@ -187,7 +254,9 @@ export default {
         code: e.code.toUpperCase(),
         params: {
           ...myParams,
-          qualifyingCriteria: myParams.qualifyingCriteria.concat([this.companyQualifyingCriterion])
+          qualifyingCriteria: myParams.qualifyingCriteria
+            .concat([this.companyQualifyingCriterion])
+            .map(i => _.omit(i, 'id'))
         },
         description: e.description,
         type: e.type,
@@ -223,8 +292,9 @@ export default {
       }))
     },
 
-    newPromotion () {
+    newCriterion () {
       return {
+        id: Date.now(),
         type: null,
         params: null,
       }
@@ -247,7 +317,8 @@ export default {
         params: {
           ...promo.params,
           refundFunction: _.defaults(promo.params.refundFunction, { type: 'refundDiscountedAmt', params: {} }),
-          qualifyingCriteria: filterCompanyCriteria(promo.params.qualifyingCriteria),
+          qualifyingCriteria: filterCompanyCriteria(promo.params.qualifyingCriteria)
+            .map((i, j) => ({...i, id: j})),
           discountFunction: promo.params.discountFunction || {type: 'simpleRate', params: {rate: 0}},
           usageLimit: promo.params.usageLimit || { userLimit: null, globalLimit: null },
         },
