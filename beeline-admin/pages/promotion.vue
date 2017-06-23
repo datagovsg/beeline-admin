@@ -91,6 +91,7 @@
               <div v-for="(criterion, index) in promotion.params.qualifyingCriteria"
                   :key="index">
                 <PromotionCriterionEditor :value="criterion"
+                  :promotionType="promotion.type"
                   :companyId="companyId"
                   @input="promotion.params.qualifyingCriteria.splice(index, 1, $event)" />
 
@@ -108,7 +109,9 @@
               </div>
             </td>
             <td>
-              <PromotionDiscountEditor v-model="promotion.params.discountFunction">
+              <PromotionDiscountEditor
+                :promotionType="promotion.type"
+                v-model="promotion.params.discountFunction">
               </PromotionDiscountEditor>
             </td>
           </tr>

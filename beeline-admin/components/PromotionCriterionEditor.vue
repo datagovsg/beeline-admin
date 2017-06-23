@@ -89,6 +89,19 @@
         />
     </div>
 
+    <div v-if="value.type === 'limitByMinTicketCount'">
+      <label>
+        Min. number of tickets
+      </label>
+      <input
+        class="form-control"
+        type="number"
+        step="1"
+        :value="paramCache.limitByMinTicketCount.n"
+        @change="updateParam('n', $event.target.value && parseInt($event.target.value))"
+        />
+    </div>
+
     <div v-if="value.type === 'limitByTripDayOfWeek'">
       Days of week promo is valid for:
       <label>
@@ -138,38 +151,50 @@ const leftPad = require('left-pad')
 import dateformat from 'dateformat'
 import {mapGetters, mapActions, mapState} from 'vuex'
 
-const criterionTypes = [
+const criterionTypes = _.sortBy([
   {
     type: 'limitByCompany',
-    default: {companyId: null}
-  },
-  {
-    type: 'limitByRoute',
-    default: {routeIds: []}
-  },
-  {
-    type: 'limitByRouteTags'
-  },
-  {
-    type: 'limitByTripDate',
-    default: {startDate: null, endDate: null}
-  },
-  {
-    type: 'limitByTripDayOfWeek',
-    default: {0: false, 1: false, 2: false, 3: false, 4: false, 5: false, 6: false}
-  },
-  {
-    type: 'limitByPurchaseDate',
-    default: {startDate: null, endDate: null}
+    default: {companyId: null},
+    restrict: ['Promotion', 'RoutePass'],
   },
   {
     type: 'limitByContactList',
     default: {contactListId: null}
   },
-]
+  {
+    type: 'limitByMinTicketCount',
+    default: {n: 5},
+    restrict: ['Promotion'],
+  },
+  {
+    type: 'limitByPurchaseDate',
+    default: {startDate: null, endDate: null},
+    restrict: ['Promotion', 'RoutePass'],
+  },
+  {
+    type: 'limitByRoute',
+    default: {routeIds: []},
+    restrict: ['Promotion'],
+  },
+  {
+    type: 'limitByRouteTags'
+    default: {tags: []},
+    restrict: ['Promotion', 'RoutePass'],
+  },
+  {
+    type: 'limitByTripDayOfWeek',
+    default: {0: false, 1: false, 2: false, 3: false, 4: false, 5: false, 6: false},
+    restrict: ['Promotion'],
+  },
+  {
+    type: 'limitByTripDate',
+    default: {startDate: null, endDate: null},
+    restrict: ['Promotion'],
+  },
+], 'type')
 
 export default {
-  props: ['value', 'companyId'],
+  props: ['value', 'companyId', 'promotionType'],
   data () {
     return {
       paramCache:  _(criterionTypes)
@@ -209,7 +234,7 @@ export default {
     params () {
       return this.value.type && this.paramCache[this.type]
     },
-    criterionTypes: () => criterionTypes
+    criterionTypes: () => criterionTypes.filter(t => t.restrict.indexOf(this.promotionType) !== -1)
   },
   methods: {
     updateParam (key, value) {
