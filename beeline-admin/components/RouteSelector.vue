@@ -15,14 +15,14 @@ import _ from 'lodash'
 const filters = require('../filters')
 
 export default {
-  props: ['value', 'multiple'],
+  props: ['value', 'multiple', 'companyId'],
   created () {
     this.fetch('currentRoutes')
   },
   computed: {
     ...mapState('shared', ['currentRoutes']),
     sortedRoutes () {
-      return _.sortBy(this.currentRoutes, 'label')
+      return _.sortBy(this.currentRoutes.filter(r => r.transportCompanyId === this.companyId), 'label')
     }
   },
   methods: {

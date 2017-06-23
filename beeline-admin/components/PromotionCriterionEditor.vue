@@ -35,6 +35,7 @@
       <label>
         Routes
         <RouteSelector :multiple="true" class="form-control"
+          :companyId="companyId"
           :value="paramCache.limitByRoute.routeIds"
           @input="updateParam('routeIds', $event)"
           />
@@ -169,7 +170,6 @@ const criterionTypes = _.sortBy([
   {
     type: 'limitByPurchaseDate',
     default: {startDate: null, endDate: null},
-    restrict: ['Promotion', 'RoutePass'],
   },
   {
     type: 'limitByRoute',
@@ -177,9 +177,8 @@ const criterionTypes = _.sortBy([
     restrict: ['Promotion'],
   },
   {
-    type: 'limitByRouteTags'
+    type: 'limitByRouteTags',
     default: {tags: []},
-    restrict: ['Promotion', 'RoutePass'],
   },
   {
     type: 'limitByTripDayOfWeek',
@@ -234,7 +233,9 @@ export default {
     params () {
       return this.value.type && this.paramCache[this.type]
     },
-    criterionTypes: () => criterionTypes.filter(t => t.restrict.indexOf(this.promotionType) !== -1)
+    criterionTypes () {
+      return criterionTypes.filter(t => !t.restrict || t.restrict.indexOf(this.promotionType) !== -1)
+    }
   },
   methods: {
     updateParam (key, value) {

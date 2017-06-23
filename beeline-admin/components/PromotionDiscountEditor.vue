@@ -90,40 +90,6 @@
       Add tier
     </button>
   </div>
-
-  <div v-if="value.type == 'tieredRateByTotalValue'">
-    <div>N.B. Tiers must be in increasing order</div>
-    <div v-for="(tier, index) in paramCache.tieredRateByQty.schedule"
-        class="form-inline">
-
-      When user buys at least
-      <input type="number" placeholder="Min tickets to qualify" step="1"
-        :value="tier[0]"
-        @change="updateTier(index, 0, parseInt($event.target.value))"
-        class="form-control" />
-
-      tickets,
-
-      <br/>
-      discount the price by
-
-      <PercentInput
-        :value="tier[1]"
-        placeholder="Discount rate (0 - 100)"
-        @input="updateTier(index, 1, $event)"
-        class="form-control" />
-
-      <button @click="removeTier(index)"
-          class="btn btn-danger">
-        <span class="glyphicon glyphicon-trash"></span>
-      </button>
-      <hr/>
-    </div>
-    <button @click="addTier([null, null])" class="btn btn-default">
-      <span class="glyphicon glyphicon-plus"></span>
-      Add tier
-    </button>
-  </div>
 </div>
 </template>
 
@@ -155,11 +121,11 @@ const discountTypes = _.sortBy([
     default: {schedule: []},
     restrict: ['Promotion', 'RoutePass'],
   },
-  {
-    type: 'tieredRateByTotalValue',
-    default: {schedule: []},
-    restrict: ['Promotion', 'RoutePass'],
-  },
+  // {
+  //   type: 'tieredRateByTotalValue',
+  //   default: {schedule: []},
+  //   restrict: ['Promotion', 'RoutePass'],
+  // },
   {
     type: 'fixedTransactionPrice',
     default: {price: null},
@@ -200,7 +166,9 @@ export default {
     params () {
       return this.value.type && this.paramCache[this.type]
     },
-    discountTypes: () => discountTypes.filter(r => r.restrict.indexOf(this.promotionType) !== -1)
+    discountTypes () {
+      return discountTypes.filter(r => !r.restrict || r.restrict.indexOf(this.promotionType) !== -1)
+    }
   },
   methods: {
     updateParam (key, value) {
