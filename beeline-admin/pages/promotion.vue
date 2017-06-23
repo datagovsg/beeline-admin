@@ -270,7 +270,7 @@ export default {
       )
       .then((response) => {
         this.promotion = this.makeEditable(response.data)
-      })
+      }))
       .then(() =>
         this.$refs.modalHelper.show(
           'CommonModals',
@@ -289,7 +289,7 @@ export default {
             message: _.get(err, 'message')
           }
         )
-      }))
+      })
     },
 
     newCriterion () {

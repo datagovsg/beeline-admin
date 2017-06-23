@@ -28,12 +28,18 @@ export default {
       value: null
     }
   },
+  watch: {
+    type: {
+      immediate: true,
+      handler(v) {
+        if (v === 'flash') {
+          setTimeout(() => this.resolve(), 1000)
+        }
+      }
+    }
+  },
   created() {
     this.value = this.defaultValue
-    console.log(this.value, this.type)
-    if (this.type === 'flash') {
-      setTimeout(() => this.resolve(), 2000)
-    }
   },
   mixins: [
     require('../modals/ModalMixin')
