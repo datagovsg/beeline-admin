@@ -192,7 +192,6 @@ export default {
     }
   },
   components: {
-    ModalHelper: require('../components/ModalHelper'),
     CreateTripsDatePicker: require('../modals/CreateTripsDatePicker.vue')
   },
   methods: {

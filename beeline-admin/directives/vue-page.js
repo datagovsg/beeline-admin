@@ -8,14 +8,16 @@ Vue.use(VueGoogleMaps)
 
 // PAGES
 Vue.component('RoutesPage', require('../../beeline-admin/pages/routes.vue'))
+Vue.component('PromotionPage', require('../../beeline-admin/pages/promotion.vue'))
 Vue.component('ExtendRoutesPage', require('../../beeline-admin/pages/extendRoutes.vue'))
 
 // COMPONENTS
 Vue.component('UibPagination', require('../../beeline-admin/components/pagination.vue'))
 Vue.component('SortTh', require('../../beeline-admin/components/SortTh.vue'))
-Vue.component('TagsView', require('../../beeline-admin/components/TagsView.vue'))
+Vue.component('TagsView', require('../components/TagsView.vue'))
 Vue.component('ExpandableArea', require('../../beeline-admin/components/ExpandableArea.vue'))
 Vue.component('Modal', require('vue-strap/src/Modal.vue'))
+Vue.component('ModalHelper', require('../components/ModalHelper'))
 Vue.component('PingPath', require('../components/PingPath.vue'))
 Vue.component('TripStopMarker', require('../components/TripStopMarker.vue'))
 Vue.component('LoadingSpinner', require('../../beeline-admin/components/LoadingSpinner.vue'))

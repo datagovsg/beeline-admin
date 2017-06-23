@@ -28,6 +28,16 @@ export default {
       value: null
     }
   },
+  watch: {
+    type: {
+      immediate: true,
+      handler(v) {
+        if (v === 'flash') {
+          setTimeout(() => this.resolve(), 1000)
+        }
+      }
+    }
+  },
   created() {
     this.value = this.defaultValue
   },
