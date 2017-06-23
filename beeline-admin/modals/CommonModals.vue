@@ -30,6 +30,10 @@ export default {
   },
   created() {
     this.value = this.defaultValue
+    console.log(this.value, this.type)
+    if (this.type === 'flash') {
+      setTimeout(() => this.resolve(), 2000)
+    }
   },
   mixins: [
     require('../modals/ModalMixin')

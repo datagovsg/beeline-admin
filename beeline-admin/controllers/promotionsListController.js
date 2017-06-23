@@ -7,11 +7,12 @@ angular.module('beeline-admin')
     $scope.filter = {
       orderBy: 'code',
       order: 'asc',
+      promotionType: 'Promotion',
     }
 
-    $scope.$watchGroup(['filter.order', 'filter.orderBy', 'promotions'], () => {
-      $scope.sortedPromotions = _.orderBy(
-        $scope.promotions,
+    $scope.$watchGroup(['filter.order', 'filter.orderBy', 'filter.promotionType', 'promotions'], () => {
+      $scope.sortedPromotions = $scope.promotions && _.orderBy(
+        $scope.promotions.filter(x => x.type === $scope.filter.promotionType),
         [$scope.filter.orderBy],
         [$scope.filter.order]
       )

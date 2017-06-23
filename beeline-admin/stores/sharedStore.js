@@ -36,7 +36,7 @@ const fetchJobs = {
   },
   companies: {
     url: '/companies'
-  }
+  },
 }
 
 module.exports = {
