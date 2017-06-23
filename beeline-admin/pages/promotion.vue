@@ -44,6 +44,13 @@
                 </label>
               </div>
 
+              <div class="form-group" v-if="promotion.type === 'RoutePass'">
+                <label>
+                  Tag
+                  <input type="text" v-model="promotion.params.tag" class="form-control" />
+                </label>
+              </div>
+
               <div class="form-group">
                 <label>
                   Description (shown to user)
@@ -256,7 +263,7 @@ export default {
           ...myParams,
           qualifyingCriteria: myParams.qualifyingCriteria
             .concat([this.companyQualifyingCriterion])
-            .map(i => _.omit(i, 'id'))
+            .map(i => _.omit(i, 'id')),
         },
         description: e.description,
         type: e.type,
@@ -315,6 +322,7 @@ export default {
         description: 'Hello world!',
         ...promo,
         params: {
+          tag: '',
           ...promo.params,
           refundFunction: _.defaults(promo.params.refundFunction, { type: 'refundDiscountedAmt', params: {} }),
           qualifyingCriteria: filterCompanyCriteria(promo.params.qualifyingCriteria)

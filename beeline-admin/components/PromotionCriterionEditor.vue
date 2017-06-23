@@ -179,6 +179,7 @@ const criterionTypes = _.sortBy([
   {
     type: 'limitByRouteTags',
     default: {tags: []},
+    restrict: ['Promotion'],
   },
   {
     type: 'limitByTripDayOfWeek',
