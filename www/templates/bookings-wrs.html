@@ -205,9 +205,8 @@
                   </span>
                   <button class="btn btn-danger actions" ng-click="refundPayment(ticket)"
                       ng-if="(ticket.status == 'valid' || ticket.status == 'void') && ticket.paymentResource">
-                   <span class="glyphicon glyphicon-usd" aria-hidden="true"></span>
                    Refund
-                   &dollar;{{ticket.ticketSale.credit - ticket.notes.discountValue || 0 | currency}}
+                   &dollar;{{ticket.ticketSale.credit - ticket.notes.discountValue || 0 | number:2}}
                  </button>
                  <button class="btn btn-warning" ng-click="issueRouteCredits(ticket)">
                    <span class="glyphicon glyphicon-piggy-bank" aria-hidden="true"></span> Issue Credits
