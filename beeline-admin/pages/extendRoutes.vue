@@ -108,12 +108,17 @@ import querystring from 'querystring'
 import _ from 'lodash'
 const filters = require('../filters')
 
+/**
+  * Uniquely hash trips by their stops, stop time and price.
+  * Trips with different hashes are "significantly different"
+  * from each other and should be represented by different colours
+  */
 function tripHash(trip) {
   function secondsSinceMidnight(t) {
     return t.getHours()*3600 + t.getMinutes()*60 + t.getSeconds()
   }
 
-  return _.map(_.sortBy(trip.tripStops, 'time'), ts =>
+  return trip.price + ';' + _.map(_.orderBy(trip.tripStops, ['time', 'stopId']), ts =>
     `${ts.stopId.toString(36)},${secondsSinceMidnight(ts.time).toString(36)}`)
     .join(';')
 }
