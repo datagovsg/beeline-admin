@@ -257,6 +257,7 @@ export default {
         options: {
           include_trips: true,
           include_dates: true,
+          include_features: true,
         }
       })
 
