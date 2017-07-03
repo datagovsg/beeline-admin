@@ -16,16 +16,22 @@ export default {
     watch(promise) {
       assert(typeof promise.then === 'function')
 
+      let nextPromise
+
       if (this.promise) {
-        this.promise = Promise.all([
+        nextPromise = Promise.all([
           this.promise,
           promise.catch(() => {})
         ])
       } else {
-        this.promise = promise.catch(() => {})
+        nextPromise = promise.catch((err) => {console.log(err)})
       }
 
-      this.promise.then(() => this.end())
+      nextPromise.then(() => {
+        if (this.promise === nextPromise) this.end()
+      })
+
+      this.promise = nextPromise
 
       return promise
     },
