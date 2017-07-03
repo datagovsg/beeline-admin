@@ -43,7 +43,6 @@ angular.module('beeline-admin')
         newRoute.notes.crowdstartExpiry = $scope.editRoute._meta.campaignEndDate ?
           $scope.editRoute._meta.campaignEndDate.toISOString() : null;
 
-        newRoute.notes.lelongExpiry = newRoute.notes.crowdstartExpiry;
         function formatDate(d) {
           return leftPad(d.getUTCFullYear(), 4, '0') + '-' +
             leftPad(d.getUTCMonth() + 1, 2, '0') + '-' +

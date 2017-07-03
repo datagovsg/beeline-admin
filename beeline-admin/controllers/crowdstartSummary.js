@@ -40,9 +40,6 @@ function($scope, AdminService, RoutesService, LoadingSpinner,
     const transformed = result.data
     .filter(r => r.transportCompanyId == companyId)
     .map(route => {
-      if (route.notes && !route.notes.crowdstartExpiry) {
-        route.notes.crowdstartExpiry = route.notes.lelongExpiry
-      }
       return {
         ...route,
         _meta: {
