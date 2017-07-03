@@ -317,11 +317,19 @@ function CreateTripsDateController($scope, TripsService) {
     });
   }
 
+  function mergeDateInfo(a, b) {
+    return {
+      ...a,
+      ...b,
+      css: a.css ? (b.css ? `${a.css} ${b.css}` : a.css) : b.css
+    }
+  }
+
   $scope.$watchGroup(['datepicker.dateWithTrips', 'publicHolidays'], ([dt, ph]) => {
     if (dt && ph) {
       $scope.datepicker.highlightDays = _(dt.concat(ph))
         .groupBy(x => x.date.valueOf())
-        .mapValues(arr => arr.reduce((a, b) => _.assign(a, b), {}))
+        .mapValues(arr => arr.reduce(mergeDateInfo, {}))
         .values()
         .value()
     }
