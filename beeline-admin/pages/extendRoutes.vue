@@ -165,6 +165,7 @@ export default {
     return {
       filter: {
         tags: '',
+        label: '',
       },
       filteredRoutes: [],
       routes: null,
@@ -291,21 +292,20 @@ export default {
           this.updateFilter() // not using a computed because we want to throttle it
 
           // A trick to load the routes we're interested in first
-          let currentTags = false
+          let currentTags = false, currentLabel = false
           let currentRoutes = this.routes
 
-          function updateCurrentRoutes () {
-            let currentTagsSplit = currentTags ? currentTags.split(',') : []
-
+          const updateCurrentRoutes = () => {
             // Prioritize routes with tags that we want
             currentRoutes = _.sortBy(
-              currentRoutes, r => _.every(currentTagsSplit, tag => r.tags && r.tags.includes(tag)) ? 0 : 1
+              currentRoutes, r => this.applyFilter(r) ? 0 : 1
             )
           }
 
           while (currentRoutes.length > 0) {
-            if (currentTags !== this.filter.tags) {
+            if (currentTags !== this.filter.tags || currentLabel !== this.filter.label) {
               currentTags = this.filter.tags
+              currentLabel = this.filter.label
               updateCurrentRoutes()
             }
 
@@ -368,11 +368,13 @@ export default {
 
     updateFilter: _.throttle(function () {
       this.filteredRoutes = this.routes && this.routes
-        .filter(route =>
-          (!this.filter.label || route.label === this.filter.label) &&
-          this.tags.every(tag => route.tags && route.tags.indexOf(tag) !== -1)
-        )
+        .filter(route => this.applyFilter(route))
     }, 500, {leading: false, trailing: true}),
+
+    applyFilter(route) {
+      return (!this.filter.label || route.label === this.filter.label) &&
+        this.tags.every(tag => route.tags && route.tags.indexOf(tag) !== -1)
+    },
 
     dateClass(route, day) {
       const trip = _.get(route.tripsByDate, day.date.getTime())
