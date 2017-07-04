@@ -81,7 +81,7 @@
     "build": "cross-env BACKEND_URL=https\\://beeline-server-dev.herokuapp.com BUILD_PREFIX=www webpack",
     "watch": "npm run start & npm run webpack-watch",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "http-server -c-1 www",
+    "start": "http-server -c-1 www -p 8101",
     "heroku-postbuild": "cross-env BACKEND_URL=https\\://beeline-server-dev.herokuapp.com BUILD_PREFIX=www webpack",
     "live-build": "cross-env BACKEND_URL=https\\://api.beeline.sg BUILD_PREFIX=build webpack",
     "live-cp": "shx mkdir -p build && shx cp -r 'www/*' build",
