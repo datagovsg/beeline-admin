@@ -65,7 +65,8 @@
         </thead>
         <tbody>
           <tr ng-repeat="txn in disp.transactions track by $index">
-            <td title="Transaction Item ID: {{txn.id}}">{{$index + 1}}</td>
+            <!-- <td title="Transaction Item ID: {{txn.id}}">{{$index + 1}}</td> -->
+            <td>{{ $index + 1 + (paging.page-1) * paging.perPage }}</td>
             <td>{{txn.createdAt | date:'dd MMM yyyy HH:mm:ss':'+0800'}}</td>
             <td title="Transaction ID: {{txn.transactionId}}">{{txn.transaction.committed ? 'Valid' : 'Failed'}}</td>
             <td>{{txn.transaction.description}}</td>
