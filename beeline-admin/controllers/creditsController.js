@@ -28,6 +28,10 @@ function($scope, $stateParams, AdminService, LoadingSpinner, commonModals) {
     page: 1,
     perPage: 20,
   }
+  $scope.refund = {
+    transactionItems: null,
+    paymentResource : null
+  }
 
   $scope.$watchCollection('filter', () => {
     $scope.paging.page = 1
@@ -154,4 +158,33 @@ function($scope, $stateParams, AdminService, LoadingSpinner, commonModals) {
     $scope.filter.selectedMonth = newMonth.clone().toDate()
     $scope.filter.page = 1
   }
+
+  $scope.refund = async function(txn) {
+    await LoadingSpinner.watchPromise(queryTransactionItems(txn))
+    console.log($scope.refund.transactionItems)
+    console.log($scope.refund.paymentResource)
+  }
+
+  function queryTransactionItems (txn) {
+    let queryOptions = {
+      transactionId: txn.transactionId
+    }
+    return AdminService.beeline({
+      method: 'GET',
+      url: `/transactionItems?`
+        + querystring.stringify(queryOptions)
+    }).then(resp => {
+      let transactionItems = resp.data.rows
+      let paymentItem = transactionItems.find((ti)=>{
+        return ti.itemType === 'payment'
+      })
+      $scope.refund.paymentResource = _.get(paymentItem, 'payment.paymentResource')
+      $scope.refund.transactionItems = resp.data
+    }).catch(err =>
+      commonModals.alert(
+        `${err && err.data && err.data.message}`
+      )
+    )
+  }
+
 })

@@ -81,7 +81,10 @@
             <td><ul class="tags"><li class="tags">{{txn.routeCredits.tag}}</li></ul></td>
             <td>{{txn.credit | currency}}</td>
             <td>
-              <!-- <button class="btn btn-primary btn-xs">Dummy</button> -->
+              <button class="btn btn-primary btn-xs" ng-if="txn.transaction.type === 'routeCreditPurchase' || txn.transaction.type === 'conversion'"
+                ng-click="refund(txn)">
+                Refund
+              </button>
             </td>
           </tr>
         </tbody>
