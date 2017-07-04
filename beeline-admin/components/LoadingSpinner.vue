@@ -21,12 +21,14 @@ export default {
       if (this.promise) {
         nextPromise = Promise.all([
           this.promise,
-          promise.catch(() => {})
+          promise.catch((err) => {console.error(err)})
         ])
       } else {
-        nextPromise = promise.catch((err) => {console.log(err)})
+        nextPromise = promise.catch((err) => {console.error(err)})
       }
 
+      // If another promise is subsequently watch()ed, then
+      // nextPromise !== this.promise
       nextPromise.then(() => {
         if (this.promise === nextPromise) this.end()
       })
