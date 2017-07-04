@@ -109,8 +109,8 @@ export default {
         }
 
         merged = dateFns
-        .filter(dateFn => dateFn.date(new Date(canonicalTime + this.effectiveOffset)))
-        .reduce(mergeDateInfo, merged)
+          .filter(dateFn => dateFn.date(new Date(canonicalTime + this.effectiveOffset)))
+          .reduce(mergeDateInfo, merged)
 
         return merged
       }
@@ -180,7 +180,7 @@ export default {
 function mergeDateInfo (a, b) {
   return {
     ...a, ...b,
-    classes: a.classes ? (b.classes ? a.classes.concat(b.classes) : a.classes) : b.classes
+    classes: _.flatten([a.classes, b.classes])
   }
 }
 
