@@ -260,7 +260,27 @@ export default {
 
           this.updateFilter() // not using a computed because we want to throttle it
 
-          for (let route of this.routes) {
+          // A trick to load the routes we're interested in first
+          let currentTags = false
+          let currentRoutes = this.routes
+
+          function updateCurrentRoutes () {
+            let currentTagsSplit = currentTags ? currentTags.split(',') : []
+
+            // Prioritize routes with tags that we want
+            currentRoutes = _.sortBy(
+              currentRoutes, r => _.every(currentTagsSplit, tag => r.tags && r.tags.includes(tag)) ? 0 : 1
+            )
+          }
+
+          while (currentRoutes.length > 0) {
+            if (currentTags !== this.filter.tags) {
+              currentTags = this.filter.tags
+              updateCurrentRoutes()
+            }
+
+            const route = currentRoutes[0]
+
             await this.axios.get(`/routes/${route.id}?` + querystring.stringify({
               include_trips: true,
               start_date: new Date(
@@ -303,7 +323,10 @@ export default {
               route.tripsByDate = _.keyBy(trips, t => t.date.getTime()) || {}
               route.ended = (trips.length === 0)
             })
-          }
+
+            // Remove the first element
+            currentRoutes.shift()
+          } /* while (currentRoutes.length > 0) */
         })
       }
     }
