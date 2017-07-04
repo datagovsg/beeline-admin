@@ -78,10 +78,10 @@ angular.module('beeline-admin')
           }
         })
 
-        var tripId = _.get($scope.editRoute.trips[0],'id')
+        // Update trip
         const tripPromise = AdminService.beeline({
           method: 'PUT',
-          url: `/trips/${tripId}`,
+          url: `/trips/${$scope.editRoute.trips[0].id}`,
           data: {
             ..._.pick($scope.editRoute.trips[0], ['capacity']),
             date: formatDate($scope.editRoute._meta.firstTripDate),
@@ -103,7 +103,7 @@ angular.module('beeline-admin')
         // Prepare the metadata...
         route.notes = route.notes || {};
         route._meta = {
-          campaignEndDate: new Date(route.notes.crowdstartExpiry || route.notes.lelongExpiry),
+          campaignEndDate: new Date(route.notes.crowdstartExpiry),
         };
         route.notes.tier = route.notes.tier || [{price: 10, pax: 13}]
 
