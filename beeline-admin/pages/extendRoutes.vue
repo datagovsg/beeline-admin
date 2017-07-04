@@ -33,9 +33,29 @@
     </div>
 
     <label>
-      Comma-separated list of tags
+      Route Label:
+    </label>
+    <input type="text" v-model="filter.label" @input="updateFilter" />
+
+    <label>
+      Comma-separated list of tags:
     </label>
     <input type="text" v-model="filter.tags" @input="updateFilter" />
+
+    <br/>
+    <br/>
+
+    <table class="selection-table legend">
+      <tbody>
+        <tr>
+          <td>Routes will be extended using the trip marked: </td>
+          <td class="selected-hash">&nbsp;&nbsp;&nbsp;</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <br/>
+    <br/>
 
     <table class="selection-table">
       <thead>
@@ -91,7 +111,9 @@
             <a :href="`#/c//trips/${route.id}/route`"><span class="glyphicon glyphicon-pencil" /></a>
           </td>
           <td><TagsView :tags="route.tags" /></td>
-          <td v-for="day in days" :key="day.date.getTime()" :class="dateClass(route, day)">
+          <td v-for="day in days" :key="day.date.getTime()" :class="dateClass(route, day)"
+              title="Click to use this trip as a template"
+              @click="useTripHashOf(route, day)">
             <!-- <input type="checkbox" v-model="selectedDays[route.id][day.date.getTime()]" /> -->
           </td>
         </tr>
@@ -118,9 +140,16 @@ function tripHash(trip) {
     return t.getHours()*3600 + t.getMinutes()*60 + t.getSeconds()
   }
 
-  return trip.price + ';' + _.map(_.orderBy(trip.tripStops, ['time', 'stopId']), ts =>
-    `${ts.stopId.toString(36)},${secondsSinceMidnight(ts.time).toString(36)}`)
-    .join(';')
+  return [
+    trip.capacity,
+    trip.price,
+    _(trip.tripStops)
+      .orderBy(['time', 'stopId'])
+      .map(ts =>
+        `${ts.stopId.toString(36)},${secondsSinceMidnight(ts.time).toString(36)}`
+      )
+      .join(';')
+  ].join(';')
 }
 
 export default {
@@ -256,11 +285,32 @@ export default {
             selected: false,
             ended: false,
             tripsByDate: null,
+            _extensionHashId: 0,
           }))
 
           this.updateFilter() // not using a computed because we want to throttle it
 
-          for (let route of this.routes) {
+          // A trick to load the routes we're interested in first
+          let currentTags = false
+          let currentRoutes = this.routes
+
+          function updateCurrentRoutes () {
+            let currentTagsSplit = currentTags ? currentTags.split(',') : []
+
+            // Prioritize routes with tags that we want
+            currentRoutes = _.sortBy(
+              currentRoutes, r => _.every(currentTagsSplit, tag => r.tags && r.tags.includes(tag)) ? 0 : 1
+            )
+          }
+
+          while (currentRoutes.length > 0) {
+            if (currentTags !== this.filter.tags) {
+              currentTags = this.filter.tags
+              updateCurrentRoutes()
+            }
+
+            const route = currentRoutes[0]
+
             await this.axios.get(`/routes/${route.id}?` + querystring.stringify({
               include_trips: true,
               start_date: new Date(
@@ -303,7 +353,10 @@ export default {
               route.tripsByDate = _.keyBy(trips, t => t.date.getTime()) || {}
               route.ended = (trips.length === 0)
             })
-          }
+
+            // Remove the first element
+            currentRoutes.shift()
+          } /* while (currentRoutes.length > 0) */
         })
       }
     }
@@ -315,7 +368,10 @@ export default {
 
     updateFilter: _.throttle(function () {
       this.filteredRoutes = this.routes && this.routes
-        .filter(route => this.tags.every(tag => route.tags && route.tags.indexOf(tag) !== -1))
+        .filter(route =>
+          (!this.filter.label || route.label === this.filter.label) &&
+          this.tags.every(tag => route.tags && route.tags.indexOf(tag) !== -1)
+        )
     }, 500, {leading: false, trailing: true}),
 
     dateClass(route, day) {
@@ -328,7 +384,13 @@ export default {
         'selected': day.selected,
         'loading': !route.tripsByDate,
         'ended': route.ended,
+        'selected-hash': (hashCode !== undefined) && (hashCode === route._extensionHashId)
       }
+    },
+    useTripHashOf(route, day) {
+      const trip = _.get(route.tripsByDate, day.date.getTime())
+
+      if (trip) route._extensionHashId = trip.hashIdMod5
     },
 
     // Route painting
@@ -407,7 +469,10 @@ export default {
       this.extendJobs.done = 0
 
       for (let route of routesToExtend) {
-        const lastTrip = _.maxBy(_.values(route.tripsByDate), 'date')
+        const lastTrip = _(route.tripsByDate)
+          .values()
+          .filter(trip => trip.hashIdMod5 === route._extensionHashId)
+          .maxBy('date')
 
         await Promise.all(
           daysToExtend
@@ -463,20 +528,29 @@ export default {
     tr.active &, tr.active:hover &, &, &:hover {
       &.trip-hash-0 {
         background-color: #008;
+        cursor: pointer;
       }
       &.trip-hash-1 {
         background-color: #080;
+        cursor: pointer;
       }
       &.trip-hash-2 {
         background-color: #800;
+        cursor: pointer;
       }
       &.trip-hash-3 {
         background-color: #088;
+        cursor: pointer;
       }
       &.trip-hash-4 {
         background-color: #880;
+        cursor: pointer;
       }
     }
+  }
+
+  td.selected-hash {
+    border: solid 3px red;
   }
 
   tr.active td {

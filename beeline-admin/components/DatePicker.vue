@@ -93,33 +93,26 @@ export default {
       if (!this.specialDates) return () => null
 
       // Build the date index for raw date values
-      const dateIndex = {}
-      this.specialDates
+      const dateIndex = _(this.specialDates)
         .filter(s => s.date instanceof Date)
-        .forEach(specialDate => {
-          const canonicalTime = this.canonicalTime(specialDate.date)
-          dateIndex[canonicalTime] = dateIndex[canonicalTime] || []
-          dateIndex[canonicalTime].push(specialDate)
-        })
+        .groupBy(specialDate => this.canonicalTime(specialDate.date))
+        .value()
 
       const dateFns = this.specialDates
         .filter(s => typeof s.date === 'function')
 
       return (canonicalTime) => {
-        const initial = {}
+        let merged = {}
+
         if (dateIndex[canonicalTime]) {
-          for (let props of dateIndex[canonicalTime]) {
-            Object.assign(initial, props)
-          }
+          merged = dateIndex[canonicalTime].reduce(mergeDateInfo, merged)
         }
 
-        for (let dateFns of dateFns) {
-          console.log(new Date(canonicalTime))
-          if (dateFns.date(new Date(canonicalTime + this.effectiveOffset))) {
-            Object.assign(initial, dateFns)
-          }
-        }
-        return initial
+        merged = dateFns
+          .filter(dateFn => dateFn.date(new Date(canonicalTime + this.effectiveOffset)))
+          .reduce(mergeDateInfo, merged)
+
+        return merged
       }
     },
     weeks () {
@@ -182,4 +175,13 @@ export default {
     },
   }
 }
+
+
+function mergeDateInfo (a, b) {
+  return {
+    ...a, ...b,
+    classes: _.flatten([a.classes, b.classes])
+  }
+}
+
 </script>
