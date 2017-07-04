@@ -41,7 +41,7 @@
   </div>
   <div class="row text-center">
     <div class="col-lg-12">
-        <uib-pagination boundary-links="true" ng-model="paging.page" total-items="disp.totalItems" items-per-page="paging.perPage"></uib-pagination>
+        <div uib-pagination boundary-links="true" ng-model="paging.page" total-items="disp.totalItems" items-per-page="paging.perPage"></div>
         <div>
           Showing {{(paging.page-1) * paging.perPage + 1}} to {{(paging.page-1) * paging.perPage + disp.transactions.length}} of {{disp.totalItems}}
         </div>
@@ -89,7 +89,7 @@
   </div>
   <div class="row text-center">
     <div class="col-lg-12">
-        <uib-pagination boundary-links="true" ng-model="paging.page" total-items="disp.totalItems" items-per-page="paging.perPage"></uib-pagination>
+        <div uib-pagination boundary-links="true" ng-model="paging.page" total-items="disp.totalItems" items-per-page="paging.perPage"></div>
     </div>
   </div>
 </div>
