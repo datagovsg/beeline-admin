@@ -77,19 +77,8 @@ function($scope, $stateParams, AdminService, LoadingSpinner, commonModals) {
 
   function loadTransactionSummary() {
     let queryOptions = buildQuery({}, {
-      ...$scope.filter,
-      startDate: new Date(
-        $scope.filter.selectedMonth.getFullYear(),
-        $scope.filter.selectedMonth.getMonth(),
-        1,
-      ),
-      endDate: new Date(
-        $scope.filter.selectedMonth.getFullYear(),
-        $scope.filter.selectedMonth.getMonth() + 1,
-        0,
-      ),
+      ...$scope.filter
     })
-
     return AdminService.beeline({
       method: 'GET',
       url: `/companies/${$scope.companyId}/transactionItems/routeCredits/summary?`
@@ -156,7 +145,7 @@ function($scope, $stateParams, AdminService, LoadingSpinner, commonModals) {
 
   $scope.monthChanged = function(newMonth) {
     $scope.filter.selectedMonth = newMonth.clone().toDate()
-    $scope.filter.page = 1
+    $scope.filter.startDate = $scope.filter.endDate = null
   }
 
   $scope.refund = async function(txn) {
