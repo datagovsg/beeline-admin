@@ -118,9 +118,16 @@ function tripHash(trip) {
     return t.getHours()*3600 + t.getMinutes()*60 + t.getSeconds()
   }
 
-  return trip.price + ';' + _.map(_.orderBy(trip.tripStops, ['time', 'stopId']), ts =>
-    `${ts.stopId.toString(36)},${secondsSinceMidnight(ts.time).toString(36)}`)
-    .join(';')
+  return [
+    trip.capacity,
+    trip.price,
+    _(trip.tripStops)
+      .orderBy(['time', 'stopId'])
+      .map(ts =>
+        `${ts.stopId.toString(36)},${secondsSinceMidnight(ts.time).toString(36)}`
+      )
+      .join(';')
+  ].join(';')
 }
 
 export default {
