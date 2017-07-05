@@ -13,13 +13,15 @@ module.exports = {
         })
       })
 
-      promise.catch((err) => {
-        console.log(err)
-      }).then(() => {
-        this.isShown = false
-      })
-
-      return promise
+      return promise.then(
+        (result) => {
+          this.isShown = false
+          return result
+        }, (err) => {
+          console.error(err)
+          this.isShown = false
+          throw err
+        })
     }
   }
 }

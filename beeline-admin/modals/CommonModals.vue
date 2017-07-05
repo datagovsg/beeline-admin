@@ -39,7 +39,11 @@ export default {
     }
   },
   created() {
-    this.value = this.defaultValue
+    if (this.type === 'prompt') {
+      this.value = this.defaultValue
+    } else if (this.type === 'confirm') {
+      this.value = true
+    }
   },
   mixins: [
     require('../modals/ModalMixin')
