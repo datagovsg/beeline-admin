@@ -15,7 +15,7 @@
     </ul>
 
     <div v-if="tabs[activeTab]" :is="tabs[activeTab].component"
-      :route="route" />
+      :route="route" @requery="requery" />
   </div>
 </template>
 
@@ -48,9 +48,13 @@ export default {
     return {
       tabs,
       route: null,
+      routePromise: null,
     }
   },
   watch: {
+    routeId() {
+      this.requery()
+    },
     routePromise: {
       immediate: true,
       handler (p) {
@@ -72,11 +76,26 @@ export default {
   },
   computed: {
     f() { return filters },
-    routePromise () {
+    activeTab () {
+      return this.tabs.findIndex(tab => tab.link === this.tab)
+    }
+  },
+  created() {
+    this.requery()
+  },
+  methods: {
+    ...mapActions('resources', ['getRoute', 'saveRoute', 'createTripForDate']),
+    ...mapActions('spinner', ['spinOnPromise']),
+
+    goToTab(tab) {
+      return `#/c/${this.companyId}/trips/${this.routeId}/${tab.link}`
+    },
+
+    requery () {
       if (!this.routeId) {
-        return Promise.resolve(null)
+        this.routePromise = Promise.resolve(null)
       } else {
-        return this.getRoute({
+        this.routePromise = this.getRoute({
           id: this.routeId,
           options: {
             include_dates: true,
@@ -87,18 +106,7 @@ export default {
           }
         })
       }
-    },
-    activeTab () {
-      return this.tabs.findIndex(tab => tab.link === this.tab)
     }
-  },
-  methods: {
-    ...mapActions('resources', ['getRoute', 'saveRoute', 'createTripForDate']),
-    ...mapActions('spinner', ['spinOnPromise']),
-
-    goToTab(tab) {
-      return `#/c/${this.companyId}/trips/${this.routeId}/${tab.link}`
-    },
   }
 }
 </script>

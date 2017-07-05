@@ -1,96 +1,124 @@
 <template>
-  <div class="editor-tabs-content" v-if="editRoute">
-    <div class="row">
-      <div class="col-lg-6">
-        <form class="form-horizontal">
-          <div class="form-group">
-            <label v-if="isSuperAdmin()" class="col-sm-2 control-label">
-              Company
-            </label>
-            <div class="col-sm-10">
-              <CompanySelector class="form-control" v-model="editRoute.transportCompanyId" />
+  <div class="container-fluid">
+      <div class="date-filter-popup">
+      <div class="row">
+        <div class="col-lg-4 pull-left">
+          <div class="row">
+            <div class="col-lg-6 text-left">
+              <h4>Show trips for the month of</h4>
+            </div>
+            <div class="col-lg-4 pull-left">
+              <div class="input-group">
+                <input type="text" class="form-control" uib-datepicker-popup="MMM-yyyy" datepicker-options="{'datepickerMode': 'month'}" ng-model="filter.filterMonth" is-open="filter.$startDatePopupIsOpen">
+                <span class="input-group-btn">
+                  <button class="btn btn-primary btn-icon" type="button" ng-click="filter.$startDatePopupIsOpen = !filter.$startDatePopupIsOpen"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span></button>
+                </span>
+              </div>
+              <!-- /input-group -->
             </div>
           </div>
-          <div class="form-group">
-            <label class="col-sm-2 control-label">Route Label</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" v-model="editRoute.label" placeholder="Route Label" >
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-2 control-label">Route Name</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" v-model="editRoute.name" placeholder="Route Name">
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-2 control-label">From</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" v-model="editRoute.from" placeholder="Start Address" >
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-2 control-label">To</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" v-model="editRoute.to" placeholder="End Address" >
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-2 control-label">Signage</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" placeholder="Signage" name="signage" v-model="editRoute.notes.signage">
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-2 control-label">Description</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control"  placeholder="Route Description" v-model="editRoute.notes.description">
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-2 control-label">Schedule</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" v-model="editRoute.schedule" placeholder="AM, Mon to Fri except P.H.">
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-2 control-label">Tags</label>
-            <div class="col-sm-10">
-              <TagsEditor v-model="editRoute.tags">
-              </TagsEditor>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="inputPassword3" class="col-sm-2 control-label">Notes</label>
-            <div class="col-sm-10">
-              <textarea class="form-control" placeholder="Important Notes in Markdown" rows=12 v-model="editRoute.features" ></textarea>
-            </div>
-          </div>
-        </form>
-      </div>
-      <div class="col-lg-6">
-        <div class="path-editor">
-          <path-editor path="editRoute.path" route-id="editRoute.id">
-          </path-editor>
+        </div>
+        <div class="col-lg-6 pull-right text-right">
+          <h3 class="text-danger dates-selected">{{selection && selection.length}} trip(s) selected</h3>
+          <button class="btn btn-default edit-trip-button" ng-click="showEditTripDialog()" ng-disabled="!selection.length">Edit Selected Trips</button>
+          <button class="btn btn-primary create-trip-button" ng-click="showCreateTripDialog()">Create new trips</button>
+          </form>
         </div>
       </div>
     </div>
-    <hr />
+
     <div class="row">
       <div class="col-lg-12">
-        <div class="route-buttons">
-          <button class="btn btn-primary" @click="doSaveRoute()" ng-disabled="!route || (form.routeEditorForm.$dirty && form.routeEditorForm.$invalid)">
-            Save Route Changes
-          </button>
+        <multi-select-broker collection="trips" selection="selection" track-by="'id'">
+        </multi-select-broker>
+        <div class="table-responsive">
+        <table class="table table-striped trips-list">
+          <thead>
+            <tr>
+              <th></th>  <!-- radio and index-->
+              <th></th>  <!-- trip ID -->
+              <th></th>  <!--date -->
+              <th></th>  <!-- pax -->
+              <th></th>  <!-- booked -->
+              <th></th>  <!-- price -->
+              <th></th>  <!--trip status -->
+              <th></th>  <!-- driver -->
+              <th colspan="{{disp.stopsList.length}}">Stops</th>
+              <th></th> <!-- actions (delete, use) -->
+            </tr>
+            <tr>
+              <th class="radio-column"><button class="btn btn-default btn-sm" ng-click="selection.$selectAll()">Select all</button></th> <!-- radio -->
+              <th>Trip ID</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Cap</th>
+              <th>Booked</th>
+              <th>Price</th>
+              <th>Driver</th>
+              <th ng-repeat="stop in disp.stopsList track by $index"
+                  class="stop-text"
+                  title="{{stop.stop.description}}">
+                {{stop.stop.description}}
+              </th>
+              <th>Delete<br />Trip
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="trip in trips track by trip.id"
+                ng-class="{
+                  selected: selection.selected[trip.id],
+                }">
+              <td ng-mousedown="selection.$mousedown($event, $index)">
+                <input type="checkbox" ng-model="selection.selected[trip.id]"
+                  ng-mousedown="$event.stopPropagation()">  <span class="trip-index">{{ $index + 1 }}</span>
+              </td>
+              <td>
+                <small>{{trip.id}}</small>
+              </td>
+              <td>
+                {{trip.date | date:'dd/MM/yy EEE'}}
+              </td>
+              <td>
+                <span class="label trip-normal"
+                    ng-if="trip.isRunning">Normal</span>
+                <span class="label trip-void"
+                    ng-if="trip.status == 'void'">Void</span>
+                <span class="label trip-cancelled"
+                    ng-if="trip.status == 'cancelled'">Cancelled</span>
+              </td>
+              <td>
+                {{trip.capacity}}
+                <i class="glyphicon glyphicon-user"></i>
+              </td>
+              <td>
+                <a ui-sref="^.bookings({tripId: trip.id})">
+                  {{trip.availability.seatsBooked}}
+                  <i class="glyphicon glyphicon-user"></i>
+                </a>
+              </td>
+              <td>
+                {{trip.price | number:2}}
+              </td>
+              <td>
+                {{trip.driverTelephone }}
+              </td>
+              <td ng-repeat="stop in disp.stopsList">
+                {{ findStop(trip, stop.stopId, stop.orderOfAppearance).time | date:'HH:mm'}}
 
-          <div class="btn-group">
-            <button class="btn btn-default" @click="doResetRoute()" v-if="!route.id">
-              Reset Route
-            </button>
-            <button class="btn btn-danger" @click="doReleteRoute()" ng-disabled="!route || !route.id">
-              Delete this Route
-            </button>
-          </div>
+                <span class="label stop-board" title="Boarding Stop"
+                    ng-if="findStop(trip, stop.stopId, stop.orderOfAppearance).canBoard">B</span>
+                <span class="label stop-alight" title="Alighting Stop"
+                    ng-if="findStop(trip, stop.stopId, stop.orderOfAppearance).canAlight">A</span>
+              </td>
+              <td>
+                <button class="btn btn-danger btn-icon" ng-click="tripList.deleteTrip(trip)">
+                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+              </button>
+              </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

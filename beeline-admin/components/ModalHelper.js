@@ -21,9 +21,7 @@ module.exports = {
         const {_resolve, _reject, options} = this
 
         this.show(options.component, options.props)
-          .then(_resolve)
-          .catch(_reject)
-          .then(this.closeModal)
+          .then(_resolve, _reject)
       }
     }
   },
@@ -41,7 +39,6 @@ module.exports = {
     }
   },
   methods: {
-    ...mapActions('modals', ['closeModal']),
     show(comp, props) {
       this.modalComponent = comp
       this.modalProps = props
