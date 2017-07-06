@@ -56,22 +56,23 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="tier in editRoute.notes.tier">
+          <tr ng-model="editRoute.notes.tier[0]">
             <td>
-              <button ng-disabled="editRoute.notes.tier.length <= 1"
+              <!-- disable mutli-tier -->
+              <!-- <button ng-disabled="editRoute.notes.tier.length <= 1"
               ng-click="removeTier($index)" class="btn btn-danger" type="button">
                 <span class="glyphicon glyphicon-minus"></span>
-              </button>
+              </button> -->
             </td>
             <td>
-              <input type="number" class="form-control" step="0.01" ng-model="tier.price"/>
+              <input type="number" class="form-control" step="0.01" ng-model="editRoute.notes.tier[0].price"/>
             </td>
             <td>
-              <input type="number" class="form-control" ng-model="tier.pax" />
+              <input type="number" class="form-control" ng-model="editRoute.notes.tier[0].pax" />
             </td>
           </tr>
         </tbody>
-        <tfoot>
+        <!-- <tfoot>
           <tr>
             <td colspan="3">
               <button ng-click="addTier()" class="btn btn-primary" type="button"
@@ -80,7 +81,7 @@
               </button>
             </td>
           </tr>
-        </tfoot>
+        </tfoot> -->
       </table>
     </div>
     <div class="form-group">

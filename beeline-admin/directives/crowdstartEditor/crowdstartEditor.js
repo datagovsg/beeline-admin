@@ -17,9 +17,9 @@ angular.module('beeline-admin')
       $scope.removeTier = function (index) {
         $scope.editRoute.notes.tier.splice(index, 1)
       }
-      $scope.addTier = function () {
-        $scope.editRoute.notes.tier.push({price: 10, pax: 13})
-      }
+      // $scope.addTier = function () {
+      //   $scope.editRoute.notes.tier.push({price: 10, pax: 13})
+      // }
 
       $scope.withdrawBid = function (bid) {
         commonModals.confirm('Are you sure you want to cancel this bid?')
@@ -89,7 +89,16 @@ angular.module('beeline-admin')
           }
         })
 
-        Promise.all([routePromise, tripPromise])
+        // Update price and exsiting bids
+        const bidPromise = AdminService.beeline({
+          method: 'PUT',
+          url: `/custom/lelong/routes/${$scope.editRoute.id}/bids`,
+          data: {
+            price: $scope.editRoute.notes.tier[0].price
+          }
+        })
+
+        Promise.all([routePromise, tripPromise, bidPromise])
         .then(() => window.location.reload())
         .catch((err) => commonModals.alert(`${err && err.data && err.data.message}`))
       } /* $scope.save */
