@@ -15,7 +15,7 @@
     </ul>
 
     <div v-if="tabs[activeTab]" :is="tabs[activeTab].component"
-      :route="route" @requery="requery" />
+      :route="route" @requery="requery" :companyId="companyId" />
   </div>
 </template>
 
