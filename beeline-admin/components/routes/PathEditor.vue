@@ -108,7 +108,7 @@ export default {
     'route.trips': {
       immediate: true,
       handler (trips) {
-        if (trips) {
+        if (trips && trips.length) {
           this.tripId = _.minBy(
             trips,
             trip => Math.abs(new Date(trip.date).getTime() - Date.now())
