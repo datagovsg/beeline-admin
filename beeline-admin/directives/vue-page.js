@@ -24,6 +24,8 @@ Vue.component('PingPath', require('../components/PingPath.vue'))
 Vue.component('TripStopMarker', require('../components/TripStopMarker.vue'))
 Vue.component('LoadingSpinner', require('../../beeline-admin/components/LoadingSpinner.vue'))
 Vue.component('DatePickerDropdown', require('../components/DatePickerDropdown.vue'))
+Vue.component('MonthPickerDropdown', require('../components/MonthPickerDropdown.vue'))
+Vue.component('MonthPicker', require('../components/MonthPicker.vue'))
 Vue.component('PriceInput', require('../components/PriceInput.vue'))
 
 Vue.component('Modal', require('vue-strap/src/Modal.vue'))
