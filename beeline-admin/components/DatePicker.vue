@@ -116,7 +116,7 @@ export default {
       }
     },
     weeks () {
-      return [0, 1, 2, 3, 4].map(
+      return [0, 1, 2, 3, 4, 5].map(
         weekNumber => [0,1,2,3,4,5,6].map(weekDay => {
           const canonical = ((weekNumber * 7) + weekDay) * 24*3600*1000 + this.firstDayOfCalendar.getTime()
           const canonicalDate = new Date(canonical)
