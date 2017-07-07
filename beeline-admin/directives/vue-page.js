@@ -27,10 +27,13 @@ Vue.component('DatePickerDropdown', require('../components/DatePickerDropdown.vu
 Vue.component('MonthPickerDropdown', require('../components/MonthPickerDropdown.vue'))
 Vue.component('MonthPicker', require('../components/MonthPicker.vue'))
 Vue.component('PriceInput', require('../components/PriceInput.vue'))
+Vue.component('TimeInput', require('../components/TimeInput.vue'))
+Vue.component('StopSelector', require('../components/StopSelector.vue'))
 
 Vue.component('Modal', require('vue-strap/src/Modal.vue'))
 Vue.component('Tabs', require('vue-strap/src/Tabs.vue'))
 Vue.component('Tab', require('vue-strap/src/Tab.vue'))
+Vue.component('VueSelect', require('vue-select').default)
 
 angular.module('beeline-admin')
 .directive('vuePage', function (vueStore, uiGmapGoogleMapApi) {
