@@ -91,8 +91,8 @@ angular.module('beeline-admin')
 
         // Update price and exsiting bids
         const bidPromise = AdminService.beeline({
-          method: 'PUT',
-          url: `/custom/lelong/routes/${$scope.editRoute.id}/bids`,
+          method: 'POST',
+          url: `/custom/lelong/routes/${$scope.editRoute.id}/bids/update_price`,
           data: {
             price: $scope.editRoute.notes.tier[0].price
           }
