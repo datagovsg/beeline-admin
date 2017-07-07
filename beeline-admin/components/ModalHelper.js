@@ -11,6 +11,7 @@ module.exports = {
     // All the modals I need...
     CreateTripsDatePicker: require('../modals/CreateTripsDatePicker.vue'),
     CommonModals: require('../modals/CommonModals.vue'),
+    TripEditor: require('../modals/TripEditor.vue'),
   },
   computed: {
     ...mapState('modals', ['_resolve', '_reject', 'options'])

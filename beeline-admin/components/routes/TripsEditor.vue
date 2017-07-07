@@ -133,6 +133,18 @@ import * as resources from '../../shared/resources'
 import {timeSinceMidnight} from '../../shared/filters';
 const filters = require('../../filters')
 
+const updatableFields = [
+  'driverId', 'capacity', 'companyId', 'price',
+  'bookingInfo', 'status'
+];
+const updatableTripStopFields = [
+  'canBoard', 'canAlight', 'time', 'stopId'
+]
+const creatableFields = updatableFields.concat([
+  'routeId'
+])
+const creatableTripStopFields = updatableTripStopFields
+
 export default {
   props: ['route', 'companyId'],
   data() {
@@ -167,13 +179,6 @@ export default {
           })
         })
       }
-
-      console.log(stopsSet);
-      console.log(_(stopsSet)
-        .values()
-        .flatten()
-        .sortBy(s => timeSinceMidnight(s.time))
-        .value())
 
       return _(stopsSet)
         .values()
@@ -271,7 +276,107 @@ export default {
       const stop = trip.tripStops
         .find(ts => ts.stopId === stopId && ts.orderOfAppearance === ooA);
       return stop
+    },
+
+    /**
+      Updates an existing trip with the trip data, preserving as much as
+      possible the original trip stops.
+     **/
+    updateTrip(trip, tripData) {
+
+      const adaptedData = {
+        ..._.pick(tripData, updatableFields),
+        tripStops: assignTripStopIds(trip.date, trip.tripStops, tripData.tripStops)
+      }
+
+      return this.axios.put(
+        `/trips/${trip.id}`,
+        adaptedData
+      )
+    },
+
+    showEditTripDialog() {
+      this.showModal({
+        component: 'TripEditor',
+        props: {
+          createNew: false,
+          editedTrips: this.selection,
+          referenceTrip: this.selection[0],
+        }
+      })
+      .then((tripData) => {
+        this.spinOnPromise(
+          Promise.all(this.selection.map(trip => this.updateTrip(trip, tripData)))
+          .then(() => this.requery())
+        )
+        .then(() => {
+          return this.showModal({
+            component: 'CommonModals',
+            props: {
+              type: 'flash',
+              message: 'Trips updated',
+            }
+          })
+        })
+        .catch((error) => {
+          return this.showModal({
+            component: 'CommonModals',
+            props: {
+              type: 'alert',
+              message: error.message
+            }
+          })
+        })
+      })
+    },
+
+    showCreateTripDialog() {
+
     }
   }
 }
+function combineDateTime(utcDate, time) {
+  return new Date(
+    utcDate.getUTCFullYear(),
+    utcDate.getUTCMonth(),
+    utcDate.getUTCDate(),
+    time.getHours(),
+    time.getMinutes(),
+    time.getSeconds()
+  )
+}
+
+function assignTripStopIds (date, original, reference) {
+  //
+  var referenceStops = _(reference)
+    // clone the tripStops because we'll be mutating them with an id
+    .map(ts => {
+      var update = _.pick(ts, updatableTripStopFields);
+      update.time = combineDateTime(date, ts.time).getTime();
+      return update;
+    })
+    .groupBy('stopId')
+    .value();
+
+  //
+  var originalStops = _(original)
+    .groupBy('stopId')
+    .value();
+
+  // Give the reference stops an id
+  // For now, match old and new by order of appearance
+  // TODO: more intelligent matching
+  _.each(referenceStops, (tss, stopId) => {
+    _.each(tss, (ts, index) => {
+      if (originalStops[stopId] && originalStops[stopId][index]) {
+        ts.id = originalStops[stopId][index].id;
+      }
+      else {
+        ts.id = null
+      }
+    })
+  })
+
+  return _.flatten(_.values(referenceStops));
+};
 </script>
