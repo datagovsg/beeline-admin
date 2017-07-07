@@ -140,6 +140,7 @@ export default {
       filter: {
         filterMonth: new Date(),
       },
+      routePromise: Promise.resolve(null),
       editRoute: null,
     }
   },
@@ -150,44 +151,6 @@ export default {
   computed: {
     ...mapGetters(['axios']),
     f: () => filters,
-    routePromise () {
-      if (!this.route) {
-        return Promise.resolve(null)
-      } else {
-        return this.getRoute({
-          id: this.route.id,
-          options: {
-            start_date: new Date(
-              this.filter.filterMonth.getFullYear(),
-              this.filter.filterMonth.getMonth(),
-              1,
-            ).toISOString(),
-
-            end_date: new Date(
-              this.filter.filterMonth.getFullYear(),
-              this.filter.filterMonth.getMonth() + 1,
-              0
-            ).toISOString(),
-
-            include_trips: true,
-          }
-        })
-        .then((route) => {
-          route.trips.forEach((trip) => {
-            const tsSet = _.groupBy(trip.tripStops, 'stopId');
-
-            trip._selected = false
-
-            _.values(tsSet).forEach((tripStopsInSet) => {
-              tripStopsInSet.forEach((tripStop, index) => {
-                tripStop.orderOfAppearance = index
-              })
-            })
-          })
-          return route
-        })
-      }
-    },
     stopsList() {
       if (!this.trips) return []
 
@@ -226,6 +189,12 @@ export default {
     }
   },
   watch: {
+    'route.id': {
+      immediate: true,
+      handler (promise) {
+        this.requery()
+      }
+    },
     routePromise: {
       immediate: true,
       handler (promise) {
@@ -257,6 +226,45 @@ export default {
           return this.spinWatch(this.editRoute = this.axios.delete(`/routes/${this.route.id}`))
         }
       })
+    },
+
+    requery () {
+      if (!this.route) {
+        this.routePromise = Promise.resolve(null)
+      } else {
+        this.routePromise = this.getRoute({
+          id: this.route.id,
+          options: {
+            start_date: new Date(
+              this.filter.filterMonth.getFullYear(),
+              this.filter.filterMonth.getMonth(),
+              1,
+            ).toISOString(),
+
+            end_date: new Date(
+              this.filter.filterMonth.getFullYear(),
+              this.filter.filterMonth.getMonth() + 1,
+              0
+            ).toISOString(),
+
+            include_trips: true,
+          }
+        })
+        .then((route) => {
+          route.trips.forEach((trip) => {
+            const tsSet = _.groupBy(trip.tripStops, 'stopId');
+
+            trip._selected = false
+
+            _.values(tsSet).forEach((tripStopsInSet) => {
+              tripStopsInSet.forEach((tripStop, index) => {
+                tripStop.orderOfAppearance = index
+              })
+            })
+          })
+          return route
+        })
+      }
     },
 
     findStop (trip, stopId, ooA) {
