@@ -35,7 +35,11 @@
             />
         </template>
         <template v-else>
-          (Please create a trip first)
+          (Please
+          <a :href="`#/c/${companyId}/trips/${editRoute.id}/trips`">
+            create a trip
+          </a>
+          first)
         </template>
       </div>
 
@@ -158,7 +162,23 @@ export default {
     route: {
       immediate: true,
       handler (route) {
-        this.editRoute = _.cloneDeep(route)
+        if (!route) {
+          this.editRoute = null
+        } else {
+          const clone = _.cloneDeep(route)
+
+          this.editRoute = {
+            ...clone,
+            notes: {
+              noPasses: null,
+              crowdstartExpiry: null,
+              date: null,
+              tier: [],
+              ..._.get(clone, 'notes'),
+            },
+            tags: _.get(clone, 'tags') || [],
+          }
+        }
       }
     },
     bidsPromise: {
