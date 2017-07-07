@@ -5,7 +5,7 @@
     </div>
 
     <form class="container-fluid form-horizontal" @submit.prevent="doSaveRoute"
-        v-if="editRoute && editRoute.tags.includes('lelong')">
+        v-if="editRoute">
       <div class="form-group form-inline">
         <label>
           Route Passes per Bid
@@ -20,7 +20,8 @@
         </label>
 
         <DatePickerDropdown
-          :value="new Date(editRoute.notes.crowdstartExpiry)"
+          :value="editRoute.notes.crowdstartExpiry ? new Date(editRoute.notes.crowdstartExpiry) : null"
+          :offset="0"
           @input="update('notes.crowdstartExpiry', f.date($event, 'yyyy-mm-dd'))"
           />
 
@@ -30,7 +31,8 @@
         <template v-if="editRoute.trips[0]">
 
           <DatePickerDropdown
-            :value="new Date(editRoute.trips[0] && editRoute.trips[0].date)"
+            :value="editRoute.trips[0].date && new Date(editRoute.trips[0].date)"
+            :offset="0"
             @input="update('trips.0.date', $event)"
             />
         </template>
@@ -54,7 +56,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(tier, index) in editRoute.notes.tier">
+            <tr v-for="(tier, index) in [editRoute.notes.tier[0]]">
               <td>
                 <button :disabled="editRoute.notes.tier.length <= 1"
                     @click="removeTier(index)" class="btn btn-danger" type="button">
@@ -69,7 +71,7 @@
               </td>
             </tr>
           </tbody>
-          <tfoot>
+          <!-- <tfoot>
             <tr>
               <td colspan="3">
                 <button @click="addTier()" class="btn btn-primary" type="button"
@@ -79,7 +81,7 @@
                 </button>
               </td>
             </tr>
-          </tfoot>
+          </tfoot> -->
         </table>
       </div>
       <div class="form-group">
@@ -172,9 +174,8 @@ export default {
             notes: {
               noPasses: null,
               crowdstartExpiry: null,
-              date: null,
-              tier: [],
               ..._.get(clone, 'notes'),
+              tier: [_.get(clone, 'tier.0') || this.defaultTier()],
             },
             tags: _.get(clone, 'tags') || [],
           }
@@ -237,8 +238,15 @@ export default {
           tripStops: withTimesUpdated(this.editRoute.trips[0].tripStops),
         }
       )
+      // Update price and exsiting bids
+      const bidPromise = this.axios.post(
+        `/custom/lelong/routes/${this.editRoute.id}/bids/update_price`,
+        {
+          price: this.editRoute.notes.tier[0].price
+        }
+      )
 
-      Promise.all([routePromise, tripPromise])
+      Promise.all([routePromise, tripPromise, bidPromise])
       .then(() => this.$emit('requery'))
       .catch((err) => commonModals.alert(`${err && err.data && err.data.message}`))
     },
@@ -250,11 +258,14 @@ export default {
       _.set(this.editRoute, key, value)
     },
 
+    defaultTier () {
+      return {price: 10, pax: 13}
+    },
     removeTier (index) {
       this.editRoute.notes.tier.splice(index, 1)
     },
     addTier () {
-      this.editRoute.notes.tier.push({price: 10, pax: 13})
+      this.editRoute.notes.tier.push(this.defaultTier())
     },
     withdrawBid (bid) {
       this.showModal({

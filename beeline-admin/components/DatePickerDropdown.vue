@@ -1,6 +1,6 @@
 <template>
   <div class="input-group datepicker-dropdown" @click.stop="handleClick">
-    <input type="text" class="form-control" v-model="buffer" @input="checkDate" />
+    <input type="text" class="form-control" :value="buffer" @input="checkDate" />
     <span class="input-group-btn">
       <button class="btn btn-primary btn-icon" type="button"
         @click="showPopup = !showPopup">
@@ -87,7 +87,7 @@ export default {
     value: {
       immediate: true,
       handler (v) {
-        this.buffer = v && dateformat(v, this.format)
+        this.buffer = v ? dateformat(v, this.format) : ''
       }
     },
     showPopup (v, oldV) {
@@ -99,7 +99,7 @@ export default {
   },
   computed: {
     dateString() {
-      return dateformat(this.value, this.format)
+      return this.value ? dateformat(this.value, this.format) : ''
     }
   },
   methods: {
