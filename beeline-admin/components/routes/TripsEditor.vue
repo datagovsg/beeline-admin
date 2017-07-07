@@ -249,7 +249,7 @@ export default {
             end_date: new Date(
               this.filter.filterMonth.getFullYear(),
               this.filter.filterMonth.getMonth() + 1,
-              0
+              1
             ).toISOString(),
 
             include_trips: true,
