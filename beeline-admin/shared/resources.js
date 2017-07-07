@@ -77,7 +77,8 @@ export const storeModule = {
       return context.rootGetters.axios.get(`/trips/${tripId}/pings?` +
         querystring.stringify(_.pick(options, ['startTime', 'endTime', 'byTripId', 'limit'])))
         .then(resp => resp.data.map(postProcessPing))
-    }
+    },
+
   }
 }
 

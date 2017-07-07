@@ -286,7 +286,8 @@ export default {
         tripDates = await this.$refs.modalHelper.show(
           'CreateTripsDatePicker',
           {
-            route
+            route,
+            selectOnTrips: true,
           }
         )
       } catch (err) {

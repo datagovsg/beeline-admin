@@ -130,6 +130,7 @@
 <script>
 import {mapGetters, mapActions, mapState} from 'vuex'
 import * as resources from '../../shared/resources'
+import assert from 'assert'
 import {timeSinceMidnight} from '../../shared/filters';
 const filters = require('../../filters')
 
@@ -196,6 +197,13 @@ export default {
   watch: {
     'route.id': {
       immediate: true,
+      handler (promise) {
+        this.requery()
+      }
+    },
+    'filter': {
+      immediate: true,
+      deep: true,
       handler (promise) {
         this.requery()
       }
@@ -330,8 +338,63 @@ export default {
       })
     },
 
-    showCreateTripDialog() {
+    async showCreateTripDialog() {
+      const tripDates = await this.showModal({
+        component: 'CreateTripsDatePicker',
+        props: {
+          selectOnTrips: false,
+          route: this.editRoute,
+          message: 'Select the dates on which to create trips'
+        }
+      })
 
+      const tripData = await this.showModal({
+          component: 'TripEditor',
+          props: {
+            referenceTrip: this.selection[0],
+            createNew: true,
+            newTripDates: tripDates,
+          }
+        })
+
+      const createData = tripDates.map((date) => {
+          // must be round...
+          assert.equal(date.getTime() % (24 * 3600 * 1000), 0)
+
+          return {
+            ..._.pick(tripData, creatableFields),
+            date: date.toISOString(),
+            tripStops: tripData.tripStops.map(ts => ({
+              ..._.pick(ts, ['stopId', 'canBoard', 'canAlight']),
+              time: combineDateTime(date, ts.time).toISOString(),
+            }))
+          }
+        });
+
+      try {
+        await this.spinOnPromise(
+          Promise.all(createData.map(d => this.axios.post(
+            '/trips',
+            d
+          )))
+        )
+
+        await this.showModal({
+          component: 'CommonModals',
+          props: {
+            type: 'flash',
+            message: 'Trips created',
+          }
+        })
+      } catch (error) {
+        await this.showModal({
+          component: 'CommonModals',
+          props: {
+            type: 'alert',
+            message: error.message
+          }
+        })
+      }
     }
   }
 }
