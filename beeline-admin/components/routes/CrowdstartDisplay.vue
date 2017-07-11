@@ -19,7 +19,7 @@
               <th>Bid Date</th>
               <th>Bid Price</th>
               <th>Status</th>
-              <th>Cancel</th>
+              <th>Operations</th>
             </tr>
           </thead>
           <tbody>
@@ -37,6 +37,10 @@
                 <button class="btn btn-danger" @click="withdrawBid(bid)"
                     type="button">
                   <span class="glyphicon glyphicon-trash"></span>
+                </button>
+                <button class="btn btn-danger" @click="charge(bid)" :disabled="bid.status!=='bidded'" v-if="route.tags.indexOf('success') > -1"
+                    type="button">
+                  <span class="glyphicon glyphicon-piggy-bank"></span>
                 </button>
               </td>
             </tr>
@@ -146,10 +150,15 @@ export default {
     convert () {
       // add 'success' to crwodstart tags
       // create public route with 'crowdstart-id' tag
+      // after convert promopt admin 'Do you want to charge all bidders now?'
     },
 
     chargeAndCreditUser () {
       // for loop individual bid & charge
+    },
+
+    charge (bid) {
+      // manually charge individual bid through stripe
     }
 
   }
