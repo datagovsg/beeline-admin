@@ -44,6 +44,11 @@ export default {
         component: 'CrowdstartEditor',
         link: 'crowdstart'
       },
+      {
+        description: 'View Bidders',
+        component: 'CrowdstartDisplay',
+        link: 'bidders'
+      },
     ]
 
     return {
@@ -74,6 +79,7 @@ export default {
     RouteDescriptionEditor: require('../components/routes/RouteDescriptionEditor.vue'),
     TripsEditor: require('../components/routes/TripsEditor.vue'),
     CrowdstartEditor: require('../components/routes/CrowdstartEditor.vue'),
+    CrowdstartDisplay: require('../components/routes/CrowdstartDisplay.vue')
   },
   computed: {
     f() { return filters },
