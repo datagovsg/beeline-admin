@@ -1,10 +1,11 @@
 <template>
-  <div class="spinner-elem" v-if="promise">
+  <div class="spinner-elem" v-if="spinnerPromise">
   </div>
 </template>
 
 <script>
 import assert from 'assert'
+import {mapGetters, mapActions, mapState} from 'vuex'
 
 export default {
   data () {
@@ -12,34 +13,14 @@ export default {
       promise: null,
     }
   },
+  computed: {
+    ...mapState('spinner', ['spinnerPromise'])
+  },
   methods: {
+    ...mapActions('spinner', ['spinOnPromise']),
     watch(promise) {
-      assert(typeof promise.then === 'function')
-
-      let nextPromise
-
-      if (this.promise) {
-        nextPromise = Promise.all([
-          this.promise,
-          promise.catch((err) => {console.error(err)})
-        ])
-      } else {
-        nextPromise = promise.catch((err) => {console.error(err)})
-      }
-
-      // If another promise is subsequently watch()ed, then
-      // nextPromise !== this.promise
-      nextPromise.then(() => {
-        if (this.promise === nextPromise) this.end()
-      })
-
-      this.promise = nextPromise
-
-      return promise
+      this.spinOnPromise(promise)
     },
-    end () {
-      this.promise = null
-    }
   }
 }
 </script>

@@ -5,6 +5,6 @@ export default function($scope, $state, $urlRouter, AdminService, LoadingSpinner
   companyId) {
 
   $scope.pageProps = {
-    companyId
+    companyId,
   }
 }

@@ -165,7 +165,7 @@
 
 <script>
 import {mapGetters, mapActions, mapState} from 'vuex'
-import * as resources from '../shared/resources'
+import * as resources from '../stores/resources'
 const filters = require('../filters')
 
 export default {
@@ -286,7 +286,8 @@ export default {
         tripDates = await this.$refs.modalHelper.show(
           'CreateTripsDatePicker',
           {
-            route
+            route,
+            selectOnTrips: true,
           }
         )
       } catch (err) {

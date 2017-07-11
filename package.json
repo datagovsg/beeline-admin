@@ -41,6 +41,7 @@
     "inline-environment-variables-webpack-plugin": "^1.2.0",
     "json-loader": "^0.5.4",
     "jsonwebtoken": "^6.2.0",
+    "jwt-decode": "^2.2.0",
     "left-pad": "^1.1.0",
     "lodash": "^4.11.1",
     "moment": "^2.14.1",
@@ -59,6 +60,7 @@
     "vue": "^2.3.4",
     "vue-datepicker": "^1.3.0",
     "vue-loader": "^12.2.1",
+    "vue-select": "^2.2.0",
     "vue-strap": "git+https://github.com/wffranco/vue-strap.git",
     "vue-template-compiler": "^2.3.4",
     "vue2-google-maps": "^0.7.9",
@@ -66,9 +68,9 @@
     "webpack": "^2.5.1",
     "webpack-stream": "^3.2.0"
   },
-"engines": {
-"node": "7.8.x"
-},
+  "engines": {
+    "node": "7.8.x"
+  },
   "devDependencies": {
     "babel-core": "^6.7.7",
     "bower": "^1.3.3",

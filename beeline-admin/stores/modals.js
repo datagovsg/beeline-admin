@@ -1,11 +1,12 @@
+import Vue from 'vue'
+import _ from 'lodash'
+import assert from 'assert'
 
 const initial = () => ({
-  modalShown: null,
   _resolve: null,
   _reject: null,
-  title: '',
-  message: '',
-  defaultValue: '',
+  _promise: Promise.resolve(null),
+  options: null,
 })
 
 module.exports = {
@@ -13,50 +14,52 @@ module.exports = {
   state: initial(),
   mutations: {
     setModal(state, options) {
-      _.assign(state, _.pick(options, ['title', 'message', 'defaultValue', 'modalShown',
-        '_resolve', '_reject']))
+      _.assign(state, _.pick(options, ['options', '_resolve', '_reject']))
+    },
+    setPromise(state, promise) {
+      _.assign(state, {_promise: promise})
     }
   },
   actions: {
-   prompt (context, options) {
-     const promise = new Promise((resolve, reject) => {
-       context.commit('setModal', {
-         ...options,
-         modalShown: 'prompt',
-         _resolve: resolve,
-         _reject: reject
-       })
-     })
-     .then((result) => {
-       return result || ''
-     })
-     .catch((err) => null)
+    /** Adds a modal request to the queue */
+    showModal (context, options) {
+      return context.state._promise
+        .catch(() => {}) /* continue regardless of errors from previous promise */
+        .then(() => {
+          // at this point, assume the modal is fully closed
+          assert(context.state._resolve === null)
 
-     promise.then((result) => {
-       context.commit('setModal', initial())
-     })
+          const resultPromise = new Promise((resolve, reject) => {
+            context.commit('setModal', {
+              options,
+              _resolve: resolve,
+              _reject: reject,
+            })
+          })
 
-     return promise
-   },
-   alert (context, options) {
-     const promise = new Promise((resolve, reject) => {
-       context.commit('setModal', {
-         ...options,
-         modalShown: 'alert',
-         _resolve: resolve,
-         _reject: reject
-       })
-     })
-     .then((result) => {
-       return result || ''
-     })
-     .catch((err) => null)
+          // But don't allow the next dialog to show, until we fully
+          // close current dialog
+          context.commit(
+            'setPromise',
+            resultPromise
+              .catch(() => {})
+              .then(() => {
+                context.commit('setModal', {
+                  options: null,
+                  _resolve: null,
+                  _reject: null,
+                })
 
-     promise.then((result) => {
-       context.commit('setModal', initial())
-     })
+                // Let the changes bubble to ModalHelper
+                return new Promise((resolve) => {
+                  // FIXME: wtf is wrong with wffranco/vue-strap?
+                  setTimeout(resolve, 1000)
+                })
+              })
+          )
 
-     return promise
-   }
+          return resultPromise
+        })
+    },
   }
 }

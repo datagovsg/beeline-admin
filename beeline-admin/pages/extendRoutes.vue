@@ -125,7 +125,7 @@
 
 <script>
 import {mapGetters, mapActions, mapState} from 'vuex'
-import * as resources from '../shared/resources'
+import * as resources from '../stores/resources'
 import querystring from 'querystring'
 import _ from 'lodash'
 const filters = require('../filters')
@@ -458,7 +458,7 @@ export default {
       const routesToExtend = this.filteredRoutes.filter(r => r.selected && !r.ended).reverse()
       const daysToExtend = this.days.filter(r => r.selected)
 
-      await this.$refs.modalHelper.show(
+      const confirm = await this.$refs.modalHelper.show(
         'CommonModals',
         {
           type: 'confirm',
@@ -466,6 +466,8 @@ export default {
             `routes by ${daysToExtend.length} days?`
         }
       )
+
+      if (!confirm) return
 
       this.extendJobs.count = routesToExtend.length
       this.extendJobs.done = 0

@@ -115,11 +115,12 @@ table.trips-list {
   }
 }
 
-.trip-data-editor-nav{
-  margin: $padding-large-vertical*2 0;
+.trip-data-editor .modal-dialog {
+  margin: 2em 4em;
+  width: auto;
 
   .form-control{
-  margin-left: $padding-small-horizontal;
+    margin-left: $padding-small-horizontal;
   }
 }
 

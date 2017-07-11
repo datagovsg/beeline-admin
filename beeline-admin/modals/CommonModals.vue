@@ -10,8 +10,8 @@
     <!-- custom buttons -->
     <div slot="modal-footer" class="modal-footer">
       <button type="button" class="btn btn-primary" @click="resolve(value)">OK</button>
-      <button type="button" class="btn btn-default" @click="reject()"
-        v-if="type !== 'alert'">Cancel</button>
+      <button type="button" class="btn btn-default" @click="resolve(false)"
+        v-if="type === 'confirm'">Cancel</button>
     </div>
   </Modal>
 </template>
@@ -39,7 +39,11 @@ export default {
     }
   },
   created() {
-    this.value = this.defaultValue
+    if (this.type === 'prompt') {
+      this.value = this.defaultValue
+    } else if (this.type === 'confirm') {
+      this.value = true
+    }
   },
   mixins: [
     require('../modals/ModalMixin')

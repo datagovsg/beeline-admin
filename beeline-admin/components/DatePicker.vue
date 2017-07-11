@@ -34,18 +34,24 @@
 import dateformat from 'dateformat'
 
 export default {
-  props: [
-    'value',
-    'multiple',
-    'offset',
-    'month',
-    'specialDates',
-    'defaultDisable',
-    'monthFormat',
-  ],
+  props: {
+    'value': {},
+    'multiple': {},
+    'offset': {},
+    'month': {},
+    'specialDates': {},
+    'defaultDisable': {},
+    'monthFormat': {},
+    'otherMonthSelectable': {default: true},
+  },
   data () {
     return {
       currentlyViewedMonth: this.month || new Date()
+    }
+  },
+  watch: {
+    currentlyViewedMonth() {
+      this.$emit('month-changed', this.monthCanonical)
     }
   },
   computed: {
@@ -116,18 +122,20 @@ export default {
       }
     },
     weeks () {
-      return [0, 1, 2, 3, 4].map(
+      return [0, 1, 2, 3, 4, 5].map(
         weekNumber => [0,1,2,3,4,5,6].map(weekDay => {
           const canonical = ((weekNumber * 7) + weekDay) * 24*3600*1000 + this.firstDayOfCalendar.getTime()
           const canonicalDate = new Date(canonical)
+          const isDifferentMonth = (canonicalDate.getMonth() !== this.monthCanonical.getMonth())
           return {
             canonical,
             date: canonicalDate,
             day: canonicalDate.getDate(),
-            disabled: (this.defaultDisable)
-              ? !this.specialDatesByTime(canonical) || !this.specialDatesByTime(canonical).enabled
-              : this.specialDatesByTime(canonical) && this.specialDatesByTime(canonical).disabled,
-            differentMonth: (canonicalDate.getMonth() !== this.monthCanonical.getMonth()),
+            disabled:
+              (this.defaultDisable)
+                ? !this.specialDatesByTime(canonical) || !this.specialDatesByTime(canonical).enabled
+                : this.specialDatesByTime(canonical) && this.specialDatesByTime(canonical).disabled,
+            differentMonth: isDifferentMonth,
             classes: (this.specialDatesByTime(canonical) && this.specialDatesByTime(canonical).classes) || [],
             selected: this.value && (this.multiple
               ? this.value.find(d => this.canonicalTime(d) === canonical)
@@ -145,6 +153,7 @@ export default {
     },
     clicked (day) {
       if (day.disabled) return
+      if (!this.otherMonthSelectable && day.differentMonth) return
 
       if (this.multiple) {
         const index = this.value.findIndex(v => this.canonicalTime(v) === day.canonical)

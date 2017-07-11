@@ -1,11 +1,12 @@
 <template>
-  <div class="form-inline">
+  <div class="form-control tags-editor">
     <TagsView :tags="value">
       <template scope="props">
         <i class="glyphicon glyphicon-remove" @click="removeTag(props.tag)"></i>
       </template>
     </TagsView>
-    <input type="text" class="form-control" v-model="currentTag" @keydown="makeTag($event)" />
+    <input type="text" class="no-border" v-model="currentTag"
+      @keydown="makeTag($event)" :placeholder="placeholder" />
   </div>
 </template>
 
@@ -17,6 +18,9 @@ export default {
     value: {
       type: Array
     },
+    placeholder: {
+      type: String
+    }
   },
   data () {
     return {
@@ -41,3 +45,12 @@ export default {
   }
 }
 </script>
+<style>
+.no-border {
+  border: none;
+  box-shadow: none;
+}
+.tags-editor .tags {
+  display: inline;
+}
+</style>
