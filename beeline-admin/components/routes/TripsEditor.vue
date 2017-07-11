@@ -129,7 +129,7 @@
 
 <script>
 import {mapGetters, mapActions, mapState} from 'vuex'
-import * as resources from '../../shared/resources'
+import * as resources from '../../stores/resources'
 import assert from 'assert'
 import {timeSinceMidnight} from '../../shared/filters';
 const filters = require('../../filters')

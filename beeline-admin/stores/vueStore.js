@@ -8,10 +8,10 @@ angular.module('beeline-admin')
 .factory('vueStore', () => {
   const store = new Vuex.Store({
     modules: {
-      shared: require('../stores/sharedStore.js'),
-      spinner: require('../stores/spinner.js'),
-      modals: require('../stores/modals.js'),
-      resources: require('../shared/resources.js').storeModule,
+      shared: require('./sharedStore.js'),
+      spinner: require('./spinner.js'),
+      modals: require('./modals.js'),
+      resources: require('./resources.js').storeModule,
     },
     state: {
       idToken: null,

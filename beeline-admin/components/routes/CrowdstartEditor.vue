@@ -134,7 +134,7 @@
 
 <script>
 import {mapGetters, mapActions, mapState} from 'vuex'
-import * as resources from '../../shared/resources'
+import * as resources from '../../stores/resources'
 import querystring from 'querystring'
 import assert from 'assert'
 import _ from 'lodash'
