@@ -180,9 +180,16 @@ export default {
         }
       )
 
-      Promise.all([routePromise, tripPromise, bidPromise])
+      this.spinOnPromise(Promise.all([routePromise, tripPromise, bidPromise])
       .then(() => this.$emit('requery'))
-      .catch((err) => commonModals.alert(`${err && err.data && err.data.message}`))
+      .catch((err) => this.showModal ({
+          components: 'CommonModals',
+          props: {
+            type: 'alert',
+            message: _.get(err, 'data.message')
+          }
+        })
+      ))
     },
     doResetRoute() {
       this.editRoute = blankRoute()
