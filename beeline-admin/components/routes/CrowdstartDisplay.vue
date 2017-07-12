@@ -217,7 +217,7 @@ export default {
             message: _.get(err, 'message') || err
           }
         }))
-      this.spinOnPromise(chargePromise)
+      return this.spinOnPromise(chargePromise)
     }
 
   }
