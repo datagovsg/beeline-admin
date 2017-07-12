@@ -392,7 +392,7 @@ export default {
     useTripHashOf(route, day) {
       const trip = _.get(route.tripsByDate, day.date.getTime())
 
-      if (trip) route._extensionHashId = trip.hashIdMod5
+      if (trip) route._extensionHashId = trip.hashId
     },
 
     // Route painting
@@ -475,7 +475,7 @@ export default {
       for (let route of routesToExtend) {
         const lastTrip = _(route.tripsByDate)
           .values()
-          .filter(trip => trip.hashIdMod5 === route._extensionHashId)
+          .filter(trip => trip.hashId === route._extensionHashId)
           .maxBy('date')
 
         await Promise.all(
@@ -531,30 +531,30 @@ export default {
   td.has-trip.selected, td.has-trip:not(.selected) {
     tr.active &, tr.active:hover &, &, &:hover {
       &.trip-hash-0 {
-        background-color: #008;
+        background-color: #FBB7A7;
         cursor: pointer;
       }
       &.trip-hash-1 {
-        background-color: #080;
+        background-color: #FFF8C8;
         cursor: pointer;
       }
       &.trip-hash-2 {
-        background-color: #800;
+        background-color: #F1D38D;
         cursor: pointer;
       }
       &.trip-hash-3 {
-        background-color: #088;
+        background-color: #C6D0AE;
         cursor: pointer;
       }
       &.trip-hash-4 {
-        background-color: #880;
+        background-color: #95CCC7;
         cursor: pointer;
       }
     }
   }
 
   td.selected-hash {
-    border: solid 3px red;
+    border: solid 3px #CF5B6F;
   }
 
   tr.active td {
