@@ -392,7 +392,7 @@ export default {
     useTripHashOf(route, day) {
       const trip = _.get(route.tripsByDate, day.date.getTime())
 
-      if (trip) route._extensionHashId = trip.hashIdMod5
+      if (trip) route._extensionHashId = trip.hashId
     },
 
     // Route painting
@@ -475,7 +475,7 @@ export default {
       for (let route of routesToExtend) {
         const lastTrip = _(route.tripsByDate)
           .values()
-          .filter(trip => trip.hashIdMod5 === route._extensionHashId)
+          .filter(trip => trip.hashId === route._extensionHashId)
           .maxBy('date')
 
         await Promise.all(
