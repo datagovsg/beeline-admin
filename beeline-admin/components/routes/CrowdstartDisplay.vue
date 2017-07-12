@@ -145,20 +145,79 @@ export default {
 
     terminate () {
       // add 'failed' to both route and bids
+      let terminatePromise = this.axios.post(`/custom/lelong/routes/${this.route.id}/expire`)
+        .then(() => {this.$emit('requery')})
+        .catch((err) => this.showModal({
+          component: 'CommonModals',
+          props: {
+            type: 'alert',
+            message: _.get(err, 'message') || err
+          }
+        }))
+      this.spinOnPromise(terminatePromise)
     },
 
     convert () {
       // add 'success' to crwodstart tags
       // create public route with 'crowdstart-id' tag
       // after convert promopt admin 'Do you want to charge all bidders now?'
+      let convertPromise = this.axios.post(`/custom/lelong/routes/${this.route.id}/activate`,
+          {
+            price: this.route.notes.tier[0].price,
+            label: this.route.label
+          }
+        )
+        .then(() => {this.$emit('requery')})
+        .catch((err) => this.showModal({
+          component: 'CommonModals',
+          props: {
+            type: 'alert',
+            message: _.get(err, 'message') || err
+          }
+        }))
+      this.spinOnPromise(convertPromise)
+      .then(() => {this.chargeAllBidders()})
     },
 
-    chargeAndCreditUser () {
+    chargeAllBidders () {
       // for loop individual bid & charge
+      this.showModal({
+        component: 'CommonModals',
+        props: {
+          type: 'confirm',
+          message: 'Do you want to charge all bidders now?'
+        }
+      })
+      .then((result) => {
+        if (result) {
+          Promise.all(this.bids.map((bid) => {
+            this.charge(bid)
+          }))
+          .then(() => {this.$emit('requery')})
+          console.log('Done')
+        }
+      })
+      .catch((err) => this.showModal({
+        component: 'CommonModals',
+        props: {
+          type: 'alert',
+          message: _.get(err, 'message')
+        }
+      }))
     },
 
     charge (bid) {
       // manually charge individual bid through stripe
+      let chargePromise = this.axios.post(`/custom/lelong/routes/${this.route.id}/bids/${bid.id}/convert`)
+        .then(() => {this.$emit('requery')})
+        .catch((err) => this.showModal({
+          component: 'CommonModals',
+          props: {
+            type: 'alert',
+            message: _.get(err, 'message') || err
+          }
+        }))
+      this.spinOnPromise(chargePromise)
     }
 
   }

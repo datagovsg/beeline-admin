@@ -38,7 +38,7 @@
         </template>
         <template v-else>
           (Please
-          <a :href="`#/c/${companyId}/trips/${editRoute.id}/trips`">
+          <a :href="`#/c/${this.companyId}/trips/${editRoute.id}/trips`">
             create a trip
           </a>
           first)
@@ -87,7 +87,7 @@ import _ from 'lodash'
 const filters = require('../../filters')
 
 export default {
-  props: ['route'],
+  props: ['route', 'companyId'],
   data() {
     return {
       editRoute: null
