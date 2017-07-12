@@ -147,14 +147,15 @@ export default {
       // add 'failed' to both route and bids
       let terminatePromise = this.axios.post(`/custom/lelong/routes/${this.route.id}/expire`)
         .then(() => {this.$emit('requery')})
-        .catch((err) => this.showModal({
-          component: 'CommonModals',
-          props: {
-            type: 'alert',
-            message: _.get(err, 'message') || err
-          }
-        }))
+
       this.spinOnPromise(terminatePromise)
+      .catch((err) => this.showModal({
+        component: 'CommonModals',
+        props: {
+          type: 'alert',
+          message: _.get(err, 'message') || err
+        }
+      }))
     },
 
     convert () {
@@ -192,10 +193,10 @@ export default {
       })
       .then((result) => {
         if (result) {
-          Promise.all(this.bids.map((bid) => {
+          this.spinOnPromise(Promise.all(this.bids.map((bid) => {
             return this.charge(bid)
           }))
-          .then(() => {this.$emit('requery')})
+          .then(() => {this.$emit('requery')}))
           console.log('Done')
         }
       })
