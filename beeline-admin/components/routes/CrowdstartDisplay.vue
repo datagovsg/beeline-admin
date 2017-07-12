@@ -168,15 +168,17 @@ export default {
           }
         )
         .then(() => {this.$emit('requery')})
-        .catch((err) => this.showModal({
-          component: 'CommonModals',
-          props: {
-            type: 'alert',
-            message: _.get(err, 'message') || err
-          }
-        }))
+
       this.spinOnPromise(convertPromise)
       .then(() => {this.chargeAllBidders()})
+      .catch((err) => this.showModal({
+        component: 'CommonModals',
+        props: {
+          type: 'alert',
+          message: _.get(err, 'message') || err
+        }
+      }))
+
     },
 
     chargeAllBidders () {
@@ -191,7 +193,7 @@ export default {
       .then((result) => {
         if (result) {
           Promise.all(this.bids.map((bid) => {
-            this.charge(bid)
+            return this.charge(bid)
           }))
           .then(() => {this.$emit('requery')})
           console.log('Done')
@@ -210,6 +212,7 @@ export default {
       // manually charge individual bid through stripe
       let chargePromise = this.axios.post(`/custom/lelong/routes/${this.route.id}/bids/${bid.id}/convert`)
         .then(() => {this.$emit('requery')})
+      return this.spinOnPromise(chargePromise)
         .catch((err) => this.showModal({
           component: 'CommonModals',
           props: {
@@ -217,7 +220,6 @@ export default {
             message: _.get(err, 'message') || err
           }
         }))
-      return this.spinOnPromise(chargePromise)
     }
 
   }
