@@ -13,7 +13,7 @@ export default function (uiGmapGoogleMapApi, $q, TripsService) {
 
       scope.$watch('routeId', (id) => {
         if (!id) return
-        
+
         // get all trips
         TripsService.getTrips({
           routeId: id,
@@ -146,7 +146,6 @@ export default function (uiGmapGoogleMapApi, $q, TripsService) {
 
             renderer.addListener('directions_changed', () => {
               const directions = renderer.getDirections()
-              console.log(directions)
               legs[i] = directions.routes[0].overview_path
               const {origin: currentOrigin, destination: currentDestination} = directions.request
               if (i > 0 && currentOrigin !== lastOrigin) {

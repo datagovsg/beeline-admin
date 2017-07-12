@@ -1,6 +1,6 @@
 <template>
   <div class="input-group datepicker-dropdown" @click.stop="handleClick">
-    <input type="text" class="form-control" :value="buffer" @input="checkDate" />
+    <input type="text" class="form-control" v-model="buffer" @input="checkDate" />
     <span class="input-group-btn">
       <button class="btn btn-primary btn-icon" type="button"
         @click="showPopup = !showPopup">
@@ -15,7 +15,7 @@
           <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
         </button>
       </div> -->
-      <DatePicker :offset="offset" :value="value" @input="updateValue($event)" />
+      <MonthPicker :offset="offset" :value="value" @input="updateValue($event)" />
     </div>
   </div>
 </template>
@@ -29,7 +29,7 @@
   .popup {
     position: absolute;
     top: 100%;
-    right: 0;
+    left: 0;
     z-index: 100;
     background-color: white;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
@@ -56,6 +56,8 @@
 <script>
 import dateformat from 'dateformat'
 
+const currentOffset = new Date().getTimezoneOffset() * 60000
+
 export default {
   props: {
     value: {
@@ -63,9 +65,11 @@ export default {
     },
     format: {
       type: String,
-      default: 'dd mmm yyyy',
+      default: 'mmmm yyyy',
     },
-    offset: {}
+    offset: {
+      default: currentOffset
+    }
   },
   created () {
     this.clickOut = () => {
@@ -87,7 +91,7 @@ export default {
     value: {
       immediate: true,
       handler (v) {
-        this.buffer = v ? dateformat(v, this.format) : ''
+        this.buffer = v && dateformat(v.getTime(), this.format)
       }
     },
     showPopup (v, oldV) {
@@ -95,11 +99,11 @@ export default {
     }
   },
   components: {
-    DatePicker: require('./DatePicker.vue'),
+    MonthPicker: require('./MonthPicker.vue'),
   },
   computed: {
     dateString() {
-      return this.value ? dateformat(this.value, this.format) : ''
+      return dateformat(this.value, this.format)
     }
   },
   methods: {

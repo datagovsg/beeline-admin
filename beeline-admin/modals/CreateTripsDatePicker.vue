@@ -1,14 +1,23 @@
 <template>
-  <Modal :value="isShown" title="Test!" @cancel="reject">
+  <Modal :value="isShown" title="Test!" @cancel="reject()">
     <div slot="modal-header" class="modal-header">
       <h3>Select dates</h3>
     </div>
 
-    Select the trips from the old route to copy over to the new route:
+    <template v-if="message">
+      {{message}}
+    </template>
+    <template v-else>
+      Select the trips from the old route to copy over to the new route:
+    </template>
 
-    <DatePicker :defaultDisable="true" :multiple="true"
-      :month="new Date(route.dates.lastDate)" :offset="0"
+    <DatePicker
+      :defaultDisable="selectOnTrips"
+      :multiple="true"
+      :month="monthShown" :offset="0"
       :specialDates="specialDates"
+      :otherMonthSelectable="false"
+      @month-changed="loadTripsForMonth($event)"
       v-model="selectedDates" class="date-picker"
       />
 
@@ -36,22 +45,27 @@
 
 <script>
 import _ from 'lodash'
+import {mapGetters, mapActions, mapState} from 'vuex'
 
 export default {
-  props: ['route'],
+  props: ['route', 'selectOnTrips', 'message'],
   mixins: [
     require('./ModalMixin')
   ],
   data() {
     return {
-      selectedDates: []
+      selectedDates: [],
+      trips: null
     }
   },
   computed: {
+    routeTrips() {
+      return this.trips || (this.route && this.route.trips)
+    },
     specialDates() {
-      return this.route.trips.map(t => ({
+      return this.routeTrips.map(t => ({
         date: t.date,
-        enabled: true,
+        [this.selectOnTrips ? 'enabled' : 'disabled']: true
       }))
     },
     sortedSelectedDates() {
@@ -61,10 +75,46 @@ export default {
       return {
         date: require('dateformat')
       }
+    },
+    monthShown () {
+      return this.route.dates ? new Date(this.route.dates.lastDate) : new Date()
     }
+  },
+  created () {
+    this.loadTripsForMonth(this.monthShown)
   },
   components: {
     DatePicker: require('../components/DatePicker.vue')
+  },
+  methods: {
+    ...mapActions('resources', ['getRoute']),
+
+    loadTripsForMonth (date) {
+      const start = new Date(
+        date.getUTCFullYear(),
+        date.getUTCMonth(),
+        1
+      )
+      const end = new Date(
+        date.getUTCFullYear(),
+        date.getUTCMonth() + 1,
+        1
+      )
+
+      const promise = this.$lastPromise = this.getRoute({
+        id: this.route.id,
+        options: {
+          include_trips: true,
+          start_date: start.toISOString(),
+          end_date: end.toISOString(),
+        }
+      })
+      .then((route) => {
+        if (promise === this.$lastPromise) {
+          this.trips = route.trips
+        }
+      })
+    }
   }
 }
 </script>

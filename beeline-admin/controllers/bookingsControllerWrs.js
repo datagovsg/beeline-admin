@@ -35,7 +35,6 @@ angular.module('beeline-admin')
       refunded: true,
       void: true,
       failed: false,
-      bidded: true,
       pending: false,
     },
     startDate: startOfMonth,

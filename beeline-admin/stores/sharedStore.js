@@ -2,7 +2,7 @@ import Vuex from 'vuex'
 import axios from 'axios'
 import querystring from 'querystring'
 import _ from 'lodash'
-import * as resources from '../shared/resources'
+import * as resources from '../stores/resources'
 
 const fetchJobs = {
   allRoutes: {
@@ -37,6 +37,7 @@ const fetchJobs = {
   companies: {
     url: '/companies'
   },
+  stops: {url: '/stops'}
 }
 
 module.exports = {
