@@ -5,12 +5,13 @@ import querystring from 'querystring';
 angular.module('beeline-admin')
 .controller(
 'creditsController',
-function($scope, $stateParams, AdminService, LoadingSpinner, commonModals) {
+function($scope, $stateParams, AdminService, LoadingSpinner, commonModals, RoutesService) {
   const now = new Date()
   const debouncedLoadTransactions = _.debounce(loadTransactions, 1000)
   const debouncedloadTransactionSummary = _.debounce(loadTransactionSummary, 1000)
 
   $scope.companyId = $stateParams.companyId || null
+
   $scope.filter = {
     user: { id: $stateParams.userId } || {},
     startDate: null,
@@ -28,7 +29,19 @@ function($scope, $stateParams, AdminService, LoadingSpinner, commonModals) {
     page: 1,
     perPage: 20,
   }
-
+  $scope.routesPromise = RoutesService.getRoutes().then((data) => {
+    let routesBelongToCompany = _.filter(data, (route) => route.transportCompanyId === parseInt($scope.companyId))
+    // {'rp-401': 'G50', 'crowdstart-403': 'G51'}
+    let routeLabelTagMap = {}
+    _.forEach(routesBelongToCompany, (route)=>{
+      if (route.tags) {
+        _.forEach(route.tags, (tag) =>{
+          routeLabelTagMap[tag] = route.label
+        })
+      }
+    })
+    return routeLabelTagMap
+  })
   $scope.$watchCollection('filter', () => {
     $scope.paging.page = 1
     if($scope.companyId){
@@ -53,7 +66,8 @@ function($scope, $stateParams, AdminService, LoadingSpinner, commonModals) {
     }
   })
 
-  function loadTransactions () {
+  async function loadTransactions () {
+    $scope.routeTagLabelMap = await $scope.routesPromise
     let queryOptions = buildQuery($scope.paging, $scope.filter)
 
     return LoadingSpinner.watchPromise(
@@ -69,10 +83,13 @@ function($scope, $stateParams, AdminService, LoadingSpinner, commonModals) {
         )
       )
     )
+
   }
 
   function postProcessTransaction (txns) {
     return Promise.all(_.map(txns, (txn) => {
+      // do the route label mapping
+      txn.routeLabel = $scope.routeTagLabelMap[txn.routeCredits.tag]
       // to speed up, skip the query transaction items for non-purchase / non-conversion ones
       if (txn.transaction.type !== 'routeCreditPurchase' && txn.transaction.type !== 'conversion') {
         return Promise.resolve(txn)

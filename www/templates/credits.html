@@ -58,6 +58,7 @@
             <th>Charge ID</th>
             <th>Txn Timestamp</th>
             <th>Status</th>
+            <th>Route Label</th>
             <th>Description</th>
             <th>Type</th>
             <th>User</th>
@@ -88,6 +89,7 @@
               <span class="label txn-valid" ng-if="txn.transaction.committed">Valid</span>
               <span class="label txn-failed" ng-if="!txn.transaction.committed">Failed</span>
             </td>
+            <td>{{txn.routeLabel}}</td>
             <td>{{txn.transaction.description}}</td>
             <td>{{txn.transaction.type}}</td>
             <td>
