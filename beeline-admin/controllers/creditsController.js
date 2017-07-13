@@ -65,14 +65,25 @@ function($scope, $stateParams, AdminService, LoadingSpinner, commonModals) {
         method: 'GET',
         url: `/companies/${$scope.companyId}/transactionItems/routeCredits?`
           + querystring.stringify(queryOptions)
-      }).then(resp => {
-        $scope.disp.transactions = resp.data
+      }).then(async resp => {
+        $scope.disp.transactions = await postProcessTransaction(resp.data)
       }).catch(err =>
         commonModals.alert(
           `${err && err.data && err.data.message}`
         )
       )
     )
+  }
+
+  function postProcessTransaction (txns) {
+    return Promise.all(_.map(txns, (txn) => {
+      // to speed up, skip the query transaction items for non-purchase / non-conversion ones
+      if (txn.transaction.type !== 'routeCreditPurchase' && txn.transaction.type !== 'conversion') {
+        return Promise.resolve(txn)
+      }
+      else
+        return queryTransactionItems(txn)
+    }))
   }
 
   function loadTransactionSummary() {
@@ -150,8 +161,10 @@ function($scope, $stateParams, AdminService, LoadingSpinner, commonModals) {
 
   $scope.refund = async function(txn) {
     await LoadingSpinner.watchPromise(queryTransactionItems(txn))
-    console.log($scope.refund.transactionItems)
-    console.log($scope.refund.paymentResource)
+    console.log(txn)
+    console.log(txn.refund.transactionItems)
+    console.log(txn.refund.paymentResource)
+    console.log(txn.refund.paymentAmount)
   }
 
   function queryTransactionItems (txn) {
@@ -167,8 +180,13 @@ function($scope, $stateParams, AdminService, LoadingSpinner, commonModals) {
       let paymentItem = transactionItems.find((ti)=>{
         return ti.itemType === 'payment'
       })
-      $scope.refund.paymentResource = _.get(paymentItem, 'payment.paymentResource')
-      $scope.refund.transactionItems = resp.data
+      txn.refund = {
+        paymentResource : _.get(paymentItem, 'payment.paymentResource'),
+        transactionItems: resp.data,
+        paymentAmount : _.get(paymentItem, 'debit')
+      }
+      return txn
+
     }).catch(err =>
       commonModals.alert(
         `${err && err.data && err.data.message}`

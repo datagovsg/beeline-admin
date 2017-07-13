@@ -59,7 +59,8 @@
             <th>Type</th>
             <th>User</th>
             <th>Tag</th>
-            <th>Amount</th>
+            <th>Credit Amount</th>
+            <th>Payment Amount</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -80,6 +81,9 @@
             </td>
             <td><ul class="tags"><li class="tags">{{txn.routeCredits.tag}}</li></ul></td>
             <td>{{txn.credit | currency}}</td>
+            <td>
+              {{txn.refund.paymentAmount > 0 ? (txn.refund.paymentAmount | currency) : ''}} 
+            </td>
             <td>
               <button class="btn btn-primary btn-xs" ng-if="txn.transaction.committed && (txn.transaction.type === 'routeCreditPurchase' || txn.transaction.type === 'conversion')"
                 ng-click="refund(txn)">
