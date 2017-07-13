@@ -28,10 +28,6 @@ function($scope, $stateParams, AdminService, LoadingSpinner, commonModals) {
     page: 1,
     perPage: 20,
   }
-  $scope.refund = {
-    transactionItems: null,
-    paymentResource : null
-  }
 
   $scope.$watchCollection('filter', () => {
     $scope.paging.page = 1
@@ -162,9 +158,10 @@ function($scope, $stateParams, AdminService, LoadingSpinner, commonModals) {
   $scope.refund = async function(txn) {
     await LoadingSpinner.watchPromise(queryTransactionItems(txn))
     console.log(txn)
-    console.log(txn.refund.transactionItems)
-    console.log(txn.refund.paymentResource)
-    console.log(txn.refund.paymentAmount)
+    console.log(txn.payment.transactionItems)
+    console.log(txn.payment.paymentResource)
+    console.log(txn.payment.paymentAmount)
+    console.log(txn.payment.destinationResoure)
   }
 
   function queryTransactionItems (txn) {
@@ -180,10 +177,19 @@ function($scope, $stateParams, AdminService, LoadingSpinner, commonModals) {
       let paymentItem = transactionItems.find((ti)=>{
         return ti.itemType === 'payment'
       })
-      txn.refund = {
+      txn.payment = {
         paymentResource : _.get(paymentItem, 'payment.paymentResource'),
+        destinationResoure: _.get(paymentItem, 'payment.data.transfer.destination_payment'),
         transactionItems: resp.data,
         paymentAmount : _.get(paymentItem, 'debit')
+      }
+      let promoItem = transactionItems.find((ti) => {
+        return ti.itemType === 'discount'
+      })
+      txn.promo = {
+        code: _.get(promoItem, 'discount.code'),
+        promoId: _.get(promoItem, 'discount.promotionId'),
+        amount: _.get(promoItem, 'debit')
       }
       return txn
 

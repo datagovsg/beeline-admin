@@ -1,0 +1,17 @@
+.label{
+  &.txn-valid {
+    @include label-variant($label-success-bg);
+  }
+
+  &.txn-void {
+    @include label-variant($label-default-bg);
+  }
+
+  &.txn-refunded {
+    @include label-variant($label-danger-bg);
+  }
+
+  &.txn-failed, &.discount-code {
+    @include label-variant($gray-darker);
+  }
+}

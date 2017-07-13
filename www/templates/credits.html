@@ -53,7 +53,8 @@
         <thead>
           <tr>
             <th>S/N</th>
-            <th>Date</th>
+            <th>Txn ID</th>
+            <th>Txn Timestamp</th>
             <th>Status</th>
             <th>Description</th>
             <th>Type</th>
@@ -68,8 +69,16 @@
           <tr ng-repeat="txn in disp.transactions track by $index">
             <!-- <td title="Transaction Item ID: {{txn.id}}">{{$index + 1}}</td> -->
             <td>{{ $index + 1 + (paging.page-1) * paging.perPage }}</td>
+            <td>
+              <a ui-sref="^.transactions({id: txn.transactionId})">
+                {{txn.transactionId}}<br/>
+              </a>
+            </td>
             <td>{{txn.createdAt | date:'dd MMM yyyy HH:mm:ss':'+0800'}}</td>
-            <td title="Transaction ID: {{txn.transactionId}}">{{txn.transaction.committed ? 'Valid' : 'Failed'}}</td>
+            <td title="Transaction ID: {{txn.transactionId}}">
+              <span class="label txn-valid" ng-if="txn.transaction.committed">Valid</span>
+              <span class="label txn-failed" ng-if="!txn.transaction.committed">Failed</span>
+            </td>
             <td>{{txn.transaction.description}}</td>
             <td>{{txn.transaction.type}}</td>
             <td>
@@ -80,11 +89,17 @@
             <br>{{txn.routeCredits.user.email}}
             </td>
             <td><ul class="tags"><li class="tags">{{txn.routeCredits.tag}}</li></ul></td>
-            <td>{{txn.credit | currency}}</td>
             <td>
-              {{txn.refund.paymentAmount > 0 ? (txn.refund.paymentAmount | currency) : ''}} 
+              <div ng-if="!txn.promo.promoId">{{txn.credit | currency}}</div>
+              <div ng-if="txn.promo.promoId">{{txn.payment.paymentAmount | currency}} + {{txn.promo.amount | currency}}</div>
+              <div ng-if="txn.promo.promoId">{{txn.promo.code ? txn.promo.code : 'automatic'}} {{txn.promo.promoId}}</div>
             </td>
             <td>
+              {{txn.payment.paymentAmount > 0 ? (txn.payment.paymentAmount | currency) : ''}}
+            </td>
+            <td>
+              {{txn.payment.paymentResource}}<br/>
+              {{txn.payment.destinationResoure}}<br/>
               <button class="btn btn-primary btn-xs" ng-if="txn.transaction.committed && (txn.transaction.type === 'routeCreditPurchase' || txn.transaction.type === 'conversion')"
                 ng-click="refund(txn)">
                 Refund
