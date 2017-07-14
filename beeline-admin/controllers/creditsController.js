@@ -36,12 +36,16 @@ function($scope, $stateParams, AdminService, LoadingSpinner, commonModals, Route
     _.forEach(routesBelongToCompany, (route)=>{
       if (route.tags) {
         _.forEach(route.tags, (tag) =>{
-          routeLabelTagMap[tag] = route.label
+          routeLabelTagMap[tag] = {
+            label: route.label,
+            description: route.name
+          }
         })
       }
     })
     return routeLabelTagMap
   })
+
   $scope.$watchCollection('filter', () => {
     $scope.paging.page = 1
     if($scope.companyId){
@@ -89,7 +93,8 @@ function($scope, $stateParams, AdminService, LoadingSpinner, commonModals, Route
   function postProcessTransaction (txns) {
     return Promise.all(_.map(txns, (txn) => {
       // do the route label mapping
-      txn.routeLabel = $scope.routeTagLabelMap[txn.routeCredits.tag]
+      txn.routeLabel = $scope.routeTagLabelMap[txn.routeCredits.tag].label
+      txn.routeDescription = $scope.routeTagLabelMap[txn.routeCredits.tag].description
       // to speed up, skip the query transaction items for non-purchase / non-conversion ones
       if (txn.transaction.type !== 'routeCreditPurchase' && txn.transaction.type !== 'conversion') {
         return Promise.resolve(txn)

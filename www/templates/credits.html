@@ -13,6 +13,10 @@
         <div class="form-group">
             <user-selector ng-model="filter.userId" include-ephemeral="false" initial-user="filter.user"></user-selector>
         </div>
+        <!-- <div class="form-group">
+          <label>User</label>
+          <input type="text" class="form-control" ng-model="filter.userQuery">
+        </div> -->
         <div class="form-group">
           <label>Credit Tag</label>
           <input type="text" class="form-control" ng-model="filter.tag">
@@ -59,6 +63,7 @@
             <th>Txn Timestamp</th>
             <th>Status</th>
             <th>Route Label</th>
+            <th>Route Description</th>
             <th>Description</th>
             <th>Type</th>
             <th>User</th>
@@ -90,6 +95,7 @@
               <span class="label txn-failed" ng-if="!txn.transaction.committed">Failed</span>
             </td>
             <td>{{txn.routeLabel}}</td>
+            <td>{{txn.routeDescription}}</td>
             <td>{{txn.transaction.description}}</td>
             <td>{{txn.transaction.type}}</td>
             <td>
