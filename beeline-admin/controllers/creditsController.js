@@ -179,11 +179,23 @@ function($scope, $stateParams, AdminService, LoadingSpinner, commonModals, Route
 
   $scope.refund = async function(txn) {
     await LoadingSpinner.watchPromise(queryTransactionItems(txn))
-    console.log(txn)
-    console.log(txn.payment.transactionItems)
-    console.log(txn.payment.paymentResource)
-    console.log(txn.payment.paymentAmount)
-    console.log(txn.payment.destinationResoure)
+    // TODO: test and reflect the 'refunded' on the orignal transaction
+    // AND disable the refund button if
+    let refundPromise = AdminService.beeline({
+      method: 'POST',
+      // route credit id
+      url: `transactions/route_passes/${txn.routeCreditItem.itemId}/refund/payment`,
+      data: {
+        // transactionItem id
+        transactionItemId: txn.routeCreditItem.id
+      }
+    }).then(() => {
+      console.log('Success')
+    })
+    await LoadingSpinner.watchPromise(refundPromise)
+      .catch( (err) => {
+        console.log(err)
+      })
   }
 
   function queryTransactionItems (txn) {
@@ -196,23 +208,24 @@ function($scope, $stateParams, AdminService, LoadingSpinner, commonModals, Route
         + querystring.stringify(queryOptions)
     }).then(resp => {
       let transactionItems = resp.data.rows
-      let paymentItem = transactionItems.find((ti)=>{
-        return ti.itemType === 'payment'
-      })
+
+      let [paymentItem, promoItem, routeCreditItem]
+        = matchByType(transactionItems, ['payment', 'discount', 'routeCredits'])
+
       txn.payment = {
         paymentResource : _.get(paymentItem, 'payment.paymentResource'),
         destinationResoure: _.get(paymentItem, 'payment.data.transfer.destination_payment'),
-        transactionItems: resp.data,
         paymentAmount : _.get(paymentItem, 'debit')
       }
-      let promoItem = transactionItems.find((ti) => {
-        return ti.itemType === 'discount'
-      })
+
       txn.promo = {
         code: _.get(promoItem, 'discount.code'),
         promoId: _.get(promoItem, 'discount.promotionId'),
         amount: _.get(promoItem, 'debit')
       }
+
+      txn.routeCreditItem = routeCreditItem
+
       return txn
 
     }).catch(err =>
@@ -220,6 +233,17 @@ function($scope, $stateParams, AdminService, LoadingSpinner, commonModals, Route
         `${err && err.data && err.data.message}`
       )
     )
+  }
+
+  function matchByType (items, typeArray) {
+    let resultArray = []
+    _.forEach(typeArray, (type) => {
+      let result = items.find((item) => {
+        return item.itemType && item.itemType === type
+      })
+      resultArray.push(result)
+    })
+    return resultArray
   }
 
 })
