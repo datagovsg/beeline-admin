@@ -96,7 +96,7 @@
             <td title="Transaction ID: {{txn.transactionId}}">
               <span class="label txn-valid" ng-if="txn.transaction.committed && !txn.refundingTransactionId">Valid</span>
               <span class="label txn-failed" ng-if="!txn.transaction.committed">Failed</span>
-              <span class="label txn-failed" ng-if="txn.transaction.committed && txn.refundingTransactionId">Refunded</span>
+              <span class="label txn-refunded" ng-if="txn.transaction.committed && txn.refundingTransactionId">Refunded</span>
             </td>
             <td>{{txn.routeLabel}}</td>
             <td>{{txn.routeDescription}}</td>
