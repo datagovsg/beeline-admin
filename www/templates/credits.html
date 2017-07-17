@@ -11,7 +11,8 @@
       <h2>Search selected dates by:</h2>
       <form>
         <div class="form-group">
-            <user-selector ng-model="filter.userId" include-ephemeral="false" initial-user="filter.user"></user-selector>
+            <user-selector ng-model="filter.userId" include-ephemeral="false" initial-user="filter.user">
+            </user-selector>
         </div>
         <!-- <div class="form-group">
           <label>User</label>
@@ -80,19 +81,22 @@
               <a ui-sref="^.transactions({id: txn.transactionId})">
                 {{txn.transactionId}}<br/>
               </a>
+              <a ng-if="txn.refundingTransactionId" ui-sref="^.transactions({id: txn.refundingTransactionId})">{{txn.refundingTransactionId}}</a>
             </td>
             <td>
               {{txn.payment.paymentResource}}<br/>
+              <span ng-if="txn.refundPayment.paymentResource">{{txn.refundPayment.paymentResource}}<br/></span>
               {{txn.payment.destinationResoure}}<br/>
-              <button class="btn btn-primary btn-xs" ng-if="txn.transaction.committed && (txn.transaction.type === 'routeCreditPurchase' || txn.transaction.type === 'conversion')"
+              <button class="btn btn-primary btn-xs" ng-if="txn.transaction.committed && (txn.transaction.type === 'routeCreditPurchase' || txn.transaction.type === 'conversion') && !txn.refundingTransactionId"
                 ng-click="refund(txn)">
                 Refund
               </button>
             </td>
             <td>{{txn.createdAt | date:'dd MMM yyyy HH:mm:ss':'+0800'}}</td>
             <td title="Transaction ID: {{txn.transactionId}}">
-              <span class="label txn-valid" ng-if="txn.transaction.committed">Valid</span>
+              <span class="label txn-valid" ng-if="txn.transaction.committed && !txn.refundingTransactionId">Valid</span>
               <span class="label txn-failed" ng-if="!txn.transaction.committed">Failed</span>
+              <span class="label txn-failed" ng-if="txn.transaction.committed && txn.refundingTransactionId">Refunded</span>
             </td>
             <td>{{txn.routeLabel}}</td>
             <td>{{txn.routeDescription}}</td>

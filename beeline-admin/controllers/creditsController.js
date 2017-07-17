@@ -177,25 +177,25 @@ function($scope, $stateParams, AdminService, LoadingSpinner, commonModals, Route
     $scope.filter.startDate = $scope.filter.endDate = null
   }
 
-  $scope.refund = async function(txn) {
-    await LoadingSpinner.watchPromise(queryTransactionItems(txn))
-    // TODO: test and reflect the 'refunded' on the orignal transaction
-    // AND disable the refund button if
-    let refundPromise = AdminService.beeline({
+  $scope.refund = function(txn) {
+    console.log(txn.refundPayment.paymentResource)
+    LoadingSpinner.watchPromise(AdminService.beeline({
       method: 'POST',
       // route credit id
-      url: `transactions/route_passes/${txn.routeCreditItem.itemId}/refund/payment`,
+      url: `/transactions/route_passes/${txn.routeCreditItem.itemId}/refund/payment`,
       data: {
         // transactionItem id
         transactionItemId: txn.routeCreditItem.id
       }
     }).then(() => {
       console.log('Success')
-    })
-    await LoadingSpinner.watchPromise(refundPromise)
-      .catch( (err) => {
-        console.log(err)
-      })
+      commonModals.alert('Refund successed')
+    }).catch ((err) => {
+      console.log(err)
+      commonModals.alert(
+        `${err && err.data && err.data.message}`
+      )
+    }))
   }
 
   function queryTransactionItems (txn) {
@@ -225,6 +225,24 @@ function($scope, $stateParams, AdminService, LoadingSpinner, commonModals, Route
       }
 
       txn.routeCreditItem = routeCreditItem
+
+      // has been refunded
+      if (txn.refundingTransactionId) {
+        queryOptions = {
+          transactionId: txn.refundingTransactionId
+        }
+        AdminService.beeline({
+          method: 'GET',
+          url: `/transactionItems?`
+            + querystring.stringify(queryOptions)
+        }).then(resp => {
+          transactionItems = resp.data.rows
+          let refundPayment = matchByType(transactionItems, ['refundPayment'])
+          txn.refundPayment = {
+            paymentResource:  _.get(refundPayment, '[0]refundPayment.paymentResource')
+          }
+        })
+      }
 
       return txn
 
