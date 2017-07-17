@@ -114,6 +114,7 @@
                   <StopDisplay :stop="findStop(trip, stop.stopId, stop.orderOfAppearance)"/>
                 </td>
                 <td>
+                  <!-- TODO: no deleteTrip -->
                   <button class="btn btn-danger btn-icon" @click="tripList.deleteTrip(trip)">
                     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                   </button>

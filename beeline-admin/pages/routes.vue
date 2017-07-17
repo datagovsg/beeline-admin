@@ -273,7 +273,7 @@ export default {
 
       if (!label) return
 
-      const route = await this.$refs.loadingSpinner.watch(routePromise)
+      const route = await this.$refs.loadingSpinner.spinOnPromise(routePromise)
 
       const newRoute = {
         ..._.omit(route, ['id']),
