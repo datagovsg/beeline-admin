@@ -47,12 +47,16 @@ function($scope, $stateParams, AdminService, LoadingSpinner, commonModals, Route
   })
 
   $scope.$watchCollection('filter', () => {
+    refresh()
+  })
+
+  function refresh() {
     $scope.paging.page = 1
     if($scope.companyId){
       debouncedLoadTransactions()
       debouncedloadTransactionSummary()
     }
-  })
+  }
 
   $scope.$watch('disp.txnCountByDay', (counts) => {
     $scope.disp.highlightDays = _.keys(counts).map((date) => {
@@ -178,7 +182,7 @@ function($scope, $stateParams, AdminService, LoadingSpinner, commonModals, Route
   }
 
   $scope.refund = function(txn) {
-    console.log(txn.refundPayment.paymentResource)
+
     LoadingSpinner.watchPromise(AdminService.beeline({
       method: 'POST',
       // route credit id
@@ -195,6 +199,8 @@ function($scope, $stateParams, AdminService, LoadingSpinner, commonModals, Route
       commonModals.alert(
         `${err && err.data && err.data.message}`
       )
+    }).finally(() => {
+      refresh()
     }))
   }
 
