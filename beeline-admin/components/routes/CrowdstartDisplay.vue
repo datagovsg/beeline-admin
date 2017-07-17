@@ -19,6 +19,7 @@
               <th>Bid Date</th>
               <th>Bid Price</th>
               <th>Status</th>
+              <th>Charge Message</th>
               <th>Operations</th>
             </tr>
           </thead>
@@ -33,6 +34,7 @@
               <td>{{f.date(bid.createdAt, 'dd mmm yy HH:MM:ss')}}</td>
               <td>{{bid.price}}</td>
               <td>{{bid.status}}</td>
+              <td ng-if="bid.chargeError">{{bid.chargeError && bid.chargeError.message}}</td>
               <td>
                 <button class="btn btn-danger" @click="withdrawBid(bid)"
                     type="button">
@@ -85,7 +87,34 @@ export default {
       return this.axios.get(`/custom/lelong/routes/${this.route.id}/bids?` + querystring.stringify({
           statuses: JSON.stringify(['bidded', 'void', 'failed', 'withdrawn']),
       }))
-      .then(resp => resp.data)
+      .then((resp) => {
+        let bids = resp.data
+        let now = parseInt(Date.now())
+        // bids with notes and timestamps with charge error
+        _.map(bids, (bid) => {
+          if (bid.status === 'bidded' && bid.notes) {
+            let timestamps = _(bid.notes)
+            .keys()
+            .filter((key) => {
+              return parseInt(key) && (parseInt(key) <= now)
+            })
+            .value()
+
+            if (timestamps) {
+              let latestTimestamp = _(timestamps)
+                .sortBy((stamp) => parseInt(stamp))
+                .reverse()
+                .value()[0]
+              bid.chargeError = {
+                ...bid.notes[latestTimestamp],
+                timestamp: latestTimestamp
+              }
+            }
+          }
+          return bid
+        })
+        return bids
+      })
     },
     routeIsActivated () {
       if (!this.bids || !this.route) return false
@@ -162,16 +191,29 @@ export default {
       // add 'success' to crwodstart tags
       // create public route with 'crowdstart-id' tag
       // after convert promopt admin 'Do you want to charge all bidders now?'
-      let convertPromise = this.axios.post(`/custom/lelong/routes/${this.route.id}/activate`,
-          {
-            price: this.route.notes.tier[0].price,
-            label: this.route.label
-          }
-        )
-        .then(() => {this.$emit('requery')})
 
-      this.spinOnPromise(convertPromise)
-      .then(() => {this.chargeAllBidders()})
+      this.showModal({
+        component: 'CommonModals',
+        props: {
+          type: 'confirm',
+          message: 'Are you sure you want to convert the crowdstart?'
+        }
+      })
+      .then((result) => {
+        if (result) {
+          let convertPromise = this.axios.post(`/custom/lelong/routes/${this.route.id}/activate`,
+              {
+                price: this.route.notes.tier[0].price,
+                label: this.route.label
+              }
+            )
+            .then(() => {this.$emit('requery')})
+          this.spinOnPromise(convertPromise)
+          .then(() => {
+            this.chargeAllBidders()
+          })
+        }
+      })
       .catch((err) => this.showModal({
         component: 'CommonModals',
         props: {
@@ -179,6 +221,16 @@ export default {
           message: _.get(err, 'message') || err
         }
       }))
+
+      // this.spinOnPromise(convertPromise)
+      // .then(() => {this.chargeAllBidders()})
+      // .catch((err) => this.showModal({
+      //   component: 'CommonModals',
+      //   props: {
+      //     type: 'alert',
+      //     message: _.get(err, 'message') || err
+      //   }
+      // }))
 
     },
 
