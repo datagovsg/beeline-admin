@@ -150,6 +150,7 @@
           </tr>
         </tbody></table>
         <button :disabled="checkResults" @click="save()" class="btn btn-primary">Save</button>
+        <button @click="cancel()" class="btn btn-default">Cancel</button>
       </div>
     </div>
   </div>
@@ -172,7 +173,10 @@ const filters = require('../filters')
 export default {
   props: ['id', 'companyId'],
   data () {
-    return {promotion: null,}
+    return {
+      promotion: null,
+      originalPromotion: null,
+    }
   },
   created () {
 
@@ -245,7 +249,11 @@ export default {
       handler(p) {
         if (!p) return
         p
-        .then((q) => this.promotion = q)
+        .then((q) => {
+          this.promotion = q
+          // deep clone the promotion object for cancel purpose
+          this.originalPromotion = JSON.parse(JSON.stringify(q));
+        })
         .catch((err) => {
           console.log(err)
           this.promotion = false
@@ -297,6 +305,11 @@ export default {
           }
         )
       })
+    },
+
+    cancel () {
+      // assign back the original promotion
+      this.promotion = JSON.parse(JSON.stringify(this.originalPromotion));
     },
 
     newCriterion () {
