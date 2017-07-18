@@ -252,7 +252,7 @@ export default {
         .then((q) => {
           this.promotion = q
           // deep clone the promotion object for cancel purpose
-          this.originalPromotion = JSON.parse(JSON.stringify(q));
+          this.originalPromotion = _.cloneDeep(q)
         })
         .catch((err) => {
           console.log(err)
@@ -309,7 +309,7 @@ export default {
 
     cancel () {
       // assign back the original promotion
-      this.promotion = JSON.parse(JSON.stringify(this.originalPromotion));
+      this.promotion = _.cloneDeep(this.originalPromotion)
     },
 
     newCriterion () {
