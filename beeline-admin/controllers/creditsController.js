@@ -260,14 +260,11 @@ function($scope, $stateParams, AdminService, LoadingSpinner, commonModals, Route
   }
 
   function matchByType (items, typeArray) {
-    let resultArray = []
-    _.forEach(typeArray, (type) => {
-      let result = items.find((item) => {
+    return typeArray.map((type) => {
+      return items.find((item) => {
         return item.itemType && item.itemType === type
       })
-      resultArray.push(result)
     })
-    return resultArray
   }
 
 })
