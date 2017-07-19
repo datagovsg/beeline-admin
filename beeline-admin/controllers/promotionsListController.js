@@ -62,7 +62,7 @@ angular.module('beeline-admin')
           params: {
             tag: code,
             qualifyingCriteria: [{type: 'limitByCompany', params: {companyId}}, {type: 'limitByPurchaseDate', params: {startDate: startDate,endDate: endDate}}],
-            discountFunction: { type: 'tieredFixedByTotalValue', params: {"schedule": [[25, 5], [50, 10]]}},
+            discountFunction: { type: 'tieredRateByTotalValue', params: {"schedule": [[25, 0.1], [50, 0.2]]}},
             refundFunction: { type: 'refundDiscountedAmt', params: {} },
             usageLimit: {userLimit: null, globalLimit: null}
           }

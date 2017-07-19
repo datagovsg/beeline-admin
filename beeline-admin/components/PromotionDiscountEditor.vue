@@ -124,6 +124,42 @@
       Add tier
     </button>
   </div>
+
+  <div v-if="value.type == 'tieredRateByTotalValue'">
+    <div>N.B. Tiers must be in increasing order</div>
+    <div v-for="(tier, index) in paramCache.tieredRateByTotalValue.schedule"
+        class="form-inline">
+
+      When user buys
+      <PriceInput type="number" placeholder="min value e.g. $100" step="0.01"
+        :value="tier[0]"
+        @input="updateTier(index, 0, parseInt($event))"
+        class="form-control" />
+
+      worth of route passes,
+
+      <br/>
+      discount the price by (%)
+      <div class="input-group">
+        <PercentInput
+          :value="tier[1]"
+          placeholder="Discount rate (0 - 100)"
+          @input="updateTier(index, 1, $event)"
+          class="form-control" />
+          <span class="input-group-addon">%</span>
+      </div>
+
+      <button @click="removeTier(index)"
+          class="btn btn-danger">
+        <span class="glyphicon glyphicon-trash"></span>
+      </button>
+      <hr/>
+    </div>
+    <button @click="addTier([null, null])" class="btn btn-default">
+      <span class="glyphicon glyphicon-plus"></span>
+      Add tier
+    </button>
+  </div>
 </div>
 </template>
 
@@ -157,6 +193,11 @@ const discountTypes = _.sortBy([
   },
   {
     type: 'tieredFixedByTotalValue',
+    default: {schedule: []},
+    restrict: ['Promotion', 'RoutePass'],
+  },
+  {
+    type: 'tieredRateByTotalValue',
     default: {schedule: []},
     restrict: ['Promotion', 'RoutePass'],
   },
