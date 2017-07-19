@@ -34,7 +34,7 @@
               <td>{{f.date(bid.createdAt, 'dd mmm yy HH:MM:ss')}}</td>
               <td>{{bid.price}}</td>
               <td>{{bid.status}}</td>
-              <td ng-if="bid.chargeError">{{bid.chargeError && bid.chargeError.message}}</td>
+              <td v-if="bid.chargeError">{{bid.chargeError && bid.chargeError.message}}</td>
               <td>
                 <button class="btn btn-danger" @click="withdrawBid(bid)"
                     type="button">
@@ -91,7 +91,7 @@ export default {
         let bids = resp.data
         let now = parseInt(Date.now())
         // bids with notes and timestamps with charge error
-        _.map(bids, (bid) => {
+        _.forEach(bids, (bid) => {
           if (bid.status === 'bidded' && bid.notes) {
             let timestamps = _(bid.notes)
             .keys()
@@ -101,17 +101,13 @@ export default {
             .value()
 
             if (timestamps) {
-              let latestTimestamp = _(timestamps)
-                .sortBy((stamp) => parseInt(stamp))
-                .reverse()
-                .value()[0]
+              let latestTimestamp = _.maxBy(timestamps, (timestamp) => parseInt(timestamp))
               bid.chargeError = {
                 ...bid.notes[latestTimestamp],
                 timestamp: latestTimestamp
               }
             }
           }
-          return bid
         })
         return bids
       })
@@ -208,9 +204,9 @@ export default {
               }
             )
             .then(() => {this.$emit('requery')})
-          this.spinOnPromise(convertPromise)
+          return this.spinOnPromise(convertPromise)
           .then(() => {
-            this.chargeAllBidders()
+            return this.chargeAllBidders()
           })
         }
       })
@@ -218,20 +214,9 @@ export default {
         component: 'CommonModals',
         props: {
           type: 'alert',
-          message: _.get(err, 'message') || err
+          message: _.get(err, 'message') || 'There is some error.'
         }
       }))
-
-      // this.spinOnPromise(convertPromise)
-      // .then(() => {this.chargeAllBidders()})
-      // .catch((err) => this.showModal({
-      //   component: 'CommonModals',
-      //   props: {
-      //     type: 'alert',
-      //     message: _.get(err, 'message') || err
-      //   }
-      // }))
-
     },
 
     chargeAllBidders () {
@@ -252,13 +237,7 @@ export default {
           console.log('Done')
         }
       })
-      .catch((err) => this.showModal({
-        component: 'CommonModals',
-        props: {
-          type: 'alert',
-          message: _.get(err, 'message')
-        }
-      }))
+
     },
 
     charge (bid) {
