@@ -17,7 +17,8 @@
     <div style="text-align: right">
       <button ng-click="postNew()" class="btn btn-default">
         <span class="glyphicon glyphicon-plus"></span>
-        Add Promo Code
+        <span  ng-if="filter.promotionType === 'Promotion'">Add Promo Code</span>
+        <span  ng-if="filter.promotionType === 'RoutePass'">Add Route Pass</span>
       </button>
     </div>
 

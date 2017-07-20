@@ -6309,14 +6309,6 @@ route-editor {
   route-editor .editor-tabs-content {
     margin-top: 40px; }
 
-path-editor .map-container {
-  min-height: 400px; }
-
-path-editor .path-buttons {
-  margin: 20px 0; }
-  path-editor .path-buttons .btn-default {
-    margin-right: 10px; }
-
 dl.dl-compact dd {
   float: left;
   margin-left: 1em; }
@@ -6497,9 +6489,10 @@ table.trips-list {
   .label.stop-alight[href]:hover, .label.stop-alight[href]:focus {
     background-color: #ff3a37; }
 
-.trip-data-editor-nav {
-  margin: 20px 0; }
-  .trip-data-editor-nav .form-control {
+.trip-data-editor .modal-dialog {
+  margin: 2em 4em;
+  width: auto; }
+  .trip-data-editor .modal-dialog .form-control {
     margin-left: 10px; }
 
 .trip-data-editor .stop-selector-cell {
@@ -6978,6 +6971,26 @@ label.superAdmin {
 .users .route-header {
   background-color: #AAA;
   border-color: #AAA; }
+
+.label.txn-valid {
+  background-color: #00C4A5; }
+  .label.txn-valid[href]:hover, .label.txn-valid[href]:focus {
+    background-color: #00917a; }
+
+.label.txn-void {
+  background-color: #777777; }
+  .label.txn-void[href]:hover, .label.txn-void[href]:focus {
+    background-color: #5e5e5e; }
+
+.label.txn-refunded {
+  background-color: #FF6C6A; }
+  .label.txn-refunded[href]:hover, .label.txn-refunded[href]:focus {
+    background-color: #ff3a37; }
+
+.label.txn-failed, .label.discount-code {
+  background-color: #222222; }
+  .label.txn-failed[href]:hover, .label.txn-failed[href]:focus, .label.discount-code[href]:hover, .label.discount-code[href]:focus {
+    background-color: #090909; }
 
 html, body {
   height: 100%; }
