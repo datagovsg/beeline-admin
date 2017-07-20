@@ -34,7 +34,7 @@
               <td>{{f.date(bid.createdAt, 'dd mmm yy HH:MM:ss')}}</td>
               <td>{{bid.price}}</td>
               <td>{{bid.status}}</td>
-              <td v-if="bid.chargeError">{{bid.chargeError && bid.chargeError.message}}</td>
+              <td>{{bid.chargeError && bid.chargeError.message || ''}}</td>
               <td>
                 <button class="btn btn-danger" @click="withdrawBid(bid)"
                     type="button">
