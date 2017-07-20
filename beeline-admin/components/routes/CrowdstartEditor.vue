@@ -4,8 +4,8 @@
       This is not a crowdstart route. Please add the "lelong" tag to the route.
     </div>
 
-    <form class="container-fluid form-horizontal" @submit.prevent="doSaveRoute"
-        v-if="editRoute">
+    <form class="container-fluid form-horizontal"
+        v-if="editRoute" @submit.prevent="doSaveRoute">
       <div class="form-group form-inline">
         <label>
           Route Passes per Bid
@@ -38,7 +38,7 @@
         </template>
         <template v-else>
           (Please
-          <a :href="`#/c/${companyId}/trips/${editRoute.id}/trips`">
+          <a :href="`#/c/${this.companyId}/trips/${editRoute.id}/trips`">
             create a trip
           </a>
           first)
@@ -58,10 +58,6 @@
           <tbody>
             <tr v-for="(tier, index) in [editRoute.notes.tier[0]]">
               <td>
-                <button :disabled="editRoute.notes.tier.length <= 1"
-                    @click="removeTier(index)" class="btn btn-danger" type="button">
-                  <span class="glyphicon glyphicon-minus"></span>
-                </button>
               </td>
               <td>
                 <PriceInput v-model="tier.price" class="form-control" />
@@ -71,62 +67,12 @@
               </td>
             </tr>
           </tbody>
-          <!-- <tfoot>
-            <tr>
-              <td colspan="3">
-                <button @click="addTier()" class="btn btn-primary" type="button"
-                   :disabled="editRoute.notes.tier.length >= 1">
-                  <span class="glyphicon glyphicon-plus"></span>
-                  Add Tier
-                </button>
-              </td>
-            </tr>
-          </tfoot> -->
         </table>
       </div>
       <div class="form-group">
         <button class="btn btn-primary">
           Save
         </button>
-      </div>
-
-      <hr/>
-
-      <div class="form-group form-inline" v-if="bids">
-        <h3>Bidders</h3>
-        <table class="table table-striped table-hover">
-          <thead>
-            <tr>
-              <th></th>
-              <th>User</th>
-              <th>Telephone</th>
-              <th>Email</th>
-              <th>Bid Date</th>
-              <th>Bid Price</th>
-              <th>Status</th>
-              <th>Cancel</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(bid, index) in bids" :class="{
-              'not-live': bid.status !== 'bidded',
-            }">
-              <td>{{index + 1}}</td>
-              <td>{{bid.user.name}}</td>
-              <td>{{bid.user.telephone}}</td>
-              <td>{{bid.user.email}}</td>
-              <td>{{f.date(bid.createdAt, 'dd mmm yy HH:MM:ss')}}</td>
-              <td>{{bid.price}}</td>
-              <td>{{bid.status}}</td>
-              <td>
-                <button class="btn btn-danger" @click="withdrawBid(bid)"
-                    type="button">
-                  <span class="glyphicon glyphicon-trash"></span>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
       </div>
     </form>
   </div>
@@ -141,11 +87,10 @@ import _ from 'lodash'
 const filters = require('../../filters')
 
 export default {
-  props: ['route'],
+  props: ['route', 'companyId'],
   data() {
     return {
-      editRoute: null,
-      bids: null
+      editRoute: null
     }
   },
   computed: {
@@ -155,7 +100,7 @@ export default {
       if (!this.route) return
 
       return this.axios.get(`/custom/lelong/routes/${this.route.id}/bids?` + querystring.stringify({
-          statuses: JSON.stringify(['bidded', 'void', 'failed']),
+          statuses: JSON.stringify(['bidded', 'void', 'failed', 'withdrawn']),
       }))
       .then(resp => resp.data)
     }
@@ -175,20 +120,10 @@ export default {
               noPasses: null,
               crowdstartExpiry: null,
               ..._.get(clone, 'notes'),
-              tier: [_.get(clone, 'tier.0') || this.defaultTier()],
+              tier: [_.get(clone.notes, 'tier.0') || this.defaultTier()],
             },
             tags: _.get(clone, 'tags') || [],
           }
-        }
-      }
-    },
-    bidsPromise: {
-      immediate: true,
-      handler (promise) {
-        if (promise) {
-          promise.then(bids => {
-            this.bids = bids
-          })
         }
       }
     }
@@ -203,7 +138,6 @@ export default {
         ...this.editRoute,
         notes: _.cloneDeep(this.editRoute.notes)
       }
-
       const withTimesUpdated = (tripStops) => {
         const msDifference = Date.UTC(
           this.editRoute.trips[0].date.getUTCFullYear(),
@@ -246,9 +180,16 @@ export default {
         }
       )
 
-      Promise.all([routePromise, tripPromise, bidPromise])
+      this.spinOnPromise(Promise.all([routePromise, tripPromise, bidPromise])
       .then(() => this.$emit('requery'))
-      .catch((err) => commonModals.alert(`${err && err.data && err.data.message}`))
+      .catch((err) => this.showModal ({
+          components: 'CommonModals',
+          props: {
+            type: 'alert',
+            message: _.get(err, 'data.message')
+          }
+        })
+      ))
     },
     doResetRoute() {
       this.editRoute = blankRoute()
@@ -260,37 +201,7 @@ export default {
 
     defaultTier () {
       return {price: 10, pax: 13}
-    },
-    removeTier (index) {
-      this.editRoute.notes.tier.splice(index, 1)
-    },
-    addTier () {
-      this.editRoute.notes.tier.push(this.defaultTier())
-    },
-    withdrawBid (bid) {
-      this.showModal({
-        component: 'CommonModals',
-        props: {
-          type: 'confirm',
-          message: 'Are you sure you want to cancel this bid?'
-        }
-      })
-      .then((result) => {
-        if (result) {
-          return this.spinOnPromise(this.axios.delete(
-            `/custom/lelong/routes/${this.route.id}/bids/${bid.id}`
-          )
-          .then(() => {this.$emit('requery')}))
-        }
-      })
-      .catch((err) => this.showModal({
-        component: 'CommonModals',
-        props: {
-          type: 'alert',
-          message: _.get(err, 'message')
-        }
-      }))
-    },
+    }
   }
 }
 </script>
