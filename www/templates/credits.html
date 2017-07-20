@@ -8,10 +8,16 @@
   <div class="row" ng-if="disp">
     <div class="col-sm-8">
       <h1>Credits</h1>
+      <h2>Search selected dates by:</h2>
       <form>
         <div class="form-group">
-            <user-selector ng-model="filter.userId" include-ephemeral="false" initial-user="filter.user"></user-selector>
+            <user-selector ng-model="filter.userId" include-ephemeral="false" initial-user="filter.user">
+            </user-selector>
         </div>
+        <!-- <div class="form-group">
+          <label>User</label>
+          <input type="text" class="form-control" ng-model="filter.userQuery">
+        </div> -->
         <div class="form-group">
           <label>Credit Tag</label>
           <input type="text" class="form-control" ng-model="filter.tag">
@@ -53,21 +59,47 @@
         <thead>
           <tr>
             <th>S/N</th>
-            <th>Date</th>
+            <th>Txn ID</th>
+            <th>Charge ID</th>
+            <th>Txn Timestamp</th>
             <th>Status</th>
+            <th>Route Label</th>
+            <th>Route Description</th>
             <th>Description</th>
             <th>Type</th>
             <th>User</th>
             <th>Tag</th>
-            <th>Amount</th>
-            <th>Action</th>
+            <th>Credit Amount</th>
+            <th>Payment Amount</th>
           </tr>
         </thead>
         <tbody>
           <tr ng-repeat="txn in disp.transactions track by $index">
-            <td title="Transaction Item ID: {{txn.id}}">{{$index + 1}}</td>
+            <!-- <td title="Transaction Item ID: {{txn.id}}">{{$index + 1}}</td> -->
+            <td>{{ $index + 1 + (paging.page-1) * paging.perPage }}</td>
+            <td>
+              <a ui-sref="^.transactions({id: txn.transactionId})">
+                {{txn.transactionId}}<br/>
+              </a>
+              <a ng-if="txn.refundingTransactionId" ui-sref="^.transactions({id: txn.refundingTransactionId})">{{txn.refundingTransactionId}}</a>
+            </td>
+            <td>
+              {{txn.payment.paymentResource}}<br/>
+              <span ng-if="txn.refundPayment.paymentResource">{{txn.refundPayment.paymentResource}}<br/></span>
+              {{txn.payment.destinationResoure}}<br/>
+              <button class="btn btn-primary btn-xs" ng-if="txn.transaction.committed && (txn.transaction.type === 'routeCreditPurchase' || txn.transaction.type === 'conversion') && !txn.refundingTransactionId"
+                ng-click="refund(txn)">
+                Refund
+              </button>
+            </td>
             <td>{{txn.createdAt | date:'dd MMM yyyy HH:mm:ss':'+0800'}}</td>
-            <td title="Transaction ID: {{txn.transactionId}}">{{txn.transaction.committed ? 'Valid' : 'Failed'}}</td>
+            <td title="Transaction ID: {{txn.transactionId}}">
+              <span class="label txn-valid" ng-if="txn.transaction.committed && !txn.refundingTransactionId">Valid</span>
+              <span class="label txn-failed" ng-if="!txn.transaction.committed">Failed</span>
+              <span class="label txn-refunded" ng-if="txn.transaction.committed && txn.refundingTransactionId">Refunded</span>
+            </td>
+            <td>{{txn.routeLabel}}</td>
+            <td>{{txn.routeDescription}}</td>
             <td>{{txn.transaction.description}}</td>
             <td>{{txn.transaction.type}}</td>
             <td>
@@ -76,11 +108,21 @@
             <br>(UID: {{txn.routeCredits.userId}})</a>
             <br>{{txn.routeCredits.user.telephone}}
             <br>{{txn.routeCredits.user.email}}
+            <br>
+              <span class="discount-code label" ng-if="txn.promo.promoId"
+                  ui-sref="^.promotions({companyId: companyId, promoId: txn.promo.promoId})">
+                <span ng-if="txn.promo.code">{{txn.promo.code}}</span>
+                <span ng-if="!txn.promo.code"><i>(automatic)</i></span>
+                (#{{txn.promo.promoId}})
+              </span>
             </td>
             <td><ul class="tags"><li class="tags">{{txn.routeCredits.tag}}</li></ul></td>
-            <td>{{txn.credit | currency}}</td>
             <td>
-              <!-- <button class="btn btn-primary btn-xs">Dummy</button> -->
+              <div ng-if="!txn.promo.promoId">{{txn.credit | currency}}</div>
+              <div ng-if="txn.promo.promoId">{{txn.payment.paymentAmount | currency}} + {{txn.promo.amount | currency}}</div>
+            </td>
+            <td>
+              {{txn.payment.paymentAmount > 0 ? (txn.payment.paymentAmount | currency) : ''}}
             </td>
           </tr>
         </tbody>
