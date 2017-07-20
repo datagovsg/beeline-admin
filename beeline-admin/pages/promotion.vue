@@ -4,7 +4,8 @@
     <ModalHelper ref="modalHelper"/>
 
     <div class="col-lg-12">
-      <h1>Edit Promotion '{{promotion && promotion.code}}'</h1>
+      <h1 v-if="promotion && promotion.type === 'Promotion'">Edit Promotion '{{promotion && promotion.code}}'</h1>
+      <h1 v-if="promotion && promotion.type === 'RoutePass'">Edit Route Pass '{{promotion && promotion.code}}'</h1>
 
       <div v-if="promotion === false">
         Error loading promotion
@@ -31,17 +32,6 @@
                   You have not keyed in a promo code. This promotion will be
                   automatically applied to <b>all transactions</b> without a promo code.
                 </div>
-              </div>
-
-              <div class="form-group">
-                <label>
-                  <input type="radio" value="Promotion" v-model="promotion.type" />
-                  Promotions on Tickets
-                </label>
-                <label>
-                  <input type="radio" value="RoutePass" v-model="promotion.type" />
-                  Promotions on Route Passes
-                </label>
               </div>
 
               <div class="form-group" v-if="promotion.type === 'RoutePass'">
@@ -150,6 +140,7 @@
           </tr>
         </tbody></table>
         <button :disabled="checkResults" @click="save()" class="btn btn-primary">Save</button>
+        <button @click="cancel()" class="btn btn-default">Cancel</button>
       </div>
     </div>
   </div>
@@ -172,7 +163,10 @@ const filters = require('../filters')
 export default {
   props: ['id', 'companyId'],
   data () {
-    return {promotion: null,}
+    return {
+      promotion: null,
+      originalPromotion: null,
+    }
   },
   created () {
 
@@ -245,7 +239,11 @@ export default {
       handler(p) {
         if (!p) return
         p
-        .then((q) => this.promotion = q)
+        .then((q) => {
+          this.promotion = q
+          // deep clone the promotion object for cancel purpose
+          this.originalPromotion = _.cloneDeep(q)
+        })
         .catch((err) => {
           console.log(err)
           this.promotion = false
@@ -297,6 +295,11 @@ export default {
           }
         )
       })
+    },
+
+    cancel () {
+      // assign back the original promotion
+      this.promotion = _.cloneDeep(this.originalPromotion)
     },
 
     newCriterion () {

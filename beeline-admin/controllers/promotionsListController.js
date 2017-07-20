@@ -34,20 +34,45 @@ angular.module('beeline-admin')
     $scope.postNew = function () {
       const code = randomString() + randomString() + randomString()
 
-      return LoadingSpinner.watchPromise(AdminService.beeline({
-        method: `POST`,
-        url: `/companies/${companyId}/promotions`,
-        data: {
+      let promoData
+
+      let now = new Date()
+      let startDate = now.toISOString().slice(0,10)
+      // 1 month after today
+      let endDate = new Date(now.getFullYear(), now.getMonth()+1, now.getDate()).toISOString().slice(0,10)
+
+      if ($scope.filter.promotionType === 'Promotion') {
+        promoData = {
           code,
           description: `New Promo Code`,
           type: 'Promotion',
           params: {
-            qualifyingCriteria: [{type: 'limitByCompany', params: {companyId}}],
-            discountFunction: { type: 'simpleRate', params: {rate: 0.0}},
+            qualifyingCriteria: [{type: 'limitByCompany', params: {companyId}}, {type: 'limitByTripDate', params: {startDate: startDate,endDate: endDate}}],
+            discountFunction: { type: 'simpleRate', params: {rate: 0.10}},
             refundFunction: { type: 'refundDiscountedAmt', params: {} },
-            usageLimit: {userLimit: 0, globalLimit: 0}
+            usageLimit: {userLimit: 1, globalLimit: 1000000}
           }
         }
+      } else {
+        // TODO: how to add route price schedule to the route?
+        promoData = {
+          code: '', //route pass with no promo code entered
+          description: `New Route Pass`,
+          type: 'RoutePass',
+          params: {
+            tag: code,
+            qualifyingCriteria: [{type: 'limitByCompany', params: {companyId}}, {type: 'limitByPurchaseDate', params: {startDate: startDate,endDate: endDate}}],
+            discountFunction: { type: 'tieredRateByTotalValue', params: {"schedule": [[25, 0.1], [50, 0.2]]}},
+            refundFunction: { type: 'refundDiscountedAmt', params: {} },
+            usageLimit: {userLimit: null, globalLimit: null}
+          }
+        }
+      }
+
+      return LoadingSpinner.watchPromise(AdminService.beeline({
+        method: `POST`,
+        url: `/companies/${companyId}/promotions`,
+        data: promoData
       })
       .then(refresh)
       .then(() => commonModals.flash(`A new dummy promotion ${code} has been created`))
