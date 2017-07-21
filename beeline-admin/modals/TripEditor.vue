@@ -129,9 +129,9 @@
                     <td>
                        <div class="stop-selector-cell">
                          <StopSelector v-model="tripStop.stopId" style="width: 100%"/>
-                          <!-- <stop-selector-popup ng-model="tripStop.stopId" class="btn btn-default btn-icon">
-                            <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Add/Edit Stop
-                          </stop-selector-popup> -->
+                         <button @click="showStopPopup(tripStop)" class="btn btn-default">
+                           <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Add/Edit Stop
+                         </button>
                       </div>
                     </td>
                     <td>
@@ -174,6 +174,7 @@
 </template>
 
 <script>
+import {mapActions} from 'vuex'
 const filters = require('../filters')
 
 export default {
@@ -213,6 +214,7 @@ export default {
     f: () => filters,
   },
   methods: {
+    ...mapActions('modals', ['showModal']),
     blankTripStop() {
       return {
         stopId: null,
@@ -229,6 +231,16 @@ export default {
 
       newDate.setHours(split[0], split[1])
       return newDate
+    },
+    showStopPopup (tripStop) {
+      this.showModal({
+        component: 'StopsPopup',
+        props: {}
+      })
+      .then((stop) => {
+        tripStop.stopId = stop.id
+      })
+      .catch(() => {})
     }
   },
   mixins: [

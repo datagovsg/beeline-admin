@@ -6,6 +6,7 @@ module.exports = {
     CreateTripsDatePicker: require('../modals/CreateTripsDatePicker.vue'),
     CommonModals: require('../modals/CommonModals.vue'),
     TripEditor: require('../modals/TripEditor.vue'),
+    StopsPopup: require('../modals/StopsPopup.vue'),
   },
   computed: {
     ...mapState('modals', ['modalStack'])
