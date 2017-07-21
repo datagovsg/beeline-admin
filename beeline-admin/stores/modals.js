@@ -3,9 +3,7 @@ import _ from 'lodash'
 import assert from 'assert'
 
 const initial = () => ({
-  _resolve: null,
-  _reject: null,
-  _promise: Promise.resolve(null),
+  modalStack: [],
   options: null,
 })
 
@@ -13,52 +11,43 @@ module.exports = {
   namespaced: true,
   state: initial(),
   mutations: {
-    setModal(state, options) {
-      _.assign(state, _.pick(options, ['options', '_resolve', '_reject']))
+    addModal(state, options) {
+      state.modalStack.push(_.pick(options, ['options', 'resolve', 'reject']))
     },
-    setPromise(state, promise) {
-      _.assign(state, {_promise: promise})
-    }
+    removeModal(state, options) {
+      state.modalStack.pop()
+    },
   },
   actions: {
     /** Adds a modal request to the queue */
     showModal (context, options) {
-      return context.state._promise
-        .catch(() => {}) /* continue regardless of errors from previous promise */
+      return Promise.resolve(null)
         .then(() => {
-          // at this point, assume the modal is fully closed
-          assert(context.state._resolve === null)
+          const modalIndex = context.state.modalStack.length
 
           const resultPromise = new Promise((resolve, reject) => {
-            context.commit('setModal', {
+            context.commit('addModal', {
               options,
-              _resolve: resolve,
-              _reject: reject,
+              resolve,
+              reject,
             })
           })
 
-          // But don't allow the next dialog to show, until we fully
-          // close current dialog
-          context.commit(
-            'setPromise',
-            resultPromise
-              .catch(() => {})
-              .then(() => {
-                context.commit('setModal', {
-                  options: null,
-                  _resolve: null,
-                  _reject: null,
-                })
+          const hideModal = () => {
+            assert(modalIndex === context.state.modalStack.length - 1)
+            context.commit('removeModal')
+          }
 
-                // Let the changes bubble to ModalHelper
-                return new Promise((resolve) => {
-                  // FIXME: wtf is wrong with wffranco/vue-strap?
-                  setTimeout(resolve, 1000)
-                })
-              })
-          )
-
+          // Result must only be returned *after* modal has been deleted from stack,
+          // so that if another modal is shown, there isn't a conflict
           return resultPromise
+            .then(result => {
+              hideModal()
+              return result
+            }, err => {
+              hideModal()
+              throw err
+            })
         })
     },
   }

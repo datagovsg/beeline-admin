@@ -115,7 +115,7 @@
                 </td>
                 <td>
                   <!-- TODO: no deleteTrip -->
-                  <button class="btn btn-danger btn-icon" @click="tripList.deleteTrip(trip)">
+                  <button class="btn btn-danger btn-icon" @click="deleteTrip(trip)">
                     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                   </button>
                 </td>
@@ -279,6 +279,7 @@ export default {
           return route
         })
       }
+      return this.routePromise
     },
 
     findStop (trip, stopId, ooA) {
@@ -302,6 +303,43 @@ export default {
         `/trips/${trip.id}`,
         adaptedData
       )
+    },
+
+    deleteTrip(trip) {
+      this.showModal({
+        component: 'CommonModals',
+        props: {
+          type: 'confirm',
+          title: 'Delete trip',
+          message: 'Are you sure you want to delete this trip?'
+        }
+      })
+      .then((confirm) => {
+        if (confirm) {
+          return this.axios.delete(
+            `/trips/${trip.id}`
+          )
+        }
+      })
+      .then(() => {
+        this.spinOnPromise(this.requery())
+        return this.showModal({
+          component: 'CommonModals',
+          props: {
+            type: 'flash',
+            message: 'Trips deleted',
+          }
+        })
+      })
+      .catch((error) => {
+        return this.showModal({
+          component: 'CommonModals',
+          props: {
+            type: 'alert',
+            message: error.message
+          }
+        })
+      })
     },
 
     showEditTripDialog() {

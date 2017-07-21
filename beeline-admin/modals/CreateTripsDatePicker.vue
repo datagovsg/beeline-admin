@@ -1,34 +1,36 @@
 <template>
-  <Modal :value="isShown" title="Test!" @cancel="reject()">
-    <div slot="modal-header" class="modal-header">
+  <modal @cancel="reject()" :name="name" :value="value">
+    <div class="modal-header">
       <h3>Select dates</h3>
     </div>
 
-    <template v-if="message">
-      {{message}}
-    </template>
-    <template v-else>
-      Select the trips from the old route to copy over to the new route:
-    </template>
+    <div class="modal-body">
+      <template v-if="message">
+        {{message}}
+      </template>
+      <template v-else>
+        Select the trips from the old route to copy over to the new route:
+      </template>
 
-    <DatePicker
-      :defaultDisable="selectOnTrips"
-      :multiple="true"
-      :month="monthShown" :offset="0"
-      :specialDates="specialDates"
-      :otherMonthSelectable="false"
-      @month-changed="loadTripsForMonth($event)"
-      v-model="selectedDates" class="date-picker"
-      />
+      <DatePicker
+        :defaultDisable="selectOnTrips"
+        :multiple="true"
+        :month="monthShown" :offset="0"
+        :specialDates="specialDates"
+        :otherMonthSelectable="false"
+        @month-changed="loadTripsForMonth($event)"
+        v-model="selectedDates" class="date-picker"
+        />
 
-    <strong>Trips to create:</strong>
-    <ul class="date-list">
-      <li v-for="date in sortedSelectedDates">
-        {{f.date(date, 'dd-mmm-yyyy')}}
-      </li>
-    </ul>
+      <strong>Trips to create:</strong>
+      <ul class="date-list">
+        <li v-for="date in sortedSelectedDates">
+          {{f.date(date, 'dd-mmm-yyyy')}}
+        </li>
+      </ul>
+    </div>
 
-    <div slot="modal-footer" class="modal-footer">
+    <div class="modal-footer">
       <div class="row">
         <div class="col-lg-12">
           <button class="btn btn-default" @click="reject()">
@@ -40,7 +42,7 @@
         </div>
       </div>
     </div>
-  </Modal>
+  </modal>
 </template>
 
 <script>

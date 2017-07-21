@@ -1,8 +1,8 @@
 <template>
-  <Modal :value="!!isShown" class="trip-data-editor" @cancel="reject()">
+  <modal class="trip-data-editor" :name="name" :adaptive="true"
+      @cancel="reject()" :value="value">
     <!-- If creating trips, tripIds doesn't exist -->
-    <div slot="modal-header" class="modal-header"
-        v-if="createNew">
+    <div class="modal-header" v-if="createNew">
       <h3>Create trips</h3>
       <ul class="date-list">
         <li v-for="date in newTripDates">
@@ -24,8 +24,7 @@
       </ul>
     </div>
 
-    <div class="container-fluid" v-if="editTrip">
-      <div class="overflow-scroll">
+    <div class="modal-body" v-if="editTrip">
         <div class=" trip-data-editor-nav">
           <div class="row">
             <div class="col-lg-10 col-lg-offset-1">
@@ -130,9 +129,9 @@
                     <td>
                        <div class="stop-selector-cell">
                          <StopSelector v-model="tripStop.stopId" style="width: 100%"/>
-                          <!-- <stop-selector-popup ng-model="tripStop.stopId" class="btn btn-default btn-icon">
-                            <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Add/Edit Stop
-                          </stop-selector-popup> -->
+                         <button @click="showStopPopup(tripStop)" class="btn btn-default">
+                           <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Add/Edit Stop
+                         </button>
                       </div>
                     </td>
                     <td>
@@ -160,12 +159,10 @@
             </div>
           </div>
         </div>
-      </div>
-
     </div>
     <!-- trip-data-editor -->
 
-    <div slot="modal-footer" class="modal-footer">
+    <div class="modal-footer">
       <button class="btn btn-primary" @click="resolve(editTrip)">
         Save
       </button>
@@ -173,10 +170,11 @@
         Cancel
       </button>
     </div>
-  </Modal>
+  </modal>
 </template>
 
 <script>
+import {mapActions} from 'vuex'
 const filters = require('../filters')
 
 export default {
@@ -216,6 +214,7 @@ export default {
     f: () => filters,
   },
   methods: {
+    ...mapActions('modals', ['showModal']),
     blankTripStop() {
       return {
         stopId: null,
@@ -232,6 +231,16 @@ export default {
 
       newDate.setHours(split[0], split[1])
       return newDate
+    },
+    showStopPopup (tripStop) {
+      this.showModal({
+        component: 'StopsPopup',
+        props: {}
+      })
+      .then((stop) => {
+        tripStop.stopId = stop.id
+      })
+      .catch(() => {})
     }
   },
   mixins: [
