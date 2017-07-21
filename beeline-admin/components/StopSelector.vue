@@ -17,7 +17,7 @@ export default {
     imputedValue() {
       if (this.stops) {
         const stop = this.stops.find(s => s.id === this.value)
-        return {value: this.value, label: stop.description || '(Unknown)'}
+        return {value: this.value, label: _.get(stop, 'description') || '(Unknown)'}
       } else {
         return {value: this.value, label: 'Loading...'}
       }
@@ -35,8 +35,11 @@ export default {
 
     whatInput ($event) {
       // Vue-Select is very badly written
-      if ($event.value !== this.value)
+      if (!$event) {
+        this.$emit('input', null)
+      } else if ($event.value !== this.value) {
         this.$emit('input', $event.value)
+      }
     }
   }
 }

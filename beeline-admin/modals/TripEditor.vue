@@ -129,7 +129,7 @@
                     </td>
                     <td>
                        <div class="stop-selector-cell">
-                         <StopSelector v-model="tripStop.stopId" />
+                         <StopSelector v-model="tripStop.stopId" style="width: 100%"/>
                           <!-- <stop-selector-popup ng-model="tripStop.stopId" class="btn btn-default btn-icon">
                             <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Add/Edit Stop
                           </stop-selector-popup> -->
@@ -155,6 +155,8 @@
                   </tr>
                 </tbody>
               </table>
+              <!-- extra space for the dropdown menu -->
+              <br/><br/><br/><br/><br/><br/><br/><br/><br/>
             </div>
           </div>
         </div>
@@ -191,18 +193,20 @@ export default {
     referenceTrip: {
       immediate: true,
       handler(trip) {
+        const tripClone = _.cloneDeep(trip)
+
         this.editTrip = {
           price: '0.00',
           capacity: 13,
           status: null,
           tripStops: [],
-          ...trip,
+          ...tripClone,
           bookingInfo: {
             windowSize: 0,
             windowType: 'stop',
             notes: '',
             childTicketPrice: null,
-            ...(trip && trip.bookingInfo)
+            ...(tripClone && tripClone.bookingInfo)
           }
         }
       }
@@ -215,7 +219,7 @@ export default {
     blankTripStop() {
       return {
         stopId: null,
-        time: null,
+        time: new Date(),
         canBoard: true,
         canAlight: true,
       }
