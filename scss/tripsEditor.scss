@@ -117,7 +117,15 @@ table.trips-list {
 
 .trip-data-editor .modal-dialog {
   margin: 2em 4em;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 2em);
   width: auto;
+
+  .modal-body {
+    flex: 1 1 auto;
+    overflow: auto;
+  }
 
   .form-control{
     margin-left: $padding-small-horizontal;

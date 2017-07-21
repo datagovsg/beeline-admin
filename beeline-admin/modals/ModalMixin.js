@@ -1,27 +1,11 @@
 module.exports = {
-  data () {
-    return {
-      isShown: false,
-      resolve: null, reject: null,
-    }
-  },
+  props: ['name', 'value'],
   methods: {
-    show() {
-      const promise = new Promise((resolve, reject) => {
-        _.assign(this, {
-          resolve, reject, isShown: true
-        })
-      })
-
-      return promise.then(
-        (result) => {
-          this.isShown = false
-          return result
-        }, (err) => {
-          console.error(err)
-          this.isShown = false
-          throw err
-        })
-    }
+    resolve(data) {
+      this.$emit('resolve', data)
+    },
+    reject(data) {
+      this.$emit('reject', data)
+    },
   }
 }

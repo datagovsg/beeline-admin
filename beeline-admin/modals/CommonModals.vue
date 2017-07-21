@@ -1,19 +1,24 @@
 <template>
-  <Modal :value="!!isShown" :title="title"
-      @cancel="reject()">
-    {{message}}
+  <modal :name="name" @cancel="reject()" :value="value">
+    <div class="modal-header">
+      <h3>{{title}}</h3>
+    </div>
 
-    <div v-if="type === 'prompt'">
-      <input type="text" v-model="value" class="form-control"/>
+    <div class="modal-body">
+      {{message}}
+
+      <div v-if="type === 'prompt'">
+        <input type="text" v-model="value" class="form-control"/>
+      </div>
     </div>
 
     <!-- custom buttons -->
-    <div slot="modal-footer" class="modal-footer">
-      <button type="button" class="btn btn-primary" @click="resolve(value)">OK</button>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary" @click="resolve(dataValue)">OK</button>
       <button type="button" class="btn btn-default" @click="resolve(false)"
         v-if="type === 'confirm'">Cancel</button>
     </div>
-  </Modal>
+  </modal>
 </template>
 
 <script>
@@ -25,7 +30,7 @@ export default {
   ],
   data () {
     return {
-      value: null
+      dataValue: null
     }
   },
   watch: {
@@ -40,9 +45,9 @@ export default {
   },
   created() {
     if (this.type === 'prompt') {
-      this.value = this.defaultValue
+      this.dataValue = this.defaultValue
     } else if (this.type === 'confirm') {
-      this.value = true
+      this.dataValue = true
     }
   },
   mixins: [

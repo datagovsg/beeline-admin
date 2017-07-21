@@ -30,7 +30,7 @@ Vue.component('PriceInput', require('../components/PriceInput.vue'))
 Vue.component('TimeInput', require('../components/TimeInput.vue'))
 Vue.component('StopSelector', require('../components/StopSelector.vue'))
 
-Vue.component('Modal', require('vue-strap/src/Modal.vue'))
+Vue.component('Modal', require('../modals/MyModal.vue'))
 Vue.component('Tabs', require('vue-strap/src/Tabs.vue'))
 Vue.component('Tab', require('vue-strap/src/Tab.vue'))
 Vue.component('VueSelect', require('vue-select').default)

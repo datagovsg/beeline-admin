@@ -1,8 +1,8 @@
 <template>
-  <Modal :value="!!isShown" class="trip-data-editor" @cancel="reject()">
+  <modal class="trip-data-editor" :name="name" :adaptive="true"
+      @cancel="reject()" :value="value">
     <!-- If creating trips, tripIds doesn't exist -->
-    <div slot="modal-header" class="modal-header"
-        v-if="createNew">
+    <div class="modal-header" v-if="createNew">
       <h3>Create trips</h3>
       <ul class="date-list">
         <li v-for="date in newTripDates">
@@ -24,8 +24,7 @@
       </ul>
     </div>
 
-    <div class="container-fluid" v-if="editTrip">
-      <div class="overflow-scroll">
+    <div class="modal-body" v-if="editTrip">
         <div class=" trip-data-editor-nav">
           <div class="row">
             <div class="col-lg-10 col-lg-offset-1">
@@ -160,12 +159,10 @@
             </div>
           </div>
         </div>
-      </div>
-
     </div>
     <!-- trip-data-editor -->
 
-    <div slot="modal-footer" class="modal-footer">
+    <div class="modal-footer">
       <button class="btn btn-primary" @click="resolve(editTrip)">
         Save
       </button>
@@ -173,7 +170,7 @@
         Cancel
       </button>
     </div>
-  </Modal>
+  </modal>
 </template>
 
 <script>
