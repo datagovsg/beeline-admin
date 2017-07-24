@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid crowdstart-editor">
-    <div class="form-group" v-if="editRoute && !editRoute.tags.includes('lelong') && !editRoute.tags.includes('crowdstart')">
+    <div class="form-group" v-if="editRoute && !editRoute.tags.includes('crowdstart')">
       This is not a crowdstart route. Please add the "crowdstart" tag to the route.
     </div>
 
