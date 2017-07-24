@@ -164,6 +164,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import {mapGetters, mapActions, mapState} from 'vuex'
 import * as resources from '../stores/resources'
 const filters = require('../filters')
@@ -172,10 +173,10 @@ export default {
   props: ['companyId'],
   data() {
     const tagPresets = [
-      { name: 'All', tag: null },
-      { name: 'Crowdstart', tag: 'lelong' },
-      { name: 'Lite', tag: 'lite' },
-      { name: 'Regular', tag: 'public' },
+      { name: 'All', tags: null },
+      { name: 'Crowdstart', tags: ['lelong', 'crowdstart'] },
+      { name: 'Lite', tags: ['lite'] },
+      { name: 'Regular', tags: ['public'] },
     ]
 
     return {
@@ -218,7 +219,7 @@ export default {
       const routes = this.allRoutes &&
         this.allRoutes
           .filter(r => !this.companyId || r.transportCompanyId === this.companyId)
-          .filter(r => !this.filter.preset.tag || r.tags.indexOf(this.filter.preset.tag) !== -1)
+          .filter(r => !this.filter.preset.tags || _.intersection(r.tags, this.filter.preset.tags).length > 0)
           .filter(r => !this.filter.searchTerms ||
               (r.label && r.label.toLowerCase().startsWith(this.filter.searchTerms.toLowerCase())) ||
               (r.name && r.name.toLowerCase().indexOf(this.filter.searchTerms.toLowerCase()) !== -1) ||
