@@ -1,7 +1,9 @@
 import querystring from 'querystring'
 
-export default function($scope, $state, $stateParams, $http, AdminService, LoadingSpinner) {
+export default function($scope, $state, $stateParams, $http, AdminService,
+    LoadingSpinner, companyId) {
   $scope.transactions = [];
+  $scope.companyId = companyId;
 
   $scope.filter = {
     currentPage: 1,
