@@ -8,7 +8,7 @@
       {{message}}
 
       <div v-if="type === 'prompt'">
-        <input type="text" v-model="value" class="form-control"/>
+        <input type="text" v-model="dataValue" class="form-control"/>
       </div>
     </div>
 
