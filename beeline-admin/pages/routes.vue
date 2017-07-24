@@ -246,10 +246,10 @@ export default {
     ...mapActions('shared', ['invalidate', 'refresh']),
 
     viewRoute(route) {
-      this.$refs.modalHelper.show(
-        require('../modals/ViewRouteTrips.vue'),
-        {route}
-      )
+      this.showModal({
+        component: require('../modals/ViewRouteTrips.vue'),
+        props: {route}
+      })
     },
     async copyRoute(r) {
       const routePromise = this.getRoute({
@@ -261,15 +261,15 @@ export default {
         }
       })
 
-      const label = await this.$refs.modalHelper.show(
-        'CommonModals',
-        {
+      const label = await this.showModal({
+        component: 'CommonModals',
+        props: {
           type: 'prompt',
           title: 'Copy Route',
           message: 'New Route Label',
           defaultValue: `Copy of ${r.label}`,
         }
-      )
+      })
 
       if (!label) return
 
@@ -283,13 +283,13 @@ export default {
       // Prompt for the dates
       let tripDates
       try {
-        tripDates = await this.$refs.modalHelper.show(
-          'CreateTripsDatePicker',
-          {
+        tripDates = await this.showModal({
+          component: 'CreateTripsDatePicker',
+          props: {
             route,
             selectOnTrips: true,
           }
-        )
+        })
       } catch (err) {
         console.log(err)
         return
@@ -327,13 +327,13 @@ export default {
           this.refresh(['allRoutes', 'currentRoutes'])
         )
       } catch (err) {
-        await this.$refs.modalHelper.show(
-          'CommonModals',
-          {
+        await this.showModal({
+          component: 'CommonModals',
+          props: {
             title: 'Error',
             message: err.message,
           }
-        )
+        })
       }
     }
   }

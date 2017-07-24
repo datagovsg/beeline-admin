@@ -177,6 +177,7 @@ export default {
   },
   computed: {
     ...mapGetters(['axios']),
+    ...mapActions('modals', ['showModal']),
     f: () => filters,
 
     promotionPromise() {
@@ -277,23 +278,23 @@ export default {
         this.promotion = this.makeEditable(response.data)
       }))
       .then(() =>
-        this.$refs.modalHelper.show(
-          'CommonModals',
-          {
+        this.showModal({
+          component: 'CommonModals',
+          props: {
             type: 'flash',
             message: 'Promotion saved'
           }
-        )
+        })
       )
       .catch(err => {
-        this.$refs.modalHelper.show(
-          'CommonModals',
-          {
+        this.showModal({
+          component: 'CommonModals',
+          props: {
             type: 'alert',
             title: 'Error',
             message: _.get(err, 'message')
           }
-        )
+        })
       })
     },
 

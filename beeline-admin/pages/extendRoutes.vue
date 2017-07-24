@@ -458,14 +458,14 @@ export default {
       const routesToExtend = this.filteredRoutes.filter(r => r.selected && !r.ended).reverse()
       const daysToExtend = this.days.filter(r => r.selected)
 
-      const confirm = await this.$refs.modalHelper.show(
-        'CommonModals',
-        {
+      const confirm = await this.showModal({
+        component: 'CommonModals',
+        props: {
           type: 'confirm',
           message: `Are you sure you want to extend ${routesToExtend.length} ` +
             `routes by ${daysToExtend.length} days?`
         }
-      )
+      })
 
       if (!confirm) return
 
