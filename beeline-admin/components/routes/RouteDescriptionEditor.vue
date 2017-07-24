@@ -70,7 +70,7 @@
       </div>
       <div class="col-lg-6">
         <div class="path-editor">
-          <PathEditor v-model="editRoute.path" :route="route">
+          <PathEditor v-model="editRoute.path" :route="route || {trips: []}">
           </PathEditor>
         </div>
       </div>
@@ -84,10 +84,10 @@
           </button>
 
           <div class="btn-group">
-            <button class="btn btn-default" @click="doResetRoute()" v-if="!route.id">
+            <button class="btn btn-default" @click="doResetRoute()" v-if="!editRoute.id">
               Reset Route
             </button>
-            <button class="btn btn-danger" @click="doDeleteRoute()" ng-disabled="!route || !route.id">
+            <button class="btn btn-danger" @click="doDeleteRoute()" :disabled="!editRoute || !editRoute.id">
               Delete this Route
             </button>
           </div>
@@ -103,7 +103,7 @@ import * as resources from '../../stores/resources'
 const filters = require('../../filters')
 
 export default {
-  props: ['route'],
+  props: ['route', 'companyId'],
   data() {
     return {
       editRoute: null
@@ -135,7 +135,7 @@ export default {
     route: {
       immediate: true,
       handler (route) {
-        this.editRoute = route && {
+        this.editRoute = route ? {
           ...route,
           companyTags: route.companyTags || [],
           tags: route.tags || [],
@@ -143,6 +143,24 @@ export default {
             description: null,
             signage: null,
             ...route.notes,
+          }
+        } : {
+          // Blank route
+          features: '',
+          transportCompanyId: null,
+          path: '',
+          companyTags: [],
+          tags: [],
+          label: '',
+          name: '',
+          from: '',
+          to: '',
+          trips: [],
+          id: null,
+          schedule: '',
+          notes: {
+            description: null,
+            signage: null,
           }
         }
       }
@@ -154,7 +172,14 @@ export default {
     ...mapActions('modals', ['showModal']),
 
     doSaveRoute() {
-      this.spinOnPromise(this.saveRoute(this.editRoute))
+      this.spinOnPromise(
+        this.saveRoute(this.editRoute)
+        .then((response) => {
+          if (!this.editRoute.id) {
+            window.location.hash = `#/c/${this.companyId}/trips/${response.data.id}/route`
+          }
+        })
+      )
       .catch((err) => {
         return this.showModal({
           component: 'CommonModals',
@@ -181,7 +206,10 @@ export default {
       })
       .then((confirm) => {
         if (confirm) {
-          return this.spinWatch(this.editRoute = this.axios.delete(`/routes/${this.route.id}`))
+          return this.spinWatch(this.axios.delete(`/routes/${this.route.id}`))
+            .then(() => {
+              window.location.hash = `#/c/${this.companyId}/routes`
+            })
         }
       })
       .catch((err) => {
