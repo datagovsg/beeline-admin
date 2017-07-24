@@ -56,6 +56,17 @@
                           <input type="text" class="form-control" v-model="editStop.label" placeholder="Stop Label">
                         </div>
                       </div>
+
+                      <div class="form-group">
+                        <label class="col-sm-4 control-label">Stop Coordinates</label>
+                        <div class="col-sm-7 form-inline">
+                          <label class="col-sm-4 control-label">Latitude</label>
+                          <input type="text" class="form-control" v-model.lazy.number="editStop.coordinates.coordinates[1]" placeholder="1.380">
+
+                          <label class="col-sm-4 control-label">Latitude</label>
+                          <input type="text" class="form-control" v-model.lazy.number="editStop.coordinates.coordinates[0]" placeholder="103.8">
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div class="row">
@@ -138,6 +149,10 @@ export default {
           `/stops/${s.id}`,
           _.pick(s, ['description', 'coordinates', 'road', 'label'])
         )
+        .then((response) => {
+          this.refresh(['stops'])
+          this.selectedStop = _.clone(s)
+        })
       } else {
         this.axios.post(
           `/stops`,

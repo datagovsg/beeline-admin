@@ -87,7 +87,7 @@
     "heroku-postbuild": "cross-env BACKEND_URL=https\\://beeline-server-dev.herokuapp.com BUILD_PREFIX=www webpack",
     "live-build": "cross-env BACKEND_URL=https\\://beeline-server-admin.herokuapp.com BUILD_PREFIX=build webpack",
     "live-cp": "shx mkdir -p build && shx cp -r 'www/*' build",
-    "live-cname": "shx echo 'admin.beeline.sg' > build/CNAME",
+    "live-cname": "shx echo admin.beeline.sg > build/CNAME",
     "live-gh-pages": "gh-pages -d build",
     "deploy": "npm run live-cp && npm run live-build && npm run live-cname",
     "deploy!": "npm run deploy && npm run live-gh-pages"
