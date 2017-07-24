@@ -254,8 +254,23 @@
       <td ng-if="item.itemType == 'routeCredits'"></td>
 
       <!-- transfers -->
-      <td ng-if="item.itemType == 'discount'">{{item.discount.code}}</td>
-      <td ng-if="item.itemType == 'discount'"></td>
+      <td ng-if="item.itemType == 'discount'">
+        {{item.discount.description}}
+        <span ng-if="item.discount.code">
+          &mdash;
+          {{item.discount.code}}
+        </span>
+      </td>
+      <td ng-if="item.itemType == 'discount'">
+        <!--
+          FIXME: we need to identify the correct company,
+          otherwise the destination page will load nothing
+        -->
+        <a ui-sref="^.promotions({companyId: companyId, promoId: item.discount.promotionId})"
+            ng-if="item.discount.promotionId">
+          Promotion #{{item.discount.promotionId}}
+        </a>
+      </td>
       <td ng-if="item.itemType == 'discount'"></td>
       <td ng-if="item.itemType == 'discount'"></td>
       <td ng-if="item.itemType == 'discount'"></td>

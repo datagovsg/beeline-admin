@@ -209,7 +209,7 @@
                   <br> (UID: {{ticket.user.id}})</a>
                   <br> {{ticket.user.json.telephone || ticket.user.telephone}}
                   <br> {{ticket.user.json.email || ticket.user.email}}
-                  <span ng-if="ticket.discount">
+                  <span ng-if="ticket.discount && ticket.discount.debitF">
                     <br>
                     <span class="discount-code label"
                         ui-sref="^.promotions({companyId: ticket.boardStop.trip.route.transportCompanyId, promoId: ticket.discount.discount.promotionId})">
