@@ -149,6 +149,10 @@ export default {
           `/stops/${s.id}`,
           _.pick(s, ['description', 'coordinates', 'road', 'label'])
         )
+        .then((response) => {
+          this.refresh(['stops'])
+          this.selectedStop = _.clone(s)
+        })
       } else {
         this.axios.post(
           `/stops`,
