@@ -55,9 +55,8 @@ function ($rootScope, $uibModal, AdminService, TagsService,
         await LoadingSpinner.watchPromise(
           AdminService.beeline({
             method: 'POST',
-            url: '/transactions/refund/routePass',
+            url: `/transactions/tickets/${data.ticket.id}/refund/route_pass`,
             data: {
-              ticketId: data.ticket.id,
               targetAmt: data.price,
               creditTag: data.tag
             }
@@ -71,7 +70,7 @@ function ($rootScope, $uibModal, AdminService, TagsService,
         await LoadingSpinner.watchPromise(
           AdminService.beeline({
             method: 'POST',
-            url: '/transactions/issueFreeRoutePass',
+            url: '/transactions/route_passes/issue_free',
             data: {
               userId: data.user.id,
               amount: numPassesToRefund * data.price,

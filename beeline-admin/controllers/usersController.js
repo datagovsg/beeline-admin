@@ -120,7 +120,7 @@ angular.module('beeline-admin')
       Promise.all([
         RoutesService.getRoutes(),
         AdminService.beeline({
-          url: `/custom/lelong/users/${userId}/bids`
+          url: `/crowdstart/users/${userId}/bids`
         })
       ])
       .then(([routes, bidsResponse]) => {

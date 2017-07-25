@@ -99,7 +99,7 @@ export default {
     bidsPromise () {
       if (!this.route) return
 
-      return this.axios.get(`/custom/lelong/routes/${this.route.id}/bids?` + querystring.stringify({
+      return this.axios.get(`/crowdstart/routes/${this.route.id}/bids?` + querystring.stringify({
           statuses: JSON.stringify(['bidded', 'void', 'failed', 'withdrawn']),
       }))
       .then(resp => resp.data)
@@ -174,7 +174,7 @@ export default {
       )
       // Update price and exsiting bids
       const bidPromise = this.axios.post(
-        `/custom/lelong/routes/${this.editRoute.id}/bids/update_price`,
+        `/crowdstart/routes/${this.editRoute.id}/bids/update_price`,
         {
           price: this.editRoute.notes.tier[0].price
         }

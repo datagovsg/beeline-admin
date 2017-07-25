@@ -111,9 +111,8 @@ angular.module('beeline-admin')
       LoadingSpinner.watchPromise(
         AdminService.beeline({
           method: 'POST',
-          url: '/transactions/refund/payment',
+          url: `/transactions/tickets/${ticket.id}/refund/payment`,
           data: {
-            ticketId: ticket.id,
             targetAmt: originalPrice - discount,
           }
         })

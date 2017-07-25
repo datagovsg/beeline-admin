@@ -87,7 +87,7 @@ function IssueTicketController($scope, AdminService, LoadingSpinner, commonModal
 
     LoadingSpinner.watchPromise(AdminService.beeline({
       method: 'POST',
-      url: '/transactions/issueFreeTicket',
+      url: '/transactions/tickets/issue_free',
       data: issueRequest,
     })
     .then(() => {
