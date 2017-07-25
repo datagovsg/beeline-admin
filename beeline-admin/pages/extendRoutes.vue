@@ -155,13 +155,6 @@ function tripHash(trip) {
 export default {
   props: ['companyId'],
   data() {
-    const tagPresets = [
-      { name: 'All', tag: null },
-      { name: 'Crowdstart', tag: 'lelong' },
-      { name: 'Lite', tag: 'lite' },
-      { name: 'Regular', tag: 'public' },
-    ]
-
     return {
       filter: {
         tags: '',
@@ -172,7 +165,6 @@ export default {
 
       tripsByRoute: null,
 
-      tagPresets,
       now: Date.now(),
 
       // route painting
@@ -280,7 +272,7 @@ export default {
       handler (rp) {
         rp.then(async (routesResponse) => {
           this.routes = routesResponse.data
-          .filter(r => r.tags.indexOf('lelong') === -1)
+          .filter(r => !r.tags.includes('lelong') && !r.tags.includes('crowdstart'))
           .map(r => ({
             ...r,
             selected: false,
