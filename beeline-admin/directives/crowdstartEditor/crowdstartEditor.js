@@ -27,7 +27,7 @@ angular.module('beeline-admin')
           if (result) {
             return LoadingSpinner.watchPromise(AdminService.beeline({
               method: 'DELETE',
-              url: `/custom/lelong/routes/${$scope.route.id}/bids/${bid.id}`
+              url: `/crowdstart/routes/${$scope.route.id}/bids/${bid.id}`
             })
             .then(requery))
           }
@@ -92,7 +92,7 @@ angular.module('beeline-admin')
         // Update price and exsiting bids
         const bidPromise = AdminService.beeline({
           method: 'POST',
-          url: `/custom/lelong/routes/${$scope.editRoute.id}/bids/update_price`,
+          url: `/crowdstart/routes/${$scope.editRoute.id}/bids/update_price`,
           data: {
             price: $scope.editRoute.notes.tier[0].price
           }
@@ -132,7 +132,7 @@ angular.module('beeline-admin')
 
         // Asynchronously find the bids
         AdminService.beeline({
-          url: `/custom/lelong/routes/${route.id}/bids?` + querystring.stringify({
+          url: `/crowdstart/routes/${route.id}/bids?` + querystring.stringify({
             statuses: JSON.stringify(['bidded', 'void', 'failed']),
           })
         })

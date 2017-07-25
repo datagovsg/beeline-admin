@@ -84,7 +84,7 @@ export default {
     bidsPromise () {
       if (!this.route) return
 
-      return this.axios.get(`/custom/lelong/routes/${this.route.id}/bids?` + querystring.stringify({
+      return this.axios.get(`/crowdstart/routes/${this.route.id}/bids?` + querystring.stringify({
           statuses: JSON.stringify(['bidded', 'void', 'failed', 'withdrawn']),
       }))
       .then((resp) => {
@@ -146,7 +146,7 @@ export default {
       .then((result) => {
         if (result) {
           return this.spinOnPromise(this.axios.delete(
-            `/custom/lelong/routes/${this.route.id}/bids/${bid.id}`
+            `/crowdstart/routes/${this.route.id}/bids/${bid.id}`
           )
           .then(() => {this.$emit('requery')}))
         }
@@ -170,7 +170,7 @@ export default {
 
     terminate () {
       // add 'failed' to both route and bids
-      let terminatePromise = this.axios.post(`/custom/lelong/routes/${this.route.id}/expire`)
+      let terminatePromise = this.axios.post(`/crowdstart/routes/${this.route.id}/expire`)
         .then(() => {this.$emit('requery')})
 
       this.spinOnPromise(terminatePromise)
@@ -197,7 +197,7 @@ export default {
       })
       .then((result) => {
         if (result) {
-          let convertPromise = this.axios.post(`/custom/lelong/routes/${this.route.id}/activate`,
+          let convertPromise = this.axios.post(`/crowdstart/routes/${this.route.id}/activate`,
               {
                 price: this.route.notes.tier[0].price,
                 label: this.route.label
@@ -242,7 +242,7 @@ export default {
 
     charge (bid) {
       // manually charge individual bid through stripe
-      let chargePromise = this.axios.post(`/custom/lelong/routes/${this.route.id}/bids/${bid.id}/convert`)
+      let chargePromise = this.axios.post(`/crowdstart/routes/${this.route.id}/bids/${bid.id}/convert`)
         .then(() => {this.$emit('requery')})
       return this.spinOnPromise(chargePromise)
         .catch((err) => this.showModal({

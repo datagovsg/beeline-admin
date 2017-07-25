@@ -34,7 +34,7 @@ function($scope, AdminService, RoutesService, LoadingSpinner,
   })
 
   AdminService.beeline({
-    url:'/custom/lelong/status'
+    url:'/crowdstart/status'
   })
   .then((result) => {
     const transformed = result.data
