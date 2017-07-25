@@ -1,6 +1,6 @@
 <template>
-<modal :name="name">
-  <div slot="modal-header" class="modal-header">
+<modal :name="name" :value="value">
+  <div class="modal-header">
     <h3>
       {{route.label}}: {{route.from}} &mdash; {{route.to}}
 
@@ -58,7 +58,6 @@
       </gmap-info-window>
     </gmap-map>
   </div>
-  <div slot="modal-footer"></div>
 </modal>
 </template>
 <script>
