@@ -102,7 +102,7 @@
             <td>{{txn.routeLabel}}</td>
             <td>{{txn.routeDescription}}</td>
             <td>{{txn.transaction.description}}</td>
-            <td>{{txn.noTickets || ''}}</td>
+            <td>{{txn.numTickets || ''}}</td>
             <td>{{txn.transaction.type}}</td>
             <td>
             <a ui-sref="^.users({userId: filter.user.id})">

@@ -107,12 +107,12 @@ function($scope, $stateParams, AdminService, LoadingSpinner, commonModals, Route
       } else if (txn.transaction.type === 'ticketPurchase') {
         let tickets = _.get(txn, 'notes.tickets')
         if (tickets) {
-          txn.noTickets = _(tickets).values()
+          txn.numTickets = _(tickets).values()
             .filter((x) => {return x >0 })
             .value()
             .length
         } else {
-          txn.noTickets = 0
+          txn.numTickets = 0
         }
         return Promise.resolve(txn)
       }
