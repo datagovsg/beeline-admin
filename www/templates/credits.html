@@ -14,17 +14,17 @@
             <user-selector ng-model="filter.userId" include-ephemeral="false" initial-user="filter.user">
             </user-selector>
         </div>
-        <!-- <div class="form-group">
-          <label>User</label>
-          <input type="text" class="form-control" ng-model="filter.userQuery">
-        </div> -->
         <div class="form-group">
           <label>Credit Tag</label>
           <input type="text" class="form-control" ng-model="filter.tag">
         </div>
         <div class="form-group">
           <label>TransactionType</label>
-          <input type="text" class="form-control" ng-model="filter.transactionType">
+          <select
+            ng-model="filter.transactionType"
+            ng-options="value as value for value in transactionTypes">
+          </select>
+          <input type="hidden" class="form-control" ng-model="filter.transactionType">
         </div>
         <div class="form-group">
           <div class="checkbox">
@@ -66,6 +66,7 @@
             <th>Route Label</th>
             <th>Route Description</th>
             <th>Description</th>
+            <th>Number of Ticket Purchased</th>
             <th>Type</th>
             <th>User</th>
             <th>Tag</th>
@@ -87,7 +88,7 @@
               {{txn.payment.paymentResource}}<br/>
               <span ng-if="txn.refundPayment.paymentResource">{{txn.refundPayment.paymentResource}}<br/></span>
               {{txn.payment.destinationResoure}}<br/>
-              <button class="btn btn-primary btn-xs" ng-if="txn.transaction.committed && (txn.transaction.type === 'routeCreditPurchase' || txn.transaction.type === 'conversion') && !txn.refundingTransactionId"
+              <button class="btn btn-danger btn-xs" ng-if="txn.transaction.committed && (txn.transaction.type === 'routeCreditPurchase' || txn.transaction.type === 'conversion') && !txn.refundingTransactionId"
                 ng-click="refund(txn)">
                 Refund
               </button>
@@ -101,6 +102,7 @@
             <td>{{txn.routeLabel}}</td>
             <td>{{txn.routeDescription}}</td>
             <td>{{txn.transaction.description}}</td>
+            <td>{{txn.noTickets || ''}}</td>
             <td>{{txn.transaction.type}}</td>
             <td>
             <a ui-sref="^.users({userId: filter.user.id})">
