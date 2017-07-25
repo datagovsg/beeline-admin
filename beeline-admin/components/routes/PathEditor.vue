@@ -19,6 +19,7 @@
           lat: ts.stop.coordinates.coordinates[1],
           lng: ts.stop.coordinates.coordinates[0],
           }"
+        :key="ts.id"
         :icon="makeStopIcon(ts, index)"
         @click="selectedTripStop = ts"
         >
