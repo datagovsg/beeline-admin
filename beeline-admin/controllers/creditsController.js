@@ -29,9 +29,11 @@ function($scope, $stateParams, AdminService, LoadingSpinner, commonModals, Route
     page: 1,
     perPage: 20,
   }
+
+  $scope.transactionTypes = ['', 'conversion', 'routeCreditPurchase', 'ticketPurchase', 'refundPayment', 'freeRouteCredit', 'routeCreditExpiry']
+
   $scope.routesPromise = RoutesService.getRoutes().then((data) => {
     let routesBelongToCompany = _.filter(data, (route) => route.transportCompanyId === parseInt($scope.companyId))
-    // {'rp-401': 'G50', 'crowdstart-403': 'G51'}
     let routeLabelTagMap = {}
     _.forEach(routesBelongToCompany, (route)=>{
       if (route.tags) {
@@ -100,7 +102,18 @@ function($scope, $stateParams, AdminService, LoadingSpinner, commonModals, Route
       txn.routeLabel = $scope.routeTagLabelMap[txn.routeCredits.tag].label
       txn.routeDescription = $scope.routeTagLabelMap[txn.routeCredits.tag].description
       // to speed up, skip the query transaction items for non-purchase / non-conversion ones
-      if (txn.transaction.type !== 'routeCreditPurchase' && txn.transaction.type !== 'conversion') {
+      if (txn.transaction.type !== 'routeCreditPurchase' && txn.transaction.type !== 'conversion' && txn.transaction.type !== 'ticketPurchase') {
+        return Promise.resolve(txn)
+      } else if (txn.transaction.type === 'ticketPurchase') {
+        let tickets = _.get(txn, 'notes.tickets')
+        if (tickets) {
+          txn.numTickets = _(tickets).values()
+            .filter((x) => {return x >0 })
+            .value()
+            .length
+        } else {
+          txn.numTickets = 0
+        }
         return Promise.resolve(txn)
       }
       else
