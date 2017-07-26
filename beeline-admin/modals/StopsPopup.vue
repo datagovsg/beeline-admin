@@ -22,6 +22,7 @@
                     :key="stop.id"
                     :position="geoJsonToLatLng(stop.coordinates)"
                     @click="selectedStop = stop"
+                    :options="{optimized: true}"
                     />
                 </GmapCluster>
                 <GmapMarker :position="geoJsonToLatLng(editStop.coordinates)"

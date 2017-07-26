@@ -5,7 +5,8 @@ const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const InlineEnviromentVariablesPlugin = require('inline-environment-variables-webpack-plugin');
 
 const env = {
-  BACKEND_URL: process.env.BACKEND_URL || 'https://beeline-server-dev.herokuapp.com'
+  BACKEND_URL: process.env.BACKEND_URL || 'https://beeline-server-dev.herokuapp.com',
+  NODE_ENV: process.env.NODE_ENV || 'development',
 }
 
 const prefix = path.resolve(process.env.BUILD_PREFIX || 'www')
