@@ -16,11 +16,12 @@ angular.module('beeline-admin')
         $scope.promotions.filter(x => {
           if ($scope.filter.promotionType === 'RoutePass') {
             return x.type === $scope.filter.promotionType
-          }
-          else if ($scope.filter.promotionSubtype === 'General') {
-            return x.type === $scope.filter.promotionType && (x.params.usageLimit.userLimit !== 1 || x.params.usageLimit.globalLimit !== 1)
           } else {
-            return x.type === $scope.filter.promotionType && x.params.usageLimit.userLimit === 1 && x.params.usageLimit.globalLimit === 1
+             if ($scope.filter.promotionSubtype === 'General') {
+              return x.type === $scope.filter.promotionType && (x.params.usageLimit.userLimit !== 1 || x.params.usageLimit.globalLimit !== 1)
+            } else {
+              return x.type === $scope.filter.promotionType && x.params.usageLimit.userLimit === 1 && x.params.usageLimit.globalLimit === 1
+            }
           }
         }),
         [$scope.filter.orderBy],
