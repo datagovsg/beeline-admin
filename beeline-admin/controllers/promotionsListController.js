@@ -8,11 +8,21 @@ angular.module('beeline-admin')
       orderBy: 'code',
       order: 'asc',
       promotionType: 'Promotion',
+      promotionSubtype: 'General'
     }
 
-    $scope.$watchGroup(['filter.order', 'filter.orderBy', 'filter.promotionType', 'promotions'], () => {
+    $scope.$watchGroup(['filter.order', 'filter.orderBy', 'filter.promotionType', 'promotions', 'filter.promotionSubtype'], () => {
       $scope.sortedPromotions = $scope.promotions && _.orderBy(
-        $scope.promotions.filter(x => x.type === $scope.filter.promotionType),
+        $scope.promotions.filter(x => {
+          if ($scope.filter.promotionType === 'RoutePass') {
+            return x.type === $scope.filter.promotionType
+          }
+          else if ($scope.filter.promotionSubtype === 'General') {
+            return x.type === $scope.filter.promotionType && (x.params.usageLimit.userLimit !== 1 || x.params.usageLimit.globalLimit !== 1)
+          } else {
+            return x.type === $scope.filter.promotionType && x.params.usageLimit.userLimit === 1 && x.params.usageLimit.globalLimit === 1
+          }
+        }),
         [$scope.filter.orderBy],
         [$scope.filter.order]
       )
