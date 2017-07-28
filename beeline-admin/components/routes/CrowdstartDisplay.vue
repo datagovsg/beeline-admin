@@ -34,14 +34,14 @@
               <td>{{f.date(bid.createdAt, 'dd mmm yy HH:MM:ss')}}</td>
               <td>{{bid.price}}</td>
               <td>{{bid.status}}</td>
-              <td>{{bid.chargeError && bid.chargeError.message || ''}}</td>
+              <td>{{bid.charge_message || bid.chargeError && bid.chargeError.message || ''}}</td>
               <td>
                 <button class="btn btn-danger" @click="withdrawBid(bid)"
-                    type="button">
+                    type="button" title="withdraw bid">
                   <span class="glyphicon glyphicon-trash"></span>
                 </button>
                 <button class="btn btn-danger" @click="charge(bid)" :disabled="bid.status!=='bidded'" v-if="route.tags.indexOf('success') > -1"
-                    type="button">
+                    type="button" title="manually charge">
                   <span class="glyphicon glyphicon-piggy-bank"></span>
                 </button>
               </td>
@@ -92,7 +92,10 @@ export default {
         let now = parseInt(Date.now())
         // bids with notes and timestamps with charge error
         _.forEach(bids, (bid) => {
-          if (bid.status === 'bidded' && bid.notes) {
+          if (bid.status === 'void') {
+            bid.charge_message = 'charge successfully'
+          }
+          else if (bid.status === 'bidded' && bid.notes) {
             let timestamps = _(bid.notes)
             .keys()
             .filter((key) => {
