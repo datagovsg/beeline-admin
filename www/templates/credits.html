@@ -96,7 +96,7 @@
                 </button>
               </span>
               <span ng-if="!txn.transaction.committed">
-                {{txn.nonCommittedReason}}
+                {{txn.uncommitReason}}
               </span>
             </td>
             <td>{{txn.createdAt | date:'dd MMM yyyy HH:mm:ss':'+0800'}}</td>

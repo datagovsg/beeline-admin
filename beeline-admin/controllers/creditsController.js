@@ -290,7 +290,7 @@ function($scope, $stateParams, AdminService, LoadingSpinner, commonModals, Route
         + querystring.stringify(queryOptions)
     }).then(resp => {
       let paymentItem = resp.data.rows.find(x => x.itemType === 'payment')
-      txn.nonCommittedReason = _.get(paymentItem, 'payment.data.message') || 'Reason is unknown'
+      txn.uncommitReason = _.get(paymentItem, 'payment.data.message') || 'Reason is unknown'
       return txn
     }).catch(err =>
       commonModals.alert(
