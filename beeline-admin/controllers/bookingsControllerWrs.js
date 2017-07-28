@@ -5,7 +5,7 @@ const pickOneModalTemplate = require('../templates/modals/pickOne.html')
 
 angular.module('beeline-admin')
 .controller('bookingsWrs', function($scope, AdminService, RoutesService, LoadingSpinner, TagsService,
-  $state, $stateParams, issueTicketModal, issueRouteCreditsModal, commonModals, $uibModal,
+  $state, $stateParams, issueTicketModal, commonModals, $uibModal,
   companyId) {
   $scope.tickets = [];
   $scope.currentPage = 1;
@@ -155,25 +155,6 @@ angular.module('beeline-admin')
     }
 
     issueTicketModal.open(issueTicketModalOptions).then(query);
-  }
-
-  $scope.issueRouteCredits = function (ticket) {
-    let context = {
-      user: ticket.user,
-      price: ticket.boardStop.trip.priceF,
-      route: ticket.boardStop.trip.route,
-      ticket
-    }
-
-    issueRouteCreditsModal.issueOn(context)
-    .then((issueResult) => {
-      issueRouteCreditsModal.processModalResult(issueResult)
-    })
-    .then(() => commonModals.alert('Credits issued'))
-    .catch((err) => {
-      console.log(err)
-      commonModals.alert(`There was an error issuing credits: ${_.get(err, 'data.message')}`)
-    })
   }
 
   // Edit ticket button

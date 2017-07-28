@@ -200,9 +200,6 @@
                    Refund
                    &dollar;{{ticket.ticketSale.credit - ticket.notes.discountValue || 0 | number:2}}
                  </button>
-                 <button class="btn btn-warning" ng-click="issueRouteCredits(ticket)">
-                   <span class="glyphicon glyphicon-piggy-bank" aria-hidden="true"></span> Issue Credits
-                 </button>
                 </td>
                 <td>
                   <a ui-sref="^.users({userId: ticket.user.id})"><strong>{{ticket.user.json.name ? (ticket.user.json.name + ' #' + ticket.user.json.index) : ticket.user.name}} </strong>
