@@ -34,7 +34,7 @@
               <td>{{f.date(bid.createdAt, 'dd mmm yy HH:MM:ss')}}</td>
               <td>{{bid.price}}</td>
               <td>{{bid.status}}</td>
-              <td>{{bid.charge_message || bid.chargeError && bid.chargeError.message || ''}}</td>
+              <td>{{bid.chargeMsg || bid.chargeError && bid.chargeError.message || ''}}</td>
               <td>
                 <button class="btn btn-danger" @click="withdrawBid(bid)"
                     type="button" title="withdraw bid">
@@ -90,27 +90,9 @@ export default {
       .then((resp) => {
         let bids = resp.data
         let now = parseInt(Date.now())
-        // bids with notes and timestamps with charge error
         _.forEach(bids, (bid) => {
-          if (bid.status === 'void') {
-            bid.charge_message = 'charge successfully'
-          }
-          else if (bid.status === 'bidded' && bid.notes) {
-            let timestamps = _(bid.notes)
-            .keys()
-            .filter((key) => {
-              return parseInt(key) && (parseInt(key) <= now)
-            })
-            .value()
-
-            if (timestamps) {
-              let latestTimestamp = _.maxBy(timestamps, (timestamp) => parseInt(timestamp))
-              bid.chargeError = {
-                ...bid.notes[latestTimestamp],
-                timestamp: latestTimestamp
-              }
-            }
-          }
+          bid.chargeMsg = (bid.status === 'void') ? 'Charged successfully' : null;
+          bid.chargeError = bidChargeError(bid)
         })
         return bids
       })
@@ -265,6 +247,30 @@ const routeIsEligible = (route) => {
   return route.tags.indexOf('success') == -1 && route.tags.indexOf('failed') == -1
       && (route.tags.includes('lelong') || route.tags.includes('crowdstart'))
       && _.get(route, 'notes.crowdstartExpiry') && new Date(route.notes.crowdstartExpiry) < Date.now()
+}
+
+function bidChargeError(bid) {
+  // bids with notes and timestamps with charge error
+  if (bid.status === 'bidded' && bid.notes) {
+    let timestamps = _(bid.notes)
+    .keys()
+    .filter((key) => {
+      return parseInt(key) && (parseInt(key) <= now)
+    })
+    .value()
+
+    if (timestamps) {
+      let latestTimestamp = _.maxBy(timestamps, (timestamp) => parseInt(timestamp))
+      return {
+        ...bid.notes[latestTimestamp],
+        timestamp: latestTimestamp
+      }
+    } else {
+      return null
+    }
+  } else {
+    return null
+  }
 }
 
 </script>
