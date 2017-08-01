@@ -14,6 +14,17 @@
       </label>
     </div>
 
+    <div ng-if = "filter.promotionType === 'Promotion'">
+      <label>
+        <input type="radio" value="General" ng-model="filter.promotionSubtype" />
+        General Promotions
+      </label>
+      <label>
+        <input type="radio" value="OneTimeUse" ng-model="filter.promotionSubtype" />
+        One-time Use Promotions
+      </label>
+    </div>
+
     <div style="text-align: right">
       <button ng-click="postNew()" class="btn btn-default">
         <span class="glyphicon glyphicon-plus"></span>
