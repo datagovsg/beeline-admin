@@ -37,11 +37,11 @@
               <td>{{bid.chargeMsg || bid.chargeError && bid.chargeError.message || ''}}</td>
               <td>
                 <button class="btn btn-danger" @click="withdrawBid(bid)"
-                    type="button" title="withdraw bid">
+                    type="button" title="Withdraw Bid">
                   <span class="glyphicon glyphicon-trash"></span>
                 </button>
                 <button class="btn btn-danger" @click="charge(bid)" :disabled="bid.status!=='bidded'" v-if="route.tags.indexOf('success') > -1"
-                    type="button" title="manually charge">
+                    type="button" title="Manually Charge">
                   <span class="glyphicon glyphicon-piggy-bank"></span>
                 </button>
               </td>
