@@ -34,7 +34,7 @@
               <td>{{f.date(bid.createdAt, 'dd mmm yy HH:MM:ss')}}</td>
               <td>{{bid.price}}</td>
               <td>{{bid.status}}</td>
-              <td>{{bid.chargeMsg || bid.chargeError && bid.chargeError.message || ''}}</td>
+              <td>{{bid.chargeMessage || bid.chargeError && bid.chargeError.message || ''}}</td>
               <td>
                 <button class="btn btn-danger" @click="withdrawBid(bid)"
                     type="button" title="Withdraw Bid">
@@ -91,7 +91,7 @@ export default {
         let bids = resp.data
         let now = parseInt(Date.now())
         _.forEach(bids, (bid) => {
-          bid.chargeMsg = (bid.status === 'void') ? 'Charged successfully' : null;
+          bid.chargeMessage = (bid.status === 'void') ? 'Charged successfully' : null;
           bid.chargeError = bidChargeError(bid)
         })
         return bids
