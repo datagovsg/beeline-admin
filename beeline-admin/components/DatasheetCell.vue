@@ -27,15 +27,13 @@ cell is clicked / in focus.
       </slot>
     </a>
 
-    <template v-if="isEditing">
-      <slot name="editor">
-        <input
-          :value="value"
-          @input="$emit('input', $event.target.value)"
-          class="the-editor"
-          />
-      </slot>
-    </template>
+    <slot name="editor" v-if="isEditing">
+      <input
+        :value="value"
+        @input="$emit('input', $event.target.value)"
+        class="the-editor"
+        />
+    </slot>
   </div>
 </template>
 <style lang="scss">
@@ -64,7 +62,6 @@ export default {
     return {
       edit: false,
       isEditing: false,
-      editorStyle: null
     }
   },
   watch: {
