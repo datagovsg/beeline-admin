@@ -102,8 +102,10 @@ function($scope, $stateParams, AdminService, LoadingSpinner, commonModals, Route
       txn.routeLabel = $scope.routeTagLabelMap[txn.routeCredits.tag].label
       txn.routeDescription = $scope.routeTagLabelMap[txn.routeCredits.tag].description
       // to speed up, skip the query transaction items for non-purchase / non-conversion ones
-      if (txn.transaction.type !== 'routeCreditPurchase' && txn.transaction.type !== 'conversion' && txn.transaction.type !== 'ticketPurchase') {
+      if (txn.transaction.type !== 'routeCreditPurchase' && txn.transaction.type !== 'conversion' && txn.transaction.type !== 'ticketPurchase' && txn.transaction.committed) {
         return Promise.resolve(txn)
+      } else if (!txn.transaction.committed) {
+        return queryUncommitReason(txn)
       } else if (txn.transaction.type === 'ticketPurchase') {
         let tickets = _.get(txn, 'notes.tickets')
         if (tickets) {
@@ -262,9 +264,7 @@ function($scope, $stateParams, AdminService, LoadingSpinner, commonModals, Route
           }
         })
       }
-
       return txn
-
     }).catch(err =>
       commonModals.alert(
         `${err && err.data && err.data.message}`
@@ -278,6 +278,25 @@ function($scope, $stateParams, AdminService, LoadingSpinner, commonModals, Route
         return item.itemType && item.itemType === type
       })
     })
+  }
+
+  function queryUncommitReason (txn) {
+    let queryOptions = {
+      transactionId: txn.transactionId
+    }
+    return AdminService.beeline({
+      method: 'GET',
+      url: `/transactionItems?`
+        + querystring.stringify(queryOptions)
+    }).then(resp => {
+      let paymentItem = resp.data.rows.find(x => x.itemType === 'payment')
+      txn.uncommitReason = _.get(paymentItem, 'payment.data.message') || 'Reason is unknown'
+      return txn
+    }).catch(err =>
+      commonModals.alert(
+        `${err && err.data && err.data.message}`
+      )
+    )
   }
 
 })
