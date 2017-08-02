@@ -1,8 +1,28 @@
 <template>
   <!-- Vue-Select is very badly written -->
-  <VueSelect :value="imputedValue" @input="whatInput"
-    :options="stopsAsOption" />
+  <DatasheetCell>
+    <div style="min-width: 20em">
+      <template v-if="!value">
+      </template>
+      <template v-else-if="!stopsById[value]">
+        <i>Loading...</i>
+      </template>
+      <template v-else>
+        {{stopsById[value].description}}
+      </template>
+    </div>
+    <VueSelect
+      slot="editor"
+      class="the-editor"
+      :value="imputedValue" @input="whatInput"
+      :options="stopsAsOption" />
+  </DatasheetCell>
 </template>
+<style>
+.the-editor {
+  background-color: white;
+}
+</style>
 <script>
 import {mapGetters, mapActions, mapState} from 'vuex'
 
@@ -13,6 +33,7 @@ export default {
   },
   computed: {
     ...mapState('shared', ['stops']),
+    ...mapGetters('shared', ['stopsById']),
 
     imputedValue() {
       if (this.stops) {
