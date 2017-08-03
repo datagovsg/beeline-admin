@@ -13,6 +13,7 @@ Vue.component('PromotionPage', require('../../beeline-admin/pages/promotion.vue'
 Vue.component('ExtendRoutesPage', require('../../beeline-admin/pages/extendRoutes.vue'))
 
 // COMPONENTS
+Vue.component('DatasheetCell', require('../../beeline-admin/components/DatasheetCell.vue'))
 Vue.component('UibPagination', require('../../beeline-admin/components/pagination.vue'))
 Vue.component('SortTh', require('../../beeline-admin/components/SortTh.vue'))
 Vue.component('TagsView', require('../components/TagsView.vue'))
