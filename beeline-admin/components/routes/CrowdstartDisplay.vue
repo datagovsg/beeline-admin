@@ -257,10 +257,10 @@ export default {
   }
 }
 
-// helper function to verify the route is not processed AND has 'lelong' or 'crowdstart' tag AND is expired
+// helper function to verify the route is not processed AND has 'crowdstart' tag AND is expired
 const routeIsEligible = (route) => {
   return route.tags.indexOf('success') == -1 && route.tags.indexOf('failed') == -1
-      && (route.tags.includes('lelong') || route.tags.includes('crowdstart'))
+      && route.tags.includes('crowdstart')
       && _.get(route, 'notes.crowdstartExpiry') && new Date(route.notes.crowdstartExpiry) < Date.now()
 }
 

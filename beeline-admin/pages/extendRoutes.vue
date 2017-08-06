@@ -272,7 +272,7 @@ export default {
       handler (rp) {
         rp.then(async (routesResponse) => {
           this.routes = routesResponse.data
-          .filter(r => !r.tags.includes('lelong') && !r.tags.includes('crowdstart'))
+          .filter(r => !r.tags.includes('crowdstart'))
           .map(r => ({
             ...r,
             selected: false,

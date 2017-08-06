@@ -1,5 +1,5 @@
 const systemTags = [
-  'public', 'lite', 'mandai', 'lelong', 'crowdstart',
+  'public', 'lite', 'mandai', 'crowdstart',
   'notify-when-empty', 'success', 'failed',
 ]
 

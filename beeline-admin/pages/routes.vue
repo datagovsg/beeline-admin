@@ -174,7 +174,7 @@ export default {
   data() {
     const tagPresets = [
       { name: 'All', tags: null },
-      { name: 'Crowdstart', tags: ['lelong', 'crowdstart'] },
+      { name: 'Crowdstart', tags: ['crowdstart'] },
       { name: 'Lite', tags: ['lite'] },
       { name: 'Regular', tags: ['public'] },
     ]

@@ -99,7 +99,7 @@ function RoutePopupController($scope, RoutesService, $uibModalInstance,
 
     let tripsPromise
 
-    if (!$scope.route.tags.includes('lelong') && !$scope.route.tags.includes('crowdstart')) {
+    if (!$scope.route.tags.includes('crowdstart')) {
       tripsPromise = TripsService.getTrips({
         routeId: $scope.route.id,
         startDate: new Date(Date.UTC(2015,1,1)),
