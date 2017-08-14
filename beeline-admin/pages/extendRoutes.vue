@@ -339,7 +339,7 @@ export default {
 
               trips.forEach(trip => {
                 trip.hashId = tripHashes[trip.hash]
-                trip.hashIdMod5 = tripHashes[trip.hash] % 5
+                trip.hashIdMod4 = tripHashes[trip.hash] % 4
               })
 
               route.tripsByDate = _.keyBy(trips, t => t.date.getTime()) || {}
@@ -370,7 +370,7 @@ export default {
 
     dateClass(route, day) {
       const trip = _.get(route.tripsByDate, day.date.getTime())
-      const hashCode = _.get(trip, 'hashIdMod5')
+      const hashCode = _.get(trip, 'hashIdMod4')
 
       return {
         'has-trip': trip,
@@ -523,11 +523,11 @@ export default {
   td.has-trip.selected, td.has-trip:not(.selected) {
     tr.active &, tr.active:hover &, &, &:hover {
       &.trip-hash-0 {
-        background-color: #FBB7A7;
+        background-color: #FFF8C8;
         cursor: pointer;
       }
       &.trip-hash-1 {
-        background-color: #FFF8C8;
+        background-color: #95CCC7;
         cursor: pointer;
       }
       &.trip-hash-2 {
@@ -536,10 +536,6 @@ export default {
       }
       &.trip-hash-3 {
         background-color: #C6D0AE;
-        cursor: pointer;
-      }
-      &.trip-hash-4 {
-        background-color: #95CCC7;
         cursor: pointer;
       }
     }
