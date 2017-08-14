@@ -224,7 +224,7 @@ export default {
     ...mapActions('modals', ['showModal']),
 
     doSaveRoute() {
-      this.spinWatch(this.saveRoute(this.editRoute))
+      this.spinOnPromise(this.saveRoute(this.editRoute))
     },
     doResetRoute() {
       this.editRoute = blankRoute()
@@ -237,7 +237,7 @@ export default {
       })
       .then((confirm) => {
         if (confirm) {
-          return this.spinWatch(this.editRoute = this.axios.delete(`/routes/${this.route.id}`))
+          return this.spinOnPromise(this.editRoute = this.axios.delete(`/routes/${this.route.id}`))
         }
       })
     },

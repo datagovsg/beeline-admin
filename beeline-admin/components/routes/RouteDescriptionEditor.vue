@@ -206,7 +206,7 @@ export default {
       })
       .then((confirm) => {
         if (confirm) {
-          return this.spinWatch(this.axios.delete(`/routes/${this.route.id}`))
+          return this.spinOnPromise(this.axios.delete(`/routes/${this.route.id}`))
             .then(() => {
               window.location.hash = `#/c/${this.companyId}/routes`
             })
