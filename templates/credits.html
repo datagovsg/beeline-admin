@@ -85,13 +85,19 @@
               <a ng-if="txn.refundingTransactionId" ui-sref="^.transactions({id: txn.refundingTransactionId})">{{txn.refundingTransactionId}}</a>
             </td>
             <td>
-              {{txn.payment.paymentResource}}<br/>
-              <span ng-if="txn.refundPayment.paymentResource">{{txn.refundPayment.paymentResource}}<br/></span>
-              {{txn.payment.destinationResoure}}<br/>
-              <button class="btn btn-danger btn-xs" ng-if="txn.transaction.committed && (txn.transaction.type === 'routeCreditPurchase' || txn.transaction.type === 'conversion') && !txn.refundingTransactionId"
-                ng-click="refund(txn)">
-                Refund
-              </button>
+              <span ng-if="txn.transaction.committed">
+                {{txn.payment.paymentResource}}<br/>
+                <span ng-if="txn.refundPayment.paymentResource">{{txn.refundPayment.paymentResource}}<br/></span>
+                {{txn.payment.destinationResoure}}<br/>
+                <button class="btn btn-danger" ng-if="txn.transaction.committed && (txn.transaction.type === 'routeCreditPurchase' || txn.transaction.type === 'conversion') && !txn.refundingTransactionId"
+                  ng-click="refund(txn)">
+                  Refund
+                  &dollar;{{txn.payment.paymentAmount || 0 | number:2}}
+                </button>
+              </span>
+              <span ng-if="!txn.transaction.committed">
+                {{txn.uncommitReason}}
+              </span>
             </td>
             <td>{{txn.createdAt | date:'dd MMM yyyy HH:mm:ss':'+0800'}}</td>
             <td title="Transaction ID: {{txn.transactionId}}">
