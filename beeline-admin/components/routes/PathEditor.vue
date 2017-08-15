@@ -84,7 +84,6 @@ export default {
           zIndex: 15
         }
       },
-      google: null
     }
   },
   computed: {
@@ -93,7 +92,7 @@ export default {
       return this.route.trips.find(t => t.id === this.tripId)
     },
     currentPath() {
-      if (this.google && this.route && this.route.path) {
+      if (typeof google !== 'undefined' && this.route && this.route.path) {
         return google.maps.geometry.encoding.decodePath(this.route.path)
       }
     },
@@ -101,7 +100,6 @@ export default {
   created() {
     this.$dirRenderers = []
     loaded.then(() => {
-      this.google = google
       this.$dirService = new google.maps.DirectionsService()
     })
   },
@@ -130,7 +128,6 @@ export default {
       this.renderedPath = null
       this.$emit('input', null)
 
-      mapPath.setMap(null)
       this.$dirRenderers.forEach((renderer) => { renderer.setMap(null) })
     },
 
@@ -254,7 +251,7 @@ export default {
     },
 
     makeStopIcon(tripStop, index) {
-      if (typeof google.maps !== 'undefined') {
+      if (typeof google !== 'undefined') {
         return {
           scaledSize: new google.maps.Size(30, 30),
           anchor: new google.maps.Point(15, 15),
