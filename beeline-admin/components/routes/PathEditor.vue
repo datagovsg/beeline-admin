@@ -84,7 +84,6 @@ export default {
           zIndex: 15
         }
       },
-      google: null
     }
   },
   computed: {
@@ -93,7 +92,7 @@ export default {
       return this.route.trips.find(t => t.id === this.tripId)
     },
     currentPath() {
-      if (this.google && this.route && this.route.path) {
+      if (typeof google !== 'undefined' && this.route && this.route.path) {
         return google.maps.geometry.encoding.decodePath(this.route.path)
       }
     },
@@ -101,7 +100,6 @@ export default {
   created() {
     this.$dirRenderers = []
     loaded.then(() => {
-      this.google = google
       this.$dirService = new google.maps.DirectionsService()
     })
   },
@@ -130,7 +128,6 @@ export default {
       this.renderedPath = null
       this.$emit('input', null)
 
-      mapPath.setMap(null)
       this.$dirRenderers.forEach((renderer) => { renderer.setMap(null) })
     },
 
@@ -208,27 +205,44 @@ export default {
             // When directions are changed, if they are connected to other
             // directions renderers, the others have to be updated too
             const directions = renderer.getDirections()
-            const {origin: currentOrigin, destination: currentDestination} = directions.request
+            let {origin: currentOrigin, destination: currentDestination} = directions.request
+
+            // currentOrigin can be a string | latlng | latlngliteral | place...
+            if (currentOrigin.location) currentOrigin = currentOrigin.location
+            if (currentDestination.location) currentDestination = currentDestination.location
 
             // Save the updated leg in our legs array
             this.$legs[i] = directions.routes[0].overview_path
 
             // Update the neighbouring direction renderers if necessary
-            if (i > 0 && currentOrigin !== lastOrigin) {
+            const prevLegNeedsUpdate = i > 0 && currentOrigin !== lastOrigin
+            const nextLegNeedsUpdate = i < stopsLatLng.length - 1 && currentDestination !== lastDestination
+
+            if (prevLegNeedsUpdate) {
               // Origin different -- update the previous leg too
               lastOrigin = currentOrigin
               const directions = this.$dirRenderers[i - 1].getDirections()
-              const {origin, waypoints} = directions.request
 
-              this.updateDirections(this.$dirRenderers[i - 1], origin, currentOrigin, waypoints)
-            } else if (i < stopsLatLng.length - 1 && currentDestination !== lastDestination) {
+              // Directions may be undefined
+              this.updateDirections(this.$dirRenderers[i - 1],
+                directions ? directions.origin : this.$legs[i - 1].origin,
+                currentOrigin,
+                directions ? directions.waypoints : [])
+            }
+
+            if (nextLegNeedsUpdate) {
               // Destination different -- update the next leg too
               lastDestination = currentDestination
               const directions = this.$dirRenderers[i + 1].getDirections()
-              const {destination, waypoints} = directions.request
 
-              this.updateDirections(this.$dirRenderers[i + 1], currentDestination, destination, waypoints)
-            } else {
+              // Directions may be undefined
+              this.updateDirections(this.$dirRenderers[i + 1],
+                currentDestination,
+                directions ? directions.destination : this.$legs[i + 1].destination,
+                directions ? directions.waypoints : [])
+            }
+
+            if (!prevLegNeedsUpdate && !nextLegNeedsUpdate){
               // No updates required -- display the new route path
               this.updateRenderedPath()
             }
@@ -245,7 +259,7 @@ export default {
         )
 
       // save the renderers for future reference
-      this.$dirRenderers = renderersOriginsDestinations.map(x => x.renderer)
+      this.$dirRenderers = renderersOriginsDestinations.map(x => x.renderer);
 
       // generate the initial legs
       this.$legs = renderersOriginsDestinations.map(
@@ -254,7 +268,7 @@ export default {
     },
 
     makeStopIcon(tripStop, index) {
-      if (typeof google.maps !== 'undefined') {
+      if (typeof google !== 'undefined') {
         return {
           scaledSize: new google.maps.Size(30, 30),
           anchor: new google.maps.Point(15, 15),

@@ -30,12 +30,6 @@
     "extract-text-webpack-plugin": "^2.1.0",
     "file-loader": "^0.8.5",
     "gh-pages": "^0.12.0",
-    "gulp": "^3.5.6",
-    "gulp-concat": "^2.2.0",
-    "gulp-minify-css": "^0.3.0",
-    "gulp-rename": "^1.2.0",
-    "gulp-sass": "^2.0.4",
-    "gulp-sourcemaps": "^2.0.0-alpha",
     "html-loader": "^0.4.3",
     "http-server": "^0.10.0",
     "inline-environment-variables-webpack-plugin": "^1.2.0",
@@ -73,7 +67,6 @@
   },
   "devDependencies": {
     "babel-core": "^6.7.7",
-    "bower": "^1.3.3",
     "webpack-stream": "^3.2.0"
   },
   "main": "gulpfile.js",
