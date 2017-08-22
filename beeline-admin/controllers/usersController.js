@@ -72,7 +72,8 @@ angular.module('beeline-admin')
     let context = {
       user: $scope.user,
       route: routeCredit.routes[0],
-      price: routeCredit.routes[0].trips[0].price
+      price: routeCredit.routes[0].trips[0].price,
+      tag: routeCredit.tag
     }
 
     issueRouteCreditsModal.issueOn(context)
