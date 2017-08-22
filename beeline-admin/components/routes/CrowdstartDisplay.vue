@@ -34,14 +34,14 @@
               <td>{{f.date(bid.createdAt, 'dd mmm yy HH:MM:ss')}}</td>
               <td>{{bid.price}}</td>
               <td>{{bid.status}}</td>
-              <td>{{bid.chargeError && bid.chargeError.message || ''}}</td>
+              <td>{{bid.chargeMessage || bid.chargeError && bid.chargeError.message || ''}}</td>
               <td>
                 <button class="btn btn-danger" @click="withdrawBid(bid)"
-                    type="button">
+                    type="button" title="Withdraw Bid">
                   <span class="glyphicon glyphicon-trash"></span>
                 </button>
                 <button class="btn btn-danger" @click="charge(bid)" :disabled="bid.status!=='bidded'" v-if="route.tags.indexOf('success') > -1"
-                    type="button">
+                    type="button" title="Manually Charge">
                   <span class="glyphicon glyphicon-piggy-bank"></span>
                 </button>
               </td>
@@ -90,24 +90,9 @@ export default {
       .then((resp) => {
         let bids = resp.data
         let now = parseInt(Date.now())
-        // bids with notes and timestamps with charge error
         _.forEach(bids, (bid) => {
-          if (bid.status === 'bidded' && bid.notes) {
-            let timestamps = _(bid.notes)
-            .keys()
-            .filter((key) => {
-              return parseInt(key) && (parseInt(key) <= now)
-            })
-            .value()
-
-            if (timestamps) {
-              let latestTimestamp = _.maxBy(timestamps, (timestamp) => parseInt(timestamp))
-              bid.chargeError = {
-                ...bid.notes[latestTimestamp],
-                timestamp: latestTimestamp
-              }
-            }
-          }
+          bid.chargeMessage = (bid.status === 'void') ? 'Charged successfully' : null;
+          bid.chargeError = bidChargeError(bid)
         })
         return bids
       })
@@ -262,6 +247,30 @@ const routeIsEligible = (route) => {
   return route.tags.indexOf('success') == -1 && route.tags.indexOf('failed') == -1
       && route.tags.includes('crowdstart')
       && _.get(route, 'notes.crowdstartExpiry') && new Date(route.notes.crowdstartExpiry) < Date.now()
+}
+
+function bidChargeError(bid) {
+  // bids with notes and timestamps with charge error
+  if (bid.status === 'bidded' && bid.notes) {
+    let timestamps = _(bid.notes)
+    .keys()
+    .filter((key) => {
+      return parseInt(key) && (parseInt(key) <= now)
+    })
+    .value()
+
+    if (timestamps) {
+      let latestTimestamp = _.maxBy(timestamps, (timestamp) => parseInt(timestamp))
+      return {
+        ...bid.notes[latestTimestamp],
+        timestamp: latestTimestamp
+      }
+    } else {
+      return null
+    }
+  } else {
+    return null
+  }
 }
 
 </script>
