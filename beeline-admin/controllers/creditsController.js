@@ -173,7 +173,7 @@ function($scope, $stateParams, AdminService, LoadingSpinner, commonModals, Route
         $scope.filter.selectedMonth.getFullYear(),
         $scope.filter.selectedMonth.getMonth() + 1,
         0
-      ).getTime()
+      ).getTime() + 24 * 3600 * 1000
     }
 
     if(filter.tag) {
