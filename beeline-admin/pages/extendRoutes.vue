@@ -197,28 +197,12 @@ export default {
       }
     }
   },
-  created () {
-    this.axios.get(`/publicHolidays`)
-    .then((response) => {
-      response.data
-      .map(holiday => ({
-        ...holiday,
-        date: new Date(holiday.date).getTime()
-      }))
-      .forEach((holiday) => {
-        this.days.forEach(day => {
-          if (day.date.getTime() === holiday.date) {
-            day.publicHoliday = true
-          }
-        })
-      })
-    })
-  },
   components: {
     ModalHelper: require('../components/ModalHelper'),
   },
   computed: {
     ...mapGetters('shared', ['companiesById', 'currentRoutesById']),
+    ...mapState('shared', ['publicHolidays']),
     ...mapGetters(['axios']),
 
     routesPromise () {
@@ -262,6 +246,21 @@ export default {
         }
       }, [])
     }
+  },
+  created () {
+    this.fetch('publicHolidays')
+    .then(() => {
+      console.log(this.publicHolidays, this.days)
+      const isHoliday = this.publicHolidays
+        .reduce((set, holiday) => {
+          set[new Date(holiday.date).getTime()] = true
+          return set
+        }, {})
+
+      this.days.forEach(day => {
+        day.publicHoliday = !!isHoliday[day.date.getTime()]
+      })
+    })
   },
   mounted() {
     /* Not available if companyId === null */
@@ -359,7 +358,7 @@ export default {
   methods: {
     ...mapActions('modals', ['showModal']),
     ...mapActions('resources', ['createTripForDate']),
-    ...mapActions('shared', ['invalidate', 'refresh']),
+    ...mapActions('shared', ['invalidate', 'refresh', 'fetch']),
 
     updateFilter: _.throttle(function () {
       this.filteredRoutes = this.routes && this.routes
