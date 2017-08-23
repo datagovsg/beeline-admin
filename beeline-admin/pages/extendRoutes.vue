@@ -222,8 +222,12 @@ export default {
     ...mapGetters(['axios']),
 
     routesPromise () {
+      const d = new Date()
+      d.setDate(d.getDate() - 5)
+
       return this.axios.get('/routes?' + querystring.stringify({
-        transportCompanyId: this.companyId || []
+        transportCompanyId: this.companyId || [],
+        start_date: d.toISOString(),
       }))
     },
 
