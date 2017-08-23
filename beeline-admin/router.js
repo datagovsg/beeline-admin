@@ -205,6 +205,12 @@ angular.module('beeline-admin')
     // because the hash has not been parsed
     if (auth.initialized) {
       redirect()
+    } else {
+      auth.authResultPromise.then(() => {
+        if (!auth.redirectRequired) { // No redirect required **by the authenticator**
+          redirect()
+        }
+      })
     }
   });
 })
