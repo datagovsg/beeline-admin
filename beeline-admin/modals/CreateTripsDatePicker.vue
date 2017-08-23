@@ -61,18 +61,29 @@ export default {
     }
   },
   computed: {
+    ...mapState('shared', ['publicHolidays']),
+
     routeTrips() {
       return this.trips || (this.route && this.route.trips)
     },
+
     specialDates() {
       return this.routeTrips.map(t => ({
         date: t.date,
         [this.selectOnTrips ? 'enabled' : 'disabled']: true
       }))
+      .concat(this.publicHolidays
+        ? this.publicHolidays.map(ph => ({
+            date: new Date(ph.date),
+            classes: ['public-holiday'],
+          }))
+        : [])
     },
+
     sortedSelectedDates() {
       return _.sortBy(this.selectedDates)
     },
+
     f() {
       return {
         date: require('dateformat')
@@ -84,12 +95,14 @@ export default {
   },
   created () {
     this.loadTripsForMonth(this.monthShown)
+    this.fetch('publicHolidays')
   },
   components: {
     DatePicker: require('../components/DatePicker.vue')
   },
   methods: {
     ...mapActions('resources', ['getRoute']),
+    ...mapActions('shared', ['fetch']),
 
     loadTripsForMonth (date) {
       const start = new Date(
@@ -135,6 +148,15 @@ export default {
     &.disabled {
       background-color: #888;
       color: #CCC;
+    }
+    &.different-month {
+      color: #CCC;
+    }
+    &:not(.different-month) {
+      font-weight: bold;
+    }
+    &.public-holiday {
+      color: #F00;
     }
   }
   th:not([colspan]) {

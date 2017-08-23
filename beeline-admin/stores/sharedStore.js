@@ -37,7 +37,8 @@ const fetchJobs = {
   companies: {
     url: '/companies'
   },
-  stops: {url: '/stops'}
+  stops: {url: '/stops'},
+  publicHolidays: {url: '/publicHolidays'},
 }
 
 module.exports = {
