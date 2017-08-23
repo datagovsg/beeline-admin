@@ -264,7 +264,10 @@ export default {
     }
   },
   mounted() {
-    this.$refs.loadingSpinner.watch(Promise.all(Object.values(this.$store.state.shared.promises)))
+    /* Not available if companyId === null */
+    if (this.$refs.loadingSpinner) {
+      this.$refs.loadingSpinner.watch(Promise.all(Object.values(this.$store.state.shared.promises)))
+    }
   },
   watch: {
     routesPromise: {
