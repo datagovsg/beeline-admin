@@ -53,9 +53,9 @@
         <div>
           <b>{{f.date(selectedPing.time, 'HH:MM:ss')}}</b>
           <br/>
-          Driver Id: #{{selectedPing.driverId}}
+          Driver Id: #{{selectedPing.driverId}} {{selectedPingDriverVehicle && selectedPingDriverVehicle.driver.name}}
           <br/>
-          Vehilcle Id: #{{selectedPing.vehicleId}}
+          Vehilcle Id: #{{selectedPing.vehicleId}} {{selectedPingDriverVehicle && selectedPingDriverVehicle.vehicleNumber}}
         </div>
       </gmap-info-window>
     </gmap-map>
@@ -79,6 +79,7 @@ export default {
       selectedStop: null,
       selectedPing: null,
       pingsByDriverId: null,
+      vehicleList: null,
       routePath: null,
     }
   },
@@ -117,6 +118,16 @@ export default {
           byTripId: true,
         }
       })
+    },
+    vehiclesPromise() {
+      return this.getVehicles()
+    },
+    selectedPingDriverVehicle() {
+      if (!this.vehicleList || !this.selectedPing) return
+
+      return this.vehicleList.find((value) => {
+        return value.id === this.selectedPing.vehicleId && value.driverId === this.selectedPing.driverId
+      }) || null
     },
     trips () {
       if (!this.routeWithTrips) return
@@ -158,9 +169,15 @@ export default {
         if (p) p.then((pings) => this.pingsByDriverId = _.groupBy(pings, 'driverId'))
       }
     },
+    vehiclesPromise: {
+      immediate: true,
+      handler(p) {
+        if(p) p.then((vehicles) => this.vehicleList = vehicles)
+      }
+    }
   },
   methods: {
-    ...mapActions('resources', ['getRoute', 'getPings']),
+    ...mapActions('resources', ['getRoute', 'getPings', 'getVehicles']),
     zoomInOnStops () {
       if (!this.selectedTrip) return
 
