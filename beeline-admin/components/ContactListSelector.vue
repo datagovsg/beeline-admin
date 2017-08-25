@@ -1,5 +1,5 @@
 <template>
-  <select :value="value" @input="$emit('input', $event.target.value)">
+  <select @input="$emit('input', $event.target.value)" v-model="value">
     <option disabled></option>
     <option v-for="clist in sortedContactLists" :value="clist.id">
       {{clist.description}}
