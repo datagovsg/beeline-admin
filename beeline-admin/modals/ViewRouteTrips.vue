@@ -54,6 +54,8 @@
           <b>{{f.date(selectedPing.time, 'HH:MM:ss')}}</b>
           <br/>
           Driver Id: #{{selectedPing.driverId}}
+          <br/>
+          Vehilcle Id: #{{selectedPing.vehicleId}}
         </div>
       </gmap-info-window>
     </gmap-map>
