@@ -57,7 +57,7 @@
     "vue-select": "^2.2.0",
     "vue-strap": "git+https://github.com/wffranco/vue-strap.git",
     "vue-template-compiler": "^2.3.4",
-    "vue2-google-maps": "^0.7.10",
+    "vue2-google-maps": "^0.8.0",
     "vuex": "^2.3.1",
     "webpack": "^2.5.1",
     "webpack-stream": "^3.2.0"

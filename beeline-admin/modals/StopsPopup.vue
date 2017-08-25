@@ -8,10 +8,11 @@
     <div class="modal-body">
       <div class="row">
         <div class="col-lg-12">
-          <div class="flex-row">
-            <div class="flex-shrink">
-              <GmapMap :center="{lat: 1.38, lng: 103.8}" :zoom="12" @click="newStop($event)"
-                :style="{width: '400px', height: '400px'}">
+          <div class="map-editor-row">
+            <div class="map-panel">
+              <GmapMap :center="{lat: 1.38, lng: 103.8}" :zoom="12"
+                @click="newStop($event)"
+                :style="{width: '100%', height: '400px'}" ref="gmap">
                 <!-- <ui-gmap-markers models="allStops" coords="'$latlng'" idKey="'id'"
                   type="'cluster'" typeOptions="{maxZoom: 18}" click="stopClicked"
                   dorebuildall="true" modelsbyref="true"
@@ -31,7 +32,7 @@
                   />
               </GmapMap>
             </div>
-            <div class="flex-row">
+            <div class="flex-row stops-edit-panel">
               <div v-if="editStop">
                   <h4>
                     <span v-if="!editStop.id">New Stop</span>
@@ -103,6 +104,22 @@
   </modal>
 </template>
 
+<style lang="scss">
+.map-editor-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  .map-panel {
+    flex: 1 0 400px;
+  }
+  .stops-edit-panel {
+    flex: 1 0 400px;
+    padding: 0.5em 1em;
+  }
+}
+</style>
+
 <script>
 const filters = require('../filters')
 import {mapState, mapActions, mapGetters} from 'vuex'
@@ -123,8 +140,10 @@ export default {
       immediate: true,
       handler(stop) {
         const editStop = _.cloneDeep(stop)
-
         this.editStop = editStop || null
+
+        if (this.$refs.gmap)
+          this.$refs.gmap.resizePreserveCenter()
       }
     }
   },
