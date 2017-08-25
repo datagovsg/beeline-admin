@@ -26,28 +26,31 @@
       </GmapMarker>
       <GmapPolyline v-if="currentPath" :path="currentPath" :options="options.currentPathPolyline">
       </GmapPolyline>
-      <!-- <GmapPolyline v-if="renderedPath" :path="renderedPath" :options="options.renderedPathPolyline">
-      </GmapPolyline> -->
       <GmapInfoWindow v-if="selectedTripStop">
         {{ts.stop.description}}
       </GmapInfoWindow>
     </GmapMap>
     <div class="col-lg-12">
       <div class="path-buttons">
-        <button class="btn btn-default"
-          @click="googlePath(trip.tripStops)"
-          :disabled="!trip"
-          >
-          Generate Path
-        </button>
         <span class="btn-group">
-          <button class="btn btn-primary"
-            @click="savePath()">
-            Save route path
+          <button class="btn btn-default"
+            @click="googlePath(trip.tripStops)"
+            :disabled="!trip || hasRenderedPath"
+            >
+            Generate Path
           </button>
+        </span>
+
+        <span class="btn-group">
           <button class="btn btn-danger"
-            @click="clearPath()">
-            Clear path
+            @click="clearRenderers()"
+            v-if="hasRenderedPath">
+            Reset
+          </button>
+          <button class="btn btn-primary"
+            @click="savePath()"
+            v-if="hasRenderedPath">
+            Use generated route path
           </button>
         </span>
       </div>
@@ -71,18 +74,14 @@ export default {
     return {
       tripId: null,
       selectedTripStop: null,
-      renderedPath: null,
+      hasRenderedPath: false,
       options: {
+        /* This is the polyline that shows the current path saved in the route */
         currentPathPolyline: {
           strokeColor: '#880000',
           strokeWeight: 2,
           zIndex: 10
         },
-        renderedPathPolyline: {
-          strokeColor: '#FF0000',
-          strokeWeight: 3,
-          zIndex: 15
-        }
       },
     }
   },
@@ -92,13 +91,24 @@ export default {
       return this.route.trips.find(t => t.id === this.tripId)
     },
     currentPath() {
-      if (typeof google !== 'undefined' && this.route && this.route.path) {
-        return google.maps.geometry.encoding.decodePath(this.route.path)
+      // The ordering of this comparison matters, because
+      // this computed property must be marked as a reactive
+      // dependency of the route path
+      if (this.value && typeof google !== 'undefined') {
+        try {
+          return google.maps.geometry.encoding.decodePath(this.value)
+        } catch (e) {
+          return null
+        }
       }
     },
   },
   created() {
-    this.$dirRenderers = []
+    /* $dirRenderers and $legs are assigned in created() because they
+      are complex objects, and we do not want them to be reactive */
+    this.$dirRenderers = null
+    this.$legs = null
+
     loaded.then(() => {
       this.$dirService = new google.maps.DirectionsService()
     })
@@ -117,18 +127,19 @@ export default {
     }
   },
   methods: {
-    savePath() {
-      if (!this.renderedPath) return
-
-      this.$emit('input', google.maps.geometry.encoding.encodePath(this.renderedPath))
-
-      this.$dirRenderers.forEach((renderer) => { renderer.setMap(null) })
+    getConcatenatedPath () {
+      return this.$legs && this.$legs.reduce((all, leg) => all.concat(leg))
     },
-    clearPath() {
-      this.renderedPath = null
-      this.$emit('input', null)
+    savePath() {
+      const path = this.getConcatenatedPath()
 
+      this.$emit('input', google.maps.geometry.encoding.encodePath(path))
       this.$dirRenderers.forEach((renderer) => { renderer.setMap(null) })
+      this.hasRenderedPath = false
+    },
+    clearRenderers () {
+      this.$dirRenderers.forEach((renderer) => { renderer.setMap(null) })
+      this.hasRenderedPath = false
     },
 
     zoomInOnStops() {
@@ -142,10 +153,6 @@ export default {
         })
       }
       this.$refs.map.panToBounds(bounds)
-    },
-
-    updateRenderedPath () {
-      this.renderedPath = this.$legs.reduce((all, leg) => all.concat(leg))
     },
 
     async updateDirections (renderer, origin, destination, waypoints) {
@@ -177,9 +184,9 @@ export default {
         return new google.maps.LatLng(lat, lng)
       })
 
-      this.$dirRenderers.forEach((renderer) => { renderer.setMap(null) })
-      this.$dirRenderers = []
-      this.$legs = []
+      if (this.$dirRenderers) {
+        this.$dirRenderers.forEach((renderer) => { renderer.setMap(null) })
+      }
 
       const renderersOriginsDestinations = _.range(0, stopsLatLng.length - 1)
         .map(i => {
@@ -241,11 +248,6 @@ export default {
                 directions ? directions.destination : this.$legs[i + 1].destination,
                 directions ? directions.waypoints : [])
             }
-
-            if (!prevLegNeedsUpdate && !nextLegNeedsUpdate){
-              // No updates required -- display the new route path
-              this.updateRenderedPath()
-            }
           })
           return {renderer, origin, destination}
         })
@@ -265,6 +267,8 @@ export default {
       this.$legs = renderersOriginsDestinations.map(
         ({origin, destination}) => [origin, destination]
       )
+
+      this.hasRenderedPath = true
     },
 
     makeStopIcon(tripStop, index) {
