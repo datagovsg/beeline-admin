@@ -61,6 +61,12 @@
             </div>
           </div>
           <div class="form-group">
+            <label class="col-sm-2 control-label">Route Pass Sizes (e.g. 5, 10, 15)</label>
+            <div class="col-sm-10">
+              <NumberArrayEditor v-model="editRoute.notes.passSizes" />
+            </div>
+          </div>
+          <div class="form-group">
             <label for="inputPassword3" class="col-sm-2 control-label">Notes</label>
             <div class="col-sm-10">
               <textarea class="form-control" placeholder="Important Notes in Markdown" rows=12 v-model="editRoute.features" ></textarea>
@@ -142,6 +148,7 @@ export default {
           notes: {
             description: null,
             signage: null,
+            passSizes: [],
             ...route.notes,
           }
         } : {

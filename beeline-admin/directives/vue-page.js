@@ -18,6 +18,7 @@ Vue.component('UibPagination', require('../../beeline-admin/components/paginatio
 Vue.component('SortTh', require('../../beeline-admin/components/SortTh.vue'))
 Vue.component('TagsView', require('../components/TagsView.vue'))
 Vue.component('TagsEditor', require('../components/TagsEditor.vue'))
+Vue.component('NumberArrayEditor', require('../components/NumberArrayEditor.vue'))
 Vue.component('CompanySelector', require('../components/CompanySelector.vue'))
 Vue.component('ExpandableArea', require('../../beeline-admin/components/ExpandableArea.vue'))
 Vue.component('ModalHelper', require('../components/ModalHelper'))
