@@ -79,15 +79,15 @@ export default {
       selectedStop: null,
       selectedPing: null,
       pingsByDriverId: null,
-      vehicleList: null,
       routePath: null,
     }
   },
-  // created() {
-  //   console.log(this)
-  // },
+  created() {
+    this.fetch('vehicles')
+  },
   computed: {
     ...mapState(['axios']),
+    ...mapState('shared', ['vehicles']),
     f: () => filters,
     routePromise() {
       if (!this.route) return
@@ -119,15 +119,12 @@ export default {
         }
       })
     },
-    vehiclesPromise() {
-      return this.getVehicles()
-    },
     selectedPingDriverVehicle() {
-      if (!this.vehicleList || !this.selectedPing) return
+      if (!this.vehicles || !this.selectedPing) return
 
-      return this.vehicleList.find((value) => {
+      return this.vehicles.find((value) => {
         return value.id === this.selectedPing.vehicleId && value.driverId === this.selectedPing.driverId
-      }) || null
+      })
     },
     trips () {
       if (!this.routeWithTrips) return
@@ -168,16 +165,11 @@ export default {
       handler(p) {
         if (p) p.then((pings) => this.pingsByDriverId = _.groupBy(pings, 'driverId'))
       }
-    },
-    vehiclesPromise: {
-      immediate: true,
-      handler(p) {
-        if(p) p.then((vehicles) => this.vehicleList = vehicles)
-      }
     }
   },
   methods: {
-    ...mapActions('resources', ['getRoute', 'getPings', 'getVehicles']),
+    ...mapActions('resources', ['getRoute', 'getPings']),
+    ...mapActions('shared', ['fetch']),
     zoomInOnStops () {
       if (!this.selectedTrip) return
 

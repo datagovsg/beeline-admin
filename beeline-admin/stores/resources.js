@@ -78,12 +78,6 @@ export const storeModule = {
         querystring.stringify(_.pick(options, ['startTime', 'endTime', 'byTripId', 'limit'])))
         .then(resp => resp.data.map(postProcessPing))
     },
-
-    getVehicles(context) {
-      return context.rootGetters.axios.get('/vehicles')
-        .then(resp => resp.data)
-    },
-
   }
 }
 
