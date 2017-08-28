@@ -4,7 +4,7 @@ import querystring from 'querystring';
 
 angular.module('beeline-admin')
 .controller(
-'creditsController',
+'routePassesController',
 function($scope, $stateParams, AdminService, LoadingSpinner, commonModals, RoutesService) {
   const now = new Date()
   const debouncedLoadTransactions = _.debounce(loadTransactions, 1000)
