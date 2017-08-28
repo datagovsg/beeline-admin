@@ -78,7 +78,6 @@ export const storeModule = {
         querystring.stringify(_.pick(options, ['startTime', 'endTime', 'byTripId', 'limit'])))
         .then(resp => resp.data.map(postProcessPing))
     },
-
   }
 }
 

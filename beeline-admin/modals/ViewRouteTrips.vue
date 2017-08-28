@@ -53,9 +53,9 @@
         <div>
           <b>{{f.date(selectedPing.time, 'HH:MM:ss')}}</b>
           <br/>
-          Driver Id: #{{selectedPing.driverId}}
+          Driver Id: #{{selectedPing.driverId}} {{selectedPingDriverVehicle && selectedPingDriverVehicle.driver.name}}
           <br/>
-          Vehilcle Id: #{{selectedPing.vehicleId}}
+          Vehilcle Id: #{{selectedPing.vehicleId}} {{selectedPingDriverVehicle && selectedPingDriverVehicle.vehicleNumber}}
         </div>
       </gmap-info-window>
     </gmap-map>
@@ -82,11 +82,12 @@ export default {
       routePath: null,
     }
   },
-  // created() {
-  //   console.log(this)
-  // },
+  created() {
+    this.fetch('vehicles')
+  },
   computed: {
     ...mapState(['axios']),
+    ...mapState('shared', ['vehicles']),
     f: () => filters,
     routePromise() {
       if (!this.route) return
@@ -116,6 +117,13 @@ export default {
           ).toISOString(),
           byTripId: true,
         }
+      })
+    },
+    selectedPingDriverVehicle() {
+      if (!this.vehicles || !this.selectedPing) return
+
+      return this.vehicles.find((value) => {
+        return value.id === this.selectedPing.vehicleId && value.driverId === this.selectedPing.driverId
       })
     },
     trips () {
@@ -157,10 +165,11 @@ export default {
       handler(p) {
         if (p) p.then((pings) => this.pingsByDriverId = _.groupBy(pings, 'driverId'))
       }
-    },
+    }
   },
   methods: {
     ...mapActions('resources', ['getRoute', 'getPings']),
+    ...mapActions('shared', ['fetch']),
     zoomInOnStops () {
       if (!this.selectedTrip) return
 
