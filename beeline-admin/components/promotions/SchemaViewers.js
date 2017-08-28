@@ -64,15 +64,21 @@ export const RouteIdsViewer = {
   render (h) {
     const contents = []
 
-    for (let v of this.value) {
+    // Generate the route labels, and sort by them!
+    const routeIdCompanyAndLabels = _.sortBy(this.value.map(v => {
       const route = this.allRoutesById[v]
+
+      return [v, route && route.transportCompanyId, (route && route.label) || `#${v}`]
+    }), s => s[2])
+
+    for (let [routeId, companyId, routeLabel] of routeIdCompanyAndLabels) {
       if (contents.length !== 0) {
         contents.push(', ')
       }
       contents.push(h(
         'a',
-        {domProps: {href: `#/c/${route && route.transportCompanyId}/trips/${v}/route`}},
-        [(route && route.label) || `#${v}`]
+        {domProps: {href: `#/c/${companyId}/trips/${routeId}/route`}},
+        [routeLabel]
       ))
     }
 
