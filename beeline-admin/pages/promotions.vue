@@ -99,17 +99,14 @@
             <td>
               <ol class="criteria">
                 <li v-for="criterion in promotion.params.qualifyingCriteria">
-                  <b>{{criterion.type}}</b>
-                  <ul>
-                    <li v-for="(value, key) in criterion.params">
-                      {{key}}: {{value}}
-                    </li>
-                  </ul>
+                  <b>{{f.titleCase(criterion.type)}}</b>
+                  <SchemaViewer :schema="PromotionsSchemata[criterion.type]" :value="criterion.params">
+                  </SchemaViewer>
                 </li>
               </ol>
             </td>
             <td>
-              <b>{{promotion.params.discountFunction.type}}</b>
+              <b>{{f.titleCase(promotion.params.discountFunction.type)}}</b>
               <ul class="discount">
                 <li v-for="(value, key) in promotion.params.discountFunction.params">
                   {{key}}: {{value}}
@@ -142,10 +139,16 @@
 import _ from 'lodash'
 import {mapActions, mapGetters} from 'vuex'
 import leftPad from 'left-pad'
+import SchemaViewer from '../components/promotions/SchemaViewer.vue'
+import PromotionsSchemata from '../components/promotions/Schemata'
 const filters = require('../filters')
 
 export default {
   props: ['companyId'],
+
+  components: {
+    SchemaViewer
+  },
 
   data () {
     return {
@@ -168,6 +171,8 @@ export default {
     ...mapGetters(['axios']),
 
     f: () => filters,
+
+    PromotionsSchemata: () => PromotionsSchemata,
 
     sortedPromotions () {
       return this.promotions && _.orderBy(

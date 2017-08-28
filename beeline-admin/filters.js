@@ -8,6 +8,7 @@ module.exports = {
   _: require('lodash'),
   pointToLatLng: p => ({ lat: p.coordinates[1], lng: p.coordinates[0]}),
   leftPad: require('left-pad'),
+  titleCase: require('title-case'),
   monthNames: n => monthNames[n],
 
   moveUp(arr, index) {
