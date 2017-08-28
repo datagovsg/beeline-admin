@@ -1,8 +1,8 @@
 const _ = require('lodash');
 
 angular.module('beeline-admin')
-.controller('promotionsController', function($scope, $state, $stateParams,
-  $urlRouter, AdminService, store, LoadingSpinner, commonModals, companyId) {
+.controller('promotionsController',
+['$scope', 'companyId', function($scope, companyId) {
     $scope.promoCodes = null;
     $scope.promoTypes = ['Promotion'];
 
@@ -10,4 +10,4 @@ angular.module('beeline-admin')
       id: $state.params.promoId,
       companyId
     }
-});
+}]);
