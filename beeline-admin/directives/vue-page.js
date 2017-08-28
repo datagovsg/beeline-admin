@@ -10,6 +10,7 @@ Vue.use(VueGoogleMaps)
 Vue.component('RoutesPage', require('../../beeline-admin/pages/routes.vue'))
 Vue.component('RoutePage', require('../../beeline-admin/pages/route.vue'))
 Vue.component('PromotionPage', require('../../beeline-admin/pages/promotion.vue'))
+Vue.component('PromotionsPage', require('../../beeline-admin/pages/promotions.vue'))
 Vue.component('ExtendRoutesPage', require('../../beeline-admin/pages/extendRoutes.vue'))
 
 // COMPONENTS
