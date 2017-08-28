@@ -4,11 +4,15 @@ import querystring from 'querystring'
 import jwtDecode from 'jwt-decode'
 import _ from 'lodash'
 
+import SharedStore from './shared'
+import CompanySharedStore from './companyShared'
+
 angular.module('beeline-admin')
 .factory('vueStore', () => {
   const store = new Vuex.Store({
     modules: {
-      shared: require('./sharedStore.js'),
+      shared: SharedStore,
+      companyShared: CompanySharedStore,
       spinner: require('./spinner.js'),
       modals: require('./modals.js'),
       resources: require('./resources.js').storeModule,
