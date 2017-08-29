@@ -52,7 +52,6 @@ export const CompanyIdViewer = { // Stub
   },
   computed: {
     ...mapGetters('shared', ['companiesById']),
-    ...mapState('companyShared', ['companyId']),
   },
   methods: {
     ...mapActions('shared', ['fetch'])
