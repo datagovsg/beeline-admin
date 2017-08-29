@@ -68,7 +68,7 @@
         <tr>
           <th></th>
           <th></th>
-          <th v-for="month in months" :colspan="month.colspan">
+          <th v-for="month in months" :colspan="month.colspan" class="new-month">
             {{f.monthNames(month.date.getUTCMonth())}}
           </th>
         </tr>
@@ -77,7 +77,8 @@
           <th></th>
           <th v-for="day in days" :key="day.date.getTime()" :class="{
               'today': day.today,
-              'public-holiday': day.publicHoliday
+              'public-holiday': day.publicHoliday,
+              'new-month': day.newMonthDay
             }">
             {{day.date.getUTCDate()}}
           </th>
@@ -90,6 +91,7 @@
                   'selected': day.selected,
                   'public-holiday': day.publicHoliday,
                   'today': day.today,
+                  'new-month': day.newMonthDay
                   }"
                 @mousedown.prevent="beginPaintDate($event, day)"
                 @mousemove.prevent="paintDate($event, day)"
@@ -178,15 +180,17 @@ export default {
       days: (() => {
         const today = new Date()
         return _.range(0, 65).map(offset => {
+          let date = new Date(Date.UTC(
+            today.getFullYear(),
+            today.getMonth(),
+            today.getDate() - 5 + offset,
+          ))
           return {
-            date: new Date(Date.UTC(
-              today.getFullYear(),
-              today.getMonth(),
-              today.getDate() - 5 + offset,
-            )),
+            date: date,
             today: (offset === 5),
             publicHoliday: false,
             selected: false,
+            newMonthDay: offset === 0 || date.getDate() === 1
           }
         })
       })(),
@@ -513,6 +517,9 @@ export default {
     }
     &.today {
       color: #00F;
+    }
+    &.new-month {
+      border-left: solid 2px #000;
     }
   }
 
