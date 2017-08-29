@@ -1,12 +1,16 @@
 import SchemaField from './SchemaField'
-import {ContactListViewer, RouteIdsViewer, DateFormatViewer} from './SchemaViewers'
+import {ContactListViewer, RouteIdsViewer, DateFormatViewer,
+        CompanyIdViewer} from './SchemaViewers'
 
 export default {
   'limitByContactList': [
-    new SchemaField({field: 'contactListId', viewer: ContactListViewer}),
+    new SchemaField({field: 'contactListId', humanLabel: 'Contact List', viewer: ContactListViewer}),
   ],
   'limitByRoute': [
-    new SchemaField({field: 'routeIds', viewer: RouteIdsViewer}),
+    new SchemaField({field: 'routeIds', humanLabel: 'Routes', viewer: RouteIdsViewer}),
+  ],
+  'limitByCompany': [
+    new SchemaField({field: 'companyId', humanLabel: 'Company', viewer: CompanyIdViewer}),
   ],
   'limitByTripDate': [
     new SchemaField({field: 'startDate', viewer: DateFormatViewer, props: {format: 'dd-mmm-yyyy', utc: true}}),

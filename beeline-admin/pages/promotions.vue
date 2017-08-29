@@ -141,15 +141,15 @@ import {mapActions, mapGetters} from 'vuex'
 import leftPad from 'left-pad'
 import SchemaViewer from '../components/promotions/SchemaViewer.vue'
 import PromotionsSchemata from '../components/promotions/Schemata'
+import CompanyIdMixin from '../mixins/CompanyIdMixin'
 const filters = require('../filters')
 
 export default {
-  props: ['companyId'],
+  mixins: [CompanyIdMixin],
 
   components: {
     SchemaViewer
   },
-
   data () {
     return {
       filter: {

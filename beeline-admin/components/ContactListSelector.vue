@@ -1,7 +1,9 @@
 <template>
-  <select @input="$emit('input', $event.target.value)" v-model="value">
-    <option disabled></option>
-    <option v-for="clist in sortedContactLists" :value="clist.id">
+  <select @input="$emit('input', parseInt($event.target.value))">
+    <option disabled :selected="!value"></option>
+    <option v-for="clist in sortedContactLists"
+        :value="clist.id"
+        :selected="clist.id == value">
       {{clist.description}}
     </option>
   </select>
@@ -11,36 +13,24 @@
 import {mapGetters, mapActions, mapState} from 'vuex'
 import * as resources from '../stores/resources'
 import _ from 'lodash'
+import CompanyIdMixin from '../mixins/CompanyIdMixin'
+
 const filters = require('../filters')
 
 export default {
   props: ['value', 'companyId'],
-  data() {
-    return {
-      contactLists: []
-    }
-  },
+  mixins: [CompanyIdMixin],
   computed: {
-    ...mapGetters(['axios']),
-    promise () {
-      return this.axios.get(`/companies/${this.companyId}/contactLists`)
-    },
+    ...mapState('companyShared', ['contactLists']),
     sortedContactLists () {
-      return _.sortBy(this.contactLists, 'name')
+      return this.contactLists ? _.sortBy(this.contactLists, 'name') : []
     }
   },
-  watch: {
-    promise: {
-      immediate: true,
-      handler(p) {
-        if (p) {
-          p.then((r) => this.contactLists = r.data)
-        }
-      }
-    }
+  created () {
+    this.fetch('contactLists')
   },
   methods: {
-    ...mapActions('shared', ['fetch'])
+    ...mapActions('companyShared', ['fetch'])
   }
 }
 </script>

@@ -106,37 +106,37 @@
     <div v-if="value.type === 'limitByTripDayOfWeek'">
       Days of week promo is valid for:
       <label>
-        <input type="checkbox" :checked="params.limitByTripDayOfWeek[0]"
+        <input type="checkbox" :checked="paramCache.limitByTripDayOfWeek[0]"
           @change="updateParam(0, $event.target.checked)" />
         Sunday
       </label>
       <label>
-        <input type="checkbox" :checked="params.limitByTripDayOfWeek[0]"
+        <input type="checkbox" :checked="paramCache.limitByTripDayOfWeek[1]"
           @change="updateParam(1, $event.target.checked)" />
         Monday
       </label>
       <label>
-        <input type="checkbox" :checked="params.limitByTripDayOfWeek[0]"
+        <input type="checkbox" :checked="paramCache.limitByTripDayOfWeek[2]"
           @change="updateParam(2, $event.target.checked)" />
         Tuesday
       </label>
       <label>
-        <input type="checkbox" :checked="params.limitByTripDayOfWeek[0]"
+        <input type="checkbox" :checked="paramCache.limitByTripDayOfWeek[3]"
           @change="updateParam(3, $event.target.checked)" />
         Wednesday
       </label>
       <label>
-        <input type="checkbox" :checked="params.limitByTripDayOfWeek[0]"
+        <input type="checkbox" :checked="paramCache.limitByTripDayOfWeek[4]"
           @change="updateParam(4, $event.target.checked)" />
         Thursday
       </label>
       <label>
-        <input type="checkbox" :checked="params.limitByTripDayOfWeek[0]"
+        <input type="checkbox" :checked="paramCache.limitByTripDayOfWeek[5]"
           @change="updateParam(5, $event.target.checked)" />
         Friday
       </label>
       <label>
-        <input type="checkbox" :checked="params.limitByTripDayOfWeek[0]"
+        <input type="checkbox" :checked="paramCache.limitByTripDayOfWeek[6]"
           @change="updateParam(6, $event.target.checked)" />
         Saturday
       </label>

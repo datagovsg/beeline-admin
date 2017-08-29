@@ -177,7 +177,6 @@ export default {
   },
   computed: {
     ...mapGetters(['axios']),
-    ...mapActions('modals', ['showModal']),
     f: () => filters,
 
     promotionPromise() {
@@ -253,6 +252,8 @@ export default {
     }
   },
   methods: {
+    ...mapActions('spinner', ['spinOnPromise']),
+    ...mapActions('modals', ['showModal']),
     preSaveTransform (e) {
       const myParams = _.omit(e.params, ['companyId'])
 
@@ -270,7 +271,7 @@ export default {
     },
 
     save () {
-      this.$refs.loadingSpinner.watch(this.axios.put(
+      this.spinOnPromise(this.axios.put(
         `/companies/${this.companyId}/promotions/${this.id}`,
         this.preSaveTransform(this.promotion)
       )

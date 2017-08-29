@@ -2,7 +2,7 @@ const _ = require('lodash');
 
 angular.module('beeline-admin')
 .controller('promotionsController',
-['$scope', 'companyId', function($scope, companyId) {
+['$scope', '$state', 'companyId', function($scope, $state, companyId) {
     $scope.promoCodes = null;
     $scope.promoTypes = ['Promotion'];
 
