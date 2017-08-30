@@ -41,13 +41,18 @@ export default {
         if (v === null || v === undefined) {
           this.editValue = null
         } else {
-          const match = this.matchingResults.find(u => u.id === this.value)
+          const match = this.matchingResults && this.matchingResults.find(u => u.id === this.value)
+
+          if (!match) {
+            // Trigger a search for this user's data
+            this.fetchMatchingResults(`${this.value}`)
+          }
+
           this.editValue = match || defaultValue(v)
-          this.searchQuery = `(${this.editValue.id}) ${this.editValue.name} ` +
-            `${this.editValue.telephone} ${this.editValue.email}`
+          this.searchQuery = makeResultText(this.editValue)
         }
       }
-    }
+    },
   },
 
   computed: {
@@ -81,6 +86,7 @@ export default {
 
           if (this.value !== null && this.value !== undefined) {
             this.editValue = this.matchingResults.find(u => u.id === this.value)
+            this.searchQuery = makeResultText(this.editValue)
           }
         }
       })
@@ -95,5 +101,9 @@ function defaultValue (uid) {
     description: '',
     telephone: '',
   }
+}
+
+function makeResultText (v) {
+  return `(${v.id}) ${v.name} ${v.telephone || ''} ${v.email || ''}`
 }
 </script>
