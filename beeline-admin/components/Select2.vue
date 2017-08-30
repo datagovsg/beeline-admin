@@ -11,6 +11,7 @@
       @input="showDropdown(); $emit('text_input', $event.target.value)"
       @change="$emit('text_change', $event.target.value)"
       ref="input"
+      :placeholder="placeholder"
       />
     <div v-if="dropdownShown"
         ref="optionElementsContainer"
@@ -22,7 +23,7 @@
           @click="navigateTo(index); useSelected();"
           ref="optionElements">
         <slot name="option-template" :entry="entry">
-          {{entry.label}}
+          {{entry && entry.label}}
         </slot>
       </div>
     </div>
@@ -72,7 +73,7 @@
 
 <script>
 export default {
-  props: ['text', 'options', 'value'],
+  props: ['text', 'options', 'value', 'placeholder'],
 
   data () {
     return {
