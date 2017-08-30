@@ -182,7 +182,11 @@ export default {
       this.dropdownShown = true
       this.$nextTick(() => {
         this.$refs.input.focus()
-        this.selectedIndex = this.options.indexOf(this.value)
+        /* Math.max --
+          - if we have a value, and it's in the list, then stick with it
+          - else (indexOf == -1), use the first available value
+        */
+        this.selectedIndex = Math.max(0, this.options.indexOf(this.value))
         this.ensureVisible()
       })
     }

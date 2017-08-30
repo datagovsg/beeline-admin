@@ -80,7 +80,7 @@ export default {
       this.fetchMatchingResults(query)
     },
 
-    fetchMatchingResults: _.debounce(function (query) {
+    fetchMatchingResults: debounce(function (query) {
       /* The API does not support search if the query string is too short */
       if (query.length < 3) return
 
