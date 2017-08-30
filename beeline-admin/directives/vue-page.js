@@ -14,6 +14,7 @@ Vue.component('PromotionsPage', require('../../beeline-admin/pages/promotions.vu
 Vue.component('ExtendRoutesPage', require('../../beeline-admin/pages/extendRoutes.vue'))
 
 // COMPONENTS
+Vue.component('Dropdown', require('../../beeline-admin/components/Dropdown.vue'))
 Vue.component('DatasheetCell', require('../../beeline-admin/components/DatasheetCell.vue'))
 Vue.component('UibPagination', require('../../beeline-admin/components/pagination.vue'))
 Vue.component('SortTh', require('../../beeline-admin/components/SortTh.vue'))
@@ -32,6 +33,7 @@ Vue.component('MonthPicker', require('../components/MonthPicker.vue'))
 Vue.component('PriceInput', require('../components/PriceInput.vue'))
 Vue.component('TimeInput', require('../components/TimeInput.vue'))
 Vue.component('StopSelector', require('../components/StopSelector.vue'))
+Vue.component('Select2', require('../components/Select2.vue'))
 
 Vue.component('Modal', require('../modals/MyModal.vue'))
 Vue.component('Tabs', require('vue-strap/src/Tabs.vue'))
