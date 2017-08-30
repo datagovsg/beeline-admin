@@ -126,6 +126,9 @@ export default {
         const el = this.$refs.optionElements[this.selectedIndex]
         const container = this.$refs.optionElementsContainer
 
+        // el may be unavailable if there are zero elements
+        if (!el) return
+
         if (el.offsetTop + el.offsetHeight >=
             container.scrollTop + container.clientHeight) {
           container.scrollTop = el.offsetTop
@@ -135,10 +138,12 @@ export default {
       }
     },
     useSelected () {
-      if (this.selectedIndex !== -1) {
+      if (this.selectedIndex >= 0 && this.selectedIndex < this.options.length) {
         this.$emit('input', this.options[this.selectedIndex])
-        this.dropdownShown = false;
+      } else {
+        this.$emit('input', null)
       }
+      this.dropdownShown = false;
     },
     showDropdown () {
       this.dropdownShown = true
