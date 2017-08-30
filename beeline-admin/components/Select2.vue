@@ -70,6 +70,8 @@
     width: 100%;
     border: solid 1px #CCC;
     box-shadow: 0.2em 0.2em 0.4em rgba(0, 0, 0, 0.5);
+    z-index: 1;
+    background-color: white;
 
     .select2-dropdown-input {
       width: 100%;
