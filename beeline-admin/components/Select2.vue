@@ -1,32 +1,45 @@
 <template>
   <Dropdown :showDropdown="dropdownShown" class="select2">
-    <input type="editText" slot="dropdown-input" class="dropdown-input"
-      v-model="editText"
-      @keydown.down="navigateTo(selectedIndex + 1)"
-      @keydown.up="navigateTo(selectedIndex - 1)"
-      @keydown.down.alt="showDropdown"
-      @keydown.up.alt="showDropdown"
-      @keydown.esc="dropdownShown = false"
-      @keydown.enter="useSelected"
-      @input="showDropdown(); $emit('text_input', $event.target.value)"
-      @change="$emit('text_change', $event.target.value)"
-      ref="input"
-      :placeholder="placeholder"
-      />
+    <a href="#" @click.prevent slot="dropdown-input"
+        class="select2-dropdown-display form-control"
+        @focus="showDropdown">
+      <slot name="display-template" :entry="value">
+        {{value}}
+      </slot>
+    </a>
+
     <div v-if="dropdownShown"
-        ref="optionElementsContainer"
         class="select2-dropdown-dropdown"
         slot="dropdown-dropdown">
-      <div v-for="(entry, index) in options"
-          :class="{active: index === selectedIndex}"
-          class="select2-dropdown-option"
-          @click="navigateTo(index); useSelected();"
-          ref="optionElements">
-        <slot name="option-template" :entry="entry">
-          {{entry && entry.label}}
-        </slot>
+
+      <input type="editText" slot="dropdown-input"
+          class="select2-dropdown-input"
+        v-model="editText"
+        @keydown.down="navigateTo(selectedIndex + 1)"
+        @keydown.up="navigateTo(selectedIndex - 1)"
+        @keydown.down.alt="showDropdown"
+        @keydown.up.alt="showDropdown"
+        @keydown.esc="dropdownShown = false"
+        @keydown.enter="useSelected"
+        @input="showDropdown(); $emit('text_input', $event.target.value)"
+        @change="$emit('text_change', $event.target.value)"
+        ref="input"
+        :placeholder="placeholder"
+        />
+
+      <div ref="optionElementsContainer" class="select2-dropdown-scroll-pane">
+        <div v-for="(entry, index) in options"
+            :class="{active: index === selectedIndex}"
+            class="select2-dropdown-option"
+            @click="navigateTo(index); useSelected();"
+            ref="optionElements">
+          <slot name="option-template" :entry="entry">
+            {{entry}}
+          </slot>
+        </div>
       </div>
     </div>
+
     <button slot="dropdown-button" class="select2-dropdown-button dropdown-button"
         @click="showDropdown">
       <i class="glyphicon glyphicon-chevron-down" />
@@ -38,23 +51,43 @@
 .select2 {
   position: relative;
 
+  .dropdown-group {
+    display: flex;
+    flex-direction: row;
+
+    .select2-dropdown-display {
+      flex: 1 1 auto;
+    }
+    .select2-dropdown-button {
+      flex: 0 0 auto;
+    }
+  }
+
   .select2-dropdown-dropdown {
-    max-height: 300px;
-    overflow-y: scroll;
     position: absolute;
     top: 100%;
     left: 0;
     width: 100%;
-
     border: solid 1px #CCC;
     box-shadow: 0.2em 0.2em 0.4em rgba(0, 0, 0, 0.5);
 
-    & .select2-dropdown-option {
-      padding: 0.5em;
-      margin: 0;
+    .select2-dropdown-input {
+      width: 100%;
+      display: block;
     }
-    & .select2-dropdown-option.active {
-      background-color: #DEF;
+
+    .select2-dropdown-scroll-pane {
+      max-height: 300px;
+      overflow-y: scroll;
+      position: relative;
+
+      & .select2-dropdown-option {
+        padding: 0.5em;
+        margin: 0;
+      }
+      & .select2-dropdown-option.active {
+        background-color: #DEF;
+      }
     }
   }
   .dropdown-group {
@@ -148,6 +181,7 @@ export default {
     showDropdown () {
       this.dropdownShown = true
       this.$nextTick(() => {
+        this.$refs.input.focus()
         this.selectedIndex = this.options.indexOf(this.value)
         this.ensureVisible()
       })
