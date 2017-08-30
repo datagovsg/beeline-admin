@@ -2,10 +2,17 @@
   <Select2
     :options="selectOptions"
     :value="editValue"
-    :text="searchQuery"
     @input="updateValue"
     @text_input="updateSearch"
     >
+    <template scope="s" slot="display-template">
+      <template v-if="s.entry">
+        ({{s.entry.id}})
+        {{s.entry.name}}
+        {{s.entry.telephone}}
+        {{s.entry.email}}
+      </template>
+    </template>
     <template scope="s" slot="option-template">
       <template v-if="s.entry">
         ({{s.entry.id}})
@@ -28,7 +35,6 @@ export default {
 
   data() {
     return {
-      searchQuery: '',
       editValue: null,
       matchingResults: null,
     }
@@ -49,7 +55,6 @@ export default {
           }
 
           this.editValue = match || defaultValue(v)
-          this.searchQuery = makeResultText(this.editValue)
         }
       }
     },
@@ -76,6 +81,9 @@ export default {
     },
 
     fetchMatchingResults: _.debounce(function (query) {
+      /* The API does not support search if the query string is too short */
+      if (query.length < 3) return
+
       const promise = this.$lastPromise = this.axios.get(`/users/search?` + querystring.stringify({
         q: query,
         includeEphemeral: this.includeEphemeral ? 'true' : 'false',
@@ -86,7 +94,8 @@ export default {
 
           if (this.value !== null && this.value !== undefined) {
             this.editValue = this.matchingResults.find(u => u.id === this.value)
-            this.searchQuery = makeResultText(this.editValue)
+              || this.editValue /* if there was a previous match */
+              || defaultValue(this.value)
           }
         }
       })
@@ -103,7 +112,4 @@ function defaultValue (uid) {
   }
 }
 
-function makeResultText (v) {
-  return `(${v.id}) ${v.name} ${v.telephone || ''} ${v.email || ''}`
-}
 </script>
