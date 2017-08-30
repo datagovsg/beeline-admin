@@ -15,6 +15,7 @@
       <input type="editText" slot="dropdown-input"
           class="select2-dropdown-input"
         v-model="editText"
+        @keydown.delete="handleDelete"
         @keydown.down="navigateTo(selectedIndex + 1)"
         @keydown.up="navigateTo(selectedIndex - 1)"
         @keydown.down.alt="showDropdown"
@@ -191,6 +192,12 @@ export default {
         this.selectedIndex = Math.max(0, this.options.indexOf(this.value))
         this.ensureVisible()
       })
+    },
+
+    handleDelete () {
+      if (this.editText === '') {
+        this.$emit('input', null)
+      }
     }
   }
 }
