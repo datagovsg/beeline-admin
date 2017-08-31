@@ -75,9 +75,8 @@ export default function SharedStoreTemplate (definition, fetchJobs) {
         if (!(jobs instanceof Array)) jobs = [jobs]
 
         return Promise.all(jobs.map(job => {
-          if (context.state.promises[job]) return
-
-          return context.dispatch('refresh', job)
+          return context.state.promises[job]
+            ? context.state.promises[job] : context.dispatch('refresh', job)
         }))
       }
     }
