@@ -190,7 +190,7 @@ export default {
             today: (offset === 5),
             publicHoliday: false,
             selected: false,
-            newMonthDay: offset === 0 || date.getDate() === 1
+            newMonthDay: offset === 0 || date.getUTCDate() === 1
           }
         })
       })(),
