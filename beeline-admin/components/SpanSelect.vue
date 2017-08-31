@@ -7,7 +7,7 @@
     @input="fixInput"
 
     :month="month"
-    :offset="0"
+    :offset="offset"
     :specialDates="(specialDates || []).concat(selectedSpan)"
     :defaultDisable="defaultDisable"
     :monthFormat="monthFormat"
