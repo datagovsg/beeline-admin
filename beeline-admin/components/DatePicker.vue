@@ -18,13 +18,12 @@
     </thead>
     <tbody>
       <tr v-for="week in weeks">
-        <td @click="clicked(week[0])" :class="dayClasses(week[0])">{{week[0].day}}</td>
-        <td @click="clicked(week[1])" :class="dayClasses(week[1])">{{week[1].day}}</td>
-        <td @click="clicked(week[2])" :class="dayClasses(week[2])">{{week[2].day}}</td>
-        <td @click="clicked(week[3])" :class="dayClasses(week[3])">{{week[3].day}}</td>
-        <td @click="clicked(week[4])" :class="dayClasses(week[4])">{{week[4].day}}</td>
-        <td @click="clicked(week[5])" :class="dayClasses(week[5])">{{week[5].day}}</td>
-        <td @click="clicked(week[6])" :class="dayClasses(week[6])">{{week[6].day}}</td>
+        <td v-for="i in Array(7).fill().map((_, i) => i)"
+            @click="clicked(week[i])"
+            :class="dayClasses(week[i])">
+          {{week[i].day}}
+          <div v-if="week[i].annotation" class="annotation">{{week[i].annotation}}</div>
+        </td>
       </tr>
     </tbody>
   </table>
@@ -127,16 +126,18 @@ export default {
           const canonical = ((weekNumber * 7) + weekDay) * 24*3600*1000 + this.firstDayOfCalendar.getTime()
           const canonicalDate = new Date(canonical)
           const isDifferentMonth = (canonicalDate.getMonth() !== this.monthCanonical.getMonth())
+          const canonicalDateMetadata = this.specialDatesByTime(canonical)
           return {
             canonical,
             date: canonicalDate,
             day: canonicalDate.getDate(),
             disabled:
               (this.defaultDisable)
-                ? !this.specialDatesByTime(canonical) || !this.specialDatesByTime(canonical).enabled
-                : this.specialDatesByTime(canonical) && this.specialDatesByTime(canonical).disabled,
+                ? !canonicalDateMetadata || !canonicalDateMetadata.enabled
+                : canonicalDateMetadata && canonicalDateMetadata.disabled,
             differentMonth: isDifferentMonth,
-            classes: (this.specialDatesByTime(canonical) && this.specialDatesByTime(canonical).classes) || [],
+            classes: ((canonicalDateMetadata && canonicalDateMetadata.classes) || []).filter(Boolean),
+            annotation: canonicalDateMetadata.annotation,
             selected: this.value && (this.multiple
               ? this.value.find(d => this.canonicalTime(d) === canonical)
               : this.canonicalTime(this.value) === canonical)
