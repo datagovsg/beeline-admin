@@ -18,7 +18,7 @@
             <user-id-selector v-model="filter.userId"/>
           </div>
           <div class="form-group">
-            <label>Credit Tag</label>
+            <label>Tag</label>
             <input type="text" class="form-control" v-model="filter.tag" :value="filter">
           </div>
           <div class="form-group">
@@ -92,10 +92,10 @@
                   {{txn.payment && txn.payment.paymentResource}}<br/>
                   <span v-if="txn.refundPayment && txn.refundPayment.paymentResource">{{txn.refundPayment.paymentResource}}<br/></span>
                   {{txn.payment && txn.payment.destinationResoure}}<br/>
-                  <button class="btn btn-danger" v-if="txn.transaction.committed && (txn.transaction.type === 'routeCreditPurchase' || txn.transaction.type === 'conversion') && !txn.refundingTransactionId"
+                  <button class="btn btn-danger" v-if="!txn.redeemed && txn.transaction.committed && (txn.transaction.type === 'routePassPurchase' || txn.transaction.type === 'conversion') && !txn.refundingTransactionId"
                     @click="refund(txn)">
                     Refund
-                    &dollar;{{txn.payment && txn.payment.paymentAmount || 0}}
+                    &dollar;{{routePassPurchasePrice(txn).toFixed(2)}}
                   </button>
                 </span>
                 <span v-if="!txn.transaction.committed">
@@ -104,7 +104,8 @@
               </td>
               <td>{{f.date(txn.createdAt, 'dd mmm yyyy HH:mm:ss')}}</td>
               <td :title="`Transaction ID: ${txn.transactionId}`">
-                <span class="label txn-valid" v-if="txn.transaction.committed && !txn.refundingTransactionId">Valid</span>
+                <span class="label txn-redeemed" v-if="txn.redeemed && txn.transaction.committed && !txn.refundingTransactionId">Redeemed</span>
+                <span class="label txn-valid" v-if="!txn.redeemed && txn.transaction.committed && !txn.refundingTransactionId">Valid</span>
                 <span class="label txn-failed" v-if="!txn.transaction.committed">Failed</span>
                 <span class="label txn-refunded" v-if="txn.transaction.committed && txn.refundingTransactionId">Refunded</span>
               </td>
@@ -114,11 +115,11 @@
               <td>{{txn.numTickets !== undefined ? txn.numTickets : ''}}</td>
               <td>{{txn.transaction.type}}</td>
               <td>
-              <a :href="`#/c/${companyId}/users/${txn.routeCredits.userId}`">
-              <strong>{{txn.routeCredits.user.name}}</strong>
-              <br>(UID: {{txn.routeCredits.userId}})</a>
-              <br>{{txn.routeCredits.user.telephone}}
-              <br>{{txn.routeCredits.user.email}}
+              <a :href="`#/c/${companyId}/users/${txn.routePass.userId}`">
+              <strong>{{txn.routePass.user.name}}</strong>
+              <br>(UID: {{txn.routePass.userId}})</a>
+              <br>{{txn.routePass.user.telephone}}
+              <br>{{txn.routePass.user.email}}
               <br>
                 <span class="discount-code label" v-if="txn.promo && txn.promo.promoId"
                     :href="`#/c/${companyId}/promotions/${txn.promo.promoId}`">
@@ -127,13 +128,13 @@
                   (#{{txn.promo.promoId}})
                 </span>
               </td>
-              <td><ul class="tags"><li class="tags">{{txn.routeCredits.tag}}</li></ul></td>
+              <td><ul class="tags"><li class="tags">{{txn.routePass.tag}}</li></ul></td>
               <td>
-                <div v-if="txn.promo && txn.promo.promoId">{{txn.payment && txn.payment.paymentAmount}} + {{txn.promo.amount}}</div>
+                <div v-if="routePassDiscount(txn)">{{routePassPurchasePrice(txn).toFixed(2)}} + {{routePassDiscount(txn).toFixed(2)}}</div>
                 <div v-else>{{txn.credit}}</div>
               </td>
               <td>
-                {{txn.payment && txn.payment.paymentAmount > 0 ? (txn.payment.paymentAmount) : ''}}
+                {{routePassPurchasePrice(txn).toFixed(2)}}
               </td>
             </tr>
           </tbody>
@@ -172,7 +173,7 @@ export default {
         perPage: 20,
       },
       transactions: [],
-      transactionTypes: ['', 'conversion', 'routeCreditPurchase', 'ticketPurchase', 'refundPayment', 'freeRouteCredit', 'routeCreditExpiry'],
+      transactionTypes: ['', 'conversion', 'routePassPurchase', 'ticketPurchase', 'refundPayment', 'freeRoutePass', 'routePassExpiry'],
       allRoutesPromise: this.fetch('allRoutes'),
       publicHolidaysPromise: this.fetch('publicHolidays')
     }
@@ -223,7 +224,7 @@ export default {
         return this.companyId
           ? this.axios
             .get(
-              `/companies/${this.companyId}/transactionItems/routeCredits/summary?` +
+              `/companies/${this.companyId}/transaction_items/route_passes/summary?` +
               querystring.stringify(this.transactionSummaryQuery)
             )
             .then(response => _.pick(response.data, ['totalItems', 'txnCountByDay']))
@@ -270,6 +271,12 @@ export default {
     ...mapActions('modals', ['showModal']),
     ...mapActions('shared', ['fetch']),
 
+    routePassDiscount (txn) {
+      return +_.get(txn.routePassItem, 'notes.discountValue', 0)
+    },
+    routePassPurchasePrice (txn) {
+      return (+txn.credit || 0) - this.routePassDiscount(txn)
+    },
     buildQuery (paging, filter) {
       let queryOptions = {}
 
@@ -327,7 +334,7 @@ export default {
           await this.spinOnPromise(Promise.resolve(true).then(async () => {
             await this.allRoutesPromise
             const response = await this.axios.get(
-              `/companies/${this.companyId}/transactionItems/routeCredits?` +
+              `/companies/${this.companyId}/transaction_items/route_passes?` +
               querystring.stringify(this.transactionQuery)
             )
             this.transactions = await this.postProcessTransaction(response.data, this.routePassTagToLabel)
@@ -340,10 +347,10 @@ export default {
     postProcessTransaction (txns, routePassTagToLabel) {
       return Promise.all(_.map(txns, (txn) => {
         // do the route label mapping
-        txn.routeLabel = routePassTagToLabel[txn.routeCredits.tag].label
-        txn.routeDescription = routePassTagToLabel[txn.routeCredits.tag].description
+        txn.routeLabel = routePassTagToLabel[txn.routePass.tag].label
+        txn.routeDescription = routePassTagToLabel[txn.routePass.tag].description
         // to speed up, skip the query transaction items for non-purchase / non-conversion ones
-        if (txn.transaction.type !== 'routeCreditPurchase' && txn.transaction.type !== 'conversion' && txn.transaction.type !== 'ticketPurchase' && txn.transaction.committed) {
+        if (txn.transaction.type !== 'routePassPurchase' && txn.transaction.type !== 'conversion' && txn.transaction.type !== 'ticketPurchase' && txn.transaction.committed) {
           return Promise.resolve(txn)
         } else if (!txn.transaction.committed) {
           return this.queryUncommitReason(txn)
@@ -369,7 +376,7 @@ export default {
         transactionId: txn.transactionId
       }
       return this.axios
-        .get(`/transactionItems?${querystring.stringify(queryOptions)}`)
+        .get(`/transaction_items?${querystring.stringify(queryOptions)}`)
         .then(resp => {
           let paymentItem = resp.data.rows.find(x => x.itemType === 'payment')
           txn.uncommitReason = _.get(paymentItem, 'payment.data.message') || 'Reason is unknown'
@@ -382,12 +389,14 @@ export default {
         transactionId: txn.transactionId
       }
       return this.axios
-        .get(`/transactionItems?${querystring.stringify(queryOptions)}`)
+        .get(`/transaction_items?${querystring.stringify(queryOptions)}`)
         .then(async resp => {
           let transactionItems = resp.data.rows
 
-          let [paymentItem, promoItem, routeCreditItem]
-            = this.matchByType(transactionItems, ['payment', 'discount', 'routeCredits'])
+          let [paymentItem, promoItem]
+            = this.matchByType(transactionItems, ['payment', 'discount'])
+
+          const routePassItem = transactionItems.find(i => i.id === txn.id)
 
           txn.payment = {
             paymentResource : _.get(paymentItem, 'payment.paymentResource'),
@@ -401,7 +410,8 @@ export default {
             amount: _.get(promoItem, 'debit')
           }
 
-          txn.routeCreditItem = routeCreditItem
+          txn.routePassItem = routePassItem
+          txn.redeemed = _.get(routePassItem.routePass, 'notes.ticketId')
 
           // has been refunded
           if (txn.refundingTransactionId) {
@@ -409,7 +419,7 @@ export default {
               transactionId: txn.refundingTransactionId
             }
             txn.refundPayment = await this.axios
-              .get(`/transactionItems?${querystring.stringify(queryOptions)}`)
+              .get(`/transaction_items?${querystring.stringify(queryOptions)}`)
               .then(resp => {
                 transactionItems = resp.data.rows
                 let refundPayment = this.matchByType(transactionItems, ['refundPayment'])
@@ -432,8 +442,8 @@ export default {
     refund (txn) {
       this.spinOnPromise(this.axios
         .post(
-          `/transactions/route_passes/${txn.routeCreditItem.itemId}/refund/payment`,
-          { transactionItemId: txn.routeCreditItem.id }
+          `/transactions/route_passes/${txn.routePassItem.itemId}/refund/payment`,
+          { transactionItemId: txn.routePassItem.id }
         )
         .then(() => {
           this.showModal({
