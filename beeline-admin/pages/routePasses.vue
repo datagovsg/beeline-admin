@@ -82,10 +82,10 @@
             <tr v-for="(txn, index) in transactions">
               <td>{{ index + 1 + paging.page * paging.perPage }}</td>
               <td>
-                <a ui-sref="^.transactions({id: txn.transactionId})">
+                <a :href="`#/c/${companyId}/transactions?id=${txn.transactionId}`">
                   {{txn.transactionId}}<br/>
                 </a>
-                <a v-if="txn.refundingTransactionId" ui-sref="^.transactions({id: txn.refundingTransactionId})">{{txn.refundingTransactionId}}</a>
+                <a v-if="txn.refundingTransactionId" :href="`#/c/${companyId}/transactions?id=${txn.refundingTransactionId}`">{{txn.refundingTransactionId}}</a>
               </td>
               <td>
                 <span v-if="txn.transaction.committed">
@@ -114,14 +114,14 @@
               <td>{{txn.numTickets !== undefined ? txn.numTickets : ''}}</td>
               <td>{{txn.transaction.type}}</td>
               <td>
-              <a ui-sref="^.users({userId: filter.user.id})">
+              <a :href="`#/c/${companyId}/users/${txn.routeCredits.userId}`">
               <strong>{{txn.routeCredits.user.name}}</strong>
               <br>(UID: {{txn.routeCredits.userId}})</a>
               <br>{{txn.routeCredits.user.telephone}}
               <br>{{txn.routeCredits.user.email}}
               <br>
                 <span class="discount-code label" v-if="txn.promo && txn.promo.promoId"
-                    ui-sref="^.promotions({companyId: companyId, promoId: txn.promo.promoId})">
+                  :href="`#/c/${companyId}/promotions/${txn.promo.promoId}`">
                   <span v-if="txn.promo.code">{{txn.promo.code}}</span>
                   <span v-else><i>(automatic)</i></span>
                   (#{{txn.promo.promoId}})
@@ -260,9 +260,9 @@ export default {
     },
     transactionQuery: {
       immediate: true,
-      handler: function () {
+      handler: _.debounce(function () {
         this.loadTransactions()
-      }
+      }, 1000)
     }
   },
   methods: {
@@ -321,7 +321,7 @@ export default {
 
       return queryOptions
     },
-    loadTransactions: _.debounce(async function () {
+    loadTransactions: async function () {
       if (this.companyId) {
         try {
           await this.spinOnPromise(Promise.resolve(true).then(async () => {
@@ -336,7 +336,7 @@ export default {
           this.showErrorModal(err)
         }
       }
-    }, 1000),
+    },
     postProcessTransaction (txns, routePassTagToLabel) {
       return Promise.all(_.map(txns, (txn) => {
         // do the route label mapping
