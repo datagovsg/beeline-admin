@@ -157,7 +157,7 @@ import * as resources from '../stores/resources'
 import filters from '../filters'
 
 export default {
-  props: ['companyId'],
+  props: ['companyId', 'userId'],
   data () {
     return {
       filter: {
@@ -166,7 +166,7 @@ export default {
         tag: null,
         transactionType: null,
         hideUncommittedTransactions: false,
-        userId: null
+        userId: this.userId,
       },
       paging: {
         page: 0,
