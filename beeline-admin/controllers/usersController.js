@@ -1,4 +1,5 @@
 import assert from 'assert';
+import _ from 'lodash';
 
 angular.module('beeline-admin')
   .controller('usersController', function ($scope, AdminService, RoutesService,
@@ -7,7 +8,7 @@ angular.module('beeline-admin')
 
   $scope.user = null
   $scope.selector = { userId: $stateParams.userId || null }
-  $scope.routeCredits = null
+  $scope.routePasses = null
   $scope.adminService = AdminService
   $scope.companyId = $stateParams.companyId || null
   $scope.now = Date.now()
@@ -19,7 +20,7 @@ angular.module('beeline-admin')
   })
 
   if ($scope.selector.userId){
-    $scope.showRouteCreditHistory = null;
+    $scope.showRoutePassHistory = null;
 
     LoadingSpinner.watchPromise(
       AdminService.beeline({
@@ -32,7 +33,7 @@ angular.module('beeline-admin')
       }
 
       return Promise.all([
-        $scope.companyId ? loadRouteCreditsAndRoutes($scope.selector.userId) : Promise.resolve(),
+        $scope.companyId ? loadRoutePassesAndRoutes($scope.selector.userId) : Promise.resolve(),
         loadBids($scope.selector.userId),
       ])
     }).catch(err => {
@@ -80,7 +81,7 @@ angular.module('beeline-admin')
     .then((issueResult) => {
       if (issueResult) {
         return issueRouteCreditsModal.processModalResult(issueResult)
-        .then(() => loadRouteCreditsAndRoutes($scope.user.id))
+        .then(() => loadRoutePassesAndRoutes($scope.user.id))
         .then(() => commonModals.alert('Credits issued'))
       }
     })
@@ -105,7 +106,7 @@ angular.module('beeline-admin')
     .then((expireResult) => {
       if (expireResult) {
         return expireRouteCreditsModal.processModalResult(expireResult)
-        .then(() => loadRouteCreditsAndRoutes($scope.user.id))
+        .then(() => loadRoutePassesAndRoutes($scope.user.id))
         .then(() => commonModals.alert('Credits expired'))
       }
     })
@@ -114,7 +115,7 @@ angular.module('beeline-admin')
   }
 
   $scope.showHistory = function (credit) {
-    $scope.showRouteCreditHistory = credit;
+    $scope.showRoutePassHistory = credit;
   }
 
   function loadBids(userId) {
@@ -139,47 +140,47 @@ angular.module('beeline-admin')
     )
   }
 
-  function loadRouteCreditsAndRoutes(userId){
+  function loadRoutePassesAndRoutes(userId){
     let companyRoutesPromise = RoutesService.getRoutes()
       .then(routes => routes.filter(r => r.transportCompanyId == $scope.companyId))
 
     return LoadingSpinner.watchPromise(Promise.all([
-      RoutesService.fetchRouteCredits(userId, $scope.companyId),
+      RoutesService.fetchRoutePasses(userId, $scope.companyId),
       companyRoutesPromise
     ])
-    .then(([routeCredits, companyRoutes]) => {
-      let routeCreditsWithRoutes =
-        routeCredits.map(rc => {
-          rc.routes = companyRoutes.filter(
-            r => r.tags.indexOf(rc.tag) !== -1)
-          return rc
+    .then(([routePasses, companyRoutes]) => {
+      let routePassesWithRoutes =
+        routePasses.map(rp => {
+          rp.routes = companyRoutes.filter(
+            r => r.tags.indexOf(rp.tag) !== -1)
+          return rp
         })
 
-      let getRouteWithTrips = _(routeCreditsWithRoutes)
-        .map(rc => rc.routes)
+      let getRouteWithTrips = _(routePassesWithRoutes)
+        .map(rp => rp.routes)
         .flatten()
         .map(r => RoutesService.getRoute(r.id, { includeTrips: true }))
         .value()
 
-      $scope.routeCredits = routeCredits
+      $scope.routePasses = routePasses
 
       return Promise.all(getRouteWithTrips)
     })).then(routeTrips => {
       let routeWithTripsByRouteId = _.keyBy(routeTrips, r => r.id)
 
-      $scope.routeCredits = $scope.routeCredits.map(rc => {
-        rc.routes = rc.routes.map(route => {
+      $scope.routePasses = $scope.routePasses.map(rp => {
+        rp.routes = rp.routes.map(route => {
           let routeWithTrips = routeWithTripsByRouteId[route.id]
           const tripDates = routeWithTrips.trips.map(trip => trip.date)
           routeWithTrips.startDate = new Date(_.min(tripDates));
           routeWithTrips.endDate = new Date(_.max(tripDates));
           return routeWithTrips
         })
-        return rc
+        return rp
       })
 
-      if ($scope.showRouteCreditHistory) {
-        $scope.showRouteCreditHistory = $scope.routeCredits.find(r => r.tag == $scope.showRouteCreditHistory.tag)
+      if ($scope.showRoutePassHistory) {
+        $scope.showRoutePassHistory = $scope.routePasses.find(r => r.tag == $scope.showRoutePassHistory.tag)
       }
 
       $scope.$apply()

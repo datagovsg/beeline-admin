@@ -6,7 +6,6 @@
       <th>Balance Before</th>
       <th>Change</th>
       <th>Balance After</th>
-      <th>Credits Remaining</th>
     </tr>
   </thead>
   <tbody>
@@ -18,14 +17,9 @@
     <tr ng-repeat="ti in routeCreditHistory track by ti.id">
       <td>{{ti.createdAt | date:'dd MMM yy HH:mm':'+0800'}}</td>
       <td>{{ti.transaction.description}}</td>
-      <td class="text-right">{{ti._balanceBefore | number:2}}</td>
-      <td class="text-right">{{ti.credit | number:2}}</td>
-      <td class="text-right">{{ti._balanceAfter | number:2}}</td>
-      <td class="text-right">
-        <span ng-if="agingRecords[ti.id]">
-          {{agingRecords[ti.id]._unusedBalance | number:2}}
-        </span>
-      </td>
+      <td class="text-right">{{ti._balanceBefore | number}}</td>
+      <td class="text-right">{{ti.credit > 0 ? 1 : -1| number}}</td>
+      <td class="text-right">{{ti._balanceAfter | number}}</td>
     </tr>
     <tr>
       <td></td>
@@ -33,7 +27,6 @@
       <td class="text-right"></td>
       <td class="text-right"></td>
       <td class="text-right">{{finalBalance | number:2}}</td>
-      <td></td>
     </tr>
   </tbody>
 </table>
