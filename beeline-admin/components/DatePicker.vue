@@ -137,7 +137,7 @@ export default {
                 : canonicalDateMetadata && canonicalDateMetadata.disabled,
             differentMonth: isDifferentMonth,
             classes: ((canonicalDateMetadata && canonicalDateMetadata.classes) || []).filter(Boolean),
-            annotation: canonicalDateMetadata.annotation,
+            annotation: canonicalDateMetadata && canonicalDateMetadata.annotation,
             selected: this.value && (this.multiple
               ? this.value.find(d => this.canonicalTime(d) === canonical)
               : this.canonicalTime(this.value) === canonical)
