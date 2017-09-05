@@ -92,7 +92,7 @@ export default {
         let now = parseInt(Date.now())
         _.forEach(bids, (bid) => {
           bid.chargeMessage = (bid.status === 'void') ? 'Charged successfully' : null;
-          bid.chargeError = bidChargeError(bid)
+          bid.chargeError = bidChargeError(bid, now)
         })
         return bids
       })
@@ -249,7 +249,7 @@ const routeIsEligible = (route) => {
       && _.get(route, 'notes.crowdstartExpiry') && new Date(route.notes.crowdstartExpiry) < Date.now()
 }
 
-function bidChargeError(bid) {
+function bidChargeError(bid, now) {
   // bids with notes and timestamps with charge error
   if (bid.status === 'bidded' && bid.notes) {
     let timestamps = _(bid.notes)
