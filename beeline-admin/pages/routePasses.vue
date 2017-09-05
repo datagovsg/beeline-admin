@@ -121,7 +121,7 @@
               <br>{{txn.routeCredits.user.email}}
               <br>
                 <span class="discount-code label" v-if="txn.promo && txn.promo.promoId"
-                  :href="`#/c/${companyId}/promotions/${txn.promo.promoId}`">
+                    :href="`#/c/${companyId}/promotions/${txn.promo.promoId}`">
                   <span v-if="txn.promo.code">{{txn.promo.code}}</span>
                   <span v-else><i>(automatic)</i></span>
                   (#{{txn.promo.promoId}})
