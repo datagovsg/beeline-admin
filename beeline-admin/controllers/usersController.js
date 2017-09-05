@@ -82,7 +82,7 @@ angular.module('beeline-admin')
       if (issueResult) {
         return issueRouteCreditsModal.processModalResult(issueResult)
         .then(() => loadRoutePassesAndRoutes($scope.user.id))
-        .then(() => commonModals.alert('Credits issued'))
+        .then(() => commonModals.alert('Passes issued'))
       }
     })
     .catch(err => commonModals.alert(
@@ -98,7 +98,7 @@ angular.module('beeline-admin')
     let context = {
       user: $scope.user,
       route: routeCredit.routes[0],
-      price: routeCredit.routes[0].trips[0].price,
+      quantity: 1,
       tag: routeCredit.tag,
     }
 
@@ -107,7 +107,7 @@ angular.module('beeline-admin')
       if (expireResult) {
         return expireRouteCreditsModal.processModalResult(expireResult)
         .then(() => loadRoutePassesAndRoutes($scope.user.id))
-        .then(() => commonModals.alert('Credits expired'))
+        .then(() => commonModals.alert('Passes expired'))
       }
     })
     .catch(err => commonModals.alert(

@@ -21,7 +21,7 @@ function ($rootScope, $uibModal, AdminService, TagsService,
       data: {
         user: context.user,
         route: context.route,
-        debitAmt: context.price,
+        quantity: context.quantity,
         tag: context.tag
       },
       template: expireRouteCreditsTemplate,
@@ -32,13 +32,13 @@ function ($rootScope, $uibModal, AdminService, TagsService,
 
   this.processModalResult = function (expireResult) {
     if (expireResult) {
-      const {debitAmt, tag, user} = expireResult
+      const {quantity, tag, user} = expireResult
 
       return AdminService.beeline({
         method: 'POST',
-        url: `/companies/${AdminService.getCompanyId()}/route_credits/${tag}/users/${user.id}/expire`,
+        url: `/companies/${AdminService.getCompanyId()}/route_passes/${tag}/users/${user.id}/expire`,
         data: {
-          amount: debitAmt
+          quantity
         }
       })
     }
