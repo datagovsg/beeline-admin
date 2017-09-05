@@ -109,9 +109,12 @@ export default {
       immediate: true,
       handler (promise) {
         if (promise) {
-          promise.then(bids => {
-            this.bids = bids
-          })
+          this.$store.dispatch(
+            'spinner/spinOnPromise',
+            promise.then(bids => {
+              this.bids = bids
+            })
+          )
         }
       }
     }
