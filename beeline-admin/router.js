@@ -184,10 +184,10 @@ angular.module('beeline-admin')
     }
   })
 
-  .state('c.credits', {
-    url: '/credits?userId',
-    templateUrl: 'templates/credits.html',
-    controller: 'creditsController',
+  .state('c.route-passes', {
+    url: '/route-passes?userId',
+    templateUrl: 'templates/route-passes.html',
+    controller: 'routePassesController',
     data: {
       requiresLogin: true,
     }

@@ -1,13 +1,16 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import * as VueGoogleMaps from 'vue2-google-maps'
+import AsyncComputed from 'vue-async-computed'
 import assert from 'assert'
 
 Vue.use(Vuex)
 Vue.use(VueGoogleMaps)
+Vue.use(AsyncComputed)
 
 // PAGES
 Vue.component('RoutesPage', require('../../beeline-admin/pages/routes.vue'))
+Vue.component('RoutePassesPage', require('../../beeline-admin/pages/routePasses.vue'))
 Vue.component('RoutePage', require('../../beeline-admin/pages/route.vue'))
 Vue.component('PromotionPage', require('../../beeline-admin/pages/promotion.vue'))
 Vue.component('PromotionsPage', require('../../beeline-admin/pages/promotions.vue'))
@@ -34,6 +37,8 @@ Vue.component('PriceInput', require('../components/PriceInput.vue'))
 Vue.component('TimeInput', require('../components/TimeInput.vue'))
 Vue.component('StopSelector', require('../components/StopSelector.vue'))
 Vue.component('Select2', require('../components/Select2.vue'))
+Vue.component('SpanSelect', require('../components/SpanSelect.vue'))
+Vue.component('UserIdSelector', require('../components/UserIdSelector.vue'))
 
 Vue.component('Modal', require('../modals/MyModal.vue'))
 Vue.component('Tabs', require('vue-strap/src/Tabs.vue'))
