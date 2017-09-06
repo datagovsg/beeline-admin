@@ -386,7 +386,7 @@ export default {
         .then(async resp => {
           let transactionItems = resp.data.rows
 
-          let [paymentItem, promoItem, routePassItem]
+          let [paymentItem, promoItem, routeCreditItem]
             = this.matchByType(transactionItems, ['payment', 'discount', 'routePass'])
 
           txn.payment = {
