@@ -387,7 +387,7 @@ export default {
           let transactionItems = resp.data.rows
 
           let [paymentItem, promoItem, routeCreditItem]
-            = this.matchByType(transactionItems, ['payment', 'discount', 'routePass'])
+            = this.matchByType(transactionItems, ['payment', 'discount', 'routeCredits'])
 
           txn.payment = {
             paymentResource : _.get(paymentItem, 'payment.paymentResource'),
