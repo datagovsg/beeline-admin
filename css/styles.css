@@ -6983,9 +6983,9 @@ label.superAdmin {
   .label.txn-valid[href]:hover, .label.txn-valid[href]:focus {
     background-color: #00917a; }
 
-.label.txn-void {
+.label.txn-void, .label.txn-redeemed {
   background-color: #777777; }
-  .label.txn-void[href]:hover, .label.txn-void[href]:focus {
+  .label.txn-void[href]:hover, .label.txn-void[href]:focus, .label.txn-redeemed[href]:hover, .label.txn-redeemed[href]:focus {
     background-color: #5e5e5e; }
 
 .label.txn-refunded {

@@ -73,6 +73,12 @@
           />
           Route Credits
       </label>
+      <label>
+        <input type="checkbox"
+          ng-model="filter.itemTypes.routePass"
+          />
+          Route Passes
+      </label>
     </div>
 
     <!-- txn id -->
@@ -245,13 +251,21 @@
       <td ng-if="item.itemType == 'transfer'"></td>
       <td ng-if="item.itemType == 'transfer'"></td>
 
-      <!-- transfers -->
+      <!-- Route credits -->
       <td ng-if="item.itemType == 'routeCredits'">{{item.routeCredits.tag}}</td>
       <td ng-if="item.itemType == 'routeCredits'">{{item.routeCredits.userId}}</td>
       <td ng-if="item.itemType == 'routeCredits'"></td>
       <td ng-if="item.itemType == 'routeCredits'"></td>
       <td ng-if="item.itemType == 'routeCredits'"></td>
       <td ng-if="item.itemType == 'routeCredits'"></td>
+
+      <!-- Route passes -->
+      <td ng-if="item.itemType == 'routePass'">{{item.routePass.tag}}</td>
+      <td ng-if="item.itemType == 'routePass'">{{item.routePass.userId}}</td>
+      <td ng-if="item.itemType == 'routePass'"></td>
+      <td ng-if="item.itemType == 'routePass'"></td>
+      <td ng-if="item.itemType == 'routePass'"></td>
+      <td ng-if="item.itemType == 'routePass'"></td>
 
       <!-- transfers -->
       <td ng-if="item.itemType == 'discount'">

@@ -61,7 +61,7 @@
             <a ui-sref="^.bookings({userId: user.id})"><button class="btn btn-primary btn-block btm-offset" ng-disabled="!user">User booking for this month</button></a>
           </div>
           <div class="col-sm-12">
-            <a ui-sref="^.credits({userId: user.id})"><button class="btn btn-primary btn-block btm-offset" ng-disabled="!user">Credits for this month</button></a>
+            <a ui-sref="^.route-passes({userId: user.id})"><button class="btn btn-primary btn-block btm-offset" ng-disabled="!user">Credits for this month</button></a>
           </div>
           <div class="col-sm-12">
             <button class="btn btn-primary btn-block btm-offset" ng-click="getUserPin()" ng-if="adminService.isSuperAdmin()" ng-disabled="!user">Get PIN</button>
@@ -71,13 +71,14 @@
       </div>
     </div>
 
-    <div class="col-sm-9" ng-if="user.id && showRouteCreditHistory">
-      <h2>History of '{{showRouteCreditHistory.tag}}'</h2>
-      <route-credit-history-viewer user-id="user.id"
-        credit-tag="showRouteCreditHistory.tag"
-        final-balance="showRouteCreditHistory.balance"
+    <div class="col-sm-9" ng-if="user.id && showRoutePassHistory">
+      <h2>History of '{{showRoutePassHistory.tag}}'</h2>
+      <route-pass-history-viewer
+        user-id="user.id"
+        tag="showRoutePassHistory.tag"
+        final-balance="showRoutePassHistory.balance"
         company-id="companyId">
-      </route-credit-history-viewer>
+      </route-pass-history-viewer>
     </div>
     <div class="col-sm-9">
       <div>
@@ -113,16 +114,16 @@
       </div>
 
       <div>
-        <h2>Route Credits</h2>
+        <h2>Route Passes</h2>
         <div ng-if="!companyId">
-          Please select a company from the top right hand corner to manage route credits
+          Please select a company from the top right hand corner to manage route passes
         </div>
         <table ng-if="companyId" class="table">
           <thead>
             <tr>
               <th>Actions</th>
-              <th>Credit Tag</th>
-              <th>Credit Balance</th>
+              <th>Tag</th>
+              <th>Balance</th>
               <th class="route-header">Route Label</th>
               <th class="route-header">Route Description</th>
               <th class="route-header">Route Status</th>
@@ -131,7 +132,7 @@
               <th class="route-header">Route Price</th>
             </tr>
           </thead>
-          <tbody ng-repeat="credit in routeCredits">
+          <tbody ng-repeat="credit in routePasses">
             <tr ng-repeat="route in credit.routes">
               <td ng-if="$index == 0" rowspan="{{ credit.routes.length }}">
                 <button class="btn btn-success btn-sm" ng-click="showHistory(credit)">
@@ -141,18 +142,18 @@
                 <br/>
                 <button class="btn btn-warning btn-sm" ng-click="issueRouteCredits(credit)">
                   <span class="glyphicon glyphicon-piggy-bank" aria-hidden="true"></span>
-                  Add credit...
+                  Issue passes...
                 </button>
                 <br/>
                 <button class="btn btn-danger btn-sm" ng-click="expireRouteCredits(credit)">
                   <span class="glyphicon glyphicon-scissors" aria-hidden="true"></span>
-                  Expire Credits...
+                  Expire passes...
                 </button>
               </td>
               <td ng-if="$index == 0" rowspan="{{ credit.routes.length }}">
                 <ul class="tags"><li class="tags">{{ credit.tag }}</li></ul>
               </td>
-              <td ng-if="$index == 0" rowspan="{{ credit.routes.length }}" class="width-limit-xs">{{ credit.balance | currency }}</td>
+              <td ng-if="$index == 0" rowspan="{{ credit.routes.length }}" class="width-limit-xs">{{ credit.balance }}</td>
               <td>
                 <a ui-sref="c.trips({
                   companyId: route.transportCompanyId,
