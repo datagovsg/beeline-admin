@@ -3,7 +3,7 @@
     @include label-variant($label-success-bg);
   }
 
-  &.txn-void {
+  &.txn-void, &.txn-redeemed {
     @include label-variant($label-default-bg);
   }
 

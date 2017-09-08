@@ -29,7 +29,7 @@ require('./directives/vue-page')
 require('./directives/percentInput')
 require('./directives/selectors/contactList')
 require('./directives/selectors/route2')
-require('./directives/routeCreditHistoryViewer/routeCreditHistoryViewer')
+require('./directives/routePassHistoryViewer/routePassHistoryViewer')
 require('./auth0')
 require('./router')
 

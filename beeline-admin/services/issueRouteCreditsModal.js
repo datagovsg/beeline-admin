@@ -72,7 +72,7 @@ function ($rootScope, $uibModal, AdminService, TagsService,
             url: '/transactions/route_passes/issue_free',
             data: {
               userId: data.user.id,
-              amount: numPassesToRefund * data.price,
+              quantity: numPassesToRefund,
               routeId: data.route.id,
               tag: data.tag,
               description: data.description,

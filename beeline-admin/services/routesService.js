@@ -222,10 +222,10 @@ export default function (AdminService, DriverService, $q, LoadingSpinner, compan
     })
   }
 
-  this.fetchRouteCredits = function(userId, companyId){
+  this.fetchRoutePasses = function(userId, companyId){
     return AdminService.beeline({
       method: 'GET',
-      url: `/companies/${companyId}/routeCreditsByUser/${userId}`
+      url: `/companies/${companyId}/route_passes/all/users/${userId}`
     }).then((response) => {
       return response.data
     }).catch(err => {

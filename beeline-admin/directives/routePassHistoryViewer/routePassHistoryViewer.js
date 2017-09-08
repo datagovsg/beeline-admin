@@ -1,17 +1,17 @@
 
 angular.module('beeline-admin')
-.directive('routeCreditHistoryViewer', function (AdminService, commonModals, $q) {
+.directive('routePassHistoryViewer', function (AdminService, commonModals, $q) {
   return {
     restrict: 'E',
     scope: {
       userId: '<',
       companyId: '<',
-      creditTag: '<',
+      tag: '<',
       finalBalance: '<',
     },
-    template: require('./routeCreditHistoryViewer.html'),
+    template: require('./routePassHistoryViewer.html'),
     controller($scope) {
-      $scope.$watchGroup(['userId', 'companyId', 'creditTag', 'finalBalance'], () => {
+      $scope.$watchGroup(['userId', 'companyId', 'tag', 'finalBalance'], () => {
         $scope.reset()
       })
 
@@ -25,7 +25,7 @@ angular.module('beeline-admin')
       $scope.loadMoreHistory = function () {
         $scope.loadHistoryPromise = $scope.loadHistoryPromise
         .then((historySoFar) => {
-          const baseUrl = `/companies/${$scope.companyId}/route_credits/${$scope.creditTag}` +
+          const baseUrl = `/companies/${$scope.companyId}/route_passes/${$scope.tag}` +
             `/users/${$scope.userId}/history`
           const loadUrl = historySoFar.length === 0 ?
             baseUrl : `${baseUrl}?lastId=${historySoFar[historySoFar.length - 1].id}`
@@ -40,7 +40,6 @@ angular.module('beeline-admin')
               $scope.moreToLoad = false
             }
             $scope.routeCreditHistory = concatenated.slice().reverse();
-            $scope.agingRecords = _.keyBy(computeAging(concatenated).accounted, 'id')
             return concatenated
           })
           .catch((err) => {
@@ -58,7 +57,7 @@ angular.module('beeline-admin')
           parseFloat($scope.finalBalance) : lastChunk[lastChunk.length - 1]._balanceBefore
 
         for (let item of nextChunk) {
-          const nextBalance = lastBalance + parseFloat(item.debit)
+          const nextBalance = lastBalance + (item.debit < 0 ? -1 : 1)
           item._balanceAfter = lastBalance
           item._balanceBefore = parseFloat(nextBalance.toFixed(2))
 
@@ -66,31 +65,6 @@ angular.module('beeline-admin')
         }
 
         return lastChunk.concat(nextChunk)
-      }
-
-      function computeAging(items) {
-        let aging = {
-          unaccounted: parseFloat($scope.finalBalance),
-          accounted: []
-        }
-
-        for (let item of items) {
-          if (aging.unaccounted <= 0) {
-            break
-          } else {
-            if (item.creditF >= 0) {
-              aging = {
-                unaccounted: aging.unaccounted - item.creditF,
-                accounted: aging.accounted.concat([{
-                  ...item,
-                  _unusedBalance: Math.min(aging.unaccounted, item.creditF)
-                }])
-              }
-            }
-          }
-        }
-
-        return aging
       }
 
       $scope.reset()
