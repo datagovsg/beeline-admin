@@ -272,7 +272,7 @@ export default {
     ...mapActions('shared', ['fetch']),
 
     routePassDiscount (txn) {
-      return +_.get(txn.routePassItem, 'notes.discountValue', 0)
+      return +_.get(txn.routePassItem, 'routePass.notes.discountValue', 0)
     },
     routePassPurchasePrice (txn) {
       return (+txn.credit || 0) - this.routePassDiscount(txn)
