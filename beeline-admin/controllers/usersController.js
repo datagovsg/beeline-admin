@@ -64,25 +64,29 @@ angular.module('beeline-admin')
     })
   }
 
-  $scope.issueRouteCredits = function(routeCredit) {
-    assert(routeCredit.routes
-        && routeCredit.routes.length > 0)
-    assert(routeCredit.routes[0].trips
-        && routeCredit.routes[0].trips.length > 0)
-
-    let context = {
-      user: $scope.user,
-      route: routeCredit.routes[0],
-      price: routeCredit.routes[0].trips[0].price,
-      tag: routeCredit.tag
+  $scope.issueRouteCredits = function(routeCredit, arbitrary) {
+    if (!arbitrary) {
+      assert(routeCredit.routes
+          && routeCredit.routes.length > 0)
+      assert(routeCredit.routes[0].trips
+          && routeCredit.routes[0].trips.length > 0)
     }
+    let context = arbitrary
+      ? {
+        user: $scope.user,
+        price: 0,
+      }
+      : {
+        user: $scope.user,
+        price: routeCredit.routes[0].trips[0].price,
+        tag: routeCredit.tag
+      }
 
     issueRouteCreditsModal.issueOn(context)
     .then((issueResult) => {
       if (issueResult) {
         return issueRouteCreditsModal.processModalResult(issueResult)
         .then(() => loadRoutePassesAndRoutes($scope.user.id))
-        .then(() => commonModals.alert('Passes issued'))
       }
     })
     .catch(err => commonModals.alert(
