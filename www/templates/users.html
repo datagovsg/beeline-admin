@@ -66,6 +66,13 @@
           <div class="col-sm-12">
             <button class="btn btn-primary btn-block btm-offset" ng-click="getUserPin()" ng-if="adminService.isSuperAdmin()" ng-disabled="!user">Get PIN</button>
           </div>
+          <div class="col-sm-12">
+            <button class="btn btn-warning btn-block btm-offset" ng-click="issueRouteCredits({}, true)" ng-disabled="!user">
+              <span class="glyphicon glyphicon-piggy-bank" aria-hidden="true"></span>
+              Issue passes...
+            </button>
+          </div>
+          <br/>
         </div>
 
       </div>
