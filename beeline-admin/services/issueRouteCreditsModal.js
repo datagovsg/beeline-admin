@@ -6,6 +6,14 @@ angular.module('beeline-admin')
 function ($rootScope, $uibModal, AdminService, TagsService,
           commonModals, LoadingSpinner, uibModalPromise) {
   this.issueOn = function (context) {
+    if (context.tag && TagsService.getCreditTags([context.tag]).length == 0) {
+      return commonModals.alert({
+        title: 'Error',
+        message:
+        `The route for the selected ticket does not have suitable credit tags.`
+      })
+    }
+
     return uibModalPromise.openModal({
       data: {
         user: context.user,
