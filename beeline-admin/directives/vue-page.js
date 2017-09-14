@@ -19,7 +19,7 @@ Vue.component('ExtendRoutesPage', require('../../beeline-admin/pages/extendRoute
 // COMPONENTS
 Vue.component('Dropdown', require('../../beeline-admin/components/Dropdown.vue'))
 Vue.component('DatasheetCell', require('../../beeline-admin/components/DatasheetCell.vue'))
-Vue.component('UibPagination', require('../../beeline-admin/components/pagination.vue'))
+Vue.component('UibPagination', require('../../beeline-admin/components/UibPagination.vue'))
 Vue.component('SortTh', require('../../beeline-admin/components/SortTh.vue'))
 Vue.component('TagsView', require('../components/TagsView.vue'))
 Vue.component('TagsEditor', require('../components/TagsEditor.vue'))

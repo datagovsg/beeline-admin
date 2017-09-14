@@ -2,7 +2,7 @@
   <Select2
     :value="editValue"
     @input="updateValue"
-    @text_input="updateSearch"
+    @text-input="updateSearch"
     :options="selectOptions"
     >
     <template scope="s" slot="display-template">
