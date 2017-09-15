@@ -19,7 +19,7 @@
           </div>
           <div class="form-group">
             <label>Tag</label>
-            <input type="text" class="form-control" v-model="filter.tag" :value="filter">
+            <route-tag-selector v-model="filter.tag" :companyId="companyId" />
           </div>
           <div class="form-group">
             <label>TransactionType</label>
@@ -74,7 +74,6 @@
               <th>Type</th>
               <th>User</th>
               <th>Tag</th>
-              <th>Credit Amount</th>
               <th>Payment Amount</th>
             </tr>
           </thead>
@@ -129,10 +128,6 @@
                 </span>
               </td>
               <td><ul class="tags"><li class="tags">{{txn.routePass.tag}}</li></ul></td>
-              <td>
-                <div v-if="routePassDiscount(txn)">{{routePassPurchasePrice(txn).toFixed(2)}} + {{routePassDiscount(txn).toFixed(2)}}</div>
-                <div v-else>{{txn.credit}}</div>
-              </td>
               <td>
                 {{routePassPurchasePrice(txn).toFixed(2)}}
               </td>
@@ -192,7 +187,7 @@ export default {
 
     routePassTagToLabel () {
       return _(this.allRoutes)
-        .filter(route => route.transportCompanyId === parseInt(this.companyId))
+        .filter(route => route.transportCompanyId === this.companyId)
         .flatMap(route => route.tags
           .filter(t => t.startsWith('rp-') || t.startsWith('crowdstart-'))
           .map(t => [t, { label: route.label, description: route.name }])
