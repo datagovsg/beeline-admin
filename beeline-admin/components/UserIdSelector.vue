@@ -3,7 +3,7 @@
     :options="selectOptions"
     :value="editValue"
     @input="updateValue"
-    @text_input="updateSearch"
+    @text-input="updateSearch"
     >
     <template scope="s" slot="display-template">
       <template v-if="s.entry">

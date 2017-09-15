@@ -22,8 +22,8 @@
         @keydown.up.alt="showDropdown"
         @keydown.esc="dropdownShown = false"
         @keydown.enter="useSelected"
-        @input="showDropdown(); $emit('text_input', $event.target.value)"
-        @change="$emit('text_change', $event.target.value)"
+        @input="showDropdown(); $emit('text-input', $event.target.value)"
+        @change="$emit('text-change', $event.target.value)"
         ref="input"
         :placeholder="placeholder"
         />
