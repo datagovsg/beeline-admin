@@ -7,7 +7,7 @@ angular.module('beeline-admin')
 'routePassesController',
 function($scope, $stateParams) {
   $scope.pageProps = {
-    companyId: $stateParams.companyId,
+    companyId: parseInt($stateParams.companyId),
     userId: $stateParams.userId,
   };
 });

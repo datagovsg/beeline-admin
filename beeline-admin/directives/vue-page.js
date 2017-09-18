@@ -39,6 +39,7 @@ Vue.component('StopSelector', require('../components/StopSelector.vue'))
 Vue.component('Select2', require('../components/Select2.vue'))
 Vue.component('SpanSelect', require('../components/SpanSelect.vue'))
 Vue.component('UserIdSelector', require('../components/UserIdSelector.vue'))
+Vue.component('RouteTagSelector', require('../components/RouteTagSelector.vue'))
 
 Vue.component('Modal', require('../modals/MyModal.vue'))
 Vue.component('Tabs', require('vue-strap/src/Tabs.vue'))

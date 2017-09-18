@@ -82,7 +82,7 @@ export default {
     return {
       searchQuery: '',
       editValue: null,
-      matchingResults: null,
+      matchingResults: [],
     }
   },
 
@@ -171,7 +171,6 @@ export default {
         })
         this.matchingResults = Object.keys(tagsToRoutes)
           .map(tag => ({tag, routes: tagsToRoutes[tag]}))
-          // .filter(r => r.tag.toLowerCase().indexOf(query.toLowerCase()) !== -1)
       } else {
         this.matchingResults = []
       }
@@ -180,7 +179,6 @@ export default {
       this.editValue = (this.matchingResults &&
           this.matchingResults.find(r => r.tag === this.value))
         || this.editValue
-        || defaultValue(v, !this.allRoutes)
     }, 300)
   }
 }
