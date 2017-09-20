@@ -31,6 +31,14 @@ const jsBundle = {
         include: path.resolve('.'),
       },
       {
+        test: /\.js$/,
+        loader: 'babel-loader',
+        include: [
+          /node_modules\/vue-strap/,
+          /node_modules\/vue-async-computed/,
+        ],
+      },
+      {
         test: /\.vue$/,
         loader: 'vue-loader',
         include: path.resolve('.'),
@@ -73,12 +81,18 @@ const jsBundle = {
     filename: 'bundle.js',
     pathinfo: true,
   },
-  externals: {
-    'lodash': '_'
-  },
+  // externals: {
+  //   'lodash': '_'
+  // },
   plugins: [
     new InlineEnviromentVariablesPlugin(env)
-  ]
+  ],
+  resolve: {
+    alias: {
+      '~': __dirname,
+      '@': path.join(__dirname, 'beeline-admin'),
+    }
+  }
 };
 
 const cssBundle = {
