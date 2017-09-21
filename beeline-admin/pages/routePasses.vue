@@ -486,7 +486,7 @@ export default {
       color: #CCC;
     }
     &.different-month {
-      color: #CCC;
+      opacity: 0.5;
     }
     &:not(.different-month) {
       font-weight: bold;
