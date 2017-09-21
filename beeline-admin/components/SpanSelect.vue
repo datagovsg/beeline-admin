@@ -5,7 +5,7 @@
     :multiple="true"
 
     @input="fixInput"
-
+    @month-click="selectEntireMonth"
     :month="month"
     :offset="offset"
     :specialDates="(specialDates || []).concat(selectedSpan)"
@@ -23,6 +23,7 @@
 <script>
 import DatePicker from './DatePicker.vue'
 import {sortBy, difference} from 'lodash'
+import assert from 'assert'
 
 export default {
   props: {...DatePicker.props},
@@ -50,6 +51,11 @@ export default {
   },
 
   methods: {
+    selectEntireMonth (date) {
+      const firstDate = new Date(date.getFullYear(), date.getMonth(), 1)
+      const lastDate = new Date(date.getFullYear(), date.getMonth() + 1, 0)
+      return this.fixInput([firstDate, lastDate])
+    },
     fixInput (newValue) {
       const oldValue = this.value
 
@@ -65,8 +71,13 @@ export default {
         }
       } else if (oldValue.length === 2) {
         /* Pick the deselected date */
-        if (newValue.length === 1) {
+        if (newValue.length === 0) {
+          // Happens when oldValue[0] === oldValue[1] and user keeps clicking the same date
+          this.$emit('input', [])
+        } else if (newValue.length === 1) {
           this.$emit('input', difference(oldValue, newValue))
+        } else if (newValue.length === 2) {
+          this.$emit('input', newValue)
         } else if (newValue.length === 3) {
           /* Pick the selected date */
           this.$emit('input', difference(newValue, oldValue))
