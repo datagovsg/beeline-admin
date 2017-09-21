@@ -3,7 +3,9 @@
     <thead>
       <tr>
         <th @click="currentlyViewedMonth = prevMonth">‹</th>
-        <th colspan="5">{{ (this.monthFormat || (x => this.f.date(x, 'mmmm yyyy')))(monthCanonical) }}</th>
+        <th @click="$emit('month-click', monthCanonical)" colspan="5">
+          {{ (this.monthFormat || (x => this.f.date(x, 'mmmm yyyy')))(monthCanonical) }}
+        </th>
         <th @click="currentlyViewedMonth = nextMonth">›</th>
       </tr>
       <tr>
