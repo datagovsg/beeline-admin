@@ -8,4 +8,5 @@ beeline-admin/env.json
 www/css/**/*.css
 www/lib/beeline-admin/bundle.js.map
 www/lib/beeline-admin/bundle.js
+test/unit/coverage
 build
