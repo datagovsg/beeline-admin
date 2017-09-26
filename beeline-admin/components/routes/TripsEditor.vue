@@ -426,6 +426,8 @@ export default {
             message: 'Trips created',
           }
         })
+
+        await this.spinOnPromise(this.requery())
       } catch (error) {
         await this.showModal({
           component: 'CommonModals',
