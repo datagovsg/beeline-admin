@@ -402,6 +402,7 @@ export default {
 
           return {
             ..._.pick(tripData, creatableFields),
+            routeId: this.route.id,
             date: date.toISOString(),
             tripStops: tripData.tripStops.map(ts => ({
               ..._.pick(ts, ['stopId', 'canBoard', 'canAlight']),
@@ -425,6 +426,8 @@ export default {
             message: 'Trips created',
           }
         })
+
+        await this.spinOnPromise(this.requery())
       } catch (error) {
         await this.showModal({
           component: 'CommonModals',
