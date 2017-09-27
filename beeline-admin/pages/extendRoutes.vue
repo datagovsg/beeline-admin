@@ -271,10 +271,7 @@ export default {
     })
   },
   mounted() {
-    /* Not available if companyId === null */
-    if (this.$refs.loadingSpinner) {
-      this.$refs.loadingSpinner.watch(Promise.all(Object.values(this.$store.state.shared.promises)))
-    }
+    this.spinOnPromise.watch(Promise.all(Object.values(this.$store.state.shared.promises)))
   },
   watch: {
     routesPromise: {
@@ -365,6 +362,7 @@ export default {
   },
   methods: {
     ...mapActions('modals', ['showModal']),
+    ...mapActions('spinner', ['spinOnPromise']),
     ...mapActions('resources', ['createTripForDate']),
     ...mapActions('shared', ['invalidate', 'refresh', 'fetch']),
 

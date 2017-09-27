@@ -206,7 +206,7 @@ export default {
     this.$store.dispatch('shared/fetch', 'companies')
   },
   mounted() {
-    this.$refs.loadingSpinner.watch(Promise.all(Object.values(this.$store.state.shared.promises)))
+    this.spinOnPromise(Promise.all(Object.values(this.$store.state.shared.promises)))
   },
   computed: {
     ...mapState('shared', ['allRoutes', 'companies']),
@@ -245,6 +245,7 @@ export default {
     ...mapActions('modals', ['showModal']),
     ...mapActions('resources', ['getRoute', 'saveRoute', 'createTripForDate']),
     ...mapActions('shared', ['invalidate', 'refresh']),
+    ...mapActions('spinner', ['spinOnPromise']),
 
     viewRoute(route) {
       this.showModal({
@@ -274,7 +275,7 @@ export default {
 
       if (!label) return
 
-      const route = await this.$refs.loadingSpinner.spinOnPromise(routePromise)
+      const route = await this.spinOnPromise(routePromise)
 
       const newRoute = {
         ..._.omit(route, ['id']),
@@ -322,9 +323,9 @@ export default {
           })
         })
 
-        await this.$refs.loadingSpinner.watch(Promise.all(tripPromises));
+        await this.spinOnPromise(Promise.all(tripPromises));
 
-        await this.$refs.loadingSpinner.watch(
+        await this.spinOnPromise(
           this.refresh(['allRoutes', 'currentRoutes'])
         )
       } catch (err) {
