@@ -195,9 +195,9 @@
                     {{ticket.paymentData.message}}<br/>
                   </span>
                   <button class="btn btn-danger actions" ng-click="refundPayment(ticket)"
-                      ng-if="(ticket.status == 'valid' || ticket.status == 'void') && ticket.paymentResource">
+                      ng-if="(ticket.status == 'valid' || ticket.status == 'void') && ticket.paymentResource && ticket.ticketSale && ticket.ticketSale.notes.outstanding > 0">
                    Refund
-                   &dollar;{{ticket.ticketSale.credit - ticket.notes.discountValue || 0 | number:2}}
+                   &dollar;{{ticket.ticketSale.notes.outstanding || 0 | number:2}}
                  </button>
                 </td>
                 <td>
