@@ -66,7 +66,9 @@
               <th>Txn ID</th>
               <th>Charge ID</th>
               <th>Txn Timestamp</th>
+              <th>Expiry Date</th>
               <th>Status</th>
+              <th>Redeemed?</th>
               <th>Route Label</th>
               <th>Route Description</th>
               <th>Description</th>
@@ -91,7 +93,7 @@
                   {{txn.payment && txn.payment.paymentResource}}<br/>
                   <span v-if="txn.refundPayment && txn.refundPayment.paymentResource">{{txn.refundPayment.paymentResource}}<br/></span>
                   {{txn.payment && txn.payment.destinationResoure}}<br/>
-                  <button class="btn btn-danger" v-if="!txn.redeemed && txn.transaction.committed && (txn.transaction.type === 'routePassPurchase' || txn.transaction.type === 'conversion') && !txn.refundingTransactionId"
+                  <button :class="`btn ${txn.redeemed ? 'btn-default' : 'btn-danger'}`" v-if="txn.transaction.committed && (txn.transaction.type === 'routePassPurchase' || txn.transaction.type === 'conversion') && !txn.refundingTransactionId"
                     @click="refund(txn)">
                     Refund
                     &dollar;{{routePassPurchasePrice(txn).toFixed(2)}}
@@ -102,12 +104,14 @@
                 </span>
               </td>
               <td>{{f.date(txn.createdAt, 'dd mmm yyyy HH:mm:ss')}}</td>
+              <td>{{f.date(txn.expiresAt, 'dd mmm yyyy')}}</td>
               <td :title="`Transaction ID: ${txn.transactionId}`">
                 <span class="label txn-redeemed" v-if="txn.redeemed && txn.transaction.committed && !txn.refundingTransactionId">Redeemed</span>
                 <span class="label txn-valid" v-if="!txn.redeemed && txn.transaction.committed && !txn.refundingTransactionId">Valid</span>
                 <span class="label txn-failed" v-if="!txn.transaction.committed">Failed</span>
                 <span class="label txn-refunded" v-if="txn.transaction.committed && txn.refundingTransactionId">Refunded</span>
               </td>
+              <td>{{txn.redeemed}}</td>
               <td>{{txn.routeLabel}}</td>
               <td>{{txn.routeDescription}}</td>
               <td>{{txn.transaction.description}}</td>
