@@ -68,11 +68,10 @@
               <th>Txn Timestamp</th>
               <th>Expiry Date</th>
               <th>Status</th>
-              <th>Redeemed?</th>
+              <th>Redeemed Ticket ID</th>
               <th>Route Label</th>
               <th>Route Description</th>
-              <th>Description</th>
-              <th>Number of Ticket Purchased</th>
+              <th>Notes</th>
               <th>Type</th>
               <th>User</th>
               <th>Tag</th>
@@ -104,7 +103,7 @@
                 </span>
               </td>
               <td>{{f.date(txn.createdAt, 'dd mmm yyyy HH:mm:ss')}}</td>
-              <td>{{f.date(txn.expiresAt, 'dd mmm yyyy')}}</td>
+              <td>{{txn.expiresAt !== undefined ? f.date(txn.expiresAt, 'dd mmm yyyy') : ''}}</td>
               <td :title="`Transaction ID: ${txn.transactionId}`">
                 <span class="label txn-redeemed" v-if="txn.redeemed && txn.transaction.committed && !txn.refundingTransactionId">Redeemed</span>
                 <span class="label txn-valid" v-if="!txn.redeemed && txn.transaction.committed && !txn.refundingTransactionId">Valid</span>
@@ -114,8 +113,7 @@
               <td>{{txn.redeemed}}</td>
               <td>{{txn.routeLabel}}</td>
               <td>{{txn.routeDescription}}</td>
-              <td>{{txn.transaction.description}}</td>
-              <td>{{txn.numTickets !== undefined ? txn.numTickets : ''}}</td>
+              <td>{{txn.description}}</td>
               <td>{{txn.transaction.type}}</td>
               <td>
               <a :href="`#/c/${companyId}/users/${txn.routePass.userId}`">
@@ -354,28 +352,17 @@ export default {
         } else if (!txn.transaction.committed) {
           return this.queryUncommitReason(txn)
         } else if (txn.transaction.type === 'ticketPurchase') {
-          let tickets = _.get(txn, 'notes.tickets')
-          if (tickets) {
-            txn.numTickets = _(tickets)
-              .values()
-              .filter(x => x > 0)
-              .value()
-              .length
-          } else {
-            txn.numTickets = 0
-          }
-          return Promise.resolve(txn)
-        }
-        else
+          return this.queryTicket(txn)
+        } else {
           return this.queryTransactionItems(txn)
+        }
       }))
     },
     queryUncommitReason (txn) {
       let queryOptions = {
         transactionId: txn.transactionId
       }
-      return this.axios
-        .get(`/transaction_items?${querystring.stringify(queryOptions)}`)
+      return this.axios.get(`/transaction_items?${querystring.stringify(queryOptions)}`)
         .then(resp => {
           let paymentItem = resp.data.rows.find(x => x.itemType === 'payment')
           txn.uncommitReason = _.get(paymentItem, 'payment.data.message') || 'Reason is unknown'
@@ -383,12 +370,15 @@ export default {
         })
         .catch(this.showErrorModal)
     },
+    queryTicket (txn) {
+      txn.description = txn.transaction.description
+      return Promise.resolve(txn)
+    },
     queryTransactionItems (txn) {
       let queryOptions = {
         transactionId: txn.transactionId
       }
-      return this.axios
-        .get(`/transaction_items?${querystring.stringify(queryOptions)}`)
+      return this.axios.get(`/transaction_items?${querystring.stringify(queryOptions)}`)
         .then(async resp => {
           let transactionItems = resp.data.rows
 
@@ -411,6 +401,10 @@ export default {
 
           txn.routePassItem = routePassItem
           txn.redeemed = _.get(routePassItem.routePass, 'notes.ticketId')
+          txn.expiresAt = _.get(routePassItem.routePass, 'expiresAt')
+
+          const perPassDiscount = _.get(promoItem, `notes.tickets[${routePassItem.itemId}]`)
+          txn.description = perPassDiscount ? `Discount: ${perPassDiscount.toFixed(2)}` : `No Discount`
 
           // has been refunded
           if (txn.refundingTransactionId) {
