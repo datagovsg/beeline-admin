@@ -120,7 +120,7 @@ export default function($scope, $state, $stateParams, $http, AdminService,
 
     _.assign(queryOpts, overrides);
 
-    return '/transactionItems?' + querystring.stringify(queryOpts);
+    return '/transaction_items?' + querystring.stringify(queryOpts);
   }
 
   function query() {

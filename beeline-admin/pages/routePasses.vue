@@ -71,7 +71,7 @@
               <th>Redeemed Ticket ID</th>
               <th>Route Label</th>
               <th>Route Description</th>
-              <th>Notes</th>
+              <th>Description</th>
               <th>Type</th>
               <th>User</th>
               <th>Tag</th>
@@ -372,7 +372,15 @@ export default {
     },
     queryTicket (txn) {
       txn.description = txn.transaction.description
-      return Promise.resolve(txn)
+      const [ticketId] = Object.keys(_.get(txn.notes, 'tickets') || {})
+      const queryOptions = { itemTypes: ['ticketSale', 'ticketSale'], ticketId }
+      return this.axios.get(`/transaction_items?${querystring.stringify(queryOptions)}`)
+          .then(response => {
+            const [ticketSale] = response.data.rows
+            const [tripDate] = ticketSale.ticketSale.boardStop.time.split('T')
+            txn.description = `Trip Date: ${tripDate}`
+            return txn
+          })
     },
     queryTransactionItems (txn) {
       let queryOptions = {
