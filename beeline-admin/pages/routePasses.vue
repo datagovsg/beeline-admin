@@ -6,7 +6,7 @@
     <div class="row" v-if="!companyId">
       Please select a company
     </div>
-    <div class="row" v-else-if="!transactions || !allRoutes">
+    <div class="row" v-else-if="!transactions">
       Loading...
     </div>
     <div class="row">
@@ -171,7 +171,6 @@ export default {
       },
       transactions: [],
       transactionTypes: ['', 'conversion', 'routePassPurchase', 'ticketPurchase', 'refundPayment', 'freeRoutePass', 'routePassExpiry'],
-      allRoutesPromise: this.fetch('allRoutes'),
       publicHolidaysPromise: this.fetch('publicHolidays')
     }
   },
@@ -183,20 +182,10 @@ export default {
   },
   computed: {
     ...mapGetters(['axios']),
-    ...mapState('shared', ['allRoutes', 'publicHolidays']),
+    ...mapState('shared', ['publicHolidays']),
 
     f: () => filters,
 
-    routePassTagToLabel () {
-      return _(this.allRoutes)
-        .filter(route => route.transportCompanyId === this.companyId)
-        .flatMap(route => route.tags
-          .filter(t => t.startsWith('rp-') || t.startsWith('crowdstart-'))
-          .map(t => [t, { label: route.label, description: route.name }])
-        )
-        .fromPairs()
-        .value()
-    },
     specialDates () {
       return this.publicHolidayDates.concat(this.highlightDays)
     },
@@ -329,46 +318,50 @@ export default {
       if (this.companyId) {
         try {
           await this.spinOnPromise(Promise.resolve(true).then(async () => {
-            await this.allRoutesPromise
             const response = await this.axios.get(
               `/companies/${this.companyId}/transaction_items/route_passes?` +
               querystring.stringify(this.transactionQuery)
             )
-            this.transactions = await this.postProcessTransaction(response.data, this.routePassTagToLabel)
+            this.transactions = await this.postProcessTransaction(response.data)
           }))
         } catch (err) {
           this.showErrorModal(err)
         }
       }
     },
-    postProcessTransaction (txns, routePassTagToLabel) {
+    postProcessTransaction (txns) {
+      const transactionLevelQueries = {}
+      const findOrCreateTransactionLevelQuery = transactionId => {
+        if (!transactionLevelQueries[transactionId]) {
+          transactionLevelQueries[transactionId] = this.axios
+            .get(`/transaction_items?${querystring.stringify({ transactionId })}`)
+        }
+        return transactionLevelQueries[transactionId]
+      }
       return Promise.all(_.map(txns, (txn) => {
         // do the route label mapping
-        txn.routeLabel = routePassTagToLabel[txn.routePass.tag].label
-        txn.routeDescription = routePassTagToLabel[txn.routePass.tag].description
+        txn.routeLabel = txn.routePass.route.label
+        txn.routeDescription = txn.routePass.route.description
         // to speed up, skip the query transaction items for non-purchase / non-conversion ones
         if (txn.transaction.type !== 'routePassPurchase' && txn.transaction.type !== 'conversion' && txn.transaction.type !== 'ticketPurchase' && txn.transaction.committed) {
           return Promise.resolve(txn)
         } else if (!txn.transaction.committed) {
-          return this.queryUncommitReason(txn)
+          return findOrCreateTransactionLevelQuery(txn.transactionId)
+            .then(resp => this.processUncommitReason(txn, resp))
+            .catch(this.showErrorModal)
         } else if (txn.transaction.type === 'ticketPurchase') {
           return this.queryTicket(txn)
         } else {
-          return this.queryTransactionItems(txn)
+          return findOrCreateTransactionLevelQuery(txn.transactionId)
+            .then(resp => this.processTransactionItems(txn, resp))
+            .catch(this.showErrorModal)
         }
       }))
     },
-    queryUncommitReason (txn) {
-      let queryOptions = {
-        transactionId: txn.transactionId
-      }
-      return this.axios.get(`/transaction_items?${querystring.stringify(queryOptions)}`)
-        .then(resp => {
-          let paymentItem = resp.data.rows.find(x => x.itemType === 'payment')
-          txn.uncommitReason = _.get(paymentItem, 'payment.data.message') || 'Reason is unknown'
-          return txn
-        })
-        .catch(this.showErrorModal)
+    processUncommitReason (txn, resp) {
+      const paymentItem = resp.data.rows.find(x => x.itemType === 'payment')
+      txn.uncommitReason = _.get(paymentItem, 'payment.data.message') || 'Reason is unknown'
+      return txn
     },
     queryTicket (txn) {
       txn.description = txn.transaction.description
@@ -382,56 +375,49 @@ export default {
             return txn
           })
     },
-    queryTransactionItems (txn) {
-      let queryOptions = {
-        transactionId: txn.transactionId
+    async processTransactionItems (txn, resp) {
+      let transactionItems = resp.data.rows
+
+      let [paymentItem, promoItem]
+        = this.matchByType(transactionItems, ['payment', 'discount'])
+
+      const routePassItem = transactionItems.find(i => i.id === txn.id)
+
+      txn.payment = {
+        paymentResource : _.get(paymentItem, 'payment.paymentResource'),
+        destinationResoure: _.get(paymentItem, 'payment.data.transfer.destination_payment'),
+        paymentAmount : _.get(paymentItem, 'debit')
       }
-      return this.axios.get(`/transaction_items?${querystring.stringify(queryOptions)}`)
-        .then(async resp => {
-          let transactionItems = resp.data.rows
 
-          let [paymentItem, promoItem]
-            = this.matchByType(transactionItems, ['payment', 'discount'])
+      txn.promo = {
+        code: _.get(promoItem, 'discount.code'),
+        promoId: _.get(promoItem, 'discount.promotionId'),
+        amount: _.get(promoItem, 'debit')
+      }
 
-          const routePassItem = transactionItems.find(i => i.id === txn.id)
+      txn.routePassItem = routePassItem
+      txn.redeemed = _.get(routePassItem.routePass, 'notes.ticketId')
+      txn.expiresAt = _.get(routePassItem.routePass, 'expiresAt')
 
-          txn.payment = {
-            paymentResource : _.get(paymentItem, 'payment.paymentResource'),
-            destinationResoure: _.get(paymentItem, 'payment.data.transfer.destination_payment'),
-            paymentAmount : _.get(paymentItem, 'debit')
-          }
+      const perPassDiscount = _.get(promoItem, `notes.tickets[${routePassItem.itemId}]`)
+      txn.description = perPassDiscount ? `Discount: ${perPassDiscount.toFixed(2)}` : `No Discount`
 
-          txn.promo = {
-            code: _.get(promoItem, 'discount.code'),
-            promoId: _.get(promoItem, 'discount.promotionId'),
-            amount: _.get(promoItem, 'debit')
-          }
-
-          txn.routePassItem = routePassItem
-          txn.redeemed = _.get(routePassItem.routePass, 'notes.ticketId')
-          txn.expiresAt = _.get(routePassItem.routePass, 'expiresAt')
-
-          const perPassDiscount = _.get(promoItem, `notes.tickets[${routePassItem.itemId}]`)
-          txn.description = perPassDiscount ? `Discount: ${perPassDiscount.toFixed(2)}` : `No Discount`
-
-          // has been refunded
-          if (txn.refundingTransactionId) {
-            queryOptions = {
-              transactionId: txn.refundingTransactionId
+      // has been refunded
+      if (txn.refundingTransactionId) {
+        queryOptions = {
+          transactionId: txn.refundingTransactionId
+        }
+        txn.refundPayment = await this.axios
+          .get(`/transaction_items?${querystring.stringify(queryOptions)}`)
+          .then(resp => {
+            transactionItems = resp.data.rows
+            let refundPayment = this.matchByType(transactionItems, ['refundPayment'])
+            return {
+              paymentResource:  _.get(refundPayment, '[0]refundPayment.paymentResource')
             }
-            txn.refundPayment = await this.axios
-              .get(`/transaction_items?${querystring.stringify(queryOptions)}`)
-              .then(resp => {
-                transactionItems = resp.data.rows
-                let refundPayment = this.matchByType(transactionItems, ['refundPayment'])
-                return {
-                  paymentResource:  _.get(refundPayment, '[0]refundPayment.paymentResource')
-                }
-              })
-          }
-          return txn
-        })
-        .catch(this.showErrorModal)
+          })
+      }
+      return txn
     },
     matchByType (items, typeArray) {
       return typeArray.map(type => items.find(item => item.itemType && item.itemType === type))
