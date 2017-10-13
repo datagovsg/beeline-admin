@@ -341,7 +341,7 @@ export default {
       return Promise.all(_.map(txns, (txn) => {
         // do the route label mapping
         txn.routeLabel = txn.routePass.route.label
-        txn.routeDescription = txn.routePass.route.description
+        txn.routeDescription = txn.routePass.route.name
         // to speed up, skip the query transaction items for non-purchase / non-conversion ones
         if (txn.transaction.type !== 'routePassPurchase' && txn.transaction.type !== 'conversion' && txn.transaction.type !== 'ticketPurchase' && txn.transaction.committed) {
           return Promise.resolve(txn)
