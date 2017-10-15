@@ -404,7 +404,7 @@ export default {
 
       // has been refunded
       if (txn.refundingTransactionId) {
-        queryOptions = {
+        const queryOptions = {
           transactionId: txn.refundingTransactionId
         }
         txn.refundPayment = await this.axios
