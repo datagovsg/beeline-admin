@@ -9,26 +9,8 @@ export default function (AdminService, DriverService, $q, LoadingSpinner, compan
   var routesCache;
 
   function makeRouteQuery(options) {
-    var query = {};
-
-    if (options) {
-      if (options.startDate)
-        query.start_date = options.startDate;
-      if (options.endDate)
-        query.end_date = options.endDate;
-      if (options.includeIndicative)
-          query.include_indicative = options.includeIndicative;
-      if (options.includeTrips)
-        query.include_trips = options.includeTrips;
-      if (options.includeAvailability)
-        query.include_availability = options.includeAvailability;
-      if (options.transportCompanyId)
-        query.transportCompanyId = options.transportCompanyId;
-      if (options.includeFeatures)
-        query.include_features = options.includeFeatures;
-    }
-    query = querystring.stringify(query)
-    return query
+    var query = options || {}
+    return querystring.stringify(query)
   }
 
   function postProcessRoute(route) {

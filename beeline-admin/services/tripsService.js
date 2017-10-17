@@ -13,10 +13,10 @@ export default function (AdminService, DriverService, $q) {
     return AdminService.beeline({
       method: 'GET',
       url: `/routes/${options.routeId}?`+ querystring.stringify({
-        include_trips: true,
-        start_date: options.startDate.getTime(),
-        end_date: options.endDate.getTime(),
-        include_availability: options.includeAvailability ? true : false,
+        includeTrips: true,
+        startDate: options.startDate.getTime(),
+        endDate: options.endDate.getTime(),
+        includeAvailability: options.includeAvailability ? true : false,
       })
     })
     .then((response) => {

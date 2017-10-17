@@ -119,9 +119,9 @@ export default {
       const promise = this.$lastPromise = this.getRoute({
         id: this.route.id,
         options: {
-          include_trips: true,
-          start_date: start.toISOString(),
-          end_date: end.toISOString(),
+          includeTrips: true,
+          startDate: start.toISOString(),
+          endDate: end.toISOString(),
         }
       })
       .then((route) => {

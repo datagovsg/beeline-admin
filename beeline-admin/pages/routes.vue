@@ -257,9 +257,9 @@ export default {
       const routePromise = this.getRoute({
         id: r.id,
         options: {
-          include_trips: true,
-          include_dates: true,
-          include_features: true,
+          includeTrips: true,
+          includeDates: true,
+          includeFeatures: true,
         }
       })
 

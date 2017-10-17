@@ -249,19 +249,19 @@ export default {
         this.routePromise = this.getRoute({
           id: this.route.id,
           options: {
-            start_date: new Date(
+            startDate: new Date(
               this.filter.filterMonth.getFullYear(),
               this.filter.filterMonth.getMonth(),
               1,
             ).toISOString(),
 
-            end_date: new Date(
+            endDate: new Date(
               this.filter.filterMonth.getFullYear(),
               this.filter.filterMonth.getMonth() + 1,
               1
             ).toISOString(),
 
-            include_trips: true,
+            includeTrips: true,
           }
         })
         .then((route) => {
