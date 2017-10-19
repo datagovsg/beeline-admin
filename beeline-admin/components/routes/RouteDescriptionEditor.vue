@@ -127,8 +127,8 @@ export default {
         return this.getRoute({
           id: this.routeId,
           options: {
-            include_dates: true,
-            include_features: true,
+            includeDates: true,
+            includeFeatures: true,
           }
         })
       }

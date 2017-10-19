@@ -215,7 +215,7 @@ export default {
 
       return this.axios.get('/routes?' + querystring.stringify({
         transportCompanyId: this.companyId || [],
-        start_date: d.toISOString(),
+        startDate: d.toISOString(),
       }))
     },
 
@@ -311,13 +311,13 @@ export default {
             const route = currentRoutes[0]
 
             await this.axios.get(`/routes/${route.id}?` + querystring.stringify({
-              include_trips: true,
-              start_date: new Date(
+              includeTrips: true,
+              startDate: new Date(
                 this.days[0].date.getUTCFullYear(),
                 this.days[0].date.getUTCMonth(),
                 this.days[0].date.getUTCDate(),
               ).toISOString(),
-              end_date: new Date(
+              endDate: new Date(
                 this.days[this.days.length - 1].date.getUTCFullYear(),
                 this.days[this.days.length - 1].date.getUTCMonth(),
                 this.days[this.days.length - 1].date.getUTCDate() + 1,

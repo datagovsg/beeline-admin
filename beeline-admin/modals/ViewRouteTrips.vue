@@ -94,7 +94,7 @@ export default {
 
       return this.getRoute({
         id: this.route.id,
-        options: {include_trips: true}
+        options: {includeTrips: true}
       })
     },
     pingsPromise() {

@@ -105,11 +105,11 @@ export default {
         this.routePromise = this.getRoute({
           id: this.routeId,
           options: {
-            include_dates: true,
-            include_features: true,
-            include_trips: true,
-            start_date: filters.date(Date.now() - 30 * 24 * 3600 * 1000, 'dd-mmm-yyyy'),
-            end_date: filters.date(Date.now() + 180 * 24 * 3600 * 1000, 'dd-mmm-yyyy'),
+            includeDates: true,
+            includeFeatures: true,
+            includeTrips: true,
+            startDate: filters.date(Date.now() - 30 * 24 * 3600 * 1000, 'dd-mmm-yyyy'),
+            endDate: filters.date(Date.now() + 180 * 24 * 3600 * 1000, 'dd-mmm-yyyy'),
           }
         })
       }
