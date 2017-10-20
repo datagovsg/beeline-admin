@@ -16,7 +16,6 @@ export default function (AdminService, DriverService, $q) {
         includeTrips: true,
         startDate: options.startDate.getTime(),
         endDate: options.endDate.getTime(),
-        includeAvailability: options.includeAvailability ? true : false,
       })
     })
     .then((response) => {

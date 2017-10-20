@@ -51,7 +51,6 @@ export default function (AdminService, DriverService, $q, LoadingSpinner, compan
     @param options -- options to pass in query string to /routes
       @prop startDate : string | int
       @prop endDate : string | int
-      @prop includeAvailability : boolean
       @prop includeTrips : boolean
   **/
   this.getRoutes = function(options) {

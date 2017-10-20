@@ -52,7 +52,6 @@ export default function(AdminService, RoutesService, $rootScope, LoadingSpinner)
 
         RoutesService.getRoute(routeId, {
           includeTrips: true,
-          includeAvailability: true,
           startDate: today.getTime()
         })
         .then((route) => {
