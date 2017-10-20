@@ -90,7 +90,6 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner) {
       startDate: startOfMonth.getTime(),
       endDate: endOfMonth.getTime(),
       includeTrips: true,
-      includeAvailability: false,
     }).then((routes) => {
       $scope.disp.availableRoutes = routes
     })

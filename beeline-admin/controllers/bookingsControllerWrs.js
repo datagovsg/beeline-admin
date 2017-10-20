@@ -320,7 +320,6 @@ angular.module('beeline-admin')
       startDate: $scope.filter.startDate.getTime(),
       endDate: $scope.filter.endDate.getTime() + 24*60*60*1000,
       includeTrips: false,
-      includeAvailability: false,
     }).then((routes) => {
       $scope.disp.availableRoutes = routes
     })

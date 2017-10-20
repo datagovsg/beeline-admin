@@ -9,7 +9,6 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner) {
     if (!AdminService.getCompanyId()) return;
 
     var options = {
-      includeAvailability: true,
       includeTrips: true,
       startDate: new Date(
         $scope.selectedMonth.getFullYear(),
