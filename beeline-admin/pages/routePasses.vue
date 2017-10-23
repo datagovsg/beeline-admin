@@ -39,6 +39,10 @@
           <br>
 
         </form>
+        <button class="btn btn-default" @click="downloadCSV()" type="button">
+          <span class="glyphicon glyphicon-save" aria-hidden="true"/>
+          Download CSV
+        </button>
       </div>
       <div class="col-sm-4">
         <div class="datepicker-wrap">
@@ -262,6 +266,15 @@ export default {
 
     toISODate (dt) {
       return dateformat(new Date(dt), 'isoDate')
+    },
+    downloadCSV() {
+      this.axios
+        .post('/makeDownloadLink', {
+          uri: `/companies/${this.companyId}/transaction_items/route_passes?format=csvdump&${querystring.stringify(this.transactionQuery)}`
+        })
+        .then((result) => {
+          window.location.href = `${process.env.BACKEND_URL}/downloadLink?token=${result.data.token}`
+        })
     },
     routePassDiscount (txn) {
       return +_.get(txn.routePassItem, 'routePass.notes.discountValue', 0)
