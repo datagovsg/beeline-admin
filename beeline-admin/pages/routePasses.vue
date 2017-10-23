@@ -43,7 +43,9 @@
       <div class="col-sm-4">
         <div class="datepicker-wrap">
           <h4 class="text-center">
-            Select the start date, and the end date:
+            Dates selected:
+            {{ toISODate(this.transactionQuery.startDateTime) }} -
+            {{ toISODate(this.transactionQuery.endDateTime - 24 * 3600 * 1000) }}
           </h4>
           <span-select @month-changed="monthChanged" v-model="filter.dates" :special-dates="specialDates"/>
         </div>
@@ -152,6 +154,7 @@ import {mapGetters, mapActions, mapState} from 'vuex'
 import _ from 'lodash'
 import * as resources from '../stores/resources'
 import filters from '../filters'
+import dateformat from 'dateformat'
 
 export default {
   props: ['companyId', 'userId'],
@@ -257,6 +260,9 @@ export default {
     ...mapActions('modals', ['showModal']),
     ...mapActions('shared', ['fetch']),
 
+    toISODate (dt) {
+      return dateformat(new Date(dt), 'isoDate')
+    },
     routePassDiscount (txn) {
       return +_.get(txn.routePassItem, 'routePass.notes.discountValue', 0)
     },
