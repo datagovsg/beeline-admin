@@ -362,7 +362,7 @@ export default {
         txn.routeLabel = txn.routePass.route.label
         txn.routeDescription = txn.routePass.route.name
         // to speed up, skip the query transaction items for non-purchase / non-conversion ones
-        if (txn.transaction.type !== 'routePassPurchase' && txn.transaction.type !== 'conversion' && txn.transaction.type !== 'ticketPurchase' && txn.transaction.committed) {
+        if (!['freeRoutePass', 'routePassPurchase', 'conversion', 'ticketPurchase'].includes(txn.transaction.type) && txn.transaction.committed) {
           return Promise.resolve(txn)
         } else if (!txn.transaction.committed) {
           return findOrCreateTransactionLevelQuery(txn.transactionId)
