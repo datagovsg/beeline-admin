@@ -95,9 +95,9 @@
               </td>
               <td>
                 <span v-if="txn.transaction.committed">
-                  {{txn.payment && txn.payment.paymentResource}}<br/>
-                  <span v-if="txn.refundPayment && txn.refundPayment.paymentResource">{{txn.refundPayment.paymentResource}}<br/></span>
-                  {{txn.payment && txn.payment.destinationResoure}}<br/>
+                  {{txn.paymentResource}}<br/>
+                  <span v-if="txn.refundResource">{{txn.refundResource}}<br/></span>
+                  {{txn.transferResource}}<br/>
                   <button :class="`btn ${txn.redeemed ? 'btn-default' : 'btn-danger'}`" v-if="txn.transaction.committed && (txn.transaction.type === 'routePassPurchase' || txn.transaction.type === 'conversion') && !txn.refundingTransactionId"
                     @click="refund(txn)">
                     Refund
@@ -276,8 +276,8 @@ export default {
           window.location.href = `${process.env.BACKEND_URL}/downloadLink?token=${result.data.token}`
         })
     },
-    routePassDiscount (txn) {
-      return +_.get(txn.routePassItem, 'routePass.notes.discountValue', 0)
+    routePassDiscount (routePassTxnItem) {
+      return +_.get(routePassTxnItem, 'routePass.notes.discountValue', 0)
     },
     routePassPurchasePrice (txn) {
       return (+txn.credit || 0) - this.routePassDiscount(txn)
@@ -362,7 +362,7 @@ export default {
         txn.routeLabel = txn.routePass.route.label
         txn.routeDescription = txn.routePass.route.name
         // to speed up, skip the query transaction items for non-purchase / non-conversion ones
-        if (txn.transaction.type !== 'routePassPurchase' && txn.transaction.type !== 'conversion' && txn.transaction.type !== 'ticketPurchase' && txn.transaction.committed) {
+        if (!['freeRoutePass', 'routePassPurchase', 'conversion', 'ticketPurchase'].includes(txn.transaction.type) && txn.transaction.committed) {
           return Promise.resolve(txn)
         } else if (!txn.transaction.committed) {
           return findOrCreateTransactionLevelQuery(txn.transactionId)
@@ -371,9 +371,7 @@ export default {
         } else if (txn.transaction.type === 'ticketPurchase') {
           return this.queryTicket(txn)
         } else {
-          return findOrCreateTransactionLevelQuery(txn.transactionId)
-            .then(resp => this.processTransactionItems(txn, resp))
-            .catch(this.showErrorModal)
+          return this.processTransactionItems(txn)
         }
       }))
     },
@@ -394,19 +392,13 @@ export default {
             return txn
           })
     },
-    async processTransactionItems (txn, resp) {
-      let transactionItems = resp.data.rows
+    processTransactionItems (txn) {
+      const {transactionItems} = txn.transaction
 
       let [paymentItem, promoItem]
         = this.matchByType(transactionItems, ['payment', 'discount'])
 
-      const routePassItem = transactionItems.find(i => i.id === txn.id)
-
-      txn.payment = {
-        paymentResource : _.get(paymentItem, 'payment.paymentResource'),
-        destinationResoure: _.get(paymentItem, 'payment.data.transfer.destination_payment'),
-        paymentAmount : _.get(paymentItem, 'debit')
-      }
+      const routePassItem = txn
 
       txn.promo = {
         code: _.get(promoItem, 'discount.code'),
@@ -414,28 +406,13 @@ export default {
         amount: _.get(promoItem, 'debit')
       }
 
-      txn.routePassItem = routePassItem
-      txn.redeemed = _.get(routePassItem.routePass, 'notes.ticketId')
-      txn.expiresAt = _.get(routePassItem.routePass, 'expiresAt')
+      txn.routePassItem = txn
+      txn.redeemed = _.get(txn, 'notes.ticketId')
+      txn.expiresAt = _.get(txn.routePass, 'expiresAt')
 
-      const perPassDiscount = _.get(promoItem, `notes.tickets[${routePassItem.itemId}]`)
+      const perPassDiscount = _.get(promoItem, `notes.tickets[${txn.itemId}]`)
       txn.description = perPassDiscount ? `Discount: ${perPassDiscount.toFixed(2)}` : `No Discount`
 
-      // has been refunded
-      if (txn.refundingTransactionId) {
-        const queryOptions = {
-          transactionId: txn.refundingTransactionId
-        }
-        txn.refundPayment = await this.axios
-          .get(`/transaction_items?${querystring.stringify(queryOptions)}`)
-          .then(resp => {
-            transactionItems = resp.data.rows
-            let refundPayment = this.matchByType(transactionItems, ['refundPayment'])
-            return {
-              paymentResource:  _.get(refundPayment, '[0]refundPayment.paymentResource')
-            }
-          })
-      }
       return txn
     },
     matchByType (items, typeArray) {
@@ -445,11 +422,11 @@ export default {
       this.filter.selectedMonth = newMonth.clone().toDate()
       this.filter.startDate = this.filter.endDate = null
     },
-    refund (txn) {
+    refund (routePassTxnItem) {
       this.spinOnPromise(this.axios
         .post(
-          `/transactions/route_passes/${txn.routePassItem.itemId}/refund/payment`,
-          { transactionItemId: txn.routePassItem.id }
+          `/transactions/route_passes/${routePassTxnItem.itemId}/refund/payment`,
+          { transactionItemId: routePassTxnItem.id }
         )
         .then(() => {
           this.showModal({
