@@ -185,7 +185,7 @@ angular.module('beeline-admin')
   $scope.toggleVoidTicket = async function (ticket) {
     const { id, status } = ticket
     assert(['valid', 'void'].includes(status), `This ticket is ${status} and cannot be voided or made valid`)
-    const newStatus = status === 'void' ? 'valid' : 'void'
+    const newStatus = (status === 'void') ? 'valid' : 'void'
     if (await commonModals.confirm(`Confirm change ticket status to ${newStatus}?`)) {
       LoadingSpinner.watchPromise(
         AdminService.beeline({
@@ -201,7 +201,7 @@ angular.module('beeline-admin')
         return commonModals.alert(`This ticket is now ${status}`)
       })
       .catch(err => {
-        console.log(err);
+        console.error(err);
         return commonModals.alert(`Failed - ${err.message}`)
       })
     }
