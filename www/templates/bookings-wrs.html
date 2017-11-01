@@ -299,6 +299,10 @@
                       <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                       Edit
                     </button>
+                    <button type="button" class="btn btn-warning btn-default" ng-click="toggleVoidTicket(ticket)"
+                    ng-disabled="!['valid', 'void'].includes(ticket.status) || selectedTickets.length > 1">
+                      {{ ticket.status === 'void' ? 'Unvoid' : 'Void' }}
+                    </button>
                   </div>
                 </td>
               </tr>

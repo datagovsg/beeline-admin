@@ -182,6 +182,31 @@ angular.module('beeline-admin')
     issueTicketModal.open(issueTicketModalOptions).then(query);
   }
 
+  $scope.toggleVoidTicket = async function (ticket) {
+    const { id, status } = ticket
+    assert(['valid', 'void'].includes(status), `This ticket is ${status} and cannot be voided or made valid`)
+    const newStatus = status === 'void' ? 'valid' : 'void'
+    if (await commonModals.confirm(`Confirm change ticket status to ${newStatus}?`)) {
+      LoadingSpinner.watchPromise(
+        AdminService.beeline({
+          method: 'PUT',
+          url: `/tickets/${id}/status`,
+          data: {
+            status: newStatus,
+          }
+        })
+      ).then((response) => {
+        const { status } = response.data
+        query()
+        return commonModals.alert(`This ticket is now ${status}`)
+      })
+      .catch(err => {
+        console.log(err);
+        return commonModals.alert(`Failed - ${err.message}`)
+      })
+    }
+  }
+
   function buildQuery(override) {
     // update the request and CSV url
     // tripStartDate & tripEndDate should be converted to
