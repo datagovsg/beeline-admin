@@ -70,6 +70,7 @@
             <tr>
               <th>S/N</th>
               <th>Txn ID</th>
+              <th>Txn Description</th>
               <th>Charge ID</th>
               <th>Txn Timestamp</th>
               <th>Expiry Date</th>
@@ -93,6 +94,7 @@
                 </a>
                 <a v-if="txn.refundingTransactionId" :href="`#/c/${companyId}/transactions?id=${txn.refundingTransactionId}`">{{txn.refundingTransactionId}}</a>
               </td>
+              <td>{{txn.transaction.description}}</td>
               <td>
                 <span v-if="txn.transaction.committed">
                   {{txn.paymentResource}}<br/>
@@ -119,7 +121,7 @@
               <td>{{txn.redeemed}}</td>
               <td>{{txn.routeLabel}}</td>
               <td>{{txn.routeDescription}}</td>
-              <td>{{txn.transaction.description}}</td>
+              <td>{{txn.description}}</td>
               <td>{{txn.transaction.type}}</td>
               <td>
               <a :href="`#/c/${companyId}/users/${txn.routePass.userId}`">
