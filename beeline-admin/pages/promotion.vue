@@ -172,8 +172,8 @@ export default {
 
   },
   components: {
-    PromotionCriterionEditor: require('../components/PromotionCriterionEditor.vue'),
-    PromotionDiscountEditor: require('../components/PromotionDiscountEditor.vue'),
+    PromotionCriterionEditor: require('../components/PromotionCriterionEditor.vue').default,
+    PromotionDiscountEditor: require('../components/PromotionDiscountEditor.vue').default,
   },
   computed: {
     ...mapGetters(['axios']),

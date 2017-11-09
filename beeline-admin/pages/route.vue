@@ -75,11 +75,11 @@ export default {
     },
   },
   components: {
-    RouteDisplay: require('../components/routes/RouteDisplay.vue'),
-    RouteDescriptionEditor: require('../components/routes/RouteDescriptionEditor.vue'),
-    TripsEditor: require('../components/routes/TripsEditor.vue'),
-    CrowdstartEditor: require('../components/routes/CrowdstartEditor.vue'),
-    CrowdstartDisplay: require('../components/routes/CrowdstartDisplay.vue')
+    RouteDisplay: require('../components/routes/RouteDisplay.vue').default,
+    RouteDescriptionEditor: require('../components/routes/RouteDescriptionEditor.vue').default,
+    TripsEditor: require('../components/routes/TripsEditor.vue').default,
+    CrowdstartEditor: require('../components/routes/CrowdstartEditor.vue').default,
+    CrowdstartDisplay: require('../components/routes/CrowdstartDisplay.vue').default
   },
   computed: {
     f() { return filters },

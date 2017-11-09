@@ -219,8 +219,8 @@ export default {
     }
   },
   components: {
-    PercentInput: require('./PercentInput.vue'),
-    PriceInput: require('./PriceInput.vue'),
+    PercentInput: require('./PercentInput.vue').default,
+    PriceInput: require('./PriceInput.vue').default,
   },
   watch: {
     'value.params': {

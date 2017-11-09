@@ -99,7 +99,7 @@ export default {
     }
   },
   components: {
-    MonthPicker: require('./MonthPicker.vue'),
+    MonthPicker: require('./MonthPicker.vue').default,
   },
   computed: {
     dateString() {

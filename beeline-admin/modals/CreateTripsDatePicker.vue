@@ -98,7 +98,7 @@ export default {
     this.fetch('publicHolidays')
   },
   components: {
-    DatePicker: require('../components/DatePicker.vue')
+    DatePicker: require('../components/DatePicker.vue').default
   },
   methods: {
     ...mapActions('resources', ['getRoute']),

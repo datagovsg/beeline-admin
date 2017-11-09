@@ -193,7 +193,7 @@ export default {
     }
   },
   components: {
-    CreateTripsDatePicker: require('../modals/CreateTripsDatePicker.vue')
+    CreateTripsDatePicker: require('../modals/CreateTripsDatePicker.vue').default
   },
   methods: {
     getStartDate(r) {
@@ -249,7 +249,7 @@ export default {
 
     viewRoute(route) {
       this.showModal({
-        component: require('../modals/ViewRouteTrips.vue'),
+        component: require('../modals/ViewRouteTrips.vue').default,
         props: {route}
       })
     },

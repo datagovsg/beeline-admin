@@ -208,11 +208,11 @@ export default {
     }
   },
   components: {
-    TagsEditor: require('./TagsEditor.vue'),
-    DatePickerDropdown: require('./DatePickerDropdown.vue'),
-    RouteSelector: require('./RouteSelector.vue'),
-    CompanySelector: require('./CompanySelector.vue'),
-    ContactListSelector: require('./ContactListSelector.vue'),
+    TagsEditor: require('./TagsEditor.vue').default,
+    DatePickerDropdown: require('./DatePickerDropdown.vue').default,
+    RouteSelector: require('./RouteSelector.vue').default,
+    CompanySelector: require('./CompanySelector.vue').default,
+    ContactListSelector: require('./ContactListSelector.vue').default,
   },
   watch: {
     'value.params': {
