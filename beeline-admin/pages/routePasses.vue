@@ -137,7 +137,7 @@
               </td>
               <td><ul class="tags"><li class="tags">{{txn.routePass.tag}}</li></ul></td>
               <td>
-                {{routePassPurchasePrice(txn).toFixed(2)}}
+                {{(txn.transaction.type === 'ticketPurchase' ? +txn.credit : routePassPurchasePrice(txn)).toFixed(2)}}
               </td>
             </tr>
           </tbody>
