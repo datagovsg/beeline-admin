@@ -119,7 +119,7 @@
               <td>{{txn.redeemed}}</td>
               <td>{{txn.routeLabel}}</td>
               <td>{{txn.routeDescription}}</td>
-              <td>{{txn.description}}</td>
+              <td>{{txn.transaction.description}}</td>
               <td>{{txn.transaction.type}}</td>
               <td>
               <a :href="`#/c/${companyId}/users/${txn.routePass.userId}`">
