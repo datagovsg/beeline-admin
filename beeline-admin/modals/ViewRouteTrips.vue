@@ -40,8 +40,12 @@
           />
       </template>
 
-      <gmap-info-window v-if="selectedStop"
-          :position="f.pointToLatLng(selectedStop.stop.coordinates)">
+      <gmap-info-window
+        v-if="selectedStop"
+        :position="f.pointToLatLng(selectedStop.stop.coordinates)"
+        :opened="selectedStop !== undefined"
+        @closeclick="selectedStop = undefined"
+        >
         <div>
           <b>{{selectedStop.stop.description}}</b>
           <br/>
@@ -49,7 +53,12 @@
         </div>
       </gmap-info-window>
 
-      <gmap-info-window v-if="selectedPing" :position="f.pointToLatLng(selectedPing.coordinates)">
+      <gmap-info-window
+        v-if="selectedPing"
+        :position="f.pointToLatLng(selectedPing.coordinates)"
+        :opened="selectedPing !== undefined"
+        @closeclick="selectedPing = undefined"
+        >
         <div>
           <b>{{f.date(selectedPing.time, 'HH:MM:ss')}}</b>
           <br/>
