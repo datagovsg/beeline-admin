@@ -271,7 +271,7 @@ export default {
     })
   },
   mounted() {
-    this.spinOnPromise.watch(Promise.all(Object.values(this.$store.state.shared.promises)))
+    this.spinOnPromise(Promise.all(Object.values(this.$store.state.shared.promises)))
   },
   watch: {
     routesPromise: {
