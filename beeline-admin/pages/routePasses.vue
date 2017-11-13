@@ -48,8 +48,8 @@
         <div class="datepicker-wrap">
           <h4 class="text-center">
             Dates selected:
-            {{ toISODate(this.transactionQuery.startDateTime) }} -
-            {{ toISODate(this.transactionQuery.endDateTime - 24 * 3600 * 1000) }}
+            {{ f.date(this.transactionQuery.startDateTime, 'isoDate') }} -
+            {{ f.date(this.transactionQuery.endDateTime - 24 * 3600 * 1000, 'isoDate') }}
           </h4>
           <span-select @month-changed="monthChanged" v-model="filter.dates" :special-dates="specialDates"/>
         </div>
@@ -266,9 +266,6 @@ export default {
     ...mapActions('modals', ['showModal']),
     ...mapActions('shared', ['fetch']),
 
-    toISODate (dt) {
-      return dateformat(new Date(dt), 'isoDate')
-    },
     downloadCSV() {
       this.axios
         .post('/makeDownloadLink', {
