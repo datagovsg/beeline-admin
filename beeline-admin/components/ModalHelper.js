@@ -3,10 +3,10 @@ import {mapGetters, mapActions, mapState} from 'vuex'
 module.exports = {
   components: {
     // All the modals I need...
-    CreateTripsDatePicker: require('../modals/CreateTripsDatePicker.vue'),
-    CommonModals: require('../modals/CommonModals.vue'),
-    TripEditor: require('../modals/TripEditor.vue'),
-    StopsPopup: require('../modals/StopsPopup.vue'),
+    CreateTripsDatePicker: require('../modals/CreateTripsDatePicker.vue').default,
+    CommonModals: require('../modals/CommonModals.vue').default,
+    TripEditor: require('../modals/TripEditor.vue').default,
+    StopsPopup: require('../modals/StopsPopup.vue').default,
   },
   computed: {
     ...mapState('modals', ['modalStack'])

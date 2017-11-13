@@ -159,7 +159,7 @@ export default {
     }
   },
   components: {
-    StopDisplay: require('./TripStopDisplay.vue'),
+    StopDisplay: require('./TripStopDisplay.vue').default,
     MultiSelectBroker: require('../MultiSelectBroker'),
   },
   computed: {

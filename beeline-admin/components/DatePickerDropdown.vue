@@ -95,7 +95,7 @@ export default {
     }
   },
   components: {
-    DatePicker: require('./DatePicker.vue'),
+    DatePicker: require('./DatePicker.vue').default,
   },
   computed: {
     dateString() {

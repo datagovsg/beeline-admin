@@ -27,7 +27,7 @@ export default {
     }
   },
   components: {
-    TagsView: require('./TagsView.vue'),
+    TagsView: require('./TagsView.vue').default,
   },
   methods: {
     removeTag (tag) {

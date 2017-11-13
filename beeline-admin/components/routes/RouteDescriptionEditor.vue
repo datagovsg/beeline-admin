@@ -116,7 +116,7 @@ export default {
     }
   },
   components: {
-    PathEditor: require('./PathEditor.vue')
+    PathEditor: require('./PathEditor.vue').default
   },
   computed: {
     ...mapGetters(['axios', 'isSuperAdmin']),
