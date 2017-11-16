@@ -106,7 +106,7 @@ angular.module('beeline-admin')
   .state('c.driver', {
     url: '/drivers',
     templateUrl: 'templates/drivers.html',
-    controller: 'drivers',
+    controller: 'driversController',
     data: {
       requiresLogin: true,
     }

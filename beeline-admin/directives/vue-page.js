@@ -15,6 +15,7 @@ Vue.component('RoutePage', require('../../beeline-admin/pages/route.vue').defaul
 Vue.component('PromotionPage', require('../../beeline-admin/pages/promotion.vue').default)
 Vue.component('PromotionsPage', require('../../beeline-admin/pages/promotions.vue').default)
 Vue.component('ExtendRoutesPage', require('../../beeline-admin/pages/extendRoutes.vue').default)
+Vue.component('DriversPage', require('../../beeline-admin/pages/drivers.vue').default)
 
 // COMPONENTS
 Vue.component('Dropdown', require('../../beeline-admin/components/Dropdown.vue').default)
