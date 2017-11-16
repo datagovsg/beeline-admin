@@ -1,7 +1,9 @@
 <template>
-  <GmapMarker :position="f.pointToLatLng(tripStop.stop.coordinates)"
+  <GmapMarker
+    :position="f.pointToLatLng(tripStop.stop.coordinates)"
     :icon="tripStopIcon"
-  />
+    @click="$emit('click', tripStop)"
+    />
 </template>
 
 <script>
