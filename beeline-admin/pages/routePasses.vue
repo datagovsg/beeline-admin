@@ -368,7 +368,7 @@ export default {
             .then(resp => this.processUncommitReason(txn, resp))
             .catch(this.showErrorModal)
         } else if (txn.transaction.type === 'ticketPurchase') {
-          return this.queryTicket(txn)
+          return this.processTicket(txn)
         } else {
           return this.processTransactionItems(txn)
         }
@@ -379,17 +379,9 @@ export default {
       txn.uncommitReason = _.get(paymentItem, 'payment.data.message') || 'Reason is unknown'
       return txn
     },
-    queryTicket (txn) {
-      txn.description = txn.transaction.description
-      const [ticketId] = Object.keys(_.get(txn.notes, 'tickets') || {})
-      const queryOptions = { itemTypes: ['ticketSale', 'ticketSale'], ticketId }
-      return this.axios.get(`/transaction_items?${querystring.stringify(queryOptions)}`)
-          .then(response => {
-            const [ticketSale] = response.data.rows
-            const [tripDate] = ticketSale.ticketSale.boardStop.time.split('T')
-            txn.description = `Trip Date: ${tripDate}`
-            return txn
-          })
+    processTicket (txn) {
+      txn.description = `Trip Date: ${txn.tripDate}`
+      return txn
     },
     processTransactionItems (txn) {
       const {transactionItems} = txn.transaction
