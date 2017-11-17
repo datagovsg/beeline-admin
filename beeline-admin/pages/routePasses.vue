@@ -435,7 +435,7 @@ export default {
     },
     showErrorModal (err) {
       console.error(err)
-      this.showModal({
+      return this.showModal({
         component: 'CommonModals',
         props: {
           type: 'alert',
