@@ -157,6 +157,7 @@ export default {
   },
   methods: {
     ...mapActions('shared', ['fetch', 'refresh']),
+    ...mapActions('modals', ['showModal']),
     geoJsonToLatLng(gjs) {
       return {
         lat: gjs.coordinates[1],
