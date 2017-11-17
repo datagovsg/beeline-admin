@@ -122,10 +122,10 @@
             <td>
               <a class="btn btn-default"
                 :href="`#/c/${companyId}/promotions/${promotion.id}`">
-                <span class="glyphicon glyphicon-pencil"></span>
+                <span class="glyphicon glyphicon-pencil"/> Edit
               </a>
               <button @click="destroy(promotion)" class="btn btn-danger">
-                <span class="glyphicon glyphicon-trash"></span>
+                <span class="glyphicon glyphicon-trash"/> Delete
               </button>
             </td>
           </tr>
