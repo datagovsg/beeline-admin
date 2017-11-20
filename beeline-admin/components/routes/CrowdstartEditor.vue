@@ -131,7 +131,7 @@ export default {
   methods: {
     ...mapActions('resources', ['saveRoute', 'createTripForDate']),
     ...mapActions('spinner', ['spinOnPromise']),
-    ...mapActions('modals', ['showModal']),
+    ...mapActions('modals', ['showErrorModal']),
 
     doSaveRoute() {
       const newRoute = {
@@ -181,15 +181,9 @@ export default {
       )
 
       this.spinOnPromise(Promise.all([routePromise, tripPromise, bidPromise])
-      .then(() => this.$emit('requery'))
-      .catch((err) => this.showModal ({
-          components: 'CommonModals',
-          props: {
-            type: 'alert',
-            message: _.get(err, 'data.message')
-          }
-        })
-      ))
+        .then(() => this.$emit('requery'))
+        .catch(this.showErrorModal)
+      )
     },
     doResetRoute() {
       this.editRoute = blankRoute()

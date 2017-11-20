@@ -253,7 +253,7 @@ export default {
   },
   methods: {
     ...mapActions('spinner', ['spinOnPromise']),
-    ...mapActions('modals', ['showModal']),
+    ...mapActions('modals', ['showModal', 'showErrorModal']),
     preSaveTransform (e) {
       const myParams = _.omit(e.params, ['companyId'])
 
@@ -287,16 +287,7 @@ export default {
           }
         })
       )
-      .catch(err => {
-        this.showModal({
-          component: 'CommonModals',
-          props: {
-            type: 'alert',
-            title: 'Error',
-            message: _.get(err, 'message')
-          }
-        })
-      })
+      .catch(this.showErrorModal)
     },
 
     cancel () {

@@ -199,7 +199,7 @@ export default {
 
   methods: {
     ...mapActions('spinner', ['spinOnPromise']),
-    ...mapActions('modals', ['showModal']),
+    ...mapActions('modals', ['showModal', 'showErrorModal']),
 
     refresh () {
       return this.axios.get(`/companies/${this.companyId}/promotions`)
@@ -267,15 +267,7 @@ export default {
           }
         })
       )
-      .catch((err) =>
-        this.showModal({
-          component: 'CommonModals',
-          props: {
-            type: 'alert',
-            message: `${err && err.response && err.response.message}`
-          }
-        })
-      )
+      .catch(this.showErrorModal)
     },
 
     destroy (promotion) {
@@ -296,15 +288,7 @@ export default {
           )
         }
       })
-      .catch((err) =>
-        this.showModal({
-          component: 'CommonModals',
-          props: {
-            type: 'alert',
-            message: `${err && (err.message || (err.response && err.response.message))}`
-          }
-        })
-      )
+      .catch(this.showErrorModal)
     }
   }
 }
