@@ -50,5 +50,16 @@ module.exports = {
             })
         })
     },
+    showErrorModal (context, err) {
+      console.error(err)
+      return context.dispatch('showModal', {
+        component: 'CommonModals',
+        props: {
+          type: 'alert',
+          title: _.get(err, 'response.data.error', 'Error'),
+          message: `${_.get(err, 'message')}: ${_.get(err, 'response.data.message', '')}`
+        }
+      })
+    }
   }
 }
