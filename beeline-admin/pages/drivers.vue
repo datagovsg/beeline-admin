@@ -80,7 +80,7 @@ export default {
   },
   methods: {
     ...mapActions('spinner', ['spinOnPromise']),
-    ...mapActions('modals', ['showModal']),
+    ...mapActions('modals', ['showModal', 'showErrorModal']),
     async query () {
       if (this.companyId) {
         await this.spinOnPromise(
@@ -184,17 +184,6 @@ export default {
         .catch(this.showErrorModal)
         .then(this.query)
       )
-    },
-    showErrorModal (err) {
-      console.error(err)
-      return this.showModal({
-        component: 'CommonModals',
-        props: {
-          type: 'alert',
-          title: err.error || 'Error',
-          message: `${err && (err.message || (err.data && err.data.message))}`
-        }
-      })
     }
   }
 }

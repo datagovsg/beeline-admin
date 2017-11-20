@@ -157,7 +157,7 @@ export default {
   },
   methods: {
     ...mapActions('shared', ['fetch', 'refresh']),
-    ...mapActions('modals', ['showModal']),
+    ...mapActions('modals', ['showModal', 'showErrorModal']),
     geoJsonToLatLng(gjs) {
       return {
         lat: gjs.coordinates[1],
@@ -174,6 +174,7 @@ export default {
           this.refresh(['stops'])
           this.selectedStop = _.clone(s)
         })
+        .catch(this.showErrorModal)
       } else {
         this.axios.post(
           `/stops`,
@@ -184,6 +185,7 @@ export default {
           s.id = response.data.id
           this.selectedStop = _.clone(s)
         })
+        .catch(this.showErrorModal)
       }
     },
     deleteStop(s) {
@@ -199,6 +201,7 @@ export default {
           return this.axios.delete(`/stops/${s.id}`)
         }
       })
+      .catch(this.showErrorModal)
     },
     newStop(e) {
       this.editStop = {

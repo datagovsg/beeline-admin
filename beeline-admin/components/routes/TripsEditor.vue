@@ -221,7 +221,7 @@ export default {
   methods: {
     ...mapActions('resources', ['getRoute', 'saveRoute', 'createTripForDate']),
     ...mapActions('spinner', ['spinOnPromise']),
-    ...mapActions('modals', ['showModal']),
+    ...mapActions('modals', ['showModal', 'showErrorModal']),
 
     doSaveRoute() {
       this.spinOnPromise(this.saveRoute(this.editRoute))
@@ -331,15 +331,7 @@ export default {
           }
         })
       })
-      .catch((error) => {
-        return this.showModal({
-          component: 'CommonModals',
-          props: {
-            type: 'alert',
-            message: error.message
-          }
-        })
-      })
+      .catch(this.showErrorModal)
     },
 
     showEditTripDialog() {
@@ -365,15 +357,7 @@ export default {
             }
           })
         })
-        .catch((error) => {
-          return this.showModal({
-            component: 'CommonModals',
-            props: {
-              type: 'alert',
-              message: error.message
-            }
-          })
-        })
+        .catch(this.showErrorModal)
       })
     },
 
@@ -429,13 +413,7 @@ export default {
 
         await this.spinOnPromise(this.requery())
       } catch (error) {
-        await this.showModal({
-          component: 'CommonModals',
-          props: {
-            type: 'alert',
-            message: error.message
-          }
-        })
+        await this.showErrorModal(error)
       }
     }
   }

@@ -121,7 +121,7 @@ export default {
   },
   methods: {
     ...mapActions('spinner', ['spinOnPromise']),
-    ...mapActions('modals', ['showModal']),
+    ...mapActions('modals', ['showModal', 'showErrorModal']),
 
     withdrawBid (bid) {
       this.showModal({
@@ -139,13 +139,7 @@ export default {
           .then(() => {this.$emit('requery')}))
         }
       })
-      .catch((err) => this.showModal({
-        component: 'CommonModals',
-        props: {
-          type: 'alert',
-          message: _.get(err, 'message')
-        }
-      }))
+      .catch(this.showErrorModal)
     },
 
     enableTerminate () {
@@ -162,13 +156,7 @@ export default {
         .then(() => {this.$emit('requery')})
 
       this.spinOnPromise(terminatePromise)
-      .catch((err) => this.showModal({
-        component: 'CommonModals',
-        props: {
-          type: 'alert',
-          message: _.get(err, 'message') || err
-        }
-      }))
+        .catch(this.showErrorModal)
     },
 
     convert () {
@@ -198,13 +186,7 @@ export default {
           })
         }
       })
-      .catch((err) => this.showModal({
-        component: 'CommonModals',
-        props: {
-          type: 'alert',
-          message: _.get(err, 'message') || 'There is some error.'
-        }
-      }))
+      .catch(this.showErrorModal)
     },
 
     chargeAllBidders () {
@@ -233,13 +215,7 @@ export default {
       let chargePromise = this.axios.post(`/crowdstart/routes/${this.route.id}/bids/${bid.id}/convert`)
         .then(() => {this.$emit('requery')})
       return this.spinOnPromise(chargePromise)
-        .catch((err) => this.showModal({
-          component: 'CommonModals',
-          props: {
-            type: 'alert',
-            message: _.get(err, 'message') || err
-          }
-        }))
+        .catch(this.showErrorModal)
     }
 
   }
