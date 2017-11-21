@@ -182,7 +182,13 @@
                   </a>
                 </td>
                 <td class="item-description">
-                  <span ng-if="ticket.routePassPurchaseDescription">{{ticket.routePassPurchaseDescription}}<br/></span>
+                  <span ng-if="ticket.routePass">
+                    Purchased using route pass {{ticket.routePass.id}}<br/>
+                    Purchase Txn:
+                      <a ui-sref="^.transactions({id: ticket.routePass.transactionId})">
+                        {{ticket.routePass.transactionId}}</a><br/>
+                    Discount: &dollar;{{ticket.routePass.discount || 0 | number:2}}
+                  </span>
                   <span ng-if="ticket.paymentResource">{{ticket.paymentResource}}<br/></span>
                   <span ng-if="ticket.ticketExpense">{{ticket.ticketExpense.transaction.description}}<br/></span>
                   <span ng-if="ticket.refundResource">{{ticket.refundResource}}<br/></span>
