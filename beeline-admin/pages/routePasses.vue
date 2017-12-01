@@ -401,7 +401,7 @@ export default {
       txn.redeemed = _.get(txn, 'notes.ticketId')
       txn.expiresAt = _.get(txn.routePass, 'expiresAt')
 
-      const perPassDiscount = _.get(promoItem, `notes.tickets[${txn.itemId}]`)
+      const perPassDiscount = _.get(txn, `routePass.notes.discountValue`)
       txn.description = perPassDiscount ? `Discount: ${perPassDiscount.toFixed(2)}` : `No Discount`
 
       return txn
