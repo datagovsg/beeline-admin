@@ -389,16 +389,13 @@ export default {
       let [paymentItem, promoItem]
         = this.matchByType(transactionItems, ['payment', 'discount'])
 
-      const routePassItem = txn
-
       txn.promo = {
         code: _.get(promoItem, 'discount.code'),
         promoId: _.get(promoItem, 'discount.promotionId'),
         amount: _.get(promoItem, 'debit')
       }
 
-      txn.routePassItem = txn
-      txn.redeemed = _.get(txn, 'notes.ticketId')
+      txn.redeemed = _.get(txn.routePass, 'notes.ticketId')
       txn.expiresAt = _.get(txn.routePass, 'expiresAt')
 
       const perPassDiscount = _.get(txn, `routePass.notes.discountValue`)
