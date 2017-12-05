@@ -94,7 +94,12 @@
                 </a>
                 <a v-if="txn.refundingTransactionId" :href="`#/c/${companyId}/transactions?id=${txn.refundingTransactionId}`">{{txn.refundingTransactionId}}</a>
               </td>
-              <td>{{txn.transaction.description}}</td>
+              <td>
+                <span>{{txn.transaction.description}}</span><br/>
+                <span v-if="txn.discount && txn.discount.description">
+                  Discount Scheme: {{txn.discount.description}}
+                </span>
+              </td>
               <td>
                 <span v-if="txn.transaction.committed">
                   {{txn.paymentResource}}<br/>
@@ -130,11 +135,11 @@
               <br>{{txn.routePass.user.telephone}}
               <br>{{txn.routePass.user.email}}
               <br>
-                <span class="discount-code label" v-if="txn.promo && txn.promo.promoId"
-                    :href="`#/c/${companyId}/promotions/${txn.promo.promoId}`">
-                  <span v-if="txn.promo.code">{{txn.promo.code}}</span>
+                <span class="discount-code label" v-if="txn.discount && txn.discount.promotionId"
+                    :href="`#/c/${companyId}/promotions/${txn.discount.promotionId}`">
+                  <span v-if="txn.discount.code">{{txn.discount.code}}</span>
                   <span v-else><i>(automatic)</i></span>
-                  (#{{txn.promo.promoId}})
+                  (#{{txn.discount.promotionId}})
                 </span>
               </td>
               <td><ul class="tags"><li class="tags">{{txn.routePass.tag}}</li></ul></td>
@@ -388,12 +393,6 @@ export default {
 
       let [paymentItem, promoItem]
         = this.matchByType(transactionItems, ['payment', 'discount'])
-
-      txn.promo = {
-        code: _.get(promoItem, 'discount.code'),
-        promoId: _.get(promoItem, 'discount.promotionId'),
-        amount: _.get(promoItem, 'debit')
-      }
 
       txn.redeemed = _.get(txn.routePass, 'notes.ticketId')
       txn.expiresAt = _.get(txn.routePass, 'expiresAt')
