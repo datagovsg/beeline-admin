@@ -163,7 +163,7 @@
     <!-- trip-data-editor -->
 
     <div class="modal-footer">
-      <button class="btn btn-primary" @click="resolve(editTrip)">
+      <button class="btn btn-primary" @click="validateBeforeResolve()">
         Save
       </button>
       <button class="btn btn-default" @click="reject()">
@@ -214,7 +214,7 @@ export default {
     f: () => filters,
   },
   methods: {
-    ...mapActions('modals', ['showModal']),
+    ...mapActions('modals', ['showModal', 'showErrorModal']),
     blankTripStop() {
       return {
         stopId: null,
@@ -241,6 +241,21 @@ export default {
         tripStop.stopId = stop.id
       })
       .catch(() => {})
+    },
+    validateBeforeResolve () {
+      const {tripStops: ts} = this.editTrip
+      if (!(ts.some(s => s.canBoard) && ts.some(s => s.canAlight))) {
+        this.showErrorModal({
+          message: 'Invalid trip',
+          data: {
+            message:
+              'A trip should have one stop to board from, ' +
+              'and one stop to alight from'
+          }
+        })
+      } else {
+        this.resolve(this.editTrip)
+      }
     }
   },
   mixins: [
