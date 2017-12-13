@@ -5,7 +5,7 @@
     </div>
 
     <form class="container-fluid form-horizontal"
-        v-if="route">
+        v-if="route" @submit.prevent="() => {}">
 
       <div class="form-group form-inline" v-if="bids">
         <h3>Bidders</h3>
