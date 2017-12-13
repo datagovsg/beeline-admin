@@ -123,10 +123,6 @@ export default {
         }
       })
 
-      if (!remarks) {
-        return
-      }
-
       await this.spinOnPromise(this.axios
         .put(
           `/companies/${this.companyId}/drivers/${driver.id}`,
