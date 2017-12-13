@@ -124,7 +124,7 @@
     "webpack": "webpack",
     "webpack-watch": "webpack --watch -d",
     "build": "cross-env BACKEND_URL=https\\://beeline-server-dev.herokuapp.com BUILD_PREFIX=www webpack",
-    "watch": "npm run start & npm run webpack-watch",
+    "watch": "cross-env PORT=8100 npm run start & npm run webpack-watch",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "test": "npm run unit",
     "start": "http-server -c-1 www",
