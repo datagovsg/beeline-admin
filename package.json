@@ -127,7 +127,7 @@
     "watch": "npm run start & npm run webpack-watch",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "test": "npm run unit",
-    "start": "http-server -p 8100 -c-1 www",
+    "start": "http-server -c-1 www",
     "heroku-postbuild": "cross-env NODE_ENV=production BACKEND_URL=https\\://beeline-server-dev.herokuapp.com BUILD_PREFIX=www webpack",
     "live-build": "cross-env NODE_ENV=production BACKEND_URL=https\\://beeline-server-admin.herokuapp.com BUILD_PREFIX=build webpack",
     "live-cp": "shx mkdir -p build && shx cp -r 'www/*' build",
