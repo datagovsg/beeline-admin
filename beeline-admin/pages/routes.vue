@@ -58,7 +58,6 @@
               <sort-th>Boarding</sort-th>
               <sort-th>Alighting</sort-th>
               <sort-th>Route path</sort-th>
-              <sort-th @sort="filter.order=$event.order, filter.orderBy=$event.orderBy" :order="filter.order" :order-by="filter.orderBy" field="lastDriverName">Last driver</sort-th>
               <sort-th @sort="filter.order=$event.order, filter.orderBy=$event.orderBy" :order="filter.order" :order-by="filter.orderBy" field="lastPrice">Price</sort-th>
               <sort-th @sort="filter.order=$event.order, filter.orderBy=$event.orderBy" :order="filter.order" :order-by="filter.orderBy" field="lastCapacity">Capacity</sort-th>
               <sort-th>Tags</sort-th>
@@ -139,7 +138,6 @@
                 </expandable-area>
               </td>
               <td><button class="btn btn-default" @click="viewRoute(route)">View</button></td>
-              <td>{{route.indicativeTrip && route.indicativeTrip.lastDriverName}}</td>
               <td>{{route.indicativeTrip && route.indicativeTrip.lastPrice}}</td>
               <td>{{route.indicativeTrip && route.indicativeTrip.lastCapacity}}<span class="glyphicon glyphicon-user" aria-hidden="true"></span></td>
               <td><TagsView :tags="route.tags" /></td>
