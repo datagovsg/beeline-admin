@@ -200,11 +200,14 @@ export default {
       })
       .then((result) => {
         if (result) {
-          this.spinOnPromise(Promise.all(this.bids.map((bid) => {
-            return this.charge(bid)
-          }))
-          .then(() => {this.$emit('requery')}))
-          console.log('Done')
+          this.spinOnPromise(
+            Promise.all(
+              this.bids
+                .filter((bid) => bid.status === 'bidded')
+                .map(this.charge)
+            )
+            .then(() => this.$emit('requery'))
+          )
         }
       })
 
