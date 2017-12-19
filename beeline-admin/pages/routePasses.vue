@@ -119,7 +119,8 @@
               <td>{{txn.expiresAt !== undefined ? f.date(txn.expiresAt, 'dd mmm yyyy') : ''}}</td>
               <td :title="`Transaction ID: ${txn.transactionId}`">
                 <span class="label txn-redeemed" v-if="txn.redeemed && txn.transaction.committed && !txn.refundingTransactionId">Redeemed</span>
-                <span class="label txn-valid" v-if="!txn.redeemed && txn.transaction.committed && !txn.refundingTransactionId">Valid</span>
+                <span class="label txn-redeemed" v-if="!txn.redeemed && txn.transaction.committed && txn.routePass.status === 'expired'">Expired</span>
+                <span class="label txn-valid" v-if="!txn.redeemed && txn.transaction.committed && !txn.refundingTransactionId && txn.routePass.status !== 'expired'">Valid</span>
                 <span class="label txn-failed" v-if="!txn.transaction.committed">Failed</span>
                 <span class="label txn-refunded" v-if="txn.transaction.committed && txn.refundingTransactionId">Refunded</span>
               </td>
