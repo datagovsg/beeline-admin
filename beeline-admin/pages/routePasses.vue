@@ -115,7 +115,7 @@
                   {{txn.uncommitReason}}
                 </span>
               </td>
-              <td>{{f.date(txn.createdAt, 'dd mmm yyyy HH:mm:ss')}}</td>
+              <td>{{f.date(txn.createdAt, 'dd mmm yyyy HH:MM:ss')}}</td>
               <td>{{txn.expiresAt !== undefined ? f.date(txn.expiresAt, 'dd mmm yyyy') : ''}}</td>
               <td :title="`Transaction ID: ${txn.transactionId}`">
                 <span class="label txn-redeemed" v-if="txn.redeemed && txn.transaction.committed && !txn.refundingTransactionId">Redeemed</span>
