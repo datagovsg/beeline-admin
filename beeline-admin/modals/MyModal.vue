@@ -3,7 +3,7 @@
   <transition name="modal">
     <div class="modal-mask" v-if="value">
       <div class="modal-wrapper" @click="clickToClose && $emit('cancel')">
-        <div class="modal-dialog" @click.stop>
+        <div class="modal-dialog" :style="overrideWidth ? `width: ${overrideWidth}` : ''" @click.stop>
           <slot />
         </div>
       </div>
@@ -71,7 +71,8 @@ export default {
     'clickToClose': {
       default: true,
     },
-    value: {}
+    value: {},
+    overrideWidth: {},
   },
   // created () {
   //   this.$escapeEvent = (event) => {

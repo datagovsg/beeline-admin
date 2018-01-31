@@ -44,6 +44,8 @@ export default {
     'defaultDisable': {},
     'monthFormat': {},
     'otherMonthSelectable': {default: true},
+    'toModel': {default: () => ((day, effectiveOffset) => new Date(day.date.getTime() + effectiveOffset))},
+    'extractDateFromModel': {default: () => ((v, effectiveOffset) => v)},
   },
   data () {
     return {
@@ -140,9 +142,10 @@ export default {
             differentMonth: isDifferentMonth,
             classes: ((canonicalDateMetadata && canonicalDateMetadata.classes) || []).filter(Boolean),
             annotation: canonicalDateMetadata && canonicalDateMetadata.annotation,
+            rawAnnotation: canonicalDateMetadata && canonicalDateMetadata.rawAnnotation,
             selected: this.value && (this.multiple
-              ? this.value.find(d => this.canonicalTime(d) === canonical)
-              : this.canonicalTime(this.value) === canonical)
+              ? this.value.find(d => this.extractCanonicalTime(d) === canonical)
+              : this.extractCanonicalTime(this.value) === canonical)
           }
         })
       )
@@ -154,21 +157,23 @@ export default {
       const time = Date.UTC(tzDate.getUTCFullYear(), tzDate.getUTCMonth(), tzDate.getUTCDate())
       return time
     },
+    extractCanonicalTime (value) {
+      return this.canonicalTime(this.extractDateFromModel(value, this.effectiveOffset))
+    },
     clicked (day) {
       if (day.disabled) return
       if (!this.otherMonthSelectable && day.differentMonth) return
 
       if (this.multiple) {
-        const index = this.value.findIndex(v => this.canonicalTime(v) === day.canonical)
+        const index = this.value.findIndex(v => this.extractCanonicalTime(v) === day.canonical)
 
         if (index === -1) {
-          this.$emit('input', this.value.concat([this.toUserDate(day.date)]))
+          this.$emit('input', this.value.concat([this.toModel(day, this.effectiveOffset)]))
         } else {
-          this.$emit('input', this.value
-            .filter(v => this.canonicalTime(v) !== day.canonical))
+          this.$emit('input', this.value.filter(v => this.extractCanonicalTime(v) !== day.canonical))
         }
       } else {
-        this.$emit('input', this.toUserDate(day.date))
+        this.$emit('input', this.toModel(day, this.effectiveOffset))
       }
     },
     dayClasses (day) {
@@ -181,9 +186,6 @@ export default {
         basic[d] = true
       }
       return basic
-    },
-    toUserDate(date) {
-      return new Date(date.getTime() + this.effectiveOffset)
     },
   }
 }

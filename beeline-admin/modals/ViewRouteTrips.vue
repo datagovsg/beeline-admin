@@ -1,5 +1,5 @@
 <template>
-<modal :name="name" :value="value">
+<modal override-width="1200px" :name="name" :value="value">
   <div class="modal-header">
     <h3>
       {{route.label}}: {{route.from}} &mdash; {{route.to}}
@@ -11,13 +11,6 @@
   </div>
 
   <div class="modal-body">
-    <select @change="zoomInOnStops" v-model="selectedTrip"
-        class="form-control">
-      <option v-for="trip in trips" :value="trip">
-        {{ f.date(trip.date, 'dd mmm yyyy', true)}}
-      </option>
-    </select>
-
     <gmap-map :center="{lat: 1.38, lng: 103.8}" :zoom="12" ref="map" class="view-trips-map">
       <!-- Route path -->
       <gmap-polyline v-if="routePath" :path="routePath" />
@@ -68,16 +61,35 @@
         </div>
       </gmap-info-window>
     </gmap-map>
+    <div>
+      <date-picker
+        class="date-picker-trips"
+        :multiple="false"
+
+        v-model="selectedTrip"
+        :specialDates="trips.map(trip => ({ date: trip.date, enabled: true, annotation: 1, rawAnnotation: trip }))"
+        :defaultDisable="true"
+        :otherMonthSelectable="true"
+        :toModel="(d) => d.rawAnnotation"
+        :extractDateFromModel="extractDateFromModel"
+        >
+      </date-picker>
+    </div>
   </div>
 </modal>
 </template>
 <script>
 import {mapState, mapActions} from 'vuex'
-import filters from '../filters'
 import _ from 'lodash'
+
+import DatePicker from '@/components/DatePicker.vue'
+import filters from '@/filters'
 
 export default {
   props: ['route', 'value'],
+  components: {
+    DatePicker
+  },
   mixins: [
     require('./ModalMixin')
   ],
@@ -136,9 +148,8 @@ export default {
       })
     },
     trips () {
-      if (!this.routeWithTrips) return
-
-      return _.orderBy(this.routeWithTrips.trips, ['date'], ['desc'])
+      return this.routeWithTrips
+        ? _.orderBy(this.routeWithTrips.trips, ['date'], ['desc']) : []
     },
     routePathPromise () {
       const promise = this.routePromise &&
@@ -174,30 +185,86 @@ export default {
       handler(p) {
         if (p) p.then((pings) => this.pingsByDriverId = _.groupBy(pings, 'driverId'))
       }
+    },
+    selectedTrip: {
+      immediate: false,
+      handler(selectedTrip) {
+        if (selectedTrip) {
+          var bounds = new google.maps.LatLngBounds();
+          for (let tripStop of selectedTrip.tripStops) {
+            bounds.extend({
+              lat: tripStop.stop.coordinates.coordinates[1],
+              lng: tripStop.stop.coordinates.coordinates[0]
+            })
+          }
+          this.$refs.map.panToBounds(bounds)
+        }
+      }
     }
   },
   methods: {
     ...mapActions('resources', ['getRoute', 'getPings']),
     ...mapActions('shared', ['fetch']),
-    zoomInOnStops () {
-      if (!this.selectedTrip) return
-
-      var bounds = new google.maps.LatLngBounds();
-      for (let tripStop of this.selectedTrip.tripStops) {
-        bounds.extend({
-          lat: tripStop.stop.coordinates.coordinates[1],
-          lng: tripStop.stop.coordinates.coordinates[0]
-        })
-      }
-      this.$refs.map.panToBounds(bounds)
-    }
+    extractDateFromModel: (trip, effectiveOffset) => new Date(trip.date.getTime() + effectiveOffset),
   }
 }
 </script>
 
-<style>
+<style scoped>
+.modal-dialog {
+  width: 75%;
+}
+.modal-body {
+  display: flex;
+  flex-direction: row;
+}
+.modal-body > * {
+  flex: 1 1 50%;
+}
 .view-trips-map {
-  width: 100%;
+  width: 50%;
   height: 400px;
+}
+</style>
+<style lang="scss">
+.date-picker-trips {
+  width: 100%;
+  td, th {
+    text-align: center;
+    line-height: 3.0;
+    position: relative;
+    cursor: pointer;
+
+    &.selected {
+      background-color: #008;
+      color: #FFF;
+    }
+    &.disabled {
+      background-color: #888;
+      color: #CCC;
+    }
+    &.different-month {
+      opacity: 0.5;
+    }
+    &:not(.different-month) {
+      font-weight: bold;
+    }
+    &.public-holiday {
+      color: #F00;
+    }
+    div.annotation {
+      background-color: #FF6C6A;
+      color: #F4F4F4;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      line-height: 1.6;
+      font-size: 12px;
+      padding: 1px 5px;
+    }
+  }
+  th:not([colspan]) {
+    width: 14%;
+  }
 }
 </style>
