@@ -112,7 +112,7 @@
                   </button>
                 </span>
                 <span v-if="!txn.transaction.committed">
-                  {{txn.uncommitReason}}
+                  {{txn.paymentMessage || 'Reason is unknown'}}
                 </span>
               </td>
               <td>{{f.date(txn.createdAt, 'dd mmm yyyy HH:MM:ss')}}</td>
@@ -355,13 +355,6 @@ export default {
     },
     postProcessTransaction (txns) {
       const transactionLevelQueries = {}
-      const findOrCreateTransactionLevelQuery = transactionId => {
-        if (!transactionLevelQueries[transactionId]) {
-          transactionLevelQueries[transactionId] = this.axios
-            .get(`/transaction_items?${querystring.stringify({ transactionId })}`)
-        }
-        return transactionLevelQueries[transactionId]
-      }
       return Promise.all(_.map(txns, (txn) => {
         // do the route label mapping
         txn.routeLabel = txn.routePass.route.label
@@ -369,10 +362,6 @@ export default {
         // to speed up, skip the query transaction items for non-purchase / non-conversion ones
         if (!['freeRoutePass', 'routePassPurchase', 'conversion', 'ticketPurchase'].includes(txn.transaction.type) && txn.transaction.committed) {
           return Promise.resolve(txn)
-        } else if (!txn.transaction.committed) {
-          return findOrCreateTransactionLevelQuery(txn.transactionId)
-            .then(resp => this.processUncommitReason(txn, resp))
-            .catch(this.showErrorModal)
         } else if (txn.transaction.type === 'ticketPurchase') {
           return this.processTicket(txn)
         } else {
@@ -380,20 +369,12 @@ export default {
         }
       }))
     },
-    processUncommitReason (txn, resp) {
-      const paymentItem = resp.data.rows.find(x => x.itemType === 'payment')
-      txn.uncommitReason = _.get(paymentItem, 'payment.data.message') || 'Reason is unknown'
-      return txn
-    },
     processTicket (txn) {
       txn.description = `Trip Date: ${txn.tripDate}`
       return txn
     },
     processTransactionItems (txn) {
       const {transactionItems} = txn.transaction
-
-      let [paymentItem, promoItem]
-        = this.matchByType(transactionItems, ['payment', 'discount'])
 
       txn.redeemed = _.get(txn.routePass, 'notes.ticketId')
       txn.expiresAt = _.get(txn.routePass, 'expiresAt')
