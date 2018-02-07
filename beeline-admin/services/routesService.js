@@ -2,7 +2,7 @@ import _ from 'lodash'
 import querystring from 'querystring'
 import assert from 'assert'
 
-export default function (AdminService, DriverService, $q, LoadingSpinner, companiesSvc) {
+export default function (AdminService, DriverService, $q, LoadingSpinner) {
 
   var routesPromiseCache = null, currentRoutesPromiseCache = null;
   var routesById = null;
@@ -61,7 +61,7 @@ export default function (AdminService, DriverService, $q, LoadingSpinner, compan
       const _options = options || {}
       var query = makeRouteQuery(_options);
 
-      var companiesPromise = companiesSvc.getCompanies()
+      var companiesPromise = AdminService.fetchAdminCompanies()
         .then((companies => _.keyBy(companies, 'id')))
 
       var routesPromise = AdminService.beeline({
