@@ -32,8 +32,10 @@ angular.module('beeline-admin')
       isSuperAdmin (state) {
         if (!state.idToken) return false
 
+        // FIXME: remove dependency on app_metadata
+        // Should rely on (GET /admins/whoami).scope
         const decoded = jwtDecode(state.idToken)
-        return decoded.app_metadata.roles.includes('superadmin')
+        return _.get(decoded, 'app_metadata.roles', []).includes('superadmin')
       }
     },
     mutations: {
