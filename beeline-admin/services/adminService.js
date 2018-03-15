@@ -81,31 +81,15 @@ export default function ($http, $rootScope, $location, store, jwtHelper, auth, c
         url: '/admins/whoami'
       })
       .then(async (whoAmI) => {
-        const adminId = whoAmI.data.adminId
+        const { scope: role, adminId, email, transportCompanyIds } = whoAmI.data
 
-        // FIXME: In the future roles (including superadmin positions)
-        // should be read from the /whoami endpoint
-        const tokenData = jwtHelper.decodeToken(store.get('sessionToken'))
-        const role = _.get(tokenData, 'app_metadata.roles', []).indexOf('superadmin') != -1
-          ? 'superadmin' : 'admin'
+        const transportCompanies = !adminId && role === 'superadmin'
+          ? (await this.fetchAllCompanies())
+          : (await this.beeline({url: `/admins/${adminId}`})).data.transportCompanies
 
-        const myCompanies = (adminId && role !== 'superadmin')
-          ? (await this.beeline({url: `/admins/${adminId}`})).data.transportCompanies
-          : (await this.fetchAllCompanies())
-
-        console.log(tokenData)
-
-        return {
-          email: whoAmI.data.email || tokenData.email,
-          role,
-          transportCompanyIds: myCompanies.map(tc => tc.id),
-          transportCompanies: myCompanies,
-        }
+        return { email, role, transportCompanyIds, transportCompanies }
       })
-      .catch((err) => {
-        console.log('Error fetching user data')
-        console.log(err)
-      })
+      .catch(console.error)
     }
   }
 
