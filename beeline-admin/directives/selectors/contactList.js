@@ -1,6 +1,6 @@
 
 angular.module('beeline-admin')
-.directive('contactListSelector', function($http, companiesSvc, AdminService, $rootScope) {
+.directive('contactListSelector', function($http, AdminService, $rootScope) {
 
   let contactLists = []
 

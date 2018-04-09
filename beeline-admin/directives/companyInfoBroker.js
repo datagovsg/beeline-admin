@@ -1,6 +1,6 @@
 import assert from 'assert';
 
-export default function(companiesSvc) {
+export default function(AdminService) {
   return {
     scope: {
       companyId: '<',
@@ -14,7 +14,7 @@ export default function(companiesSvc) {
           return;
         }
         else {
-          companiesSvc.getCompanies().then((companies) => {
+          AdminService.fetchAdminCompanies().then((companies) => {
             scope.company = companies.find(c => c.id == scope.companyId)
           })
         }

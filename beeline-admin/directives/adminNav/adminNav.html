@@ -49,7 +49,7 @@
           <a ng-click="adminService.login()">Login</a>
         </li>
         <li ng-if="auth.isAuthenticated" class="logout-button">
-          <a ng-click="adminService.logout()">Log out <br/> {{adminService.session().email}}</a>
+          <a ng-click="adminService.logout()">Log out <br/> {{adminService.session.email}}</a>
         </li>
       </ul>
     </div>

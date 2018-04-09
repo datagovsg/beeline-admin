@@ -1,5 +1,5 @@
 
-export default function($http, companiesSvc) {
+export default function($http) {
   return {
     template: `
 <select

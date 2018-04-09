@@ -1,5 +1,5 @@
 
-export default function($http, companiesSvc) {
+export default function($http, AdminService) {
   return {
     template: `
 <select
@@ -9,7 +9,7 @@ export default function($http, companiesSvc) {
     `,
     replace: true,
     link(scope, elem, attr) {
-      companiesSvc.getCompanies()
+      AdminService.fetchAdminCompanies()
       .then((companies) => {
         return scope.companies = [{id:0, name: '(All)'}].concat(companies)
       })
