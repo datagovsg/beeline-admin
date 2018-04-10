@@ -133,44 +133,37 @@ export default {
       )
     },
     async addDriver (driver) {
-      const telephone  = await this.showModal({
-        component: 'CommonModals',
-        props: {
-          type: 'prompt',
-          title: 'Driver Telephone',
-          message: 'Please enter the 8-digit Mobile No. starting with the digit 8 or 9.',
+      const promptForRequiredValue = async props => {
+        let value
+        while (!value) {
+          value = await this.showModal({
+            component: 'CommonModals',
+            props,
+          })
+          if (!value) {
+            await this.showErrorModal({ message: 'This value is required' })
+          }
         }
-      })
-
-      if (!telephone) {
-        return
+        return value
       }
 
-      const name = await this.showModal({
-        component: 'CommonModals',
-        props: {
-          type: 'prompt',
-          title: 'Driver Name',
-          message: 'Please enter the name of the Driver.',
-        }
+      const telephone = await promptForRequiredValue({
+        type: 'prompt',
+        title: 'Driver Telephone',
+        message: 'Please enter the 8-digit Mobile No. starting with the digit 8 or 9.',
       })
 
-      if (!name) {
-        return
-      }
-
-      const remarks = await this.showModal({
-        component: 'CommonModals',
-        props: {
-          type: 'prompt',
-          title: 'Remarks for Driver',
-          message: 'Any remarks?',
-        }
+      const name = await promptForRequiredValue({
+        type: 'prompt',
+        title: 'Driver Name',
+        message: 'Please enter the name of the Driver.',
       })
 
-      if (!remarks) {
-        return
-      }
+      const remarks = await promptForRequiredValue({
+        type: 'prompt',
+        title: 'Remarks for Driver',
+        message: 'Any remarks?',
+      })
 
       await this.spinOnPromise(this.axios
         .post(
