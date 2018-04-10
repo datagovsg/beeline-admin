@@ -56,7 +56,7 @@ export default function () {
           scope.combinedHL = [];
           let combinedKeys = _.union(_.keys(phByDate), _.keys(hlByDate));
           for (let key of combinedKeys) {
-            scope.combinedHL.push(_.extend(phByDate[key], hlByDate[key]))
+            scope.combinedHL.push(_.extend({}, phByDate[key], hlByDate[key]))
           }
         }
       })
