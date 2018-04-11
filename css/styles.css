@@ -6508,6 +6508,11 @@ table.trips-list {
   .trip-data-editor .stop-selector-cell stop-selector-popup {
     flex: 0 0 auto; }
 
+#contact-list-details {
+  height: 60vh; }
+  #contact-list-details textarea {
+    height: 95%; }
+
 .crowdstart-editor tr.not-live td {
   color: #888; }
 

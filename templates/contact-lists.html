@@ -14,19 +14,22 @@
         <thead>
           <tr>
             <th>ID</th>
-            <th>Created</th>
             <th>Description</th>
+            <th>Created</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr ng-repeat="contactList in contactLists">
             <td>{{contactList.id}}</td>
-            <td><a ui-sref="^.contact-list({contactListId: contactList.id})">{{contactList.createdAt | date:'dd-MMM-yyyy HH:mm:ss'}}</a></td>
             <td><a ui-sref="^.contact-list({contactListId: contactList.id})">{{contactList.description}}</a></td>
+            <td><a ui-sref="^.contact-list({contactListId: contactList.id})">{{contactList.createdAt | date:'dd-MMM-yyyy HH:mm:ss'}}</a></td>
             <td>
+              <button class="btn btn-default" ui-sref="^.contact-list({contactListId: contactList.id})">
+                <span class="glyphicon glyphicon-edit"></span>Edit
+              </button>
               <button class="btn btn-danger" ng-click="destroy(contactList)">
-                <span class="glyphicon glyphicon-trash"></span>
+                <span class="glyphicon glyphicon-trash"></span>Delete
               </button>
             </td>
           </tr>
