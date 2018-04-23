@@ -6,7 +6,7 @@ angular.module('beeline-admin')
 function ($rootScope, $uibModal, AdminService, TagsService,
           commonModals, LoadingSpinner, uibModalPromise) {
   this.issueOn = function (context) {
-    if (context.tag && TagsService.getCreditTags([context.tag]).length == 0) {
+    if (context.tag && TagsService.getTags([context.tag]).length == 0) {
       return commonModals.alert({
         title: 'Error',
         message:
@@ -53,7 +53,7 @@ function ($rootScope, $uibModal, AdminService, TagsService,
             url: `/transactions/tickets/${data.ticket.id}/refund/route_pass`,
             data: {
               targetAmt: data.price,
-              creditTag: data.tag
+              tag: data.tag
             }
           })
         )

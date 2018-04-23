@@ -4,7 +4,7 @@ const systemTags = [
 ]
 
 export default function () {
-  this.getCreditTags = function(tags) {
+  this.getTags = function(tags) {
     return _.difference(tags, systemTags)
   }
 }

@@ -6,7 +6,7 @@ angular.module('beeline-admin')
 function ($rootScope, $uibModal, AdminService, TagsService,
           commonModals, LoadingSpinner, uibModalPromise) {
   this.showExpireModal = function (context) {
-    const tags = TagsService.getCreditTags(context.route.tags)
+    const tags = TagsService.getTags(context.route.tags)
     const tag = tags[0]
 
     if(!tag){
