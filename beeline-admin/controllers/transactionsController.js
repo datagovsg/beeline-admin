@@ -44,26 +44,26 @@ export default function($scope, $state, $stateParams, $http, AdminService,
   $scope.downloadCsv = function() {
     AdminService.beeline({
       method: 'POST',
-      url: '/makeDownloadLink',
+      url: '/downloads',
       data: {
         uri: $scope.csvUrl
       }
     })
     .then((result) => {
-      window.location.href = AdminService.serverUrl() + '/downloadLink?token=' + result.data.token;
+      window.location.href = AdminService.serverUrl() + '/downloads/' + result.data.token;
     })
   }
   // Statement Download
   $scope.downloadStatement = function() {
     AdminService.beeline({
       method: 'POST',
-      url: '/makeDownloadLink',
+      url: '/downloads',
       data: {
         uri: $scope.statementUrl
       }
     })
     .then((result) => {
-      window.location.href = AdminService.serverUrl() + '/downloadLink?token=' + result.data.token;
+      window.location.href = AdminService.serverUrl() + '/downloads/' + result.data.token;
     })
   }
 

@@ -274,11 +274,11 @@ export default {
 
     downloadCSV() {
       this.axios
-        .post('/makeDownloadLink', {
+        .post('/downloads', {
           uri: `/companies/${this.companyId}/transaction_items/route_passes?format=csvdump&${querystring.stringify(this.transactionQuery)}`
         })
         .then((result) => {
-          window.location.href = `${process.env.BACKEND_URL}/downloadLink?token=${result.data.token}`
+          window.location.href = `${process.env.BACKEND_URL}/downloads/${result.data.token}`
         })
     },
     routePassDiscount (routePassTxnItem) {

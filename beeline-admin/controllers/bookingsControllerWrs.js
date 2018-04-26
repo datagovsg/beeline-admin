@@ -77,13 +77,13 @@ angular.module('beeline-admin')
   $scope.downloadCsv = function() {
     AdminService.beeline({
       method: 'POST',
-      url: '/makeDownloadLink',
+      url: '/downloads',
       data: {
         uri: $scope.csvUrl
       }
     })
     .then((result) => {
-      window.location.href = AdminService.serverUrl() + '/downloadLink?token=' + result.data.token;
+      window.location.href = AdminService.serverUrl() + '/downloads/' + result.data.token;
     })
   }
 
