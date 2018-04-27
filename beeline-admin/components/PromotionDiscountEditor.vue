@@ -10,9 +10,11 @@
       {{f.titleCase(type.type)}}
     </option>
   </select>
+  <br/>
+  
   <div v-if="value.type == 'simpleRate'">
     <div>
-      Rate (%)
+      Discount Rate (%):
     </div>
     <div class="input-group">
       <PercentInput
@@ -25,7 +27,7 @@
   </div>
 
   <label v-if="value.type == 'simpleFixed'">
-    Discount each ticket by
+    Discount each ticket price by ($):
     <div class="input-group">
       <span class="input-group-addon">$</span>
       <PriceInput
@@ -36,7 +38,7 @@
   </label>
 
   <label v-if="value.type == 'fixedTransactionPrice'">
-    Charge the <strong>entire</strong> bundle of tickets at
+    Charge the <strong>entire</strong> bundle of tickets at ($):
     <div class="input-group">
       <span class="input-group-addon">$</span>
       <PriceInput
@@ -47,7 +49,7 @@
   </label>
 
   <label v-if="value.type == 'flatPrice'">
-    Flat price at:
+    Charge per ticket price at ($):
     <div class="input-group">
       <span class="input-group-addon">$</span>
       <PriceInput
@@ -71,7 +73,7 @@
       tickets,
 
       <br/>
-      discount the price by
+      discount the price by ($)
 
       <PercentInput
         :value="tier[1]"
@@ -102,17 +104,17 @@
         @input="updateTier(index, 0, parseInt($event))"
         class="form-control" />
 
-      worth of route passes,
+      dollars worth of tickets or route passes,
 
       <br/>
-      discount the price by
+      discount the total price by ($)
 
       <PriceInput
         :value="tier[1]"
         placeholder="Discount amount in $"
         @input="updateTier(index, 1, $event)"
         class="form-control" />
-
+      
       <button @click="removeTier(index)"
           class="btn btn-danger">
         <span class="glyphicon glyphicon-trash"></span>
@@ -136,10 +138,10 @@
         @input="updateTier(index, 0, parseInt($event))"
         class="form-control" />
 
-      worth of route passes,
+      dollars worth of tickets or route passes,
 
       <br/>
-      discount the price by (%)
+      discount the total price by (%)
       <div class="input-group">
         <PercentInput
           :value="tier[1]"
