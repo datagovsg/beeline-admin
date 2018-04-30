@@ -11,14 +11,14 @@
     </option>
   </select>
   <br/>
-  
+
   <div v-if="value.type == 'simpleRate'">
     <div>
       Discount Rate (%):
     </div>
     <div class="input-group">
       <PercentInput
-        placeholder="Discount rate (0 - 100)"
+        placeholder="Discount Rate (%)"
         :value="paramCache.simpleRate.rate"
         @input="updateParam('rate', $event)"
         class="form-control" />
@@ -27,7 +27,7 @@
   </div>
 
   <label v-if="value.type == 'simpleFixed'">
-    Discount each ticket price by ($):
+    Discount each ticket by ($):
     <div class="input-group">
       <span class="input-group-addon">$</span>
       <PriceInput
@@ -49,7 +49,7 @@
   </label>
 
   <label v-if="value.type == 'flatPrice'">
-    Charge per ticket price at ($):
+    Charge each ticket at ($):
     <div class="input-group">
       <span class="input-group-addon">$</span>
       <PriceInput
@@ -114,7 +114,7 @@
         placeholder="Discount amount in $"
         @input="updateTier(index, 1, $event)"
         class="form-control" />
-      
+
       <button @click="removeTier(index)"
           class="btn btn-danger">
         <span class="glyphicon glyphicon-trash"></span>
