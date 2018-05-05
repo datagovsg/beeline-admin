@@ -30,11 +30,11 @@
         <li uib-dropdown on-toggle="toggled(open)">
           <a href id="simple-dropdown" uib-dropdown-toggle>Company<span class="caret"></span></a>
           <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
-            <li><a ui-sref="c.companies({companyId: adminService.actingCompany})">Edit Profile</a></li>
+            <li><a ui-sref="c.companies({companyId: adminService.actingCompany})">Manage Company Profile</a></li>
             <li><a ui-sref="c.promotions-list({companyId: adminService.actingCompany})">Manage Promotions</a></li>
-            <li><a ui-sref="c.contact-lists({companyId: adminService.actingCompany})">Manage Telephone Lists</a></li>
+            <li><a ui-sref="c.contact-lists({companyId: adminService.actingCompany})">Manage Contact Lists</a></li>
             <li><a ui-sref="c.admins({companyId: adminService.actingCompany})">Manage Admin Users</a></li>
-            <li><a ui-sref="c.notifications({companyId: adminService.actingCompany})">Manage Event Notifications</a></li>
+            <li><a ui-sref="c.notifications({companyId: adminService.actingCompany})">Manage Route Event Notifications</a></li>
             <li ng-if="adminService.isSuperAdmin()"><a ui-sref="c.transactions({companyId: adminService.actingCompany})">Transactions</a></li>
           </ul>
         </li>

@@ -23,7 +23,7 @@
             <td>
               <div class="form-group">
                 <label>
-                  Code
+                  Code (To be key in by user in the app)
                   <input type="text" v-model="promotion.code"
                     placeholder="HARI-RAYA" class="form-control"
                     @change="promotion.code = promotion.code.toUpperCase()" />
@@ -43,7 +43,7 @@
 
               <div class="form-group">
                 <label>
-                  Description (shown to user)
+                  Description (To be shown to user in the app)
                   <input type="text" v-model="promotion.description"
                     placeholder="Hari Raya promotion" class="form-control"  />
                 </label>
