@@ -74,6 +74,22 @@
         :extractDateFromModel="extractDateFromModel"
         >
       </date-picker>
+      <div v-if="timeWindowParams">
+        <strong>Timeframe Filter</strong>
+        <vue-slider
+          v-if="timeWindowParams"
+          v-model="pingParameters.timeframe"
+          v-bind="timeWindowParams"
+          @drag-start="setDisplayedTimeframe"
+          >
+        </vue-slider>
+        <strong>
+          {{formatTimestamp(displayedTimeframe[0])}} -
+          {{formatTimestamp(displayedTimeframe[1])}}
+        </strong>
+        <input v-model="timeWindowParams.fixed" id="fixedWindow" type="checkbox"/>
+        <label for="fixedWindow">Lock</label>
+      </div>
     </div>
   </div>
 </modal>
@@ -82,6 +98,7 @@
 import {mapState, mapActions} from 'vuex'
 import _ from 'lodash'
 import moment from 'moment-timezone'
+import VueSlider from 'vue-slider-component'
 
 import DatePicker from '@/components/DatePicker.vue'
 import filters from '@/filters'
@@ -89,13 +106,15 @@ import filters from '@/filters'
 export default {
   props: ['route', 'value'],
   components: {
-    DatePicker
+    DatePicker,
+    VueSlider,
   },
   mixins: [
     require('./ModalMixin')
   ],
   data () {
     return {
+      displayedTimeframe: null,
       routeWithTrips: null,
       selectedTrip: null,
       selectedStop: null,
@@ -103,6 +122,7 @@ export default {
       pingParameters: null,
       pingsByDriverId: null,
       routePath: null,
+      timeWindowParams: null,
     }
   },
   created() {
@@ -151,6 +171,14 @@ export default {
     }
   },
   watch: {
+    'pingParameters.timeframe': {
+      immediate: true,
+      handler(timeframe) {
+        if (timeframe) {
+          this.displayedTimeframe = timeframe
+        }
+      }
+    },
     routePromise: {
       immediate: true,
       handler(p) {
@@ -175,7 +203,7 @@ export default {
       immediate: false,
       handler(selectedTrip) {
         if (selectedTrip) {
-          const { date, tripStops, id: tripId } = selectedTrip
+          const { tripStops, id: tripId } = selectedTrip
           const bounds = new google.maps.LatLngBounds()
           for (let tripStop of tripStops) {
             bounds.extend({
@@ -184,13 +212,22 @@ export default {
             })
           }
           this.$refs.map.panToBounds(bounds)
-          const selectedDate = moment.tz(date, 'Asia/Singapore')
-          const from = selectedDate.startOf('date').valueOf()
-          const to = selectedDate.add(1, 'days').startOf('date').valueOf()
+          const from = moment(tripStops[0].time).add(-30, 'minutes').valueOf()
+          const to = moment(tripStops[tripStops.length - 1].time).add(30, 'minutes').valueOf()
           this.pingParameters = {
             tripId,
             limit: 10000,
             timeframe: [from, to],
+          }
+          this.timeWindowParams = {
+            min: from,
+            max: to,
+            tooltip: false,
+            lazy: true,
+            dotSize: 14,
+            height: 10,
+            processDragable: true,
+            fixed: false,
           }
         }
       }
@@ -200,6 +237,10 @@ export default {
     ...mapActions('resources', ['getRoute', 'getPings']),
     ...mapActions('shared', ['fetch']),
     extractDateFromModel: (trip, effectiveOffset) => new Date(trip.date.getTime() + effectiveOffset),
+    formatTimestamp: (ts) => moment.tz(ts, 'Asia/Singapore').format('HH:mm:ss'),
+    setDisplayedTimeframe: function (context) {
+      this.displayedTimeframe = context.getValue()
+    },
   }
 }
 </script>
