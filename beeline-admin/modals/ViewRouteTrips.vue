@@ -81,6 +81,7 @@
 <script>
 import {mapState, mapActions} from 'vuex'
 import _ from 'lodash'
+import moment from 'moment-timezone'
 
 import DatePicker from '@/components/DatePicker.vue'
 import filters from '@/filters'
@@ -99,6 +100,7 @@ export default {
       selectedTrip: null,
       selectedStop: null,
       selectedPing: null,
+      pingParameters: null,
       pingsByDriverId: null,
       routePath: null,
     }
@@ -119,26 +121,9 @@ export default {
       })
     },
     pingsPromise() {
-      if (!this.selectedTrip) return
-
-      return this.getPings({
-        tripId: this.selectedTrip.id,
-        options: {
-          limit: 10000,
-          // TODO: flexible time boundaries for night
-          startTime: new Date(
-            this.selectedTrip.date.getUTCFullYear(),
-            this.selectedTrip.date.getUTCMonth(),
-            this.selectedTrip.date.getUTCDate()
-          ).toISOString(),
-          endTime: new Date(
-            this.selectedTrip.date.getUTCFullYear(),
-            this.selectedTrip.date.getUTCMonth(),
-            this.selectedTrip.date.getUTCDate() + 1
-          ).toISOString(),
-          byTripId: true,
-        }
-      })
+      if (!this.pingParameters) return
+      const { tripId, limit, timeframe: [ from, to ] } = this.pingParameters
+      return this.getPings({ tripId, options: { limit, from, to } })
     },
     selectedPingDriverVehicle() {
       if (!this.vehicles || !this.selectedPing) return
@@ -190,14 +175,23 @@ export default {
       immediate: false,
       handler(selectedTrip) {
         if (selectedTrip) {
-          var bounds = new google.maps.LatLngBounds();
-          for (let tripStop of selectedTrip.tripStops) {
+          const { date, tripStops, id: tripId } = selectedTrip
+          const bounds = new google.maps.LatLngBounds()
+          for (let tripStop of tripStops) {
             bounds.extend({
               lat: tripStop.stop.coordinates.coordinates[1],
               lng: tripStop.stop.coordinates.coordinates[0]
             })
           }
           this.$refs.map.panToBounds(bounds)
+          const selectedDate = moment.tz(date, 'Asia/Singapore')
+          const from = selectedDate.startOf('date').valueOf()
+          const to = selectedDate.add(1, 'days').startOf('date').valueOf()
+          this.pingParameters = {
+            tripId,
+            limit: 10000,
+            timeframe: [from, to],
+          }
         }
       }
     }

@@ -75,7 +75,7 @@ export const storeModule = {
 
     getPings(context, {tripId, options}) {
       return context.rootGetters.axios
-        .get(`${process.env.TRACKING_URL}/trips/${tripId}/pings?` + querystring.stringify(_.pick(options, ['limit'])))
+        .get(`${process.env.TRACKING_URL}/trips/${tripId}/pings?${querystring.stringify(options)}`)
         .then(resp => resp.data.map(postProcessPing))
     },
   }

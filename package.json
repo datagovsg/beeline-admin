@@ -22,6 +22,7 @@
     "left-pad": "^1.1.0",
     "lodash": "^4.11.1",
     "moment": "^2.14.1",
+    "moment-timezone": "^0.5.16",
     "multiple-date-picker": "git+https://github.com/datagovsg/MultipleDatePicker.git#annotations",
     "request": "^2.74.0",
     "title-case": "^2.1.1",
