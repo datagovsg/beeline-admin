@@ -1,7 +1,17 @@
 <div class="container-fluid withnav admin">
     <company-info-broker company-id="companyId" company="company"></company-info-broker>
 
-    <h1>Event Notifications for {{company.name}}</h1>
+    <h1>Manage Route Event Notifications</h1>
+
+    <br/>
+    <u><b>Guide to get your telegram ID for route notifications:</b></u>
+    <ol>
+      <li>Download “Telegram” messenger app on your mobile devices</li>
+      <li>Access https://t.me/beeline_server_bot</li>
+      <li>Press start and extract telegram ID</li>
+    </ol>
+    <br/>
+
     <table class="table event-notifications route-notifications table-striped">
       <thead>
         <tr>
@@ -39,8 +49,10 @@
           <td>
             <button ng-click="routeSubscriptions.saveOne(subscription)" class="btn btn-default glyphicon glyphicon-save"
               ng-disabled="form.$pristine || form.$invalid">
+              Update
             </button>
             <button ng-click="routeSubscriptions.deleteOne(subscription)" class="btn btn-danger glyphicon glyphicon-trash">
+              Delete
             </button>
           </td>
         </tr>
