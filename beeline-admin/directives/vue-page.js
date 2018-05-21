@@ -10,11 +10,11 @@ Vue.use(AsyncComputed)
 
 // PAGES
 Vue.component('RoutesPage', require('../../beeline-admin/pages/routes.vue').default)
-Vue.component('RoutePassesPage', require('../../beeline-admin/pages/routePasses.vue').default)
+Vue.component('RoutePassesPage', require('../../beeline-admin/pages/route-passes.vue').default)
 Vue.component('RoutePage', require('../../beeline-admin/pages/route.vue').default)
 Vue.component('PromotionPage', require('../../beeline-admin/pages/promotion.vue').default)
 Vue.component('PromotionsPage', require('../../beeline-admin/pages/promotions.vue').default)
-Vue.component('ExtendRoutesPage', require('../../beeline-admin/pages/extendRoutes.vue').default)
+Vue.component('ExtendRoutesPage', require('../../beeline-admin/pages/extend-routes.vue').default)
 Vue.component('DriversPage', require('../../beeline-admin/pages/drivers.vue').default)
 
 // COMPONENTS
