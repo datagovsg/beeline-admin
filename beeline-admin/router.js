@@ -193,6 +193,15 @@ angular.module('beeline-admin')
     }
   })
 
+  .state('c.route-timeliness', {
+    url: '/route-timeliness',
+    templateUrl: 'templates/route-timeliness.html',
+    controller: 'routeTimelinessController',
+    data: {
+      requiresLogin: true,
+    }
+  })
+
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise(function ($injector, $location) {
     const auth = $injector.get('auth')
