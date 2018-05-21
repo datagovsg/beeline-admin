@@ -44,7 +44,7 @@ angular.module('beeline-admin')
 
   .state('c.extendRoutes', {
     url: '/extend_routes',
-    templateUrl: 'templates/extendRoutes.html',
+    templateUrl: 'templates/extend-routes.html',
     controller: 'extendRoutesController',
     data: {
       requiresLogin: true,
