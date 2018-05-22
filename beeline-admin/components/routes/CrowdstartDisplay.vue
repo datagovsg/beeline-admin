@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid crowdstart-editor">
-    <div class="form-group" v-if="route && !route.tags.includes('crowdstart')">
+    <div class="form-group" v-if="route && !route.tags.includes('crowdstart') && !route.tags.includes('crowdstart-private')">
       This is not a crowdstart route. Please add the "crowdstart" tag to the route.
     </div>
 
@@ -227,7 +227,7 @@ export default {
 // helper function to verify the route is not processed AND has 'crowdstart' tag AND is expired
 const routeIsEligible = (route) => {
   return route.tags.indexOf('success') == -1 && route.tags.indexOf('failed') == -1
-      && route.tags.includes('crowdstart')
+      && (route.tags.includes('crowdstart') || route.tags.includes('crowdstart-private'))
       && _.get(route, 'notes.crowdstartExpiry') && new Date(route.notes.crowdstartExpiry) < Date.now()
 }
 
