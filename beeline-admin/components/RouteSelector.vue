@@ -1,6 +1,7 @@
 <template>
-  <select v-if="currentRoutes" :multiple="multiple"
-      @input="emitValue($event.target)">
+  <select
+    :multiple="multiple"
+    @input="emitValue($event.target)">
     <option v-for="route in sortedRoutes" :value="route.id"
         :selected="isSelected(route.id)">
       {{route.label}} {{route.name}}
@@ -22,7 +23,9 @@ export default {
   computed: {
     ...mapState('shared', ['currentRoutes']),
     sortedRoutes () {
-      return _.sortBy(this.currentRoutes.filter(r => r.transportCompanyId === this.companyId), 'label')
+      return [{ name: "(select)" }].concat(
+        _.sortBy((this.currentRoutes || []).filter(r => r.transportCompanyId === this.companyId), 'label')
+      )
     }
   },
   methods: {
