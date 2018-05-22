@@ -8,7 +8,7 @@
     </div>
     <div class="row">
       <div class="col-sm-8">
-        <h1>Route Timeliness</h1>
+        <h1>Route Timeliness Report</h1>
         <form>
           <div class="form-group">
             <label>Route</label>
