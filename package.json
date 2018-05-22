@@ -17,6 +17,7 @@
     "axios": "^0.16.2",
     "bootstrap": "^3.3.6",
     "dateformat": "^2.0.0",
+    "downloadjs": "^1.4.7",
     "jsonwebtoken": "^6.2.0",
     "jwt-decode": "^2.2.0",
     "left-pad": "^1.1.0",
