@@ -14,15 +14,19 @@
             <label>Route</label>
             <route-selector
               class="form-control"
-              v-model="filter.routeId"
+              v-model="filter.routeIds"
               :companyId="companyId"
-              :multiple="false"
+              :multiple="true"
               />
           </div>
           <br>
 
         </form>
-        <button class="btn btn-default" @click="downloadCSV()" type="button">
+        <button class="btn btn-default"
+          type="button"
+          :disabled="filter.routeIds.length === 0"
+          @click="downloadCSV()"
+          >
           <span class="glyphicon glyphicon-save" aria-hidden="true"/>
           Download CSV
         </button>
@@ -56,7 +60,7 @@ export default {
       filter: {
         dates: [],
         selectedMonth: new Date(),
-        routeId: null,
+        routeIds: [],
       },
       publicHolidaysPromise: this.fetch('publicHolidays')
     }
@@ -67,7 +71,7 @@ export default {
     ...mapState('shared', ['publicHolidays']),
 
     query () {
-      const { selectedMonth, dates, routeId } = this.filter
+      const { selectedMonth, dates, routeIds } = this.filter
 
       const from = filters.date(
         dates.length > 0
@@ -91,8 +95,7 @@ export default {
         'isoDate'
       )
 
-      console.log({ routeId, from, to })
-      return { routeId, from, to }
+      return { routeIds, from, to }
     }
   },
   asyncComputed: {
@@ -115,18 +118,25 @@ export default {
     ...mapActions('modals', ['showModal', 'showErrorModal']),
     ...mapActions('shared', ['fetch']),
 
-    downloadCSV() {
-      const { routeId, ...queryParameters } = this.query
+    async downloadCSV() {
+      const { routeIds, ...queryParameters } = this.query
       const qs = querystring.stringify({ ...queryParameters, format: 'csv' })
-      this.axios
-        .get(`${process.env.TRACKING_URL}/routes/${routeId}/performance?${qs}`)
-        .then(response => {
-          const contentType = response.headers['content-type']
-          const blob = new Blob([response.data], { type: contentType })
-          const { from, to } = queryParameters
-          const fileName = `${routeId} - ${from} to ${to}.csv`
-          download(blob, fileName, contentType)
-        })
+      let payloads = []
+
+      const noHeaders = csvText => csvText.substring(csvText.indexOf("\n") + 1)
+
+      for (const routeId of routeIds) {
+        const url = `${process.env.TRACKING_URL}/routes/${routeId}/performance?${qs}`
+        const response = await this.axios.get(url)
+        const payload = payloads.length > 0
+          ? noHeaders(response.data + "\n")
+          : response.data + "\n"
+        payloads.push(payload)
+      }
+      const blob = new Blob(payloads, { type: 'text/csv' })
+      const { from, to } = queryParameters
+      const fileName = `Route Timeliness Performance - ${from} to ${to}.csv`
+      download(blob, fileName, 'text/csv')
     },
     monthChanged (newMonth) {
       this.filter.selectedMonth = newMonth.clone().toDate()
@@ -137,6 +147,9 @@ export default {
 </script>
 
 <style lang="scss">
+select[multiple].form-control {
+  height: 200px;
+}
 .span-select {
   width: 100%;
   td, th {
