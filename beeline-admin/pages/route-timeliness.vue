@@ -11,12 +11,15 @@
         <h1>Route Timeliness Report</h1>
         <form>
           <div class="form-group">
-            <label>Route</label>
+            Select:
+            <a class="select-route" @click="filter.routeIds = $refs.routeSelector.allRouteIds">all</a> |
+            <a class="select-route" @click="filter.routeIds = []">none</a>
             <route-selector
               class="form-control"
               v-model="filter.routeIds"
               :companyId="companyId"
               :multiple="true"
+              ref="routeSelector"
               />
           </div>
           <br>
@@ -118,7 +121,7 @@ export default {
     ...mapActions('modals', ['showModal', 'showErrorModal']),
     ...mapActions('shared', ['fetch']),
 
-    async downloadCSV() {
+    async downloadCSV () {
       const { routeIds, ...queryParameters } = this.query
       const qs = querystring.stringify({ ...queryParameters, format: 'csv' })
       let payloads = []
@@ -147,6 +150,10 @@ export default {
 </script>
 
 <style lang="scss">
+a.select-route {
+  text-decoration: underline;
+  cursor: pointer;
+}
 select[multiple].form-control {
   height: 200px;
 }

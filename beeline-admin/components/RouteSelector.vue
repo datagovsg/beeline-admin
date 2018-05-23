@@ -26,7 +26,10 @@ export default {
       return [{ name: "(select)" }].concat(
         _.sortBy((this.currentRoutes || []).filter(r => r.transportCompanyId === this.companyId), 'label')
       )
-    }
+    },
+    allRouteIds () {
+      return (this.currentRoutes || []).map(r => r.id)
+    },
   },
   methods: {
     ...mapActions('shared', ['fetch']),
