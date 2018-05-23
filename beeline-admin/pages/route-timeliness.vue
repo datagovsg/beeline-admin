@@ -33,6 +33,7 @@
           <span class="glyphicon glyphicon-save" aria-hidden="true"/>
           Download CSV
         </button>
+        <span v-if="progressText">&nbsp;{{ progressText }}</span>
       </div>
       <div class="col-sm-4">
         <div class="datepicker-wrap">
@@ -65,7 +66,8 @@ export default {
         selectedMonth: new Date(),
         routeIds: [],
       },
-      publicHolidaysPromise: this.fetch('publicHolidays')
+      publicHolidaysPromise: this.fetch('publicHolidays'),
+      progressText: null,
     }
   },
   components: { RouteSelector },
@@ -127,19 +129,25 @@ export default {
       let payloads = []
 
       const noHeaders = csvText => csvText.substring(csvText.indexOf("\n") + 1)
-
-      for (const routeId of routeIds) {
-        const url = `${process.env.TRACKING_URL}/routes/${routeId}/performance?${qs}`
-        const response = await this.axios.get(url)
-        const payload = payloads.length > 0
-          ? noHeaders(response.data + "\n")
-          : response.data + "\n"
-        payloads.push(payload)
+      try {
+        for (let i = 0; i < routeIds.length; ++i) {
+          const routeId = routeIds[i]
+          this.progressText = `Fetching timeliness statistics for route id ${routeId}... (${i + 1} of ${routeIds.length})`
+          const url = `${process.env.TRACKING_URL}/routes/${routeId}/performance?${qs}`
+          const response = await this.axios.get(url)
+          const payload = payloads.length > 0
+            ? noHeaders(response.data + "\n")
+            : response.data + "\n"
+          payloads.push(payload)
+        }
+        const blob = new Blob(payloads, { type: 'text/csv' })
+        const { from, to } = queryParameters
+        const fileName = `Route Timeliness Performance - ${from} to ${to}.csv`
+        this.progressText = `Generating ${fileName}...`
+        download(blob, fileName, 'text/csv')
+      } finally {
+        this.progressText = null
       }
-      const blob = new Blob(payloads, { type: 'text/csv' })
-      const { from, to } = queryParameters
-      const fileName = `Route Timeliness Performance - ${from} to ${to}.csv`
-      download(blob, fileName, 'text/csv')
     },
     monthChanged (newMonth) {
       this.filter.selectedMonth = newMonth.clone().toDate()
