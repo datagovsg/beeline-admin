@@ -28,7 +28,7 @@ export default {
       )
     },
     allRouteIds () {
-      return (this.currentRoutes || []).map(r => r.id)
+      return (this.currentRoutes || []).filter(r => r.transportCompanyId === this.companyId).map(r => r.id)
     },
   },
   methods: {
