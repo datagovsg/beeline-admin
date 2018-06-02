@@ -39,10 +39,11 @@
           <br>
 
         </form>
-        <button class="btn btn-default" @click="downloadCSV()" type="button">
+        <button :disabled="progressText" class="btn btn-default" @click="downloadCSV()" type="button">
           <span class="glyphicon glyphicon-save" aria-hidden="true"/>
           Download CSV
         </button>
+        <span v-if="progressText">&nbsp;{{ progressText }}</span>
       </div>
       <div class="col-sm-4">
         <div class="datepicker-wrap">
@@ -164,14 +165,15 @@ import assert from 'assert'
 import querystring from 'querystring'
 import {mapGetters, mapActions, mapState} from 'vuex'
 import _ from 'lodash'
+import download from 'downloadjs'
 import * as resources from '../stores/resources'
 import filters from '../filters'
-import dateformat from 'dateformat'
 
 export default {
   props: ['companyId', 'userId'],
   data () {
     return {
+      progressText: null,
       filter: {
         dates: [],
         selectedMonth: new Date(),
@@ -272,14 +274,34 @@ export default {
     ...mapActions('modals', ['showModal', 'showErrorModal']),
     ...mapActions('shared', ['fetch']),
 
-    downloadCSV() {
-      this.axios
-        .post('/downloads', {
-          uri: `/companies/${this.companyId}/transaction_items/route_passes?format=csvdump&${querystring.stringify(this.transactionQuery)}`
-        })
-        .then((result) => {
-          window.location.href = `${process.env.BACKEND_URL}/downloads/${result.data.token}`
-        })
+    async downloadCSV() {
+      const payloads = []
+      const noHeaders = csvText => csvText.substring(csvText.indexOf("\n") + 1)
+
+      let { startDateTime, endDateTime } = this.transactionQuery
+      try {
+        for (; startDateTime < endDateTime; startDateTime += 24 * 3600 * 1000) {
+          const dateString = filters.date(startDateTime, 'dd mmm yyyy')
+          this.progressText = `Fetching route pass dump for ${dateString}...`
+          const params = {
+            startDateTime,
+            endDateTime: startDateTime + 24 * 3600 * 1000,
+            format: 'csvdump'
+          }
+          const url = `/companies/${this.companyId}/transaction_items/route_passes?${querystring.stringify(params)}`
+          const response = await this.axios.get(url)
+          const payload = payloads.length > 0
+            ? noHeaders(response.data + "\n")
+            : response.data + "\n"
+          payloads.push(payload)
+        }
+        const blob = new Blob(payloads, { type: 'text/csv' })
+        const fileName = `route_pass_dump.csv`
+        this.progressText = `Generating ${fileName}...`
+        download(blob, fileName, 'text/csv')
+      } finally {
+        this.progressText = null
+      }
     },
     routePassDiscount (routePassTxnItem) {
       return +_.get(routePassTxnItem, 'routePass.notes.discountValue', 0)
