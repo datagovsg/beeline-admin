@@ -28,10 +28,18 @@
         <button class="btn btn-default"
           type="button"
           :disabled="filter.routeIds.length === 0"
-          @click="downloadCSV()"
+          @click="downloadTimelinessCSV()"
           >
           <span class="glyphicon glyphicon-save" aria-hidden="true"/>
-          Download CSV
+          Timeliness CSV
+        </button>
+        <button class="btn btn-default"
+          type="button"
+          :disabled="filter.routeIds.length === 0"
+          @click="downloadEventsCSV()"
+          >
+          <span class="glyphicon glyphicon-save" aria-hidden="true"/>
+          Events CSV
         </button>
         <span v-if="progressText">&nbsp;{{ progressText }}</span>
       </div>
@@ -123,9 +131,9 @@ export default {
     ...mapActions('modals', ['showModal', 'showErrorModal']),
     ...mapActions('shared', ['fetch']),
 
-    async downloadCSV () {
-      const { routeIds, ...queryParameters } = this.query
-      const qs = querystring.stringify({ ...queryParameters, format: 'csv' })
+    async downloadTimelinessCSV () {
+      const { routeIds, from, to } = this.query
+      const qs = querystring.stringify({ from, to, format: 'csv' })
       let payloads = []
 
       const noHeaders = csvText => csvText.substring(csvText.indexOf("\n") + 1)
@@ -141,8 +149,38 @@ export default {
           payloads.push(payload)
         }
         const blob = new Blob(payloads, { type: 'text/csv' })
-        const { from, to } = queryParameters
         const fileName = `Route Timeliness Performance - ${from} to ${to}.csv`
+        this.progressText = `Generating ${fileName}...`
+        download(blob, fileName, 'text/csv')
+      } finally {
+        this.progressText = null
+      }
+    },
+    async downloadEventsCSV () {
+      const { routeIds, from, to } = this.query
+      let payloads = []
+
+      const noHeaders = csvText => csvText.substring(csvText.indexOf("\n") + 1)
+      try {
+        for (let i = 0; i < routeIds.length; ++i) {
+          const routeId = routeIds[i]
+          this.progressText = `Fetching events for route id ${routeId}... (${i + 1} of ${routeIds.length})`
+          const startDateTime = (new Date(from)).getTime()
+          const endDateTime = (new Date(to)).getTime()
+
+          for (let dateTime = startDateTime; dateTime <= endDateTime; dateTime += 24 * 3600 * 1000) {
+            const date = filters.date(new Date(dateTime), 'isoDate')
+            const qs = querystring.stringify({ date, format: 'csv' })
+            const url = `${process.env.TRACKING_URL}/routes/${routeId}/events?${qs}`
+            const response = await this.axios.get(url)
+            const payload = payloads.length > 0
+              ? noHeaders(response.data + "\n")
+              : response.data + "\n"
+            payloads.push(payload)
+          }
+        }
+        const blob = new Blob(payloads, { type: 'text/csv' })
+        const fileName = `Route Events - ${from} to ${to}.csv`
         this.progressText = `Generating ${fileName}...`
         download(blob, fileName, 'text/csv')
       } finally {
