@@ -283,11 +283,15 @@ export default {
         for (; startDateTime < endDateTime; startDateTime += 24 * 3600 * 1000) {
           const dateString = filters.date(startDateTime, 'dd mmm yyyy')
           this.progressText = `Fetching route pass dump for ${dateString}...`
-          const params = {
-            startDateTime,
-            endDateTime: startDateTime + 24 * 3600 * 1000,
-            format: 'csvdump'
-          }
+          const params = _.assign(
+            {},
+            this.transactionQuery,
+            {
+              startDateTime,
+              endDateTime: startDateTime + 24 * 3600 * 1000,
+              format: 'csvdump'
+            }
+          )
           const url = `/companies/${this.companyId}/transaction_items/route_passes?${querystring.stringify(params)}`
           const response = await this.axios.get(url)
           const payload = payloads.length > 0
