@@ -31,9 +31,7 @@ export default function ($http, $rootScope, $location, store, jwtHelper, auth, c
 
   this.logout = function() {
     auth.signout();
-    store.remove('token');
     store.remove('sessionToken');
-    store.remove('refreshToken');
     store.remove('profile');
     window.location.reload(); // Needed, otherwise Auth0 won't recognize this as a new page
   }

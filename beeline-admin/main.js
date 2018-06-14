@@ -110,6 +110,13 @@ angular.module('beeline-admin')
   checkStorageToken()
   handleRedirect()
 
+  function storeSessionToken({ idToken }) {
+    store.set('sessionToken', idToken)
+    auth.getProfile().then((profile) => {
+      store.set('profile', profile);
+    })
+  }
+
   // If promise is a Promise, pause the state change until it's resolved
   // else change the state immediately
   function pauseStateChange($event, newState, newParams, promise) {
@@ -122,6 +129,8 @@ angular.module('beeline-admin')
       .catch((preventLogin) => {
         if (!preventLogin) {
           auth.showLoginDialog()
+            .then(storeSessionToken)
+            .finally(() => window.location.reload())
         }
       })
     } else {
@@ -139,11 +148,10 @@ angular.module('beeline-admin')
 
       if (authResult) {
         if (authResult.error) {
-          return commonModals.alert(auth.authResult.error_description);
+          return commonModals.alert(authResult.errorDescription)
         }
         else {
           store.set('sessionToken', authResult.idToken)
-          store.set('refreshToken', authResult.refreshToken)
           $cookies.put('sessionToken', authResult.idToken)
           auth.getProfile().then((profile) => {
             store.set('profile', profile);
@@ -159,42 +167,22 @@ angular.module('beeline-admin')
   }
 
   function checkStorageToken() {
-    // There are three cases:
-    // 1. Has token, not expired
-    // 2. Has token, but expired
-    // 3. No token
-    const token = store.get('sessionToken')
-    const refreshToken = store.get('refreshToken')
+    const idToken = store.get('sessionToken')
 
-    if (token) {
-      if (!jwtHelper.isTokenExpired(token)) { // Case 1
-        // FIXME: when do we deal with this side effect?
+    if (idToken) {
+      if (!jwtHelper.isTokenExpired(idToken)) {
         if (!auth.isAuthenticated) {
-          auth.authenticate(token);
+          auth.authenticate({ idToken });
           auth.getProfile().then((profile) => {
             store.set('profile', profile);
           })
         }
-      } else { // Case 2
-        // Two sub-cases
-        // a) With refresh token -- try to refresh
-        // b) No refresh token -- show the login screen
-        if (refreshToken) {
-          // Refresh the token
-          return auth.refreshToken(refreshToken)
-            .then((delegationResult) => {
-              auth.authenticate(delegationResult.id_token);
-              store.set('sessionToken', delegationResult.id_token)
-              auth.getProfile().then((profile) => {
-                store.set('profile', profile);
-              })
-            })
-        } else {
-          return Promise.reject(null);
-        }
+      } else {
+        return auth.refreshToken()
+          .then(storeSessionToken)
       }
     } else {
-      return Promise.reject(null);
+      return Promise.reject(null)
     }
   }
 })
