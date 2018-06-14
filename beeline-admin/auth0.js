@@ -31,7 +31,14 @@ const domainPromise = axios.get(`${process.env.BACKEND_URL}/auth/credentials`)
   );
 
   const authResultPromise = new Promise((resolve, reject) => {
-    webAuth.parseHash((err, authResult) => err ? reject(err) : resolve(authResult))
+    webAuth.parseHash((err, authResult) => {
+      if (err) {
+        console.warn(`Unable to parse embedded hash, returning empty object: `, err)
+        resolve()
+      } else {
+        resolve(authResult)
+      }
+    })
   })
 
   return authResultPromise.then(authResult => ({lock, authResult}))
