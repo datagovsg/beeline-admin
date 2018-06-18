@@ -17,7 +17,7 @@
   font-size:16px;
   line-height:38px;
 }
-.tag-draft{}, .tag-suggestions{display:inline-block;}
+.tag-draft, .tag-suggestions{display:inline-block;}
 .tag-editor .tag{display:inline-block;height:24px;margin:0 7px 0 0;background-color:#ffab40;color:#fff;padding:0 5px;border-radius:2px;font-size:14px;line-height:24px;cursor:default;transition:box-shadow 100ms linear;}
 .tag-editor .tag:hover{box-shadow: 0 3px 3px rgba(0,0,0,0.2);}
 .tag-editor .tag .remove{margin:0 0 0 5px;font-weight:bold;cursor:pointer;}

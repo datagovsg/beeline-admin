@@ -1,7 +1,8 @@
 const path = require('path');
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const fs = require('fs');
 const autoprefixer = require('autoprefixer')
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const InlineEnviromentVariablesPlugin = require('inline-environment-variables-webpack-plugin');
 
 const env = {
@@ -40,20 +41,16 @@ const jsBundle = {
         ],
       },
       {
+        test: /\.css$/,
+        use: ['vue-style-loader', 'css-loader'],
+      },
+      {
+        test: /\.scss$/,
+        use: ['vue-style-loader', 'css-loader', 'sass-loader'],
+      },
+      {
         test: /\.vue$/,
         loader: 'vue-loader',
-        include: path.resolve('.'),
-        options: {
-          loaders: {
-            // scss: {
-            //   loader: [
-            //     {loader: 'style-loader'},
-            //     {loader: 'css-loader', options: {url: false}},
-            //     {loader: 'sass-loader'},
-            //   ]
-            // }
-          }
-        }
       }
     ],
   },
@@ -86,6 +83,7 @@ const jsBundle = {
   //   'lodash': '_'
   // },
   plugins: [
+    new VueLoaderPlugin(),
     new InlineEnviromentVariablesPlugin(env)
   ],
   resolve: {
@@ -101,26 +99,15 @@ const cssBundle = {
   module: {
     rules: [{
       test: /\.scss$/,
-      use: ExtractTextPlugin.extract({
-        use: [
-          {loader: 'css-loader', options: {url: false}},
-          {loader: 'sass-loader'}
-        ],
-      })
+      use: [
+        MiniCssExtractPlugin.loader,
+        {loader: 'css-loader', options: {url: false}},
+        {loader: 'sass-loader'}
+      ]
     }]
   },
-  output: {
-    // This output is entirely superfluous.
-    // We are abusing Webpack so that it will compile the SCSS
-    // What it means is that you can load the style sheet by
-    // both <script src="....XXX.css.js"></script>
-    // and also by <link href="....XXX.css" />
-    path: path.join(prefix, `css`),
-    filename: 'styles.css.js',
-    pathinfo: true,
-  },
   plugins: [
-    new ExtractTextPlugin({
+    new MiniCssExtractPlugin({
       filename: 'styles.css',
     })
   ]
