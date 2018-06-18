@@ -1,5 +1,5 @@
 import UibPagination from '@/components/UibPagination.vue'
-import { mount } from 'avoriaz'
+import { mount } from '@vue/test-utils'
 
 const DEFAULT_PROPS = {
   boundaryLinks: true,
@@ -7,10 +7,10 @@ const DEFAULT_PROPS = {
 }
 
 const verifyEntries = (pagination, active, symbols, boundaryLinks = true) => {
-  expect(pagination.find('.active')[0].text()).to.equal(active + '')
+  expect(pagination.find('.active').text()).to.equal(active + '')
   const allSymbols = boundaryLinks ? ['«', '‹', ...symbols, '›', '»'] : ['‹', ...symbols, '›']
-  const pageEntries = pagination.find('li')
-  allSymbols.forEach((s, i) => expect(pageEntries[i].text()).to.equal(s))
+  const pageEntries = pagination.findAll('li')
+  allSymbols.forEach((s, i) => expect(pageEntries.at(i).text()).to.equal(s))
 }
 
 const createPaginationAndVerifyEntries = (props, symbols) => () => {
@@ -56,12 +56,12 @@ describe('UibPagination.vue - Event Handling', () => {
       ['1', '2', '3', '4', '5', '6', '7', '8', '9', '...']
     )()
 
-    const nextPage = pagination.find('li[aria-label=Next]')[0]
+    const nextPage = pagination.find('li[aria-label=Next]')
     nextPage.trigger('click')
 
     verifyEntries(pagination, 5, ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '...'])
 
-    const prevPage = pagination.find('li[aria-label=Previous]')[0]
+    const prevPage = pagination.find('li[aria-label=Previous]')
     prevPage.trigger('click')
 
     verifyEntries(pagination, 4, ['1', '2', '3', '4', '5', '6', '7', '8', '9', '...'])
@@ -74,12 +74,12 @@ describe('UibPagination.vue - Event Handling', () => {
       ['1', '2', '3', '4', '5', '6', '7', '8', '9', '...']
     )()
 
-    const firstPage = pagination.find('li[aria-label="Jump to First"]')[0]
+    const firstPage = pagination.find('li[aria-label="Jump to First"]')
     firstPage.trigger('click')
 
     verifyEntries(pagination, 1, ['1', '2', '3', '4', '5', '6', '...'])
 
-    const lastPage = pagination.find('li[aria-label="Jump to Last"]')[0]
+    const lastPage = pagination.find('li[aria-label="Jump to Last"]')
     lastPage.trigger('click')
 
     verifyEntries(pagination, 15, ['...', '10', '11', '12', '13', '14', '15'])
@@ -92,7 +92,7 @@ describe('UibPagination.vue - Event Handling', () => {
     )()
 
     for (var i = 5; i >= 1; --i) {
-      const page = pagination.find(`li:nth-child(${2 + i})`)[0]
+      const page = pagination.find(`li:nth-child(${2 + i})`)
       page.trigger('click')
       verifyEntries(pagination, i, ['1', '2', '3', '4', '5'])
     }

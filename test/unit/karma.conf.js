@@ -14,13 +14,17 @@ module.exports = function (config) {
     //    http://karma-runner.github.io/0.13/config/browsers.html
     // 2. add it to the `browsers` array below.
     browsers: ['PhantomJS'],
-    frameworks: ['mocha', 'sinon-chai', 'phantomjs-shim'],
+    frameworks: ['jasmine', 'sinon-chai', 'phantomjs-shim'],
     reporters: ['spec', 'coverage'],
     files: ['./index.js'],
     preprocessors: {
       './index.js': ['webpack', 'sourcemap']
     },
-    webpack: webpackConfig,
+    webpack: {
+      ...webpackConfig,
+      devtool: 'inline-source-map',
+      mode: 'development'
+    },
     webpackMiddleware: {
       noInfo: true
     },
@@ -30,6 +34,8 @@ module.exports = function (config) {
         { type: 'lcov', subdir: '.' },
         { type: 'text-summary' }
       ]
-    }
+    },
   })
 }
+
+

@@ -2,45 +2,6 @@ import querystring from 'querystring';
 import _ from 'lodash';
 
 export default function ($scope, AdminService, LoadingSpinner, commonModals) {
-  const PermissionsMap = {
-    basic: ['view-drivers', 'view-admins', 'view-transactions', 'monitor-operations'],
-    refund: ['refund'],
-    issueTickets: ['issue-tickets'],
-    operations: [
-      'manage-routes', 'manage-drivers',
-      'drive', 'update-trip-status',
-      'message-passengers', 'view-passengers',
-      'manage-notifications', 'manage-customers',
-    ],
-    manageCompany: ['manage-company'],
-    manageAdmins: ['manage-admins'],
-  }
-  $scope.admins = [];
-
-  function mapPermissions(permissions) {
-    return _(permissions)
-      .keys()
-      .filter(key => permissions[key])
-      .map(value => PermissionsMap[value])
-      .flatten()
-      .value()
-  }
-  function reverseMapPermissions(permissionList) {
-    var permissions = {};
-
-    if (!permissionList)  return permissions;
-
-    _.each(PermissionsMap, (permissionGroup, groupName) => {
-      if (_.every(permissionGroup, p => permissionList.indexOf(p) !== -1)) {
-        permissions[groupName] = true;
-      }
-      else {
-        permissions[groupName] = false;
-      }
-    });
-    return permissions;
-  }
-
   function query() {
     if (!AdminService.getCompanyId()) return;
 
