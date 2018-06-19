@@ -93,12 +93,12 @@ export async function mockAjax(routes, fn) {
   }
 
   let v = null
+  let sandbox = sinon.createSandbox({})
 
   try {
     // Stub
-    const stubs = []
     for (let method in routesByMethod) {
-      const stub = sinon.stub(axios, method).callsFake(async (path, maybeData, options) => {
+      sandbox.stub(axios, method).callsFake(async (path, maybeData, options) => {
         const result = routesByMethod[method].find(s => s.path === path)
 
         // axios.{post, patch, put} accepts a `data` argument
@@ -146,17 +146,11 @@ export async function mockAjax(routes, fn) {
           }
           throw e
         }
-
       })
-      stubs.push(stub)
     }
 
-    v = await fn()
+    return await fn()
   } finally {
-    for (let method in routesByMethod) {
-      axios[method].restore()
-    }
+    sandbox.restore()
   }
-
-  return v
 }
