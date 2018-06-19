@@ -6,7 +6,7 @@
     <div class="row">
       <div class="col-lg-12">
         <h1>Manage Admins Users</h1>
-        <button @click="addAdmin()" class="btn btn-primary btn-lg addAdmin">
+        <button @click="addAdmin()" class="btn btn-primary btn-lg add-admin">
           Add a new Admin
         </button>
         <table class="table table-condensed table-striped table-bordered admin-table">
@@ -41,9 +41,9 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="admin in sortedAdmins" :key="admin.id" name="adminForm">
+            <tr v-for="(admin, index) in sortedAdmins" :key="admin.id" name="adminForm">
               <td>
-                {{$index + 1}}
+                {{index + 1}}
               </td>
               <td v-if="admin.id">
                 {{admin.email}}
@@ -67,10 +67,13 @@
               <td><input type="checkbox" v-model="admin.permissions.manageAdmins"></td>
 
               <td>
-                <button class="btn btn-success" ng-click="updateAdmin(admin, adminForm)" ng-if="adminForm.$dirty" ng-disabled="adminForm.$invalid">
+                <button class="btn btn-success update-button" @click="updateAdmin(admin, adminForm)">
+                  <!-- v-if="adminForm.$dirty"
+                  :disabled="adminForm.$invalid"> -->
                   Update
                 </button>
-                <button class="btn btn-danger" ng-click="deleteAdmin(admin)" ng-show="adminForm.$pristine && admin.id">
+                <button class="btn btn-danger delete-button" @click="deleteAdmin(admin)">
+                  <!-- v-if="adminForm.$pristine && admin.id"> -->
                   Delete
                 </button>
               </td>
@@ -111,6 +114,7 @@ export default {
 
     blankAdmin () {
       return {
+        id: null,
         email: '',
         name: '',
         permissions: {
@@ -144,7 +148,13 @@ export default {
     },
 
     updateAdmin (admin) {
+      const updatePromise = (admin.id === null)
+        ? this.axios.post(`/companies/${this.companyId}/admins`, admin)
+        : this.axios.put(`/companies/${this.companyId}/admins/${admin.id}`, admin)
 
+      this.spinOnPromise(updatePromise)
+      .then(() => this.requery())
+      .catch(e => console.error(e))
     },
 
     deleteAdmin (admin) {
@@ -169,6 +179,7 @@ export default {
           })
         }
       })
+      .then(() => this.requery())
     }
   }
 }
