@@ -87,7 +87,6 @@ describe('assets.vue', () => {
 
       // click on button triggers delete
       expect(deleted).toBe(false)
-      console.log(assetsPage.findAll('.modal-footer .btn-primary'))
       assetsPage.find('.modal-footer .btn-primary').trigger('click')
       await delay(10)
       expect(deleted).toBe(true)
