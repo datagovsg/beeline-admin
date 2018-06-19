@@ -71,6 +71,8 @@ const jsBundle = {
     ],
   },
   entry: [
+    '@babel/polyfill',
+
     /* angular */
     path.resolve('node_modules/angular/angular'),
     path.resolve('node_modules/angular-ui-router/release/angular-ui-router'),
