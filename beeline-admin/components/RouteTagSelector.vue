@@ -68,6 +68,9 @@ import {mapGetters, mapActions, mapState} from 'vuex'
 import {debounce} from 'lodash'
 import querystring from 'querystring'
 import _ from 'lodash'
+
+import Select2 from '@/components/Select2.vue'
+
 const filters = require('../filters')
 
 const SYSTEM_TAGS = _.fromPairs([
@@ -77,6 +80,10 @@ const SYSTEM_TAGS = _.fromPairs([
 
 export default {
   props: ['value', 'includeRestricted', 'companyId'],
+
+  components: {
+    Select2
+  },
 
   data() {
     return {

@@ -129,6 +129,7 @@
 import {mapGetters, mapActions, mapState} from 'vuex'
 import * as resources from '../stores/resources'
 import querystring from 'querystring'
+import TagsView from '@/components/TagsView.vue'
 import _ from 'lodash'
 const filters = require('../filters')
 
@@ -202,7 +203,7 @@ export default {
     }
   },
   components: {
-    ModalHelper: require('../components/ModalHelper'),
+    TagsView,
   },
   computed: {
     ...mapGetters('shared', ['companiesById', 'currentRoutesById']),

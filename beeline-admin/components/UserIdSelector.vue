@@ -28,10 +28,17 @@
 import {mapGetters, mapActions, mapState} from 'vuex'
 import {debounce} from 'lodash'
 import querystring from 'querystring'
+
+import Select2 from '@/components/Select2.vue'
+
 const filters = require('../filters')
 
 export default {
   props: ['value', 'includeEphemeral'],
+
+  components: {
+    Select2
+  },
 
   data() {
     return {

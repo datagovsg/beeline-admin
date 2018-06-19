@@ -142,13 +142,15 @@ import leftPad from 'left-pad'
 import SchemaViewer from '../components/promotions/SchemaViewer.vue'
 import PromotionsSchemata from '../components/promotions/Schemata'
 import CompanyIdMixin from '../mixins/CompanyIdMixin'
+import SortTh from '@/components/SortTh.vue'
 const filters = require('../filters')
 
 export default {
   mixins: [CompanyIdMixin],
 
   components: {
-    SchemaViewer
+    SchemaViewer,
+    SortTh,
   },
   data () {
     return {

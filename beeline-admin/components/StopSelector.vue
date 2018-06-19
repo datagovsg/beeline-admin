@@ -26,8 +26,15 @@
 <script>
 import {mapGetters, mapActions, mapState} from 'vuex'
 
+import DatasheetCell from '@/components/DatasheetCell.vue'
+import VueSelect from 'vue-select'
+
 export default {
   props: ['value'],
+  components: {
+    DatasheetCell,
+    VueSelect
+  },
   created() {
     this.fetch('stops')
   },

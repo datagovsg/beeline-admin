@@ -106,6 +106,12 @@
 <script>
 import {mapGetters, mapActions, mapState} from 'vuex'
 import * as resources from '../../stores/resources'
+
+import TagsEditor from '@/components/TagsEditor.vue'
+import PathEditor from '@/components/routes/PathEditor.vue'
+import NumberArrayEditor from '@/components/NumberArrayEditor.vue'
+import CompanySelector from '@/components/CompanySelector.vue'
+
 const filters = require('../../filters')
 
 export default {
@@ -116,7 +122,10 @@ export default {
     }
   },
   components: {
-    PathEditor: require('./PathEditor.vue').default
+    PathEditor,
+    TagsEditor,
+    NumberArrayEditor,
+    CompanySelector,
   },
   computed: {
     ...mapGetters(['axios', 'isSuperAdmin']),

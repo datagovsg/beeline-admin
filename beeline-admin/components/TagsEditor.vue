@@ -11,6 +11,7 @@
 </template>
 
 <script>
+import TagsView from '@/components/TagsView.vue'
 import dateformat from 'dateformat'
 
 export default {
@@ -28,7 +29,7 @@ export default {
     }
   },
   components: {
-    TagsView: require('./TagsView.vue').default,
+    TagsView,
   },
   methods: {
     removeTag (tag) {

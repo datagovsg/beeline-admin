@@ -9,7 +9,7 @@ const initial = () => ({
 
 module.exports = {
   namespaced: true,
-  state: initial(),
+  state: initial,
   mutations: {
     addModal(state, options) {
       state.modalStack.push(_.pick(options, ['options', 'resolve', 'reject']))
@@ -34,7 +34,7 @@ module.exports = {
           })
 
           const hideModal = () => {
-            assert(modalIndex === context.state.modalStack.length - 1)
+            assert.equal(modalIndex, context.state.modalStack.length - 1)
             context.commit('removeModal')
           }
 

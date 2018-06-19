@@ -92,65 +92,65 @@ export async function mockAjax(routes, fn) {
     })
   }
 
-  // Stub
-  const stubs = []
-  for (let method in routesByMethod) {
-    const stub = sinon.stub(axios, method).callsFake(async (path, maybeData, options) => {
-      const result = routesByMethod[method].find(s => s.path === path)
+  let v = null
+  let sandbox = sinon.createSandbox({})
 
-      // axios.{post, patch, put} accepts a `data` argument
-      // also -- must make sure requests are JSON serializable
-      if (method === 'get' || method === 'delete' || method === 'head' || method === 'options') {
-        options = maybeData
-      } else {
-        maybeData = JSON.parse(JSON.stringify(maybeData))
-      }
+  try {
+    // Stub
+    for (let method in routesByMethod) {
+      sandbox.stub(axios, method).callsFake(async (path, maybeData, options) => {
+        const result = routesByMethod[method].find(s => s.path === path)
 
-      if (result) {
-        if (result.callback) {
-          // TODO: Should this be asynchronous or synchronous?
-          await result.callback({
-            data: maybeData,
-            path,
-            ...options
-          }, {
-            status: result.status,
-            data: result.value,
-            method
-          })
+        // axios.{post, patch, put} accepts a `data` argument
+        // also -- must make sure requests are JSON serializable
+        if (method === 'get' || method === 'delete' || method === 'head' || method === 'options') {
+          options = maybeData
+        } else {
+          maybeData = JSON.parse(JSON.stringify(maybeData))
         }
 
-        if (result.status >= 200 && result.status < 300) {
-          return {
-            status: result.status,
-            data: result.value,
+        if (result) {
+          if (result.callback) {
+            // TODO: Should this be asynchronous or synchronous?
+            await result.callback({
+              data: maybeData,
+              path,
+              ...options
+            }, {
+              status: result.status,
+              data: result.value,
+              method
+            })
+          }
+
+          if (result.status >= 200 && result.status < 300) {
+            return {
+              status: result.status,
+              data: result.value,
+            }
+          } else {
+            const e = new Error('Simulated HTTP Error')
+            e.response = {
+              status: result.status,
+              data: result.value
+            }
+            throw e
           }
         } else {
-          const e = new Error()
+          const message = `"${path}" was not found. We have ` +
+          `${routesByMethod[method].map(s => '"' + s.path + '"').join(',')}`
+          const e = new Error(message)
           e.response = {
-            status: result.status,
-            data: result.value
+            status: 404,
+            data: message
           }
           throw e
         }
-      } else {
-        const e = new Error()
-        e.response = {
-          status: 404,
-          data: `"${path}" was not found. We have ` +
-          `${routesByMethod[method].map(s => '"' + s.path + '"').join(',')}`
-        }
-        throw e
-      }
+      })
+    }
 
-    })
-    stubs.push(stub)
+    return await fn()
+  } finally {
+    sandbox.restore()
   }
-
-  const v = await fn()
-
-  for (let method in routesByMethod) {
-    axios[method].restore()
-  }
-  return v
 }

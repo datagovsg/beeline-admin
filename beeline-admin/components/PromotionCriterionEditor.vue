@@ -152,6 +152,12 @@ const leftPad = require('left-pad')
 import dateformat from 'dateformat'
 import {mapGetters, mapActions, mapState} from 'vuex'
 
+import TagsEditor from '@/components/TagsEditor.vue'
+import DatePickerDropdown from '@/components/DatePickerDropdown.vue'
+import RouteSelector from '@/components/RouteSelector.vue'
+import ContactListSelector from '@/components/ContactListSelector.vue'
+import CompanySelector from '@/components/CompanySelector.vue'
+
 const criterionTypes = _.sortBy([
   {
     type: 'limitByCompany',
@@ -208,11 +214,11 @@ export default {
     }
   },
   components: {
-    TagsEditor: require('./TagsEditor.vue').default,
-    DatePickerDropdown: require('./DatePickerDropdown.vue').default,
-    RouteSelector: require('./RouteSelector.vue').default,
-    CompanySelector: require('./CompanySelector.vue').default,
-    ContactListSelector: require('./ContactListSelector.vue').default,
+    TagsEditor,
+    DatePickerDropdown,
+    RouteSelector,
+    CompanySelector,
+    ContactListSelector,
   },
   watch: {
     'value.params': {

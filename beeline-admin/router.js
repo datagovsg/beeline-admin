@@ -36,7 +36,7 @@ angular.module('beeline-admin')
   .state('c.routes', {
     url: '/routes',
     templateUrl: 'templates/routes.html',
-    controller: 'routes',
+    controller: 'genericVuePageController',
     data: {
       requiresLogin: true,
     }
@@ -45,7 +45,7 @@ angular.module('beeline-admin')
   .state('c.extendRoutes', {
     url: '/extend_routes',
     templateUrl: 'templates/extend-routes.html',
-    controller: 'extendRoutesController',
+    controller: 'genericVuePageController',
     data: {
       requiresLogin: true,
     }
@@ -62,7 +62,7 @@ angular.module('beeline-admin')
   .state('assets', {
     url: '/assets',
     templateUrl: 'templates/assets.html',
-    controller: 'assets',
+    controller: 'genericVuePageController',
     data: {
       requiresLogin: true,
     }
@@ -142,7 +142,7 @@ angular.module('beeline-admin')
   .state('c.promotions-list', {
     url: '/promotions',
     templateUrl: 'templates/promotions-list.html',
-    controller: 'promotionsListController',
+    controller: 'genericVuePageController',
     data: {
       requiresLogin: true,
     }
@@ -196,7 +196,7 @@ angular.module('beeline-admin')
   .state('c.route-timeliness', {
     url: '/route-timeliness',
     templateUrl: 'templates/route-timeliness.html',
-    controller: 'routeTimelinessController',
+    controller: 'genericVuePageController',
     data: {
       requiresLogin: true,
     }

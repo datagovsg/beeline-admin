@@ -1,5 +1,5 @@
 <template>
-  <modal class="stops-popup" @cancel="reject()" :value="value" :clickToClose="false">
+  <Modal class="stops-popup" @cancel="reject()" :value="value" :clickToClose="false">
     <div class="modal-header">
       <p>
         Select an existing stop or pin a new stop location on the map
@@ -124,11 +124,15 @@
 const filters = require('../filters')
 import {mapState, mapActions, mapGetters} from 'vuex'
 
+import Modal from '@/modals/MyModal.vue'
+import ModalMixin from '@/modals/ModalMixin'
+
 export default {
   props: [
     'createNew', 'referenceTrip',
     'newTripDates', 'editedTrips'
   ],
+  components: { Modal },
   data() {
     return {
       editStop: null,
@@ -219,8 +223,6 @@ export default {
       }
     }
   },
-  mixins: [
-    require('../modals/ModalMixin')
-  ],
+  mixins: [ModalMixin],
 }
 </script>

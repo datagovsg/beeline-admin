@@ -10,6 +10,7 @@ Vue.use(AsyncComputed)
 
 // PAGES
 Vue.component('AdminsPage', require('../../beeline-admin/pages/admins.vue').default)
+Vue.component('AssetsPage', require('../../beeline-admin/pages/assets.vue').default)
 Vue.component('RoutesPage', require('../../beeline-admin/pages/routes.vue').default)
 Vue.component('RoutePassesPage', require('../../beeline-admin/pages/route-passes.vue').default)
 Vue.component('RoutePage', require('../../beeline-admin/pages/route.vue').default)
@@ -20,34 +21,8 @@ Vue.component('DriversPage', require('../../beeline-admin/pages/drivers.vue').de
 Vue.component('RouteTimelinessPage', require('../../beeline-admin/pages/route-timeliness.vue').default)
 
 // COMPONENTS
-Vue.component('Dropdown', require('../../beeline-admin/components/Dropdown.vue').default)
-Vue.component('DatasheetCell', require('../../beeline-admin/components/DatasheetCell.vue').default)
-Vue.component('UibPagination', require('../../beeline-admin/components/UibPagination.vue').default)
-Vue.component('SortTh', require('../../beeline-admin/components/SortTh.vue').default)
-Vue.component('TagsView', require('../components/TagsView.vue').default)
-Vue.component('TagsEditor', require('../components/TagsEditor.vue').default)
-Vue.component('NumberArrayEditor', require('../components/NumberArrayEditor.vue').default)
-Vue.component('CompanySelector', require('../components/CompanySelector.vue').default)
-Vue.component('ExpandableArea', require('../../beeline-admin/components/ExpandableArea.vue').default)
 Vue.component('ModalHelper', require('../components/ModalHelper'))
-Vue.component('PingPath', require('../components/PingPath.vue').default)
-Vue.component('TripStopMarker', require('../components/TripStopMarker.vue').default)
 Vue.component('LoadingSpinner', require('../../beeline-admin/components/LoadingSpinner.vue').default)
-Vue.component('DatePickerDropdown', require('../components/DatePickerDropdown.vue').default)
-Vue.component('MonthPickerDropdown', require('../components/MonthPickerDropdown.vue').default)
-Vue.component('MonthPicker', require('../components/MonthPicker.vue').default)
-Vue.component('PriceInput', require('../components/PriceInput.vue').default)
-Vue.component('TimeInput', require('../components/TimeInput.vue').default)
-Vue.component('StopSelector', require('../components/StopSelector.vue').default)
-Vue.component('Select2', require('../components/Select2.vue').default)
-Vue.component('SpanSelect', require('../components/SpanSelect.vue').default)
-Vue.component('UserIdSelector', require('../components/UserIdSelector.vue').default)
-Vue.component('RouteTagSelector', require('../components/RouteTagSelector.vue').default)
-
-Vue.component('Modal', require('../modals/MyModal.vue').default)
-Vue.component('Tabs', require('vue-strap/src/Tabs.vue').default)
-Vue.component('Tab', require('vue-strap/src/Tab.vue').default)
-Vue.component('VueSelect', require('vue-select').default)
 
 angular.module('beeline-admin')
 .directive('vuePage', function (vueStore, uiGmapGoogleMapApi) {

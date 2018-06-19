@@ -1,5 +1,5 @@
 <template>
-  <modal class="trip-data-editor" :name="name" :adaptive="true"
+  <Modal class="trip-data-editor" :name="name" :adaptive="true"
       @cancel="reject()" :value="value">
     <!-- If creating trips, tripIds doesn't exist -->
     <div class="modal-header" v-if="createNew">
@@ -175,6 +175,12 @@
 
 <script>
 import {mapActions} from 'vuex'
+
+import TimeInput from '@/components/TimeInput.vue'
+import StopSelector from '@/components/StopSelector.vue'
+import Modal from '@/modals/MyModal.vue'
+import ModalMixin from '@/modals/ModalMixin'
+
 const filters = require('../filters')
 
 export default {
@@ -182,6 +188,7 @@ export default {
     'createNew', 'referenceTrip',
     'newTripDates', 'editedTrips'
   ],
+  components: { StopSelector, TimeInput, Modal },
   data() {
     return {
       editTrip: null
@@ -258,8 +265,6 @@ export default {
       }
     }
   },
-  mixins: [
-    require('../modals/ModalMixin')
-  ],
+  mixins: [ModalMixin],
 }
 </script>

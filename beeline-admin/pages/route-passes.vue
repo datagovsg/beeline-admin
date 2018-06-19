@@ -15,11 +15,11 @@
         <h2>Search selected dates by:</h2>
         <form>
           <div class="form-group">
-            <user-id-selector v-model="filter.userId"/>
+            <UserIdSelector v-model="filter.userId"/>
           </div>
           <div class="form-group">
             <label>Tag</label>
-            <route-tag-selector v-model="filter.tag" :companyId="companyId" />
+            <RouteTagSelector v-model="filter.tag" :companyId="companyId" />
           </div>
           <div class="form-group">
             <label>TransactionType</label>
@@ -52,13 +52,13 @@
             {{ f.date(this.transactionQuery.startDateTime, 'isoDate') }} -
             {{ f.date(this.transactionQuery.endDateTime - 24 * 3600 * 1000, 'isoDate') }}
           </h4>
-          <span-select @month-changed="monthChanged" v-model="filter.dates" :special-dates="specialDates"/>
+          <SpanSelect @month-changed="monthChanged" v-model="filter.dates" :special-dates="specialDates"/>
         </div>
       </div>
     </div>
     <div class="row text-center">
       <div class="col-lg-12">
-          <uib-pagination :boundary-links="true" v-model="paging.page" :total-items="transactionSummary.totalItems" :items-per-page="paging.perPage"/>
+          <UibPagination :boundary-links="true" v-model="paging.page" :total-items="transactionSummary.totalItems" :items-per-page="paging.perPage"/>
           <div>
             Showing {{paging.page * paging.perPage + 1}} to {{paging.page * paging.perPage + (transactions || []).length}} of {{transactionSummary.totalItems}}
           </div>
@@ -155,7 +155,7 @@
     </div>
     <div class="row text-center">
       <div class="col-lg-12">
-          <uib-pagination :boundary-links="true" v-model="paging.page" :total-items="transactionSummary.totalItems" :items-per-page="paging.perPage"/>
+          <UibPagination :boundary-links="true" v-model="paging.page" :total-items="transactionSummary.totalItems" :items-per-page="paging.perPage"/>
       </div>
     </div>
   </div>
@@ -168,6 +168,11 @@ import _ from 'lodash'
 import download from 'downloadjs'
 import * as resources from '../stores/resources'
 import filters from '../filters'
+
+import SpanSelect from '@/components/SpanSelect.vue'
+import RouteTagSelector from '@/components/RouteTagSelector.vue'
+import UibPagination from '@/components/UibPagination.vue'
+import UserIdSelector from '@/components/UserIdSelector.vue'
 
 export default {
   props: ['companyId', 'userId'],
@@ -195,7 +200,10 @@ export default {
 
   },
   components: {
-
+    RouteTagSelector,
+    SpanSelect,
+    UibPagination,
+    UserIdSelector
   },
   computed: {
     ...mapGetters(['axios']),

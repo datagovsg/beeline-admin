@@ -1,5 +1,5 @@
 <template>
-  <modal :name="name" @cancel="reject()" :value="value">
+  <Modal :name="name" @cancel="reject()" :value="value">
     <div class="modal-header">
       <h3>{{title}}</h3>
     </div>
@@ -24,10 +24,14 @@
 <script>
 import {mapState} from 'vuex'
 
+import Modal from '@/modals/MyModal.vue'
+import ModalMixin from '@/modals/ModalMixin'
+
 export default {
   props: [
     'type', 'title', 'message', 'defaultValue'
   ],
+  components: { Modal },
   data () {
     return {
       dataValue: null
@@ -50,8 +54,6 @@ export default {
       this.dataValue = true
     }
   },
-  mixins: [
-    require('../modals/ModalMixin')
-  ],
+  mixins: [ModalMixin],
 }
 </script>
