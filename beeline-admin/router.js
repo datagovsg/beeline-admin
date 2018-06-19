@@ -70,7 +70,7 @@ angular.module('beeline-admin')
   .state('c.admins', {
     url: '/admins',
     templateUrl: 'templates/admins.html',
-    controller: 'admins',
+    controller: 'genericVuePageController',
     data: {
       requiresLogin: true,
     }
@@ -106,7 +106,7 @@ angular.module('beeline-admin')
   .state('c.driver', {
     url: '/drivers',
     templateUrl: 'templates/drivers.html',
-    controller: 'driversController',
+    controller: 'genericVuePageController',
     data: {
       requiresLogin: true,
     }
