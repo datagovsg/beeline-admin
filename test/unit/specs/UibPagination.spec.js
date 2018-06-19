@@ -7,10 +7,10 @@ const DEFAULT_PROPS = {
 }
 
 const verifyEntries = (pagination, active, symbols, boundaryLinks = true) => {
-  expect(pagination.find('.active').text()).to.equal(active + '')
+  expect(pagination.find('.active').text()).toBe(active + '')
   const allSymbols = boundaryLinks ? ['«', '‹', ...symbols, '›', '»'] : ['‹', ...symbols, '›']
   const pageEntries = pagination.findAll('li')
-  allSymbols.forEach((s, i) => expect(pageEntries.at(i).text()).to.equal(s))
+  allSymbols.forEach((s, i) => expect(pageEntries.at(i).text()).toBe(s))
 }
 
 const createPaginationAndVerifyEntries = (props, symbols) => () => {
