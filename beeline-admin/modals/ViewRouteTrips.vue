@@ -1,5 +1,5 @@
 <template>
-<modal override-width="1200px" :name="name" :value="value">
+<Modal override-width="1200px" :name="name" :value="value">
   <div class="modal-header">
     <h3>
       {{route.label}}: {{route.from}} &mdash; {{route.to}}
@@ -101,12 +101,19 @@ import moment from 'moment-timezone'
 import VueSlider from 'vue-slider-component'
 
 import DatePicker from '@/components/DatePicker.vue'
+import PingPath from '@/components/PingPath.vue'
+import TripStopMarker from '@/components/TripStopMarker.vue'
+import Modal from '@/modals/MyModal.vue'
+
 import filters from '@/filters'
 
 export default {
   props: ['route', 'value'],
   components: {
     DatePicker,
+    Modal,
+    PingPath,
+    TripStopMarker,
     VueSlider,
   },
   mixins: [

@@ -32,7 +32,7 @@
     <div class="row" v-if="routes">
       <div class="col-lg-12">
         <div class="pull-left">
-          <uib-pagination :boundary-links="true" v-model="filter.page"
+          <UibPagination :boundary-links="true" v-model="filter.page"
             :total-items="routes.length" :items-per-page="filter.perPage" />
         </div>
         <div class="pull-right create-button">
@@ -48,20 +48,20 @@
           <thead>
             <tr>
               <th></th>
-              <sort-th @sort="filter.order=$event.order, filter.orderBy=$event.orderBy" :order="filter.order" :order-by="filter.orderBy" field="id">Route<br />ID</sort-th>
-              <sort-th @sort="filter.order=$event.order, filter.orderBy=$event.orderBy" :order="filter.order" :order-by="filter.orderBy" field="label">Route<br />label</sort-th>
-              <sort-th @sort="filter.order=$event.order, filter.orderBy=$event.orderBy" :order="filter.order" :order-by="filter.orderBy">Company</sort-th>
-              <sort-th @sort="filter.order=$event.order, filter.orderBy=$event.orderBy" :order="filter.order" :order-by="filter.orderBy" field="from">Route<br />Description</sort-th>
-              <sort-th @sort="filter.order=$event.order, filter.orderBy=$event.orderBy" :order="filter.order" :order-by="filter.orderBy" field="firstTrip.date">Start date</sort-th>
-              <sort-th @sort="filter.order=$event.order, filter.orderBy=$event.orderBy" :order="filter.order" :order-by="filter.orderBy" field="endDate">End date</sort-th>
-              <sort-th>Status</sort-th>
-              <sort-th>Boarding</sort-th>
-              <sort-th>Alighting</sort-th>
-              <sort-th>Route path</sort-th>
-              <sort-th @sort="filter.order=$event.order, filter.orderBy=$event.orderBy" :order="filter.order" :order-by="filter.orderBy" field="lastPrice">Price</sort-th>
-              <sort-th @sort="filter.order=$event.order, filter.orderBy=$event.orderBy" :order="filter.order" :order-by="filter.orderBy" field="lastCapacity">Capacity</sort-th>
-              <sort-th>Tags</sort-th>
-              <sort-th>Actions</sort-th>
+              <SortTh @sort="filter.order=$event.order, filter.orderBy=$event.orderBy" :order="filter.order" :order-by="filter.orderBy" field="id">Route<br />ID</SortTh>
+              <SortTh @sort="filter.order=$event.order, filter.orderBy=$event.orderBy" :order="filter.order" :order-by="filter.orderBy" field="label">Route<br />label</SortTh>
+              <SortTh @sort="filter.order=$event.order, filter.orderBy=$event.orderBy" :order="filter.order" :order-by="filter.orderBy">Company</SortTh>
+              <SortTh @sort="filter.order=$event.order, filter.orderBy=$event.orderBy" :order="filter.order" :order-by="filter.orderBy" field="from">Route<br />Description</SortTh>
+              <SortTh @sort="filter.order=$event.order, filter.orderBy=$event.orderBy" :order="filter.order" :order-by="filter.orderBy" field="firstTrip.date">Start date</SortTh>
+              <SortTh @sort="filter.order=$event.order, filter.orderBy=$event.orderBy" :order="filter.order" :order-by="filter.orderBy" field="endDate">End date</SortTh>
+              <SortTh>Status</SortTh>
+              <SortTh>Boarding</SortTh>
+              <SortTh>Alighting</SortTh>
+              <SortTh>Route path</SortTh>
+              <SortTh @sort="filter.order=$event.order, filter.orderBy=$event.orderBy" :order="filter.order" :order-by="filter.orderBy" field="lastPrice">Price</SortTh>
+              <SortTh @sort="filter.order=$event.order, filter.orderBy=$event.orderBy" :order="filter.order" :order-by="filter.orderBy" field="lastCapacity">Capacity</SortTh>
+              <SortTh>Tags</SortTh>
+              <SortTh>Actions</SortTh>
             </tr>
           </thead>
           <tbody>
@@ -108,7 +108,7 @@
                 </template>
               </td>
               <td style="width:15%">
-                <expandable-area>
+                <ExpandableArea>
                   <table class="borderless" v-if="route.recentTrip">
                     <tr v-for="tripStop in route.recentTrip.tripStops"
                         v-if="tripStop.canBoard">
@@ -120,10 +120,10 @@
                       </td>
                     </tr>
                   </table>
-                </expandable-area>
+                </ExpandableArea>
               </td>
               <td style="width:15%">
-                <expandable-area>
+                <ExpandableArea>
                   <table class="borderless" v-if="route.recentTrip">
                     <tr v-for="tripStop in route.recentTrip.tripStops"
                         v-if="tripStop.canAlight">
@@ -135,7 +135,7 @@
                       </td>
                     </tr>
                   </table>
-                </expandable-area>
+                </ExpandableArea>
               </td>
               <td><button class="btn btn-default" @click="viewRoute(route)">View</button></td>
               <td>{{route.indicativeTrip && route.indicativeTrip.lastPrice}}</td>
@@ -167,6 +167,12 @@ import {mapGetters, mapActions, mapState} from 'vuex'
 import * as resources from '../stores/resources'
 const filters = require('../filters')
 
+import CreateTripsDatePicker from '@/modals/CreateTripsDatePicker.vue'
+import ExpandableArea from '@/components/ExpandableArea.vue'
+import SortTh from '@/components/SortTh.vue'
+import TagsView from '@/components/TagsView.vue'
+import UibPagination from '@/components/UibPagination.vue'
+
 export default {
   props: ['companyId'],
   data() {
@@ -191,7 +197,11 @@ export default {
     }
   },
   components: {
-    CreateTripsDatePicker: require('../modals/CreateTripsDatePicker.vue').default
+    CreateTripsDatePicker,
+    ExpandableArea,
+    SortTh,
+    TagsView,
+    UibPagination,
   },
   methods: {
     getStartDate(r) {

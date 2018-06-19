@@ -56,6 +56,8 @@
 <script>
 import dateformat from 'dateformat'
 
+import MonthPicker from '@/components/MonthPicker.vue'
+
 const currentOffset = new Date().getTimezoneOffset() * 60000
 
 export default {
@@ -99,7 +101,7 @@ export default {
     }
   },
   components: {
-    MonthPicker: require('./MonthPicker.vue').default,
+    MonthPicker,
   },
   computed: {
     dateString() {

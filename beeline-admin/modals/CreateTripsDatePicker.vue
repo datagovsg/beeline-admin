@@ -1,5 +1,5 @@
 <template>
-  <modal @cancel="reject()" :name="name" :value="value">
+  <Modal @cancel="reject()" :name="name" :value="value">
     <div class="modal-header">
       <h3>Select dates</h3>
     </div>
@@ -48,6 +48,9 @@
 <script>
 import _ from 'lodash'
 import {mapGetters, mapActions, mapState} from 'vuex'
+
+import Modal from '@/modals/MyModal.vue'
+import DatePicker from '@/components/DatePicker.vue'
 
 export default {
   props: ['route', 'selectOnTrips', 'message'],
@@ -98,7 +101,8 @@ export default {
     this.fetch('publicHolidays')
   },
   components: {
-    DatePicker: require('../components/DatePicker.vue').default
+    DatePicker,
+    Modal,
   },
   methods: {
     ...mapActions('resources', ['getRoute']),

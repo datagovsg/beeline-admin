@@ -135,6 +135,10 @@ import assert from 'assert'
 import {timeSinceMidnight} from '../../shared/filters';
 const filters = require('../../filters')
 
+import MonthPickerDropdown from '@/components/MonthPickerDropdown.vue'
+import MultiSelectBroker from '@/components/MultiSelectBroker'
+import StopDisplay from '@/components/routes/TripStopDisplay.vue'
+
 const updatableFields = [
   'driverId', 'capacity', 'companyId', 'price',
   'bookingInfo', 'status'
@@ -159,8 +163,9 @@ export default {
     }
   },
   components: {
-    StopDisplay: require('./TripStopDisplay.vue').default,
-    MultiSelectBroker: require('../MultiSelectBroker'),
+    StopDisplay,
+    MultiSelectBroker,
+    MonthPickerDropdown,
   },
   computed: {
     ...mapGetters(['axios']),

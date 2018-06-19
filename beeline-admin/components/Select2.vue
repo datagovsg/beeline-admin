@@ -108,6 +108,8 @@
 </style>
 
 <script>
+import Dropdown from '@/components/Dropdown.vue'
+
 export default {
   props: ['text', 'options', 'value', 'placeholder'],
 
@@ -118,6 +120,8 @@ export default {
       editText: null,
     }
   },
+
+  components: { Dropdown },
 
   mounted () {
     this.$documentClickListener = (event) => {

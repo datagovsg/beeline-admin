@@ -49,7 +49,7 @@
             Dates selected:
             {{ this.query.from }} - {{ this.query.to }}
           </h4>
-          <span-select @month-changed="monthChanged" v-model="filter.dates" :special-dates="publicHolidayDates"/>
+          <SpanSelect @month-changed="monthChanged" v-model="filter.dates" :special-dates="publicHolidayDates"/>
         </div>
       </div>
     </div>
@@ -64,6 +64,7 @@ import * as resources from '../stores/resources'
 import filters from '../filters'
 
 import RouteSelector from '../components/RouteSelector.vue'
+import SpanSelect from '../components/SpanSelect.vue'
 
 export default {
   props: ['companyId'],
@@ -78,7 +79,7 @@ export default {
       progressText: null,
     }
   },
-  components: { RouteSelector },
+  components: { RouteSelector, SpanSelect },
   computed: {
     ...mapGetters(['axios']),
     ...mapState('shared', ['publicHolidays']),

@@ -172,6 +172,9 @@ const leftPad = require('left-pad')
 import dateformat from 'dateformat'
 import {mapGetters, mapActions, mapState} from 'vuex'
 
+import PercentInput from '@/components/PercentInput.vue'
+import PriceInput from '@/components/PriceInput.vue'
+
 const discountTypes = _.sortBy([
   {
     type: 'simpleRate',
@@ -221,8 +224,8 @@ export default {
     }
   },
   components: {
-    PercentInput: require('./PercentInput.vue').default,
-    PriceInput: require('./PriceInput.vue').default,
+    PercentInput,
+    PriceInput,
   },
   watch: {
     'value.params': {

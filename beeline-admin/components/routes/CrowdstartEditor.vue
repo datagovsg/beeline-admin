@@ -86,12 +86,19 @@ import assert from 'assert'
 import _ from 'lodash'
 const filters = require('../../filters')
 
+import DatePickerDropdown from '@/components/DatePickerDropdown.vue'
+import PriceInput from '@/components/PriceInput.vue'
+
 export default {
   props: ['route', 'companyId'],
   data() {
     return {
       editRoute: null
     }
+  },
+  components: {
+    DatePickerDropdown,
+    PriceInput
   },
   computed: {
     ...mapGetters(['axios']),
