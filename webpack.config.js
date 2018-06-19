@@ -13,6 +13,12 @@ const env = {
 
 const prefix = path.resolve(process.env.BUILD_PREFIX || 'www')
 
+const babelSettings = {
+  presets: [
+    ['@babel/preset-env', {targets: {browsers: 'ie 11'}}]
+  ]
+}
+
 const jsBundle = {
   devtool: 'source-map',
   module: {
@@ -30,7 +36,11 @@ const jsBundle = {
         test: /\.js$/,
         loader: 'babel-loader',
         exclude: /node_modules/,
-        include: path.resolve('.'),
+        options: {
+          babelrc: false,
+          cacheDirectory: true,
+          ...babelSettings,
+        }
       },
       {
         test: /\.js$/,
@@ -38,7 +48,13 @@ const jsBundle = {
         include: [
           /node_modules\/vue-strap/,
           /node_modules\/vue-async-computed/,
+          /node_modules\/sinon\//,
         ],
+        options: {
+          babelrc: false,
+          cacheDirectory: true,
+          ...babelSettings,
+        }
       },
       {
         test: /\.css$/,
