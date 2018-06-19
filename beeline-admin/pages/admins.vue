@@ -117,14 +117,11 @@ export default {
         id: null,
         email: '',
         name: '',
-        permissions: {
-          basic: false,
-          refund: false,
-          issueTickets: false,
-          operations: false,
-          manageCompany: false,
-          manageAdmins: false,
-        }
+        permissions: Object.keys(PermissionsMap)
+          .reduce((acc, key) => {
+            acc[key] = false
+            return acc
+          }, {})
       }
     },
 
@@ -149,8 +146,13 @@ export default {
 
     updateAdmin (admin) {
       const updatePromise = (admin.id === null)
-        ? this.axios.post(`/companies/${this.companyId}/admins`, admin)
-        : this.axios.put(`/companies/${this.companyId}/admins/${admin.id}`, admin)
+        ? this.axios.post(`/companies/${this.companyId}/admins`, {
+          ...admin,
+          permissions: mapPermissions(admin.permissions)
+        })
+        : this.axios.put(`/companies/${this.companyId}/admins/${admin.id}`, {
+          permissions: mapPermissions(admin.permissions)
+        })
 
       this.spinOnPromise(updatePromise)
       .then(() => this.requery())

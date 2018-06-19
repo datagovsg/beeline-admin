@@ -33,7 +33,10 @@ describe('admins.vue', () => {
               {
                 id: 5,
                 adminCompany: {
-                  permissions: []
+                  permissions: ['manage-routes', 'manage-drivers',
+                  'drive', 'update-trip-status',
+                  'message-passengers', 'view-passengers',
+                  'manage-notifications', 'manage-customers'] // operations
                 }
               }
             ]
@@ -61,7 +64,6 @@ describe('admins.vue', () => {
           store: testStore({})
         }
       )
-      console.log('JUST CREATED THE PAGE AGAIN!!')
       await delay(10)
       return adminPage
     })
@@ -76,6 +78,14 @@ describe('admins.vue', () => {
     expect(rows.at(0).text().includes('Amanda'))
     expect(rows.at(1).text().includes('Aardvark'))
     expect(rows.at(2).text().includes('Aisha'))
+
+    // Check operations box is checked for Aisha
+    expect(rows.at(2).findAll('input[type="checkbox"]').at(0).is(':checked')).toBe(false)
+    expect(rows.at(2).findAll('input[type="checkbox"]').at(1).is(':checked')).toBe(false)
+    expect(rows.at(2).findAll('input[type="checkbox"]').at(2).is(':checked')).toBe(false)
+    expect(rows.at(2).findAll('input[type="checkbox"]').at(3).is(':checked')).toBe(true)
+    expect(rows.at(2).findAll('input[type="checkbox"]').at(4).is(':checked')).toBe(false)
+    expect(rows.at(2).findAll('input[type="checkbox"]').at(5).is(':checked')).toBe(false)
   })
 
   it('should delete admins on request', async () => {
@@ -109,6 +119,7 @@ describe('admins.vue', () => {
           called = true
           expect(data.name).toBe('Ben')
           expect(data.email).toBe('benben@example.com')
+          expect(data.permissions).toContain('refund')
         }]
     }, async () => {
       adminPage.find('.add-admin')
@@ -124,6 +135,10 @@ describe('admins.vue', () => {
       adminPage.find('table.admin-table tbody tr:nth-child(4) input[type="text"]')
         .setValue('Ben')
 
+      adminPage.findAll('table.admin-table tbody tr:nth-child(4) input[type="checkbox"]')
+        .at(1) // Issue refunds
+        .setChecked(true)
+
       adminPage.find('table.admin-table tbody tr:nth-child(4) .update-button')
         .trigger('click')
 
@@ -132,5 +147,31 @@ describe('admins.vue', () => {
     })
   })
 
-  // PUT of admins is not allowed -- you have to delete and add again
+  it('should update admin permissions on request', async () => {
+    let called = false
+
+    await mockAjax({
+      // Mr Aardvark
+      'PUT /companies/5/admins/102': [
+        200,
+        {},
+        ({data}, response) => {
+          called = true
+          expect(data.permissions).toContain('view-drivers')
+          expect(data.permissions).toContain('view-admins')
+          expect(data.permissions).toContain('view-transactions')
+          expect(data.permissions).toContain('monitor-operations')
+        }]
+    }, async () => {
+      adminPage.findAll('table.admin-table tbody tr:nth-child(2) input[type="checkbox"]')
+        .at(0) // Issue tickets
+        .setChecked(true)
+
+      adminPage.find('table.admin-table tbody tr:nth-child(2) .update-button')
+        .trigger('click')
+
+      await delay(1)
+      expect(called).toBe(true)
+    })
+  })
 })
