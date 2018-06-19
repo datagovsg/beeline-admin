@@ -50,13 +50,12 @@ import _ from 'lodash'
 import {mapGetters, mapActions, mapState} from 'vuex'
 
 import Modal from '@/modals/MyModal.vue'
+import ModalMixin from '@/modals/ModalMixin'
 import DatePicker from '@/components/DatePicker.vue'
 
 export default {
   props: ['route', 'selectOnTrips', 'message'],
-  mixins: [
-    require('./ModalMixin')
-  ],
+  mixins: [ModalMixin],
   data() {
     return {
       selectedDates: [],

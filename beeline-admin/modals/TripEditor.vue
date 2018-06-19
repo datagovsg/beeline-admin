@@ -179,6 +179,7 @@ import {mapActions} from 'vuex'
 import TimeInput from '@/components/TimeInput.vue'
 import StopSelector from '@/components/StopSelector.vue'
 import Modal from '@/modals/MyModal.vue'
+import ModalMixin from '@/modals/ModalMixin'
 
 const filters = require('../filters')
 
@@ -264,8 +265,6 @@ export default {
       }
     }
   },
-  mixins: [
-    require('../modals/ModalMixin')
-  ],
+  mixins: [ModalMixin],
 }
 </script>

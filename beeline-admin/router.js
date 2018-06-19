@@ -62,7 +62,7 @@ angular.module('beeline-admin')
   .state('assets', {
     url: '/assets',
     templateUrl: 'templates/assets.html',
-    controller: 'assets',
+    controller: 'genericVuePageController',
     data: {
       requiresLogin: true,
     }

@@ -7,11 +7,11 @@ import * as resources from '../stores/resources'
 export default function SharedStoreTemplate (definition, fetchJobs) {
   return {
     namespaced: true,
-    state: {
+    state: () => ({
       ...definition.state,
       ... _.mapValues(fetchJobs, () => null),
       promises: _.mapValues(fetchJobs, () => null)
-    },
+    }),
     getters: {
       ...definition.getters,
       ... _(fetchJobs).toPairs()

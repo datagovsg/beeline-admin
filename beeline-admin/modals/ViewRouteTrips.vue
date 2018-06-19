@@ -104,6 +104,7 @@ import DatePicker from '@/components/DatePicker.vue'
 import PingPath from '@/components/PingPath.vue'
 import TripStopMarker from '@/components/TripStopMarker.vue'
 import Modal from '@/modals/MyModal.vue'
+import ModalMixin from '@/modals/ModalMixin'
 
 import filters from '@/filters'
 
@@ -116,9 +117,7 @@ export default {
     TripStopMarker,
     VueSlider,
   },
-  mixins: [
-    require('./ModalMixin')
-  ],
+  mixins: [ModalMixin],
   data () {
     return {
       displayedTimeframe: null,

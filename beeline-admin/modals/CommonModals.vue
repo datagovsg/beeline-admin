@@ -25,6 +25,7 @@
 import {mapState} from 'vuex'
 
 import Modal from '@/modals/MyModal.vue'
+import ModalMixin from '@/modals/ModalMixin'
 
 export default {
   props: [
@@ -53,8 +54,6 @@ export default {
       this.dataValue = true
     }
   },
-  mixins: [
-    require('../modals/ModalMixin')
-  ],
+  mixins: [ModalMixin],
 }
 </script>

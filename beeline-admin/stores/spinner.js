@@ -6,7 +6,7 @@ const initial = () => ({
 
 module.exports = {
   namespaced: true,
-  state: initial(),
+  state: initial,
   mutations: {
     _setPromise(state, promise) {
       state.spinnerPromise = promise
