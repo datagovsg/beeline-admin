@@ -2,7 +2,7 @@ import _ from 'lodash'
 import assert from 'assert'
 
 module.exports = {
-  props: ['keyFunc', 'collection'],
+  props: ['collection'],
 
   data() {
     return {

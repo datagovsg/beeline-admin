@@ -12,6 +12,7 @@
     :defaultDisable="defaultDisable"
     :monthFormat="monthFormat"
     :otherMonthSelectable="otherMonthSelectable"
+    v-on="otherListeners"
     >
   </DatePicker>
 </template>
@@ -47,6 +48,11 @@ export default {
         },
         classes: ['active']
       }]
+    },
+
+    otherListeners () {
+      const {input, 'month-click': monthClick, ...others} = this.$listeners
+      return others
     }
   },
 
