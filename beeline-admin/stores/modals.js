@@ -19,6 +19,36 @@ module.exports = {
     },
   },
   actions: {
+    confirm (context, options) {
+      context.dispatch('showModal', {
+        component: 'CommonModals',
+        props: {
+          type: 'confirm',
+          title: _.get(options, 'title'),
+          message: _.get(options, 'message'),
+        }
+      })
+    },
+    flash (context, options) {
+      context.dispatch('showModal', {
+        component: 'CommonModals',
+        props: {
+          type: 'flash',
+          title: _.get(options, 'title'),
+          message: _.get(options, 'message'),
+        }
+      })
+    },
+    alert (context, options) {
+      context.dispatch('showModal', {
+        component: 'CommonModals',
+        props: {
+          type: 'alert',
+          title: _.get(options, 'title'),
+          message: _.get(options, 'message'),
+        }
+      })
+    },
     /** Adds a modal request to the queue */
     showModal (context, options) {
       return Promise.resolve(null)
