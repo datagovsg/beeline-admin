@@ -40,7 +40,7 @@ describe('MonthPicker', () => {
     // select January
     monthButtons.at(0).trigger('click')
     await delay(1)
-    expect(lastSelected.getTime() === Date.UTC(year, 0, 1))
+    expect(lastSelected.getTime()).toBe(Date.UTC(year - 1, 0, 1))
 
     // increment the year
     yearChangeButtons.at(1).trigger('click')
@@ -54,6 +54,6 @@ describe('MonthPicker', () => {
     // select July
     monthButtons.at(6).trigger('click')
     await delay(1)
-    expect(lastSelected.getTime() === Date.UTC(year + 1, 6, 1))
+    expect(lastSelected.getTime()).toBe(Date.UTC(year + 1, 6, 1))
   })
 })
