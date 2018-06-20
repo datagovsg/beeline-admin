@@ -7,6 +7,17 @@ const initial = () => ({
   options: null,
 })
 
+function showModalOfType(type, options) {
+  return (context, options) =>
+    context.dispatch('showModal', {
+      component: 'CommonModals',
+      props: {
+        type,
+        ...options
+      }
+    })
+}
+
 module.exports = {
   namespaced: true,
   state: initial,
@@ -19,36 +30,9 @@ module.exports = {
     },
   },
   actions: {
-    confirm (context, options) {
-      context.dispatch('showModal', {
-        component: 'CommonModals',
-        props: {
-          type: 'confirm',
-          title: _.get(options, 'title'),
-          message: _.get(options, 'message'),
-        }
-      })
-    },
-    flash (context, options) {
-      context.dispatch('showModal', {
-        component: 'CommonModals',
-        props: {
-          type: 'flash',
-          title: _.get(options, 'title'),
-          message: _.get(options, 'message'),
-        }
-      })
-    },
-    alert (context, options) {
-      context.dispatch('showModal', {
-        component: 'CommonModals',
-        props: {
-          type: 'alert',
-          title: _.get(options, 'title'),
-          message: _.get(options, 'message'),
-        }
-      })
-    },
+    confirm: showModalOfType('confirm'),
+    flash: showModalOfType('flash'),
+    alert: showModalOfType('alert'),
     /** Adds a modal request to the queue */
     showModal (context, options) {
       return Promise.resolve(null)
@@ -82,13 +66,9 @@ module.exports = {
     },
     showErrorModal (context, err) {
       console.error(err)
-      return context.dispatch('showModal', {
-        component: 'CommonModals',
-        props: {
-          type: 'alert',
-          title: _.get(err, 'response.data.error', 'Error'),
-          message: `${_.get(err, 'message')}: ${_.get(err, 'response.data.message', '')}`
-        }
+      return context.dispatch('alert', {
+        title: _.get(err, 'response.data.error', 'Error'),
+        message: `${_.get(err, 'message')}: ${_.get(err, 'response.data.message', '')}`
       })
     }
   }
