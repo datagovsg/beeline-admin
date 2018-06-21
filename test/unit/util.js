@@ -1,6 +1,7 @@
 import SharedStore from '@/stores/shared'
 import CompanySharedStore from '@/stores/companyShared'
 import sinon from 'sinon'
+import querystring from 'querystring'
 import axios from 'axios'
 import Vuex from 'vuex'
 
@@ -67,39 +68,71 @@ export function testStore ({modules, state, getters, mutations, actions}, fakeAx
  * {
  *    'GET /a/b/c': [200, {
  *      hello: 'world'
- *    }]
+ *    }],
+ *
+ *    'GET /a/b/c?d&e&f
  * }
  *
  * --> axios.get('/a/b/c') => Promise.resolve({ data: {hello: world}})
+ * --> axios.get('/a/b/c?d=1&e=2&f=3') => Promise.resolve({ data: {hello: world}, query: {...}})
  */
 export async function mockAjax(routes, fn) {
 
   // Build up the routes
-  const routesByMethod = {}
+  const routesByMethod = {
+    get: [],
+    post: [],
+    put: [],
+    head: [],
+    delete: [],
+  }
 
   for (let route in routes) {
     const parts = route.split(/ /, 2)
     const method = parts[0].toLowerCase()
-    const path = parts[1]
+    const pathAndQuery = parts[1]
+    const [path, query] = pathAndQuery.split(/\?/, 2)
+    const queryParts = query && query.split(/&/g)
+      .map(q => q.split(/=/, 2))
+      .reduce(
+        (acc, [key, value]) => {
+          acc[key] = (value === undefined) ? null : decodeURIComponent(value)
+          return acc
+        }, {}
+      )
     const [status, value, callback] = routes[route]
 
     routesByMethod[method] = routesByMethod[method] || []
     routesByMethod[method].push({
       path,
+      queryParts,
       value: JSON.parse(JSON.stringify(value)),
       status,
       callback
     })
   }
 
-  let v = null
   let sandbox = sinon.createSandbox({})
 
   try {
     // Stub
     for (let method in routesByMethod) {
       sandbox.stub(axios, method).callsFake(async (path, maybeData, options) => {
-        const result = routesByMethod[method].find(s => s.path === path)
+        const [pathOnly, query] = path.split(/\?/, 2)
+        const queryData = querystring.parse(query)
+
+        const result = routesByMethod[method].find(s =>
+          s.path === pathOnly &&
+          (!s.queryParts || (
+            Object.keys(s.queryParts).every((key) => {
+              if (s.queryParts[key] === null) {
+                return key in queryData
+              } else {
+                return queryData[key] === s.queryParts[key]
+              }
+            })
+          ))
+        )
 
         // axios.{post, patch, put} accepts a `data` argument
         // also -- must make sure requests are JSON serializable
@@ -114,6 +147,7 @@ export async function mockAjax(routes, fn) {
             // TODO: Should this be asynchronous or synchronous?
             await result.callback({
               data: maybeData,
+              query: queryData,
               path,
               ...options
             }, {
