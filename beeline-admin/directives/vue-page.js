@@ -19,7 +19,7 @@ Vue.component('PromotionPage', require('../../beeline-admin/pages/promotion.vue'
 Vue.component('PromotionsPage', require('../../beeline-admin/pages/promotions.vue').default)
 Vue.component('ExtendRoutesPage', require('../../beeline-admin/pages/extend-routes.vue').default)
 Vue.component('DriversPage', require('../../beeline-admin/pages/drivers.vue').default)
-Vue.component('SummaryPage', require('../../beeline-admin/pages/ridershipSummary.vue').default)
+Vue.component('SummaryPage', require('../../beeline-admin/pages/ridership-summary.vue').default)
 Vue.component('RouteTimelinessPage', require('../../beeline-admin/pages/route-timeliness.vue').default)
 
 // COMPONENTS
