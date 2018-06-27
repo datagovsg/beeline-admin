@@ -1,3 +1,4 @@
+import numeral from 'numeral'
 
 const monthNames =
   'January,February,March,April,May,June,July,August,September,October,November,December'
@@ -5,6 +6,7 @@ const monthNames =
 
 module.exports = {
   date: require('dateformat'),
+  number: (n, f) => numeral(n).format(f),
   _: require('lodash'),
   pointToLatLng: p => ({ lat: p.coordinates[1], lng: p.coordinates[0]}),
   leftPad: require('left-pad'),

@@ -88,7 +88,7 @@ angular.module('beeline-admin')
   .state('c.summary', {
     url: '/summary',
     templateUrl: 'templates/summary.html',
-    controller: 'summary',
+    controller: 'genericVuePageController',
     data: {
       requiresLogin: true,
     }

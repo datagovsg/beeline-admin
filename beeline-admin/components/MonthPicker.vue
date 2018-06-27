@@ -1,22 +1,40 @@
 <template>
   <table class="month-picker">
+    <thead>
+      <tr>
+        <th style="text-align: left">
+          <button @click="currentlyViewedYear = prevYear" class="btn btn-default">
+            ‹
+          </button>
+        </th>
+        <th>{{ f.date(yearCanonical, 'yyyy') }}</th>
+
+        <th style="text-align: right">
+          <button @click="currentlyViewedYear = nextYear" class="btn btn-default">
+            ›
+          </button>
+        </th>
+      </tr>
+    </thead>
     <tbody>
-      <tbody>
-        <tr>
-          <th @click="currentlyViewedYear = prevYear">‹</th>
-          <th>{{ f.date(yearCanonical, 'yyyy') }}</th>
-          <th @click="currentlyViewedYear = nextYear">›</th>
-        </tr>
-        <tr>
-          <td colspan="3">
-            <div>
-              <button v-for="month in months" @click="clicked(month)" type="button">
-                {{f.date(month, 'mmmm')}}
-              </button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
+      <tr>
+        <td colspan="3">
+          <div>
+            <button v-for="m in months"
+              @click="clicked(m)"
+              type="button"
+              class="btn"
+              :class="{
+                [ (currentlyViewedYear.getUTCFullYear() === valueYear &&
+                  m.getUTCMonth() === valueMonth) ?
+                  'btn-primary' : 'btn-default']: true
+              }"
+              >
+              {{f.date(m, 'mmmm')}}
+            </button>
+          </div>
+        </td>
+      </tr>
     </tbody>
   </table>
 </template>
@@ -25,13 +43,13 @@
 import dateformat from 'dateformat'
 
 export default {
-  props: [
-    'value',
-    'multiple',
-    'offset',
-    'year',
-    'defaultDisable',
-  ],
+  props: {
+    value: {type: Date},
+    multiple: {default: false},
+    offset: {default: 0},
+    year: {type: Date},
+    defaultDisable: {},
+  },
   data () {
     return {
       currentlyViewedYear: this.year || new Date()
@@ -74,7 +92,10 @@ export default {
             1
           ))
         })
-    }
+    },
+
+    valueYear () { return this.value && this.value.getUTCFullYear() },
+    valueMonth () { return this.value && this.value.getUTCMonth() },
   },
   methods: {
     clicked (month) {

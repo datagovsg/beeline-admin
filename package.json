@@ -26,6 +26,7 @@
     "moment": "^2.22.2",
     "moment-timezone": "^0.5.18",
     "multiple-date-picker": "git+https://github.com/datagovsg/MultipleDatePicker.git#annotations",
+    "numeral": "^2.0.6",
     "request": "^2.74.0",
     "title-case": "^2.1.1",
     "ui-select": "0.16.1",
