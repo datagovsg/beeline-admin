@@ -2,7 +2,8 @@
   <select
     :multiple="multiple"
     @input="emitValue($event.target)">
-    <option v-for="route in sortedRoutes" :value="route.id"
+    <option v-for="route in sortedFilteredRoutes" :value="route.id"
+        :key="route.id"
         :selected="isSelected(route.id)">
       {{route.label}} {{route.name}}
     </option>
@@ -17,7 +18,7 @@ import querystring from 'querystring'
 const filters = require('../filters')
 
 export default {
-  props: ['value', 'multiple', 'companyId', 'startDate', 'endDate'],
+  props: ['value', 'multiple', 'companyId', 'startDate', 'endDate', 'filter'],
   data () {
     return {
       routes: null
@@ -30,10 +31,11 @@ export default {
     ...mapState('shared', ['currentRoutes', 'promises']),
     filteredRoutes () {
       return (this.routes || [])
-            .filter(r => !this.companyId ||
-              r.transportCompanyId === this.companyId)
+          .filter(f => this.filter ? this.filter(f) : true)
+          .filter(r => !this.companyId ||
+            r.transportCompanyId === this.companyId)
     },
-    sortedRoutes () {
+    sortedFilteredRoutes () {
       return [{ name: "(select)" }].concat(
         _.sortBy(this.filteredRoutes, 'label')
       )
@@ -41,7 +43,6 @@ export default {
     allRouteIds () {
       return this.filteredRoutes.map(r => r.id)
     },
-
     routePromise () {
       if (!this.startDate && !this.endDate) {
         return this.promises.currentRoutes &&
@@ -56,6 +57,9 @@ export default {
 
         return this.getRoutes(query)
       }
+    },
+    routesById () {
+      return _.keyBy(this.routes, 'id')
     }
   },
   watch: {
@@ -63,7 +67,12 @@ export default {
       immediate: true,
       handler (p) {
         if (p) {
-          p.then((d) => this.routes = d)
+          this.$latestPromise = p
+          p.then((d) => {
+            if (this.$latestPromise === p) {
+              this.routes = d
+            }
+          })
         }
       }
     }
@@ -82,8 +91,10 @@ export default {
         }
 
         this.$emit('input', values)
+        this.$emit('routes-changed', values.map(v => this.routesById[v]))
       } else {
         this.$emit('input', el.value)
+        this.$emit('routes-changed', this.routesById[el.value])
       }
     },
     isSelected(rid) {
