@@ -17,8 +17,11 @@
             <route-selector
               class="form-control"
               v-model="filter.routeIds"
+              @routes-changed="filter.routes = $event"
+              :startDate="new Date(1)"
               :companyId="companyId"
               :multiple="true"
+              :filter="r => !r.tags.includes('crowdstart')"
               ref="routeSelector"
               />
           </div>
@@ -45,13 +48,63 @@
       </div>
       <div class="col-sm-4">
         <div class="datepicker-wrap">
-          <h4 class="text-center">
+          <div>
             Dates selected:
-            {{ this.query.from }} - {{ this.query.to }}
-          </h4>
+            <b>{{ f.date(this.query.from, 'dd mmm yyyy') }}</b> -
+            <b>{{ f.date(this.query.to, 'dd mmm yyyy') }}</b>
+          </div>
           <SpanSelect @month-changed="monthChanged" v-model="filter.dates" :special-dates="publicHolidayDates"/>
         </div>
       </div>
+      <template v-if="filter.routeIds.length > 0">
+        <div class="col-sm-8" v-if="filter.routeIds.length > 10">
+          You have selected too many routes
+        </div>
+        <div class="col-sm-8" v-else>
+          <h2>Charts</h2>
+          <ul class="nav nav-pills">
+            <li role="presentation"
+              v-for="route in filter.routes"
+              :key="route.id"
+              :class="{
+                active: charts.routeId === route.id
+              }"
+              @click="charts.routeId = route.id">
+              <a href="#" @click.prevent>{{route.label}}</a>
+            </li>
+          </ul>
+
+          <hr />
+
+          <div v-if="chartRouteServiceDates">
+            This service runs from
+            <b>{{f.date(chartRouteServiceDates.startDate, 'dd mmm yyyy', true)}}</b>
+            to
+            <b>{{f.date(chartRouteServiceDates.endDate, 'dd mmm yyyy', true)}}</b>
+
+            <button class="btn btn-default"
+                @click="filter.dates = [chartRouteServiceDates.startDate, chartRouteServiceDates.endDate]">
+              Chart entire service period
+            </button>
+
+            <div>
+              Showing trips from
+              <b>{{ f.date(this.query.from, 'dd mmm yyyy') }}</b> to
+              <b>{{ f.date(this.query.to, 'dd mmm yyyy') }}</b>
+            </div>
+          </div>
+          <div v-else-if="charts.routeId">
+            Loading service data...
+          </div>
+
+
+          <template v-if="charts.trips">
+            <ReviewCharts v-if="charts.trips.length > 0" :trips="charts.trips" />
+            <span v-else>There was no data found for this period</span>
+          </template>
+          <img src="/img/spinner.svg" v-else-if="charts.routeId && !charts.trips" />
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -65,24 +118,32 @@ import filters from '../filters'
 
 import RouteSelector from '../components/RouteSelector.vue'
 import SpanSelect from '../components/SpanSelect.vue'
+import ReviewCharts from '@/components/review-chart/ReviewCharts.vue'
 
 export default {
   props: ['companyId'],
   data () {
     return {
+      charts: {
+        routeId: null,
+        trips: null,
+      },
       filter: {
         dates: [],
         selectedMonth: new Date(),
         routeIds: [],
+        routes: [], // purely for display purposes
       },
       publicHolidaysPromise: this.fetch('publicHolidays'),
       progressText: null,
     }
   },
-  components: { RouteSelector, SpanSelect },
+  components: { ReviewCharts, RouteSelector, SpanSelect },
   computed: {
     ...mapGetters(['axios']),
     ...mapState('shared', ['publicHolidays']),
+
+    f: () => filters,
 
     query () {
       const { selectedMonth, dates, routeIds } = this.filter
@@ -110,21 +171,55 @@ export default {
       )
 
       return { routeIds, from, to }
+    },
+
+    publicHolidayDates () {
+      return this.publicHolidays &&
+        this.publicHolidays.map(ph => ({
+          date: ph.date,
+          classes: ['public-holidya'],
+        }))
+    },
+
+    tripsQuery () {
+      if (!this.charts.routeId) return null
+
+      return {
+        from: this.query.from,
+        to: this.query.to,
+        routeId: this.charts.routeId
+      }
     }
   },
+
   asyncComputed: {
-    publicHolidayDates: {
-      async get () {
-        await this.publicHolidaysPromise
-        return this.publicHolidays.map(ph => (
-          {
-            date: new Date(ph.date),
-            classes: ['public-holiday'],
-          }
-        ))
-      },
-      default: []
+    chartRouteServiceDates () {
+      if (!this.charts.routeId) return
+
+      return this.axios.get(`/routes/${this.charts.routeId}?includeDates=true`)
+        .then(({data}) => {
+          return {startDate: new Date(data.dates.firstDate), endDate: new Date(data.dates.lastDate)}
+        })
     }
+  },
+
+  watch: {
+    'tripsQuery' () {
+      this.charts.trips = null
+      this.downloadChartedRoute()
+    },
+
+    'filter.routeIds' (rs) {
+      if (rs.length === 0) {
+        this.charts.routeId = null
+      } else if (!rs.includes(this.charts.routeId)) {
+        this.charts.routeId = rs[0]
+      }
+    }
+  },
+
+  created () {
+    this.fetch('publicHolidays')
   },
 
   methods: {
@@ -188,6 +283,36 @@ export default {
         this.progressText = null
       }
     },
+
+    async downloadChartedRoute () {
+      if (this.tripsQuery === null) { return }
+
+      const {routeId, ...rest} = this.tripsQuery
+
+      const promise =
+        this.$queryPromise =
+        this.axios.get(`${process.env.TRACKING_URL}/routes/${routeId}/performance?`
+          + querystring.stringify(rest))
+        .then((response) => {
+          if (promise !== this.$queryPromise) return // superseded
+
+          const trips = response.data;
+
+          trips.forEach(tr => {
+            tr.date = new Date(tr.date);
+            tr.stops.forEach(ts => {
+              ts.date = tr.date;
+              ts.expectedTime = new Date(ts.expectedTime);
+              if (ts.actualTime) {
+                ts.actualTime = new Date(ts.actualTime)
+              }
+            })
+          })
+
+          this.charts.trips = trips
+        })
+    },
+
     monthChanged (newMonth) {
       this.filter.selectedMonth = newMonth.clone().toDate()
       this.filter.startDate = this.filter.endDate = null
