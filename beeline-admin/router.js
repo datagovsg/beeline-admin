@@ -213,12 +213,16 @@ angular.module('beeline-admin')
     // We should not do anything if auth has not been initialized,
     // because the hash has not been parsed
     if (auth.initialized) {
-      redirect()
+      return '/c//bookings'
     } else {
       auth.authResultPromise.then(() => {
         if (!auth.redirectRequired) { // No redirect required **by the authenticator**
           redirect()
         }
+        /* If redirect is required, it will be handled
+            by the code in $rootScope.$on('$stateChangeStart')
+            so we're done
+        */
       })
     }
   });

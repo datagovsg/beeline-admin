@@ -93,12 +93,13 @@ angular.module('beeline-admin')
     //
     // 2. Refresh token needs to be used.
     pauseStateChange($event, newState, newParams,
-      initialized ? checkStorageToken()
+      initialized
+        ? checkStorageToken()
         : handleRedirect().then(checkStorageToken)
     )
   });
 
-  checkStorageToken()
+  Promise.resolve(checkStorageToken()).catch(() => {})
   handleRedirect()
 
   function storeSessionToken({ idToken }) {
@@ -140,8 +141,7 @@ angular.module('beeline-admin')
       if (authResult) {
         if (authResult.error) {
           return commonModals.alert(authResult.errorDescription)
-        }
-        else {
+        } else {
           store.set('sessionToken', authResult.idToken)
           $cookies.put('sessionToken', authResult.idToken)
           auth.getProfile().then((profile) => {
@@ -157,6 +157,15 @@ angular.module('beeline-admin')
     })
   }
 
+  /**
+   * Check the storage token, refreshes the token if necessary
+   *
+   * The output of this is passed to pauseStateChange.
+   * Therefore if no pausing is required (i.e. auth looks ok) then
+   * return a falsy value.
+   *
+   * If pausing is required, return a Promise that resolves when auth is complete.
+   */
   function checkStorageToken() {
     const idToken = store.get('sessionToken')
 
@@ -168,6 +177,7 @@ angular.module('beeline-admin')
             store.set('profile', profile);
           })
         }
+        return null
       } else {
         return auth.refreshToken()
           .then(storeSessionToken)
