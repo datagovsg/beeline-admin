@@ -124,6 +124,9 @@ const cssBundle = {
       ]
     }]
   },
+  output: {
+    path: path.resolve('./www/css')
+  },
   plugins: [
     new MiniCssExtractPlugin({
       filename: 'styles.css',
