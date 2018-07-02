@@ -1,9 +1,9 @@
 <template>
-  <table>
+  <table class="date-picker">
     <thead>
       <tr>
         <th @click="currentlyViewedMonth = prevMonth">‹</th>
-        <th @click="$emit('month-click', monthCanonical)" colspan="5">
+        <th @click="$emit('month-click', monthCanonical)" colspan="5" class="month-label">
           {{ (this.monthFormat || (x => this.f.date(x, 'mmmm yyyy')))(monthCanonical) }}
         </th>
         <th @click="currentlyViewedMonth = nextMonth">›</th>
@@ -129,7 +129,7 @@ export default {
         weekNumber => [0,1,2,3,4,5,6].map(weekDay => {
           const canonical = ((weekNumber * 7) + weekDay) * 24*3600*1000 + this.firstDayOfCalendar.getTime()
           const canonicalDate = new Date(canonical)
-          const isDifferentMonth = (canonicalDate.getMonth() !== this.monthCanonical.getMonth())
+          const isDifferentMonth = (canonicalDate.getUTCMonth() !== this.monthCanonical.getUTCMonth())
           const canonicalDateMetadata = this.specialDatesByTime(canonical)
           return {
             canonical,
@@ -152,6 +152,9 @@ export default {
     }
   },
   methods: {
+    fromCanonicalTime (date) {
+      return new Date(date.getTime() + this.effectiveOffset)
+    },
     canonicalTime (date) {
       const tzDate = new Date(date.getTime() - this.effectiveOffset)
       const time = Date.UTC(tzDate.getUTCFullYear(), tzDate.getUTCMonth(), tzDate.getUTCDate())
@@ -189,7 +192,6 @@ export default {
     },
   }
 }
-
 
 function mergeDateInfo (a, b) {
   return {

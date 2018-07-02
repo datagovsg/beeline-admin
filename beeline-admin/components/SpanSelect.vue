@@ -13,12 +13,17 @@
     :monthFormat="monthFormat"
     :otherMonthSelectable="otherMonthSelectable"
     v-on="otherListeners"
+
+    ref="datepicker"
     >
   </DatePicker>
 </template>
 <style lang="scss">
 .span-select .active {
   background-color: #FDD;
+}
+.month-label {
+  cursor: pointer;
 }
 </style>
 <script>
@@ -58,8 +63,8 @@ export default {
 
   methods: {
     selectEntireMonth (date) {
-      const firstDate = new Date(date.getFullYear(), date.getMonth(), 1)
-      const lastDate = new Date(date.getFullYear(), date.getMonth() + 1, 0)
+      const firstDate = this.$refs.datepicker.fromCanonicalTime(new Date(Date.UTC(date.getFullYear(), date.getMonth(), 1)))
+      const lastDate = this.$refs.datepicker.fromCanonicalTime(new Date(Date.UTC(date.getFullYear(), date.getMonth() + 1, 0)))
       return this.fixInput([firstDate, lastDate])
     },
     fixInput (newValue) {

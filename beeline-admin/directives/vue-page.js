@@ -11,6 +11,7 @@ Vue.use(AsyncComputed)
 // PAGES
 Vue.component('AdminsPage', require('../../beeline-admin/pages/admins.vue').default)
 Vue.component('AssetsPage', require('../../beeline-admin/pages/assets.vue').default)
+Vue.component('BookingsPage', require('../../beeline-admin/pages/bookings.vue').default)
 Vue.component('ContactListsPage', require('../../beeline-admin/pages/contactLists.vue').default)
 Vue.component('RoutesPage', require('../../beeline-admin/pages/routes.vue').default)
 Vue.component('RoutePassesPage', require('../../beeline-admin/pages/route-passes.vue').default)
