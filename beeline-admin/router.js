@@ -205,7 +205,7 @@ angular.module('beeline-admin')
   })
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise(['$injector', '$location', function ($injector, $location) {
+  $urlRouterProvider.otherwise(function ($injector, $location) {
     const auth = $injector.get('auth')
 
     function redirect() {
@@ -227,5 +227,5 @@ angular.module('beeline-admin')
         */
       })
     }
-  }]);
+  });
 }])

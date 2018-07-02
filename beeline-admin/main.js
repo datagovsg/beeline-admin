@@ -94,8 +94,7 @@ angular.module('beeline-admin')
   function ($rootScope, auth, store, $cookies, AdminService, jwtHelper, $state, commonModals) {
   let initialized = false
 
-  $rootScope.$on('$stateChangeStart', [
-    '$event', 'newState', 'newParams', 'oldState', 'oldParams',
+  $rootScope.$on('$stateChangeStart',
     function($event, newState, newParams, oldState, oldParams) {
     // We pause the state change when
     // 1. Auth is not yet initialized. Initialization comprises two steps:
@@ -113,7 +112,7 @@ angular.module('beeline-admin')
         ? checkStorageToken()
         : handleRedirect().then(checkStorageToken)
     )
-  }]);
+  });
 
   Promise.resolve(checkStorageToken()).catch(() => {})
   handleRedirect()

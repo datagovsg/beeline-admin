@@ -5,7 +5,7 @@ import _ from 'lodash';
 angular.module('beeline-admin').controller('CrowdstartSummaryCtrl', [
   '$scope', 'AdminService', 'RoutesService', 'LoadingSpinner',
   '$state', '$stateParams', 'issueTicketModal', 'commonModals', 'companyId',
-  RoutePopup,
+  'RoutePopup',
 function($scope, AdminService, RoutesService, LoadingSpinner,
   $state, $stateParams, issueTicketModal, commonModals, companyId,
   RoutePopup) {
