@@ -1,6 +1,6 @@
 
 
-export default function (StopsPopup) {
+export default ['StopsPopup', function (StopsPopup) {
 
   return {
     template: `
@@ -25,4 +25,4 @@ export default function (StopsPopup) {
     }
   }
 
-}
+}]

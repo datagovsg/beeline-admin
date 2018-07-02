@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import qs from 'querystring'
 
-export default function (AdminService) {
+export default ['AdminService', function (AdminService) {
   this.fetchDriverInfo = function (trips) {
     var tripsWithDrivers = _(trips)
       .uniqBy(tr => tr.driverId)
@@ -72,4 +72,4 @@ export default function (AdminService) {
       return response.data
     })
   }
-}
+}]

@@ -3,7 +3,7 @@ const confirmModalTemplate = require('../templates/modals/confirm.html');
 const promptModalTemplate = require('../templates/modals/prompt.html');
 import _ from 'lodash';
 
-export default function ($rootScope, $uibModal) {
+export default ['$rootScope', '$uibModal', function ($rootScope, $uibModal) {
 
   this.alert = function (options) {
     var modalScope = $rootScope.$new();
@@ -127,4 +127,4 @@ export default function ($rootScope, $uibModal) {
 
     return dialog.result;
   }
-}
+}]

@@ -1,6 +1,9 @@
 const _ = require('lodash');
 
-export default function($scope, $state, $urlRouter, AdminService, store,
+export default [
+  '$scope', '$state', '$urlRouter', 'AdminService', 'store',
+  'LoadingSpinner', 'commonModals', 'companyId',
+  function($scope, $state, $urlRouter, AdminService, store,
   LoadingSpinner, commonModals, companyId) {
   $scope.company = {};
   $scope.AdminService = AdminService;
@@ -53,5 +56,4 @@ export default function($scope, $state, $urlRouter, AdminService, store,
       commonModals.alert(_.get(err, 'data.message'))
     })
   }
-
-}
+}]

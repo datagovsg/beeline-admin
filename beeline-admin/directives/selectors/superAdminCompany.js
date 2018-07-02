@@ -1,6 +1,8 @@
 import {sortBy} from 'lodash'
 
-export default function($http, AdminService, store, jwtHelper, $stateParams, $state) {
+export default [
+  '$http', 'AdminService', 'store', 'jwtHelper', '$stateParams', '$state',
+  function($http, AdminService, store, jwtHelper, $stateParams, $state) {
   return {
     replace: true,
     template: `
@@ -12,7 +14,7 @@ export default function($http, AdminService, store, jwtHelper, $stateParams, $st
   <option value="">(All)</option>
 </select>
     `,
-    controller($scope) {
+    controller: ['$scope', function ($scope) {
       // Get a list of companies you work for
       $scope.availableCompanies = [];
       $scope.adminService = AdminService;
@@ -35,6 +37,6 @@ export default function($http, AdminService, store, jwtHelper, $stateParams, $st
         console.log(session)
         $scope.availableCompanies = session.transportCompanies.map(({name, id}) => ({name, id}))
       });
-    },
+    }],
   }
-}
+}]

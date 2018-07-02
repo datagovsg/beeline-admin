@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 angular.module('beeline-admin')
-.directive('routeSelect2', function (RoutesService) {
+.directive('routeSelect2', ['RoutesService', function (RoutesService) {
   let allRoutes = [];
 
   RoutesService.getRoutes().then((routes) => {
@@ -39,7 +39,7 @@ angular.module('beeline-admin')
         </ui-select-no-choice>
       </ui-select>
     `,
-    controller($scope) {
+    controller: ['$scope', function ($scope) {
       $scope.disp = {
         filteredRoutes: [{id: false, name: '---'}],
         ngModel: $scope.ngModel
@@ -79,6 +79,6 @@ angular.module('beeline-admin')
       $scope.$watch(() => allRoutes, (routes) => {
         $scope.filterBy('')
       })
-    }
+    }]
   }
-})
+}])

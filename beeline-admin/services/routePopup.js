@@ -1,25 +1,10 @@
 import stopsPopupTemplate from '../templates/routePopup.html'
 import leftPad from 'left-pad'
 
-export default function ($uibModal, $rootScope) {
-  /* Create the modal */
-
-  this.show = function (options) {
-    return new Promise((resolve, reject) => {
-      var scope;
-      var inst = $uibModal.open({
-        keyboard: false,
-        template: stopsPopupTemplate,
-        controller: RoutePopupController,
-        scope: scope = $rootScope.$new()
-      })
-      scope.options = options;
-      inst.closed.then(() => scope.$destroy());
-    })
-  }
-}
-
-function RoutePopupController($scope, RoutesService, $uibModalInstance,
+const RoutePopupcontroller = [
+  '$scope', 'RoutesService', '$uibModalInstance',
+  'uiGmapGoogleMapApi', 'mapService', 'TripsService',
+  function ($scope, RoutesService, $uibModalInstance,
   uiGmapGoogleMapApi, mapService, TripsService) {
   $scope.newStop = {}
   $scope.map = mapService.defaultMapOptions({
@@ -193,4 +178,22 @@ function RoutePopupController($scope, RoutesService, $uibModalInstance,
     $scope.map.center = {latitude: 1.38, longitude: 103.8}
     $scope.map.zoom = 10;
   }, 1000)
-} /* Controller */
+}] /* Controller */
+
+export default ['$uibModal', '$rootScope', function ($uibModal, $rootScope) {
+  /* Create the modal */
+
+  this.show = function (options) {
+    return new Promise((resolve, reject) => {
+      var scope;
+      var inst = $uibModal.open({
+        keyboard: false,
+        template: stopsPopupTemplate,
+        controller: RoutePopupController,
+        scope: scope = $rootScope.$new()
+      })
+      scope.options = options;
+      inst.closed.then(() => scope.$destroy());
+    })
+  }
+}]

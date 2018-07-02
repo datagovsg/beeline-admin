@@ -1,4 +1,4 @@
-export default function (uiGmapGoogleMapApi) {
+export default ['uiGmapGoogleMapApi', function (uiGmapGoogleMapApi) {
   return {
     template: `
 <!-- Route ping -->
@@ -72,4 +72,4 @@ export default function (uiGmapGoogleMapApi) {
       })
     }
   }
-}
+}]

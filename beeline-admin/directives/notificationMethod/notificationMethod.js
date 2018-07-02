@@ -1,4 +1,7 @@
-export default function ($rootScope, $location, uiGmapGoogleMapApi, $q,
+export default [
+  '$rootScope', '$location', 'uiGmapGoogleMapApi', '$q',
+  'RoutesService',
+  function ($rootScope, $location, uiGmapGoogleMapApi, $q,
   RoutesService) {
   return {
     template: `
@@ -45,4 +48,4 @@ export default function ($rootScope, $location, uiGmapGoogleMapApi, $q,
       ]
     }
   }
-}
+}]

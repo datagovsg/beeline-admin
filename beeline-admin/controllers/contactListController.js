@@ -1,7 +1,10 @@
 const _ = require('lodash');
 
 angular.module('beeline-admin')
-.controller('contactListController', function($scope, $state, $stateParams,
+.controller('contactListController', [
+  '$scope', '$state', '$stateParams',
+  '$urlRouter', 'AdminService', 'store', 'LoadingSpinner', 'commonModals', 'companyId',
+  function($scope, $state, $stateParams,
   $urlRouter, AdminService, store, LoadingSpinner, commonModals, companyId) {
     // Fetch the promo codes by company
 
@@ -54,4 +57,4 @@ angular.module('beeline-admin')
         emails: contactList.emails.join('\n')
       }
     }
-});
+}]);

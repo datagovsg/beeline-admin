@@ -1,6 +1,8 @@
 import assert from 'assert';
 
-export default function(AdminService, RoutesService, $rootScope, LoadingSpinner) {
+export default [
+  'AdminService', 'RoutesService', '$rootScope', 'LoadingSpinner',
+  function(AdminService, RoutesService, $rootScope, LoadingSpinner) {
 
   return {
     transclude: true,
@@ -155,4 +157,4 @@ export default function(AdminService, RoutesService, $rootScope, LoadingSpinner)
       })
     },
   }
-}
+}]

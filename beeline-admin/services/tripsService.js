@@ -2,7 +2,7 @@ import _ from 'lodash'
 import querystring from 'querystring'
 import assert from 'assert'
 
-export default function (AdminService, DriverService, $q) {
+export default ['AdminService', 'DriverService', '$q', function (AdminService, DriverService, $q) {
   /**
     @param options
       @prop routeId
@@ -80,4 +80,4 @@ export default function (AdminService, DriverService, $q) {
       return response.data;
     })
   }
-}
+}]

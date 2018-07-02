@@ -1,6 +1,8 @@
 
 angular.module('beeline-admin')
-.directive('routePassHistoryViewer', function (AdminService, commonModals, $q) {
+.directive('routePassHistoryViewer', [
+  'AdminService', 'commonModals', '$q',
+  function (AdminService, commonModals, $q) {
   return {
     restrict: 'E',
     scope: {
@@ -10,7 +12,7 @@ angular.module('beeline-admin')
       finalBalance: '<',
     },
     template: require('./routePassHistoryViewer.html'),
-    controller($scope) {
+    controller: ['$scope', function ($scope) {
       $scope.$watchGroup(['userId', 'companyId', 'tag', 'finalBalance'], () => {
         $scope.reset()
       })
@@ -68,6 +70,6 @@ angular.module('beeline-admin')
       }
 
       $scope.reset()
-    }
+    }]
   }
-})
+}])

@@ -1,25 +1,8 @@
 import _ from 'lodash';
 const bookingRefundTemplate = require('./bookingRefund.html');
 
-export default function ($uibModal, $rootScope) {
-  this.open = function (options) {
-    var modalScope = $rootScope.$new();
-    modalScope.cancelledTickets = options.cancelledTickets || [];
-    modalScope.issuedTickets = options.issuedTickets || [];
-    modalScope.selectedTicket = options.selectedTicket || {};
-
-    var modalOptions = {
-      controller: BookingRefundController,
-      template: bookingRefundTemplate,
-      scope: modalScope,
-      windowClass: 'full-width',
-    };
-
-    $uibModal.open(modalOptions);
-  }
-}
-
-function BookingRefundController($scope, LoadingSpinner, RoutesService, AdminService) {
+const BookingRefundcontroller = ['$scope', 'LoadingSpinner', 'RoutesService', 'AdminService',
+  function ($scope, LoadingSpinner, RoutesService, AdminService) {
   var lastId = 1;
 
   // The selected ticket in the issue list
@@ -92,6 +75,23 @@ function BookingRefundController($scope, LoadingSpinner, RoutesService, AdminSer
     $scope.availableUsers = _.uniqBy($scope.availableUsers, u => u.id)
     $scope.availableUsersById = _.keyBy($scope.availableUsers, u => u.id)
   })
+}]
 
+export default ['$uibModal', '$rootScope', function ($uibModal, $rootScope) {
+  this.open = function (options) {
+    var modalScope = $rootScope.$new();
+    modalScope.cancelledTickets = options.cancelledTickets || [];
+    modalScope.issuedTickets = options.issuedTickets || [];
+    modalScope.selectedTicket = options.selectedTicket || {};
 
-}
+    var modalOptions = {
+      controller: BookingRefundController,
+      template: bookingRefundTemplate,
+      scope: modalScope,
+      windowClass: 'full-width',
+    };
+
+    $uibModal.open(modalOptions);
+  }
+}]
+

@@ -1,6 +1,8 @@
 import querystring from 'querystring'
 
-export default function($scope, AdminService, RoutesService, LoadingSpinner) {
+export default [
+  '$scope', 'AdminService', 'RoutesService', 'LoadingSpinner',
+  function($scope, AdminService, RoutesService, LoadingSpinner) {
   $scope.tickets = [];
   $scope.currentPage = 1;
 
@@ -98,4 +100,4 @@ export default function($scope, AdminService, RoutesService, LoadingSpinner) {
   $scope.$watchGroup(['currentPage', 'perPage'], query)
   $scope.$watch('filter', query, true)
   $scope.$watch('filter.date', queryRoutes, true)
-}
+}]

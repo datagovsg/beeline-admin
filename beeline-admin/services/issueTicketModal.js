@@ -1,38 +1,9 @@
 const issueTicketTemplate = require('../templates/issueTicket.html');
 import leftPad from 'left-pad';
 
-export default function ($rootScope, $uibModal) {
-  this.open = function (options) {
-    var modalScope = $rootScope.$new();
-
-    modalScope.data = {
-      routeId: options.routeId,
-      boardStopId: options.boardStopStopId,
-      alightStopId: options.alightStopStopId,
-      cancelledTickets: options.cancelledTickets,
-      users: options.users,
-    };
-
-    var modalOptions = {
-      controller: IssueTicketController,
-      template: issueTicketTemplate,
-      scope: modalScope,
-      windowClass: 'full-width',
-      backdrop: 'static',
-      keyboard: false,
-    };
-
-    var modal = $uibModal.open(modalOptions);
-    modal.result.then(() => {
-      modalScope.$destroy();
-    }, () => {
-      modalScope.$destroy();
-    })
-    return modal.result;
-  }
-}
-
-function IssueTicketController($scope, AdminService, LoadingSpinner, commonModals) {
+const IssueTicketcontroller = [
+  '$scope', 'AdminService', 'LoadingSpinner', 'commonModals',
+  function ($scope, AdminService, LoadingSpinner, commonModals) {
   // Display functions
   // Get routes
   function formatTime(tm) {
@@ -171,6 +142,35 @@ function IssueTicketController($scope, AdminService, LoadingSpinner, commonModal
       .mapValues(([tid, passengers]) => passengers)
       .value();
   }
+}]
 
+export default ['$rootScope', '$uibModal', function ($rootScope, $uibModal) {
+  this.open = function (options) {
+    var modalScope = $rootScope.$new();
 
-}
+    modalScope.data = {
+      routeId: options.routeId,
+      boardStopId: options.boardStopStopId,
+      alightStopId: options.alightStopStopId,
+      cancelledTickets: options.cancelledTickets,
+      users: options.users,
+    };
+
+    var modalOptions = {
+      controller: IssueTicketController,
+      template: issueTicketTemplate,
+      scope: modalScope,
+      windowClass: 'full-width',
+      backdrop: 'static',
+      keyboard: false,
+    };
+
+    var modal = $uibModal.open(modalOptions);
+    modal.result.then(() => {
+      modalScope.$destroy();
+    }, () => {
+      modalScope.$destroy();
+    })
+    return modal.result;
+  }
+}]

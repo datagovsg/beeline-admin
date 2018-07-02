@@ -4,13 +4,14 @@ const leftPad = require('left-pad');
 const querystring = require('querystring');
 
 angular.module('beeline-admin')
-.directive('crowdstartEditor', function (LoadingSpinner) {
+.directive('crowdstartEditor', ['LoadingSpinner', function (LoadingSpinner) {
   return {
     template: require('./crowdstartEditor.html'),
     scope: {
       route: '='
     },
-    controller($scope, TripsService, AdminService, commonModals) {
+    controller: ['$scope', 'TripsService', 'AdminService', 'commonModals',
+    function ($scope, TripsService, AdminService, commonModals) {
       $scope.disp = {};
       $scope.$watch('route', requery)
 
@@ -140,6 +141,6 @@ angular.module('beeline-admin')
           $scope.bids = response.data;
         });
       } /* function requery (r) */
-    }
+    }]
   }
-})
+}])

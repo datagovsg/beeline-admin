@@ -2,7 +2,10 @@ import querystring from 'querystring'
 import assert from 'assert';
 import _ from 'lodash';
 
-angular.module('beeline-admin').controller('CrowdstartSummaryCtrl',
+angular.module('beeline-admin').controller('CrowdstartSummaryCtrl', [
+  '$scope', 'AdminService', 'RoutesService', 'LoadingSpinner',
+  '$state', '$stateParams', 'issueTicketModal', 'commonModals', 'companyId',
+  RoutePopup,
 function($scope, AdminService, RoutesService, LoadingSpinner,
   $state, $stateParams, issueTicketModal, commonModals, companyId,
   RoutePopup) {
@@ -51,7 +54,7 @@ function($scope, AdminService, RoutesService, LoadingSpinner,
     })
     $scope.routes = transformed
   })
-});
+}]);
 
 function transformTiers(bids, tiers) {
   // Brute force calculation because the scale should be small

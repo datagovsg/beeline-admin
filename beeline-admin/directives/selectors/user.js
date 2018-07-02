@@ -1,6 +1,6 @@
 import querystring from 'querystring';
 
-export default function (AdminService) {
+export default ['AdminService', function (AdminService) {
   return {
     template: `
 <ui-select ng-model="data.user">
@@ -32,7 +32,7 @@ export default function (AdminService) {
       user: '<initialUser',
       includeEphemeral: '<includeEphemeral'
     },
-    controller($scope) {
+    controller: ['$scope', function ($scope) {
       var displayUser =
         $scope.user ? $scope.user
         : $scope.ngModel ? {id: $scope.ngModel, name: `(User #${$scope.ngModel})`}
@@ -65,6 +65,6 @@ export default function (AdminService) {
         });
         lastPromise = promise;
       }
-    }
+    }]
   }
-}
+}]

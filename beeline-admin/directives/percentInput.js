@@ -20,12 +20,12 @@ angular.module('beeline-admin')
       ngStyle: '<',
       /* and any other attributes you may need */
     },
-    controller($scope) {
+    controller: ['$scope', function ($scope) {
       $scope.$watch('ngModel', model => $scope.localModel = model * 100)
 
       $scope.updateModel = function () {
         $scope.ngModel = parseFloat($scope.localModel) / 100
       }
-    }
+    }]
   }
 })

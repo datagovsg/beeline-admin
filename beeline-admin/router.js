@@ -1,6 +1,8 @@
 
 angular.module('beeline-admin')
-.config(function ($stateProvider, $urlRouterProvider, authProvider, $locationProvider) {
+.config([
+  '$stateProvider', '$urlRouterProvider', 'authProvider', '$locationProvider',
+  function ($stateProvider, $urlRouterProvider, authProvider, $locationProvider) {
   $locationProvider.hashPrefix('')
 
 
@@ -203,7 +205,7 @@ angular.module('beeline-admin')
   })
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise(function ($injector, $location) {
+  $urlRouterProvider.otherwise(['$injector', '$location', function ($injector, $location) {
     const auth = $injector.get('auth')
 
     function redirect() {
@@ -225,5 +227,5 @@ angular.module('beeline-admin')
         */
       })
     }
-  });
-})
+  }]);
+}])

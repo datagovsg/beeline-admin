@@ -1,5 +1,5 @@
 
-export default function($http) {
+export default ['$http', function($http) {
   return {
     template: `<img ng-src="{{backend}}/companies/{{companyId}}/logo" />`,
     replace: true,
@@ -10,4 +10,4 @@ export default function($http) {
       scope.backend = process.env.BACKEND_URL;
     },
   }
-}
+}]

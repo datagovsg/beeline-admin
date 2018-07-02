@@ -1,5 +1,5 @@
 
-export default function($http) {
+export default ['$http', function($http) {
   return {
     template: `
 <select
@@ -16,4 +16,4 @@ export default function($http) {
       ];
     },
   }
-}
+}]

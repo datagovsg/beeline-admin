@@ -1,6 +1,6 @@
 
 
-export default function(AdminService, auth) {
+export default ['AdminService', 'auth', function(AdminService, auth) {
   return {
     replace: true,
     template: require('./adminNav.html'),
@@ -9,4 +9,4 @@ export default function(AdminService, auth) {
       scope.auth = auth;
     }
   }
-}
+}]

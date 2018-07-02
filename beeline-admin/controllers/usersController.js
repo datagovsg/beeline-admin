@@ -2,7 +2,11 @@ import assert from 'assert';
 import _ from 'lodash';
 
 angular.module('beeline-admin')
-  .controller('usersController', function ($scope, AdminService, RoutesService,
+  .controller('usersController', [
+    '$scope', 'AdminService', 'RoutesService',
+    'LoadingSpinner', '$state', '$stateParams', 'issueRouteCreditsModal',
+    'expireRouteCreditsModal', 'commonModals', '$uibModal', 'companyId',
+    function ($scope, AdminService, RoutesService,
     LoadingSpinner, $state, $stateParams, issueRouteCreditsModal,
     expireRouteCreditsModal, commonModals, $uibModal, companyId) {
 
@@ -190,5 +194,4 @@ angular.module('beeline-admin')
       $scope.$apply()
     })
   }
-
-})
+}])

@@ -1,6 +1,6 @@
 import assert from 'assert';
 
-export default function(AdminService) {
+export default ['AdminService', function(AdminService) {
   return {
     scope: {
       tripId: '<',
@@ -22,4 +22,4 @@ export default function(AdminService) {
       })
     }
   }
-}
+}]

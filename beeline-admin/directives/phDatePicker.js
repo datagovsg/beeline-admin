@@ -4,7 +4,7 @@ import _ from 'lodash';
   Extends the multiple-date-picker to support span select.
 */
 
-export default function (AdminService) {
+export default ['AdminService', function (AdminService) {
   return {
     restrict: 'A',
     link(scope, elem, attr) {
@@ -22,4 +22,4 @@ export default function (AdminService) {
         })
     }
   }
-}
+}]
