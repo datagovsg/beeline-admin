@@ -97,9 +97,6 @@ const jsBundle = {
     filename: 'bundle.js',
     pathinfo: true,
   },
-  // externals: {
-  //   'lodash': '_'
-  // },
   plugins: [
     new VueLoaderPlugin(),
     new InlineEnviromentVariablesPlugin(env)
