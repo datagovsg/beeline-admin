@@ -2,7 +2,9 @@ import querystring from 'querystring';
 import _ from 'lodash';
 import assert from 'assert';
 
-export default function ($scope, AdminService, LoadingSpinner, commonModals, companyId) {
+export default [
+  '$scope', 'AdminService', 'LoadingSpinner', 'commonModals', 'companyId',
+  function ($scope, AdminService, LoadingSpinner, commonModals, companyId) {
   requery();
 
   ////// Data declarations
@@ -177,7 +179,7 @@ export default function ($scope, AdminService, LoadingSpinner, commonModals, com
       }
     }
   }
-}
+}]
 
 const events = {
   newBooking: {

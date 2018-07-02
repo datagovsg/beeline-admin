@@ -1,5 +1,5 @@
 
-export default function(RoutesService) {
+export default ['RoutesService', function(RoutesService) {
   return {
     template: `
 <ui-select ng-model="data.stop" on-select="updateModel()">
@@ -53,4 +53,4 @@ export default function(RoutesService) {
       })
     },
   }
-}
+}]

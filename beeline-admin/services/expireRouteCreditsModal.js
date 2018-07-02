@@ -3,7 +3,10 @@ import leftPad from 'left-pad';
 
 angular.module('beeline-admin')
 .service('expireRouteCreditsModal',
-function ($rootScope, $uibModal, AdminService, TagsService,
+[
+  '$rootScope', '$uibModal', 'AdminService', 'TagsService',
+  'commonModals', 'LoadingSpinner', 'uibModalPromise',
+  function ($rootScope, $uibModal, AdminService, TagsService,
           commonModals, LoadingSpinner, uibModalPromise) {
   this.showExpireModal = function (context) {
     const tags = TagsService.getTags(context.route.tags)
@@ -43,4 +46,4 @@ function ($rootScope, $uibModal, AdminService, TagsService,
       })
     }
   }
-})
+}])

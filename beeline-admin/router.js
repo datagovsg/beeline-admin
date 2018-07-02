@@ -1,6 +1,8 @@
 
 angular.module('beeline-admin')
-.config(function ($stateProvider, $urlRouterProvider, authProvider, $locationProvider) {
+.config([
+  '$stateProvider', '$urlRouterProvider', 'authProvider', '$locationProvider',
+  function ($stateProvider, $urlRouterProvider, authProvider, $locationProvider) {
   $locationProvider.hashPrefix('')
 
 
@@ -226,4 +228,4 @@ angular.module('beeline-admin')
       })
     }
   });
-})
+}])

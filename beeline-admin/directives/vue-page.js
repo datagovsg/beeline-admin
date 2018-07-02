@@ -27,7 +27,7 @@ Vue.component('ModalHelper', require('../components/ModalHelper'))
 Vue.component('LoadingSpinner', require('../../beeline-admin/components/LoadingSpinner.vue').default)
 
 angular.module('beeline-admin')
-.directive('vuePage', function (vueStore, uiGmapGoogleMapApi) {
+.directive('vuePage', ['vueStore', 'uiGmapGoogleMapApi', function (vueStore, uiGmapGoogleMapApi) {
 
   uiGmapGoogleMapApi.then((googleMaps) => {
     window.vueGoogleMapsInit(googleMaps)
@@ -59,4 +59,4 @@ angular.module('beeline-admin')
       })
     }
   }
-})
+}])

@@ -1,9 +1,17 @@
 const issueRouteCreditsTemplate = require('../templates/issueRouteCreditsModal.html');
-import leftPad from 'left-pad';
+
+const IssueRouteCreditscontroller = ['$scope', function ($scope) {
+  $scope.$watch('data.numPasses', () => {
+    $scope.data.creditAmt = Math.round($scope.data.numPasses * $scope.data.price * 100) / 100
+  })
+}]
 
 angular.module('beeline-admin')
 .service('issueRouteCreditsModal',
-function ($rootScope, $uibModal, AdminService, TagsService,
+[
+  '$rootScope', '$uibModal', 'AdminService', 'TagsService',
+  'commonModals', 'LoadingSpinner', 'uibModalPromise',
+  function ($rootScope, $uibModal, AdminService, TagsService,
           commonModals, LoadingSpinner, uibModalPromise) {
   this.issueOn = function (context) {
     if (context.tag && TagsService.getTags([context.tag]).length == 0) {
@@ -88,10 +96,4 @@ function ($rootScope, $uibModal, AdminService, TagsService,
       return false
     }
   }
-})
-
-function IssueRouteCreditsController($scope) {
-  $scope.$watch('data.numPasses', () => {
-    $scope.data.creditAmt = Math.round($scope.data.numPasses * $scope.data.price * 100) / 100
-  })
-}
+}])

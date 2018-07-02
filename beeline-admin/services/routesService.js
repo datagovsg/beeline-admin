@@ -2,7 +2,7 @@ import _ from 'lodash'
 import querystring from 'querystring'
 import assert from 'assert'
 
-export default function (AdminService, DriverService, $q, LoadingSpinner) {
+export default ['AdminService', 'DriverService', '$q', 'LoadingSpinner', function (AdminService, DriverService, $q, LoadingSpinner) {
 
   var routesPromiseCache = null, currentRoutesPromiseCache = null;
   var routesById = null;
@@ -214,4 +214,4 @@ export default function (AdminService, DriverService, $q, LoadingSpinner) {
     })
   }
 
-}
+}]

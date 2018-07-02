@@ -1,7 +1,9 @@
 import assert from 'assert'
 import {sortBy} from 'lodash'
 
-export default function ($http, $rootScope, $location, store, jwtHelper, auth, commonModals) {
+export default [
+  '$http', '$rootScope', '$location', 'store', 'jwtHelper', 'auth', 'commonModals',
+  function ($http, $rootScope, $location, store, jwtHelper, auth, commonModals) {
   ////////////////////// Public fields
   this.session = null
 
@@ -112,4 +114,4 @@ export default function ($http, $rootScope, $location, store, jwtHelper, auth, c
   this.getCompanyId = function() {
     return this.actingCompany || null;
   }
-}
+}]

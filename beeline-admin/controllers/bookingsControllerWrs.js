@@ -4,9 +4,11 @@ import _ from 'lodash';
 const pickOneModalTemplate = require('../templates/modals/pickOne.html')
 
 angular.module('beeline-admin')
-.controller('bookingsWrs', function($scope, AdminService, RoutesService, LoadingSpinner, TagsService,
-  $state, $stateParams, issueTicketModal, commonModals, $uibModal,
-  companyId) {
+.controller('bookingsWrs', [
+  '$scope', 'AdminService', 'RoutesService', 'LoadingSpinner', 'TagsService',
+  '$state', '$stateParams', 'issueTicketModal', 'commonModals', '$uibModal', 'companyId',
+  function($scope, AdminService, RoutesService, LoadingSpinner, TagsService,
+  $state, $stateParams, issueTicketModal, commonModals, $uibModal, companyId) {
   $scope.tickets = [];
   $scope.currentPage = 1;
 
@@ -382,4 +384,4 @@ angular.module('beeline-admin')
       $scope.currentPage,
       $scope.perPage],
     _.debounce(query, 1000, {leading: false, trailing: true}), true)
-})
+}])

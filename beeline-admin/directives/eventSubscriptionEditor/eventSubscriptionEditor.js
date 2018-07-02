@@ -11,7 +11,10 @@ function formatTime(tm) {
   return `${leftPad(hours)}:${leftPad(minutes, 2, '0')}`
 }
 
-export default function ($rootScope, $location, uiGmapGoogleMapApi, $q,
+export default [
+  '$rootScope', '$location', 'uiGmapGoogleMapApi', '$q',
+  'RoutesService', 'AdminService',
+  function ($rootScope, $location, uiGmapGoogleMapApi, $q,
   RoutesService, AdminService) {
   return {
     template: require('./eventSubscriptionEditor.html'),
@@ -97,4 +100,4 @@ export default function ($rootScope, $location, uiGmapGoogleMapApi, $q,
         `${route.label}: ${route.from} to ${route.to} (${formatTime(route.indicativeTrip && (route.indicativeTrip.nextStartTime || route.indicativeTrip.lastStartTime))})`
     }
   }
-}
+}]

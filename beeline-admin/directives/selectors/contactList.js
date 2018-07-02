@@ -1,6 +1,8 @@
 
 angular.module('beeline-admin')
-.directive('contactListSelector', function($http, AdminService, $rootScope) {
+.directive('contactListSelector', [
+  '$http', 'AdminService', '$rootScope',
+  function($http, AdminService, $rootScope) {
 
   let contactLists = []
 
@@ -27,8 +29,8 @@ angular.module('beeline-admin')
 </select>
     `,
     replace: true,
-    controller($scope) {
+    controller: ['$scope', function ($scope) {
       $scope.contactLists = () => contactLists
-    },
+    }],
   }
-})
+}])

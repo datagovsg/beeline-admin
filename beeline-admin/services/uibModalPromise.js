@@ -17,7 +17,7 @@
   *
   **/
 angular.module('beeline-admin')
-.service('uibModalPromise', function ($uibModal, $rootScope) {
+.service('uibModalPromise', ['$uibModal', '$rootScope', function ($uibModal, $rootScope) {
 
   this.openModal = function (options) {
     // format contextual data
@@ -34,4 +34,4 @@ angular.module('beeline-admin')
 
     return modal.result
   }
-})
+}])

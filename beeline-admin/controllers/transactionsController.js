@@ -1,6 +1,9 @@
 import querystring from 'querystring'
 
-export default function($scope, $state, $stateParams, $http, AdminService,
+export default [
+  '$scope', '$state', '$stateParams', '$http', 'AdminService',
+    'LoadingSpinner', 'companyId',
+  function($scope, $state, $stateParams, $http, AdminService,
     LoadingSpinner, companyId) {
   $scope.transactions = [];
   $scope.companyId = companyId;
@@ -155,4 +158,4 @@ export default function($scope, $state, $stateParams, $http, AdminService,
   }
 
   $scope.$watch('filter', query, true)
-}
+}]

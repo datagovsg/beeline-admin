@@ -1,6 +1,8 @@
 import stopsPopupTemplate from '../templates/stopsPopup.html'
 
-export default function (RoutesService, $uibModal, mapService) {
+export default [
+  'RoutesService', '$uibModal', 'mapService',
+  function (RoutesService, $uibModal, mapService) {
   /* Create the modal */
 
   this.show = function (options) {
@@ -110,4 +112,4 @@ export default function (RoutesService, $uibModal, mapService) {
       })
     })
   }
-}
+}]

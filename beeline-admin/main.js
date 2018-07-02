@@ -31,6 +31,20 @@ require('./directives/routePassHistoryViewer/routePassHistoryViewer')
 require('./auth0')
 require('./router')
 
+const configureGoogleMaps = ['uiGmapGoogleMapApiProvider', function (uiGmapGoogleMapApiProvider) {
+  uiGmapGoogleMapApiProvider.configure({
+    key: 'AIzaSyBkFH42PlbFrsfdAnjw37qMLAxjhkMT-54',
+    libraries: 'geometry',
+  })
+}]
+
+const configureUrlWhitelist = ['$sceDelegateProvider', function ($sceDelegateProvider) {
+  $sceDelegateProvider.resourceUrlWhitelist([
+    'self',
+    process.env.BACKEND_URL + '/**'
+  ])
+}]
+
 angular.module('beeline-admin')
 .config(configureGoogleMaps)
 .config(configureUrlWhitelist)
@@ -70,17 +84,18 @@ angular.module('beeline-admin')
 .service('TagsService', require('./services/tagsService').default)
 .controller('transactions', require('./controllers/transactionsController.js').default)
 .controller('trips', require('./controllers/tripsController.js').default)
-.controller('bookings', require('./controllers/bookingsController.js').default)
 .controller('companies', require('./controllers/companiesController.js').default)
 .controller('notifications', require('./controllers/notificationsController.js').default)
 .filter('makeRoutePath', require('./shared/filters.js').makeRoutePath)
 .filter('intervalToTime', require('./shared/filters.js').intervalToTime)
 .filter('leftPad', () => require('left-pad'))
-.run(function ($rootScope, auth, store, $cookies, AdminService, jwtHelper, $state,
-               commonModals) {
+.run([
+  '$rootScope', 'auth', 'store', '$cookies', 'AdminService', 'jwtHelper', '$state', 'commonModals',
+  function ($rootScope, auth, store, $cookies, AdminService, jwtHelper, $state, commonModals) {
   let initialized = false
 
-  $rootScope.$on('$stateChangeStart', function($event, newState, newParams, oldState, oldParams) {
+  $rootScope.$on('$stateChangeStart',
+    function($event, newState, newParams, oldState, oldParams) {
     // We pause the state change when
     // 1. Auth is not yet initialized. Initialization comprises two steps:
     //    a) Fetching the domain & CID
@@ -186,18 +201,4 @@ angular.module('beeline-admin')
       return Promise.reject(null)
     }
   }
-})
-
-function configureGoogleMaps(uiGmapGoogleMapApiProvider) {
-  uiGmapGoogleMapApiProvider.configure({
-    key: 'AIzaSyBkFH42PlbFrsfdAnjw37qMLAxjhkMT-54',
-    libraries: 'geometry',
-  })
-}
-
-function configureUrlWhitelist($sceDelegateProvider) {
-  $sceDelegateProvider.resourceUrlWhitelist([
-    'self',
-    process.env.BACKEND_URL + '/**'
-  ])
-}
+}])
