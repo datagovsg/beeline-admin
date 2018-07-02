@@ -302,6 +302,11 @@ describe('IssueTicket.vue', () => {
       expect(issueTicketResult.trips.filter(t => t.userId === userId)[1].boardStopId).toBe(20101)
       expect(issueTicketResult.trips.filter(t => t.userId === userId)[1].alightStopId).toBe(20104)
     }
+    expect(issueTicketResult.trips.length).toBe(4)
+    expect(typeof issueTicketResult.description).toBe('string')
+    expect(issueTicketResult.cancelledTicketIds.length).toBe(2)
+    expect(issueTicketResult.cancelledTicketIds).toContain(500)
+    expect(issueTicketResult.cancelledTicketIds).toContain(501)
   })
 
   it('should detect conflicts', async () => {
