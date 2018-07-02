@@ -28,7 +28,7 @@ module.exports = function (config) {
       plugins: (webpackConfig.plugins || []).concat(
         new webpack.ContextReplacementPlugin(/\.\/specs/, function (result) {
           if (result.request === './specs') {
-            result.regExp = new RegExp('.*' + config.grep + '.*\.spec$')
+            result.regExp = new RegExp('.*' + config.grep + '.*\\.spec$')
           }
       }))
     },

@@ -133,9 +133,9 @@
                   <UserIdSelector v-model="user.id" :value="user" :includeEphemeral="true" />
                   <div class="conflicts" v-if="conflictsByUid[user.id]">
                     This user already has a trip on
-                    <span v-for="conflict in conflictsByUid[user.id]">
-                      {{$index ? ',' : ''}}
-                      {{f.date(disp.tripsById[conflict.tripId].date, 'dd mmm yy')}}
+                    <span v-for="(conflict, conflictIndex) in conflictsByUid[user.id]" :key="conflict.user.id">
+                      {{conflictIndex ? ',' : ''}}
+                      {{f.date(conflict.trip.date, 'dd mmm yyyy')}}
                     </span>
                   </div>
                 </td>
@@ -232,9 +232,18 @@ export default {
       }
 
       const conflicts = this.data.users.map(user => // For each user
-        this.disp.tripsInMonth.filter(trip => // Find the trips that...
-          this.passengersByTripId[trip.id] && // already contain a ticket for this user
-          this.passengersByTripId[trip.id].find(ticket => ticket.userId === user.id))
+        this.selectedTrips
+          .map(trip => {
+            // Find the trips that...
+            const conflictingTicket = this.passengersByTripId[trip.id] && // already contain a ticket for this user
+              this.passengersByTripId[trip.id].find(ticket => ticket.userId === user.id)
+            return {
+              ticket: conflictingTicket,
+              trip,
+              user,
+            }
+          })
+          .filter(c => c.ticket)
       )
 
       return _(_.zip(conflicts, this.data.users))
@@ -244,16 +253,20 @@ export default {
         .value()
     },
 
-    stopsAvailable () {
+    selectedTrips () {
       if (!this.data.selectedDates || this.data.selectedDates.length === 0)
         return []
 
-      const trips = this.data.selectedDates.map(date =>
+      return this.data.selectedDates.map(date =>
         this.disp.tripsInMonth
           .find(trip => new Date(trip.date).getTime() === date.getTime())
       )
+    },
 
-      const commonSubsetOfStops = trips.reduce(
+    stopsAvailable () {
+      if (this.selectedTrips.length === 0) return []
+
+      const commonSubsetOfStops = this.selectedTrips.reduce(
         (acc, trip) => {
           return _.intersectionBy(
             acc,
@@ -261,7 +274,7 @@ export default {
             ts => `${ts.stopId};${ts.time.getHours()};${ts.time.getMinutes()}`
           )
         },
-        trips[0].tripStops
+        this.selectedTrips[0].tripStops
       )
 
       return commonSubsetOfStops
@@ -323,6 +336,27 @@ export default {
       handler (v) {
         this.data.selectedDates = []
         this.updateCalendarTrips(new Date)
+      }
+    },
+
+    /**
+     * If there are new trips, fetch the data and add them to passengersByTripId
+     */
+    'selectedTrips' (trips) {
+      for (let trip of trips) {
+        if (!(trip.id in this.passengersByTripId)) {
+          this.passengersByTripId = {
+            ...this.passengersByTripId,
+            [trip.id]: null, // set to null, reserve the space so it's not fetched twice
+          }
+
+          // fetch the data
+          this.axios.get(`/trips/${trip.id}/passengers`)
+          .then((response) => {
+            this.passengersByTripId[trip.id] = response.data
+          })
+          .catch(() => { /* Don't handle errors -- server will handle them during submission */ })
+        }
       }
     }
   },

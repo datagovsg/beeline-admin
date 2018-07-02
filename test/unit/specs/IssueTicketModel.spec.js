@@ -104,6 +104,23 @@ describe('IssueTicket.vue', () => {
     ]
   }
 
+  const PASSENGER_LISTS = [
+    [
+      {
+        id: 99999,
+        userId: 3000,
+        email: 'user@example.com',
+        name: 'Testing',
+        telephone: '+6561234567',
+        ticketId: 1,
+        boardStopId: 2,
+        alightStopId: 3,
+        bsStopId: 4,
+        tripId: 10001
+      },
+    ]
+  ]
+
   async function initializeModalWithProps (props) {
     let modalLoaded = null
 
@@ -276,7 +293,6 @@ describe('IssueTicket.vue', () => {
     await delay(1)
 
     issueTicketResult = issueTicketModal.emitted().resolve[0][0]
-    console.log(issueTicketResult)
 
     for (let userId of [999, 998]) {
       expect(issueTicketResult.trips.filter(t => t.userId === userId)[0].tripId).toBe(10001)
@@ -287,7 +303,27 @@ describe('IssueTicket.vue', () => {
       expect(issueTicketResult.trips.filter(t => t.userId === userId)[1].alightStopId).toBe(20104)
     }
   })
+
   it('should detect conflicts', async () => {
-    throw new Error()
+    await initializeModalWithProps({users: [{id: 3000}]})
+
+    await mockAjax({
+      'GET /trips/10001/passengers': [200, PASSENGER_LISTS[0]],
+      'GET /trips/10002/passengers': [200, []]
+    }, async () => {
+      await clickOnDate(16)
+      expect(issueTicketModal.find('.user-text-wrap').text().replace(/\s+/g, ' '))
+        .toContain('This user already has a trip on 16 Jun 2018')
+
+      await clickOnDate(16)
+      expect(issueTicketModal.find('.user-text-wrap').text().replace(/\s+/g, ' ')
+        .includes('This user already has a trip on 16 Jun 2018')).toBeFalsy()
+
+      await clickOnDate(30)
+      expect(issueTicketModal.find('.user-text-wrap').text().replace(/\s+/g, ' ')
+        .includes('This user already has a trip on 16 Jun 2018')).toBeFalsy()
+      expect(issueTicketModal.find('.user-text-wrap').text().replace(/\s+/, ' ')
+        .includes('This user already has a trip on 30 Jun 2018')).toBeFalsy()
+    })
   })
 })
