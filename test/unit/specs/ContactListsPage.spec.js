@@ -1,10 +1,10 @@
-import ContactsListPage from '@/pages/contactLists.vue'
+import ContactsListPage from '@/pages/contact-lists.vue'
 import { mount } from '@vue/test-utils'
 import { delay, mockAjax, testStore } from '../util'
 import axios from 'axios'
 import sinon from 'sinon'
 
-describe('contactLists.vue', () => {
+describe('contact-lists.vue', () => {
   let contactListsPage = null
 
   beforeEach(async () => {
