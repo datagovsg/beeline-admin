@@ -178,12 +178,12 @@ describe('IssueTicket.vue', () => {
     }
   })
 
-  async function clickOnDate(i) {
+  async function clickOnDate (i) {
     const rows = issueTicketModal.findAll(`table.date-picker > tbody > tr > td:not(.different-month)`)
 
     expect(rows.length).toBe(30) // 30 days in June
 
-    rows.filter(r => r.text().trim() === `${i}`).trigger('click')
+    rows.filter(r => r.text().trim() === `${i}`).at(0).trigger('click')
     await delay(1)
   }
 
@@ -329,6 +329,19 @@ describe('IssueTicket.vue', () => {
         .includes('This user already has a trip on 16 Jun 2018')).toBeFalsy()
       expect(issueTicketModal.find('.user-text-wrap').text().replace(/\s+/, ' ')
         .includes('This user already has a trip on 30 Jun 2018')).toBeFalsy()
+    })
+  })
+
+  it('should cancel correctly', async () => {
+    await initializeModalWithProps({users: [{id: 3000}]})
+
+    await mockAjax({
+    }, async () => {
+      issueTicketModal.findAll('.btn').filter(s => s.text() === 'Cancel').at(0).trigger('click')
+      await delay(1)
+
+      expect(issueTicketModal.emitted().resolve).toBeFalsy
+      expect(issueTicketModal.emitted().reject.length).toBe(1)
     })
   })
 })

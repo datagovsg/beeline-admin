@@ -117,7 +117,7 @@
             <label class="control-label col-sm-2">Reason (Required)</label>
             <div class="col-sm-10">
               <textarea class="form-control"
-                v-model="reason"
+                v-model="data.reason"
                 placeholder="Reason for changing or editing tickets - e.g. Monthly pass, Cancelled trip on DD/MM/YY" />
               </div>
            </div>
@@ -201,6 +201,8 @@ export default {
         users: [],
         reason: '',
         routeId: null,
+        boardStopStopId: null,
+        alightStopStopId: null,
         selectedDates: [],
       },
 
@@ -215,11 +217,10 @@ export default {
     // Copy data into the 'data' structure
     this.data = {
       ...this.data,
-
       routeId: this.routeId,
       boardStopStopId: this.boardStopStopId,
       alightStopStopId: this.alightStopStopId,
-      users: [...(this.users || [])],
+      users: this.users ? this.users.slice() : [],
     }
   },
   computed: {

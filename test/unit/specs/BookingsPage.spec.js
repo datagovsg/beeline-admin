@@ -16,6 +16,7 @@ describe('bookings.vue', () => {
   beforeEach(async () => {
     MockDate.set(new Date(2018, 5, 15))
     bookingsPage = await mockAjax({
+      'GET /routes?startDate&includeTrips': [200, []],
       ['GET /custom/wrs/report?' + querystring.stringify({
         transportCompanyId: 33,
         tripStartDate: Date.UTC(2018, 5, 1),
@@ -35,11 +36,12 @@ describe('bookings.vue', () => {
       const bookingsPage = mount(
         BookingsPage,
         {
+          sync: false,
           propsData: {companyId: 33},
           store: testStore({})
         }
       )
-      await delay(10)
+      await delay(20)
       return bookingsPage
     })
   })
@@ -59,6 +61,34 @@ describe('bookings.vue', () => {
     }
   })
 
+  /**
+   * Submit the issue ticket modal, and check that the `issue_free` endpoint
+   * was called. Verify that the cancelledTicketIds are correct.
+   * @param {} routeId
+   * @param {*} ticketIds
+   */
+  async function checkCancelledTicketsOnModalSubmit (ticketIds) {
+    let called = false
+    await mockAjax({
+      'POST /transactions/tickets/issue_free': [
+        200,
+        {},
+        (request, response) => {
+          // We only check cursorily that the data has been
+          // passed from IssueTicket modal to the endpoint
+          // Detailed checks should be done at IssueTicketModal.spec.vue
+          expect(request.data.cancelledTicketIds)
+            .toEqual(ticketIds)
+          called = true
+        }
+      ]
+    }, async () => {
+      expect(bookingsPage.find('.modal-footer .btn.btn-primary').trigger('click'))
+      await delay(1)
+      expect(called).toBe(true)
+    })
+  }
+
   it('should open the issue ticket dialog when "edit" is clicked, and change tickets', async () => {
     const rows = bookingsPage.findAll(`table.transactions-view > tbody > tr`)
 
@@ -66,20 +96,33 @@ describe('bookings.vue', () => {
     await delay(1)
 
     expect(bookingsPage.find('.modal-body').isVisible()).toBe(true)
+
+    await checkCancelledTicketsOnModalSubmit(
+      [FIXTURE_DATA.rows[0].id]
+    )
   })
 
   it('should open the issue ticket dialog when "edit selected tickets" is clicked, and change tickets', async () => {
     const rows = bookingsPage.findAll(`table.transactions-view > tbody > tr`)
 
     // So happens that #3,4,5 are Mandai tickets, i.e. same route so this works
-    rows.at(3).find('input[type="checkbox"]').trigger('click')
-    await delay(1)
-    rows.at(4).find('input[type="checkbox"]').trigger('click')
-    await delay(1)
+    rows.at(3).find('input[type="checkbox"]').setChecked(true)
+    await delay(5)
+    rows.at(4).find('input[type="checkbox"]').setChecked(true)
+    await delay(5)
     bookingsPage.findAll('button').filter(b => b.text().includes('Edit Selected'))
       .at(0).trigger('click')
     await delay(1)
 
+    expect(
+    bookingsPage.findAll('button').filter(b => b.text().includes('Edit Selected'))
+      .at(0).element.disabled
+    ).toBeFalsy
+
     expect(bookingsPage.find('.modal-body').isVisible()).toBe(true)
+
+    await checkCancelledTicketsOnModalSubmit(
+      [FIXTURE_DATA.rows[3].id, FIXTURE_DATA.rows[4].id]
+    )
   })
 })

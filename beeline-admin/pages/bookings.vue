@@ -24,8 +24,7 @@
             <label>
               Filter by Route:
             </label>
-            <route-select2 v-model="filter.routeId" :required="false" transport-company-id="companyId">
-            </route-select2>
+            <RouteSelector v-model="filter.routeId" :companyId="companyId" />
           </div>
           <!-- stop query -->
           <div class="form-group pull-left ticketSearch">
@@ -126,7 +125,7 @@
           |
           {{selectedBookings.length}} of {{bookings.length}} tickets selected
           |
-          <button :disabled="!selectedBookings.length || numberOfUniqueRoutesInSelectedTickets.length > 1"
+          <button :disabled="!selectedBookings.length || numberOfUniqueRoutesInSelectedTickets > 1"
             @click="issueTickets()"
             class="btn btn-default btn-lg">
             Edit Selected Tickets
@@ -355,6 +354,7 @@ import {mapGetters, mapActions} from 'vuex'
 
 import MultiSelectBroker from '@/components/MultiSelectBroker'
 import UibPagination from '@/components/UibPagination.vue'
+import RouteSelector from '@/components/RouteSelector.vue'
 import SpanSelect from '@/components/SpanSelect.vue'
 import filters from '@/filters'
 
@@ -363,6 +363,7 @@ export default {
 
   components: {
     MultiSelectBroker,
+    RouteSelector,
     SpanSelect,
     UibPagination,
   },
@@ -524,7 +525,6 @@ export default {
         this.chart.fetchedData = result.data;
       })
       .catch((err) => {
-        console.error(err.stack);
         console.error(err)
       })
     },
@@ -545,9 +545,10 @@ export default {
 
         this.fetchedData = result.data
         this.bookings = result.data.rows
-
-
         this.selectedBookings = [];
+      })
+      .catch((err) => {
+        console.log(err)
       })
 
       this.spinOnPromise(queryPromise)
@@ -601,11 +602,11 @@ export default {
     },
 
     issueTickets () {
-      const selectedTickets = this.selectedTickets
-      const firstTicket = selectedTickets.length > 0 ? selectedTickets[0] : null;
+      const selectedBookings = this.selectedBookings
+      const firstTicket = selectedBookings.length > 0 ? selectedBookings[0] : null;
 
       const issueTicketModalOptions = {
-        user: _(selectedTickets)
+        users: _(selectedBookings)
           .filter()
           .map(t => t.user)
           .uniqBy('id')
@@ -617,7 +618,7 @@ export default {
           routeId: firstTicket.boardStop.trip.routeId,
           boardStopStopId: firstTicket.boardStop.stopId,
           alightStopStopId: firstTicket.alightStop.stopId,
-          cancelledTickets: selectedTickets
+          cancelledTickets: selectedBookings
         })
       }
 
@@ -625,6 +626,12 @@ export default {
         component: 'IssueTicket',
         props: issueTicketModalOptions,
       })
+      .then((request) =>
+        this.spinOnPromise(
+          this.axios.post('/transactions/tickets/issue_free', request))
+          .then(() => this.flash('Tickets created!'))
+          .catch(this.showErrorModal)
+      )
       .then(() => this.requery(), () => { /* do nothing if cancelled */ })
     },
 
@@ -643,6 +650,12 @@ export default {
           cancelledTickets: selectedTickets
         }
       })
+      .then((request) =>
+        this.spinOnPromise(
+          this.axios.post('/transactions/tickets/issue_free', request))
+          .then(() => this.flash('Tickets created!'))
+          .catch(this.showErrorModal)
+      )
       .then(() => this.requery(), () => { /* do nothing if cancelled */ })
     },
     // Add ticket button -- don't cancel earlier ticket
@@ -659,47 +672,13 @@ export default {
           alightStopStopId: ticket.alightStop.stopId,
         },
       })
+      .then((request) =>
+        this.spinOnPromise(
+          this.axios.post('/transactions/tickets/issue_free', request))
+          .then(() => this.flash('Tickets created!'))
+          .catch(this.showErrorModal)
+      )
       .then(() => this.requery(), () => { /* do nothing if cancelled */ })
-    },
-
-    async issueTickets (result) {
-      if (!await this.confirm("Are you sure you want to issue these tickets?")) {
-        return;
-      }
-
-      const oldTransactionIds = $scope.data.cancelledTickets &&
-          _($scope.data.cancelledTickets)
-            .map(tkt => (tkt.ticketSale && tkt.ticketSale.transactionId) ||
-                (tkt.ticketExpense && tkt.ticketExpense.transactionId) || false
-            )
-            .filter(tid => tid !== false)
-            .uniq()
-            .value();
-      const cancelledTicketIds = $scope.data.cancelledTickets &&
-          $scope.data.cancelledTickets.map(ticket => ticket.id)
-
-      const oldTransactionDescription = oldTransactionIds && oldTransactionIds.length ?
-          `(Original Txn #${oldTransactionIds.join(', #')})` : '';
-      const oldTicketDescription = cancelledTicketIds && cancelledTicketIds.length ?
-          `(Replacing tickets #${cancelledTicketIds.join(', #')})` : '';
-      const description = $scope.data.reason || '';
-
-      var issueRequest = {
-        trips: _.flatten($scope.data.users.map(user => /* for each user */
-          $scope.purchaseOrder.map(po => /* for each trip */
-            _.assign(
-              _.pick(po, ['boardStopId', 'alightStopId', 'tripId']),
-              {userId: user.id}
-            )
-          )
-        )),
-        cancelledTicketIds,
-        description: description + ' ' + oldTransactionDescription + ' ' + oldTicketDescription
-      }
-
-      return this.spinOnPromise(this.axios.post('/transactions/tickets/issue_free', issueRequest))
-        .then(() => this.flash('Tickets created!'))
-        .catch(this.showErrorModal)
     },
 
     async toggleVoidTicket (ticket) {
@@ -796,93 +775,5 @@ export default {
     }
   }
 }
-
-/// TRIP SELECTION BROKER
-// export default function(AdminService, RoutesService, $rootScope, LoadingSpinner) {
-//     link(scope, elem, attr) {
-//       // The options for the select
-//       scope.info = {
-//         tripDates: [],
-//         tripStops: [],
-//       }
-
-//       // Pull the list of routes
-//       var routesPromise = RoutesService.getCurrentRoutes()
-//       .then((routes) => {
-//         scope.routes = routes
-//       })
-//       LoadingSpinner.watchPromise(routesPromise);
-
-//       // Get trip dates
-//       scope.$watch('routeId', (routeId) => {
-//         if (!routeId) {
-//           return null;
-//         }
-
-//         scope.info.tripDates = [];
-//         scope.trips = [];
-
-//         var today = new Date();
-//         today.setHours(0,0,0);
-
-//         RoutesService.getRoute(routeId, {
-//           includeTrips: true,
-//           startDate: today.getTime()
-//         })
-//         .then((route) => {
-//           scope.trips = route.trips.filter(t => t.isRunning);
-
-//           scope.datepickerDaysAllowed = scope.trips.map(trip =>
-//             new Date(
-//                 trip.date.getFullYear(),
-//                 trip.date.getMonth(),
-//                 trip.date.getDate()));
-//           scope.datepickerHighlightDays = route.trips.map(trip =>
-//             ({
-//               date: new Date(
-//                   trip.date.getFullYear(),
-//                   trip.date.getMonth(),
-//                   trip.date.getDate()),
-//               selectable: true,
-//               annotation: `${trip.availability.seatsAvailable}`
-//             }))
-
-//           // Unselect the dates that are now unselectable
-//           var offset = new Date().getTimezoneOffset() * 60000;
-//           scope.selectedDates = scope.selectedDates.filter(
-//             d => route.trips.some(t => t.date.valueOf() + offset === d.valueOf())
-//           )
-//         })
-//       });
-
-//       // Both deep and shallow watch selected dates
-//       scope.$watch('selectedDates', updateStops, true);
-//       scope.$watch('selectedDates', updateStops, false);
-
-//       scope.$watchGroup(['boardStop', 'alightStop', 'selectedTrips'], () => {
-//         if (scope.boardStop) {
-//           scope.boardStopId = scope.boardStop.stopId;
-//         }
-//         if (scope.alightStop) {
-//           scope.alightStopId = scope.alightStop.stopId;
-//         }
-
-//         if (!scope.selectedTrips) {
-//           return;
-//         }
-
-//         // update scope.trips
-//         scope.purchaseOrder = scope.selectedTrips.map(trip =>
-//           ({
-//             tripId: trip.id,
-//             boardStopId: scope.boardStop ? trip.tripStops.find(ts => ts.stopId === scope.boardStop.stopId).id
-//                                     : null,
-//             alightStopId: scope.alightStop ? trip.tripStops.find(ts => ts.stopId === scope.alightStop.stopId).id
-//                                     : null
-//           }))
-//       })
-//     },
-//   }
-// }
 
 </script>

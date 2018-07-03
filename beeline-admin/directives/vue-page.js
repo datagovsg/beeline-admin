@@ -24,8 +24,10 @@ Vue.component('SummaryPage', require('../../beeline-admin/pages/ridership-summar
 Vue.component('RouteTimelinessPage', require('../../beeline-admin/pages/route-timeliness.vue').default)
 
 // COMPONENTS
-Vue.component('ModalHelper', require('../components/ModalHelper'))
-Vue.component('LoadingSpinner', require('../../beeline-admin/components/LoadingSpinner.vue').default)
+import ModalHelper from '@/components/ModalHelper'
+import LoadingSpinner from '@/components/LoadingSpinner.vue'
+Vue.component('ModalHelper', ModalHelper)
+Vue.component('LoadingSpinner', LoadingSpinner)
 
 angular.module('beeline-admin')
 .directive('vuePage', function (vueStore, uiGmapGoogleMapApi) {

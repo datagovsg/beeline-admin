@@ -12,7 +12,7 @@ import StopsPopup from '@/modals/StopsPopup.vue'
 import EditAsset from '@/modals/EditAsset.vue'
 import IssueTicket from '@/modals/IssueTicket.vue'
 
-module.exports = {
+export default {
   components: {
     // All the modals I need...
     CreateTripsDatePicker,

@@ -8,8 +8,10 @@ Vue.use(Vuex)
 
 // Argh: copied from vue-page.js
 // COMPONENTS
-Vue.component('ModalHelper', require('@/components/ModalHelper'))
-Vue.component('LoadingSpinner', require('@/components/LoadingSpinner.vue').default)
+import ModalHelper from '@/components/ModalHelper'
+import LoadingSpinner from '@/components/LoadingSpinner.vue'
+Vue.component('ModalHelper', ModalHelper)
+Vue.component('LoadingSpinner', LoadingSpinner)
 
 // require all test files (files that ends with .spec.js)
 const testsContext = require.context('./specs', true, /\.spec$/)
