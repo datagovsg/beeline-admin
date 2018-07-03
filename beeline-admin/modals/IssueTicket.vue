@@ -1,5 +1,5 @@
 <template>
-  <Modal :name="name" @cancel="reject()" :value="{}">
+  <Modal :name="name" @cancel="reject()" :value="{}" overrideWidth="80%">
     <div class="modal-header">
       <h3>Issue A New Ticket</h3>
     </div>
@@ -17,7 +17,7 @@
             @month-change="updateCalendarTrips" />
         </div>
       </div>
-      <div class="col-lg-8 pull-right">
+      <div class="col-lg-8">
         <h4> Select Route</h4>
         <div class="trip-selector">
           <div>
@@ -376,20 +376,25 @@ export default {
 
     updateCalendarTrips (month) {
       // Given current month, route, update trips in calendar
-      const queryParams = querystring.stringify({
+      const queryParams = {
         includeTrips: 'true',
         startDate: Math.max(Date.now(), month.getTime()),
         // endDate: Math.max(Date.now(), new Date(Date.UTC(...)).getTime()),
-      })
+      }
       // Note: if you specify an endDate, then you need to watch the current month
       // However, then you will need to refactor computed:stopsAvailable to take into
       // account trips that fall on a different month
 
-      const routePromise = this.$routePromise = this.getRoute({id: this.routeId, options: queryParams})
+      const routePromise = this.$routePromise = this.getRoute({
+        id: this.routeId,
+        options: queryParams
+      })
         .then((route) => {
           if (this.$routePromise !== routePromise) return // superseded by another request
 
-          this.disp.tripsInMonth = route.trips.filter(t => t.isRunning)
+          this.disp.tripsInMonth = route.trips
+            ? route.trips.filter(t => t.isRunning)
+            : []
         })
 
       return routePromise

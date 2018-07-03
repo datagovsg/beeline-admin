@@ -188,15 +188,15 @@
                 </td>
                 <td>
                   <a v-if="ticket.ticketSale"
-                      ui-sref="^.transactions({id: ticket.ticketSale.transactionId})">
+                    :href="`#/c/${companyId}/transactions/${ticket.ticketSale.transactionId}`">
                     {{ticket.ticketSale.transactionId}}<br/>
                   </a>
                   <a v-if="ticket.ticketExpense"
-                      ui-sref="^.transactions({id: ticket.ticketExpense.transactionId})">
+                    :href="`#/c/${companyId}/transactions/${ticket.ticketExpense.transactionId}`">
                     (Issue: {{ticket.ticketExpense.transactionId}})<br/>
                   </a>
                   <a v-if="ticket.ticketRefund"
-                      ui-sref="^.transactions({id: ticket.ticketRefund.transactionId})">
+                    :href="`#/c/${companyId}/transactions/${ticket.ticketRefund.transactionId}`">
                     (Related Txn ID: {{ticket.ticketRefund.transactionId}})<br/>
                   </a>
                 </td>
@@ -204,7 +204,8 @@
                   <span v-if="ticket.routePass">
                     Purchased using route pass {{ticket.routePass.id}}<br/>
                     Purchase Txn:
-                      <a ui-sref="^.transactions({id: ticket.routePass.transactionId})">
+                      <a
+                        :href="`#/c/${companyId}/transactions/${ticket.routePass.transactionId}`">
                         {{ticket.routePass.transactionId}}</a><br/>
                     Discount: &dollar;{{ f.number(ticket.routePass.discount || 0, '#,###.00') }}
                   </span>
@@ -228,7 +229,7 @@
                  </button>
                 </td>
                 <td>
-                  <a ui-sref="^.users({userId: ticket.user.id})">
+                  <a :href="`#/c/${companyId}/${ticket.user.id}`">
                     <strong v-if="ticket.user && ticket.user.json">
                       {{ticket.user.json.name + ' #' + ticket.user.json.index}}
                     </strong>
@@ -241,13 +242,12 @@
                   <br> {{f._.get(ticket, 'user.json.email', f._.get(ticket, 'user.email'))}}
                   <span v-if="ticket.discount && ticket.discount.debitF">
                     <br>
-                    <span class="discount-code label"
-                        ui-sref="^.promotions({companyId: ticket.boardStop.trip.route.transportCompanyId, promoId: ticket.discount.discount.promotionId})">
+                    <a class="discount-code label"
+                      :href="`#/c/${ticket.boardStop.trip.route.transportCompanyId}/promotions/${ticket.discount.discount.promotionId}`">
                       <span v-if="f._.get(ticket, 'discount.discount.code')">{{ticket.discount.discount.code}}</span>
                       <span v-else><i>(automatic)</i></span>
-
                       (#{{ticket.discount.discount.promotionId}})
-                    </span>
+                    </a>
                   </span>
 
                   <button type="button" class="btn btn-default"
@@ -257,7 +257,7 @@
                   </button>
                 </td>
                 <td class="text-center">
-                  <a ui-sref="^.transactions({ticketId: ticket.id})">
+                  <a :href="`#/c/${companyId}/transactions/${ticket.Id}`">
                     {{ticket.id}}
                   </a>
                   <button class="btn btn-default btn-icon"
@@ -272,7 +272,7 @@
                   {{f.date(ticket.boardStop.trip.date, 'dd-mmm-yy', true)}}
                 </td>
                 <td>
-                  <a ui-sref="^.trips({routeId: ticket.boardStop.trip.routeId, action: 'route'})">
+                  <a :href="`#/c/${companyId}/trips/${ticket.boardStop.trip.routeId}/route`">
                     {{ticket.boardStop.trip.routeId}}
                   </a>
                 </td>
@@ -354,6 +354,7 @@
 
 </template>
 <script>
+import assert from 'assert'
 import querystring from 'querystring'
 import {mapGetters, mapActions} from 'vuex'
 
@@ -600,7 +601,7 @@ export default {
           var payment = txn.transactionItems.find(ts => ts.itemType == 'refundPayment' && ts.refundPayment)
 
           this.requery()
-          return this.alert( parseFloat(payment.credit).toFixed(2) + " refunded.")
+          return this.alert({ title: parseFloat(payment.credit).toFixed(2) + " refunded." })
         })
         .catch(this.showErrorModal)
       }
@@ -691,12 +692,12 @@ export default {
       assert(['valid', 'void'].includes(status),
         `This ticket is ${status} and cannot be voided or made valid`)
       const newStatus = (status === 'void') ? 'valid' : 'void'
-      if (await this.confirm(`Confirm change ticket status to ${newStatus}?`)) {
+      if (await this.confirm({title: `Confirm change ticket status to ${newStatus}?`})) {
         this.spinOnPromise(this.axios.put(`/tickets/${id}/status`, {status: newStatus}))
         .then((response) => {
           const { status } = response.data
           this.requery()
-          return this.alert(`This ticket is now ${status}`)
+          return this.alert({title: `This ticket is now ${status}`})
         })
         .catch(this.showErrorModal)
       }

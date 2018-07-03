@@ -28,24 +28,30 @@ export default {
   },
   computed: {
     ...mapState('shared', ['currentRoutes', 'promises']),
+    filteredRoutes () {
+      return (this.routes || [])
+            .filter(r => !this.companyId ||
+              r.transportCompanyId === this.companyId)
+    },
     sortedRoutes () {
       return [{ name: "(select)" }].concat(
-        _.sortBy((this.routes || []).filter(r => r.transportCompanyId === this.companyId), 'label')
+        _.sortBy(this.filteredRoutes, 'label')
       )
     },
     allRouteIds () {
-      return (this.routes || []).filter(r => r.transportCompanyId === this.companyId).map(r => r.id)
+      return this.filteredRoutes.map(r => r.id)
     },
 
     routePromise () {
       if (!this.startDate && !this.endDate) {
-        return this.promises.currentRoutes.then(() => this.currentRoutes)
+        return this.promises.currentRoutes &&
+          this.promises.currentRoutes.then(() => this.currentRoutes)
       } else {
         const query = {
           includePath: false,
         }
-        if (this.startDate) query.startDate = this.startDate
-        if (this.endDate) query.endDate = this.endDate
+        if (this.startDate) query.startDate = this.startDate.getTime()
+        if (this.endDate) query.endDate = this.endDate.getTime()
         if (this.companyId) query.transportCompanyId = this.companyId
 
         return this.getRoutes(query)
