@@ -4,9 +4,10 @@ import _ from 'lodash';
 angular.module('beeline-admin')
   .controller(
     'genericVuePageController',
-    function($scope, $stateParams) {
+    function($scope, $state, $stateParams) {
       $scope.pageProps = {
-        companyId: parseInt($stateParams.companyId),
+        ...$stateParams
       }
+      $scope.page = $state.current.data.page
     }
   )
