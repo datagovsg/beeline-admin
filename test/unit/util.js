@@ -106,7 +106,8 @@ export async function mockAjax(routes, fn) {
     routesByMethod[method].push({
       path,
       queryParts,
-      value: () => JSON.parse(JSON.stringify(value)),
+      value: (request) => JSON.parse(JSON.stringify(
+        typeof value === 'function' ? value(request) : value)),
       status,
       callback
     })
@@ -138,12 +139,18 @@ export async function mockAjax(routes, fn) {
         // also -- must make sure requests are JSON serializable
         if (method === 'get' || method === 'delete' || method === 'head' || method === 'options') {
           options = maybeData
+          maybeData = undefined
         } else {
-          maybeData = JSON.parse(JSON.stringify(maybeData))
+          maybeData = maybeData && JSON.parse(JSON.stringify(maybeData))
         }
 
         if (result) {
-          const generatedValue = result.value()
+          const generatedValue = await result.value({
+            query: queryData,
+            method,
+            path,
+            data: maybeData
+          })
 
           if (result.callback) {
             // TODO: Should this be asynchronous or synchronous?

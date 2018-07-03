@@ -126,8 +126,12 @@ describe('IssueTicket.vue', () => {
 
     issueTicketPromise = new Promise((resolve, reject) => {
       modalLoaded = mockAjax({
-        'GET /routes/10?': [200, {...ROUTE_10, trips: undefined}, (request, response) => {}],
-        'GET /routes/10?includeTrips=true': [200, ROUTE_10, (request, response) => {}],
+        'GET /routes/10?includeTrips=true': [
+          200,
+          (request) => ({
+            ...ROUTE_10,
+            trips: (request.query.includeTrips === 'true') ? ROUTE_10.trips : undefined
+          })],
         'GET /routes?': [200, [ROUTE_10]],
       }, async () => {
         const issueTicketModal = mount(
