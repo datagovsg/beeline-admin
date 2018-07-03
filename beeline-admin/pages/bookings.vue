@@ -732,11 +732,20 @@ export default {
           .filter(key => this.filter.status[key]))
       }
 
+      /* Search selected dates by... fields */
       if (this.filter.routeId) {
         queryOptions.routeId = this.filter.routeId
       }
+      if (this.filter.userQuery) {
+        queryOptions.userQuery = this.filter.userQuery
+      }
+      if (this.filter.stopQuery) {
+        queryOptions.stopQuery = this.filter.stopQuery
+      }
 
+      /* Search all dates by... fields */
       if (this.filter.tripId || this.filter.paymentId ||
+          this.filter.transactionId ||
           this.filter.chargeId || this.filter.ticketId) {
         delete queryOptions.tripStartDate;
         delete queryOptions.tripEndDate;
@@ -744,12 +753,6 @@ export default {
 
       if (this.filter.tripId) {
         queryOptions.tripId = this.filter.tripId
-      }
-      if (this.filter.userQuery) {
-        queryOptions.userQuery = this.filter.userQuery
-      }
-      if (this.filter.stopQuery) {
-        queryOptions.stopQuery = this.filter.stopQuery
       }
       if (this.filter.transactionId) {
         queryOptions.transactionId = this.filter.transactionId;
