@@ -106,7 +106,7 @@ export async function mockAjax(routes, fn) {
     routesByMethod[method].push({
       path,
       queryParts,
-      value: JSON.parse(JSON.stringify(value)),
+      value: () => JSON.parse(JSON.stringify(value)),
       status,
       callback
     })
@@ -143,6 +143,8 @@ export async function mockAjax(routes, fn) {
         }
 
         if (result) {
+          const generatedValue = result.value()
+
           if (result.callback) {
             // TODO: Should this be asynchronous or synchronous?
             await result.callback({
@@ -152,7 +154,7 @@ export async function mockAjax(routes, fn) {
               ...options
             }, {
               status: result.status,
-              data: result.value,
+              data: generatedValue,
               method
             })
           }
@@ -160,13 +162,13 @@ export async function mockAjax(routes, fn) {
           if (result.status >= 200 && result.status < 300) {
             return {
               status: result.status,
-              data: result.value,
+              data: generatedValue
             }
           } else {
             const e = new Error('Simulated HTTP Error')
             e.response = {
               status: result.status,
-              data: result.value
+              data: generatedValue
             }
             throw e
           }
