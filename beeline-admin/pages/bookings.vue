@@ -35,14 +35,14 @@
           <div class="form-group pull-left ticketSearch">
             <label>
               Stop ID
-              <input type="text" v-model="filter.stopQuery" class="form-control" />
+              <input type="text" v-model.lazy="filter.stopQuery" class="form-control" />
             </label>
           </div>
           <!-- user query -->
           <div class="form-group pull-left ticketSearch">
             <label>
               User
-              <input type="text" v-model="filter.userQuery" class="form-control" />
+              <input type="text" v-model.lazy="filter.userQuery" class="form-control" />
             </label>
           </div>
           <br clear="both" />
@@ -52,28 +52,28 @@
           <div class="form-group pull-left ticketSearch">
             <label>
               Trip ID
-              <input type="number" v-model="filter.tripId" class="form-control" />
+              <input type="number" v-model.lazy="filter.tripId" class="form-control" />
             </label>
           </div>
           <!-- txn query -->
           <div class="form-group pull-left ticketSearch">
             <label>
               Transaction ID
-              <input type="text" v-model="filter.transactionId" class="form-control" />
+              <input type="text" v-model.lazy="filter.transactionId" class="form-control" />
             </label>
           </div>
           <!-- Ticket query -->
           <div class="form-group pull-left ticketSearch">
             <label>
               Ticket ID
-              <input type="text" v-model="filter.ticketId" class="form-control" />
+              <input type="text" v-model.lazy="filter.ticketId" class="form-control" />
             </label>
           </div>
           <!-- charge query -->
           <div class="form-group pull-left ticketSearch">
             <label>
               Charge ID (min 8 letters)
-              <input type="text" v-model="filter.chargeId" class="form-control" />
+              <input type="text" v-model.lazy="filter.chargeId" class="form-control" />
             </label>
           </div>
           <!-- payment query -->
