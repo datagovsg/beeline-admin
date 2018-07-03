@@ -5,6 +5,12 @@ import querystring from 'querystring'
 export const storeModule = {
   namespaced: true,
   actions: {
+    getRoutes (context, options) {
+      return context.rootGetters.axios
+        .get(`/routes?` + querystring.stringify(options))
+        .then((response) => response.data.map(postProcessRoute))
+    },
+
     getRoute (context, {id, options}) {
       return context.rootGetters.axios
         .get(`/routes/${id}?` + querystring.stringify(options))

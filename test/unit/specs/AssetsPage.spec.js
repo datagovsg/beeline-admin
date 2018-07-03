@@ -103,7 +103,8 @@ describe('assets.vue', () => {
         ({data}, response) => {
           called = true
           expect(data.data).toBe('Hello my dear!')
-        }]
+        }],
+      'GET /assets': [200, []],
     }, async () => {
       const button = assetsPage.find('.new-asset-button')
 
@@ -149,7 +150,8 @@ describe('assets.vue', () => {
         ({data}, response) => {
           called = true
           expect(data.data).toBe('Hello my dear!')
-        }]
+        }],
+      'GET /assets': [200, []],
     }, async () => {
       const triggerCell = assetsPage.find('table.assets-table tbody tr:nth-child(1) td:nth-child(2)')
       expect(triggerCell.text()).toContain('## About Beeline\n\n### What is ')

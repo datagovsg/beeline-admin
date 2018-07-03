@@ -10,12 +10,14 @@ import CommonModals from '@/modals/CommonModals.vue'
 import TripEditor from '@/modals/TripEditor.vue'
 import StopsPopup from '@/modals/StopsPopup.vue'
 import EditAsset from '@/modals/EditAsset.vue'
+import IssueTicket from '@/modals/IssueTicket.vue'
 
-module.exports = {
+export default {
   components: {
     // All the modals I need...
     CreateTripsDatePicker,
     CommonModals,
+    IssueTicket,
     TripEditor,
     StopsPopup,
     EditAsset,
@@ -27,6 +29,9 @@ module.exports = {
     return h(
       'div',
       this.modalStack.map(({options: {component, props}, resolve, reject}, index) => {
+        if (!(component in this.$options.components)) {
+          throw new Error(`Unknown modal ${component}. Known components are ${Object.keys(this.$options.components).join(', ')}`)
+        }
         return h(
           component,
           {

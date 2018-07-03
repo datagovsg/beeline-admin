@@ -13,26 +13,64 @@
 import {mapGetters, mapActions, mapState} from 'vuex'
 import * as resources from '../stores/resources'
 import _ from 'lodash'
+import querystring from 'querystring'
 const filters = require('../filters')
 
 export default {
-  props: ['value', 'multiple', 'companyId'],
+  props: ['value', 'multiple', 'companyId', 'startDate', 'endDate'],
+  data () {
+    return {
+      routes: null
+    }
+  },
   created () {
     this.fetch('currentRoutes')
   },
   computed: {
-    ...mapState('shared', ['currentRoutes']),
+    ...mapState('shared', ['currentRoutes', 'promises']),
+    filteredRoutes () {
+      return (this.routes || [])
+            .filter(r => !this.companyId ||
+              r.transportCompanyId === this.companyId)
+    },
     sortedRoutes () {
       return [{ name: "(select)" }].concat(
-        _.sortBy((this.currentRoutes || []).filter(r => r.transportCompanyId === this.companyId), 'label')
+        _.sortBy(this.filteredRoutes, 'label')
       )
     },
     allRouteIds () {
-      return (this.currentRoutes || []).filter(r => r.transportCompanyId === this.companyId).map(r => r.id)
+      return this.filteredRoutes.map(r => r.id)
     },
+
+    routePromise () {
+      if (!this.startDate && !this.endDate) {
+        return this.promises.currentRoutes &&
+          this.promises.currentRoutes.then(() => this.currentRoutes)
+      } else {
+        const query = {
+          includePath: false,
+        }
+        if (this.startDate) query.startDate = this.startDate.getTime()
+        if (this.endDate) query.endDate = this.endDate.getTime()
+        if (this.companyId) query.transportCompanyId = this.companyId
+
+        return this.getRoutes(query)
+      }
+    }
+  },
+  watch: {
+    routePromise: {
+      immediate: true,
+      handler (p) {
+        if (p) {
+          p.then((d) => this.routes = d)
+        }
+      }
+    }
   },
   methods: {
     ...mapActions('shared', ['fetch']),
+    ...mapActions('resources', ['getRoutes']),
     emitValue(el) {
       if (this.multiple) {
         const values = []

@@ -2,8 +2,8 @@
 //   http://karma-runner.github.io/0.13/config/configuration-file.html
 // we are also using it with karma-webpack
 //   https://github.com/webpack/karma-webpack
-
-var webpackConfig = require('../../webpack.config')[0]
+const webpack = require('webpack')
+const webpackConfig = require('../../webpack.config')[0]
 
 delete webpackConfig.entry
 
@@ -23,7 +23,15 @@ module.exports = function (config) {
     webpack: {
       ...webpackConfig,
       devtool: 'inline-source-map',
-      mode: 'development'
+      mode: 'development',
+      plugins: (webpackConfig.plugins || []).concat(
+        config.grep ? [
+          new webpack.ContextReplacementPlugin(/\.\/specs/, function (result) {
+            if (result.request === './specs') {
+              result.regExp = new RegExp('.*' + config.grep + '.*\\.spec$')
+            }
+          }) ] : []
+      )
     },
     webpackMiddleware: {
       noInfo: true
@@ -37,5 +45,4 @@ module.exports = function (config) {
     },
   })
 }
-
 

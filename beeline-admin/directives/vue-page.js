@@ -11,6 +11,7 @@ Vue.use(AsyncComputed)
 // PAGES
 Vue.component('AdminsPage', require('../../beeline-admin/pages/admins.vue').default)
 Vue.component('AssetsPage', require('../../beeline-admin/pages/assets.vue').default)
+Vue.component('BookingsPage', require('../../beeline-admin/pages/bookings.vue').default)
 Vue.component('ContactListsPage', require('../../beeline-admin/pages/contactLists.vue').default)
 Vue.component('RoutesPage', require('../../beeline-admin/pages/routes.vue').default)
 Vue.component('RoutePassesPage', require('../../beeline-admin/pages/route-passes.vue').default)
@@ -23,8 +24,10 @@ Vue.component('SummaryPage', require('../../beeline-admin/pages/ridership-summar
 Vue.component('RouteTimelinessPage', require('../../beeline-admin/pages/route-timeliness.vue').default)
 
 // COMPONENTS
-Vue.component('ModalHelper', require('../components/ModalHelper'))
-Vue.component('LoadingSpinner', require('../../beeline-admin/components/LoadingSpinner.vue').default)
+import ModalHelper from '@/components/ModalHelper'
+import LoadingSpinner from '@/components/LoadingSpinner.vue'
+Vue.component('ModalHelper', ModalHelper)
+Vue.component('LoadingSpinner', LoadingSpinner)
 
 angular.module('beeline-admin')
 .directive('vuePage', function (vueStore, uiGmapGoogleMapApi) {

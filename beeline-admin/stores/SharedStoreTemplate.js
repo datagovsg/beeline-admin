@@ -27,7 +27,10 @@ export default function SharedStoreTemplate (definition, fetchJobs) {
     mutations: {
       ...definition.mutations,
       updateSharedPromises(state, which) {
-        Object.assign(state.promises, which)
+        state.promises = {
+          ...state.promises,
+          ...which,
+        }
       },
       updateShared(state, which) {
         Object.assign(state, which)
