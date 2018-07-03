@@ -4,7 +4,6 @@
 //   https://github.com/webpack/karma-webpack
 const webpack = require('webpack')
 const webpackConfig = require('../../webpack.config')[0]
-const grep = require('karma-webpack-grep')
 
 delete webpackConfig.entry
 
@@ -26,11 +25,13 @@ module.exports = function (config) {
       devtool: 'inline-source-map',
       mode: 'development',
       plugins: (webpackConfig.plugins || []).concat(
-        new webpack.ContextReplacementPlugin(/\.\/specs/, function (result) {
-          if (result.request === './specs') {
-            result.regExp = new RegExp('.*' + config.grep + '.*\\.spec$')
-          }
-      }))
+        config.grep ? [
+          new webpack.ContextReplacementPlugin(/\.\/specs/, function (result) {
+            if (result.request === './specs') {
+              result.regExp = new RegExp('.*' + config.grep + '.*\\.spec$')
+            }
+          }) ] : []
+      )
     },
     webpackMiddleware: {
       noInfo: true

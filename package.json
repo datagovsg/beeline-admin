@@ -80,7 +80,6 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-spec-reporter": "0.0.31",
     "karma-webpack": "^3.0.0",
-    "karma-webpack-grep": "^1.0.1",
     "mini-css-extract-plugin": "^0.4.0",
     "node-sass": "^4.9.0",
     "phantomjs-prebuilt": "^2.1.14",
