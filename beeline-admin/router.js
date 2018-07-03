@@ -171,7 +171,7 @@ angular.module('beeline-admin')
   .state('c.contact-list', {
     url: '/contactLists/{contactListId}',
     templateUrl: 'templates/contact-list.html',
-    controller: 'contactListController',
+    controller: 'genericVuePageController',
     data: {
       requiresLogin: true,
     }
