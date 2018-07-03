@@ -125,4 +125,79 @@ describe('bookings.vue', () => {
       [FIXTURE_DATA.rows[3].id, FIXTURE_DATA.rows[4].id]
     )
   })
+
+  it('should void after confirmation', async () => {
+    const rows = bookingsPage.findAll(`table.transactions-view > tbody > tr`)
+
+    // So happens that #3,4,5 are Mandai tickets, i.e. same route so this works
+    async function triggerVoid () {
+      rows.at(3).findAll('.btn')
+        .filter(btn => btn.text().trim() === 'Void')
+        .at(0)
+        .trigger('click')
+      await delay(1)
+    }
+
+    let called = false
+    await mockAjax({
+      [`PUT /tickets/${FIXTURE_DATA.rows[3].id}/status`]: [
+        200,
+        request => ({status: request.data.status}),
+        (request, response) => {
+          called = true
+          expect(request.data.status).toBe('void')
+        }
+      ]
+    }, async () => {
+      await triggerVoid()
+
+      // Modal should now appear, asking to confirm
+      bookingsPage.find(`.modal-footer .btn:not(.btn-primary)`).trigger('click')
+      await delay(1)
+      expect(called).toBe(false)
+
+      // Trigger again, this time to confirm
+      await triggerVoid()
+
+      // Modal should now appear, asking to confirm
+      bookingsPage.find(`.modal-footer .btn.btn-primary`).trigger('click')
+      await delay(1)
+      expect(called).toBe(true)
+    })
+  })
+
+  it('should send WRS email to admin', async () => {
+    const rows = bookingsPage.findAll(`table.transactions-view > tbody > tr`)
+
+    // So happens that #3,4,5 are Mandai tickets, i.e. same route so this works
+    async function triggerEmail () {
+      rows.at(3).find('.btn.send-wrs-email')
+        .trigger('click')
+      await delay(1)
+    }
+
+    let called = false
+    await mockAjax({
+      [`POST /custom/wrs/email/${FIXTURE_DATA.rows[3].ticketSale.transactionId}`]: [
+        200,
+        request => ({}),
+        (request, response) => { called = true }
+      ]
+    }, async () => {
+      await triggerEmail()
+
+      // Modal should now appear, asking to confirm
+      bookingsPage.find(`.modal-footer .btn:not(.btn-primary)`).trigger('click')
+      await delay(1)
+      expect(called).toBe(false)
+
+      // Trigger again, this time to confirm
+      await triggerEmail()
+
+      // Modal should now appear, asking to confirm
+      bookingsPage.find(`.modal-footer .btn.btn-primary`).trigger('click')
+      await delay(1)
+      expect(called).toBe(true)
+    })
+  })
 })

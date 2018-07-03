@@ -260,7 +260,7 @@
                   <a :href="`#/c/${companyId}/transactions/${ticket.Id}`">
                     {{ticket.id}}
                   </a>
-                  <button class="btn btn-default btn-icon"
+                  <button class="btn btn-default btn-icon send-wrs-email"
                     @click="sendWrsEmail(ticket)">
                     <i class="glyphicon glyphicon-envelope"></i>
                   </button>
@@ -572,18 +572,20 @@ export default {
       })
     },
 
-    sendWrsEmail (ticket) {
-      const transactionId = _.get(ticket, 'ticketSale.transactionId') ||
-        _.get(ticket, 'ticketExpense.transactionId')
+    async sendWrsEmail (ticket) {
+      if (await this.confirm({title: 'Send a copy of this ticket to your email?'})) {
+        const transactionId = _.get(ticket, 'ticketSale.transactionId') ||
+          _.get(ticket, 'ticketExpense.transactionId')
 
-      this.spinOnPromise(this.axios.post(`/custom/wrs/email/${transactionId}`))
-      .then(() => {
-        return this.alert({
-          title: 'Email sent',
-          message: 'Email sent to your Beeline Admin Login Email ID. Please check your inbox',
-        });
-      })
-      .catch(this.showErrorModal)
+        this.spinOnPromise(this.axios.post(`/custom/wrs/email/${transactionId}`))
+        .then(() => {
+          return this.alert({
+            title: 'Email sent',
+            message: 'Email sent to your Beeline Admin Login Email ID. Please check your inbox',
+          });
+        })
+        .catch(this.showErrorModal)
+      }
     },
 
     async refundPayment (ticket) {
