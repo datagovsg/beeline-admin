@@ -2,6 +2,18 @@
   <div>
     <LoadingSpinner />
     <ModalHelper />
+
+    <ol class="breadcrumb">
+      <li><a :href="`#/c/${companyId}/routes`">Routes</a></li>
+      <li>
+        <a :href="`#/c/${companyId}/trips/${routeId}/${action}`" v-if="route">
+          {{route.label}} ({{route.id}})
+        </a>
+      </li>
+    </ol>
+
+    <h2 class="sub-header">Route Editor</h2>
+
     <RouteDisplay :route="route" />
 
     <ul class="nav nav-tabs">
@@ -26,7 +38,7 @@ import * as resources from '../stores/resources'
 const filters = require('../filters')
 
 export default {
-  props: ['companyId', 'routeId', 'tab'],
+  props: ['companyId', 'routeId', 'action'],
   data() {
     const tabs = [
       {
@@ -84,7 +96,7 @@ export default {
   computed: {
     f() { return filters },
     activeTab () {
-      return this.tabs.findIndex(tab => tab.link === this.tab)
+      return this.tabs.findIndex(tab => tab.link === this.action)
     }
   },
   created() {

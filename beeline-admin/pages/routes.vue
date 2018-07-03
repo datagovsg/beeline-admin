@@ -2,6 +2,7 @@
   <div>
     <ModalHelper ref="modalHelper"/>
     <LoadingSpinner ref="loadingSpinner"/>
+    <h1>Routes</h1>
     <div class="row">
       <div class="col-lg-12">
         <div class="pull-left">

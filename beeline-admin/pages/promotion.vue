@@ -161,7 +161,7 @@ import _ from 'lodash'
 const filters = require('../filters')
 
 export default {
-  props: ['id', 'companyId'],
+  props: ['promoId', 'companyId'],
   data () {
     return {
       promotion: null,
@@ -180,10 +180,9 @@ export default {
     f: () => filters,
 
     promotionPromise() {
-      console.log("Promise: ", this.id)
-      if (!this.id) return
+      if (!this.promoId) return
 
-      return this.axios.get(`/companies/${this.companyId}/promotions/${this.id}`)
+      return this.axios.get(`/companies/${this.companyId}/promotions/${this.promoId}`)
         .then((response) => {
           return this.makeEditable(response.data)
         })
@@ -272,7 +271,7 @@ export default {
 
     save () {
       this.spinOnPromise(this.axios.put(
-        `/companies/${this.companyId}/promotions/${this.id}`,
+        `/companies/${this.companyId}/promotions/${this.promoId}`,
         this.preSaveTransform(this.promotion)
       )
       .then((response) => {
