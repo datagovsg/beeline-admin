@@ -35,19 +35,21 @@ angular.module('beeline-admin')
 
   .state('c.routes', {
     url: '/routes',
-    templateUrl: 'templates/routes.html',
+    templateUrl: 'templates/generic-vue-page.html',
     controller: 'genericVuePageController',
     data: {
       requiresLogin: true,
+      page: 'RoutesPage',
     }
   })
 
   .state('c.extendRoutes', {
     url: '/extend_routes',
-    templateUrl: 'templates/extend-routes.html',
+    templateUrl: 'templates/generic-vue-page.html',
     controller: 'genericVuePageController',
     data: {
       requiresLogin: true,
+      page: 'ExtendRoutesPage',
     }
   })
 
@@ -61,54 +63,60 @@ angular.module('beeline-admin')
   })
   .state('assets', {
     url: '/assets',
-    templateUrl: 'templates/assets.html',
+    templateUrl: 'templates/generic-vue-page.html',
     controller: 'genericVuePageController',
     data: {
       requiresLogin: true,
+      page: 'AssetsPage',
     }
   })
   .state('c.admins', {
     url: '/admins',
-    templateUrl: 'templates/admins.html',
+    templateUrl: 'templates/generic-vue-page.html',
     controller: 'genericVuePageController',
     data: {
       requiresLogin: true,
+      page: 'AdminsPage',
     }
   })
 
   .state('c.trips', {
     url: '/trips/{routeId:int}/{action}',
-    templateUrl: 'templates/trips.html',
-    controller: 'trips',
+    templateUrl: 'templates/generic-vue-page.html',
+    controller: 'genericVuePageController',
     data: {
       requiresLogin: true,
+      page: 'RoutePage',
     }
   })
 
   .state('c.summary', {
     url: '/summary',
-    templateUrl: 'templates/summary.html',
+    templateUrl: 'templates/generic-vue-page.html',
     controller: 'genericVuePageController',
     data: {
       requiresLogin: true,
+      page: 'SummaryPage',
     }
   })
 
   .state('c.bookings', {
     url: '/bookings?routeId&tripId&userId',
-    templateUrl: 'templates/bookings-wrs.html',
-    controller: 'bookingsWrs',
+    templateUrl: 'templates/generic-vue-page.html',
+    controller: 'genericVuePageController',
     data: {
       requiresLogin: true,
+      page: 'BookingsPage',
     }
   })
 
   .state('c.driver', {
     url: '/drivers',
-    templateUrl: 'templates/drivers.html',
+    templateUrl: 'templates/generic-vue-page.html',
     controller: 'genericVuePageController',
     data: {
       requiresLogin: true,
+      page: 'DriversPage',
     }
   })
 
@@ -132,28 +140,31 @@ angular.module('beeline-admin')
 
   .state('c.promotions', {
     url: '/promotions/{promoId}',
-    templateUrl: 'templates/promotions.html',
-    controller: 'promotionsController',
+    templateUrl: 'templates/generic-vue-page.html',
+    controller: 'genericVuePageController',
     data: {
       requiresLogin: true,
+      page: 'PromotionPage',
     }
   })
 
   .state('c.promotions-list', {
     url: '/promotions',
-    templateUrl: 'templates/promotions-list.html',
+    templateUrl: 'templates/generic-vue-page.html',
     controller: 'genericVuePageController',
     data: {
       requiresLogin: true,
+      page: 'PromotionsPage'
     }
   })
 
   .state('c.contact-lists', {
     url: '/contactLists',
-    templateUrl: 'templates/contact-lists.html',
+    templateUrl: 'templates/generic-vue-page.html',
     controller: 'genericVuePageController',
     data: {
       requiresLogin: true,
+      page: 'ContactListsPage',
     }
   })
 
@@ -186,19 +197,21 @@ angular.module('beeline-admin')
 
   .state('c.route-passes', {
     url: '/route-passes?userId',
-    templateUrl: 'templates/route-passes.html',
-    controller: 'routePassesController',
+    templateUrl: 'templates/generic-vue-page.html',
+    controller: 'genericVuePageController',
     data: {
       requiresLogin: true,
+      page: 'RoutePassesPage',
     }
   })
 
   .state('c.route-timeliness', {
     url: '/route-timeliness',
-    templateUrl: 'templates/route-timeliness.html',
+    templateUrl: 'templates/generic-vue-page.html',
     controller: 'genericVuePageController',
     data: {
       requiresLogin: true,
+      page: 'RouteTimelinessPage',
     }
   })
 
