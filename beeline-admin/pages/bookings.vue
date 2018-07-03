@@ -24,7 +24,12 @@
             <label>
               Filter by Route:
             </label>
-            <RouteSelector v-model="filter.routeId" :companyId="companyId" />
+            <RouteSelector
+              v-model="filter.routeId"
+              :companyId="companyId"
+              :startDate="filter.startAndEndDate[0]"
+              :endDate="filter.startAndEndDate[1]"
+              />
           </div>
           <!-- stop query -->
           <div class="form-group pull-left ticketSearch">
@@ -515,7 +520,7 @@ export default {
 
   methods: {
     ...mapActions('spinner', ['spinOnPromise']),
-    ...mapActions('modals', ['showModal', 'showErrorModal', 'alert', 'confirm']),
+    ...mapActions('modals', ['showModal', 'showErrorModal', 'alert', 'confirm', 'flash']),
 
     requeryChart () {
       if (!this.monthlyCountsUrl) return

@@ -16,7 +16,7 @@ describe('bookings.vue', () => {
   beforeEach(async () => {
     MockDate.set(new Date(2018, 5, 15))
     bookingsPage = await mockAjax({
-      'GET /routes?startDate&includeTrips': [200, []],
+      'GET /routes': [200, []],
       ['GET /custom/wrs/report?' + querystring.stringify({
         transportCompanyId: 33,
         tripStartDate: Date.UTC(2018, 5, 1),
