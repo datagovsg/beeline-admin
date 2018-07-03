@@ -258,7 +258,7 @@ export default {
 
     viewRoute(route) {
       this.showModal({
-        component: require('../modals/ViewRouteTrips.vue').default,
+        component:'ViewRouteTrips',
         props: {route}
       })
     },

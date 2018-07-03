@@ -15,7 +15,7 @@
           <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
         </button>
       </div> -->
-      <DatePicker :offset="offset" :value="value" @input="updateValue($event)" />
+      <DatePicker :offset="offset" :value="value" @input="updateValue($event), showPopup=false" />
     </div>
   </div>
 </template>

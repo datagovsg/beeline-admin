@@ -11,6 +11,7 @@ import TripEditor from '@/modals/TripEditor.vue'
 import StopsPopup from '@/modals/StopsPopup.vue'
 import EditAsset from '@/modals/EditAsset.vue'
 import IssueTicket from '@/modals/IssueTicket.vue'
+import ViewRouteTrips from '@/modals/ViewRouteTrips.vue'
 
 export default {
   components: {
@@ -21,6 +22,7 @@ export default {
     TripEditor,
     StopsPopup,
     EditAsset,
+    ViewRouteTrips,
   },
   computed: {
     ...mapState('modals', ['modalStack'])

@@ -55,6 +55,11 @@ export default {
   watch: {
     currentlyViewedMonth() {
       this.$emit('month-changed', this.monthCanonical)
+    },
+    month (m) { // if user overrides the current month
+      if (m && m.getTime() !== this.currentlyViewedMonth.getTime()) {
+        this.currentlyViewedMonth = m
+      }
     }
   },
   computed: {

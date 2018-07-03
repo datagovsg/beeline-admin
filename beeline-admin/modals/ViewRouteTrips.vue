@@ -2,7 +2,7 @@
 <Modal override-width="1200px" :name="name" :value="value">
   <div class="modal-header">
     <h3>
-      {{route.label}}: {{route.from}} &mdash; {{route.to}}
+      {{updatedRoute.label}}: {{updatedRoute.from}} &mdash; {{updatedRoute.to}}
 
       <button @click="resolve()" class="btn btn-default">
         <span class="glyphicon glyphicon-remove"></span>
@@ -57,7 +57,7 @@
           <br/>
           Driver Id: #{{selectedPing.driverId}} {{selectedPingDriverVehicle && selectedPingDriverVehicle.driver.name}}
           <br/>
-          Vehilcle Id: #{{selectedPing.vehicleId}} {{selectedPingDriverVehicle && selectedPingDriverVehicle.vehicleNumber}}
+          Vehicle Id: #{{selectedPing.vehicleId}} {{selectedPingDriverVehicle && selectedPingDriverVehicle.vehicleNumber}}
         </div>
       </gmap-info-window>
     </gmap-map>
@@ -66,12 +66,14 @@
         class="date-picker-trips"
         :multiple="false"
 
-        v-model="selectedTrip"
+        :value="selectedTrip && selectedTrip.date"
+        @input="selectedTrip = trips.find(trip => trip.date.getTime() === $event.getTime())"
+        :month="month"
+        @month-changed="month = $event"
         :specialDates="trips.map(trip => ({ date: trip.date, enabled: true, annotation: 1, rawAnnotation: trip }))"
         :defaultDisable="true"
         :otherMonthSelectable="true"
-        :toModel="(d) => d.rawAnnotation"
-        :extractDateFromModel="extractDateFromModel"
+        :offset="0"
         >
       </date-picker>
       <div v-if="timeWindowParams">
@@ -109,7 +111,7 @@ import ModalMixin from '@/modals/ModalMixin'
 import filters from '@/filters'
 
 export default {
-  props: ['route', 'value'],
+  props: ['route', 'value', 'date'],
   components: {
     DatePicker,
     Modal,
@@ -129,6 +131,7 @@ export default {
       pingsByDriverId: null,
       routePath: null,
       timeWindowParams: null,
+      month: new Date()
     }
   },
   created() {
@@ -174,6 +177,10 @@ export default {
           return path
         })
       return promise
+    },
+
+    updatedRoute () {
+      return this.routeWithTrips || this.route
     }
   },
   watch: {
@@ -190,6 +197,10 @@ export default {
       handler(p) {
         if (p) p.then(route => {
           this.routeWithTrips = route
+          if (!this.selectedTrip && this.date) {
+            this.selectedTrip = route.trips.find(t => t.date.getTime() === this.date.getTime())
+            this.month = this.date
+          }
         })
       }
     },
