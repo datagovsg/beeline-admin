@@ -153,7 +153,7 @@ export default {
       if (this.allRoutes) {
         /* filter by route name/label or tag. Put it in a forEach for efficiency */
         const routes = this.companyId
-          ? this.allRoutes.filter(r => r.transportCompanyId === this.companyId)
+          ? this.allRoutes.filter(r => r.transportCompanyId === Number(this.companyId))
           : this.allRoutes
 
         routes.forEach(route => {
