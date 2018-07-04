@@ -37,10 +37,10 @@
         {{ f.date(route.trips[0].tripStops[route.trips[0].tripStops.length-1].time, 'HH:MM TT') }} - {{route.to}}
       </td>
       <td>
-        {{ route.startDate ? f.date(route.startDate, 'dd mmm yyyy') : '...'}}
+        {{ startDate ? f.date(startDate, 'dd mmm yyyy') : '...'}}
       </td>
       <td>
-        {{ route.endDate ? f.date(route.endDate, 'dd mmm yyyy') : '...'}}
+        {{ endDate ? f.date(endDate, 'dd mmm yyyy') : '...'}}
       </td>
     </tr>
   </table>
@@ -123,5 +123,28 @@ export default {
 
     weekdays: () => ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
   },
+
+  data () {
+    return {
+      startDate: null,
+      endDate: null,
+    }
+  },
+
+  watch: {
+    'route.id': {
+      immediate: true,
+      handler (id) {
+        if (!id) return
+        const promise = this.$datesPromise = this.axios.get(`/routes/${id}?includeDates=true&includePath=false`)
+          .then(response => {
+            if (promise === this.$datesPromise) {
+              this.startDate = this.response.data.dates.startDate
+              this.endDate = this.response.data.dates.endDate
+            }
+          })
+      }
+    }
+  }
 }
 </script>

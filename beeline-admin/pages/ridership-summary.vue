@@ -234,6 +234,7 @@ export default {
           this.selectedMonth.getMonth() + 1,
           1
         ),
+        transportCompanyId: this.companyId,
       }
 
       // preprocess the routes to track all days...
