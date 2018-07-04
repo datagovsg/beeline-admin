@@ -123,29 +123,24 @@ export default {
       return Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())
     },
 
-    weekdays: () => ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
-  },
+    weekdays: () => ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
 
-  data () {
-    return {
-      startDate: null,
-      endDate: null,
+    startDate () {
+      return this.dates && new Date(this.dates.firstDate)
+    },
+    endDate () {
+      return this.dates && new Date(this.dates.lastDate)
     }
   },
 
-  watch: {
-    'route.id': {
-      immediate: true,
-      handler (id) {
-        if (!id) return
-        const promise = this.$datesPromise = this.axios.get(`/routes/${id}?includeDates=true`)
-          .then(response => {
-            if (promise === this.$datesPromise) {
-              this.startDate = new Date(response.data.dates.firstDate)
-              this.endDate = new Date(response.data.dates.lastDate)
-            }
-          })
-      }
+  asyncComputed: {
+    dates () {
+      if (!this.route) return null
+
+      return this.axios.get(`/routes/${this.route.id}?includeDates=true`)
+        .then(response => {
+          return response.data.dates
+        })
     }
   }
 }
