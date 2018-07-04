@@ -234,6 +234,7 @@ export default {
           this.selectedMonth.getMonth() + 1,
           1
         ),
+        transportCompanyId: this.companyId,
       }
 
       // preprocess the routes to track all days...
@@ -245,15 +246,6 @@ export default {
                 this.selectedMonth.getMonth(),
                 day + 1).getDay());
       this.today = Math.floor((Date.now() - options.startDate) / (24*60*60*1000))
-
-      // We are also interested in the start/end dates. Hence we need to query
-      // the report
-      let reportPromise = this.axios.get('/routes/report?' + querystring.stringify(
-        {
-          ..._.pick(options, 'startDate', 'endDate'),
-          perPage: 100, page: 1, // FIXME: doesn't fetch all routes!!
-          transportCompanyId: this.companyId,
-        }))
 
       let routesPromise = this.axios.get(`/routes?` + querystring.stringify(options))
         .then((response) => // only show public and wrs routes
@@ -328,22 +320,6 @@ export default {
             .filter(s => s.count)
       }
 
-      let augmentedRoutesPromise = Promise.all([
-        routesPromise,
-        reportPromise
-      ]).then(([routes, report]) => {
-        let routeDataById = _.keyBy(report.data.rows, 'id');
-          console.log(routes)
-
-        for (let route of routes) {
-          console.log(route)
-          if (routeDataById[route.id]) {
-            route.startDate = routeDataById[route.id].startDate;
-            route.endDate = routeDataById[route.id].endDate;
-          }
-        }
-      })
-
       this.$latestPromise = routesPromise
 
       routesPromise.then((routes) => {
@@ -353,7 +329,7 @@ export default {
         }
 
         routes.forEach(r => {
-          this.axios.get(`/routes/${r.id}?` + querystring.stringify({...options, includeTrips: true}))
+          this.axios.get(`/routes/${r.id}?` + querystring.stringify(_.omit(options, ['transportCompanyId'])))
           .then(response => {
             const trips = response.data.trips
 

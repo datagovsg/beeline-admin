@@ -37,10 +37,10 @@
         {{ f.date(route.trips[0].tripStops[route.trips[0].tripStops.length-1].time, 'HH:MM TT') }} - {{route.to}}
       </td>
       <td>
-        {{ route.startDate ? f.date(route.startDate, 'dd mmm yyyy') : '...'}}
+        {{ startDate ? f.date(startDate, 'dd mmm yyyy') : '...'}}
       </td>
       <td>
-        {{ route.endDate ? f.date(route.endDate, 'dd mmm yyyy') : '...'}}
+        {{ endDate ? f.date(endDate, 'dd mmm yyyy') : '...'}}
       </td>
     </tr>
   </table>
@@ -108,12 +108,14 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
 import filters from '@/filters'
 
 export default {
   props: ['route', 'index'],
 
   computed: {
+    ...mapGetters(['axios']),
     f: () => filters,
 
     today: () => {
@@ -121,7 +123,25 @@ export default {
       return Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())
     },
 
-    weekdays: () => ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
+    weekdays: () => ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+
+    startDate () {
+      return this.dates && new Date(this.dates.firstDate)
+    },
+    endDate () {
+      return this.dates && new Date(this.dates.lastDate)
+    }
   },
+
+  asyncComputed: {
+    dates () {
+      if (!this.route) return null
+
+      return this.axios.get(`/routes/${this.route.id}?includeDates=true`)
+        .then(response => {
+          return response.data.dates
+        })
+    }
+  }
 }
 </script>
