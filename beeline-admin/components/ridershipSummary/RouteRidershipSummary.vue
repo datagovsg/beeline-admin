@@ -108,12 +108,14 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
 import filters from '@/filters'
 
 export default {
   props: ['route', 'index'],
 
   computed: {
+    ...mapGetters(['axios']),
     f: () => filters,
 
     today: () => {
@@ -136,11 +138,11 @@ export default {
       immediate: true,
       handler (id) {
         if (!id) return
-        const promise = this.$datesPromise = this.axios.get(`/routes/${id}?includeDates=true&includePath=false`)
+        const promise = this.$datesPromise = this.axios.get(`/routes/${id}?includeDates=true`)
           .then(response => {
             if (promise === this.$datesPromise) {
-              this.startDate = this.response.data.dates.startDate
-              this.endDate = this.response.data.dates.endDate
+              this.startDate = new Date(response.data.dates.firstDate)
+              this.endDate = new Date(response.data.dates.lastDate)
             }
           })
       }
