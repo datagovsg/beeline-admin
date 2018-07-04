@@ -123,10 +123,11 @@ angular.module('beeline-admin')
 
   .state('c.crowdstart-summary', {
     url: '/crowdstart-summary',
-    templateUrl: 'templates/crowdstart-summary.html',
-    controller: 'CrowdstartSummaryCtrl',
+    templateUrl: 'templates/generic-vue-page.html',
+    controller: 'genericVuePageController',
     data: {
       requiresLogin: true,
+      page: 'CrowdstartSummaryPage',
     }
   })
   .state('c.test', {
