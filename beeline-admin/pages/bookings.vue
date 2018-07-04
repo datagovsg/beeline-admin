@@ -212,25 +212,28 @@
                   <span v-if="ticket.paymentResource">{{ticket.paymentResource}}<br/></span>
                   <span v-if="ticket.ticketExpense">{{ticket.ticketExpense.transaction.description}}<br/></span>
                   <span v-if="ticket.refundResource">{{ticket.refundResource}}<br/></span>
-                  <span v-if="ticket.paymentData && ticket.paymentData.transfer && ticket.paymentData.transfer.destination_payment">
+                  <span v-if="f._.get(ticket, 'paymentData.transfer.destination_payment')">
                     {{ticket.paymentData.transfer.destination_payment}}<br/>
                   </span>
-                  <span v-if="ticket.refundData && ticket.refundData.transfer && ticket.refundData.transfer.destination_payment">
+                  <span v-if="f._.get(ticket, 'refundData.transfer.destination_payment')">
                     {{ticket.refundData.transfer.destination_payment}}<br/>
                   </span>
-                  <span v-if="ticket.paymentData && ticket.paymentData.message">
+                  <span v-if="f._.get(ticket, 'paymentData.message')">
                     {{ticket.paymentData.message}}<br/>
                   </span>
                   <button class="btn btn-danger actions"
                       @click="refundPayment(ticket)"
-                      v-if="(ticket.status == 'valid' || ticket.status == 'void') && ticket.paymentResource && ticket.ticketSale && ticket.ticketSale.notes.outstanding > 0">
+                      v-if="(ticket.status == 'valid' || ticket.status == 'void')
+                      && ticket.paymentResource
+                      && ticket.ticketSale
+                      && f._.get(ticket, 'ticketSale.notes.outstanding', 0) > 0">
                    Refund
-                   &dollar;{{f.number(ticket.ticketSale.notes.outstanding || 0, '#,###.00')}}
+                   &dollar;{{f.number(f._.get(ticket, 'ticketSale.notes.outstanding', 0), '#,###.00')}}
                  </button>
                 </td>
                 <td>
                   <a :href="`#/c/${companyId}/${ticket.user.id}`">
-                    <strong v-if="ticket.user && ticket.user.json">
+                    <strong v-if="f._.get(ticket, 'user.json')">
                       {{ticket.user.json.name + ' #' + ticket.user.json.index}}
                     </strong>
                     <strong v-else>
@@ -240,7 +243,7 @@
                   </a>
                   <br> {{f._.get(ticket, 'user.json.telephone', f._.get(ticket, 'user.telephone'))}}
                   <br> {{f._.get(ticket, 'user.json.email', f._.get(ticket, 'user.email'))}}
-                  <span v-if="ticket.discount && ticket.discount.debitF">
+                  <span v-if="f._.get(ticket, 'discount.debitF')">
                     <br>
                     <a class="discount-code label"
                       :href="`#/c/${ticket.boardStop.trip.route.transportCompanyId}/promotions/${ticket.discount.discount.promotionId}`">
@@ -277,10 +280,11 @@
                   </a>
                 </td>
                 <td>
-                  {{ticket.boardStop.trip.route.label}}
+                  {{f._.get(ticket, 'boardStop.trip.route.label')}}
                 </td>
                 <td class="item-description">
-                  {{ticket.boardStop.trip.route.from}} <br /> {{ticket.boardStop.trip.route.to}}
+                  {{f._.get(ticket, 'boardStop.trip.route.from')}} <br />
+                  {{f._.get(ticket, 'boardStop.trip.route.to')}}
                 </td>
                 <td class="item-description">
                   <table class="borderless">
@@ -289,7 +293,7 @@
                         {{f.date(ticket.boardStop.time, 'HH:MM TT')}}
                       </td>
                       <td>
-                        {{ticket.boardStop.stop.description}}
+                        {{f._.get(ticket, 'boardStop.stop.description')}}
                       </td>
                     </tr>
                     <tr>
@@ -297,15 +301,15 @@
                         {{f.date(ticket.alightStop.time, 'HH:MM TT')}}
                       </td>
                       <td>
-                        {{ticket.alightStop.stop.description}}
+                        {{f._.get(ticket, 'alightStop.stop.description')}}
                       </td>
                     </tr>
                   </table>
                 </td>
                 <td>
-                  &dollar;{{f.number(ticket.ticketSale.credit, '#,###.00')}}
-                  <span v-if="ticket.notes.discountValue">
-                    <br>-&dollar;{{f.number(ticket.notes.discountValue, '#,###.00')}}
+                  &dollar;{{f.number(f._.get(ticket, 'ticketSale.credit'), '#,###.00')}}
+                  <span v-if="f._.get(ticket, 'notes.discountValue')">
+                    <br>-&dollar;{{f.number(f._.get(ticket, 'notes.discountValue'), '#,###.00')}}
                   </span>
                 </td>
                 <td>
