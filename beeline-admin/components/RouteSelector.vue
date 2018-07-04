@@ -33,7 +33,7 @@ export default {
       return (this.routes || [])
           .filter(f => this.filter ? this.filter(f) : true)
           .filter(r => !this.companyId ||
-            r.transportCompanyId === this.companyId)
+            r.transportCompanyId === Number(this.companyId))
     },
     sortedFilteredRoutes () {
       return [{ name: "(select)" }].concat(

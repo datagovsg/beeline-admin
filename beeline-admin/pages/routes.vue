@@ -227,7 +227,7 @@ export default {
     routes() {
       const routes = this.allRoutes &&
         this.allRoutes
-          .filter(r => !this.companyId || r.transportCompanyId === this.companyId)
+          .filter(r => !this.companyId || r.transportCompanyId === Number(this.companyId))
           .filter(r => !this.filter.preset.tags || _.intersection(r.tags, this.filter.preset.tags).length > 0)
           .filter(r => !this.filter.searchTerms ||
               (r.label && r.label.toLowerCase().startsWith(this.filter.searchTerms.toLowerCase())) ||
