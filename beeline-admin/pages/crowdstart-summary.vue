@@ -2,6 +2,9 @@
 <div class="col-lg-12 table-responsive">
   <h1>Crowdstart Routes</h1>
 
+  <LoadingSpinner ref="loadingSpinner"/>
+  <ModalHelper ref="modalHelper"/>
+
   <div class="btn-group">
     <button
       class="btn"
@@ -84,7 +87,7 @@
           <a :href="`#/c/${companyId}/trips/${route.id}/trips`">{{route.from}} to {{route.to}}</a>
         </td>
         <td>
-          <button class="btn btn-default" @click="viewRoute(route.id)">View</button>
+          <button class="btn btn-default" @click="viewRoute(route)">View</button>
         </td>
         <td>{{f.date(route.createdAt, 'dd mmm yyyy')}}</td>
         <td>{{f.date(route.notes.crowdstartExpiry, 'dd mmm yyyy')}}</td>
@@ -175,10 +178,10 @@ export default {
     ...mapActions('resources', ['getRoute', 'saveRoute', 'createTripForDate']),
     ...mapActions('spinner', ['spinOnPromise']),
 
-    viewRoute (routeId) {
+    viewRoute (route) {
       return this.showModal({
         component: 'ViewRouteTrips',
-        props: {routeId}
+        props: {route}
       })
     },
 
@@ -230,4 +233,26 @@ function transformTiers(bids, tiers) {
 .create-route-button {
   float: right;
 }
+ul.tiers {
+  display: block;
+  margin: 0;
+  padding: 0;
+
+  li.tier-status {
+    display: block;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.expired td {
+  color: #999;
+}
+.failure {
+  color: red;
+}
+.success {
+  color: #090;
+}
+
 </style>
