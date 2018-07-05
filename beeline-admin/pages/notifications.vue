@@ -14,11 +14,13 @@
   </ol>
   <br/>
 
-  <RouteEventSubscriptions :companyId="companyId" :initialEventSubscriptions="eventSubscriptions" />
+  <RouteEventSubscriptions ref="routeEventSubscriptions" 
+    :companyId="companyId" :initialEventSubscriptions="eventSubscriptions" />
 
   <h1>Other notifications</h1>
 
-  <OtherEventSubscriptions :companyId="companyId" :initialEventSubscriptions="eventSubscriptions" />
+  <OtherEventSubscriptions ref="otherEventSubscriptions" 
+    :companyId="companyId" :initialEventSubscriptions="eventSubscriptions" />
 </div>  
 </template>
 

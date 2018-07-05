@@ -1,5 +1,5 @@
 <template>
-  <table class="table event-notifications">
+  <table class="table event-notifications other-event-subscriptions table-striped">
     <thead>
       <tr>
         <th>Event Type</th>

@@ -1,5 +1,5 @@
 <template>
-  <table class="table event-notifications route-notifications table-striped">
+  <table class="table event-notifications route-event-subscriptions table-striped">
     <thead>
       <tr>
         <th>Notification Method</th>

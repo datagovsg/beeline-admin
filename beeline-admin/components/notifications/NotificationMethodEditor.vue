@@ -41,7 +41,7 @@
 
     <label >
       Name (optional):
-      <input type="text" @input="update('name', $event.target.value)"
+      <input type="text" name="name" @input="update('name', $event.target.value)"
         :value="f._.get(agent, 'name')"
         placeholder="John"
         :required="false" />
