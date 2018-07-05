@@ -569,7 +569,7 @@ export default {
 
     downloadCsv () {
       this.axios.post('/downloads', {
-        uri: $scope.csvUrl
+        uri: this.csvUrl
       })
       .then((result) => {
         window.location.href = process.env.BACKEND_URL + '/downloads/' + result.data.token
