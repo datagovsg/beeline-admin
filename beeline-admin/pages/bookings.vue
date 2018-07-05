@@ -122,7 +122,8 @@
       <div class="col-lg-12 ">
         <UibPagination
           :boundaryLinks="true"
-          :value="currentPage"
+          :value="pagination.currentPage - 1"
+          @input="pagination.currentPage = $event + 1"
           :totalItems="dataPagination.pageCount * pagination.perPage"
           :itemsPerPage="pagination.perPage" />
         <div>
@@ -183,7 +184,7 @@
                       :value="selectedBookings.find(s => s === ticket)"
                       @change="toggleSelection([ticket])"
                       :disabled="ticket.status != 'valid'"/>
-                    {{ $index + 1 + (currentPage-1) * pagination.perPage }}
+                    {{ $index + 1 + (pagination.currentPage-1) * pagination.perPage }}
                   </label>
                 </td>
                 <td>
@@ -381,10 +382,10 @@ export default {
 
   data () {
     return {
-      currentPage: 1,
       pagination: {
         perPage: 50,
         pageCount: 1,
+        currentPage: 1,
       },
 
       fetchedData: null,
@@ -460,8 +461,8 @@ export default {
       }
 
       return {
-        firstRow: (this.currentPage - 1) * this.fetchedData.perPage + 1,
-        lastRow: Math.min(this.currentPage * this.fetchedData.perPage, this.fetchedData.count),
+        firstRow: (this.pagination.currentPage - 1) * this.fetchedData.perPage + 1,
+        lastRow: Math.min(this.pagination.currentPage * this.fetchedData.perPage, this.fetchedData.count),
         totalRows: this.fetchedData.count,
         pageCount: Math.ceil(this.fetchedData.count / this.fetchedData.perPage),
       }
