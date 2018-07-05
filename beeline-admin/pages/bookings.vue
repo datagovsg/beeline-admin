@@ -189,15 +189,15 @@
                 </td>
                 <td>
                   <a v-if="ticket.ticketSale"
-                    :href="`#/c/${companyId}/transactions/${ticket.ticketSale.transactionId}`">
+                    :href="`#/c/${companyId}/transactions?transactionId=${ticket.ticketSale.transactionId}`">
                     {{ticket.ticketSale.transactionId}}<br/>
                   </a>
                   <a v-if="ticket.ticketExpense"
-                    :href="`#/c/${companyId}/transactions/${ticket.ticketExpense.transactionId}`">
+                    :href="`#/c/${companyId}/transactions?transactionId=${ticket.ticketExpense.transactionId}`">
                     (Issue: {{ticket.ticketExpense.transactionId}})<br/>
                   </a>
                   <a v-if="ticket.ticketRefund"
-                    :href="`#/c/${companyId}/transactions/${ticket.ticketRefund.transactionId}`">
+                    :href="`#/c/${companyId}/transactions?transactionId=${ticket.ticketRefund.transactionId}`">
                     (Related Txn ID: {{ticket.ticketRefund.transactionId}})<br/>
                   </a>
                 </td>
@@ -206,7 +206,7 @@
                     Purchased using route pass {{ticket.routePass.id}}<br/>
                     Purchase Txn:
                       <a
-                        :href="`#/c/${companyId}/transactions/${ticket.routePass.transactionId}`">
+                        :href="`#/c/${companyId}/transactions?transactionId=${ticket.routePass.transactionId}`">
                         {{ticket.routePass.transactionId}}</a><br/>
                     Discount: &dollar;{{ f.number(ticket.routePass.discount || 0, '#,###.00') }}
                   </span>
@@ -261,7 +261,7 @@
                   </button>
                 </td>
                 <td class="text-center">
-                  <a :href="`#/c/${companyId}/transactions/${ticket.Id}`">
+                  <a :href="`#/c/${companyId}/transactions?ticketId=${ticket.Id}`">
                     {{ticket.id}}
                   </a>
                   <button class="btn btn-default btn-icon send-wrs-email"
@@ -371,7 +371,7 @@ import SpanSelect from '@/components/SpanSelect.vue'
 import filters from '@/filters'
 
 export default {
-  props: ['companyId', 'tripId', 'userId'],
+  props: ['companyId', 'tripId', 'userId', 'routeId'],
 
   components: {
     MultiSelectBroker,
@@ -511,11 +511,11 @@ export default {
   watch: {
     requestUrl: _.debounce(function () {
       this.requery()
-    }, {leading: false, trailing: true}, 1000),
+    }, 1000, {leading: false, trailing: true}),
 
     monthlyCountsUrl:  _.debounce(function () {
       this.requeryChart()
-    }, {leading: false, trailing: true}, 300),
+    }, 1000, {leading: false, trailing: true}),
   },
 
   created () {
@@ -523,6 +523,9 @@ export default {
       this.startOfMonth,
       this.endOfMonth,
     ]
+    this.filter.routeId = this.routeId
+    this.filter.userId = this.userId
+    this.filter.tripId = this.tripId
     this.disp.now = this.now
   },
 
