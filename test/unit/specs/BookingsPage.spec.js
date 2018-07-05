@@ -1,4 +1,6 @@
 import BookingsPage from '@/pages/bookings.vue'
+import sinon from 'sinon'
+import * as redirect from '@/shared/redirect'
 import { mount } from '@vue/test-utils'
 import { delay, mockAjax, testStore } from '../util'
 import querystring from 'querystring'
@@ -198,6 +200,45 @@ describe('bookings.vue', () => {
       bookingsPage.find(`.modal-footer .btn.btn-primary`).trigger('click')
       await delay(1)
       expect(called).toBe(true)
+    })
+  })
+
+  it('should download CSV', async () => {
+    let called = false
+
+    await mockAjax({
+      'POST /downloads': [
+        200,
+        (request) => {
+          const query = querystring.parse(request.data.uri.split('?', 2)[1])
+          expect(query.tripStartDate).toBe(Date.UTC(2018, 5, 1).toString())
+          expect(query.tripEndDate).toBe(Date.UTC(2018, 6, 1).toString())
+          expect(query.format).toBe('csv')
+          expect(query.transportCompanyId).toBe('33')
+          expect(query.page).toBe(undefined)
+          expect(query.perPage).toBe(undefined)
+          expect(JSON.parse(query.statuses)).toEqual(['valid', 'refunded', 'void'])
+          called = true
+
+          return {token: 'FAKE_DOWNLOAD_TOKEN'}
+        }
+      ],
+    }, async () => {
+      let sandbox = sinon.createSandbox({})
+      
+      try {
+        let stub = sinon.stub(redirect, 'default')
+
+        bookingsPage.findAll(`.btn.btn-default`)
+          .filter(b => b.text().trim() === 'Download CSV')
+          .at(0).trigger('click')
+        await delay(1)
+
+        expect(stub.calledOnceWith(`${process.env.BACKEND_URL}/download/FAKE_DOWNLOAD_TOKEN`))
+      } finally {
+        sandbox.restore()
+      }
+      expect(called).toEqual(true)
     })
   })
 })

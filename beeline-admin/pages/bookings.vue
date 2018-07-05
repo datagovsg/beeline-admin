@@ -361,6 +361,7 @@
 import assert from 'assert'
 import querystring from 'querystring'
 import {mapGetters, mapActions} from 'vuex'
+import redirect from '@/shared/redirect'
 
 import MultiSelectBroker from '@/components/MultiSelectBroker'
 import UibPagination from '@/components/UibPagination.vue'
@@ -478,7 +479,8 @@ export default {
     },
 
     csvUrl () {
-      return this.buildQuery({format: 'csv'})
+      /* querystring.stringify strips out empty arrays [] */
+      return this.buildQuery({format: 'csv', page: [], perPage: []})
     },
 
     requestUrl () {
@@ -569,10 +571,10 @@ export default {
 
     downloadCsv () {
       this.axios.post('/downloads', {
-        uri: $scope.csvUrl
+        uri: this.csvUrl
       })
       .then((result) => {
-        window.location.href = process.env.BACKEND_URL + '/downloads/' + result.data.token
+        redirect(process.env.BACKEND_URL + '/downloads/' + result.data.token)
       })
     },
 
