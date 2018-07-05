@@ -55,10 +55,11 @@ angular.module('beeline-admin')
 
   .state('c.companies', {
     url: '/companies',
-    templateUrl: 'templates/companies.html',
-    controller: 'companies',
+    templateUrl: 'templates/generic-vue-page.html',
+    controller: 'genericVuePageController',
     data: {
       requiresLogin: true,
+      page: 'CompaniesPage',
     }
   })
   .state('assets', {
