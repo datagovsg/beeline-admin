@@ -317,7 +317,7 @@ export default {
 
       return {
         trips: _.flatten(this.data.users.map(user => /* for each user */
-          this.disp.tripsInMonth.map(trip => /* for each trip */
+          this.selectedTrips.map(trip => /* for each trip */
             ({
               userId: user.id,
               boardStopId: trip.tripStops.find(ts => ts.stopId === this.data.boardStopStopId).id,
