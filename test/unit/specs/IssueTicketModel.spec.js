@@ -54,6 +54,86 @@ describe('IssueTicket.vue', () => {
         ],
       },
       {
+        id: 10003,
+        routeId: 10,
+        date: new Date(Date.UTC(2018, 5, 17)).toISOString(),
+        isRunning: true,
+        tripStops: [
+          {
+            id: 30101,
+            canAlight: false,
+            canBoard: true,
+            stopId: 600,
+            stop: {description: 'Bus stop 600'},
+            time: new Date(2018, 5, 17, 7, 45).toISOString(),
+          },
+          {
+            id: 30102,
+            canAlight: false,
+            canBoard: true,
+            stopId: 601,
+            stop: {description: 'Bus stop 601'},
+            time: new Date(2018, 5, 17, 7, 46).toISOString(),
+          },
+          {
+            id: 30103,
+            canAlight: true,
+            canBoard: false,
+            stopId: 602,
+            stop: {description: 'Bus stop 602'},
+            time: new Date(2018, 5, 17, 8, 15).toISOString(),
+          },
+          {
+            id: 30104,
+            canAlight: true,
+            canBoard: false,
+            stopId: 603,
+            stop: {description: 'Bus stop 603'},
+            time: new Date(2018, 5, 17, 8, 16).toISOString(),
+          },
+        ],
+      },
+      {
+        id: 10003,
+        routeId: 10,
+        date: new Date(Date.UTC(2018, 5, 17)).toISOString(),
+        isRunning: true,
+        tripStops: [
+          {
+            id: 30101,
+            canAlight: false,
+            canBoard: true,
+            stopId: 600,
+            stop: {description: 'Bus stop 600'},
+            time: new Date(2018, 5, 17, 7, 45).toISOString(),
+          },
+          {
+            id: 30102,
+            canAlight: false,
+            canBoard: true,
+            stopId: 601,
+            stop: {description: 'Bus stop 601'},
+            time: new Date(2018, 5, 17, 7, 46).toISOString(),
+          },
+          {
+            id: 30103,
+            canAlight: true,
+            canBoard: false,
+            stopId: 602,
+            stop: {description: 'Bus stop 602'},
+            time: new Date(2018, 5, 17, 8, 15).toISOString(),
+          },
+          {
+            id: 30104,
+            canAlight: true,
+            canBoard: false,
+            stopId: 603,
+            stop: {description: 'Bus stop 603'},
+            time: new Date(2018, 5, 17, 8, 16).toISOString(),
+          },
+        ],
+      },
+      {
         id: 10002,
         routeId: 10,
         date: new Date(Date.UTC(2018, 5, 30)).toISOString(),
@@ -175,7 +255,7 @@ describe('IssueTicket.vue', () => {
     for (let i = 1; i <= 30; i++) {
       const classes = rows.filter(r => r.text().trim() === `${i}`).at(0).element.className
 
-      if (i === 16 || i === 30) {
+      if (i === 16 || i === 30 || i === 17) {
         expect(classes.includes('disabled')).toBe(false)
       } else {
         expect(classes.includes('disabled')).toBe(true)
