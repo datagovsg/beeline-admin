@@ -25,11 +25,12 @@ angular.module('beeline-admin')
   })
 
   .state('c.transactions', {
-    url: '/transactions?id&ticketId',
-    templateUrl: 'templates/transactions.html',
-    controller: 'transactions',
+    url: '/transactions?transactionId&ticketId',
+    templateUrl: 'templates/generic-vue-page.html',
+    controller: 'genericVuePageController',
     data: {
       requiresLogin: true,
+      page: 'TransactionsPage',
     },
   })
 
@@ -123,10 +124,11 @@ angular.module('beeline-admin')
 
   .state('c.crowdstart-summary', {
     url: '/crowdstart-summary',
-    templateUrl: 'templates/crowdstart-summary.html',
-    controller: 'CrowdstartSummaryCtrl',
+    templateUrl: 'templates/generic-vue-page.html',
+    controller: 'genericVuePageController',
     data: {
       requiresLogin: true,
+      page: 'CrowdstartSummaryPage',
     }
   })
   .state('c.test', {
@@ -181,10 +183,11 @@ angular.module('beeline-admin')
 
   .state('c.notifications', {
     url: '/notifications',
-    templateUrl: 'templates/notifications.html',
-    controller: 'notifications',
+    templateUrl: 'templates/generic-vue-page.html',
+    controller: 'genericVuePageController',
     data: {
       requiresLogin: true,
+      page: 'NotificationsPage'
     }
   })
 
