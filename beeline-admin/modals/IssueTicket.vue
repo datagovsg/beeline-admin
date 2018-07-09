@@ -33,7 +33,7 @@
               </label>
               <div class="col-sm-10">
                 <ul class="selected-dates">
-                  <li v-for="ticket in cancelledTickets">
+                  <li v-for="ticket in cancelledTickets" :key="ticket.id">
                     <table class="borderless">
                       <tr>
                         <td>
@@ -83,10 +83,10 @@
               <label class="control-label col-sm-2">Selected Date(s)</label>
              <div class="col-sm-10">
                <ul class="selected-dates">
-                 <li v-for="trip in disp.selectedTrips" :key="trip.id">
+                 <li v-for="trip in selectedTrips" :key="trip.id">
                    {{f.date(trip.date, 'dd mmm yyyy')}}
-                   <button @click="removeTrip(trip.date)"
-                     class="btn btn-link">
+                   <button @click="removeTripByDate(trip.date)"
+                     class="btn btn-link" type="button">
                      <span class="glyphicon glyphicon-remove text-danger" aria-hidden="true" />
                    </button>
                  </li>
@@ -253,13 +253,13 @@ export default {
         .mapValues(([conflict, user]) => conflict)
         .value()
     },
-
+    
     selectedTrips () {
       if (!this.data.selectedDates || this.data.selectedDates.length === 0)
         return []
 
-      return this.data.selectedDates.map(date =>
-        this.disp.tripsInMonth
+      return _.sortBy(this.data.selectedDates)
+        .map(date => this.disp.tripsInMonth
           .find(trip => new Date(trip.date).getTime() === date.getTime())
       )
     },
@@ -363,8 +363,8 @@ export default {
   },
   methods: {
     ...mapActions('resources', ['getRoute']),
-    removeDate () {
-
+    removeTripByDate (date) {
+      this.data.selectedDates = this.data.selectedDates.filter(d => d.getTime() !== date.getTime())
     },
     newUser () {
       return {
