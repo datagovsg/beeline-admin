@@ -487,9 +487,15 @@ export default {
       return this.buildQuery({format: 'csv', page: [], perPage: []})
     },
 
-    requestUrl () {
+    requestUrlWithoutPagination () {
       if (!this.idToken) return
       return this.buildQuery()
+    },
+
+    requestUrl () {
+      if (!this.idToken) return
+      const url = this.addPaginationOptions(this.requestUrlWithoutPagination)
+      return url
     },
 
     monthlyCountsUrl () {
@@ -513,6 +519,10 @@ export default {
   },
 
   watch: {
+    requestUrlWithoutPagination () {
+      this.pagination.currentPage = 1
+    },
+    
     requestUrl: _.debounce(function () {
       this.requeryTable()
     }, 1000, {leading: false, trailing: true}),
@@ -568,6 +578,7 @@ export default {
           } catch (e) {}
         }
 
+        this.pagination.currentPage = result.data.page
         this.fetchedData = result.data
         this.bookings = result.data.rows
         this.selectedBookings = [];
@@ -578,6 +589,8 @@ export default {
 
       this.spinOnPromise(queryPromise)
       .catch(this.showErrorModal)
+
+      return queryPromise
     },
 
     downloadCsv () {
@@ -722,6 +735,13 @@ export default {
       }
     },
 
+    addPaginationOptions (url) {
+      return url + '&' + querystring.stringify({
+        page: this.pagination.currentPage || 1,
+        perPage: this.pagination.perPage,
+      })
+    },
+
     buildQuery (override) {
       // update the request and CSV url
       // tripStartDate & tripEndDate should be converted to
@@ -732,9 +752,6 @@ export default {
       if (!startDate || !endDate) return null
 
       const queryOptions = {
-        page: this.pagination.currentPage || 1,
-        perPage: this.pagination.perPage,
-
         tripStartDate: Date.UTC(
           startDate.getUTCFullYear(),
           startDate.getUTCMonth(),
