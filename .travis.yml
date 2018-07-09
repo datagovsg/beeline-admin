@@ -6,7 +6,7 @@ script:
 before_deploy:
   - npm run deploy
 deploy:
-  provider: gh-pages
+  provider: pages
   skip-cleanup: true
   github-token: $GITHUB_TOKEN
   keep-history: true
