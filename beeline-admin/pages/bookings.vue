@@ -28,7 +28,7 @@
               v-model="filter.routeId"
               :companyId="companyId"
               :startDate="filter.startAndEndDate[0]"
-              :endDate="filter.startAndEndDate[1]"
+              :endDate="addOneDay(filter.startAndEndDate[1])"
               />
           </div>
           <!-- stop query -->
@@ -52,21 +52,21 @@
           <div class="form-group pull-left ticketSearch">
             <label>
               Trip ID
-              <input type="number" v-model.lazy="filter.tripId" class="form-control" />
+              <input type="tel" v-model.lazy="filter.tripId" class="form-control" />
             </label>
           </div>
           <!-- txn query -->
           <div class="form-group pull-left ticketSearch">
             <label>
               Transaction ID
-              <input type="text" v-model.lazy="filter.transactionId" class="form-control" />
+              <input type="tel" v-model.lazy="filter.transactionId" class="form-control" />
             </label>
           </div>
           <!-- Ticket query -->
           <div class="form-group pull-left ticketSearch">
             <label>
               Ticket ID
-              <input type="text" v-model.lazy="filter.ticketId" class="form-control" />
+              <input type="tel" v-model.lazy="filter.ticketId" class="form-control" />
             </label>
           </div>
           <!-- charge query -->
@@ -233,7 +233,7 @@
                  </button>
                 </td>
                 <td>
-                  <a :href="`#/c/${companyId}/${ticket.user.id}`">
+                  <a :href="`#/c/${companyId}/users/${ticket.user.id}`">
                     <strong v-if="f._.get(ticket, 'user.json')">
                       {{ticket.user.json.name + ' #' + ticket.user.json.index}}
                     </strong>
@@ -403,11 +403,12 @@ export default {
           pending: false,
         },
         startAndEndDate: [],
-        userQuery: null,
-        transactionId: null,
-        chargeId: null,
-        paymentId: null,
-        ticketId: null
+        userQuery: '',
+        tripId: '',
+        transactionId: '',
+        chargeId: '',
+        paymentId: '',
+        ticketId: ''
       },
 
       chart: {
@@ -486,9 +487,15 @@ export default {
       return this.buildQuery({format: 'csv', page: [], perPage: []})
     },
 
-    requestUrl () {
+    requestUrlWithoutPagination () {
       if (!this.idToken) return
       return this.buildQuery()
+    },
+
+    requestUrl () {
+      if (!this.idToken) return
+      const url = this.addPaginationOptions(this.requestUrlWithoutPagination)
+      return url
     },
 
     monthlyCountsUrl () {
@@ -512,6 +519,10 @@ export default {
   },
 
   watch: {
+    requestUrlWithoutPagination () {
+      this.pagination.currentPage = 1
+    },
+    
     requestUrl: _.debounce(function () {
       this.requeryTable()
     }, 1000, {leading: false, trailing: true}),
@@ -567,6 +578,7 @@ export default {
           } catch (e) {}
         }
 
+        this.pagination.currentPage = result.data.page
         this.fetchedData = result.data
         this.bookings = result.data.rows
         this.selectedBookings = [];
@@ -577,6 +589,8 @@ export default {
 
       this.spinOnPromise(queryPromise)
       .catch(this.showErrorModal)
+
+      return queryPromise
     },
 
     downloadCsv () {
@@ -721,6 +735,13 @@ export default {
       }
     },
 
+    addPaginationOptions (url) {
+      return url + '&' + querystring.stringify({
+        page: this.pagination.currentPage || 1,
+        perPage: this.pagination.perPage,
+      })
+    },
+
     buildQuery (override) {
       // update the request and CSV url
       // tripStartDate & tripEndDate should be converted to
@@ -731,9 +752,6 @@ export default {
       if (!startDate || !endDate) return null
 
       const queryOptions = {
-        page: this.pagination.currentPage || 1,
-        perPage: this.pagination.perPage,
-
         tripStartDate: Date.UTC(
           startDate.getUTCFullYear(),
           startDate.getUTCMonth(),
@@ -753,10 +771,10 @@ export default {
         queryOptions.routeId = this.filter.routeId
       }
       if (this.filter.userQuery) {
-        queryOptions.userQuery = this.filter.userQuery
+        queryOptions.userQuery = this.filter.userQuery.trim()
       }
       if (this.filter.stopQuery) {
-        queryOptions.stopQuery = this.filter.stopQuery
+        queryOptions.stopQuery = this.filter.stopQuery.trim()
       }
 
       /* Search all dates by... fields */
@@ -768,19 +786,19 @@ export default {
       }
 
       if (this.filter.tripId) {
-        queryOptions.tripId = this.filter.tripId
+        queryOptions.tripId = this.filter.tripId.trim()
       }
       if (this.filter.transactionId) {
-        queryOptions.transactionId = this.filter.transactionId;
+        queryOptions.transactionId = this.filter.transactionId.trim()
       }
       if (this.filter.chargeId) {
-        queryOptions.chargeId = this.filter.chargeId
+        queryOptions.chargeId = this.filter.chargeId.trim()
       }
       if (this.filter.paymentId) {
-        queryOptions.paymentId = this.filter.paymentId
+        queryOptions.paymentId = this.filter.paymentId.trim()
       }
       if (this.filter.ticketId) {
-        queryOptions.ticketId = this.filter.ticketId
+        queryOptions.ticketId = this.filter.ticketId.trim()
       }
 
       if (this.companyId) {
@@ -799,8 +817,76 @@ export default {
     toggleSelection (list) {
       this.selectedBookings = _.differenceBy(this.selectedBookings, list, 'id')
         .concat(_.differenceBy(list, this.selectedBookings, 'id'))
+    },
+
+    addOneDay (d) {
+      return d && new Date(d.getTime() + 24 * 3600 * 1000)
     }
   }
 }
 
 </script>
+
+<style lang="scss">
+@import "~/scss/bootstrap/_variables.scss";
+@import "~/scss/bootstrap/_mixins.scss";
+
+.bookings-page {
+  margin-bottom: $padding-large-vertical*5;
+  nav {
+    .uib-datepicker {
+      float: left;
+      margin: 0 1em;
+    }
+    &:after {
+      content: ".";
+      visibility: hidden;
+      clear: both;
+    }
+  }
+  .ticketSearch {
+    margin-right: $padding-large-horizontal;
+    margin-top: $padding-large-horizontal;
+  }
+  .ticketCheckbox {
+    margin-right: $padding-base-horizontal;
+  }
+  .bookingNav {
+    margin-top: $padding-large-vertical;
+    margin-right: $padding-base-horizontal;
+  }
+  tr.selected td {
+    background-color: $table-bg-hover;
+  }
+
+  .actions.btn {
+    margin: $padding_small_vertical 0;
+  }
+}
+
+.loading {
+  background-image: url("~/www/img/spinner.svg");
+  background-position: top right;
+  background-repeat: no-repeat;
+  background-size: 200px 200px;
+}
+
+.label{
+  &.ticket-valid {
+    @include label-variant($label-success-bg);
+  }
+
+  &.ticket-void {
+    @include label-variant($label-default-bg);
+  }
+
+  &.ticket-refunded {
+    @include label-variant($label-danger-bg);
+  }
+
+  &.ticket-failed, &.discount-code {
+    @include label-variant($gray-darker);
+  }
+
+}
+</style>

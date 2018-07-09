@@ -35,11 +35,6 @@
     </button>
   </div>
 
-  <a :href="`#/c/${companyId}/trips/0/route`" class="btn btn-primary btn-lg create-route-button">
-    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
-    Create a new route
-  </a>
-
   <br clear="both"/><br/>
 
   <table class="table table-striped table-bordered table-condensed table-hover transactions-view">
