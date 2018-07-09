@@ -513,7 +513,7 @@ export default {
 
   watch: {
     requestUrl: _.debounce(function () {
-      this.requery()
+      this.requeryTable()
     }, {leading: false, trailing: true}, 1000),
 
     monthlyCountsUrl:  _.debounce(function () {
@@ -534,7 +534,7 @@ export default {
     ...mapActions('modals', ['showModal', 'showErrorModal', 'alert', 'confirm', 'flash']),
 
     requeryBoth () {
-      this.requery()
+      this.requeryTable()
       this.requeryChart()
     },
 
@@ -550,7 +550,7 @@ export default {
       })
     },
 
-    requery () {
+    requeryTable () {
       if (this.requestUrl === null) return
 
       const queryPromise = this.$lastPromise = this.axios.get(this.requestUrl)
