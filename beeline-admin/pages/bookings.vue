@@ -233,7 +233,7 @@
                  </button>
                 </td>
                 <td>
-                  <a :href="`#/c/${companyId}/${ticket.user.id}`">
+                  <a :href="`#/c/${companyId}/users/${ticket.user.id}`">
                     <strong v-if="f._.get(ticket, 'user.json')">
                       {{ticket.user.json.name + ' #' + ticket.user.json.index}}
                     </strong>
