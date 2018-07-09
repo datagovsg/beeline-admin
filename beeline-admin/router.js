@@ -25,11 +25,12 @@ angular.module('beeline-admin')
   })
 
   .state('c.transactions', {
-    url: '/transactions?id&ticketId',
-    templateUrl: 'templates/transactions.html',
-    controller: 'transactions',
+    url: '/transactions?transactionId&ticketId',
+    templateUrl: 'templates/generic-vue-page.html',
+    controller: 'genericVuePageController',
     data: {
       requiresLogin: true,
+      page: 'TransactionsPage',
     },
   })
 

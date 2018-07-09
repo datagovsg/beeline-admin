@@ -1,8 +1,7 @@
 import IssueTicket from '@/modals/IssueTicket.vue'
+import sinon from 'sinon'
 import { mount } from '@vue/test-utils'
 import { delay, mockAjax, testStore } from '../util'
-import MockDate from 'mockdate' // Cannot use jasmine clock because it 'stops' time
-import _ from 'lodash'
 
 describe('IssueTicket.vue', () => {
   let issueTicketModal = null
@@ -237,12 +236,17 @@ describe('IssueTicket.vue', () => {
     issueTicketModal = await modalLoaded
   }
 
+  let clock = null
+
   afterEach(() => {
-    MockDate.reset()
+    clock.restore()
   })
 
   beforeEach(async () => {
-    MockDate.set(new Date(2018, 5, 15))
+    clock = sinon.useFakeTimers({
+      now: new Date(2018, 5, 15),
+      shouldAdvanceTime: true,
+    })
   })
 
   it('should load the dates in the calendar', async () => {
