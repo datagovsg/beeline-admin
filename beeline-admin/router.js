@@ -182,10 +182,11 @@ angular.module('beeline-admin')
 
   .state('c.notifications', {
     url: '/notifications',
-    templateUrl: 'templates/notifications.html',
-    controller: 'notifications',
+    templateUrl: 'templates/generic-vue-page.html',
+    controller: 'genericVuePageController',
     data: {
       requiresLogin: true,
+      page: 'NotificationsPage'
     }
   })
 
