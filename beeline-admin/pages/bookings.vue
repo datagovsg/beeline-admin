@@ -52,21 +52,21 @@
           <div class="form-group pull-left ticketSearch">
             <label>
               Trip ID
-              <input type="number" v-model.lazy="filter.tripId" class="form-control" />
+              <input type="tel" v-model.lazy="filter.tripId" class="form-control" />
             </label>
           </div>
           <!-- txn query -->
           <div class="form-group pull-left ticketSearch">
             <label>
               Transaction ID
-              <input type="text" v-model.lazy="filter.transactionId" class="form-control" />
+              <input type="tel" v-model.lazy="filter.transactionId" class="form-control" />
             </label>
           </div>
           <!-- Ticket query -->
           <div class="form-group pull-left ticketSearch">
             <label>
               Ticket ID
-              <input type="text" v-model.lazy="filter.ticketId" class="form-control" />
+              <input type="tel" v-model.lazy="filter.ticketId" class="form-control" />
             </label>
           </div>
           <!-- charge query -->
@@ -403,11 +403,12 @@ export default {
           pending: false,
         },
         startAndEndDate: [],
-        userQuery: null,
-        transactionId: null,
-        chargeId: null,
-        paymentId: null,
-        ticketId: null
+        userQuery: '',
+        tripId: '',
+        transactionId: '',
+        chargeId: '',
+        paymentId: '',
+        ticketId: ''
       },
 
       chart: {
@@ -753,10 +754,10 @@ export default {
         queryOptions.routeId = this.filter.routeId
       }
       if (this.filter.userQuery) {
-        queryOptions.userQuery = this.filter.userQuery
+        queryOptions.userQuery = this.filter.userQuery.trim()
       }
       if (this.filter.stopQuery) {
-        queryOptions.stopQuery = this.filter.stopQuery
+        queryOptions.stopQuery = this.filter.stopQuery.trim()
       }
 
       /* Search all dates by... fields */
@@ -768,19 +769,19 @@ export default {
       }
 
       if (this.filter.tripId) {
-        queryOptions.tripId = this.filter.tripId
+        queryOptions.tripId = this.filter.tripId.trim()
       }
       if (this.filter.transactionId) {
-        queryOptions.transactionId = this.filter.transactionId;
+        queryOptions.transactionId = this.filter.transactionId.trim()
       }
       if (this.filter.chargeId) {
-        queryOptions.chargeId = this.filter.chargeId
+        queryOptions.chargeId = this.filter.chargeId.trim()
       }
       if (this.filter.paymentId) {
-        queryOptions.paymentId = this.filter.paymentId
+        queryOptions.paymentId = this.filter.paymentId.trim()
       }
       if (this.filter.ticketId) {
-        queryOptions.ticketId = this.filter.ticketId
+        queryOptions.ticketId = this.filter.ticketId.trim()
       }
 
       if (this.companyId) {
