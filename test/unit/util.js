@@ -25,20 +25,16 @@ export function testStore ({modules, state, getters, mutations, actions}, fakeAx
       // ...modules,
     },
     state: {
-      idToken: null,
+      idToken: 'ABC.DEF.XYZ',
       companyId: null,
+      _isSuperAdmin: false,
       ...state,
     },
     getters: {
       axios: () => axios,
 
       isSuperAdmin (state) {
-        if (!state.idToken) return false
-
-        // FIXME: remove dependency on app_metadata
-        // Should rely on (GET /admins/whoami).scope
-        const decoded = jwtDecode(state.idToken)
-        return _.get(decoded, 'app_metadata.roles', []).includes('superadmin')
+        return state._isSuperAdmin
       },
 
       ...getters,
