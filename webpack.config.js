@@ -122,7 +122,7 @@ const cssBundle = {
     }]
   },
   output: {
-    path: path.resolve('./www/css')
+    path: path.resolve(prefix, './css')
   },
   plugins: [
     new MiniCssExtractPlugin({
