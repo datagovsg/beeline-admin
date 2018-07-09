@@ -361,7 +361,7 @@
 <script>
 import assert from 'assert'
 import querystring from 'querystring'
-import {mapState, mapGetters, mapActions} from 'vuex'
+import {mapGetters, mapActions} from 'vuex'
 import redirect from '@/shared/redirect'
 
 import MultiSelectBroker from '@/components/MultiSelectBroker'
@@ -429,7 +429,6 @@ export default {
 
   computed: {
     ...mapGetters(['axios']),
-    ...mapState(['idToken']),
 
     f: () => filters,
 
@@ -481,13 +480,11 @@ export default {
     },
 
     csvUrl () {
-      if (!this.idToken) return
       /* querystring.stringify strips out empty arrays [] */
       return this.buildQuery({format: 'csv', page: [], perPage: []})
     },
 
     requestUrl () {
-      if (!this.idToken) return
       return this.buildQuery()
     },
 
@@ -513,7 +510,7 @@ export default {
 
   watch: {
     requestUrl: _.debounce(function () {
-      this.requeryTable()
+      this.requery()
     }, 1000, {leading: false, trailing: true}),
 
     monthlyCountsUrl:  _.debounce(function () {
@@ -536,11 +533,6 @@ export default {
     ...mapActions('spinner', ['spinOnPromise']),
     ...mapActions('modals', ['showModal', 'showErrorModal', 'alert', 'confirm', 'flash']),
 
-    requeryBoth () {
-      this.requeryTable()
-      this.requeryChart()
-    },
-
     requeryChart () {
       if (!this.monthlyCountsUrl) return
 
@@ -553,7 +545,7 @@ export default {
       })
     },
 
-    requeryTable () {
+    requery () {
       if (this.requestUrl === null) return
 
       const queryPromise = this.$lastPromise = this.axios.get(this.requestUrl)
@@ -577,6 +569,8 @@ export default {
 
       this.spinOnPromise(queryPromise)
       .catch(this.showErrorModal)
+
+      this.requeryChart()
     },
 
     downloadCsv () {
@@ -618,7 +612,7 @@ export default {
           var txn = response.data;
           var payment = txn.transactionItems.find(ts => ts.itemType == 'refundPayment' && ts.refundPayment)
 
-          this.requeryBoth()
+          this.requery()
           return this.alert({ title: parseFloat(payment.credit).toFixed(2) + " refunded." })
         })
         .catch(this.showErrorModal)
@@ -653,10 +647,10 @@ export default {
       .then((request) =>
         this.spinOnPromise(
           this.axios.post('/transactions/tickets/issue_free', request))
-          .then(() => this.flash({title: 'Tickets created!'}))
+          .then(() => this.flash('Tickets created!'))
           .catch(this.showErrorModal)
       )
-      .then(() => this.requeryBoth(), () => { /* do nothing if cancelled */ })
+      .then(() => this.requery(), () => { /* do nothing if cancelled */ })
     },
 
     // Edit ticket button
@@ -677,10 +671,10 @@ export default {
       .then((request) =>
         this.spinOnPromise(
           this.axios.post('/transactions/tickets/issue_free', request))
-          .then(() => this.flash({title: 'Tickets created!'}))
+          .then(() => this.flash('Tickets created!'))
           .catch(this.showErrorModal)
       )
-      .then(() => this.requeryBoth(), () => { /* do nothing if cancelled */ })
+      .then(() => this.requery(), () => { /* do nothing if cancelled */ })
     },
     // Add ticket button -- don't cancel earlier ticket
     addTicket (ticket) {
@@ -699,10 +693,10 @@ export default {
       .then((request) =>
         this.spinOnPromise(
           this.axios.post('/transactions/tickets/issue_free', request))
-          .then(() => this.flash({title: 'Tickets created!'}))
+          .then(() => this.flash('Tickets created!'))
           .catch(this.showErrorModal)
       )
-      .then(() => this.requeryBoth(), () => { /* do nothing if cancelled */ })
+      .then(() => this.requery(), () => { /* do nothing if cancelled */ })
     },
 
     async toggleVoidTicket (ticket) {
@@ -714,7 +708,7 @@ export default {
         this.spinOnPromise(this.axios.put(`/tickets/${id}/status`, {status: newStatus}))
         .then((response) => {
           const { status } = response.data
-          this.requeryBoth()
+          this.requery()
           return this.alert({title: `This ticket is now ${status}`})
         })
         .catch(this.showErrorModal)
