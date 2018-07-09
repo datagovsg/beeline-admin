@@ -23,7 +23,6 @@
     "jwt-decode": "^2.2.0",
     "left-pad": "^1.1.0",
     "lodash": "^4.11.1",
-    "mockdate": "^2.0.2",
     "moment": "^2.22.2",
     "moment-timezone": "^0.5.18",
     "multiple-date-picker": "git+https://github.com/datagovsg/MultipleDatePicker.git#annotations",

@@ -4,19 +4,22 @@ import * as redirect from '@/shared/redirect'
 import { mount } from '@vue/test-utils'
 import { delay, mockAjax, testStore } from '../util'
 import querystring from 'querystring'
-import MockDate from 'mockdate' // Cannot use jasmine clock because it 'stops' time
 import _ from 'lodash'
 import FIXTURE_DATA from '../../fixtures/booking-data.json'
 
 describe('bookings.vue', () => {
   let bookingsPage = null
+  let clock = null
 
   afterEach(() => {
-    MockDate.reset()
+    clock.restore()
   })
 
   beforeEach(async () => {
-    MockDate.set(new Date(2018, 5, 15))
+    clock = sinon.useFakeTimers({
+      now: new Date(2018, 5, 15),
+      shouldAdvanceTime: true,
+    })
     bookingsPage = await mockAjax({
       'GET /routes': [200, []],
       ['GET /custom/wrs/report?' + querystring.stringify({
@@ -26,16 +29,16 @@ describe('bookings.vue', () => {
         // statuses: JSON.stringify(['valid', 'refunded', 'void'])
       }) + '&statuses&page&perPage']: [
         200,
-        FIXTURE_DATA,
-        (request, response) => {
+        (request) => {
           const statusesJson = JSON.parse(request.query.statuses)
           expect(statusesJson.includes('valid')).toBe(true)
           expect(statusesJson.includes('refunded')).toBe(true)
           expect(statusesJson.includes('void')).toBe(true)
+          return FIXTURE_DATA
         }
       ]
     }, async () => {
-      const bookingsPage = mount(
+      const bookingsPage = await mount(
         BookingsPage,
         {
           sync: false,
@@ -43,7 +46,7 @@ describe('bookings.vue', () => {
           store: testStore({})
         }
       )
-      await delay(20)
+      await delay(1050) // There is a 1-second debounce
       return bookingsPage
     })
   })
