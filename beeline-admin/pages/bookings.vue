@@ -28,7 +28,7 @@
               v-model="filter.routeId"
               :companyId="companyId"
               :startDate="filter.startAndEndDate[0]"
-              :endDate="filter.startAndEndDate[1]"
+              :endDate="addOneDay(filter.startAndEndDate[1])"
               />
           </div>
           <!-- stop query -->
@@ -799,6 +799,10 @@ export default {
     toggleSelection (list) {
       this.selectedBookings = _.differenceBy(this.selectedBookings, list, 'id')
         .concat(_.differenceBy(list, this.selectedBookings, 'id'))
+    },
+
+    addOneDay (d) {
+      return d && new Date(d.getTime() + 24 * 3600 * 1000)
     }
   }
 }
