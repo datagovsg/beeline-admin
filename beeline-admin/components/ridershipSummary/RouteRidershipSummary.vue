@@ -92,9 +92,11 @@
             cancelled: trip && trip.status === 'cancelled',
             void: trip && trip.status === 'void'
           }" class="passenger-count day">
-          <a ui-sref="^.bookings({tripId: trip.id})">
-          {{trip ? (trip.availability.seatsBooked || '0') : ''}}
-          </a>
+          <template v-if="trip">
+            <a :href="`#/c/${route.transportCompanyId}/bookings?tripId=${trip.id}`">
+              {{trip.availability.seatsBooked || '0'}}
+            </a>
+          </template>
         </td>
       </tr>
     </template>
