@@ -15,6 +15,7 @@
         <h2>Search selected dates by:</h2>
         <form>
           <div class="form-group">
+            <label>User ID</label>
             <UserIdSelector v-model="filter.userId"/>
           </div>
           <div class="form-group">
@@ -422,7 +423,7 @@ export default {
       return typeArray.map(type => items.find(item => item.itemType && item.itemType === type))
     },
     monthChanged (newMonth) {
-      this.filter.selectedMonth = newMonth.clone().toDate()
+      this.filter.selectedMonth = newMonth
       this.filter.startDate = this.filter.endDate = null
     },
     refund (routePassTxnItem) {
