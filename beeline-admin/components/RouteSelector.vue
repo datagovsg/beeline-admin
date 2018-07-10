@@ -21,8 +21,13 @@
         </div>
       </template>
       <template v-else>
-        {{s.entry ? routesById[s.entry].label : ''}}
-        {{s.entry ? routesById[s.entry].name : ''}}
+        <template v-if="s.entry && routesById[s.entry]">
+          {{routesById[s.entry].label}}
+          {{routesById[s.entry].name}}
+        </template>
+        <template v-else-if="s.entry">
+          Route #{{s.entry}}
+        </template>
       </template>
     </div>
 
