@@ -31,7 +31,8 @@ export default {
     return h(
       'div',
       this.modalStack.map(({options: {component, props}, resolve, reject}, index) => {
-        if (!(component in this.$options.components)) {
+        if (typeof component === 'string' &&
+            !(component in this.$options.components)) {
           throw new Error(`Unknown modal ${component}. Known components are ${Object.keys(this.$options.components).join(', ')}`)
         }
         return h(
