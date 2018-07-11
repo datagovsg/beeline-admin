@@ -23,6 +23,7 @@
           :value="editRoute.notes.crowdstartExpiry ? new Date(editRoute.notes.crowdstartExpiry) : null"
           :offset="0"
           @input="update('notes.crowdstartExpiry', f.date($event, 'yyyy-mm-dd'))"
+          class="datepicker-dropdown"
           />
 
         <label>
@@ -34,6 +35,7 @@
             :value="editRoute.trips[0].date && new Date(editRoute.trips[0].date)"
             :offset="0"
             @input="update('trips.0.date', $event)"
+            class="datepicker-dropdown"
             />
         </template>
         <template v-else>
@@ -77,6 +79,12 @@
     </form>
   </div>
 </template>
+
+<style scoped>
+.datepicker-dropdown {
+  max-width: 200px;
+}
+</style>
 
 <script>
 import {mapGetters, mapActions, mapState} from 'vuex'
