@@ -193,10 +193,11 @@ angular.module('beeline-admin')
 
   .state('c.users', {
     url: '/users/{userId}',
-    templateUrl: 'templates/users.html',
-    controller: 'usersController',
+    templateUrl: 'templates/generic-vue-page.html',
+    controller: 'genericVuePageController',
     data: {
       requiresLogin: true,
+      page: 'UserPage'
     }
   })
 
