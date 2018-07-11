@@ -1,7 +1,7 @@
 <template>
   <Select2
     :options="selectOptions"
-    :value="editValue"
+    :value="displayValue"
     @input="updateValue"
     @text-input="updateSearch"
     >
@@ -42,26 +42,23 @@ export default {
 
   data() {
     return {
-      editValue: null,
       matchingResults: null,
+      fetchedValue: null,
     }
   },
 
   watch: {
-    value: {
+    matchedValue: {
       immediate: true,
-      handler (v) {
-        if (v === null || v === undefined) {
-          this.editValue = null
-        } else {
-          const match = this.matchingResults && this.matchingResults.find(u => u.id === this.value)
-
-          if (!match) {
-            // Trigger a search for this user's data
-            this.fetchMatchingResults(`${this.value}`)
-          }
-
-          this.editValue = match || defaultValue(v)
+      handler (m) {
+        /* if there's a value, but no match, fetch the user only */
+        if (!m && this.value) {
+          const promise = this.$fetchPromise = this.axios.get(`/user/${this.value}`)
+          .then((response) => {
+            if (promise === this.$fetchPromise) {
+              this.fetchedValue = response.data
+            }
+          })
         }
       }
     },
@@ -73,7 +70,22 @@ export default {
 
     selectOptions () {
       return this.matchingResults ||
-        [this.value ? defaultValue(this.value) : null]
+        [this.value ? blankValue(this.value) : null]
+    },
+
+    matchedValue () {
+      return this.matchingResults && this.matchingResults.find(u => u.id === this.value)
+    },
+
+    displayValue () {
+      if (!this.value) {
+        return null
+      } else {
+        return this.matchedValue ||
+          (this.fetchedValue && this.fetchedValue.id === this.value
+            ? this.fetchedValue
+            : blankValue(this.value))
+      }
     }
   },
 
@@ -98,19 +110,17 @@ export default {
       .then((response) => {
         if (this.$lastPromise === promise) {
           this.matchingResults = response.data
-
-          if (this.value !== null && this.value !== undefined) {
-            this.editValue = this.matchingResults.find(u => u.id === this.value)
-              || this.editValue /* if there was a previous match */
-              || defaultValue(this.value)
-          }
         }
       })
     }, 300)
   }
 }
 
-function defaultValue (uid) {
+function formatUser (u) {
+  return `(${u.id}) ${u.name} ${u.telephone} ${u.email}`
+}
+
+function blankValue (uid) {
   return {
     id: uid,
     name: 'Loading...',
