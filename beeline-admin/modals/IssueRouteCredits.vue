@@ -23,7 +23,7 @@
     <div class="row">
       <label class="col-sm-3 control-label"># of Trips: </label>
       <div class="col-sm-4">
-        <input type="number" name="rides" class="form-control" min="1" v-model.number="data.quantity">
+        <input type="number" name="quantity" class="form-control" min="1" v-model.number="data.quantity">
       </div>
     </div>
     <div class="row">

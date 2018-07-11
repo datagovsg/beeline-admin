@@ -24,7 +24,7 @@
       <label class="col-sm-3 control-label">Quantity: </label>
       <div class="col-sm-4">
         <div class="input-group">
-          <input type="number" step="1" name="quantity" class="form-control" v-model="data.quantity">
+          <input type="number" step="1" name="quantity" class="form-control" v-model.number="data.quantity">
         </div>
       </div>
     </div>
