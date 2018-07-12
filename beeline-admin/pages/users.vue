@@ -6,6 +6,8 @@
     <div class="col-sm-3">
       <h1>Users</h1>
     </div>
+  </div>
+  <div class="row">
     <div class="col-sm-6">
       <UserIdSelector :value="Number(userId)"
         @input="goToUserId($event)"

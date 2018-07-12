@@ -80,7 +80,7 @@ export default {
   },
   methods: {
     ...mapActions('spinner', ['spinOnPromise']),
-    ...mapActions('modals', ['showModal', 'showErrorModal']),
+    ...mapActions('modals', ['showModal', 'showErrorModal', 'confirm']),
     async query () {
       if (this.companyId) {
         await this.spinOnPromise(
@@ -91,12 +91,14 @@ export default {
         )
       }
     },
-    deleteDriver (did) {
-      return this.spinOnPromise(
-        this.axios.delete(`/companies/${this.companyId}/drivers/${did}`)
-          .catch(this.showErrorModal)
-          .then(this.query)
-      )
+    async deleteDriver (did) {
+      if (await this.confirm({title: 'Are you sure you want to delete?'})) {
+        return this.spinOnPromise(
+          this.axios.delete(`/companies/${this.companyId}/drivers/${did}`)
+            .catch(this.showErrorModal)
+            .then(this.query)
+        )
+      }
     },
     async updateDriverName (driver) {
       const name = await this.showModal({

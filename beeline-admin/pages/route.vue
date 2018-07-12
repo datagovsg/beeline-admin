@@ -112,9 +112,9 @@ export default {
 
     requery () {
       if (!this.routeId) {
-        this.routePromise = Promise.resolve(null)
+        return this.routePromise = Promise.resolve(null)
       } else {
-        this.routePromise = this.getRoute({
+        return this.routePromise = this.getRoute({
           id: this.routeId,
           options: {
             includeDates: true,
