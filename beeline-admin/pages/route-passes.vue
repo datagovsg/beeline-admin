@@ -1,14 +1,16 @@
 <template>
   <div class="container-fluid withnav route-passes">
+    <div class="row">
+      <h1>Route Passes</h1>
+    </div>
     <div class="row" v-if="!companyId">
       Please select a company
     </div>
     <div class="row" v-else-if="!transactions">
       Loading...
     </div>
-    <div class="row">
+    <div class="row" v-else>
       <div class="col-sm-8">
-        <h1>Route Passes</h1>
         <h2>Search selected dates by:</h2>
         <form>
           <div class="form-group">
@@ -53,16 +55,12 @@
           <SpanSelect @month-changed="monthChanged" v-model="filter.dates" :special-dates="specialDates"/>
         </div>
       </div>
-    </div>
-    <div class="row text-center">
       <div class="col-lg-12">
           <UibPagination :boundary-links="true" v-model="paging.page" :total-items="transactionSummary.totalItems" :items-per-page="paging.perPage"/>
           <div>
             Showing {{paging.page * paging.perPage + 1}} to {{paging.page * paging.perPage + (transactions || []).length}} of {{transactionSummary.totalItems}}
           </div>
       </div>
-    </div>
-    <div class="row">
       <div class="col-sm-12">
         <table class="table">
           <thead>
@@ -150,8 +148,6 @@
           </tbody>
         </table>
       </div>
-    </div>
-    <div class="row text-center">
       <div class="col-lg-12">
           <UibPagination :boundary-links="true" v-model="paging.page" :total-items="transactionSummary.totalItems" :items-per-page="paging.perPage"/>
       </div>

@@ -1,63 +1,50 @@
 <template>
-  <div class="container withnav drivers">
-    <LoadingSpinner ref="loadingSpinner"/>
-    <ModalHelper ref="modalHelper"/>
-    <div class="row">
-      <div class="col-lg-12">
-        <h1>Drivers</h1>
-        <div v-if="!companyId">
-          <p>
-            You are Superadmin! Pick the company you would like to edit
-            from the top right hand corner
-          </p>
-        </div>
-        <button @click="addDriver()" class="btn btn-primary btn-lg">
-          Add a new driver
-        </button>
-
+  <div>
+    <h1>Drivers</h1>
+    <div v-if="!companyId">
+      <p>
+        You are Superadmin! Pick the company you would like to edit
+        from the top right hand corner
+      </p>
     </div>
-    <br>
-
-    </div>
-    <div class="row">
-      <div class="col-lg-12">
-        <table class="table table-condensed table-striped table-bordered">
-          <thead>
-            <tr>
-              <th>No.</th>
-              <th>Name</th>
-              <th>Telephone</th>
-              <th>Remarks</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(driver, index) in drivers" :key="index">
-              <td>
-                {{index + 1}}
-              </td>
-              <td>
-                {{driver.transportCompanies[0].driverCompany.name}}
-              </td>
-              <td>
-                {{driver.telephone}}
-              </td>
-              <td>
-                {{driver.transportCompanies[0].driverCompany.remarks}}
-              </td>
-              <td>
-                <button class="btn btn-primary" @click="updateDriverName(driver)">
-                  Edit Name and Remarks
-                </button>
-                <button class="btn btn-danger" @click="deleteDriver(driver.id)">
-                  Delete Driver
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <button @click="addDriver()" class="btn btn-primary btn-lg">
+      Add a new driver
+    </button>
+    <table class="table table-condensed table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th>Name</th>
+          <th>Telephone</th>
+          <th>Remarks</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(driver, index) in drivers" :key="index">
+          <td>
+            {{index + 1}}
+          </td>
+          <td>
+            {{driver.transportCompanies[0].driverCompany.name}}
+          </td>
+          <td>
+            {{driver.telephone}}
+          </td>
+          <td>
+            {{driver.transportCompanies[0].driverCompany.remarks}}
+          </td>
+          <td>
+            <button class="btn btn-primary" @click="updateDriverName(driver)">
+              Edit Name and Remarks
+            </button>
+            <button class="btn btn-danger" @click="deleteDriver(driver.id)">
+              Delete Driver
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 <script>
