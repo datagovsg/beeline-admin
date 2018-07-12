@@ -6829,46 +6829,6 @@ label.superAdmin {
     opacity: 1.0;
     transition: all .1s linear; }
 
-.users td {
-  word-wrap: normal;
-  word-break: break-word; }
-
-.users user-selector .ui-select-container {
-  padding-top: 33px; }
-
-.users user-selector .ui-select-search {
-  width: 100% !important; }
-
-.users user-selector ul.ui-select-no-choice {
-  width: 100%; }
-
-.users user-selector ul.ui-select-no-choice li {
-  list-style: none;
-  padding-left: 12px;
-  padding-bottom: 0px; }
-
-.users user-selector ul li.ui-select-choices-group {
-  list-style: none;
-  padding-left: 10px;
-  padding-bottom: 0px;
-  width: 100%; }
-
-.users user-selector ul li.ui-select-choices-group .ui-select-choices-row-inner {
-  padding-left: 2px; }
-
-.users .btm-offset {
-  margin-bottom: 2px; }
-
-.users .width-limit-md {
-  width: 19%; }
-
-.users .width-limit-xs {
-  width: 3%; }
-
-.users .route-header {
-  background-color: #AAA;
-  border-color: #AAA; }
-
 .label.txn-valid {
   background-color: #00C4A5; }
   .label.txn-valid[href]:hover, .label.txn-valid[href]:focus {
