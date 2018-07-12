@@ -67,6 +67,13 @@ const jsBundle = {
       {
         test: /\.vue$/,
         loader: 'vue-loader',
+      },
+      {
+        test: /\.(svg|png|gif|jpg)$/,
+        loader: 'file-loader',
+        options: {
+          publicPath: 'lib/beeline-admin'
+        }
       }
     ],
   },

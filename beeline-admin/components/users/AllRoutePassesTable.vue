@@ -1,0 +1,208 @@
+<template>
+<div v-if="routePasses === false">
+  Select a company / user
+</div>
+<table class="table" v-else>
+  <thead>
+    <tr>
+      <th>Actions</th>
+      <th>Tag</th>
+      <th>Balance</th>
+      <th class="route-header">Route Label</th>
+      <th class="route-header">Route Description</th>
+      <th class="route-header">Route Status</th>
+      <th class="route-header">Boarding</th>
+      <th class="route-header">Alighting</th>
+      <th class="route-header">Route Price</th>
+    </tr>
+  </thead>
+  <tbody v-if="routePasses === null || allRoutes === null">
+    <tr><td colspan="9"><img src="../../../www/img/spinner.svg" /></td></tr>
+  </tbody>
+  <tbody v-for="routePass in routePasses" :key="routePass.tag">
+    <template v-if="routesByRouteTag && routesByRouteTag[routePass.tag]"> <!-- wait for routes data to be loaded -->
+      <RouteInfo v-for="(route, index) in routesByRouteTag[routePass.tag]" :key="route.id" :routeId="route.id">
+        <tr slot-scope="routeInfo">
+          <td v-if="index == 0" :rowspan="routesByRouteTag[routePass.tag].length">
+            <button class="btn btn-success btn-sm" @click="showHistory(routePass.tag, routePass.balance)">
+              <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+              View History
+            </button>
+            <br/>
+            <button class="btn btn-warning btn-sm" @click="$emit('show-issue-credits', routePass)">
+              <span class="glyphicon glyphicon-piggy-bank" aria-hidden="true"></span>
+              Issue passes...
+            </button>
+            <br/>
+            <button class="btn btn-danger btn-sm" @click="$emit('show-expire-credits', routePass)">
+              <span class="glyphicon glyphicon-scissors" aria-hidden="true"></span>
+              Expire passes...
+            </button>
+          </td>
+          <td v-if="index === 0" :rowspan="routesByRouteTag[routePass.tag].length">
+            <ul class="tags"><li class="tags">{{ routePass.tag }}</li></ul>
+          </td>
+          <td v-if="index === 0" :rowspan="routesByRouteTag[routePass.tag].length"
+            class="width-limit-xs">{{ routePass.balance }}</td>
+          <td>
+            <a :href="`#/c/${companyId}/trips/${route.id}/route`" class="route-label">{{ route.label }}</a>
+          </td>
+          <td class="width-limit-md">
+            <table class="borderless">
+              <tr>
+                <td style="width:25%">From:</td>
+                <td>{{ route.from }}</td>
+              </tr>
+              <tr>
+                <td>To:</td>
+                <td>{{ route.to }}</td>
+              </tr>
+            </table>
+          </td>
+          <td class="routes-page">
+            <template v-if="routeInfo">
+              <span class="label route-active"
+                v-if="routeInfo.dates.firstDate.getTime() <= now && now <= routeInfo.dates.lastDate.getTime() + 24*3600*1000">Active</span>
+              <span class="label route-notstarted"
+                v-if="now < routeInfo.dates.firstDate.getTime()">Not Started</span>
+              <span class="label route-ended"
+                v-if="now > routeInfo.dates.lastDate.getTime() + 24*3600*1000">Ended</span>
+            </template>
+          </td>
+          <td class="width-limit-md">
+            <ExpandableArea v-if="f._.get(routeInfo, 'trips[0].tripStops')">
+              <table class="borderless">
+                <tr v-for="tripStop in routeInfo.trips[0].tripStops.filter(r => r.canBoard)"
+                    :key="tripStop.id">
+                  <td class="text-nowrap">
+                    {{f.date(tripStop.time, 'HH:MM')}}
+                  </td>
+                  <td>
+                    {{tripStop.stop.description}}
+                  </td>
+                </tr>
+              </table>
+            </ExpandableArea>
+          </td>
+          <td class="width-limit-md">
+            <ExpandableArea v-if="f._.get(routeInfo, 'trips[0].tripStops')">
+              <table class="borderless">
+                <tr v-for="tripStop in routeInfo.trips[0].tripStops.filter(r => r.canAlight)"
+                    :key="tripStop.id">
+                  <td class="text-nowrap">
+                    {{f.date(tripStop.time, 'HH:MM')}}
+                  </td>
+                  <td>
+                    {{tripStop.stop.description}}
+                  </td>
+                </tr>
+              </table>
+            </ExpandableArea>
+          </td>
+          <td class="width-limit-xs">
+            <template v-if="f._.get(routeInfo, 'indicativeTrip')">
+              {{ f.number(routeInfo.indicativeTrip.lastPrice, '#,##0.00') }}
+            </template>
+          </td>
+        </tr>
+      </RouteInfo>
+    </template>
+  </tbody>
+</table>
+</template>
+
+<script>
+import assert from 'assert'
+import {mapGetters, mapActions, mapState} from 'vuex'
+
+import ExpandableArea from '@/components/ExpandableArea.vue'
+import RouteInfo from '@/components/users/RouteInfo'
+
+import filters from '@/filters'
+
+export default {
+  props: ['companyId', 'userId'],
+
+  components: {ExpandableArea, RouteInfo},
+
+  data () {
+    return {
+      routePasses: null,
+    }
+  },
+
+  computed: {
+    ...mapGetters(['axios']),
+    ...mapState('shared', ['allRoutes']),
+
+    f: () => filters,
+
+    now () {  
+      return Date.now()
+    },
+
+    companyRoutes () {
+      return this.allRoutes && this.allRoutes.filter(r =>
+        r.transportCompanyId === Number(this.companyId))
+    },
+
+    routesByRouteTag () {
+      return this.routePasses && this.companyRoutes &&
+        this.routePasses.reduce(
+          (acc, rp) => {
+            acc[rp.tag] = this.companyRoutes.filter(r => r.tags.includes(rp.tag))
+            return acc
+          },
+          {}
+        )
+    },
+
+    displayedRoutes () {
+      return Object.values(this.routesByRouteTag)
+    },
+
+    routePassesQueryUrl () {
+      if (!this.companyId || !this.userId) return null
+      return `/companies/${this.companyId}/route_passes/all/users/${this.userId}`
+    }
+  },
+
+  watch: {
+    routePassesQueryUrl: {
+      immediate: true,
+      handler (h) {
+        if (h === null) {
+          return
+        } else {
+          this.requery()
+        }
+      }
+    }
+  },
+
+  created () {
+    this.fetch(['allRoutes'])
+  },
+
+  methods: {
+    ...mapActions('shared', ['fetch']),
+    ...mapActions('modals', ['showModal', 'showErrorModal', 'flash']),
+
+    requery () {
+      const promise = this.$routePassesPromise =
+        this.axios.get(this.routePassesQueryUrl)
+        .then((response) => {
+          if (promise === this.$routePassesPromise) {
+            this.routePasses = response.data
+          }
+        })
+    },
+
+    showHistory (tag, balance) {
+      this.$emit('route-pass-history-requested', {
+        tag, balance
+      })
+    },
+  }
+}
+</script>
