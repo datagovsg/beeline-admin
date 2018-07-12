@@ -1,4 +1,3 @@
-import 'angular'
 import '@babel/polyfill'
 import Vue from 'vue'
 import Vuex from 'vuex'
@@ -22,9 +21,3 @@ testsContext.keys().forEach(testsContext)
 const srcContext = require.context('../../beeline-admin/components', true)
 srcContext.keys().forEach(srcContext)
 
-angular.module('beeline-admin', [
-  'uiGmapgoogle-maps', 'ui.router', 'ui.bootstrap',
-  'angular-storage', 'angular-jwt', 'ngCookies', 'multipleDatePicker',
-  'ui.select', 'ngTagEditor'])
-
-require('~/beeline-admin/auth0.js')
