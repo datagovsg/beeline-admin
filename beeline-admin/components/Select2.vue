@@ -2,6 +2,7 @@
   <Dropdown :showDropdown="dropdownShown" class="select2">
     <a href="#" @click.prevent slot="dropdown-input"
         class="select2-dropdown-display form-control"
+        style="height: auto"
         @focus="showDropdown">
       <slot name="display-template" :entry="value">
         {{value}}
@@ -42,7 +43,7 @@
     </div>
 
     <button slot="dropdown-button" class="select2-dropdown-button dropdown-button"
-        @click="showDropdown">
+        @click="showDropdown" type="button">
       <i class="glyphicon glyphicon-chevron-down" />
     </button>
   </Dropdown>
@@ -111,7 +112,7 @@
 import Dropdown from '@/components/Dropdown.vue'
 
 export default {
-  props: ['text', 'options', 'value', 'placeholder'],
+  props: ['text', 'options', 'value', 'placeholder', 'persistAfterSelect'],
 
   data () {
     return {
@@ -183,7 +184,9 @@ export default {
       } else {
         this.$emit('input', null)
       }
-      this.dropdownShown = false;
+      if (!this.persistAfterSelect) {
+        this.dropdownShown = false;
+      }
     },
     showDropdown () {
       this.dropdownShown = true

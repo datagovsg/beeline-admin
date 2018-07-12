@@ -1,27 +1,72 @@
 <template>
-  <select
-    :multiple="multiple"
-    @input="emitValue($event.target)">
-    <option v-for="route in sortedFilteredRoutes" :value="route.id"
-        :key="route.id"
-        :selected="isSelected(route.id)">
-      {{route.label}} {{route.name}}
-    </option>
-  </select>
+  <Select2
+    :value="value"
+    @input="emitValue"
+    @text-input="updateSearch"
+    :options="sortedFilteredQueriedRoutes"
+    :persistAfterSelect="multiple"
+  >
+    <div slot="display-template" slot-scope="s" :class="{
+      'is-multiple': multiple
+    }">
+      <template v-if="multiple">
+        <div v-for="routeId in s.entry" :key="routeId" class="route-selector-item-of-multiple">
+          <template v-if="routesById[routeId]">
+            {{routesById[routeId].label}}
+            {{routesById[routeId].name}}
+          </template>
+          <template v-else>
+            Route #{{s.entry}}
+          </template>
+        </div>
+      </template>
+      <template v-else>
+        <template v-if="s.entry && routesById[s.entry]">
+          {{routesById[s.entry].label}}
+          {{routesById[s.entry].name}}
+        </template>
+        <template v-else-if="s.entry">
+          Route #{{s.entry}}
+        </template>
+      </template>
+    </div>
+
+    <span slot="option-template" slot-scope="s">
+      <div
+        :class="{
+          selected: isSelected(value, s.entry.id)
+        }"
+        @click="itemClicked(s.entry)">
+        {{s.entry.label}} {{s.entry.name}}
+      </div>
+    </span>
+  </Select2>
 </template>
+
+<style scoped>
+.selected {
+  background-color: #469;
+  color: #fff;
+}
+</style>
 
 <script>
 import {mapGetters, mapActions, mapState} from 'vuex'
 import * as resources from '../stores/resources'
 import _ from 'lodash'
 import querystring from 'querystring'
+
+import Select2 from '@/components/Select2.vue'
+
 const filters = require('../filters')
 
 export default {
   props: ['value', 'multiple', 'companyId', 'startDate', 'endDate', 'filter'],
+  components: {Select2},
   data () {
     return {
-      routes: null
+      routes: null,
+      searchQuery: '',
     }
   },
   created () {
@@ -36,8 +81,15 @@ export default {
             r.transportCompanyId === Number(this.companyId))
     },
     sortedFilteredRoutes () {
-      return [{ name: "(select)" }].concat(
+      return (
         _.sortBy(this.filteredRoutes, 'label')
+      )
+    },
+    sortedFilteredQueriedRoutes () {
+      const q = this.searchQuery.toLowerCase()
+      return this.sortedFilteredRoutes.filter(route =>
+        (route.name || '').toLowerCase().includes(q) ||
+        (route.label || '').toLowerCase().includes(q)
       )
     },
     allRouteIds () {
@@ -80,31 +132,60 @@ export default {
   methods: {
     ...mapActions('shared', ['fetch']),
     ...mapActions('resources', ['getRoutes']),
-    emitValue(el) {
+    emitValue(value) {
       if (this.multiple) {
-        const values = []
+        if (value === null) { /* delete */
+          const popped = this.value.slice(0, this.value.length - 1)
+          this.$emit('input', popped)
+          this.$emit('routes-changed', popped.map(v => this.routesById[v]))
+        } else {
+          const id = value.id
+          const nextIdSet = this.value.includes(id)
+            ? this.value.filter(i => i !== id)
+            : this.value.concat([id])
 
-        for (let i=0; i<el.options.length; i++) {
-          if (el.options[i].selected) {
-            values.push(parseInt(el.options[i].value))
-          }
+          this.$emit('input', nextIdSet)
+          this.$emit('routes-changed', nextIdSet.map(v => this.routesById[v]))
         }
-
-        this.$emit('input', values)
-        this.$emit('routes-changed', values.map(v => this.routesById[v]))
       } else {
-        this.$emit('input', el.value)
-        this.$emit('routes-changed', this.routesById[el.value])
+        if (value !== null) {
+          this.$emit('input', value.id)
+          this.$emit('routes-changed', this.routesById[value.id])
+        }
       }
     },
-    isSelected(rid) {
+    itemClicked (route) {
+      if (this.multiple) {
+        // FIXME
+      } else {
+        this.$emit('input', route.id)
+        this.$emit('routes-changed', this.routesById[route.id])
+      }
+    },
+    updateSearch (query) {
+      this.searchQuery = query
+    },
+    isSelected(value, rid) {
       if (this.multiple) {
         // FIXME slow
-        return this.value.findIndex(r => r == rid) !== -1
+        return value.findIndex(r => r == rid) !== -1
       } else {
-        return this.value == rid
+        return value == rid
       }
     }
   }
 }
 </script>
+<style scoped lang="scss">
+.is-multiple {
+  .route-selector-item-of-multiple {
+    background-color: #ACF;
+    border: solid 1px #469;
+    max-width: 100%;
+    box-sizing: border-box;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+}
+</style>

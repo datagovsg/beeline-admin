@@ -8,22 +8,6 @@
     You will be notified when transactions fail
   </div>
 
-  <div v-else-if="type === 'newBooking'">
-    <label>
-      <input type="checkbox"
-        :value="options.setRouteIds"
-        @input="options.setRouteIds = $event.target.checked,
-        update('routeIds', $event.target.checked ? [] : undefined)" />
-      Filter by routes
-    </label>
-    <label v-if="options.setRouteIds">
-      Routes:<br/>
-      <RouteSelector :companyId="companyId"
-          multiple
-          :value="value.routeIds" @input="update('routeIds', $event)" />
-    </label>
-  </div>
-
   <div v-else-if="type === 'urgentBooking'">
     <label>
       <input type="checkbox"
@@ -33,11 +17,13 @@
       Filter by routes
     </label>
     <label v-if="options.setRouteIds">
-      Routes:<br/>
-       <RouteSelector :companyId="companyId"
-          multiple
-          :value="value.routeIds" @input="update('routeIds', $event)" />
+      Routes:
     </label>
+    <br/>
+    <RouteSelector :companyId="companyId"
+      :multiple="true"
+      :value="value.routeIds" @input="update('routeIds', $event)"
+      class="route-selector" />
     <label>
       <select
         @input="update('maxTimeToTrip', $event.target.value)"
@@ -52,126 +38,8 @@
     </label>
   </div>
 
-  <div v-else-if="type === 'noPings'">
-    <div>
-      <label>
-        <input type="checkbox"
-          :value="options.setRouteIds"
-          @input="options.setRouteIds = $event.target.checked,
-          update('routeIds', $event.target.checked ? [] : undefined)" />
-        Filter by routes
-      </label>
-      <label v-if="options.setRouteIds">
-        Routes:<br/>
-       <RouteSelector :companyId="companyId"
-          multiple
-          :value="value.routeIds" @input="update('routeIds', $event)" />
-      </label>
-      <label>
-        Notification thresholds
-        <select
-          @input="update('minsBefore', $event.target.value)"
-          class="form-control"
-          multiple>
-          <option v-for="(t, index) in disp.noPingTimeOptions"
-            :key="index"
-            :value="t[0]"
-            :selected="t[0] === value.minsBefore"
-            multiple>
-            {{t[1]}}
-          </option>
-        </select>
-      </label>
-    </div>
-  </div>
-
-  <div v-else-if="type === 'lateArrival'">
-    <div>
-      <label>
-        <input type="checkbox"
-          :value="options.setRouteIds"
-          @input="options.setRouteIds = $event.target.checked,
-          update('routeIds', $event.target.checked ? [] : undefined)" />
-        Filter by routes
-      </label>
-      <label v-if="options.setRouteIds">
-        Routes:<br/>
-       <RouteSelector :companyId="companyId"
-          multiple
-          :value="value.routeIds" @input="update('routeIds', $event)" />
-      </label>
-      <label>
-        Lateness threshold
-        <select
-          @input="update('timeAfter', $event.target.value)"
-          class="form-control"
-          multiple>
-          <option v-for="(t, index) in disp.lateArrivalTimeOptions"
-            :key="index"
-            :value="t[0]"
-            :selected="t[0] === value.timeAfter"
-            >
-            {{t[1]}}
-          </option>
-        </select>
-      </label>
-    </div>
-  </div>
-  <div v-else-if="type === 'lateETA'">
-    <div>
-      <label>
-        <input type="checkbox"
-          :value="options.setRouteIds"
-          @input="options.setRouteIds = $event.target.checked,
-          update('routeIds', $event.target.checked ? [] : undefined)" />
-        Filter by routes
-      </label>
-      <label v-if="options.setRouteIds">
-        Routes:<br/>
-       <RouteSelector :companyId="companyId"
-          multiple
-          :value="value.routeIds" @input="update('routeIds', $event)" />
-      </label>
-      <label>
-        Lateness threshold
-        <select
-          @input="update('timeAfter', $event.target.value)"
-          class="form-control"
-          multiple>
-          <option v-for="(t, index) in disp.lateETATimeOptions"
-            :key="index"
-            :value="t[0]"
-            :selected="t[0] === value.timeAfter"
-            >
-            {{t[1]}}
-          </option>
-        </select>
-      </label>
-    </div>
-  </div>
-  <div v-else-if="type === 'passengersMessaged'">
-    <div>
-      <label>
-        <input type="checkbox"
-          :value="options.setRouteIds"
-          @input="options.setRouteIds = $event.target.checked,
-          update('routeIds', $event.target.checked ? [] : undefined)" />
-        Filter by routes
-      </label>
-      <label v-if="options.setRouteIds">
-        Routes:<br/>
-       <RouteSelector :companyId="companyId"
-          multiple
-          :value="value.routeIds" @input="update('routeIds', $event)" />
-      </label>
-    </div>
-  </div>
-
   <div v-else-if="type === 'tripCancelled'">
     <div>
-      Receive notifications when trips are cancelled
-    </div>
-    <div>
       <label>
         <input type="checkbox"
           :value="options.setRouteIds"
@@ -179,12 +47,15 @@
           update('routeIds', $event.target.checked ? [] : undefined)" />
         Filter by routes
       </label>
-      <label v-if="options.setRouteIds">
-        Routes:<br/>
-       <RouteSelector :companyId="companyId"
-          multiple
-          :value="value.routeIds" @input="update('routeIds', $event)" />
-      </label>
+      <div v-if="options.setRouteIds">
+        <label>
+          Routes:<br/>
+        </label>
+        <RouteSelector :companyId="companyId"
+          :multiple="true"
+          :value="value.routeIds" @input="update('routeIds', $event)"
+          class="route-selector" />
+      </div>
     </div>
   </div>
 
@@ -292,3 +163,8 @@ export default {
 
 </script>
 
+<style scoped>
+.route-selector {
+  width: 300px;
+}
+</style>

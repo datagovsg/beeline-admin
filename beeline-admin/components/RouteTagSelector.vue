@@ -5,7 +5,7 @@
     @text-input="updateSearch"
     :options="selectOptions"
     >
-    <template scope="s" slot="display-template">
+    <template slot-scope="s" slot="display-template">
       <template v-if="s.entry">
         <div v-if="s.entry" class="route-tag-selector-option">
           <ul class="tags"><li>{{s.entry && s.entry.tag}}</li></ul>
@@ -21,7 +21,7 @@
       </template>
     </template>
 
-    <template scope="s" slot="option-template">
+    <template slot-scope="s" slot="option-template">
       <div v-if="s.entry" class="route-tag-selector-option">
         <ul class="tags"><li>{{s.entry && s.entry.tag}}</li></ul>
         <ul class="matching-routes">
