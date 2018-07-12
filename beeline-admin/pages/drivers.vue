@@ -72,11 +72,20 @@ import dateformat from 'dateformat'
 export default {
   props: ['companyId'],
   data: () => ({ drivers: [] }),
-  created () {
-    return this.query()
-  },
   computed: {
     ...mapGetters(['axios']),
+  },
+  watch: {
+    companyId: {
+      immediate: true,
+      handler (h) {
+        if (h) {
+          return this.query()
+        } else {
+          this.drivers = []
+        }
+      }
+    }
   },
   methods: {
     ...mapActions('spinner', ['spinOnPromise']),

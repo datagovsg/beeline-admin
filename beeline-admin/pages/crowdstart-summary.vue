@@ -167,6 +167,15 @@ export default {
     }
   },
 
+  watch: {
+    companyId: {
+      immediate: true,
+      handler (h) {
+        this.requery()
+      }
+    }
+  },
+
   methods: {
     ...mapActions('shared', ['fetch']),
     ...mapActions('modals', ['showModal', 'showErrorModal', 'alert']),
@@ -204,10 +213,6 @@ export default {
       this.filter.orderBy = $event.orderBy
     }
   },
-
-  created () {
-    this.requery()
-  }
 }
 
 function transformTiers(bids, tiers) {

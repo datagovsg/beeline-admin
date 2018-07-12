@@ -67,8 +67,11 @@ export default {
     }
   },
   watch: {
-    routeId() {
-      this.requery()
+    routeId: {
+      immediate: true,
+      handler (h) {
+       this.spinOnPromise(this.requery())
+      }
     },
     routePromise: {
       immediate: true,
@@ -95,9 +98,6 @@ export default {
     activeTab () {
       return this.tabs.findIndex(tab => tab.link === this.action)
     }
-  },
-  created() {
-    this.requery()
   },
   methods: {
     ...mapActions('resources', ['getRoute', 'saveRoute', 'createTripForDate']),

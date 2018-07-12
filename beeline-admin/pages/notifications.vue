@@ -63,7 +63,14 @@ export default {
       }
     }
   },
-
+  watch: {
+    companyId: {
+      immediate: true,
+      handler (h) {
+        this.requery()
+      }
+    }
+  },
   methods: {
     ...mapActions('spinner', ['spinOnPromise']),
 
@@ -92,10 +99,6 @@ export default {
       }
     }
   },
-
-  created () {
-    this.requery()
-  }
 }
 
 

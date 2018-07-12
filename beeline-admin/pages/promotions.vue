@@ -194,9 +194,13 @@ export default {
       )
     }
   },
-
-  created () {
-    this.spinOnPromise(this.refresh())
+  watch: {
+    companyId: {
+      immediate: true,
+      handler (h) {
+       this.spinOnPromise(this.refresh())
+      }
+    }
   },
 
   methods: {

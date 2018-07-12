@@ -137,19 +137,26 @@ export default {
       return `${process.env.BACKEND_URL}/companies/${this.companyId}/logo`
     },
   },
-  created () {
-    this.fetch('companies')
-    .then(() => {
-      const matchingCompany = this.companies.find(c => c.id === Number(this.companyId))
+  watch: {
+    companyId: {
+      immediate: true,
+      handler (h) {
+        const promise = this.$fetchPromise =
+          this.fetch('companies')
+          .then(() => {
+            if (promise !== this.$fetchPromise) return // superseded
+            const matchingCompany = this.companies.find(c => c.id === Number(this.companyId))
 
-      if (!matchingCompany) {
-        this.alert({
-          title: `The company with id of ${this.companyId} was not found`
-        })
-      } else {
-        this.company = matchingCompany && {...matchingCompany}
+            if (!matchingCompany) {
+              this.alert({
+                title: `The company with id of ${this.companyId} was not found`
+              })
+            } else {
+              this.company = matchingCompany && {...matchingCompany}
+            }
+          })
       }
-    })
+    }
   },
   methods: {
     ...mapActions('shared', ['fetch']),

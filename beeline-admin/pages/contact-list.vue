@@ -63,8 +63,13 @@ export default {
     f: () => filters,
   },
 
-  created () {
-    this.requery()
+  watch: {
+    companyId: {
+      immediate: true,
+      handler (h) {
+        this.requery()
+      }
+    }
   },
 
   methods: {

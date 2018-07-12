@@ -194,9 +194,6 @@ export default {
       publicHolidaysPromise: this.fetch('publicHolidays')
     }
   },
-  created () {
-
-  },
   components: {
     RouteTagSelector,
     SpanSelect,

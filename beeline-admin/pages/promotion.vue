@@ -168,9 +168,6 @@ export default {
       originalPromotion: null,
     }
   },
-  created () {
-
-  },
   components: {
     PromotionCriterionEditor: require('../components/PromotionCriterionEditor.vue').default,
     PromotionDiscountEditor: require('../components/PromotionDiscountEditor.vue').default,
