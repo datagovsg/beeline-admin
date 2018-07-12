@@ -32,6 +32,7 @@
     "ui-select": "0.16.1",
     "vue": "^2.5.16",
     "vue-async-computed": "^3.3.0",
+    "vue-router": "^3.0.1",
     "vue-select": "^2.2.0",
     "vue-slider-component": "^2.6.2",
     "vue-strap": "git+https://github.com/wffranco/vue-strap.git",
