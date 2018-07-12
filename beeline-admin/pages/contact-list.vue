@@ -1,7 +1,7 @@
 <template>
 <div>
-  <LoadingSpinner ref="loadingSpinner"/>
-  <ModalHelper ref="modalHelper"/>
+  
+  
 
   <div class="col-lg-12">
     <h1>Manage Contact List</h1>

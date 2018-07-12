@@ -1,7 +1,5 @@
 <template>
 <div>
-  <ModalHelper />
-  <LoadingSpinner />
   <div class="row">
     <div class="col-sm-3">
       <h1>Users</h1>

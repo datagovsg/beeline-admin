@@ -1,7 +1,7 @@
 <template>
   <div>
-    <LoadingSpinner ref="loadingSpinner"/>
-    <ModalHelper ref="modalHelper"/>
+    
+    
 
     <div v-if="!companyId">
       <div class="col-sm-12">
@@ -126,7 +126,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['idToken']),
+    ...mapState('auth', ['idToken']),
     ...mapState('shared', ['companies']),
     ...mapGetters(['axios', 'isSuperAdmin']),
     ...mapGetters('shared', ['companiesById']),

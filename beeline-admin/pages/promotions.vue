@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid withnav promotions-list">
-    <LoadingSpinner ref="loadingSpinner"/>
-    <ModalHelper ref="modalHelper"/>
+    
+    
     <div class="col-lg-12">
       <h1>Manage Promotions</h1>
 

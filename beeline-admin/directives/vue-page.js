@@ -32,8 +32,6 @@ Vue.component('RouteTimelinessPage', require('@/pages/route-timeliness.vue').def
 // COMPONENTS
 import ModalHelper from '@/components/ModalHelper'
 import LoadingSpinner from '@/components/LoadingSpinner.vue'
-Vue.component('ModalHelper', ModalHelper)
-Vue.component('LoadingSpinner', LoadingSpinner)
 
 angular.module('beeline-admin')
 .directive('vuePage', function (vueStore, uiGmapGoogleMapApi) {

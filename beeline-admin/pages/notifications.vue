@@ -1,7 +1,7 @@
 <template>
 <div>
-  <LoadingSpinner ref="loadingSpinner"/>
-  <ModalHelper ref="modalHelper"/>
+  
+  
 
   <h1>Manage Route Event Notifications</h1>
 

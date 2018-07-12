@@ -1,8 +1,5 @@
 <template>
   <div class="container-fluid withnav route-passes">
-    <LoadingSpinner ref="loadingSpinner"/>
-    <ModalHelper ref="modalHelper"/>
-
     <div class="row" v-if="!companyId">
       Please select a company
     </div>

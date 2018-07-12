@@ -1,8 +1,5 @@
 <template>
   <div>
-    <LoadingSpinner />
-    <ModalHelper />
-
     <ol class="breadcrumb">
       <li><a :href="`#/c/${companyId}/routes`">Routes</a></li>
       <li>

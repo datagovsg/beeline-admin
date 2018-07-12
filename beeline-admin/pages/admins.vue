@@ -1,7 +1,7 @@
 <template>
   <div class="container withnav drivers">
-    <LoadingSpinner ref="loadingSpinner"/>
-    <ModalHelper ref="modalHelper"/>
+    
+    
 
     <div class="row">
       <div class="col-lg-12">

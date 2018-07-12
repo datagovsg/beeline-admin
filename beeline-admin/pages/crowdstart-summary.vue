@@ -2,8 +2,8 @@
 <div class="col-lg-12 table-responsive">
   <h1>Crowdstart Routes</h1>
 
-  <LoadingSpinner ref="loadingSpinner"/>
-  <ModalHelper ref="modalHelper"/>
+  
+  
 
   <div class="btn-group">
     <button
@@ -145,7 +145,7 @@ export default {
   },
 
   computed: {
-    ...mapState(['idToken']),
+    ...mapState('auth', ['idToken']),
     ...mapState('shared', ['companies']),
     ...mapGetters(['axios', 'isSuperAdmin']),
     ...mapGetters('shared', ['companiesById']),

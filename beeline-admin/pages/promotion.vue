@@ -1,7 +1,7 @@
 <template>
   <div>
-    <LoadingSpinner ref="loadingSpinner"/>
-    <ModalHelper ref="modalHelper"/>
+    
+    
 
     <div class="col-lg-12">
       <h1 v-if="promotion && promotion.type === 'Promotion'">Edit Promotion '{{promotion && promotion.code}}'</h1>
