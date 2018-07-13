@@ -2,8 +2,8 @@
 <div class="col-lg-12 table-responsive">
   <h1>Crowdstart Routes</h1>
 
-  <LoadingSpinner ref="loadingSpinner"/>
-  <ModalHelper ref="modalHelper"/>
+  
+  
 
   <div class="btn-group">
     <button
@@ -145,7 +145,7 @@ export default {
   },
 
   computed: {
-    ...mapState(['idToken']),
+    ...mapState('auth', ['idToken']),
     ...mapState('shared', ['companies']),
     ...mapGetters(['axios', 'isSuperAdmin']),
     ...mapGetters('shared', ['companiesById']),
@@ -164,6 +164,15 @@ export default {
           [this.filter.order]
         )
         .value()
+    }
+  },
+
+  watch: {
+    companyId: {
+      immediate: true,
+      handler (h) {
+        this.requery()
+      }
     }
   },
 
@@ -204,10 +213,6 @@ export default {
       this.filter.orderBy = $event.orderBy
     }
   },
-
-  created () {
-    this.requery()
-  }
 }
 
 function transformTiers(bids, tiers) {

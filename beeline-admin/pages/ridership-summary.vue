@@ -4,8 +4,8 @@
     Please select a company from the top right-hand corner
   </div>
   <div class="summary-page" v-else>
-    <LoadingSpinner ref="loadingSpinner"/>
-    <ModalHelper ref="modalHelper"/>
+    
+    
 
     <div class="row">
       <div class="col-lg-4">

@@ -1,7 +1,7 @@
 <template>
   <div class="container withnav">
-    <LoadingSpinner ref="loadingSpinner"/>
-    <ModalHelper ref="modalHelper"/>
+    
+    
 
     <table class="table table-striped assets-table" v-if="assets">
       <thead>

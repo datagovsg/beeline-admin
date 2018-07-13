@@ -1,7 +1,7 @@
 <template>
 <div class="bookings-page">
-  <LoadingSpinner ref="loadingSpinner"/>
-  <ModalHelper ref="modalHelper"/>
+  
+  
 
     <!--  Remove bookings-page class -->
     <div class="row">
@@ -430,7 +430,7 @@ export default {
 
   computed: {
     ...mapGetters(['axios']),
-    ...mapState(['idToken']),
+    ...mapState('auth', ['idToken']),
 
     f: () => filters,
 

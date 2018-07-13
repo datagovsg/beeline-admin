@@ -1,7 +1,7 @@
 <template>
 <div>
-  <LoadingSpinner ref="loadingSpinner"/>
-  <ModalHelper ref="modalHelper"/>
+  
+  
 
   <h1>Manage Route Event Notifications</h1>
 
@@ -63,7 +63,14 @@ export default {
       }
     }
   },
-
+  watch: {
+    companyId: {
+      immediate: true,
+      handler (h) {
+        this.requery()
+      }
+    }
+  },
   methods: {
     ...mapActions('spinner', ['spinOnPromise']),
 
@@ -92,10 +99,6 @@ export default {
       }
     }
   },
-
-  created () {
-    this.requery()
-  }
 }
 
 

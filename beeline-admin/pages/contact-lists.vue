@@ -1,7 +1,7 @@
 <template>
   <div class="container withnav drivers">
-    <LoadingSpinner ref="loadingSpinner"/>
-    <ModalHelper ref="modalHelper"/>
+    
+    
 
     <div class="col-lg-12">
       <h1>Manage Contact Lists</h1>

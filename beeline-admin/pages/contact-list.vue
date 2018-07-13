@@ -1,7 +1,7 @@
 <template>
 <div>
-  <LoadingSpinner ref="loadingSpinner"/>
-  <ModalHelper ref="modalHelper"/>
+  
+  
 
   <div class="col-lg-12">
     <h1>Manage Contact List</h1>
@@ -63,8 +63,13 @@ export default {
     f: () => filters,
   },
 
-  created () {
-    this.requery()
+  watch: {
+    companyId: {
+      immediate: true,
+      handler (h) {
+        this.requery()
+      }
+    }
   },
 
   methods: {

@@ -43,7 +43,7 @@ export default {
 
   computed: {
     ...mapGetters(['axios']),
-    ...mapState(['idToken']),
+    ...mapState('auth', ['idToken']),
 
     f: () => filters,
 

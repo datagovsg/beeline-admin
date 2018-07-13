@@ -1,6 +1,6 @@
 import ContactListPage from '@/pages/contact-list.vue'
 import { mount } from '@vue/test-utils'
-import { delay, mockAjax, testStore } from '../util'
+import { delay, mockAjax, testStore, mountTestPage } from '../util'
 
 describe('contact-list.vue', () => {
   let contactListPage = null
@@ -36,7 +36,7 @@ describe('contact-list.vue', () => {
         SAMPLE_CONTACT_LIST
       ]
     }, async () => {
-      const contactListPage = mount(
+      const contactListPage = mountTestPage(
         ContactListPage,
         {
           sync: false,
@@ -44,7 +44,7 @@ describe('contact-list.vue', () => {
             companyId: 15,
             contactListId: 10,
           },
-          store: testStore({})
+
         }
       )
       await delay(10)

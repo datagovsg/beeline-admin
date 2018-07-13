@@ -22,7 +22,7 @@ module.exports = function (config) {
     },
     webpack: {
       ...webpackConfig,
-      devtool: 'inline-source-map',
+      devtool: 'inline-cheap-source-map',
       mode: 'development',
       plugins: (webpackConfig.plugins || []).concat(
         config.grep ? [

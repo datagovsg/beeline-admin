@@ -1,8 +1,5 @@
 <template>
   <div>
-    <LoadingSpinner />
-    <ModalHelper />
-
     <ol class="breadcrumb">
       <li><a :href="`#/c/${companyId}/routes`">Routes</a></li>
       <li>
@@ -70,8 +67,11 @@ export default {
     }
   },
   watch: {
-    routeId() {
-      this.requery()
+    routeId: {
+      immediate: true,
+      handler (h) {
+       this.spinOnPromise(this.requery())
+      }
     },
     routePromise: {
       immediate: true,
@@ -99,9 +99,6 @@ export default {
       return this.tabs.findIndex(tab => tab.link === this.action)
     }
   },
-  created() {
-    this.requery()
-  },
   methods: {
     ...mapActions('resources', ['getRoute', 'saveRoute', 'createTripForDate']),
     ...mapActions('spinner', ['spinOnPromise']),
@@ -112,9 +109,9 @@ export default {
 
     requery () {
       if (!this.routeId) {
-        this.routePromise = Promise.resolve(null)
+        return this.routePromise = Promise.resolve(null)
       } else {
-        this.routePromise = this.getRoute({
+        return this.routePromise = this.getRoute({
           id: this.routeId,
           options: {
             includeDates: true,

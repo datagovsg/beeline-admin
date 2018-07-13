@@ -1,12 +1,10 @@
 import assert from 'assert'
 
-const initial = () => ({
-  spinnerPromise: null
-})
-
 module.exports = {
   namespaced: true,
-  state: initial,
+  state:  () => ({
+    spinnerPromise: null
+  }),
   mutations: {
     _setPromise(state, promise) {
       state.spinnerPromise = promise

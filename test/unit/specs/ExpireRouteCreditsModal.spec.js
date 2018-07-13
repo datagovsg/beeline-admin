@@ -1,6 +1,6 @@
 import ExpireRouteCredits from '@/modals/ExpireRouteCredits.vue'
 import { mount } from '@vue/test-utils'
-import { delay, mockAjax, testStore } from '../util'
+import { delay, mockAjax, testStore, mountTestPage } from '../util'
 
 describe('ExpireRouteCredits.vue', () => {
   let expireRouteCreditsModal = null
@@ -18,7 +18,7 @@ describe('ExpireRouteCredits.vue', () => {
         "default_source":"card_1Bxn9YIt6Q7WukI6tL4hCBH4","invoice_prefix":"8AE0F4A","account_balance":0},"lastUsedAppName":"Beeline","createdAt":"2017-10-05T03:05:29.080Z","updatedAt":"2018-07-11T08:40:46.300Z"}
       ],
     }, async () => {
-      expireRouteCreditsModal = mount(
+      expireRouteCreditsModal = mountTestPage(
         ExpireRouteCredits,
         {
           sync: false,
@@ -31,7 +31,7 @@ describe('ExpireRouteCredits.vue', () => {
             tag: 'abcd-efgh',
             ...props,
           },
-          store: testStore({})
+
         }
       )
       await delay(2)

@@ -3,8 +3,8 @@
     Please select a company from the top!
   </div>
   <div v-else>
-    <ModalHelper ref="modalHelper"/>
-    <LoadingSpinner ref="loadingSpinner"/>
+    
+    
 
     <div>
       You can extend routes by up to 2 months from this page.

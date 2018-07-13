@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import NotificationMethodEditor from '@/components/notifications/NotificationMethodEditor.vue'
 import _ from 'lodash'
-import { delay, mockAjax, testStore } from '../util'
+import { delay, mockAjax, testStore, mountTestPage } from '../util'
 
 describe('NotificationMethodEditor.vue', () => {
   let editor = null
@@ -15,14 +15,15 @@ describe('NotificationMethodEditor.vue', () => {
     }
 
     function updateProps () {
-      editor.setProps({
+      editor.find({ref: 'testedComponent'}).setProps({
         value: lastInput,
         agent: lastAgent,
       })
     }
 
-    editor = await mount(NotificationMethodEditor, {
+    editor = await mountTestPage(NotificationMethodEditor, {
       sync: false,
+
       listeners: {
         input (e) {
           lastInput = e
@@ -39,7 +40,6 @@ describe('NotificationMethodEditor.vue', () => {
   })
 
   it('should emit agent and value correctly', async () => {
-
     editor.find('select option[value="telegram"]').element.selected = true
     editor.find('select').trigger('input')
     await delay(1)

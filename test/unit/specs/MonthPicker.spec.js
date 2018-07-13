@@ -1,17 +1,17 @@
 import MonthPicker from '@/components/MonthPicker.vue'
 import { mount } from '@vue/test-utils'
-import { delay, testStore } from '../util'
+import { delay, testStore, mountTestPage } from '../util'
 
 describe('MonthPicker', () => {
   let monthPicker = null
   let lastSelected = null
 
   beforeEach(async () => {
-    monthPicker = mount(
+    monthPicker = mountTestPage(
       MonthPicker,
       {
         propsData: {companyId: 5},
-        store: testStore({}),
+
         listeners: {
           input: (e) => { lastSelected = e }
         }

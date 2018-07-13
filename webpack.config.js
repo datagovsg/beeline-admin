@@ -79,24 +79,6 @@ const jsBundle = {
   },
   entry: [
     '@babel/polyfill',
-
-    /* angular */
-    path.resolve('node_modules/angular/angular'),
-    path.resolve('node_modules/angular-ui-router/release/angular-ui-router'),
-
-    /* ui-bootstrap */
-    path.resolve('node_modules/angular-ui-bootstrap/dist/ui-bootstrap'),
-    path.resolve('node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls'),
-
-    /* dependency of angular-ui-bootstrap */
-    path.resolve('node_modules/angular-animate/angular-animate'),
-    path.resolve('node_modules/angular-touch/angular-touch'),
-
-    /* dependency of angular-google-maps */
-    path.resolve('node_modules/angular-simple-logger/dist/angular-simple-logger'),
-    path.resolve('node_modules/lodash/lodash'),
-
-    path.resolve('node_modules/angular-google-maps/dist/angular-google-maps'),
     path.resolve('beeline-admin/main.js'),
   ],
   output: {

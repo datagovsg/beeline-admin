@@ -6,9 +6,9 @@ const fetchJobs = {
 
 export default SharedStoreTemplate(
   {
-    state: {
+    state: () => ({
       companyId: null
-    },
+    }),
     mutations: {
       updateCompanyId (state, companyId) {
         state.companyId = companyId

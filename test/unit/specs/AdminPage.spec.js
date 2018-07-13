@@ -1,6 +1,6 @@
 import AdminPage from '@/pages/admins.vue'
 import { mount } from '@vue/test-utils'
-import { delay, mockAjax, testStore } from '../util'
+import { delay, mockAjax, testStore, mountTestPage } from '../util'
 import axios from 'axios'
 import sinon from 'sinon'
 
@@ -57,11 +57,11 @@ describe('admins.vue', () => {
         ]
       ]
     }, async () => {
-      const adminPage = mount(
+      const adminPage = mountTestPage(
         AdminPage,
         {
           propsData: {companyId: 5},
-          store: testStore({})
+
         }
       )
       await delay(10)

@@ -2,7 +2,7 @@ import BookingsPage from '@/pages/bookings.vue'
 import sinon from 'sinon'
 import * as redirect from '@/shared/redirect'
 import { mount } from '@vue/test-utils'
-import { delay, mockAjax, testStore } from '../util'
+import { delay, mockAjax, testStore, mountTestPage } from '../util'
 import querystring from 'querystring'
 import _ from 'lodash'
 import FIXTURE_DATA from '../../fixtures/booking-data.json'
@@ -38,12 +38,12 @@ describe('bookings.vue', () => {
         }
       ]
     }, async () => {
-      const bookingsPage = await mount(
+      const bookingsPage = await mountTestPage(
         BookingsPage,
         {
           sync: false,
           propsData: {companyId: 33},
-          store: testStore({})
+
         }
       )
       await delay(1050) // There is a 1-second debounce

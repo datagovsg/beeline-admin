@@ -1,9 +1,11 @@
-import SharedStore from '@/stores/shared'
-import CompanySharedStore from '@/stores/companyShared'
 import sinon from 'sinon'
 import querystring from 'querystring'
 import axios from 'axios'
 import Vuex from 'vuex'
+import { mount } from '@vue/test-utils'
+
+import TestSkeleton from './TestSkeleton.vue'
+import StoreDefinition from '@/stores'
 
 export function delay (ms) {
   return new Promise((resolve) => setTimeout(resolve, ms))
@@ -14,43 +16,35 @@ export function delay (ms) {
  *
  * @param {} param0
  */
-export function testStore ({modules, state, getters, mutations, actions}, fakeAxiosRoute) {
+export function testStore ({modules, state, getters, mutations, actions}) {
   return new Vuex.Store({
+    ...StoreDefinition,
     modules: {
-      shared: SharedStore,
-      companyShared: CompanySharedStore,
-      spinner: require('@/stores/spinner.js'),
-      modals: require('@/stores/modals.js'),
-      resources: require('@/stores/resources.js').storeModule,
-      // ...modules,
+      ...StoreDefinition.modules,
+      ...modules
     },
-    state: {
-      idToken: 'ABC.DEF.XYZ',
-      companyId: null,
+    state: () => ({
+      ...(StoreDefinition.state && StoreDefinition.state()),
       _isSuperAdmin: false,
-      ...state,
-    },
+      ...state
+    }),
     getters: {
+      ...StoreDefinition.getters,
+      
       axios: () => axios,
 
       isSuperAdmin (state) {
         return state._isSuperAdmin
       },
-
       ...getters,
     },
     mutations: {
-      setCompanyId(state, companyId) {
-        state.companyId = companyId
-      },
-      setIdToken(state, idToken) {
-        state.idToken = idToken
-      },
-
-      ...mutations,
+      ...StoreDefinition.mutations,
+      ...mutations
     },
     actions: {
-      ...actions,
+      ...StoreDefinition.actions,
+      ...actions
     },
   })
 }
@@ -192,4 +186,39 @@ export async function mockAjax(routes, fn) {
   } finally {
     sandbox.restore()
   }
+}
+
+/**
+ * Wrapper around vue-test-utils::mount so that mounted components
+ * can continue to get access to modals and spinners.
+ * 
+ * @param {string|component definition} component 
+ * @param {object} mountOptions 
+ */
+export function mountTestPage (component, mountOptions) {
+  const store = testStore({})
+
+  // i need to be logged in
+  store.commit('auth/authenticate', {
+    idToken: [
+      {},
+      {},
+      {}
+    ].map(d => btoa(JSON.stringify(d))).join('.')
+  })
+
+  return mount(
+    TestSkeleton,
+    {
+      sync: false,
+      store,
+      ...mountOptions,
+      attrs: {
+        ...mountOptions.propsData,
+      },
+      propsData: {
+        skelComponent: component,
+      }
+    }
+  )
 }

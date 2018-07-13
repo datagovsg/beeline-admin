@@ -17,6 +17,8 @@
       <button type="button" class="btn btn-primary" @click="resolve(dataValue)">OK</button>
       <button type="button" class="btn btn-default" @click="resolve(false)"
         v-if="type === 'confirm'">Cancel</button>
+      <button type="button" class="btn btn-default" @click="reject()"
+        v-if="type === 'prompt'">Cancel</button>
     </div>
   </modal>
 </template>
