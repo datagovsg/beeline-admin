@@ -11,36 +11,36 @@ describe('assets.vue', () => {
         200,
         [
           {
-            "id": "commuterApp.upgradeUrl.Android",
-            "preview": "https://play.google.com/store/apps/details?id=sg.beeline&utm_source=global_co&utm_medium=prtnr&utm_c"
+            'id': 'commuterApp.upgradeUrl.Android',
+            'preview': 'https://play.google.com/store/apps/details?id=sg.beeline&utm_source=global_co&utm_medium=prtnr&utm_c'
           },
           {
-            "id": "commuterApp.upgradeUrl.iOS",
-            "preview": "https://itunes.apple.com/sg/app/beeline-sg/id1010615256?ls=1&mt=8"
+            'id': 'commuterApp.upgradeUrl.iOS',
+            'preview': 'https://itunes.apple.com/sg/app/beeline-sg/id1010615256?ls=1&mt=8'
           },
           {
-            "id": "commuterApp.minVersion",
-            "preview": "1.0.0"
+            'id': 'commuterApp.minVersion',
+            'preview': '1.0.0'
           },
           {
-            "id": "Tags",
-            "preview": "Here are some special tags:\n\n1. **public** -- Routes that will be publicly bookable on the [Beeline "
+            'id': 'Tags',
+            'preview': 'Here are some special tags:\n\n1. **public** -- Routes that will be publicly bookable on the [Beeline '
           },
           {
-            "id": "FAQ",
-            "preview": "## About Beeline\n\n### What is Beeline?\n\nBeeline is Singapore's first marketplace for crowdsourced bu"
+            'id': 'FAQ',
+            'preview': "## About Beeline\n\n### What is Beeline?\n\nBeeline is Singapore's first marketplace for crowdsourced bu"
           },
           {
-            "id": "FAQ-grab",
-            "preview": "## ABOUT GRABSHUTTLE\n\n### What is GrabShuttle?\n\nGrabShuttle is a new service that allows passengers "
+            'id': 'FAQ-grab',
+            'preview': '## ABOUT GRABSHUTTLE\n\n### What is GrabShuttle?\n\nGrabShuttle is a new service that allows passengers '
           },
           {
-            "id": "PublicHoliday",
-            "preview": "BEGIN:VCALENDAR\nPRODID:-//Google Inc//Google Calendar 70.9054//EN\nVERSION:2.0\nCALSCALE:GREGORIAN\nMET"
+            'id': 'PublicHoliday',
+            'preview': 'BEGIN:VCALENDAR\nPRODID:-//Google Inc//Google Calendar 70.9054//EN\nVERSION:2.0\nCALSCALE:GREGORIAN\nMET'
           },
           {
-            "id": "routepass-tc",
-            "preview": "1. Route passes allow you to pre-purchase tickets without fixing a date\n2. Route passes will be vali"
+            'id': 'routepass-tc',
+            'preview': '1. Route passes allow you to pre-purchase tickets without fixing a date\n2. Route passes will be vali'
           }
         ]
       ]
@@ -73,7 +73,7 @@ describe('assets.vue', () => {
 
     await mockAjax({
       'DELETE /assets/FAQ': [200, {}, () => { deleted = true }],
-      'GET /assets': [200, []],
+      'GET /assets': [200, []]
     }, async () => {
       assetsPage.findAll(`table.assets-table tbody tr`).at(0)
         .find('.delete-button')
@@ -102,7 +102,7 @@ describe('assets.vue', () => {
           called = true
           expect(data.data).toBe('Hello my dear!')
         }],
-      'GET /assets': [200, []],
+      'GET /assets': [200, []]
     }, async () => {
       const button = assetsPage.find('.new-asset-button')
 
@@ -149,7 +149,7 @@ describe('assets.vue', () => {
           called = true
           expect(data.data).toBe('Hello my dear!')
         }],
-      'GET /assets': [200, []],
+      'GET /assets': [200, []]
     }, async () => {
       const triggerCell = assetsPage.find('table.assets-table tbody tr:nth-child(1) td:nth-child(2)')
       expect(triggerCell.text()).toContain('## About Beeline\n\n### What is ')

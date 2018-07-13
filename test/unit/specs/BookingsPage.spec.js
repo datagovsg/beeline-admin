@@ -18,7 +18,7 @@ describe('bookings.vue', () => {
   beforeEach(async () => {
     clock = sinon.useFakeTimers({
       now: new Date(2018, 5, 15),
-      shouldAdvanceTime: true,
+      shouldAdvanceTime: true
     })
     bookingsPage = await mockAjax({
       'GET /routes': [200, []],
@@ -42,7 +42,7 @@ describe('bookings.vue', () => {
         BookingsPage,
         {
           sync: false,
-          propsData: {companyId: 33},
+          propsData: {companyId: 33}
 
         }
       )
@@ -120,8 +120,8 @@ describe('bookings.vue', () => {
     await delay(1)
 
     expect(
-    bookingsPage.findAll('button').filter(b => b.text().includes('Edit Selected'))
-      .at(0).element.disabled
+      bookingsPage.findAll('button').filter(b => b.text().includes('Edit Selected'))
+        .at(0).element.disabled
     ).toBeFalsy
 
     expect(bookingsPage.find('.modal-body').isVisible()).toBe(true)
@@ -225,10 +225,10 @@ describe('bookings.vue', () => {
 
           return {token: 'FAKE_DOWNLOAD_TOKEN'}
         }
-      ],
+      ]
     }, async () => {
       let sandbox = sinon.createSandbox({})
-      
+
       try {
         let stub = sinon.stub(redirect, 'default')
 

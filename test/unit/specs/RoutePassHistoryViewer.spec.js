@@ -5,6 +5,7 @@ import { delay, mockAjax, testStore, mountTestPage } from '../util'
 describe('RoutePassHistory.vue', () => {
   let routePassHistory = null
 
+  /* eslint-disable */
   const SAMPLE_HISTORY = [
     {"credit":"-5.40","debitF":5.4,"creditF":-5.4,"id":2480937,"transactionId":290660,"itemType":"routePass","itemId":122172,"notes":{"tickets":{"375141":5.4}},"debit":"5.40","createdAt":"2018-05-04T09:48:46.441Z","updatedAt":"2018-05-04T09:48:46.441Z","transaction":{"id":290660,"committed":true,"description":"Purchase: G215 4 May","creatorType":"user","creatorId":"5479","type":"ticketPurchase","createdAt":"2018-05-04T09:48:46.437Z","updatedAt":"2018-05-04T09:48:46.437Z"},"routePass":{"id":122172}},
     {"credit":"-5.40","debitF":5.4,"creditF":-5.4,"id":2425998,"transactionId":280989,"itemType":"routePass","itemId":122171,"notes":{"tickets":{"360379":5.4}},"debit":"5.40","createdAt":"2018-04-24T09:05:01.485Z","updatedAt":"2018-04-24T09:05:01.485Z","transaction":{"id":280989,"committed":true,"description":"Purchase: G215 24 Apr","creatorType":"user","creatorId":"5479","type":"ticketPurchase","createdAt":"2018-04-24T09:05:01.476Z","updatedAt":"2018-04-24T09:05:01.476Z"},"routePass":{"id":122171}},
@@ -38,6 +39,7 @@ describe('RoutePassHistory.vue', () => {
     {"credit":"5.40","debitF":-5.4,"creditF":5.4,"id":374900,"transactionId":271362,"itemType":"routePass","itemId":122170,"notes":{"routePass":{"id":122170,"tag":"rp-1176","notes":{"price":5.4,"discountCodes":[""],"discountValue":0.27},"status":"valid","userId":12345,"companyId":15,"createdAt":"2018-04-13T08:12:25.119Z","expiresAt":"2018-05-18T00:00:00.000Z","updatedAt":"2018-04-13T08:12:25.119Z"},"outstanding":5.13},"debit":"-5.40","createdAt":"2018-04-13T08:12:25.154Z","updatedAt":"2018-04-13T08:12:25.154Z","transaction":{"id":271362,"committed":true,"description":"Purchase of route pass (rp-1176)  -$1.35","creatorType":"user","creatorId":"5479","type":"routePassPurchase","createdAt":"2018-04-13T08:12:25.147Z","updatedAt":"2018-04-13T08:12:25.147Z"},"routePass":{"id":122170}},
     {"credit":"5.40","debitF":-5.4,"creditF":5.4,"id":374899,"transactionId":271362,"itemType":"routePass","itemId":122169,"notes":{"routePass":{"id":122169,"tag":"rp-1176","notes":{"price":5.4,"discountCodes":[""],"discountValue":0.27},"status":"valid","userId":12345,"companyId":15,"createdAt":"2018-04-13T08:12:25.116Z","expiresAt":"2018-05-18T00:00:00.000Z","updatedAt":"2018-04-13T08:12:25.116Z"},"outstanding":5.13},"debit":"-5.40","createdAt":"2018-04-13T08:12:25.153Z","updatedAt":"2018-04-13T08:12:25.153Z","transaction":{"id":271362,"committed":true,"description":"Purchase of route pass (rp-1176)  -$1.35","creatorType":"user","creatorId":"5479","type":"routePassPurchase","createdAt":"2018-04-13T08:12:25.147Z","updatedAt":"2018-04-13T08:12:25.147Z"},"routePass":{"id":122169}},
     {"credit":"5.40","debitF":-5.4,"creditF":5.4,"id":374898,"transactionId":271362,"itemType":"routePass","itemId":122168,"notes":{"routePass":{"id":122168,"tag":"rp-1176","notes":{"price":5.4,"discountCodes":[""],"discountValue":0.27},"status":"valid","userId":12345,"companyId":15,"createdAt":"2018-04-13T08:12:25.110Z","expiresAt":"2018-05-18T00:00:00.000Z","updatedAt":"2018-04-13T08:12:25.110Z"},"outstanding":5.13},"debit":"-5.40","createdAt":"2018-04-13T08:12:25.153Z","updatedAt":"2018-04-13T08:12:25.153Z","transaction":{"id":271362,"committed":true,"description":"Purchase of route pass (rp-1176)  -$1.35","creatorType":"user","creatorId":"5479","type":"routePassPurchase","createdAt":"2018-04-13T08:12:25.147Z","updatedAt":"2018-04-13T08:12:25.147Z"},"routePass":{"id":122168}}]
+  /* eslint-enable */
 
   beforeEach(async () => {
     routePassHistory = await mockAjax({
@@ -52,7 +54,7 @@ describe('RoutePassHistory.vue', () => {
       const routePassHistory = await mountTestPage(
         RoutePassHistory,
         {
-          propsData: {companyId: '5', userId: '123', tag: 'MY_TAG', finalBalance: 10},
+          propsData: {companyId: '5', userId: '123', tag: 'MY_TAG', finalBalance: 10}
         }
       )
       await delay(10)
@@ -72,20 +74,20 @@ describe('RoutePassHistory.vue', () => {
     // balance before
     expect(rowsMinusLast.map(w => parseInt(w.find('td:nth-child(3)').text())))
       .toEqual([
-        10, 11, 12, 11, 10,  9,  8,  7,  8,  9,
-        10, 11, 12, 13, 14, 15, 14, 13, 12, 11,
+        10, 11, 12, 11, 10, 9, 8, 7, 8, 9,
+        10, 11, 12, 13, 14, 15, 14, 13, 12, 11
       ])
     // change
     expect(rowsMinusLast.map(w => parseInt(w.find('td:nth-child(4)').text())))
       .toEqual([
-        +1, +1, -1, -1, -1,  -1, -1, +1, +1, +1,
-        +1, +1, +1, +1, +1,  -1, -1, -1, -1, -1
+        +1, +1, -1, -1, -1, -1, -1, +1, +1, +1,
+        +1, +1, +1, +1, +1, -1, -1, -1, -1, -1
       ])
     // balance after
     expect(rowsMinusLast.map(w => parseInt(w.find('td:nth-child(5)').text())))
       .toEqual([
-        11, 12, 11, 10,  9,  8,  7,  8,  9, 10,
-        11, 12, 13, 14, 15, 14, 13, 12, 11, 10,
+        11, 12, 11, 10, 9, 8, 7, 8, 9, 10,
+        11, 12, 13, 14, 15, 14, 13, 12, 11, 10
       ])
   })
 
@@ -112,30 +114,30 @@ describe('RoutePassHistory.vue', () => {
     expect(rowsMinusLast.map(w => w.find('td:nth-child(2)').text()))
       .toEqual(
         SAMPLE_HISTORY_CONTINUATION.map(h => h.transaction.description).slice().reverse()
-        .concat(
-          SAMPLE_HISTORY.map(h => h.transaction.description).slice().reverse())
+          .concat(
+            SAMPLE_HISTORY.map(h => h.transaction.description).slice().reverse())
       )
 
     // balance before
     expect(rowsMinusLast.map(w => parseInt(w.find('td:nth-child(3)').text())))
       .toEqual([
         10, 11, 12, 13, 14, 15, 14, 13, 12, 11,
-        10, 11, 12, 11, 10,  9,  8,  7,  8,  9,
-        10, 11, 12, 13, 14, 15, 14, 13, 12, 11,
+        10, 11, 12, 11, 10, 9, 8, 7, 8, 9,
+        10, 11, 12, 13, 14, 15, 14, 13, 12, 11
       ])
     // change
     expect(rowsMinusLast.map(w => parseInt(w.find('td:nth-child(4)').text())))
       .toEqual([
-        +1, +1, +1, +1, +1,  -1, -1, -1, -1, -1,
-        +1, +1, -1, -1, -1,  -1, -1, +1, +1, +1,
-        +1, +1, +1, +1, +1,  -1, -1, -1, -1, -1
+        +1, +1, +1, +1, +1, -1, -1, -1, -1, -1,
+        +1, +1, -1, -1, -1, -1, -1, +1, +1, +1,
+        +1, +1, +1, +1, +1, -1, -1, -1, -1, -1
       ])
     // balance after
     expect(rowsMinusLast.map(w => parseInt(w.find('td:nth-child(5)').text())))
       .toEqual([
         11, 12, 13, 14, 15, 14, 13, 12, 11, 10,
-        11, 12, 11, 10,  9,  8,  7,  8,  9, 10,
-        11, 12, 13, 14, 15, 14, 13, 12, 11, 10,
+        11, 12, 11, 10, 9, 8, 7, 8, 9, 10,
+        11, 12, 13, 14, 15, 14, 13, 12, 11, 10
       ])
   })
 })

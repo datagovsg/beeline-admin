@@ -15,12 +15,12 @@ describe('contact-lists.vue', () => {
           {
             id: 1,
             description: 'First contact list',
-            createdAt: '2017-01-01T00:00:00',
+            createdAt: '2017-01-01T00:00:00'
           },
           {
             id: 2,
             description: 'Second contact list',
-            createdAt: '2018-01-01T00:00:00',
+            createdAt: '2018-01-01T00:00:00'
           }
         ]
       ]
@@ -30,7 +30,7 @@ describe('contact-lists.vue', () => {
         {
           propsData: {
             companyId: 2
-          },
+          }
 
         }
       )
@@ -55,7 +55,7 @@ describe('contact-lists.vue', () => {
 
     await mockAjax({
       'DELETE /companies/2/contactLists/2': [200, {}, () => { deleted = true }],
-      'GET /companies/2/contactLists': [200, []],
+      'GET /companies/2/contactLists': [200, []]
     }, async () => {
       contactListsPage.findAll(`table.contact-lists tbody tr`).at(1)
         .find('.delete-button')
@@ -90,7 +90,7 @@ describe('contact-lists.vue', () => {
       'GET /companies/2/contactLists': [200, [], () => {
         expect(postCalled).toBe(true)
         getCalled = true
-      }],
+      }]
     }, async () => {
       const button = contactListsPage.find('.new-contact-list-button')
 

@@ -24,7 +24,7 @@ describe('IssueTicket.vue', () => {
             canBoard: true,
             stopId: 600,
             stop: {description: 'Bus stop 600'},
-            time: new Date(2018, 5, 16, 7, 45).toISOString(),
+            time: new Date(2018, 5, 16, 7, 45).toISOString()
           },
           {
             id: 10102,
@@ -32,7 +32,7 @@ describe('IssueTicket.vue', () => {
             canBoard: true,
             stopId: 601,
             stop: {description: 'Bus stop 601'},
-            time: new Date(2018, 5, 16, 7, 46).toISOString(),
+            time: new Date(2018, 5, 16, 7, 46).toISOString()
           },
           {
             id: 10103,
@@ -40,7 +40,7 @@ describe('IssueTicket.vue', () => {
             canBoard: false,
             stopId: 602,
             stop: {description: 'Bus stop 602'},
-            time: new Date(2018, 5, 16, 8, 15).toISOString(),
+            time: new Date(2018, 5, 16, 8, 15).toISOString()
           },
           {
             id: 10104,
@@ -48,9 +48,9 @@ describe('IssueTicket.vue', () => {
             canBoard: false,
             stopId: 603,
             stop: {description: 'Bus stop 603'},
-            time: new Date(2018, 5, 16, 8, 16).toISOString(),
-          },
-        ],
+            time: new Date(2018, 5, 16, 8, 16).toISOString()
+          }
+        ]
       },
       {
         id: 10003,
@@ -64,7 +64,7 @@ describe('IssueTicket.vue', () => {
             canBoard: true,
             stopId: 600,
             stop: {description: 'Bus stop 600'},
-            time: new Date(2018, 5, 17, 7, 45).toISOString(),
+            time: new Date(2018, 5, 17, 7, 45).toISOString()
           },
           {
             id: 30102,
@@ -72,7 +72,7 @@ describe('IssueTicket.vue', () => {
             canBoard: true,
             stopId: 601,
             stop: {description: 'Bus stop 601'},
-            time: new Date(2018, 5, 17, 7, 46).toISOString(),
+            time: new Date(2018, 5, 17, 7, 46).toISOString()
           },
           {
             id: 30103,
@@ -80,7 +80,7 @@ describe('IssueTicket.vue', () => {
             canBoard: false,
             stopId: 602,
             stop: {description: 'Bus stop 602'},
-            time: new Date(2018, 5, 17, 8, 15).toISOString(),
+            time: new Date(2018, 5, 17, 8, 15).toISOString()
           },
           {
             id: 30104,
@@ -88,9 +88,9 @@ describe('IssueTicket.vue', () => {
             canBoard: false,
             stopId: 603,
             stop: {description: 'Bus stop 603'},
-            time: new Date(2018, 5, 17, 8, 16).toISOString(),
-          },
-        ],
+            time: new Date(2018, 5, 17, 8, 16).toISOString()
+          }
+        ]
       },
       {
         id: 10003,
@@ -104,7 +104,7 @@ describe('IssueTicket.vue', () => {
             canBoard: true,
             stopId: 600,
             stop: {description: 'Bus stop 600'},
-            time: new Date(2018, 5, 17, 7, 45).toISOString(),
+            time: new Date(2018, 5, 17, 7, 45).toISOString()
           },
           {
             id: 30102,
@@ -112,7 +112,7 @@ describe('IssueTicket.vue', () => {
             canBoard: true,
             stopId: 601,
             stop: {description: 'Bus stop 601'},
-            time: new Date(2018, 5, 17, 7, 46).toISOString(),
+            time: new Date(2018, 5, 17, 7, 46).toISOString()
           },
           {
             id: 30103,
@@ -120,7 +120,7 @@ describe('IssueTicket.vue', () => {
             canBoard: false,
             stopId: 602,
             stop: {description: 'Bus stop 602'},
-            time: new Date(2018, 5, 17, 8, 15).toISOString(),
+            time: new Date(2018, 5, 17, 8, 15).toISOString()
           },
           {
             id: 30104,
@@ -128,9 +128,9 @@ describe('IssueTicket.vue', () => {
             canBoard: false,
             stopId: 603,
             stop: {description: 'Bus stop 603'},
-            time: new Date(2018, 5, 17, 8, 16).toISOString(),
-          },
-        ],
+            time: new Date(2018, 5, 17, 8, 16).toISOString()
+          }
+        ]
       },
       {
         id: 10002,
@@ -144,7 +144,7 @@ describe('IssueTicket.vue', () => {
             canBoard: true,
             stopId: 600,
             stop: {description: 'Bus stop 600'},
-            time: new Date(2018, 5, 30, 7, 45).toISOString(),
+            time: new Date(2018, 5, 30, 7, 45).toISOString()
           },
           {
             id: 20102,
@@ -152,7 +152,7 @@ describe('IssueTicket.vue', () => {
             canBoard: true,
             stopId: 601,
             stop: {description: 'Bus stop 601'},
-            time: new Date(2018, 5, 30, 7, 46).toISOString(),
+            time: new Date(2018, 5, 30, 7, 46).toISOString()
           },
           {
             id: 20105,
@@ -160,7 +160,7 @@ describe('IssueTicket.vue', () => {
             canBoard: true,
             stopId: 605,
             stop: {description: 'Bus stop 605'},
-            time: new Date(2018, 5, 30, 7, 47).toISOString(),
+            time: new Date(2018, 5, 30, 7, 47).toISOString()
           },
           {
             id: 20103,
@@ -168,7 +168,7 @@ describe('IssueTicket.vue', () => {
             canBoard: false,
             stopId: 602,
             stop: {description: 'Bus stop 602'},
-            time: new Date(2018, 5, 30, 8, 15).toISOString(),
+            time: new Date(2018, 5, 30, 8, 15).toISOString()
           },
           {
             id: 20104,
@@ -176,9 +176,9 @@ describe('IssueTicket.vue', () => {
             canBoard: false,
             stopId: 603,
             stop: {description: 'Bus stop 603'},
-            time: new Date(2018, 5, 30, 8, 16).toISOString(),
-          },
-        ],
+            time: new Date(2018, 5, 30, 8, 16).toISOString()
+          }
+        ]
       }
     ]
   }
@@ -196,7 +196,7 @@ describe('IssueTicket.vue', () => {
         alightStopId: 3,
         bsStopId: 4,
         tripId: 10001
-      },
+      }
     ]
   ]
 
@@ -211,7 +211,7 @@ describe('IssueTicket.vue', () => {
             ...ROUTE_10,
             trips: (request.query.includeTrips === 'true') ? ROUTE_10.trips : undefined
           })],
-        'GET /routes?': [200, [ROUTE_10]],
+        'GET /routes?': [200, [ROUTE_10]]
       }, async () => {
         const issueTicketModal = mount(
           IssueTicket,
@@ -221,9 +221,9 @@ describe('IssueTicket.vue', () => {
               routeId: 10,
               boardStopStopId: null,
               alightStopStopId: null,
-              ...props,
+              ...props
             },
-            store: testStore({}),
+            store: testStore({})
           }
         )
         await delay(2)
@@ -245,7 +245,7 @@ describe('IssueTicket.vue', () => {
   beforeEach(async () => {
     clock = sinon.useFakeTimers({
       now: new Date(2018, 5, 15),
-      shouldAdvanceTime: true,
+      shouldAdvanceTime: true
     })
   })
 
@@ -284,7 +284,7 @@ describe('IssueTicket.vue', () => {
     function getSelectOptions () {
       return [
         issueTicketModal.findAll(`select[name="boardingStop"] option`).wrappers.map(s => s.element.value),
-        issueTicketModal.findAll(`select[name="alightingStop"] option`).wrappers.map(s => s.element.value),
+        issueTicketModal.findAll(`select[name="alightingStop"] option`).wrappers.map(s => s.element.value)
       ]
     }
 
@@ -344,12 +344,12 @@ describe('IssueTicket.vue', () => {
           boardStop: {
             trip: {date: '2018-01-01', route: {label: 'XXX'}},
             stop: {description: 'abc'},
-            time: '2018-01-01T19:00:00Z',
+            time: '2018-01-01T19:00:00Z'
           },
           alightStop: {
             trip: {date: '2018-01-01', route: {label: 'XXX'}},
             stop: {description: 'abc'},
-            time: '2018-01-01T19:00:00Z',
+            time: '2018-01-01T19:00:00Z'
           },
           ticketSale: {transactionId: 666}
         },
@@ -358,15 +358,15 @@ describe('IssueTicket.vue', () => {
           boardStop: {
             trip: {date: '2018-01-02', route: {label: 'XXX'}},
             stop: {description: 'abc'},
-            time: '2018-01-01T19:00:00Z',
+            time: '2018-01-01T19:00:00Z'
           },
           alightStop: {
             trip: {date: '2018-01-02', route: {label: 'XXX'}},
             stop: {description: 'abc'},
-            time: '2018-01-01T19:00:00Z',
+            time: '2018-01-01T19:00:00Z'
           },
           ticketSale: {transactionId: 667}
-        },
+        }
       ]
     })
 

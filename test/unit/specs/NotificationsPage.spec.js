@@ -10,81 +10,81 @@ describe('notifications.vue', () => {
 
   const INITIAL_EVENT_SUBSCRIPTIONS = [
     {
-      "id": 1332,
-      "event": "passengersMessaged",
-      "transportCompanyId": 2,
-      "agent": {
-        "name": "cschua",
-        "notes": { "telegramChatId": "987654" }
+      'id': 1332,
+      'event': 'passengersMessaged',
+      'transportCompanyId': 2,
+      'agent': {
+        'name': 'cschua',
+        'notes': { 'telegramChatId': '987654' }
       },
-      "formatter": "0",
-      "handler": "telegram",
-      "params": {
-        "ignoreIfEmpty": true,
-        "transportCompanyIds": [2]
-      },
+      'formatter': '0',
+      'handler': 'telegram',
+      'params': {
+        'ignoreIfEmpty': true,
+        'transportCompanyIds': [2]
+      }
     },
     {
-      "id": 1331,
-      "event": "noPings",
-      "transportCompanyId": 2,
-      "agent": {
-        "name": "cschua",
-        "notes": { "telegramChatId": "987654" }
+      'id': 1331,
+      'event': 'noPings',
+      'transportCompanyId': 2,
+      'agent': {
+        'name': 'cschua',
+        'notes': { 'telegramChatId': '987654' }
       },
-      "formatter": "0",
-      "handler": "telegram",
-      "params": {
-        "minsBefore": [5, 25, 25],
-        "ignoreIfEmpty": true,
-        "transportCompanyIds": [2]
-      },
+      'formatter': '0',
+      'handler': 'telegram',
+      'params': {
+        'minsBefore': [5, 25, 25],
+        'ignoreIfEmpty': true,
+        'transportCompanyIds': [2]
+      }
     },
     {
-      "id": 1334,
-      "event": "lateETA",
-      "transportCompanyId": 2,
-      "agent": {
-        "name": "cschua",
-        "notes": { "telegramChatId": "987654" }
+      'id': 1334,
+      'event': 'lateETA',
+      'transportCompanyId': 2,
+      'agent': {
+        'name': 'cschua',
+        'notes': { 'telegramChatId': '987654' }
       },
-      "formatter": "0",
-      "handler": "telegram",
-      "params": {
-        "timeAfter": 600000,
-        "ignoreIfEmpty": true,
-        "transportCompanyIds": [2]
-      },
+      'formatter': '0',
+      'handler': 'telegram',
+      'params': {
+        'timeAfter': 600000,
+        'ignoreIfEmpty': true,
+        'transportCompanyIds': [2]
+      }
     },
     {
-      "id": 1333,
-      "event": "tripCancelled",
-      "transportCompanyId": 2,
-      "agent": {
-        "name": "cschua",
-        "notes": { "telegramChatId": "987654" }
+      'id': 1333,
+      'event': 'tripCancelled',
+      'transportCompanyId': 2,
+      'agent': {
+        'name': 'cschua',
+        'notes': { 'telegramChatId': '987654' }
       },
-      "formatter": "0",
-      "handler": "telegram",
-      "params": {
-        "ignoreIfEmpty": true,
-        "transportCompanyIds": [2]
-      },
+      'formatter': '0',
+      'handler': 'telegram',
+      'params': {
+        'ignoreIfEmpty': true,
+        'transportCompanyIds': [2]
+      }
     },
     {
-      "id": 1370,
-      "event": "noPings",
-      "transportCompanyId": 2,
-      "agent": {
-        "name": "dssq",
-        "notes": { "telegramChatId": "123456" }
+      'id': 1370,
+      'event': 'noPings',
+      'transportCompanyId': 2,
+      'agent': {
+        'name': 'dssq',
+        'notes': { 'telegramChatId': '123456' }
       },
-      "formatter": "0",
-      "handler": "telegram",
-      "params": {
-        "minsBefore": [5],
-        "transportCompanyIds": [2]
-      },
+      'formatter': '0',
+      'handler': 'telegram',
+      'params': {
+        'minsBefore': [5],
+        'transportCompanyIds': [2]
+      }
     }
   ]
 
@@ -94,7 +94,7 @@ describe('notifications.vue', () => {
         'GET /companies/2/eventSubscriptions': [
           200,
           INITIAL_EVENT_SUBSCRIPTIONS
-        ],
+        ]
       },
       async () => {
         const notificationsPage = mountTestPage(
@@ -102,8 +102,8 @@ describe('notifications.vue', () => {
           {
             sync: false,
             propsData: {
-              companyId: '2',
-            },
+              companyId: '2'
+            }
 
           }
         )
@@ -120,26 +120,26 @@ describe('notifications.vue', () => {
 
     await mockAjax({
       'DELETE /companies/2/eventSubscriptions/1331': [
-        200, {}, () => {called[1331] = true}
+        200, {}, () => { called[1331] = true }
       ],
       'DELETE /companies/2/eventSubscriptions/1332': [
-        200, {}, () => {called[1332] = true}
+        200, {}, () => { called[1332] = true }
       ],
       'DELETE /companies/2/eventSubscriptions/1333': [
-        200, {}, () => {called[1333] = true}
+        200, {}, () => { called[1333] = true }
       ],
       'DELETE /companies/2/eventSubscriptions/1334': [
-        200, {}, () => {called[1334] = true}
-      ],
+        200, {}, () => { called[1334] = true }
+      ]
     }, async () => {
       routeEventSubscriptions.findAll('tbody tr')
         .filter(row => row.findAll('input').wrappers
-          .some(t => t.element.value === "cschua"))
+          .some(t => t.element.value === 'cschua'))
         .at(0)
         .find('td .btn.btn-danger')
         .trigger('click')
       await delay(1)
-  
+
       notificationsPage.find('.modal-footer .btn.btn-primary').trigger('click')
       await delay(1)
 
@@ -147,7 +147,7 @@ describe('notifications.vue', () => {
         1331: true,
         1332: true,
         1333: true,
-        1334: true,
+        1334: true
       })
     })
   })
@@ -158,16 +158,16 @@ describe('notifications.vue', () => {
 
     await mockAjax({
       'DELETE /companies/2/eventSubscriptions/1331': [
-        200, {}, () => {deleted[1331] = true}
+        200, {}, () => { deleted[1331] = true }
       ],
       'DELETE /companies/2/eventSubscriptions/1332': [
-        200, {}, () => {deleted[1332] = true}
+        200, {}, () => { deleted[1332] = true }
       ],
       'DELETE /companies/2/eventSubscriptions/1333': [
-        200, {}, () => {deleted[1333] = true}
+        200, {}, () => { deleted[1333] = true }
       ],
       'DELETE /companies/2/eventSubscriptions/1334': [
-        200, {}, () => {deleted[1334] = true}
+        200, {}, () => { deleted[1334] = true }
       ],
       'POST /companies/2/eventSubscriptions': [
         200,
@@ -183,7 +183,7 @@ describe('notifications.vue', () => {
     }, async () => {
       const cschuaRow = routeEventSubscriptions.findAll('tbody tr')
         .filter(row => row.findAll('input').wrappers
-          .some(t => t.element.value === "cschua"))
+          .some(t => t.element.value === 'cschua'))
         .at(0)
 
       const newBookingCheckbox = cschuaRow.findAll('input[type="checkbox"]')
@@ -191,7 +191,7 @@ describe('notifications.vue', () => {
       newBookingCheckbox.element.checked = true
       newBookingCheckbox.trigger('change')
       newBookingCheckbox.trigger('input')
-      
+
       cschuaRow
         .find('td .btn.btn-default')
         .trigger('click')
@@ -201,7 +201,7 @@ describe('notifications.vue', () => {
         1331: true,
         1332: true,
         1333: true,
-        1334: true,
+        1334: true
       })
       expect(_.sortBy(posted)).toEqual(_.sortBy([
         'newBooking', 'noPings', 'tripCancelled', 'lateETA', 'passengersMessaged'

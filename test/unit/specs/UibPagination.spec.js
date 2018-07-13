@@ -87,7 +87,7 @@ describe('UibPagination.vue - Event Handling', () => {
 
   it('should handle page selections', async () => {
     const pagination = createPaginationAndVerifyEntries(
-      { displayAllItems:true, totalItems: 5, value: 0 },
+      { displayAllItems: true, totalItems: 5, value: 0 },
       ['1', '2', '3', '4', '5']
     )()
 
@@ -96,6 +96,5 @@ describe('UibPagination.vue - Event Handling', () => {
       page.trigger('click')
       verifyEntries(pagination, i, ['1', '2', '3', '4', '5'])
     }
-
   })
 })

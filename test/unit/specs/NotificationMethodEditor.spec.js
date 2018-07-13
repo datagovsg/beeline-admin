@@ -11,13 +11,13 @@ describe('NotificationMethodEditor.vue', () => {
   beforeEach(async () => {
     const props = {
       value: lastInput,
-      agent: lastAgent,
+      agent: lastAgent
     }
 
     function updateProps () {
       editor.find({ref: 'testedComponent'}).setProps({
         value: lastInput,
-        agent: lastAgent,
+        agent: lastAgent
       })
     }
 

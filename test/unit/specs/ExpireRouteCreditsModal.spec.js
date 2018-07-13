@@ -6,9 +6,10 @@ describe('ExpireRouteCredits.vue', () => {
   let expireRouteCreditsModal = null
   let expireRouteCreditsResult = null
   let expireRouteCreditsError = null
-  
+
   async function initializeModalWithProps (props) {
     await mockAjax({
+      /* eslint-disable */
       'GET /user/4567': [
         200,
         {"id":4567,"email":"joel@example.com","emailVerified":true,"name":"Joel","telephone":"+6582226264","type":null,"status":"valid",
@@ -17,6 +18,7 @@ describe('ExpireRouteCredits.vue', () => {
         "shipping":null,"delinquent":false,"description":null,"subscriptions":{"url":"/v1/customers/cus_CMEThqL9gkpIYN/subscriptions","data":[],"object":"list","has_more":false,"total_count":0},
         "default_source":"card_1Bxn9YIt6Q7WukI6tL4hCBH4","invoice_prefix":"8AE0F4A","account_balance":0},"lastUsedAppName":"Beeline","createdAt":"2017-10-05T03:05:29.080Z","updatedAt":"2018-07-11T08:40:46.300Z"}
       ],
+      /* eslint-enable */
     }, async () => {
       expireRouteCreditsModal = mountTestPage(
         ExpireRouteCredits,
@@ -24,13 +26,13 @@ describe('ExpireRouteCredits.vue', () => {
           sync: false,
           listeners: {
             resolve: result => expireRouteCreditsResult = result,
-            reject: err => expireRouteCreditsError = true,
+            reject: err => expireRouteCreditsError = true
           },
           propsData: {
             userId: 4567,
             tag: 'abcd-efgh',
-            ...props,
-          },
+            ...props
+          }
 
         }
       )
@@ -57,7 +59,7 @@ describe('ExpireRouteCredits.vue', () => {
     await delay(1)
 
     expect(expireRouteCreditsResult).toEqual({
-      quantity: 3,
+      quantity: 3
     })
   })
 

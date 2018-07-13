@@ -34,9 +34,9 @@ describe('admins.vue', () => {
                 id: 5,
                 adminCompany: {
                   permissions: ['manage-routes', 'manage-drivers',
-                  'drive', 'update-trip-status',
-                  'message-passengers', 'view-passengers',
-                  'manage-notifications', 'manage-customers'] // operations
+                    'drive', 'update-trip-status',
+                    'message-passengers', 'view-passengers',
+                    'manage-notifications', 'manage-customers'] // operations
                 }
               }
             ]
@@ -60,7 +60,7 @@ describe('admins.vue', () => {
       const adminPage = mountTestPage(
         AdminPage,
         {
-          propsData: {companyId: 5},
+          propsData: {companyId: 5}
 
         }
       )
