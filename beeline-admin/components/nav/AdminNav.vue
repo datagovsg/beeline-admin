@@ -86,7 +86,7 @@ export default {
     ...mapGetters(['sessionEmail', 'isSuperAdmin']),
 
     companyId () {
-      return this.$route.params.companyId || ''
+      return this.$route.params.companyId || 'null'
     }
   },
   methods: {
