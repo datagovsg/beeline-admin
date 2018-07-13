@@ -1,6 +1,7 @@
 import {mapState, mapMutations, mapActions} from 'vuex'
 import axios from 'axios'
 import auth0 from 'auth0-js'
+import jwtDecode from 'jwt-decode'
 import Auth0Lock from 'auth0-lock'
 
 /**
@@ -49,7 +50,7 @@ axios.get(`${process.env.BACKEND_URL}/auth/credentials`)
     const idToken = localStorage.sessionToken
     const isTokenValid = (t) => {
       try {
-        const time = JSON.parse(atob(t.split('.')[1])).exp * 1e3
+        const time = jwtDecode(t).exp * 1e3
         return time - Date.now() > 3600e3
       } catch (e) {
         return false
@@ -116,6 +117,6 @@ export default {
           window.location.hash = authResult.state
         }
       }
-    })   
+    })
   },
 }
