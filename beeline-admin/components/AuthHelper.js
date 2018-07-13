@@ -38,7 +38,6 @@ axios.get(`${process.env.BACKEND_URL}/auth/credentials`)
   const authResultPromise = new Promise((resolve, reject) => {
     webAuth.parseHash((err, authResult) => {
       if (!err && authResult) {
-        localStorage.sessionToken = authResult.idToken
         resolve(authResult)
       } else {
         resolve(checkToken())
@@ -91,7 +90,7 @@ export default {
   render () { return null },
 
   computed: {
-    ...mapState('auth', ['loginDialogShown'])
+    ...mapState('auth', ['loginDialogShown', 'isAuthenticated', 'idToken'])
   },
 
   methods: {
@@ -105,6 +104,12 @@ export default {
           this.$lock.show()
           this.showLoginDialog(false)
         })
+      }
+    },
+
+    idToken () {
+      if (this.isAuthenticated) {
+        window.localStorage.sessionToken = this.idToken
       }
     }
   },

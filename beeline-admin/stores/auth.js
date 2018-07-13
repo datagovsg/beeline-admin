@@ -10,12 +10,11 @@ module.exports = {
   }),
   mutations: {
     authenticate (state, result) {
+      state.isAuthenticated = true
       if (result) {
         state.idToken = result.idToken
-        state.isAuthenticated = true
       } else {
         state.idToken = null
-        state.isAuthenticated = false
       }
     },
     showLoginDialog (state, visible) {
