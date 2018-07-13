@@ -95,14 +95,17 @@ export default {
   },
 
   methods: {
-    ...mapMutations('auth', ['authenticate', 'setProfile', 'setIdToken']),
+    ...mapMutations('auth', ['authenticate', 'setProfile', 'setIdToken', 'showLoginDialog']),
   },
 
   watch: {
-    loginDialogShown () {
-      this.$setupPromise.then(() => {
-        this.$lock.show()
-      })
+    loginDialogShown (v) {
+      if (v) {
+        this.$setupPromise.then(() => {
+          this.$lock.show()
+          this.showLoginDialog(false)
+        })
+      }
     }
   },
 

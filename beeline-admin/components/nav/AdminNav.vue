@@ -97,12 +97,12 @@ export default {
     },
 
     login () {
-      this.showLoginDialog()
+      this.showLoginDialog(true)
     },
 
     logout () {
       this.authenticate(null)
-      this.showLoginDialog()
+      this.showLoginDialog(true)
     }
   }
 }

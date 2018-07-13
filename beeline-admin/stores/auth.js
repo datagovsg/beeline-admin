@@ -18,8 +18,8 @@ module.exports = {
         state.isAuthenticated = false
       }
     },
-    showLoginDialog (state) {
-      state.loginDialogShown = true 
+    showLoginDialog (state, visible) {
+      state.loginDialogShown = visible
     }
   },
 }
