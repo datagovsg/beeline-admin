@@ -118,6 +118,10 @@ export default {
     this.$setupPromise = authInitializationPromise.then(({lock, authResult}) => {
       this.$lock = lock
 
+      lock.on('authenticated', (x) => {
+        this.authenticate(x)
+      })
+
       if (authResult && !authResult.error) {
         this.authenticate(authResult)
 
