@@ -9,9 +9,15 @@
     <!-- your app's js -->
     <script src="lib/beeline-admin/bundle.js"></script>
   </head>
-  <body>
+  <body ng-app="beeline-admin">
 
-    <div id="app"></div>
+    <admin-nav>
+    </admin-nav>
 
+    <ui-view></ui-view>
+
+    <div class="modal fade">
+      Modal
+    </div>
   </body>
 </html>
