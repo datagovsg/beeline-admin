@@ -1,7 +1,7 @@
 <template>
   <div class="container withnav drivers">
-    
-    
+
+
 
     <div class="row">
       <div class="col-lg-12">
@@ -106,6 +106,14 @@ export default {
 
     sortedAdmins () {
       return _.sortBy(this.admins, 'id')
+    }
+  },
+  watch: {
+    companyId: {
+      immediate: true,
+      handler (h) {
+        this.requery()
+      }
     }
   },
   methods: {
