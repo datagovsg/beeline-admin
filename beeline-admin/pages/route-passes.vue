@@ -56,10 +56,10 @@
         </div>
       </div>
       <div class="col-lg-12">
-          <UibPagination :boundary-links="true" v-model="paging.page" :total-items="transactionSummary.totalItems" :items-per-page="paging.perPage"/>
-          <div>
-            Showing {{paging.page * paging.perPage + 1}} to {{paging.page * paging.perPage + (transactions || []).length}} of {{transactionSummary.totalItems}}
-          </div>
+        <UibPagination :boundary-links="true" v-model="paging.page" :total-items="transactionSummary && transactionSummary.totalItems" :items-per-page="paging.perPage"/>
+        <div>
+          Showing {{paging.page * paging.perPage + 1}} to {{paging.page * paging.perPage + (transactions || []).length}} of {{transactionSummary.totalItems}}
+        </div>
       </div>
       <div class="col-sm-12">
         <table class="table">
@@ -206,12 +206,14 @@ export default {
       return this.publicHolidayDates.concat(this.highlightDays)
     },
     highlightDays () {
-      return _.keys(this.transactionSummary.txnCountByDay)
+      return this.transactionSummary
+       ? _.keys(this.transactionSummary.txnCountByDay)
         .map(date => ({
           date: new Date(parseInt(date)),
           annotation: this.transactionSummary.txnCountByDay[date],
           selectable: true,
         }))
+      : null
     },
     transactionSummaryQuery () {
       return this.buildQuery({}, this.filter)
