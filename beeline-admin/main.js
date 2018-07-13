@@ -6,7 +6,7 @@ import * as VueGoogleMaps from 'vue2-google-maps'
 import assert from 'assert'
 
 import App from './App.vue'
-import createViewStore from '@/stores'
+import StoreDefinition from '@/stores'
 import createRouter from '@/router'
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   new Vue({
     el: '#app',
-    store: createViewStore(),
+    store: new Vuex.Store(StoreDefinition),
     router: createRouter(),
     render (h) {
       return h(App)

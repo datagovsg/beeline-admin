@@ -1,6 +1,6 @@
 import ContactsListPage from '@/pages/contact-lists.vue'
 import { mount } from '@vue/test-utils'
-import { delay, mockAjax, testStore } from '../util'
+import { delay, mockAjax, testStore, mountTestPage } from '../util'
 import axios from 'axios'
 import sinon from 'sinon'
 
@@ -25,13 +25,13 @@ describe('contact-lists.vue', () => {
         ]
       ]
     }, async () => {
-      const contactListsPage = mount(
+      const contactListsPage = mountTestPage(
         ContactsListPage,
         {
           propsData: {
             companyId: 2
           },
-          store: testStore({})
+
         }
       )
       await delay(10)

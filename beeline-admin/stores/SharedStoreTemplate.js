@@ -8,7 +8,7 @@ export default function SharedStoreTemplate (definition, fetchJobs) {
   return {
     namespaced: true,
     state: () => ({
-      ...definition.state,
+      ...(definition.state && definition.state()),
       ... _.mapValues(fetchJobs, () => null),
       promises: _.mapValues(fetchJobs, () => null)
     }),

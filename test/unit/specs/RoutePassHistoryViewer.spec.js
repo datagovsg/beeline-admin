@@ -1,6 +1,6 @@
 import RoutePassHistory from '@/components/users/RoutePassHistory.vue'
 import { mount } from '@vue/test-utils'
-import { delay, mockAjax, testStore } from '../util'
+import { delay, mockAjax, testStore, mountTestPage } from '../util'
 
 describe('RoutePassHistory.vue', () => {
   let routePassHistory = null
@@ -49,11 +49,10 @@ describe('RoutePassHistory.vue', () => {
         }
       ]
     }, async () => {
-      const routePassHistory = await mount(
+      const routePassHistory = await mountTestPage(
         RoutePassHistory,
         {
-          propsData: {companyId: '5', userId: '123', tag: 'MY_TAG', 'finalBalance': 10},
-          store: testStore({})
+          propsData: {companyId: '5', userId: '123', tag: 'MY_TAG', finalBalance: 10},
         }
       )
       await delay(10)

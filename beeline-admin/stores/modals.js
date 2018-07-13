@@ -2,11 +2,6 @@ import Vue from 'vue'
 import _ from 'lodash'
 import assert from 'assert'
 
-const initial = () => ({
-  modalStack: [],
-  options: null,
-})
-
 function showModalOfType(type, options) {
   return (context, options) =>
     context.dispatch('showModal', {
@@ -20,7 +15,10 @@ function showModalOfType(type, options) {
 
 module.exports = {
   namespaced: true,
-  state: initial,
+  state: () => ({
+    modalStack: [],
+    options: null,
+  }),
   mutations: {
     addModal(state, options) {
       state.modalStack.push(_.pick(options, ['options', 'resolve', 'reject']))

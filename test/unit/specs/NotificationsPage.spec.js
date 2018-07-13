@@ -1,6 +1,6 @@
 import NotificationsPage from '@/pages/notifications.vue'
 import { mount } from '@vue/test-utils'
-import { delay, mockAjax, testStore } from '../util'
+import { delay, mockAjax, testStore, mountTestPage } from '../util'
 import _ from 'lodash'
 
 describe('notifications.vue', () => {
@@ -97,14 +97,14 @@ describe('notifications.vue', () => {
         ],
       },
       async () => {
-        const notificationsPage = mount(
+        const notificationsPage = mountTestPage(
           NotificationsPage,
           {
             sync: false,
             propsData: {
               companyId: '2',
             },
-            store: testStore({})
+
           }
         )
         await delay(2)

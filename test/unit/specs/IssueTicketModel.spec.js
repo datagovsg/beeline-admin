@@ -1,7 +1,7 @@
 import IssueTicket from '@/modals/IssueTicket.vue'
 import sinon from 'sinon'
 import { mount } from '@vue/test-utils'
-import { delay, mockAjax, testStore } from '../util'
+import { delay, mockAjax, testStore, mountTestPage } from '../util'
 
 describe('IssueTicket.vue', () => {
   let issueTicketModal = null
@@ -223,7 +223,7 @@ describe('IssueTicket.vue', () => {
               alightStopStopId: null,
               ...props,
             },
-            store: testStore({})
+            store: testStore({}),
           }
         )
         await delay(2)

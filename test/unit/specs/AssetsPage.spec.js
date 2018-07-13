@@ -1,7 +1,5 @@
 import AssetsPage from '@/pages/assets.vue'
-import { mount } from '@vue/test-utils'
-import { delay, mockAjax, testStore } from '../util'
-import axios from 'axios'
+import { delay, mockAjax, testStore, mountTestPage } from '../util'
 import sinon from 'sinon'
 
 describe('assets.vue', () => {
@@ -47,10 +45,10 @@ describe('assets.vue', () => {
         ]
       ]
     }, async () => {
-      const assetsPage = mount(
+      const assetsPage = mountTestPage(
         AssetsPage,
         {
-          store: testStore({})
+
         }
       )
       await delay(10)
