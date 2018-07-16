@@ -126,19 +126,6 @@ export default {
   },
   computed: {
     ...mapGetters(['axios', 'isSuperAdmin']),
-    routePromise () {
-      if (!this.routeId) {
-        return Promise.resolve(null)
-      } else {
-        return this.getRoute({
-          id: this.routeId,
-          options: {
-            includeDates: true,
-            includeFeatures: true
-          }
-        })
-      }
-    },
     activeTab () {
       return this.tabs.indexOf(this.tab)
     }
@@ -149,33 +136,15 @@ export default {
       handler (route) {
         this.editRoute = route ? {
           ...route,
-          companyTags: route.companyTags || [],
-          tags: route.tags || [],
+          companyTags: [...(route.companyTags || [])],
+          tags: [...(route.tags || [])],
           notes: {
             description: null,
             signage: null,
             passSizes: [],
             ...route.notes
           }
-        } : {
-          // Blank route
-          features: '',
-          transportCompanyId: null,
-          path: '',
-          companyTags: [],
-          tags: [],
-          label: '',
-          name: '',
-          from: '',
-          to: '',
-          trips: [],
-          id: null,
-          schedule: '',
-          notes: {
-            description: null,
-            signage: null
-          }
-        }
+        } : this.blankRoute()
       }
     }
   },
@@ -183,6 +152,28 @@ export default {
     ...mapActions('resources', ['getRoute', 'saveRoute', 'createTripForDate']),
     ...mapActions('spinner', ['spinOnPromise']),
     ...mapActions('modals', ['showModal', 'showErrorModal']),
+
+    blankRoute () {
+      return {
+        // Blank route
+        features: '',
+        transportCompanyId: null,
+        path: '',
+        companyTags: [],
+        tags: [],
+        label: '',
+        name: '',
+        from: '',
+        to: '',
+        trips: [],
+        id: null,
+        schedule: '',
+        notes: {
+          description: null,
+          signage: null
+        }
+      }
+    },
 
     doSaveRoute () {
       this.spinOnPromise(
@@ -196,7 +187,7 @@ export default {
         .catch(this.showErrorModal)
     },
     doResetRoute () {
-      this.editRoute = blankRoute()
+      this.editRoute = this.blankRoute()
     },
     doDeleteRoute () {
       if (!this.editRoute.id) return
