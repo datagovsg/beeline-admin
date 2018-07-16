@@ -22,7 +22,7 @@ describe('MonthPicker', () => {
 
   it('should change year and select month', async () => {
     const yearChangeButtons = monthPicker.findAll(`table thead button`)
-    const monthButtons = monthPicker.findAll(`table tbody button`)
+    const monthButtons = () => monthPicker.findAll(`table tbody button`)
     const yearDisplay = monthPicker.find(`table thead tr`)
 
     const year = new Date().getUTCFullYear()
@@ -37,7 +37,7 @@ describe('MonthPicker', () => {
       ((year - 1).toString()))
 
     // select January
-    monthButtons.at(0).trigger('click')
+    monthButtons().at(0).trigger('click')
     await delay(1)
     expect(lastSelected.getTime()).toBe(Date.UTC(year - 1, 0, 1))
 
@@ -51,7 +51,7 @@ describe('MonthPicker', () => {
       ((year + 1).toString()))
 
     // select July
-    monthButtons.at(6).trigger('click')
+    monthButtons().at(6).trigger('click')
     await delay(1)
     expect(lastSelected.getTime()).toBe(Date.UTC(year + 1, 6, 1))
   })
