@@ -108,9 +108,7 @@
 <script>
 import querystring from 'querystring'
 import {mapGetters, mapActions, mapState} from 'vuex'
-import _ from 'lodash'
 import download from 'downloadjs'
-import * as resources from '../stores/resources'
 import filters from '../filters'
 
 import RouteSelector from '../components/RouteSelector.vue'

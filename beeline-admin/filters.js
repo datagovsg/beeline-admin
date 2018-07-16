@@ -8,7 +8,7 @@ module.exports = {
   date: require('dateformat'),
   number: (n, f) => numeral(n).format(f),
   _: require('lodash'),
-  pointToLatLng: p => ({ lat: p.coordinates[1], lng: p.coordinates[0]}),
+  pointToLatLng: p => ({lat: p.coordinates[1], lng: p.coordinates[0]}),
   leftPad: require('left-pad'),
   titleCase: require('title-case'),
   monthNames: n => monthNames[n],

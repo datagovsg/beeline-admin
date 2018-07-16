@@ -1,8 +1,4 @@
-import Vuex from 'vuex'
-import axios from 'axios'
-import querystring from 'querystring'
 import _ from 'lodash'
-import * as resources from '../stores/resources'
 
 export default function SharedStoreTemplate (definition, fetchJobs) {
   return {

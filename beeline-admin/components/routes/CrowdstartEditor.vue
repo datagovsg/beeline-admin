@@ -58,7 +58,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(tier, index) in [editRoute.notes.tier[0]]">
+            <tr v-for="(tier, index) in [editRoute.notes.tier[0]]" :key="index">
               <td>
               </td>
               <td>
@@ -87,8 +87,7 @@
 </style>
 
 <script>
-import {mapGetters, mapActions, mapState} from 'vuex'
-import * as resources from '../../stores/resources'
+import {mapGetters, mapActions} from 'vuex'
 import querystring from 'querystring'
 import assert from 'assert'
 import _ from 'lodash'
@@ -199,9 +198,6 @@ export default {
         .then(() => this.$emit('requery'))
         .catch(this.showErrorModal)
       )
-    },
-    doResetRoute () {
-      this.editRoute = blankRoute()
     },
 
     update (key, value) {

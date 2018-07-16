@@ -10,7 +10,8 @@
         <div v-if="s.entry" class="route-tag-selector-option">
           <ul class="tags"><li>{{s.entry && s.entry.tag}}</li></ul>
           <div class="matching-routes">
-            <span v-for="(route, index) in (s.entry && s.entry.routes && s.entry.routes.slice(0, 5))">
+            <span v-for="(route, index) in (s.entry && s.entry.routes && s.entry.routes.slice(0, 5))"
+                :key="index">
               {{index > 0 ? ', ' : ''}}{{route.label}}
             </span>
             <span v-if="(s.entry && s.entry.routes && s.entry.routes.length > 5)">
@@ -25,7 +26,8 @@
       <div v-if="s.entry" class="route-tag-selector-option">
         <ul class="tags"><li>{{s.entry && s.entry.tag}}</li></ul>
         <ul class="matching-routes">
-          <li  v-for="route in (s.entry && s.entry.routes && s.entry.routes.slice(0, 3))">
+          <li v-for="(route, index) in (s.entry && s.entry.routes && s.entry.routes.slice(0, 3))"
+              :key="index">
             {{route.label}} {{route.name}}
           </li>
           <li  v-if="s.entry && s.entry.routes && s.entry.routes.length > 3">
@@ -65,13 +67,9 @@
 </style>
 <script>
 import {mapGetters, mapActions, mapState} from 'vuex'
-import {debounce} from 'lodash'
-import querystring from 'querystring'
 import _ from 'lodash'
 
 import Select2 from '@/components/Select2.vue'
-
-const filters = require('../filters')
 
 const SYSTEM_TAGS = _.fromPairs([
   'public', 'lite', 'mandai', 'crowdstart', 'lelong',
@@ -145,7 +143,7 @@ export default {
       this.fetchMatchingResults(query)
     },
 
-    fetchMatchingResults: debounce(function (query) {
+    fetchMatchingResults: _.debounce(function (query) {
       const tagsToRoutes = {}
       const ucaseQuery = query.toUpperCase()
 

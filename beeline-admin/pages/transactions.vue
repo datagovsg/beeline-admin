@@ -363,7 +363,7 @@
 </div>
 </template>
 <script>
-import assert from 'assert'
+import _ from 'lodash'
 import querystring from 'querystring'
 import {mapGetters, mapActions} from 'vuex'
 import redirect from '@/shared/redirect'

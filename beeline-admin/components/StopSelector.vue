@@ -24,6 +24,7 @@
 }
 </style>
 <script>
+import _ from 'lodash'
 import {mapGetters, mapActions, mapState} from 'vuex'
 
 import DatasheetCell from '@/components/DatasheetCell.vue'

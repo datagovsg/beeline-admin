@@ -19,8 +19,9 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="week in weeks">
+      <tr v-for="(week, weekIndex) in weeks" :key="weekIndex">
         <td v-for="i in Array(7).fill().map((_, i) => i)"
+            :key="i"
             @click="clicked(week[i])"
             :class="dayClasses(week[i])">
           {{week[i].day}}
@@ -32,6 +33,8 @@
 </template>
 
 <script>
+import _ from 'lodash'
+
 import dateformat from 'dateformat'
 
 export default {

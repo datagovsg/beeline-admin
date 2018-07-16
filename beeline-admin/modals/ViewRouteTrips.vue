@@ -173,8 +173,6 @@ export default {
           return typeof path === 'string'
             ? google.maps.geometry.encoding.decodePath(path)
             : path
-
-          return path
         })
       return promise
     },
@@ -209,13 +207,13 @@ export default {
     routePathPromise: {
       immediate: true,
       handler (p) {
-        if (p) p.then(path => this.routePath = path)
+        if (p) p.then(path => { this.routePath = path })
       }
     },
     pingsPromise: {
       immediate: true,
       handler (p) {
-        if (p) p.then((pings) => this.pingsByDriverId = _.groupBy(pings, 'driverId'))
+        if (p) p.then((pings) => { this.pingsByDriverId = _.groupBy(pings, 'driverId') })
       }
     },
     selectedTrip: {

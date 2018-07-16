@@ -48,7 +48,7 @@
     <tr> <!-- 1/4 row of span -->
       <th rowspan="4" width="3%">{{ f.date(route.trips[0].date, 'mmm', true) }}</th>
 
-      <th v-for="pricing in route.priceSummary" :colspan="pricing.count" class="price-summary">
+      <th v-for="(pricing, index) in route.priceSummary" :key="index" :colspan="pricing.count" class="price-summary">
         <span v-if="pricing.price !== undefined">
           <i class="glyphicon glyphicon-menu-left pull-left"></i>
           <span class="priceSummaryInfo">Price: ${{ f.number(pricing.price, '#,###.00')}}</span>
@@ -63,7 +63,8 @@
 
     <template v-if="route.tripsByDay">
       <tr> <!-- 2/4 row of span -->
-        <th v-for='(trip, tripIndex) in route.tripsByDay'
+        <th v-for="(trip, tripIndex) in route.tripsByDay"
+          :key="tripIndex"
           :class="{
             'has-trip': trip,
             today: trip && trip.date.getTime() === today,
@@ -74,7 +75,8 @@
         </th>
       </tr>
       <tr> <!-- 3/4 row of span -->
-        <th v-for='trip in route.tripsByDay'
+        <th v-for='(trip, tripIndex) in route.tripsByDay'
+          :key="tripIndex"
           :class="{
             'has-trip': trip,
             today: trip && trip.date.getTime() === today,
@@ -85,7 +87,8 @@
         </th>
       </tr>
       <tr> <!-- 4/4 row of span -->
-        <td v-for='trip in route.tripsByDay'
+        <td v-for='(trip, tripIndex) in route.tripsByDay'
+          :key="tripIndex"
           :class="{
             'has-trip': trip,
             today: trip && trip.date.getTime() === today,

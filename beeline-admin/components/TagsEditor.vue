@@ -12,7 +12,6 @@
 
 <script>
 import TagsView from '@/components/TagsView.vue'
-import dateformat from 'dateformat'
 
 export default {
   props: {

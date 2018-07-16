@@ -172,6 +172,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import querystring from 'querystring'
 import {mapGetters, mapActions} from 'vuex'
 
@@ -296,7 +297,7 @@ export default {
         return _.reduce(
           tripsByDay,
           (acc, value, index, coll) => {
-            if (acc.length == 0 ||
+            if (acc.length === 0 ||
                   (value !== undefined &&
                     (acc[acc.length - 1].price !== value.price ||
                       acc[acc.length - 1].capacity !== value.capacity))) {

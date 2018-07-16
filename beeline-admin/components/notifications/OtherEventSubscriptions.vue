@@ -61,13 +61,12 @@
 
 <script>
 import _ from 'lodash'
-import assert from 'assert'
 import { mapGetters, mapActions } from 'vuex'
 
 import EventSubscriptionEditor from './EventSubscriptionEditor.vue'
 import NotificationMethodEditor from './NotificationMethodEditor.vue'
 
-import {satisfiesEvent, stringify, EVENT_TYPES} from './notifications'
+import {satisfiesEvent, EVENT_TYPES} from './notifications'
 
 const UPDATEABLE_FIELDS = [
   'params', 'event', 'handler', 'formatter', 'agent'

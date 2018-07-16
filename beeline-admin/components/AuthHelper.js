@@ -1,4 +1,4 @@
-import {mapState, mapMutations, mapActions} from 'vuex'
+import {mapState, mapMutations} from 'vuex'
 import axios from 'axios'
 import auth0 from 'auth0-js'
 import jwtDecode from 'jwt-decode'
@@ -83,7 +83,7 @@ axios.get(`${process.env.BACKEND_URL}/auth/credentials`)
     }
 
     return authResultPromise.then(authResult => ({lock, authResult}))
-      .catch(err => ({lock, authResult: null}))
+      .catch(err => ({lock, authResult: null})) // eslint-disable-line
   })
 
 export default {

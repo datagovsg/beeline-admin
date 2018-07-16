@@ -2,6 +2,7 @@
   <select @input="$emit('input', parseInt($event.target.value))">
     <option disabled :selected="!value"></option>
     <option v-for="clist in sortedContactLists"
+        :key="clist.id"
         :value="clist.id"
         :selected="clist.id == value">
       {{clist.description}}
@@ -10,12 +11,9 @@
 </template>
 
 <script>
-import {mapGetters, mapActions, mapState} from 'vuex'
-import * as resources from '../stores/resources'
+import {mapActions, mapState} from 'vuex'
 import _ from 'lodash'
 import CompanyIdMixin from '../mixins/CompanyIdMixin'
-
-const filters = require('../filters')
 
 export default {
   props: ['value', 'companyId'],

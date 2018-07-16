@@ -24,7 +24,8 @@
           <div class="form-group">
             <label>TransactionType</label>
             <select v-model="filter.transactionType">
-              <option v-for="(transactionType, index) in transactionTypes"
+              <option v-for="transactionType in transactionTypes"
+                :key="transactionType"
                 :label="transactionType"
                 :value="transactionType"
                 />
@@ -83,7 +84,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(txn, index) in transactions">
+            <tr v-for="(txn, index) in transactions" :key="txn.id">
               <td>{{ index + 1 + paging.page * paging.perPage }}</td>
               <td>
                 <a :href="`#/c/${companyId}/transactions?id=${txn.transactionId}`">
@@ -155,12 +156,10 @@
   </div>
 </template>
 <script>
-import assert from 'assert'
 import querystring from 'querystring'
 import {mapGetters, mapActions, mapState} from 'vuex'
 import _ from 'lodash'
 import download from 'downloadjs'
-import * as resources from '../stores/resources'
 import filters from '../filters'
 
 import SpanSelect from '@/components/SpanSelect.vue'
@@ -381,7 +380,6 @@ export default {
       }
     },
     postProcessTransaction (txns) {
-      const transactionLevelQueries = {}
       return Promise.all(_.map(txns, (txn) => {
         // do the route label mapping
         txn.routeLabel = txn.routePass.route.label
@@ -401,8 +399,6 @@ export default {
       return txn
     },
     processTransactionItems (txn) {
-      const {transactionItems} = txn.transaction
-
       txn.redeemed = _.get(txn.routePass, 'notes.ticketId')
       txn.expiresAt = _.get(txn.routePass, 'expiresAt')
 

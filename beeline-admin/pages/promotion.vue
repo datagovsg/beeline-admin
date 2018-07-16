@@ -116,7 +116,7 @@
               <div v-show="checkResults">
                 Errors:
                 <ul>
-                  <li v-for="result in checkResults">
+                  <li v-for="(result, index) in checkResults" :key="index">
                     {{result.message}}
                   </li>
                 </ul>
@@ -153,8 +153,7 @@ table.criteria-list > tbody > tr > td {
 }
 </style>
 <script>
-import {mapGetters, mapActions, mapState} from 'vuex'
-import * as resources from '../stores/resources'
+import {mapGetters, mapActions} from 'vuex'
 import _ from 'lodash'
 const filters = require('../filters')
 
@@ -186,7 +185,7 @@ export default {
     companyQualifyingCriterion () {
       return {
         type: 'limitByCompany',
-        params: {companyId: this.companyId}
+        params: {companyId: Number(this.companyId)}
       }
     },
 
@@ -303,7 +302,7 @@ export default {
       const filterCompanyCriteria = (qc) => {
         return qc.filter(c =>
           !(c.type === this.companyQualifyingCriterion.type &&
-            c.params.companyId == this.companyQualifyingCriterion.params.companyId))
+            Number(c.params.companyId) === this.companyQualifyingCriterion.params.companyId))
       }
 
       return _.cloneDeep({

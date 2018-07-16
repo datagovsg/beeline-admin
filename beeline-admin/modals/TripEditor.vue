@@ -5,7 +5,7 @@
     <div class="modal-header" v-if="createNew">
       <h3>Create trips</h3>
       <ul class="date-list">
-        <li v-for="date in newTripDates">
+        <li v-for="date in newTripDates" :key="date.getTime()">
           {{f.date(date, 'dd-mmm-yyyy')}}
         </li>
       </ul>
@@ -18,7 +18,7 @@
         <p>
           Trip ID:
         </p>
-        <li v-for="trip in editedTrips">
+        <li v-for="trip in editedTrips" :key="trip.id">
           {{trip.id}} ({{f.date(trip.date, 'dd-mmm-yyyy')}})
         </li>
       </ul>
@@ -116,7 +116,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(tripStop, index) in editTrip.tripStops">
+                  <tr v-for="(tripStop, index) in editTrip.tripStops" :key="index">
                     <td>
                       {{ index + 1 }}
                     </td>
@@ -174,6 +174,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import {mapActions} from 'vuex'
 
 import TimeInput from '@/components/TimeInput.vue'

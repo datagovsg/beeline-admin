@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import {mapGetters, mapActions, mapState} from 'vuex'
+import {mapGetters, mapActions} from 'vuex'
 import _ from 'lodash'
 
 import filters from '@/filters'

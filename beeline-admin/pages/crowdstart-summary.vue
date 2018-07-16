@@ -118,7 +118,6 @@
 
 <script>
 import {mapGetters, mapActions, mapState} from 'vuex'
-import * as resources from '../stores/resources'
 import _ from 'lodash'
 
 import SortTh from '@/components/SortTh.vue'
@@ -195,7 +194,7 @@ export default {
               return {
                 ...route,
                 _meta: {
-                  isConverted: route.tags.find(x => x == 'success' || x == 'failed'),
+                  isConverted: route.tags.find(x => x === 'success' || x === 'failed'),
                   tiers: transformTiers(route.bids, route.notes.tier),
                   isExpired: new Date(route.notes.crowdstartExpiry).getTime() < Date.now()
                 }

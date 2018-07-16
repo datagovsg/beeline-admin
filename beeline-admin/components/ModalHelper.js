@@ -1,4 +1,4 @@
-import {mapGetters, mapActions, mapState} from 'vuex'
+import {mapState} from 'vuex'
 
 /**
  * 19 Jun 2018: Manually import every modal used everywhere. This is because

@@ -112,7 +112,6 @@
 </template>
 
 <script>
-import assert from 'assert'
 import {mapGetters, mapActions, mapState} from 'vuex'
 
 import ExpandableArea from '@/components/ExpandableArea.vue'

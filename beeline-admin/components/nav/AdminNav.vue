@@ -69,7 +69,7 @@
 </nav>
 </template>
 <script>
-import {mapGetters, mapActions, mapMutations, mapState} from 'vuex'
+import {mapGetters, mapMutations, mapState} from 'vuex'
 
 import SuperAdminCompanySelector from './SuperAdminCompanySelector.vue'
 import MenuDropdown from '@/components/nav/MenuDropdown.vue'

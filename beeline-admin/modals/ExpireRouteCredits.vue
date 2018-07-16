@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import {mapGetters, mapActions, mapState} from 'vuex'
+import {mapGetters} from 'vuex'
 
 import Modal from '@/modals/MyModal.vue'
 import ModalMixin from '@/modals/ModalMixin'

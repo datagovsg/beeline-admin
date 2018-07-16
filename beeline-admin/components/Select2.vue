@@ -31,6 +31,7 @@
 
       <div ref="optionElementsContainer" class="select2-dropdown-scroll-pane">
         <div v-for="(entry, index) in options"
+            :key="index"
             :class="{active: index === selectedIndex}"
             class="select2-dropdown-option"
             @click="navigateTo(index); useSelected();"

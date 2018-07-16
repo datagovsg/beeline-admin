@@ -24,7 +24,8 @@
             'btn-primary': tagPreset == filter.preset,
             'btn-default': tagPreset != filter.preset
           }"
-          @click="filter.preset = tagPreset">
+          @click="filter.preset = tagPreset"
+          :key="tagPreset.name">
           {{tagPreset.name}}
         </button>
       </div>
@@ -65,7 +66,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(route, index) in sortedRoutes">
+            <tr v-for="(route, index) in sortedRoutes" :key="index">
               <td>
                 {{ filter.page * filter.perPage + index + 1 }}
               </td>
@@ -111,6 +112,7 @@
                 <ExpandableArea>
                   <table class="borderless" v-if="route.recentTrip">
                     <tr v-for="tripStop in route.recentTrip.tripStops"
+                        :key="tripStop.id"
                         v-if="tripStop.canBoard">
                       <td class="text-nowrap">
                         {{f.date(tripStop.time, 'HH:MM')}}
@@ -126,6 +128,7 @@
                 <ExpandableArea>
                   <table class="borderless" v-if="route.recentTrip">
                     <tr v-for="tripStop in route.recentTrip.tripStops"
+                        :key="tripStop.id"
                         v-if="tripStop.canAlight">
                       <td class="text-nowrap">
                         {{f.date(tripStop.time, 'HH:MM')}}
@@ -164,7 +167,6 @@
 <script>
 import _ from 'lodash'
 import {mapGetters, mapActions, mapState} from 'vuex'
-import * as resources from '../stores/resources'
 const filters = require('../filters')
 
 import CreateTripsDatePicker from '@/modals/CreateTripsDatePicker.vue'
@@ -187,8 +189,8 @@ export default {
       filter: {
         perPage: 30,
         page: 0,
-      	orderBy: 'label',
-      	order: 'asc',
+        orderBy: 'label',
+        order: 'asc',
         preset: tagPresets[0],
         searchTerms: ''
       },
@@ -202,11 +204,6 @@ export default {
     SortTh,
     TagsView,
     UibPagination
-  },
-  methods: {
-    getStartDate (r) {
-      return this.f._.get(r, 'firstTrip.date')
-    }
   },
   created () {
     this.$store.dispatch('shared/fetch', 'currentRoutes')
@@ -231,7 +228,7 @@ export default {
           .filter(r => !this.filter.searchTerms ||
               (r.label && r.label.toLowerCase().startsWith(this.filter.searchTerms.toLowerCase())) ||
               (r.name && r.name.toLowerCase().indexOf(this.filter.searchTerms.toLowerCase()) !== -1) ||
-              r.id.toString() == this.filter.searchTerms)
+              r.id.toString() === this.filter.searchTerms)
           .map(route => ({
             ...route,
             firstTrip: _.get(route, 'trips.0'),

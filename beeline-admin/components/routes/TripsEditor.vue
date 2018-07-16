@@ -62,6 +62,7 @@
                 <th>Price</th>
                 <th>Driver</th>
                 <th v-for="stop in stopsList"
+                    :key="stop.id"
                     class="stop-text"
                     :title="stop.stop.description">
                   {{stop.stop.description}}
@@ -110,7 +111,8 @@
                 </td>
                 <td>
                 </td>
-                <td v-for="stop in stopsList">
+                <td v-for="stop in stopsList"
+                    :key="stop.id">
                   <StopDisplay :stop="findStop(trip, stop.stopId, stop.orderOfAppearance)"/>
                 </td>
                 <td>
@@ -129,8 +131,8 @@
 </template>
 
 <script>
-import {mapGetters, mapActions, mapState} from 'vuex'
-import * as resources from '../../stores/resources'
+import _ from 'lodash'
+import {mapGetters, mapActions} from 'vuex'
 import assert from 'assert'
 import {timeSinceMidnight} from '../../shared/filters'
 const filters = require('../../filters')
@@ -149,7 +151,6 @@ const updatableTripStopFields = [
 const creatableFields = updatableFields.concat([
   'routeId'
 ])
-const creatableTripStopFields = updatableTripStopFields
 
 export default {
   props: ['route', 'companyId'],
@@ -230,9 +231,6 @@ export default {
 
     doSaveRoute () {
       this.spinOnPromise(this.saveRoute(this.editRoute))
-    },
-    doResetRoute () {
-      this.editRoute = blankRoute()
     },
     doDeleteRoute () {
       if (!this.editRoute.id) return

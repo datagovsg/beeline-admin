@@ -40,8 +40,6 @@
 
 </template>
 <script>
-import assert from 'assert'
-import querystring from 'querystring'
 import {mapGetters, mapActions} from 'vuex'
 
 import filters from '@/filters'

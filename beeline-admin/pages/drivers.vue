@@ -48,13 +48,7 @@
   </div>
 </template>
 <script>
-import assert from 'assert'
-import querystring from 'querystring'
-import {mapGetters, mapActions, mapState} from 'vuex'
-import _ from 'lodash'
-import * as resources from '../stores/resources'
-import filters from '../filters'
-import dateformat from 'dateformat'
+import {mapGetters, mapActions} from 'vuex'
 
 export default {
   props: ['companyId'],

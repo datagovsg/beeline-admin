@@ -170,7 +170,7 @@
             </thead>
 
             <tbody>
-              <tr v-for="(ticket, $index) in bookings" :class="{
+              <tr v-for="(ticket, index) in bookings" :key="ticket.id" :class="{
                 valid: ticket.status === 'valid',
                 failed: ticket.status === 'failed',
                 refunded: ticket.status !== 'valid' && ticket.status !== 'failed',
@@ -182,7 +182,7 @@
                       :value="selectedBookings.find(s => s === ticket)"
                       @change="toggleSelection([ticket])"
                       :disabled="ticket.status != 'valid'"/>
-                    {{ $index + 1 + (pagination.currentPage-1) * pagination.perPage }}
+                    {{ index + 1 + (pagination.currentPage-1) * pagination.perPage }}
                   </label>
                 </td>
                 <td>
@@ -357,6 +357,7 @@
 
 </template>
 <script>
+import _ from 'lodash'
 import assert from 'assert'
 import querystring from 'querystring'
 import {mapState, mapGetters, mapActions} from 'vuex'
@@ -628,7 +629,8 @@ export default {
         )
           .then((response) => {
             var txn = response.data
-            var payment = txn.transactionItems.find(ts => ts.itemType == 'refundPayment' && ts.refundPayment)
+            var payment = txn.transactionItems
+              .find(ts => ts.itemType === 'refundPayment' && ts.refundPayment)
 
             this.requeryBoth()
             return this.alert({ title: parseFloat(payment.credit).toFixed(2) + ' refunded.' })
@@ -673,7 +675,6 @@ export default {
 
     // Edit ticket button
     editTicket (ticket) {
-      const selectedTicketIds = [ticket.id]
       const selectedTickets = [ticket]
 
       return this.showModal({
@@ -696,9 +697,6 @@ export default {
     },
     // Add ticket button -- don't cancel earlier ticket
     addTicket (ticket) {
-      const selectedTicketIds = [ticket.id]
-      const selectedTickets = [ticket]
-
       return this.showModal({
         component: 'IssueTicket',
         props: {

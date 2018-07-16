@@ -28,7 +28,7 @@ export default {
       return this.graphTransforms.xToPixel(this.x)
     },
     ry () {
-      if (this.axisX2 != undefined) {
+      if (this.axisX2 !== undefined) {
         return 0 - this.y
       }
       return this.graphTransforms.yToPixel(this.y)

@@ -4,7 +4,7 @@
       Type
       <select class="form-control" :value="value.type"
           @input="updateType($event.target.value)">
-        <option v-for="t in criterionTypes" :value="t.type">
+        <option v-for="t in criterionTypes" :key="t.type" :value="t.type">
           {{f.titleCase(t.type)}}
         </option>
       </select>
@@ -148,9 +148,8 @@
 <script>
 const _ = require('lodash')
 const titleCase = require('title-case')
-const leftPad = require('left-pad')
 import dateformat from 'dateformat'
-import {mapGetters, mapActions, mapState} from 'vuex'
+import {mapState} from 'vuex'
 
 import TagsEditor from '@/components/TagsEditor.vue'
 import DatePickerDropdown from '@/components/DatePickerDropdown.vue'

@@ -25,13 +25,11 @@
 </template>
 
 <script>
-import {mapGetters, mapActions, mapState} from 'vuex'
+import {mapGetters, mapState} from 'vuex'
 import {debounce} from 'lodash'
 import querystring from 'querystring'
 
 import Select2 from '@/components/Select2.vue'
-
-const filters = require('../filters')
 
 export default {
   props: ['value', 'includeEphemeral'],
@@ -114,10 +112,6 @@ export default {
         })
     }, 300)
   }
-}
-
-function formatUser (u) {
-  return `(${u.id}) ${u.name} ${u.telephone} ${u.email}`
 }
 
 function blankValue (uid) {

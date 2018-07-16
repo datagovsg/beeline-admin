@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import dateformat from 'dateformat'
 import {mapActions, mapState, mapGetters} from 'vuex'
 

@@ -4,8 +4,7 @@
 </template>
 
 <script>
-import assert from 'assert'
-import {mapGetters, mapActions, mapState} from 'vuex'
+import {mapActions, mapState} from 'vuex'
 
 export default {
   data () {

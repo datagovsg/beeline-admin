@@ -63,7 +63,7 @@ export default {
       const sorted = this.stopsWithValidDates
         .map(s => s.timeDifference)
 
-      if (sorted.length == 0) {
+      if (sorted.length === 0) {
         return 'n.a.'
       }
       var percIndex = Math.floor(sorted.length * perc)

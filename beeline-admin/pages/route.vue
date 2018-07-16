@@ -16,7 +16,7 @@
     <ul class="nav nav-tabs">
       <li v-for="(tab, index) in tabs" :class="{
         active: activeTab === index
-        }">
+        }" :key="index">
         <a :href="goToTab(tab)">
           {{tab.description}}
         </a>
@@ -30,8 +30,7 @@
 </template>
 
 <script>
-import {mapGetters, mapActions, mapState} from 'vuex'
-import * as resources from '../stores/resources'
+import {mapActions} from 'vuex'
 const filters = require('../filters')
 
 export default {
@@ -109,9 +108,9 @@ export default {
 
     requery () {
       if (!this.routeId) {
-        return this.routePromise = Promise.resolve(null)
+        this.routePromise = Promise.resolve(null)
       } else {
-        return this.routePromise = this.getRoute({
+        this.routePromise = this.getRoute({
           id: this.routeId,
           options: {
             includeDates: true,
@@ -122,6 +121,7 @@ export default {
           }
         })
       }
+      return this.routePromise
     }
   }
 }

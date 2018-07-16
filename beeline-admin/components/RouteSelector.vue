@@ -51,14 +51,10 @@
 </style>
 
 <script>
-import {mapGetters, mapActions, mapState} from 'vuex'
-import * as resources from '../stores/resources'
+import {mapActions, mapState} from 'vuex'
 import _ from 'lodash'
-import querystring from 'querystring'
 
 import Select2 from '@/components/Select2.vue'
-
-const filters = require('../filters')
 
 export default {
   props: ['value', 'multiple', 'companyId', 'startDate', 'endDate', 'filter'],
@@ -168,9 +164,9 @@ export default {
     isSelected (value, rid) {
       if (this.multiple) {
         // FIXME slow
-        return value.findIndex(r => r == rid) !== -1
+        return value.findIndex(r => r === rid) !== -1
       } else {
-        return value == rid
+        return value === rid
       }
     }
   }

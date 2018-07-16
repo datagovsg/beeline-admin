@@ -23,17 +23,10 @@
 </template>
 
 <script>
-import querystring from 'querystring'
-import _ from 'lodash'
-import assert from 'assert'
 import { mapGetters, mapActions } from 'vuex'
 
 import RouteEventSubscriptions from '@/components/notifications/RouteEventSubscriptions.vue'
 import OtherEventSubscriptions from '@/components/notifications/OtherEventSubscriptions.vue'
-
-const UPDATEABLE_FIELDS = [
-  'params', 'event', 'handler', 'formatter', 'agent'
-]
 
 export default {
   props: ['companyId'],

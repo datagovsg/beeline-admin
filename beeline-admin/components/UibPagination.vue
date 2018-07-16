@@ -8,7 +8,7 @@
      <span aria-hidden="true">&lsaquo;</span>
    </li>
 
-   <li v-for="page in pages" @click="goTo(page)"
+   <li v-for="page in pages" :key="page" @click="goTo(page)"
      v-if="isNearCurrentPage(page) || displayAllPages"
      :class="{active: page === value}">
      <a>{{page + 1}}</a>

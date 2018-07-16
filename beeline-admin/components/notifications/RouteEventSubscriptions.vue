@@ -142,7 +142,7 @@ export default {
 
           assert(parsed.length <= 1, '[AssertionError] entries should map to one group')
 
-          if (parsed.length == 1) {
+          if (parsed.length === 1) {
             this.subscriptions.splice(
               this.subscriptions.indexOf(subscr), 1,
               parsed[0]

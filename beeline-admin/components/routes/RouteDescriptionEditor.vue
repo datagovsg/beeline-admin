@@ -104,15 +104,12 @@
 </template>
 
 <script>
-import {mapGetters, mapActions, mapState} from 'vuex'
-import * as resources from '../../stores/resources'
+import {mapGetters, mapActions} from 'vuex'
 
 import TagsEditor from '@/components/TagsEditor.vue'
 import PathEditor from '@/components/routes/PathEditor.vue'
 import NumberArrayEditor from '@/components/NumberArrayEditor.vue'
 import CompanySelector from '@/components/CompanySelector.vue'
-
-const filters = require('../../filters')
 
 export default {
   props: ['route', 'companyId'],

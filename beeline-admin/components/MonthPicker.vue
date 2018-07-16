@@ -21,6 +21,7 @@
         <td colspan="3">
           <div>
             <button v-for="m in months"
+              :key="m.getTime()"
               @click="clicked(m)"
               type="button"
               class="btn"
@@ -104,14 +105,6 @@ export default {
     toUserDate (date) {
       return new Date(date.getTime() + this.effectiveOffset)
     }
-  }
-}
-
-function mergeDateInfo (a, b) {
-  return {
-    ...a,
-    ...b,
-    classes: _.flatten([a.classes, b.classes])
   }
 }
 

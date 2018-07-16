@@ -47,13 +47,8 @@
   </div>
 </template>
 <script>
-import assert from 'assert'
-import querystring from 'querystring'
-import {mapGetters, mapActions, mapState} from 'vuex'
-import _ from 'lodash'
-import * as resources from '../stores/resources'
+import {mapGetters, mapActions} from 'vuex'
 import filters from '../filters'
-import dateformat from 'dateformat'
 
 export default {
   props: ['companyId', 'contactListId'],

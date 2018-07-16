@@ -67,9 +67,6 @@
 </template>
 
 <script>
-import _ from 'lodash'
-import leftPad from 'left-pad'
-
 import RouteSelector from '@/components/RouteSelector.vue'
 
 export default {
@@ -80,12 +77,6 @@ export default {
   computed: {
     disp () {
       return {
-        noPingTimeOptions: [
-          [5, '5 minutes before trip'],
-          [15, '15 minutes before trip'],
-          [25, '25 minutes before trip']
-        ],
-
         noPingTimeOptions: [
           [5, '5 minutes before trip'],
           [15, '15 minutes before trip'],

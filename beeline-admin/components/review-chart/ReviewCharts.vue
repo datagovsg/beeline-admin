@@ -33,6 +33,8 @@
 </template>
 
 <script>
+import _ from 'lodash'
+
 import PunctualityGraphWithMissingDates from './PunctualityGraphWithMissingDates.vue'
 import StopStatistics from './StopStatistics.vue'
 

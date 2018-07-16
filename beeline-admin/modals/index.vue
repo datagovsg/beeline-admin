@@ -17,7 +17,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="week in weeks">
+      <tr v-for="(week, weekIndex) in weeks" :key="weekIndex">
         <td @click="clicked(week[0])" :class="dayClasses(week[0])">{{week[0].day}}</td>
         <td @click="clicked(week[1])" :class="dayClasses(week[1])">{{week[1].day}}</td>
         <td @click="clicked(week[2])" :class="dayClasses(week[2])">{{week[2].day}}</td>
@@ -114,9 +114,8 @@ export default {
           }
         }
 
-        for (let dateFns of dateFns) {
-          console.log(new Date(canonicalTime))
-          if (dateFns.date(new Date(canonicalTime + this.effectiveOffset))) {
+        for (let dateFn of dateFns) {
+          if (dateFn.date(new Date(canonicalTime + this.effectiveOffset))) {
             Object.assign(initial, dateFns)
           }
         }

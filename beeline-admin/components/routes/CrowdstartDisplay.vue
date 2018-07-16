@@ -24,9 +24,11 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(bid, index) in bids" :class="{
-              'not-live': bid.status !== 'bidded',
-            }">
+            <tr v-for="(bid, index) in bids"
+                :key="index"
+                :class="{
+                  'not-live': bid.status !== 'bidded',
+                }">
               <td>{{index + 1}}</td>
               <td>{{bid.user.name}}</td>
               <td>{{bid.user.telephone}}</td>
@@ -62,10 +64,8 @@
 </template>
 
 <script>
-import {mapGetters, mapActions, mapState} from 'vuex'
-import * as resources from '../../stores/resources'
+import {mapGetters, mapActions} from 'vuex'
 import querystring from 'querystring'
-import assert from 'assert'
 import _ from 'lodash'
 const filters = require('../../filters')
 
@@ -224,7 +224,7 @@ export default {
 
 // helper function to verify the route is not processed AND has 'crowdstart' tag AND is expired
 const routeIsEligible = (route) => {
-  return route.tags.indexOf('success') == -1 && route.tags.indexOf('failed') == -1 &&
+  return route.tags.indexOf('success') === -1 && route.tags.indexOf('failed') === -1 &&
       (route.tags.includes('crowdstart') || route.tags.includes('crowdstart-private')) &&
       _.get(route, 'notes.crowdstartExpiry') && new Date(route.notes.crowdstartExpiry) < Date.now()
 }

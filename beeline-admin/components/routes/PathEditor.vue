@@ -3,7 +3,7 @@
     <div class="form-inline">
       <label class="control-label">Route Path</label>
       <select @change="zoomInOnStops()" v-model="tripId" class="form-control">
-        <option v-for="trip in route.trips" :value="trip.id">
+        <option v-for="trip in route.trips" :key="trip.id" :value="trip.id">
           {{f.date(trip.date, 'dd-mmm-yyyy', true)}}
         </option>
       </select>
@@ -64,6 +64,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 const filters = require('../../filters')
 const {loaded} = require('vue2-google-maps')
 const leftPad = require('left-pad')
@@ -194,7 +195,6 @@ export default {
         .map(i => {
           const origin = stopsLatLng[i]
           const destination = stopsLatLng[i + 1]
-          const queue = Promise.resolve(null)
 
           const renderer = new google.maps.DirectionsRenderer({
             map: this.$refs.map.$mapObject,

@@ -121,11 +121,13 @@
 </style>
 
 <script>
-const filters = require('../filters')
+import _ from 'lodash'
 import {mapState, mapActions, mapGetters} from 'vuex'
 
 import Modal from '@/modals/MyModal.vue'
 import ModalMixin from '@/modals/ModalMixin'
+
+const filters = require('../filters')
 
 export default {
   props: [

@@ -24,8 +24,6 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
-
 import Modal from '@/modals/MyModal.vue'
 import ModalMixin from '@/modals/ModalMixin'
 

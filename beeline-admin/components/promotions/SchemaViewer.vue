@@ -1,5 +1,4 @@
 <script>
-import SchemaField from './SchemaField'
 import * as SchemaViewers from './SchemaViewers'
 import {fromPairs, sortBy, keyBy} from 'lodash'
 import titleCase from 'title-case'

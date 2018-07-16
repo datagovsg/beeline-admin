@@ -1,14 +1,15 @@
+import _ from 'lodash'
 
 export function satisfiesEvent (e, eventConditions) {
   // Ensure that array keys are superset of the same
   // key in e
 
-  const arrayKeysMatch = e.event == eventConditions.event &&
+  const arrayKeysMatch = e.event === eventConditions.event &&
     _.keys(eventConditions.defaultParams)
       .filter(k => eventConditions.defaultParams[k] instanceof Array)
-      .every(k => _.difference(eventConditions.defaultParams[k], e.params[k]).length == 0)
+      .every(k => _.difference(eventConditions.defaultParams[k], e.params[k]).length === 0)
 
-  const valueKeysMatch = e.event == eventConditions.event &&
+  const valueKeysMatch = e.event === eventConditions.event &&
     _.keys(eventConditions.defaultParams)
       .filter(k => !(eventConditions.defaultParams[k] instanceof Array))
       .every(k => eventConditions.defaultParams[k] === e.params[k])

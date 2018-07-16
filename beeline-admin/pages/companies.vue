@@ -112,7 +112,6 @@
 </style>
 <script>
 import {mapGetters, mapActions, mapState} from 'vuex'
-import * as resources from '../stores/resources'
 import _ from 'lodash'
 const filters = require('../filters')
 

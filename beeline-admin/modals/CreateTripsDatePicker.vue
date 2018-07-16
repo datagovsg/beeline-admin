@@ -24,7 +24,7 @@
 
       <strong>Trips to create:</strong>
       <ul class="date-list">
-        <li v-for="date in sortedSelectedDates">
+        <li v-for="date in sortedSelectedDates" :key="date.getTime()">
           {{f.date(date, 'dd-mmm-yyyy')}}
         </li>
       </ul>
@@ -47,7 +47,7 @@
 
 <script>
 import _ from 'lodash'
-import {mapGetters, mapActions, mapState} from 'vuex'
+import {mapActions, mapState} from 'vuex'
 
 import Modal from '@/modals/MyModal.vue'
 import ModalMixin from '@/modals/ModalMixin'

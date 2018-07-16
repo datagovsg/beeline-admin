@@ -66,7 +66,7 @@
         <tr>
           <th></th>
           <th></th>
-          <th v-for="month in months" :colspan="month.colspan" class="new-month">
+          <th v-for="month in months" :key="month.date" :colspan="month.colspan" class="new-month">
             {{f.monthNames(month.date.getUTCMonth())}}
           </th>
         </tr>
@@ -125,7 +125,6 @@
 
 <script>
 import {mapGetters, mapActions, mapState} from 'vuex'
-import * as resources from '../stores/resources'
 import querystring from 'querystring'
 import TagsView from '@/components/TagsView.vue'
 import _ from 'lodash'

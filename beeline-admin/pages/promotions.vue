@@ -97,7 +97,7 @@
             </td>
             <td>
               <ol class="criteria">
-                <li v-for="criterion in promotion.params.qualifyingCriteria">
+                <li v-for="(criterion, index) in promotion.params.qualifyingCriteria" :key="index">
                   <b>{{f.titleCase(criterion.type)}}</b>
                   <SchemaViewer :schema="PromotionsSchemata[criterion.type]" :value="criterion.params">
                   </SchemaViewer>
@@ -107,7 +107,7 @@
             <td>
               <b>{{f.titleCase(promotion.params.discountFunction.type)}}</b>
               <ul class="discount">
-                <li v-for="(value, key) in promotion.params.discountFunction.params">
+                <li v-for="(value, key) in promotion.params.discountFunction.params" :key="key">
                   {{key}}: {{value}}
                 </li>
               </ul>
@@ -235,8 +235,8 @@ export default {
           type: 'Promotion',
           params: {
             qualifyingCriteria: [{type: 'limitByCompany', params: {companyId: this.companyId}}, {type: 'limitByTripDate', params: {startDate: startDate, endDate: endDate}}],
-            discountFunction: { type: 'simpleRate', params: {rate: 0.10}},
-            refundFunction: { type: 'refundDiscountedAmt', params: {} },
+            discountFunction: {type: 'simpleRate', params: {rate: 0.10}},
+            refundFunction: {type: 'refundDiscountedAmt', params: {}},
             usageLimit: {userLimit: 1, globalLimit: 1000000}
           }
         }
@@ -249,8 +249,8 @@ export default {
           params: {
             tag: code,
             qualifyingCriteria: [{type: 'limitByCompany', params: {companyId: this.companyId}}, {type: 'limitByPurchaseDate', params: {startDate: startDate, endDate: endDate}}],
-            discountFunction: { type: 'tieredRateByTotalValue', params: {'schedule': [[25, 0.1], [50, 0.2]]}},
-            refundFunction: { type: 'refundDiscountedAmt', params: {} },
+            discountFunction: {type: 'tieredRateByTotalValue', params: {'schedule': [[25, 0.1], [50, 0.2]]}},
+            refundFunction: {type: 'refundDiscountedAmt', params: {}},
             usageLimit: {userLimit: null, globalLimit: null}
           }
         }

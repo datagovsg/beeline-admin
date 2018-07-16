@@ -30,13 +30,8 @@
   </div>
 </template>
 <script>
-import assert from 'assert'
-import querystring from 'querystring'
-import {mapGetters, mapActions, mapState} from 'vuex'
+import {mapGetters, mapActions} from 'vuex'
 import _ from 'lodash'
-import * as resources from '../stores/resources'
-import filters from '../filters'
-import dateformat from 'dateformat'
 
 export default {
   props: ['companyId'],
@@ -113,42 +108,6 @@ export default {
         .catch(this.showErrorModal)
     }
   }
-}
-
-const PermissionsMap = {
-  basic: ['view-drivers', 'view-admins', 'view-transactions', 'monitor-operations'],
-  refund: ['refund'],
-  issueTickets: ['issue-tickets'],
-  operations: [
-    'manage-routes', 'manage-drivers',
-    'drive', 'update-trip-status',
-    'message-passengers', 'view-passengers',
-    'manage-notifications', 'manage-customers'
-  ],
-  manageCompany: ['manage-company'],
-  manageAdmins: ['manage-admins']
-}
-
-function mapPermissions (permissions) {
-  return _(permissions)
-    .keys()
-    .filter(key => permissions[key])
-    .map(value => PermissionsMap[value])
-    .flatten()
-    .value()
-}
-function reverseMapPermissions (permissionList) {
-  const permissions = {}
-
-  if (!permissionList) return permissions
-
-  _.each(PermissionsMap, (permissionGroup, groupName) => {
-    permissions[groupName] = _.every(
-      permissionGroup,
-      p => permissionList.indexOf(p) !== -1
-    )
-  })
-  return permissions
 }
 
 </script>
