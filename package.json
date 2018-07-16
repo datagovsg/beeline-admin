@@ -91,7 +91,7 @@
     "watch": "cross-env PORT=8100 npm run start & npm run webpack-watch",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "testserver": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js",
-    "test": "npm run unit",
+    "test": "npm run unit && npm run lint",
     "start": "http-server -c-1 www",
     "live-build": "cross-env TRACKING_URL=https\\://tracking.beeline.sg BACKEND_URL=https\\://api-admin.beeline.sg BUILD_PREFIX=build webpack --mode=development",
     "live-cp": "shx mkdir -p build && shx cp -r 'www/*' build",
