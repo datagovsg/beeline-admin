@@ -40,10 +40,10 @@ export default {
     Select2
   },
 
-  data() {
+  data () {
     return {
       matchingResults: null,
-      fetchedValue: null,
+      fetchedValue: null
     }
   },
 
@@ -54,14 +54,14 @@ export default {
         /* if there's a value, but no match, fetch the user only */
         if (!m && this.value) {
           const promise = this.$fetchPromise = this.axios.get(`/user/${this.value}`)
-          .then((response) => {
-            if (promise === this.$fetchPromise) {
-              this.fetchedValue = response.data
-            }
-          })
+            .then((response) => {
+              if (promise === this.$fetchPromise) {
+                this.fetchedValue = response.data
+              }
+            })
         }
       }
-    },
+    }
   },
 
   computed: {
@@ -105,13 +105,13 @@ export default {
 
       const promise = this.$lastPromise = this.axios.get(`/users/search?` + querystring.stringify({
         q: query,
-        includeEphemeral: this.includeEphemeral ? 'true' : 'false',
+        includeEphemeral: this.includeEphemeral ? 'true' : 'false'
       }))
-      .then((response) => {
-        if (this.$lastPromise === promise) {
-          this.matchingResults = response.data
-        }
-      })
+        .then((response) => {
+          if (this.$lastPromise === promise) {
+            this.matchingResults = response.data
+          }
+        })
     }, 300)
   }
 }
@@ -125,7 +125,7 @@ function blankValue (uid) {
     id: uid,
     name: 'Loading...',
     description: '',
-    telephone: '',
+    telephone: ''
   }
 }
 

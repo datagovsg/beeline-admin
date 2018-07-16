@@ -47,8 +47,8 @@ export default {
           } else if (this.value.length === 1) {
             return this.value[0].getTime() === d.getTime()
           } else if (this.value.length === 2) {
-            return this.value[0].getTime() <= d.getTime()
-              && d.getTime() <= this.value[1].getTime()
+            return this.value[0].getTime() <= d.getTime() &&
+              d.getTime() <= this.value[1].getTime()
           }
         },
         classes: ['active']

@@ -118,7 +118,7 @@ export default {
     return {
       dropdownShown: false,
       selectedIndex: -1,
-      editText: null,
+      editText: null
     }
   },
 
@@ -143,7 +143,7 @@ export default {
       handler (v) {
         this.editText = v
       }
-    },
+    }
   },
 
   methods: {
@@ -173,7 +173,7 @@ export default {
         if (el.offsetTop + el.offsetHeight >=
             container.scrollTop + container.clientHeight) {
           container.scrollTop = el.offsetTop
-        } else if (el.offsetTop < container.scrollTop){
+        } else if (el.offsetTop < container.scrollTop) {
           container.scrollTop = el.offsetTop + el.offsetHeight - container.srollHeight
         }
       }
@@ -185,7 +185,7 @@ export default {
         this.$emit('input', null)
       }
       if (!this.persistAfterSelect) {
-        this.dropdownShown = false;
+        this.dropdownShown = false
       }
     },
     showDropdown () {

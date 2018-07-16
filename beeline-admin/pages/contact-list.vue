@@ -1,7 +1,5 @@
 <template>
 <div>
-  
-  
 
   <div class="col-lg-12">
     <h1>Manage Contact List</h1>
@@ -53,14 +51,14 @@ export default {
 
   data () {
     return {
-      editContactList: null,
+      editContactList: null
     }
   },
 
   computed: {
     ...mapGetters(['axios']),
 
-    f: () => filters,
+    f: () => filters
   },
 
   watch: {
@@ -82,10 +80,10 @@ export default {
           `/companies/${this.companyId}/contactLists/${this.contactListId}`
         )
       )
-      .then((response) => {
-        this.editContactList = this.makeEditable(response.data)
-      })
-      .catch(this.showErrorModal)
+        .then((response) => {
+          this.editContactList = this.makeEditable(response.data)
+        })
+        .catch(this.showErrorModal)
     },
 
     save () {
@@ -95,13 +93,13 @@ export default {
           this.preSaveTransform(this.editContactList)
         )
       )
-      .then((response) => {
-        this.editContactList = this.makeEditable(response.data)
-      })
-      .catch(this.showErrorModal)
+        .then((response) => {
+          this.editContactList = this.makeEditable(response.data)
+        })
+        .catch(this.showErrorModal)
     },
 
-    preSaveTransform(e) {
+    preSaveTransform (e) {
       return {
         description: e.description,
         telephones: e.telephones.split('\n')
@@ -109,11 +107,11 @@ export default {
           .filter(s => s),
         emails: e.emails.split('\n')
           .map(s => s.trim())
-          .filter(s => s),
+          .filter(s => s)
       }
     },
 
-    makeEditable(contactList) {
+    makeEditable (contactList) {
       return {
         description: contactList.description,
         telephones: contactList.telephones.join('\n'),

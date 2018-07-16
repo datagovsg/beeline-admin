@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapMutations } from 'vuex'
 
 import AdminNav from '@/components/nav/AdminNav.vue'
 import ModalHelper from '@/components/ModalHelper.js'
@@ -28,7 +28,7 @@ export default {
   },
 
   methods: {
-    ...mapMutations('dropdown', ['setDropdown']),
+    ...mapMutations('dropdown', ['setDropdown'])
   }
 }
 </script>

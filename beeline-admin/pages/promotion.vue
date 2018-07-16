@@ -1,7 +1,5 @@
 <template>
   <div>
-    
-    
 
     <div class="col-lg-12">
       <h1 v-if="promotion && promotion.type === 'Promotion'">Edit Promotion '{{promotion && promotion.code}}'</h1>
@@ -165,18 +163,18 @@ export default {
   data () {
     return {
       promotion: null,
-      originalPromotion: null,
+      originalPromotion: null
     }
   },
   components: {
     PromotionCriterionEditor: require('../components/PromotionCriterionEditor.vue').default,
-    PromotionDiscountEditor: require('../components/PromotionDiscountEditor.vue').default,
+    PromotionDiscountEditor: require('../components/PromotionDiscountEditor.vue').default
   },
   computed: {
     ...mapGetters(['axios']),
     f: () => filters,
 
-    promotionPromise() {
+    promotionPromise () {
       if (!this.promoId) return
 
       return this.axios.get(`/companies/${this.companyId}/promotions/${this.promoId}`)
@@ -232,18 +230,18 @@ export default {
   watch: {
     promotionPromise: {
       immediate: true,
-      handler(p) {
+      handler (p) {
         if (!p) return
         p
-        .then((q) => {
-          this.promotion = q
-          // deep clone the promotion object for cancel purpose
-          this.originalPromotion = _.cloneDeep(q)
-        })
-        .catch((err) => {
-          console.log(err)
-          this.promotion = false
-        })
+          .then((q) => {
+            this.promotion = q
+            // deep clone the promotion object for cancel purpose
+            this.originalPromotion = _.cloneDeep(q)
+          })
+          .catch((err) => {
+            console.log(err)
+            this.promotion = false
+          })
       }
     }
   },
@@ -259,10 +257,10 @@ export default {
           ...myParams,
           qualifyingCriteria: myParams.qualifyingCriteria
             .concat([this.companyQualifyingCriterion])
-            .map(i => _.omit(i, 'id')),
+            .map(i => _.omit(i, 'id'))
         },
         description: e.description,
-        type: e.type,
+        type: e.type
       }
     },
 
@@ -271,19 +269,19 @@ export default {
         `/companies/${this.companyId}/promotions/${this.promoId}`,
         this.preSaveTransform(this.promotion)
       )
-      .then((response) => {
-        this.promotion = this.makeEditable(response.data)
-      }))
-      .then(() =>
-        this.showModal({
-          component: 'CommonModals',
-          props: {
-            type: 'flash',
-            message: 'Promotion saved'
-          }
-        })
-      )
-      .catch(this.showErrorModal)
+        .then((response) => {
+          this.promotion = this.makeEditable(response.data)
+        }))
+        .then(() =>
+          this.showModal({
+            component: 'CommonModals',
+            props: {
+              type: 'flash',
+              message: 'Promotion saved'
+            }
+          })
+        )
+        .catch(this.showErrorModal)
     },
 
     cancel () {
@@ -295,7 +293,7 @@ export default {
       return {
         id: Date.now(),
         type: null,
-        params: null,
+        params: null
       }
     },
 
@@ -304,7 +302,7 @@ export default {
       created by a company */
       const filterCompanyCriteria = (qc) => {
         return qc.filter(c =>
-            !(c.type === this.companyQualifyingCriterion.type &&
+          !(c.type === this.companyQualifyingCriterion.type &&
             c.params.companyId == this.companyQualifyingCriterion.params.companyId))
       }
 
@@ -320,8 +318,8 @@ export default {
           qualifyingCriteria: filterCompanyCriteria(promo.params.qualifyingCriteria)
             .map((i, j) => ({...i, id: j})),
           discountFunction: promo.params.discountFunction || {type: 'simpleRate', params: {rate: 0}},
-          usageLimit: promo.params.usageLimit || { userLimit: null, globalLimit: null },
-        },
+          usageLimit: promo.params.usageLimit || { userLimit: null, globalLimit: null }
+        }
       })
     }
   }

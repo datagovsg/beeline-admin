@@ -60,7 +60,7 @@ export default {
   props: ['companyId'],
   data: () => ({ drivers: [] }),
   computed: {
-    ...mapGetters(['axios']),
+    ...mapGetters(['axios'])
   },
   watch: {
     companyId: {
@@ -136,7 +136,7 @@ export default {
         while (!value) {
           value = await this.showModal({
             component: 'CommonModals',
-            props,
+            props
           })
           if (!value) {
             await this.showErrorModal({ message: 'This value is required' })
@@ -148,19 +148,19 @@ export default {
       const telephone = await promptForRequiredValue({
         type: 'prompt',
         title: 'Driver Telephone',
-        message: 'Please enter the 8-digit Mobile No. starting with the digit 8 or 9.',
+        message: 'Please enter the 8-digit Mobile No. starting with the digit 8 or 9.'
       })
 
       const name = await promptForRequiredValue({
         type: 'prompt',
         title: 'Driver Name',
-        message: 'Please enter the name of the Driver.',
+        message: 'Please enter the name of the Driver.'
       })
 
       const remarks = await promptForRequiredValue({
         type: 'prompt',
         title: 'Remarks for Driver',
-        message: 'Any remarks?',
+        message: 'Any remarks?'
       })
 
       await this.spinOnPromise(this.axios

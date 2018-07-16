@@ -44,8 +44,8 @@ export default {
     'defaultDisable': {},
     'monthFormat': {},
     'otherMonthSelectable': {default: true},
-    'toModel': {default: () => ((day, effectiveOffset) => new Date(day.date.getTime() + effectiveOffset))},
-    'extractDateFromModel': {default: () => ((v, effectiveOffset) => v)},
+    'toModel': {default: () => (day, effectiveOffset) => new Date(day.date.getTime() + effectiveOffset)},
+    'extractDateFromModel': {default: () => (v, effectiveOffset) => v}
   },
   data () {
     return {
@@ -53,7 +53,7 @@ export default {
     }
   },
   watch: {
-    currentlyViewedMonth() {
+    currentlyViewedMonth () {
       this.$emit('month-changed', this.monthCanonical)
     },
     month (m) { // if user overrides the current month
@@ -63,7 +63,7 @@ export default {
     }
   },
   computed: {
-    f() {
+    f () {
       return {date: dateformat}
     },
     prevMonth () {
@@ -131,8 +131,8 @@ export default {
     },
     weeks () {
       return [0, 1, 2, 3, 4, 5].map(
-        weekNumber => [0,1,2,3,4,5,6].map(weekDay => {
-          const canonical = ((weekNumber * 7) + weekDay) * 24*3600*1000 + this.firstDayOfCalendar.getTime()
+        weekNumber => [0, 1, 2, 3, 4, 5, 6].map(weekDay => {
+          const canonical = ((weekNumber * 7) + weekDay) * 24 * 3600 * 1000 + this.firstDayOfCalendar.getTime()
           const canonicalDate = new Date(canonical)
           const isDifferentMonth = (canonicalDate.getUTCMonth() !== this.monthCanonical.getUTCMonth())
           const canonicalDateMetadata = this.specialDatesByTime(canonical)
@@ -188,19 +188,20 @@ export default {
       const basic = {
         disabled: day.disabled,
         'different-month': day.differentMonth,
-        selected: day.selected,
+        selected: day.selected
       }
       for (let d of day.classes) {
         basic[d] = true
       }
       return basic
-    },
+    }
   }
 }
 
 function mergeDateInfo (a, b) {
   return {
-    ...a, ...b,
+    ...a,
+    ...b,
     classes: _.flatten([a.classes, b.classes])
   }
 }

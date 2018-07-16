@@ -48,7 +48,7 @@ export default {
     multiple: {default: false},
     offset: {default: 0},
     year: {type: Date},
-    defaultDisable: {},
+    defaultDisable: {}
   },
   data () {
     return {
@@ -56,7 +56,7 @@ export default {
     }
   },
   computed: {
-    f() {
+    f () {
       return {date: dateformat}
     },
     prevYear () {
@@ -84,7 +84,7 @@ export default {
         : new Date().getTimezoneOffset() * 60000
     },
     months () {
-      return [0,1,2,3,4,5,6,7,8,9,10,11]
+      return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
         .map(month => {
           return new Date(Date.UTC(
             this.yearCanonical.getUTCFullYear(),
@@ -95,22 +95,22 @@ export default {
     },
 
     valueYear () { return this.value && this.value.getUTCFullYear() },
-    valueMonth () { return this.value && this.value.getUTCMonth() },
+    valueMonth () { return this.value && this.value.getUTCMonth() }
   },
   methods: {
     clicked (month) {
       this.$emit('input', this.toUserDate(month))
     },
-    toUserDate(date) {
+    toUserDate (date) {
       return new Date(date.getTime() + this.effectiveOffset)
-    },
+    }
   }
 }
 
-
 function mergeDateInfo (a, b) {
   return {
-    ...a, ...b,
+    ...a,
+    ...b,
     classes: _.flatten([a.classes, b.classes])
   }
 }

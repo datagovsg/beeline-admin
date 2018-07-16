@@ -41,9 +41,9 @@ export default {
     averagePunctuality () {
       const average = this.stopsWithValidDates
         .map(s => s.timeDifference)
-        .reduce( (x,y) => x+y, 0 )
-          / this.stopsWithValidDates.length
-          / 60000
+        .reduce((x, y) => x + y, 0) /
+          this.stopsWithValidDates.length /
+          60000
 
       return average.toFixed(1)
     },
@@ -51,11 +51,11 @@ export default {
       return (this.stopsWithValidDates.length / this.tripStop.points.length).toFixed(1)
     },
     percentile50 () {
-      return this.latenessPercentile(.5)
+      return this.latenessPercentile(0.5)
     },
     percentile90 () {
-      return this.latenessPercentile(.9)
-    },
+      return this.latenessPercentile(0.9)
+    }
   },
 
   methods: {
@@ -64,10 +64,10 @@ export default {
         .map(s => s.timeDifference)
 
       if (sorted.length == 0) {
-        return 'n.a.';
+        return 'n.a.'
       }
-      var percIndex = Math.floor(sorted.length * perc);
-      return (sorted[percIndex] / 60000).toFixed(1);
+      var percIndex = Math.floor(sorted.length * perc)
+      return (sorted[percIndex] / 60000).toFixed(1)
     }
   }
 }

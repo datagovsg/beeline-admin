@@ -132,7 +132,7 @@
 import {mapGetters, mapActions, mapState} from 'vuex'
 import * as resources from '../../stores/resources'
 import assert from 'assert'
-import {timeSinceMidnight} from '../../shared/filters';
+import {timeSinceMidnight} from '../../shared/filters'
 const filters = require('../../filters')
 
 import MonthPickerDropdown from '@/components/MonthPickerDropdown.vue'
@@ -142,7 +142,7 @@ import StopDisplay from '@/components/routes/TripStopDisplay.vue'
 const updatableFields = [
   'driverId', 'capacity', 'companyId', 'price',
   'bookingInfo', 'status'
-];
+]
 const updatableTripStopFields = [
   'canBoard', 'canAlight', 'time', 'stopId'
 ]
@@ -153,36 +153,36 @@ const creatableTripStopFields = updatableTripStopFields
 
 export default {
   props: ['route', 'companyId'],
-  data() {
+  data () {
     return {
       filter: {
-        filterMonth: new Date(),
+        filterMonth: new Date()
       },
       routePromise: Promise.resolve(null),
-      editRoute: null,
+      editRoute: null
     }
   },
   components: {
     StopDisplay,
     MultiSelectBroker,
-    MonthPickerDropdown,
+    MonthPickerDropdown
   },
   computed: {
     ...mapGetters(['axios']),
     f: () => filters,
-    stopsList() {
+    stopsList () {
       if (!this.trips) return []
 
-      const stopsSet = {};
+      const stopsSet = {}
 
       for (let trip of this.trips) {
-        const tsSet = _.groupBy(trip.tripStops, 'stopId');
+        const tsSet = _.groupBy(trip.tripStops, 'stopId')
 
         _.mapValues(tsSet, (tripStops, stopId) => {
           tripStops.forEach((tripStop, index) => {
-            stopsSet[tripStop.stopId] = stopsSet[tripStop.stopId] || [];
-            stopsSet[tripStop.stopId][index] = stopsSet[tripStop.stopId][index]
-              || tripStop;
+            stopsSet[tripStop.stopId] = stopsSet[tripStop.stopId] || []
+            stopsSet[tripStop.stopId][index] = stopsSet[tripStop.stopId][index] ||
+              tripStop
           })
         })
       }
@@ -193,10 +193,10 @@ export default {
         .sortBy(s => timeSinceMidnight(s.time))
         .value()
     },
-    trips() {
+    trips () {
       return this.editRoute && _.sortBy(this.editRoute.trips, 'date')
     },
-    selection() {
+    selection () {
       return (this.trips && this.trips.filter(t => t._selected)) || []
     }
   },
@@ -221,30 +221,30 @@ export default {
           this.editRoute = route
         }))
       }
-    },
+    }
   },
   methods: {
     ...mapActions('resources', ['getRoute', 'saveRoute', 'createTripForDate']),
     ...mapActions('spinner', ['spinOnPromise']),
     ...mapActions('modals', ['showModal', 'showErrorModal']),
 
-    doSaveRoute() {
+    doSaveRoute () {
       this.spinOnPromise(this.saveRoute(this.editRoute))
     },
-    doResetRoute() {
+    doResetRoute () {
       this.editRoute = blankRoute()
     },
-    doDeleteRoute() {
+    doDeleteRoute () {
       if (!this.editRoute.id) return
 
       this.showModal({
 
       })
-      .then((confirm) => {
-        if (confirm) {
-          return this.spinOnPromise(this.editRoute = this.axios.delete(`/routes/${this.route.id}`))
-        }
-      })
+        .then((confirm) => {
+          if (confirm) {
+            return this.spinOnPromise(this.editRoute = this.axios.delete(`/routes/${this.route.id}`))
+          }
+        })
     },
 
     requery () {
@@ -266,30 +266,30 @@ export default {
               1
             ).toISOString(),
 
-            includeTrips: true,
+            includeTrips: true
           }
         })
-        .then((route) => {
-          route.trips.forEach((trip) => {
-            const tsSet = _.groupBy(trip.tripStops, 'stopId');
+          .then((route) => {
+            route.trips.forEach((trip) => {
+              const tsSet = _.groupBy(trip.tripStops, 'stopId')
 
-            trip._selected = false
+              trip._selected = false
 
-            _.values(tsSet).forEach((tripStopsInSet) => {
-              tripStopsInSet.forEach((tripStop, index) => {
-                tripStop.orderOfAppearance = index
+              _.values(tsSet).forEach((tripStopsInSet) => {
+                tripStopsInSet.forEach((tripStop, index) => {
+                  tripStop.orderOfAppearance = index
+                })
               })
             })
+            return route
           })
-          return route
-        })
       }
       return this.routePromise
     },
 
     findStop (trip, stopId, ooA) {
       const stop = trip.tripStops
-        .find(ts => ts.stopId === stopId && ts.orderOfAppearance === ooA);
+        .find(ts => ts.stopId === stopId && ts.orderOfAppearance === ooA)
       return stop
     },
 
@@ -297,8 +297,7 @@ export default {
       Updates an existing trip with the trip data, preserving as much as
       possible the original trip stops.
      **/
-    updateTrip(trip, tripData) {
-
+    updateTrip (trip, tripData) {
       const adaptedData = {
         ..._.pick(tripData, updatableFields),
         tripStops: assignTripStopIds(trip.date, trip.tripStops, tripData.tripStops)
@@ -310,7 +309,7 @@ export default {
       )
     },
 
-    deleteTrip(trip) {
+    deleteTrip (trip) {
       this.showModal({
         component: 'CommonModals',
         props: {
@@ -319,54 +318,54 @@ export default {
           message: 'Are you sure you want to delete this trip?'
         }
       })
-      .then((confirm) => {
-        if (confirm) {
-          return this.axios.delete(
-            `/trips/${trip.id}`
-          )
-        }
-      })
-      .then(() => {
-        this.spinOnPromise(this.requery())
-        return this.showModal({
-          component: 'CommonModals',
-          props: {
-            type: 'flash',
-            message: 'Trips deleted',
+        .then((confirm) => {
+          if (confirm) {
+            return this.axios.delete(
+              `/trips/${trip.id}`
+            )
           }
         })
-      })
-      .catch(this.showErrorModal)
+        .then(() => {
+          this.spinOnPromise(this.requery())
+          return this.showModal({
+            component: 'CommonModals',
+            props: {
+              type: 'flash',
+              message: 'Trips deleted'
+            }
+          })
+        })
+        .catch(this.showErrorModal)
     },
 
-    showEditTripDialog() {
+    showEditTripDialog () {
       this.showModal({
         component: 'TripEditor',
         props: {
           createNew: false,
           editedTrips: this.selection,
-          referenceTrip: this.selection[0],
+          referenceTrip: this.selection[0]
         }
       })
-      .then((tripData) => {
-        this.spinOnPromise(
-          Promise.all(this.selection.map(trip => this.updateTrip(trip, tripData)))
-          .then(() => this.requery())
-        )
-        .then(() => {
-          return this.showModal({
-            component: 'CommonModals',
-            props: {
-              type: 'flash',
-              message: 'Trips updated',
-            }
-          })
+        .then((tripData) => {
+          this.spinOnPromise(
+            Promise.all(this.selection.map(trip => this.updateTrip(trip, tripData)))
+              .then(() => this.requery())
+          )
+            .then(() => {
+              return this.showModal({
+                component: 'CommonModals',
+                props: {
+                  type: 'flash',
+                  message: 'Trips updated'
+                }
+              })
+            })
+            .catch(this.showErrorModal)
         })
-        .catch(this.showErrorModal)
-      })
     },
 
-    async showCreateTripDialog() {
+    async showCreateTripDialog () {
       const tripDates = await this.showModal({
         component: 'CreateTripsDatePicker',
         props: {
@@ -377,28 +376,28 @@ export default {
       })
 
       const tripData = await this.showModal({
-          component: 'TripEditor',
-          props: {
-            referenceTrip: this.selection[0],
-            createNew: true,
-            newTripDates: tripDates,
-          }
-        })
+        component: 'TripEditor',
+        props: {
+          referenceTrip: this.selection[0],
+          createNew: true,
+          newTripDates: tripDates
+        }
+      })
 
       const createData = tripDates.map((date) => {
-          // must be round...
-          assert.equal(date.getTime() % (24 * 3600 * 1000), 0)
+        // must be round...
+        assert.equal(date.getTime() % (24 * 3600 * 1000), 0)
 
-          return {
-            ..._.pick(tripData, creatableFields),
-            routeId: this.route.id,
-            date: date.toISOString(),
-            tripStops: tripData.tripStops.map(ts => ({
-              ..._.pick(ts, ['stopId', 'canBoard', 'canAlight']),
-              time: combineDateTime(date, ts.time).toISOString(),
-            }))
-          }
-        });
+        return {
+          ..._.pick(tripData, creatableFields),
+          routeId: this.route.id,
+          date: date.toISOString(),
+          tripStops: tripData.tripStops.map(ts => ({
+            ..._.pick(ts, ['stopId', 'canBoard', 'canAlight']),
+            time: combineDateTime(date, ts.time).toISOString()
+          }))
+        }
+      })
 
       try {
         await this.spinOnPromise(
@@ -412,7 +411,7 @@ export default {
           component: 'CommonModals',
           props: {
             type: 'flash',
-            message: 'Trips created',
+            message: 'Trips created'
           }
         })
 
@@ -423,7 +422,7 @@ export default {
     }
   }
 }
-function combineDateTime(utcDate, time) {
+function combineDateTime (utcDate, time) {
   return new Date(
     utcDate.getUTCFullYear(),
     utcDate.getUTCMonth(),
@@ -439,17 +438,17 @@ function assignTripStopIds (date, original, reference) {
   var referenceStops = _(reference)
     // clone the tripStops because we'll be mutating them with an id
     .map(ts => {
-      var update = _.pick(ts, updatableTripStopFields);
-      update.time = combineDateTime(date, ts.time).getTime();
-      return update;
+      var update = _.pick(ts, updatableTripStopFields)
+      update.time = combineDateTime(date, ts.time).getTime()
+      return update
     })
     .groupBy('stopId')
-    .value();
+    .value()
 
   //
   var originalStops = _(original)
     .groupBy('stopId')
-    .value();
+    .value()
 
   // Give the reference stops an id
   // For now, match old and new by order of appearance
@@ -457,14 +456,13 @@ function assignTripStopIds (date, original, reference) {
   _.each(referenceStops, (tss, stopId) => {
     _.each(tss, (ts, index) => {
       if (originalStops[stopId] && originalStops[stopId][index]) {
-        ts.id = originalStops[stopId][index].id;
-      }
-      else {
+        ts.id = originalStops[stopId][index].id
+      } else {
         ts.id = null
       }
     })
   })
 
-  return _.flatten(_.values(referenceStops));
+  return _.flatten(_.values(referenceStops))
 };
 </script>

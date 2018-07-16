@@ -9,7 +9,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['axios']),
+    ...mapGetters(['axios'])
   },
 
   asyncComputed: {
@@ -19,25 +19,25 @@ export default {
       return this.axios.get(`/routes/${this.routeId}?` + querystring.stringify({
         includeIndicative: true,
         includeDates: true,
-        includeTrips: false,
+        includeTrips: false
       }))
-      .then(async (response) => {
-        const tripId = response.data.indicativeTrip.nextTripId ||
+        .then(async (response) => {
+          const tripId = response.data.indicativeTrip.nextTripId ||
           response.data.indicativeTrip.lastTripId
 
-        const trip = (await this.axios.get(`/trips/${tripId}`)
-          .then((response) => response.data))
-        
-        return {
-          ...response.data,
-          dates: {
-            ...response.data.dates,
-            firstDate: new Date(response.data.dates.firstDate),
-            lastDate: new Date(response.data.dates.lastDate),
-          },
-          trips: [trip],
-        }
-      })
+          const trip = (await this.axios.get(`/trips/${tripId}`)
+            .then((response) => response.data))
+
+          return {
+            ...response.data,
+            dates: {
+              ...response.data.dates,
+              firstDate: new Date(response.data.dates.firstDate),
+              lastDate: new Date(response.data.dates.lastDate)
+            },
+            trips: [trip]
+          }
+        })
     }
   }
 }

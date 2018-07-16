@@ -56,12 +56,12 @@ cell is clicked / in focus.
 import _ from 'lodash'
 export default {
   props: {
-    value: {},
+    value: {}
   },
   data () {
     return {
       edit: false,
-      isEditing: false,
+      isEditing: false
     }
   },
   watch: {

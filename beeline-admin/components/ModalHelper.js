@@ -22,12 +22,12 @@ export default {
     TripEditor,
     StopsPopup,
     EditAsset,
-    ViewRouteTrips,
+    ViewRouteTrips
   },
   computed: {
     ...mapState('modals', ['modalStack'])
   },
-  render(h) {
+  render (h) {
     return h(
       'div',
       this.modalStack.map(({options: {component, props}, resolve, reject}, index) => {
@@ -41,7 +41,7 @@ export default {
             props: {
               ...props,
               name: `modal-${index}`,
-              value: true,
+              value: true
             },
             on: {
               resolve: resolve,
@@ -52,5 +52,5 @@ export default {
         )
       })
     )
-  },
+  }
 }

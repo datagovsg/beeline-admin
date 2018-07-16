@@ -2,9 +2,6 @@
 <div class="col-lg-12 table-responsive">
   <h1>Crowdstart Routes</h1>
 
-  
-  
-
   <div class="btn-group">
     <button
       class="btn"
@@ -151,13 +148,13 @@ export default {
     ...mapGetters('shared', ['companiesById']),
 
     f: () => filters,
-    
+
     sortedRoutes () {
       return this.routes && _(this.routes)
         .filter(r =>
-          this.filter.showExpiry === 'all' ? true :
-          this.filter.showExpiry === 'active' ? !r._meta.isExpired :
-            r._meta.isExpired
+          this.filter.showExpiry === 'all' ? true
+            : this.filter.showExpiry === 'active' ? !r._meta.isExpired
+              : r._meta.isExpired
         )
         .orderBy(
           [r => _.get(r, this.filter.orderBy)],
@@ -208,14 +205,14 @@ export default {
         })
     },
 
-    updateOrder($event) {
+    updateOrder ($event) {
       this.filter.order = $event.order
       this.filter.orderBy = $event.orderBy
     }
-  },
+  }
 }
 
-function transformTiers(bids, tiers) {
+function transformTiers (bids, tiers) {
   // Brute force calculation because the scale should be small
   return tiers.map(tier => {
     const matchingBids = (bids || []).filter(b => b.priceF < tier.price + 0.00001)
@@ -223,7 +220,7 @@ function transformTiers(bids, tiers) {
       ...tier,
       numBids: matchingBids.length,
       achieved: matchingBids.length >= tier.pax,
-      fraction: matchingBids.length / tier.pax,
+      fraction: matchingBids.length / tier.pax
     }
   })
 }

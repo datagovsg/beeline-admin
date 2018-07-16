@@ -63,13 +63,13 @@ export default {
     },
     format: {
       type: String,
-      default: 'dd mmm yyyy',
+      default: 'dd mmm yyyy'
     },
     offset: {}
   },
   created () {
     this.clickOut = () => {
-      this.showPopup = false;
+      this.showPopup = false
     }
     document.body.addEventListener('click', this.clickOut)
   },
@@ -80,7 +80,7 @@ export default {
     return {
       buffer: '',
       showPopup: false,
-      clickOut: null,
+      clickOut: null
     }
   },
   watch: {
@@ -95,10 +95,10 @@ export default {
     }
   },
   components: {
-    DatePicker: require('./DatePicker.vue').default,
+    DatePicker: require('./DatePicker.vue').default
   },
   computed: {
-    dateString() {
+    dateString () {
       return this.value ? dateformat(this.value, this.format) : ''
     }
   },

@@ -75,7 +75,7 @@ const filters = require('../filters')
 
 const SYSTEM_TAGS = _.fromPairs([
   'public', 'lite', 'mandai', 'crowdstart', 'lelong',
-  'notify-when-empty', 'success', 'failed',
+  'notify-when-empty', 'success', 'failed'
 ].map(t => [t, true]))
 
 export default {
@@ -85,11 +85,11 @@ export default {
     Select2
   },
 
-  data() {
+  data () {
     return {
       searchQuery: '',
       editValue: null,
-      matchingResults: [],
+      matchingResults: []
     }
   },
 
@@ -110,7 +110,7 @@ export default {
           this.editValue = match || defaultValue(v, !this.allRoutes)
         }
       }
-    },
+    }
   },
 
   created () {
@@ -130,7 +130,6 @@ export default {
       return this.searchQuery
         ? [match || defaultValue(this.searchQuery)].concat(this.matchingResults.filter(r => r.tag !== this.searchQuery))
         : this.matchingResults
-
     }
   },
 
@@ -163,8 +162,7 @@ export default {
             route.id.toString() === ucaseQuery
 
           for (let tag of (route.tags || [])) {
-            if (!this.includeRestricted && SYSTEM_TAGS[tag])
-              continue
+            if (!this.includeRestricted && SYSTEM_TAGS[tag]) { continue }
 
             const tagMatchesQuery = tag.toUpperCase().indexOf(ucaseQuery) !== -1
 
@@ -184,8 +182,8 @@ export default {
 
       // Update the display
       this.editValue = (this.matchingResults &&
-          this.matchingResults.find(r => r.tag === this.value))
-        || this.editValue
+          this.matchingResults.find(r => r.tag === this.value)) ||
+        this.editValue
     }, 300)
   }
 }

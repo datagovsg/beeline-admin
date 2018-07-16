@@ -16,25 +16,25 @@ export default {
     'axis',
     'stroke',
     'strokeWidth',
-    'strokeDasharray',
+    'strokeDasharray'
   ],
   computed: {
-    x1() {
-      return this.graphTransforms.xToPixel(this.value);
+    x1 () {
+      return this.graphTransforms.xToPixel(this.value)
     },
-    x2() {
-      return this.graphTransforms.xToPixel(this.value);
+    x2 () {
+      return this.graphTransforms.xToPixel(this.value)
     },
-    y1() {
-      return 0;
+    y1 () {
+      return 0
     },
-    y2() {
-      return this.graphTransforms.plotHeight();
-    },
+    y2 () {
+      return this.graphTransforms.plotHeight()
+    }
   },
   inject: {
     graphTransforms: {},
-    dataBus: {},
+    dataBus: {}
   },
   mounted () {
     if (this.dataBus) {
@@ -42,7 +42,7 @@ export default {
         b([this.value, this.value])
       })
     }
-  },
-};
+  }
+}
 
 </script>

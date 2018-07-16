@@ -189,7 +189,7 @@ export default {
     'newTripDates', 'editedTrips'
   ],
   components: { StopSelector, TimeInput, Modal },
-  data() {
+  data () {
     return {
       editTrip: null
     }
@@ -197,7 +197,7 @@ export default {
   watch: {
     referenceTrip: {
       immediate: true,
-      handler(trip) {
+      handler (trip) {
         const tripClone = _.cloneDeep(trip)
 
         this.editTrip = {
@@ -218,19 +218,19 @@ export default {
     }
   },
   computed: {
-    f: () => filters,
+    f: () => filters
   },
   methods: {
     ...mapActions('modals', ['showModal', 'showErrorModal']),
-    blankTripStop() {
+    blankTripStop () {
       return {
         stopId: null,
         time: new Date(),
         canBoard: true,
-        canAlight: true,
+        canAlight: true
       }
     },
-    updateTime(date, input) {
+    updateTime (date, input) {
       if (!input) return null
 
       const newDate = new Date(date.getTime())
@@ -244,10 +244,10 @@ export default {
         component: 'StopsPopup',
         props: {}
       })
-      .then((stop) => {
-        tripStop.stopId = stop.id
-      })
-      .catch(() => {})
+        .then((stop) => {
+          tripStop.stopId = stop.id
+        })
+        .catch(() => {})
     },
     validateBeforeResolve () {
       const {tripStops: ts} = this.editTrip
@@ -265,6 +265,6 @@ export default {
       }
     }
   },
-  mixins: [ModalMixin],
+  mixins: [ModalMixin]
 }
 </script>

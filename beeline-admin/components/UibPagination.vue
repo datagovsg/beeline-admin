@@ -36,23 +36,23 @@ export default {
     'boundaryLinks', 'displayAllPages', 'totalItems', 'itemsPerPage', 'value'
   ],
   computed: {
-    totalPages() {
+    totalPages () {
       return Math.max(
         1,
         Math.floor(((this.totalItems || 0) + ((this.itemsPerPage || 30) - 1)) / (this.itemsPerPage || 30)))
     },
-    pages() {
+    pages () {
       return _.range(0, this.totalPages)
     }
   },
   methods: {
-    goTo(page) {
+    goTo (page) {
       this.$emit('input', page)
     },
-    isNearCurrentPage(page) {
+    isNearCurrentPage (page) {
       return Math.abs(page - this.value) <= (VISIBLE_PAGE_COUNT / 2)
     },
-    isAlmostNearCurrentPage(page) {
+    isAlmostNearCurrentPage (page) {
       return Math.abs(page - this.value) === (VISIBLE_PAGE_COUNT / 2) + 1
     }
   }

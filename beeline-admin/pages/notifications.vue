@@ -1,7 +1,5 @@
 <template>
 <div>
-  
-  
 
   <h1>Manage Route Event Notifications</h1>
 
@@ -14,21 +12,21 @@
   </ol>
   <br/>
 
-  <RouteEventSubscriptions ref="routeEventSubscriptions" 
+  <RouteEventSubscriptions ref="routeEventSubscriptions"
     :companyId="companyId" :initialEventSubscriptions="eventSubscriptions" />
 
   <h1>Other notifications</h1>
 
-  <OtherEventSubscriptions ref="otherEventSubscriptions" 
+  <OtherEventSubscriptions ref="otherEventSubscriptions"
     :companyId="companyId" :initialEventSubscriptions="eventSubscriptions" />
-</div>  
+</div>
 </template>
 
 <script>
-import querystring from 'querystring';
-import _ from 'lodash';
-import assert from 'assert';
-import { mapGetters, mapActions } from 'vuex';
+import querystring from 'querystring'
+import _ from 'lodash'
+import assert from 'assert'
+import { mapGetters, mapActions } from 'vuex'
 
 import RouteEventSubscriptions from '@/components/notifications/RouteEventSubscriptions.vue'
 import OtherEventSubscriptions from '@/components/notifications/OtherEventSubscriptions.vue'
@@ -42,13 +40,13 @@ export default {
 
   data () {
     return {
-      eventSubscriptions: null,
+      eventSubscriptions: null
     }
   },
 
   components: {
     OtherEventSubscriptions,
-    RouteEventSubscriptions,
+    RouteEventSubscriptions
   },
 
   computed: {
@@ -74,16 +72,16 @@ export default {
   methods: {
     ...mapActions('spinner', ['spinOnPromise']),
 
-    requery() {
-      if (!this.companyId) return;
+    requery () {
+      if (!this.companyId) return
 
       this.spinOnPromise(this.axios.get(`/companies/${this.companyId}/eventSubscriptions`))
-      .then((response) => {
-        this.eventSubscriptions = response.data
-      })
+        .then((response) => {
+          this.eventSubscriptions = response.data
+        })
     },
 
-    blankEventSubscription() {
+    blankEventSubscription () {
       return {
         formatter: '0'
       }
@@ -98,8 +96,7 @@ export default {
         ids: []
       }
     }
-  },
+  }
 }
-
 
 </script>

@@ -93,7 +93,7 @@
       <div v-if="!companyId">
         Please select a company from the top right hand corner to manage route passes
       </div>
-      <AllRoutePassesTable v-else 
+      <AllRoutePassesTable v-else
         @route-pass-history-requested="showRoutePassHistory($event)"
         @show-issue-credits="showIssueRouteCreditsModal($event)"
         @show-expire-credits="showExpireRouteCreditsModal($event)"
@@ -132,7 +132,7 @@ import ExpireRouteCreditsModal from '@/modals/ExpireRouteCredits.vue'
 
 export default {
   props: ['companyId', 'userId'],
-  components: {AllRoutePassesTable, CrowdstartHistoryTable, RoutePassHistory, UserIdSelector}, 
+  components: {AllRoutePassesTable, CrowdstartHistoryTable, RoutePassHistory, UserIdSelector},
   data: () => ({
     routePassHistoryParams: null
   }),
@@ -140,8 +140,8 @@ export default {
   },
   computed: {
     ...mapGetters(['axios', 'isSuperAdmin']),
-    
-    f: () => filters,
+
+    f: () => filters
   },
   asyncComputed: {
     user () {
@@ -157,7 +157,7 @@ export default {
       window.location.assign(`#/c/${this.companyId}/users/${userId}`)
     },
 
-    showRoutePassHistory({tag, balance}) {
+    showRoutePassHistory ({tag, balance}) {
       this.routePassHistoryParams = {tag, balance}
     },
 
@@ -177,18 +177,18 @@ export default {
         component: IssueRouteCreditsModal,
         props: {
           userId: Number(this.userId),
-          tag: routeCredit.tag,
+          tag: routeCredit.tag
         }
       })
-      .then((issueQuery) => {
-        return this.axios.post(`/transactions/route_passes/issue_free`, issueQuery)
-        .then(() => {
-          this.$refs.routePassesHistory.requery()
-          return this.flash({title: 'Route passes issued'})
+        .then((issueQuery) => {
+          return this.axios.post(`/transactions/route_passes/issue_free`, issueQuery)
+            .then(() => {
+              this.$refs.routePassesHistory.requery()
+              return this.flash({title: 'Route passes issued'})
+            })
+            .catch(this.showErrorModal)
         })
-        .catch(this.showErrorModal)
-      })
-      .catch(() => { /* dismissed */ })
+        .catch(() => { /* dismissed */ })
     },
 
     showExpireRouteCreditsModal (routeCredit) {
@@ -196,21 +196,21 @@ export default {
         component: ExpireRouteCreditsModal,
         props: {
           userId: Number(this.userId),
-          tag: routeCredit.tag,
+          tag: routeCredit.tag
         }
       })
-      .then((expireResult) => {
-        return this.axios.post(
-          `/companies/${this.companyId}/route_passes/${routeCredit.tag}/users/${this.userId}/expire`,
-          expireResult
-        )
-        .then(() => {
-          this.$refs.routePassesHistory.requery()
-          return this.flash({title: 'Route passes expired'})
+        .then((expireResult) => {
+          return this.axios.post(
+            `/companies/${this.companyId}/route_passes/${routeCredit.tag}/users/${this.userId}/expire`,
+            expireResult
+          )
+            .then(() => {
+              this.$refs.routePassesHistory.requery()
+              return this.flash({title: 'Route passes expired'})
+            })
+            .catch(this.showErrorModal)
         })
-        .catch(this.showErrorModal)
-      })
-      .catch(() => { /* dismissed */ })
+        .catch(() => { /* dismissed */ })
     }
   }
 }

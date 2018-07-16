@@ -99,7 +99,7 @@ import PriceInput from '@/components/PriceInput.vue'
 
 export default {
   props: ['route', 'companyId'],
-  data() {
+  data () {
     return {
       editRoute: null
     }
@@ -115,9 +115,9 @@ export default {
       if (!this.route) return
 
       return this.axios.get(`/crowdstart/routes/${this.route.id}/bids?` + querystring.stringify({
-          statuses: JSON.stringify(['bidded', 'void', 'failed', 'withdrawn']),
+        statuses: JSON.stringify(['bidded', 'void', 'failed', 'withdrawn'])
       }))
-      .then(resp => resp.data)
+        .then(resp => resp.data)
     }
   },
   watch: {
@@ -135,9 +135,9 @@ export default {
               noPasses: null,
               crowdstartExpiry: null,
               ..._.get(clone, 'notes'),
-              tier: [_.get(clone.notes, 'tier.0') || this.defaultTier()],
+              tier: [_.get(clone.notes, 'tier.0') || this.defaultTier()]
             },
-            tags: _.get(clone, 'tags') || [],
+            tags: _.get(clone, 'tags') || []
           }
         }
       }
@@ -148,7 +148,7 @@ export default {
     ...mapActions('spinner', ['spinOnPromise']),
     ...mapActions('modals', ['showErrorModal']),
 
-    doSaveRoute() {
+    doSaveRoute () {
       const newRoute = {
         ...this.editRoute,
         notes: _.cloneDeep(this.editRoute.notes)
@@ -158,7 +158,7 @@ export default {
           this.editRoute.trips[0].date.getUTCFullYear(),
           this.editRoute.trips[0].date.getUTCMonth(),
           this.editRoute.trips[0].date.getUTCDate()
-        ) - this.route.trips[0].date.getTime();
+        ) - this.route.trips[0].date.getTime()
 
         const rv = tripStops.map(ts => ({
           ...ts,
@@ -166,10 +166,10 @@ export default {
         }))
 
         for (let [old, upd] of _.zip(tripStops, rv)) {
-          const day = 24*60*60*1000;
+          const day = 24 * 60 * 60 * 1000
           assert(old.time.getTime() % day === upd.time.getTime() % day)
         }
-        return rv;
+        return rv
       }
 
       // Update route
@@ -184,7 +184,7 @@ export default {
         {
           ..._.pick(this.editRoute.trips[0], ['capacity']),
           date: filters.date(this.editRoute.trips[0].date, 'yyyy-mm-dd', true),
-          tripStops: withTimesUpdated(this.editRoute.trips[0].tripStops),
+          tripStops: withTimesUpdated(this.editRoute.trips[0].tripStops)
         }
       )
       // Update price and exsiting bids
@@ -200,11 +200,11 @@ export default {
         .catch(this.showErrorModal)
       )
     },
-    doResetRoute() {
+    doResetRoute () {
       this.editRoute = blankRoute()
     },
 
-    update(key, value) {
+    update (key, value) {
       _.set(this.editRoute, key, value)
     },
 

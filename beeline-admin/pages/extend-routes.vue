@@ -3,8 +3,6 @@
     Please select a company from the top!
   </div>
   <div v-else>
-    
-    
 
     <div>
       You can extend routes by up to 2 months from this page.
@@ -138,9 +136,9 @@ const filters = require('../filters')
   * Trips with different hashes are "significantly different"
   * from each other and should be represented by different colours
   */
-function tripHash(trip) {
-  function secondsSinceMidnight(t) {
-    return t.getHours()*3600 + t.getMinutes()*60 + t.getSeconds()
+function tripHash (trip) {
+  function secondsSinceMidnight (t) {
+    return t.getHours() * 3600 + t.getMinutes() * 60 + t.getSeconds()
   }
 
   return [
@@ -157,11 +155,11 @@ function tripHash(trip) {
 
 export default {
   props: ['companyId'],
-  data() {
+  data () {
     return {
       filter: {
         tags: '',
-        label: '',
+        label: ''
       },
       filteredRoutes: [],
       routes: null,
@@ -198,12 +196,12 @@ export default {
 
       extendJobs: {
         count: 0,
-        done: 0,
+        done: 0
       }
     }
   },
   components: {
-    TagsView,
+    TagsView
   },
   computed: {
     ...mapGetters('shared', ['companiesById', 'currentRoutesById']),
@@ -216,7 +214,7 @@ export default {
 
       return this.axios.get('/routes?' + querystring.stringify({
         transportCompanyId: this.companyId || [],
-        startDate: d.toISOString(),
+        startDate: d.toISOString()
       }))
     },
 
@@ -225,7 +223,7 @@ export default {
         ...filters,
         weekdayLetter (date) {
           return 'SMTWTFS'.charAt(date.getUTCDay())
-        },
+        }
       }
     },
 
@@ -258,20 +256,20 @@ export default {
   },
   created () {
     this.fetch('publicHolidays')
-    .then(() => {
-      console.log(this.publicHolidays, this.days)
-      const isHoliday = this.publicHolidays
-        .reduce((set, holiday) => {
-          set[new Date(holiday.date).getTime()] = true
-          return set
-        }, {})
+      .then(() => {
+        console.log(this.publicHolidays, this.days)
+        const isHoliday = this.publicHolidays
+          .reduce((set, holiday) => {
+            set[new Date(holiday.date).getTime()] = true
+            return set
+          }, {})
 
-      this.days.forEach(day => {
-        day.publicHoliday = !!isHoliday[day.date.getTime()]
+        this.days.forEach(day => {
+          day.publicHoliday = !!isHoliday[day.date.getTime()]
+        })
       })
-    })
   },
-  mounted() {
+  mounted () {
     this.spinOnPromise(Promise.all(Object.values(this.$store.state.shared.promises)))
   },
   watch: {
@@ -280,19 +278,19 @@ export default {
       handler (rp) {
         rp.then(async (routesResponse) => {
           this.routes = routesResponse.data
-          .filter(r => !r.tags.includes('crowdstart'))
-          .map(r => ({
-            ...r,
-            selected: false,
-            ended: false,
-            tripsByDate: null,
-            _extensionHashId: 0,
-          }))
+            .filter(r => !r.tags.includes('crowdstart'))
+            .map(r => ({
+              ...r,
+              selected: false,
+              ended: false,
+              tripsByDate: null,
+              _extensionHashId: 0
+            }))
 
           this.updateFilter() // not using a computed because we want to throttle it
 
           // A trick to load the routes we're interested in first
-          let currentTags = false, currentLabel = false
+          let currentTags = false; let currentLabel = false
           let currentRoutes = this.routes
 
           const updateCurrentRoutes = () => {
@@ -322,37 +320,37 @@ export default {
                 this.days[this.days.length - 1].date.getUTCFullYear(),
                 this.days[this.days.length - 1].date.getUTCMonth(),
                 this.days[this.days.length - 1].date.getUTCDate() + 1,
-              ).toISOString(),
+              ).toISOString()
             }))
-            .then((response) => {
-              const trips = response.data.trips.map(trip => ({
-                ...trip,
-                date: new Date(trip.date),
-                tripStops: trip.tripStops.map(ts => ({
-                  ...ts,
-                  time: new Date(ts.time)
+              .then((response) => {
+                const trips = response.data.trips.map(trip => ({
+                  ...trip,
+                  date: new Date(trip.date),
+                  tripStops: trip.tripStops.map(ts => ({
+                    ...ts,
+                    time: new Date(ts.time)
+                  }))
                 }))
-              }))
 
-              trips.forEach(trip => {
-                trip.hash = tripHash(trip)
+                trips.forEach(trip => {
+                  trip.hash = tripHash(trip)
+                })
+
+                const tripHashes = _(trips)
+                  .map(t => t.hash)
+                  .uniqBy()
+                  .map((x, i) => [x, i])
+                  .fromPairs()
+                  .value()
+
+                trips.forEach(trip => {
+                  trip.hashId = tripHashes[trip.hash]
+                  trip.hashIdMod4 = tripHashes[trip.hash] % 4
+                })
+
+                route.tripsByDate = _.keyBy(trips, t => t.date.getTime()) || {}
+                route.ended = (trips.length === 0)
               })
-
-              const tripHashes = _(trips)
-                .map(t => t.hash)
-                .uniqBy()
-                .map((x, i) => [x, i])
-                .fromPairs()
-                .value()
-
-              trips.forEach(trip => {
-                trip.hashId = tripHashes[trip.hash]
-                trip.hashIdMod4 = tripHashes[trip.hash] % 4
-              })
-
-              route.tripsByDate = _.keyBy(trips, t => t.date.getTime()) || {}
-              route.ended = (trips.length === 0)
-            })
 
             // Remove the first element
             currentRoutes.shift()
@@ -372,12 +370,12 @@ export default {
         .filter(route => this.applyFilter(route))
     }, 500, {leading: false, trailing: true}),
 
-    applyFilter(route) {
+    applyFilter (route) {
       return (!this.filter.label || route.label === this.filter.label) &&
         this.tags.every(tag => route.tags && route.tags.indexOf(tag) !== -1)
     },
 
-    dateClass(route, day) {
+    dateClass (route, day) {
       const trip = _.get(route.tripsByDate, day.date.getTime())
       const hashCode = _.get(trip, 'hashIdMod4')
 
@@ -390,7 +388,7 @@ export default {
         'selected-hash': (hashCode !== undefined) && (hashCode === route._extensionHashId)
       }
     },
-    useTripHashOf(route, day) {
+    useTripHashOf (route, day) {
       const trip = _.get(route.tripsByDate, day.date.getTime())
 
       if (trip) route._extensionHashId = trip.hashId
@@ -454,7 +452,6 @@ export default {
       }
     },
 
-
     async confirmAndExtend () {
       const routesToExtend = this.filteredRoutes.filter(r => r.selected && !r.ended).reverse()
       const daysToExtend = this.days.filter(r => r.selected)
@@ -481,13 +478,13 @@ export default {
 
         await Promise.all(
           daysToExtend
-          .filter(day => !route.tripsByDate[day.date.getTime()])
-          .map(day => this.createTripForDate({
-            date: day.date,
-            trip: lastTrip
-          }))
+            .filter(day => !route.tripsByDate[day.date.getTime()])
+            .map(day => this.createTripForDate({
+              date: day.date,
+              trip: lastTrip
+            }))
         )
-        this.extendJobs.done ++
+        this.extendJobs.done++
       }
 
       window.location.reload()

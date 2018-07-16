@@ -29,7 +29,7 @@ export default {
     }
   },
   components: {
-    TagsView,
+    TagsView
   },
   methods: {
     removeTag (tag) {
@@ -42,7 +42,7 @@ export default {
       } else if (this.currentTag === '' && $event.keyCode === 8) {
         this.$emit('input', this.value && this.value.slice(0, this.value.length - 1))
       }
-    },
+    }
   }
 }
 </script>

@@ -66,7 +66,7 @@ export default {
   data () {
     return {
       routes: null,
-      searchQuery: '',
+      searchQuery: ''
     }
   },
   created () {
@@ -76,8 +76,8 @@ export default {
     ...mapState('shared', ['currentRoutes', 'promises']),
     filteredRoutes () {
       return (this.routes || [])
-          .filter(f => this.filter ? this.filter(f) : true)
-          .filter(r => !this.companyId ||
+        .filter(f => this.filter ? this.filter(f) : true)
+        .filter(r => !this.companyId ||
             r.transportCompanyId === Number(this.companyId))
     },
     sortedFilteredRoutes () {
@@ -101,7 +101,7 @@ export default {
           this.promises.currentRoutes.then(() => this.currentRoutes)
       } else {
         const query = {
-          includePath: false,
+          includePath: false
         }
         if (this.startDate) query.startDate = this.startDate.getTime()
         if (this.endDate) query.endDate = this.endDate.getTime()
@@ -132,7 +132,7 @@ export default {
   methods: {
     ...mapActions('shared', ['fetch']),
     ...mapActions('resources', ['getRoutes']),
-    emitValue(value) {
+    emitValue (value) {
       if (this.multiple) {
         if (value === null) { /* delete */
           const popped = this.value.slice(0, this.value.length - 1)
@@ -165,7 +165,7 @@ export default {
     updateSearch (query) {
       this.searchQuery = query
     },
-    isSelected(value, rid) {
+    isSelected (value, rid) {
       if (this.multiple) {
         // FIXME slow
         return value.findIndex(r => r == rid) !== -1

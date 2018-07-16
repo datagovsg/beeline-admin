@@ -12,6 +12,6 @@ export default {
       type: String,
       default: '1'
     }
-  },
+  }
 }
 </script>

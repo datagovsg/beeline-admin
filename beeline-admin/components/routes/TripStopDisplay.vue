@@ -18,7 +18,7 @@ const filters = require('../../filters')
 export default{
   props: ['stop'],
   computed: {
-    f() {return filters}
+    f () { return filters }
   }
 }
 </script>

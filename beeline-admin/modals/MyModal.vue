@@ -69,11 +69,11 @@
 export default {
   props: {
     'clickToClose': {
-      default: true,
+      default: true
     },
     value: {},
-    overrideWidth: {},
-  },
+    overrideWidth: {}
+  }
   // created () {
   //   this.$escapeEvent = (event) => {
   //     if (this.clickToClose && event.keyCode === 27) {

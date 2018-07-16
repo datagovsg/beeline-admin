@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
   Vue.use(VueGoogleMaps, {
     load: {
       key: 'AIzaSyBkFH42PlbFrsfdAnjw37qMLAxjhkMT-54',
-      libraries: 'geometry',
+      libraries: 'geometry'
     }
   })
   Vue.use(AsyncComputed)

@@ -46,9 +46,9 @@ export default {
       this.editAsset = {id: '', data: ''}
     } else {
       this.axios.get(`/assets/${this.assetId}`)
-      .then((response) => {
-        this.editAsset = response.data
-      })
+        .then((response) => {
+          this.editAsset = response.data
+        })
     }
   },
 

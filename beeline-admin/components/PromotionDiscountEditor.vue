@@ -166,7 +166,7 @@
 </template>
 
 <script>
-const _ = require('lodash');
+const _ = require('lodash')
 const titleCase = require('title-case')
 const leftPad = require('left-pad')
 import dateformat from 'dateformat'
@@ -179,58 +179,58 @@ const discountTypes = _.sortBy([
   {
     type: 'simpleRate',
     default: {rate: null},
-    restrict: ['Promotion', 'RoutePass'],
+    restrict: ['Promotion', 'RoutePass']
   },
   {
     type: 'simpleFixed',
     default: {fixed: null},
-    restrict: ['Promotion', 'RoutePass'],
+    restrict: ['Promotion', 'RoutePass']
   },
   {
     type: 'flatPrice',
     default: {price: null},
-    restrict: ['Promotion', 'RoutePass'],
+    restrict: ['Promotion', 'RoutePass']
   },
   {
     type: 'tieredRateByQty',
     default: {schedule: []},
-    restrict: ['Promotion', 'RoutePass'],
+    restrict: ['Promotion', 'RoutePass']
   },
   {
     type: 'tieredFixedByTotalValue',
     default: {schedule: []},
-    restrict: ['Promotion', 'RoutePass'],
+    restrict: ['Promotion', 'RoutePass']
   },
   {
     type: 'tieredRateByTotalValue',
     default: {schedule: []},
-    restrict: ['Promotion', 'RoutePass'],
+    restrict: ['Promotion', 'RoutePass']
   },
   {
     type: 'fixedTransactionPrice',
     default: {price: null},
-    restrict: ['Promotion', 'RoutePass'],
-  },
+    restrict: ['Promotion', 'RoutePass']
+  }
 ], 'type')
 
 export default {
   props: ['value', 'companyId', 'promotionType'],
   data () {
     return {
-      paramCache:  _(discountTypes)
+      paramCache: _(discountTypes)
         .keyBy(x => x.type)
         .mapValues(x => x.default)
-        .value(),
+        .value()
     }
   },
   components: {
     PercentInput,
-    PriceInput,
+    PriceInput
   },
   watch: {
     'value.params': {
       immediate: true,
-      handler(p) {
+      handler (p) {
         if (this.value && this.value.type) {
           this.paramCache[this.value.type] = p
         }
@@ -300,7 +300,7 @@ export default {
           schedule: this.value.params.schedule.concat([v])
         }
       })
-    },
+    }
   }
 }
 </script>

@@ -48,7 +48,7 @@ export default {
   asyncComputed: {
     crowdstartBids () {
       return this.axios.get(`/crowdstart/users/${this.userId}/bids`)
-      .then(r => r.data)
+        .then(r => r.data)
     }
   },
 
@@ -73,7 +73,7 @@ export default {
   },
 
   methods: {
-    ...mapActions('shared', ['fetch']),
+    ...mapActions('shared', ['fetch'])
   }
 }
 </script>

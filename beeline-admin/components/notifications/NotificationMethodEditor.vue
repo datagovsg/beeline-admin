@@ -19,7 +19,7 @@
       Email:
       <input type="email" @input="update('email', $event.target.value)"
         :value="f._.get(agent, 'email')"
-        placeholder="john@example.com" 
+        placeholder="john@example.com"
         :required="required" />
     </label>
 
@@ -35,7 +35,7 @@
       Telephone number:
       <input type="tel" @input="update('telephone', $event.target.value)"
         :value="f._.get(agent, 'telephone')"
-        placeholder="+65 8111 2222" 
+        placeholder="+65 8111 2222"
         :required="required" />
     </label>
 

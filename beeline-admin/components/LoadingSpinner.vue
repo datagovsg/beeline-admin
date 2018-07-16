@@ -10,7 +10,7 @@ import {mapGetters, mapActions, mapState} from 'vuex'
 export default {
   data () {
     return {
-      promise: null,
+      promise: null
     }
   },
   computed: {
@@ -18,9 +18,9 @@ export default {
   },
   methods: {
     ...mapActions('spinner', ['spinOnPromise']),
-    watch(promise) {
+    watch (promise) {
       this.spinOnPromise(promise)
-    },
+    }
   }
 }
 </script>

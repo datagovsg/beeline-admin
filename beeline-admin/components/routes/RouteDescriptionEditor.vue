@@ -116,7 +116,7 @@ const filters = require('../../filters')
 
 export default {
   props: ['route', 'companyId'],
-  data() {
+  data () {
     return {
       editRoute: null
     }
@@ -125,7 +125,7 @@ export default {
     PathEditor,
     TagsEditor,
     NumberArrayEditor,
-    CompanySelector,
+    CompanySelector
   },
   computed: {
     ...mapGetters(['axios', 'isSuperAdmin']),
@@ -137,7 +137,7 @@ export default {
           id: this.routeId,
           options: {
             includeDates: true,
-            includeFeatures: true,
+            includeFeatures: true
           }
         })
       }
@@ -158,7 +158,7 @@ export default {
             description: null,
             signage: null,
             passSizes: [],
-            ...route.notes,
+            ...route.notes
           }
         } : {
           // Blank route
@@ -176,32 +176,32 @@ export default {
           schedule: '',
           notes: {
             description: null,
-            signage: null,
+            signage: null
           }
         }
       }
-    },
+    }
   },
   methods: {
     ...mapActions('resources', ['getRoute', 'saveRoute', 'createTripForDate']),
     ...mapActions('spinner', ['spinOnPromise']),
     ...mapActions('modals', ['showModal', 'showErrorModal']),
 
-    doSaveRoute() {
+    doSaveRoute () {
       this.spinOnPromise(
         this.saveRoute(this.editRoute)
-        .then((response) => {
-          if (!this.editRoute.id) {
-            window.location.hash = `#/c/${this.companyId}/trips/${response.data.id}/route`
-          }
-        })
+          .then((response) => {
+            if (!this.editRoute.id) {
+              window.location.hash = `#/c/${this.companyId}/trips/${response.data.id}/route`
+            }
+          })
       )
-      .catch(this.showErrorModal)
+        .catch(this.showErrorModal)
     },
-    doResetRoute() {
+    doResetRoute () {
       this.editRoute = blankRoute()
     },
-    doDeleteRoute() {
+    doDeleteRoute () {
       if (!this.editRoute.id) return
 
       this.showModal({
@@ -211,16 +211,16 @@ export default {
           message: `Are you sure you want to delete ${this.route.label}`
         }
       })
-      .then((confirm) => {
-        if (confirm) {
-          return this.spinOnPromise(this.axios.delete(`/routes/${this.route.id}`))
-            .then(() => {
-              window.location.hash = `#/c/${this.companyId}/routes`
-            })
-        }
-      })
-      .catch(this.showErrorModal)
-    },
+        .then((confirm) => {
+          if (confirm) {
+            return this.spinOnPromise(this.axios.delete(`/routes/${this.route.id}`))
+              .then(() => {
+                window.location.hash = `#/c/${this.companyId}/routes`
+              })
+          }
+        })
+        .catch(this.showErrorModal)
+    }
   }
 }
 </script>

@@ -48,7 +48,7 @@ export default {
 
   data () {
     return {
-      selectedDate: null,
+      selectedDate: null
     }
   },
 
@@ -84,7 +84,7 @@ export default {
           points: stops.map(stop => ({
             ...stop,
             timeDifference: stop.actualTime &&
-              (stop.actualTime.getTime() - stop.expectedTime.getTime()),
+              (stop.actualTime.getTime() - stop.expectedTime.getTime())
           }))
         }
       })
@@ -93,7 +93,7 @@ export default {
         stopDetails,
         s => {
           var d = s.expectedTime
-          return d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
+          return d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds()
         })
     }
   }

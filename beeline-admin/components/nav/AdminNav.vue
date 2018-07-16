@@ -78,7 +78,7 @@ export default {
   components: {MenuDropdown, SuperAdminCompanySelector},
   data () {
     return {
-      dropdown: null,
+      dropdown: null
     }
   },
   computed: {

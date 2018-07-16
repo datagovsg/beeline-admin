@@ -1,7 +1,7 @@
 import SharedStoreTemplate from './SharedStoreTemplate'
 
 const fetchJobs = {
-  contactLists: (state) => ({url: `/companies/${state.companyId}/contactLists`}),
+  contactLists: (state) => ({url: `/companies/${state.companyId}/contactLists`})
 }
 
 export default SharedStoreTemplate(

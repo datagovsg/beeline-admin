@@ -42,20 +42,20 @@ export default {
   watch: {
     type: {
       immediate: true,
-      handler(v) {
+      handler (v) {
         if (v === 'flash') {
           setTimeout(() => this.resolve(), 1000)
         }
       }
     }
   },
-  created() {
+  created () {
     if (this.type === 'prompt') {
       this.dataValue = this.defaultValue
     } else if (this.type === 'confirm') {
       this.dataValue = true
     }
   },
-  mixins: [ModalMixin],
+  mixins: [ModalMixin]
 }
 </script>

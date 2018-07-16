@@ -6,7 +6,7 @@ module.exports = {
     idToken: null,
 
     loginDialogShown: false,
-    initCompleted: false,
+    initCompleted: false
   }),
   mutations: {
     authenticate (state, result) {
@@ -20,5 +20,5 @@ module.exports = {
     showLoginDialog (state, visible) {
       state.loginDialogShown = visible
     }
-  },
+  }
 }

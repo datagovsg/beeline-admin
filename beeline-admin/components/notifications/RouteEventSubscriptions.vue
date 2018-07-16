@@ -65,13 +65,12 @@
 <script>
 import _ from 'lodash'
 import assert from 'assert'
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex'
 
 import EventSubscriptionEditor from './EventSubscriptionEditor.vue'
 import NotificationMethodEditor from './NotificationMethodEditor.vue'
 
 import {satisfiesEvent, stringify, EVENT_TYPES} from './notifications'
-
 
 export default {
   props: ['companyId', 'initialEventSubscriptions'],
@@ -80,7 +79,7 @@ export default {
 
   data () {
     return {
-      subscriptions: null,
+      subscriptions: null
     }
   },
 
@@ -112,7 +111,7 @@ export default {
           lateETA: false,
           passengersMessaged: false,
           tripCancelled: false,
-          newBooking: false,
+          newBooking: false
         },
         handler: '',
         options: {ignoreIfEmpty: true},
@@ -137,44 +136,44 @@ export default {
       this.spinOnPromise(Promise.all(newEntries.map(ne =>
         this.axios.post(`/companies/${this.companyId}/eventSubscriptions`, ne)
       )))
-      .then((responses) => {
-        const parsed = this.parse(responses.map(r => r.data));
-        const idsToDelete = subscr.ids;
+        .then((responses) => {
+          const parsed = this.parse(responses.map(r => r.data))
+          const idsToDelete = subscr.ids
 
-        assert(parsed.length <= 1, "[AssertionError] entries should map to one group")
+          assert(parsed.length <= 1, '[AssertionError] entries should map to one group')
 
-        if (parsed.length == 1) {
-          this.subscriptions.splice(
-            this.subscriptions.indexOf(subscr), 1,
-            parsed[0]
-          )
-        }
+          if (parsed.length == 1) {
+            this.subscriptions.splice(
+              this.subscriptions.indexOf(subscr), 1,
+              parsed[0]
+            )
+          }
 
-        return Promise.all(idsToDelete.map(id =>
-          this.axios.delete(`/companies/${this.companyId}/eventSubscriptions/${id}`)))
-          .then(() => {
-            subscr.ids = [];
-          })
-      })
-      .catch(this.showErrorModal)
+          return Promise.all(idsToDelete.map(id =>
+            this.axios.delete(`/companies/${this.companyId}/eventSubscriptions/${id}`)))
+            .then(() => {
+              subscr.ids = []
+            })
+        })
+        .catch(this.showErrorModal)
     },
-    async deleteOne(subscr) {
+    async deleteOne (subscr) {
       if (!(await this.confirm({title: 'Are you sure you want to delete this?'}))) {
-        return;
+        return
       }
       ;(subscr.ids
         ? this.spinOnPromise(Promise.all(_.uniqBy(subscr.ids).map(id =>
           this.axios.delete(`/companies/${this.companyId}/eventSubscriptions/${id}`))))
         : Promise.resolve(null))
-      .then(() => {
-        this.subscriptions.splice(this.subscriptions.indexOf(subscr), 1)
-      })
-      .catch(this.showErrorModal)
+        .then(() => {
+          this.subscriptions.splice(this.subscriptions.indexOf(subscr), 1)
+        })
+        .catch(this.showErrorModal)
     },
 
     parse (eventSubscriptions) {
       // { noPings, newBooking, lateArrival ... }
-      const relevantKeys = _(EVENT_TYPES).values().map(e => e.event).keyBy().value();
+      const relevantKeys = _(EVENT_TYPES).values().map(e => e.event).keyBy().value()
 
       const groupedByRoutes = _(eventSubscriptions)
         .filter(e => e.event in relevantKeys) // filter out { lifecycle, ... }
@@ -204,8 +203,8 @@ export default {
             noPings15, [object],
             noPings25, [object],
             ...
-          }*/
-          .fromPairs().value()
+          } */
+            .fromPairs().value()
 
           return {
             options: _(es[0].params)
@@ -217,26 +216,26 @@ export default {
             handler: es[0].handler,
             agent: es[0].agent,
             events: _.mapValues(ev, e => !!e),
-            ids: _(ev).mapValues(e => e && e.id).filter(x => x).uniq().value(),
+            ids: _(ev).mapValues(e => e && e.id).filter(x => x).uniq().value()
           }
         })
         .values()
         .filter(v => v.ids.length)
-        .value();
+        .value()
 
       return groupedByRoutes
     },
 
-    serialize(subscription) {
+    serialize (subscription) {
       const eventSubscriptions = _.keys(subscription.events)
         .filter(key => subscription.events[key])
         .map(key => ({
           event: EVENT_TYPES[key].event,
           formatter: '0',
           params: _.defaults(EVENT_TYPES[key].defaultParams,
-              subscription.options),
+            subscription.options),
           agent: subscription.agent,
-          handler: subscription.handler,
+          handler: subscription.handler
         }))
 
       const mergedSubscriptions = _(eventSubscriptions)
@@ -245,10 +244,10 @@ export default {
         .mapValues(vs => {
           return _.reduce(vs, (acc, v) => {
             if (acc == null) {
-              return v;
+              return v
             } else {
               // merge array-valued params
-              var params = _.defaults(acc.params, v.params);
+              var params = _.defaults(acc.params, v.params)
 
               for (let key in acc.params) {
                 if (acc.params[key] instanceof Array &&
@@ -257,14 +256,14 @@ export default {
                 }
               }
 
-              return acc;
+              return acc
             }
-          }, null);
+          }, null)
         })
         .values()
         .value()
 
-        return mergedSubscriptions;
+      return mergedSubscriptions
     }
   }
 }

@@ -1,7 +1,6 @@
 <template>
   <div class="container-fluid withnav promotions-list">
-    
-    
+
     <div class="col-lg-12">
       <h1>Manage Promotions</h1>
 
@@ -150,7 +149,7 @@ export default {
 
   components: {
     SchemaViewer,
-    SortTh,
+    SortTh
   },
   data () {
     return {
@@ -165,7 +164,7 @@ export default {
           return (promotion.counts.global / promotion.params.usageLimit.globalLimit) || 0
         }
       },
-      promotions: null,
+      promotions: null
     }
   },
 
@@ -182,7 +181,7 @@ export default {
           if (this.filter.promotionType === 'RoutePass') {
             return x.type === this.filter.promotionType
           } else {
-             if (this.filter.promotionSubtype === 'General') {
+            if (this.filter.promotionSubtype === 'General') {
               return x.type === this.filter.promotionType && (x.params.usageLimit.userLimit !== 1 || x.params.usageLimit.globalLimit !== 1)
             } else {
               return x.type === this.filter.promotionType && x.params.usageLimit.userLimit === 1 && x.params.usageLimit.globalLimit === 1
@@ -198,7 +197,7 @@ export default {
     companyId: {
       immediate: true,
       handler (h) {
-       this.spinOnPromise(this.refresh())
+        this.spinOnPromise(this.refresh())
       }
     }
   },
@@ -214,7 +213,7 @@ export default {
         })
     },
 
-    sort({order, orderBy}) {
+    sort ({order, orderBy}) {
       this.filter.order = order
       this.filter.orderBy = orderBy
     },
@@ -225,9 +224,9 @@ export default {
       let promoData
 
       let now = new Date()
-      let startDate = now.toISOString().slice(0,10)
+      let startDate = now.toISOString().slice(0, 10)
       // 1 month after today
-      let endDate = new Date(now.getFullYear(), now.getMonth()+1, now.getDate()).toISOString().slice(0,10)
+      let endDate = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate()).toISOString().slice(0, 10)
 
       if (this.filter.promotionType === 'Promotion') {
         promoData = {
@@ -235,7 +234,7 @@ export default {
           description: `New Promo Code`,
           type: 'Promotion',
           params: {
-            qualifyingCriteria: [{type: 'limitByCompany', params: {companyId: this.companyId}}, {type: 'limitByTripDate', params: {startDate: startDate,endDate: endDate}}],
+            qualifyingCriteria: [{type: 'limitByCompany', params: {companyId: this.companyId}}, {type: 'limitByTripDate', params: {startDate: startDate, endDate: endDate}}],
             discountFunction: { type: 'simpleRate', params: {rate: 0.10}},
             refundFunction: { type: 'refundDiscountedAmt', params: {} },
             usageLimit: {userLimit: 1, globalLimit: 1000000}
@@ -244,13 +243,13 @@ export default {
       } else {
         // TODO: how to add route price schedule to the route?
         promoData = {
-          code: '', //route pass with no promo code entered
+          code: '', // route pass with no promo code entered
           description: `New Route Pass`,
           type: 'RoutePass',
           params: {
             tag: code,
-            qualifyingCriteria: [{type: 'limitByCompany', params: {companyId: this.companyId}}, {type: 'limitByPurchaseDate', params: {startDate: startDate,endDate: endDate}}],
-            discountFunction: { type: 'tieredRateByTotalValue', params: {"schedule": [[25, 0.1], [50, 0.2]]}},
+            qualifyingCriteria: [{type: 'limitByCompany', params: {companyId: this.companyId}}, {type: 'limitByPurchaseDate', params: {startDate: startDate, endDate: endDate}}],
+            discountFunction: { type: 'tieredRateByTotalValue', params: {'schedule': [[25, 0.1], [50, 0.2]]}},
             refundFunction: { type: 'refundDiscountedAmt', params: {} },
             usageLimit: {userLimit: null, globalLimit: null}
           }
@@ -262,18 +261,18 @@ export default {
           `/companies/${this.companyId}/promotions`,
           promoData
         )
-        .then(() => this.refresh())
+          .then(() => this.refresh())
       )
-      .then(() =>
-        this.showModal({
-          component: 'CommonModals',
-          props: {
-            type: 'flash',
-            message: `A new dummy promotion ${code} has been created`
-          }
-        })
-      )
-      .catch(this.showErrorModal)
+        .then(() =>
+          this.showModal({
+            component: 'CommonModals',
+            props: {
+              type: 'flash',
+              message: `A new dummy promotion ${code} has been created`
+            }
+          })
+        )
+        .catch(this.showErrorModal)
     },
 
     destroy (promotion) {
@@ -284,23 +283,22 @@ export default {
           message: `Are you sure you want to delete?`
         }
       })
-      .then((result) => {
-        if (result) {
-          this.spinOnPromise(
-            this.axios.delete(
-              `/companies/${this.companyId}/promotions/${promotion.id}`
+        .then((result) => {
+          if (result) {
+            this.spinOnPromise(
+              this.axios.delete(
+                `/companies/${this.companyId}/promotions/${promotion.id}`
+              )
+                .then(() => this.refresh())
             )
-            .then(() => this.refresh())
-          )
-        }
-      })
-      .catch(this.showErrorModal)
+          }
+        })
+        .catch(this.showErrorModal)
     }
   }
 }
 
-
-function randomString() {
+function randomString () {
   return leftPad(Math.floor(Math.random() * (1 << 30))
     .toString(35).toUpperCase(), 5, 'Z')
 }

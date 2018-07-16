@@ -41,7 +41,7 @@ export default {
     'month',
     'specialDates',
     'defaultDisable',
-    'monthFormat',
+    'monthFormat'
   ],
   data () {
     return {
@@ -49,7 +49,7 @@ export default {
     }
   },
   computed: {
-    f() {
+    f () {
       return {date: dateformat}
     },
     prevMonth () {
@@ -125,8 +125,8 @@ export default {
     },
     weeks () {
       return [0, 1, 2, 3, 4].map(
-        weekNumber => [0,1,2,3,4,5,6].map(weekDay => {
-          const canonical = ((weekNumber * 7) + weekDay) * 24*3600*1000 + this.firstDayOfCalendar.getTime()
+        weekNumber => [0, 1, 2, 3, 4, 5, 6].map(weekDay => {
+          const canonical = ((weekNumber * 7) + weekDay) * 24 * 3600 * 1000 + this.firstDayOfCalendar.getTime()
           const canonicalDate = new Date(canonical)
           return {
             canonical,
@@ -171,16 +171,16 @@ export default {
       const basic = {
         disabled: day.disabled,
         'different-month': day.differentMonth,
-        selected: day.selected,
+        selected: day.selected
       }
       for (let d of day.classes) {
         basic[d] = true
       }
       return basic
     },
-    toUserDate(date) {
+    toUserDate (date) {
       return new Date(date.getTime() + this.effectiveOffset)
-    },
+    }
   }
 }
 </script>

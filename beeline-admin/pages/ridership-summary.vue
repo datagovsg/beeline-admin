@@ -4,8 +4,6 @@
     Please select a company from the top right-hand corner
   </div>
   <div class="summary-page" v-else>
-    
-    
 
     <div class="row">
       <div class="col-lg-4">
@@ -173,7 +171,6 @@
 </div>
 </template>
 
-
 <script>
 import querystring from 'querystring'
 import {mapGetters, mapActions} from 'vuex'
@@ -189,20 +186,20 @@ export default {
   components: {
     CompanyLogo,
     RouteRidershipRummary,
-    MonthPicker,
+    MonthPicker
   },
 
   data () {
     return {
       routes: null,
-      selectedMonth: new Date(),
+      selectedMonth: new Date()
     }
   },
 
   computed: {
     ...mapGetters(['axios']),
     f: () => filters,
-    selectedTime () { return this.selectedMonth.getTime() },
+    selectedTime () { return this.selectedMonth.getTime() }
   },
 
   mounted () {
@@ -234,22 +231,22 @@ export default {
           this.selectedMonth.getMonth() + 1,
           1
         ),
-        transportCompanyId: this.companyId,
+        transportCompanyId: this.companyId
       }
 
       // preprocess the routes to track all days...
-      var numDays = (options.endDate - options.startDate)
-          / (24 * 3600 * 1000)
+      var numDays = (options.endDate - options.startDate) /
+          (24 * 3600 * 1000)
 
       this.weekDays = _.range(0, numDays).map(day =>
         new Date(this.selectedMonth.getFullYear(),
-                this.selectedMonth.getMonth(),
-                day + 1).getDay());
-      this.today = Math.floor((Date.now() - options.startDate) / (24*60*60*1000))
+          this.selectedMonth.getMonth(),
+          day + 1).getDay())
+      this.today = Math.floor((Date.now() - options.startDate) / (24 * 60 * 60 * 1000))
 
       let routesPromise = this.axios.get(`/routes?` + querystring.stringify(options))
         .then((response) => // only show public and wrs routes
-          response.data.filter((r) => _.intersection(["public","mandai"], r.tags).length > 0))
+          response.data.filter((r) => _.intersection(['public', 'mandai'], r.tags).length > 0))
         .then((routes) => {
           // Vue -- initialize the following properties so they become reactive
           routes.forEach((r) => {
@@ -264,7 +261,7 @@ export default {
        * if there are 30 days in a month, return a 30-element array,
        * with a trip at each position if there's a trip on that day
        */
-      function makeTripsByDay(trips) {
+      function makeTripsByDay (trips) {
         const tripsByDay = new Array(numDays)
 
         for (let trip of trips) {
@@ -276,9 +273,8 @@ export default {
           // cancelled trips
           tripsByDay[day] = (!currentEntry)
             ? trip : (currentEntry.isRunning && !trip.isRunning)
-            ? currentEntry : (trip.isRunning && !currentEntry.isRunning)
-            ? trip : trip
-
+              ? currentEntry : (trip.isRunning && !currentEntry.isRunning)
+                ? trip : trip
         }
         return tripsByDay
       }
@@ -296,28 +292,26 @@ export default {
        * The next C2 days of the month, the price is A2, and the capacity is B2.
        * And so on...
        */
-      function makePriceSummary(tripsByDay) {
+      function makePriceSummary (tripsByDay) {
         return _.reduce(
-            tripsByDay,
-            (acc, value, index, coll) => {
-              if (acc.length == 0 ||
+          tripsByDay,
+          (acc, value, index, coll) => {
+            if (acc.length == 0 ||
                   (value !== undefined &&
-                    ( acc[acc.length - 1].price !== value.price ||
+                    (acc[acc.length - 1].price !== value.price ||
                       acc[acc.length - 1].capacity !== value.capacity))) {
-
-                acc.push({
-                  price: value.price,
-                  capacity: value.capacity,
-                  count: 1
-                })
-              }
-              else {
-                acc[acc.length - 1].count++;
-              }
-              return acc;
-            },
-            [{price: undefined, capacity: undefined, count: 0}])
-            .filter(s => s.count)
+              acc.push({
+                price: value.price,
+                capacity: value.capacity,
+                count: 1
+              })
+            } else {
+              acc[acc.length - 1].count++
+            }
+            return acc
+          },
+          [{price: undefined, capacity: undefined, count: 0}])
+          .filter(s => s.count)
       }
 
       this.$latestPromise = routesPromise
@@ -330,17 +324,17 @@ export default {
 
         routes.forEach(r => {
           this.axios.get(`/routes/${r.id}?` + querystring.stringify(_.omit(options, ['transportCompanyId'])))
-          .then(response => {
-            const trips = response.data.trips
+            .then(response => {
+              const trips = response.data.trips
 
-            // Date-ify the trip dates
-            for (let trip of trips) {
-              trip.date = new Date(trip.date)
-            }
+              // Date-ify the trip dates
+              for (let trip of trips) {
+                trip.date = new Date(trip.date)
+              }
 
-            r.tripsByDay = makeTripsByDay(trips)
-            r.priceSummary = makePriceSummary(r.tripsByDay)
-          })
+              r.tripsByDay = makeTripsByDay(trips)
+              r.priceSummary = makePriceSummary(r.tripsByDay)
+            })
         })
 
         this.routes = routes

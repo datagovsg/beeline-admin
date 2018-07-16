@@ -61,7 +61,6 @@
   </div>
 </template>
 
-
 <script>
 import {mapGetters, mapActions, mapState} from 'vuex'
 import * as resources from '../../stores/resources'
@@ -72,7 +71,7 @@ const filters = require('../../filters')
 
 export default {
   props: ['route'],
-  data() {
+  data () {
     return {
       editRoute: null,
       bids: null
@@ -85,22 +84,22 @@ export default {
       if (!this.route) return
 
       return this.axios.get(`/crowdstart/routes/${this.route.id}/bids?` + querystring.stringify({
-          statuses: JSON.stringify(['bidded', 'void', 'failed', 'withdrawn']),
+        statuses: JSON.stringify(['bidded', 'void', 'failed', 'withdrawn'])
       }))
-      .then((resp) => {
-        let bids = resp.data
-        let now = parseInt(Date.now())
-        _.forEach(bids, (bid) => {
-          bid.chargeMessage = (bid.status === 'void') ? 'Charged successfully' : null;
-          bid.chargeError = bidChargeError(bid, now)
+        .then((resp) => {
+          let bids = resp.data
+          let now = parseInt(Date.now())
+          _.forEach(bids, (bid) => {
+            bid.chargeMessage = (bid.status === 'void') ? 'Charged successfully' : null
+            bid.chargeError = bidChargeError(bid, now)
+          })
+          return bids
         })
-        return bids
-      })
     },
     routeIsActivated () {
       if (!this.bids || !this.route) return false
 
-      let validBids = _.filter(this.bids, (bid) => {return bid.status === 'bidded'})
+      let validBids = _.filter(this.bids, (bid) => { return bid.status === 'bidded' })
       return (validBids.length >= this.route.notes.tier[0].pax)
     }
   },
@@ -131,15 +130,15 @@ export default {
           message: 'Are you sure you want to cancel this bid?'
         }
       })
-      .then((result) => {
-        if (result) {
-          return this.spinOnPromise(this.axios.delete(
-            `/crowdstart/routes/${this.route.id}/bids/${bid.id}`
-          )
-          .then(() => {this.$emit('requery')}))
-        }
-      })
-      .catch(this.showErrorModal)
+        .then((result) => {
+          if (result) {
+            return this.spinOnPromise(this.axios.delete(
+              `/crowdstart/routes/${this.route.id}/bids/${bid.id}`
+            )
+              .then(() => { this.$emit('requery') }))
+          }
+        })
+        .catch(this.showErrorModal)
     },
 
     enableTerminate () {
@@ -153,7 +152,7 @@ export default {
     terminate () {
       // add 'failed' to both route and bids
       let terminatePromise = this.axios.post(`/crowdstart/routes/${this.route.id}/expire`)
-        .then(() => {this.$emit('requery')})
+        .then(() => { this.$emit('requery') })
 
       this.spinOnPromise(terminatePromise)
         .catch(this.showErrorModal)
@@ -171,22 +170,22 @@ export default {
           message: 'Are you sure you want to convert the crowdstart?'
         }
       })
-      .then((result) => {
-        if (result) {
-          let convertPromise = this.axios.post(`/crowdstart/routes/${this.route.id}/activate`,
+        .then((result) => {
+          if (result) {
+            let convertPromise = this.axios.post(`/crowdstart/routes/${this.route.id}/activate`,
               {
                 price: this.route.notes.tier[0].price,
                 label: this.route.label
               }
             )
-            .then(() => {this.$emit('requery')})
-          return this.spinOnPromise(convertPromise)
-          .then(() => {
-            return this.chargeAllBidders()
-          })
-        }
-      })
-      .catch(this.showErrorModal)
+              .then(() => { this.$emit('requery') })
+            return this.spinOnPromise(convertPromise)
+              .then(() => {
+                return this.chargeAllBidders()
+              })
+          }
+        })
+        .catch(this.showErrorModal)
     },
 
     chargeAllBidders () {
@@ -198,25 +197,24 @@ export default {
           message: 'Do you want to charge all bidders now?'
         }
       })
-      .then((result) => {
-        if (result) {
-          this.spinOnPromise(
-            Promise.all(
-              this.bids
-                .filter((bid) => bid.status === 'bidded')
-                .map(this.charge)
+        .then((result) => {
+          if (result) {
+            this.spinOnPromise(
+              Promise.all(
+                this.bids
+                  .filter((bid) => bid.status === 'bidded')
+                  .map(this.charge)
+              )
+                .then(() => this.$emit('requery'))
             )
-            .then(() => this.$emit('requery'))
-          )
-        }
-      })
-
+          }
+        })
     },
 
     charge (bid) {
       // manually charge individual bid through stripe
       let chargePromise = this.axios.post(`/crowdstart/routes/${this.route.id}/bids/${bid.id}/convert`)
-        .then(() => {this.$emit('requery')})
+        .then(() => { this.$emit('requery') })
       return this.spinOnPromise(chargePromise)
         .catch(this.showErrorModal)
     }
@@ -226,20 +224,20 @@ export default {
 
 // helper function to verify the route is not processed AND has 'crowdstart' tag AND is expired
 const routeIsEligible = (route) => {
-  return route.tags.indexOf('success') == -1 && route.tags.indexOf('failed') == -1
-      && (route.tags.includes('crowdstart') || route.tags.includes('crowdstart-private'))
-      && _.get(route, 'notes.crowdstartExpiry') && new Date(route.notes.crowdstartExpiry) < Date.now()
+  return route.tags.indexOf('success') == -1 && route.tags.indexOf('failed') == -1 &&
+      (route.tags.includes('crowdstart') || route.tags.includes('crowdstart-private')) &&
+      _.get(route, 'notes.crowdstartExpiry') && new Date(route.notes.crowdstartExpiry) < Date.now()
 }
 
-function bidChargeError(bid, now) {
+function bidChargeError (bid, now) {
   // bids with notes and timestamps with charge error
   if (bid.status === 'bidded' && bid.notes) {
     let timestamps = _(bid.notes)
-    .keys()
-    .filter((key) => {
-      return parseInt(key) && (parseInt(key) <= now)
-    })
-    .value()
+      .keys()
+      .filter((key) => {
+        return parseInt(key) && (parseInt(key) <= now)
+      })
+      .value()
 
     if (timestamps) {
       let latestTimestamp = _.maxBy(timestamps, (timestamp) => parseInt(timestamp))

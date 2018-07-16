@@ -19,16 +19,16 @@ export default {
   props: ['pings'],
   computed: {
     f: () => filters,
-    sortedPings() {
+    sortedPings () {
       return this.pings && _.orderBy(this.pings, 'time')
     },
-    path() {
+    path () {
       if (!this.sortedPings) return null
       return this.sortedPings.map(p => filters.pointToLatLng(p.coordinates))
     },
-    pingSamples() {
+    pingSamples () {
       if (!this.sortedPings) return null
-      return this.sortedPings.filter((v,i) => i % 3 === 0)
+      return this.sortedPings.filter((v, i) => i % 3 === 0)
     },
     routePointIcon () {
       return {

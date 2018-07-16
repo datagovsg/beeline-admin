@@ -5,7 +5,7 @@ export const DateFormatViewer = {
   props: {
     value: {},
     format: {},
-    utc: {default: false},
+    utc: {default: false}
   },
   render (h) {
     // FIXME: why doesn't Vue expose the text node constructor?
@@ -51,7 +51,7 @@ export const CompanyIdViewer = { // Stub
     this.fetch(['companies'])
   },
   computed: {
-    ...mapGetters('shared', ['companiesById']),
+    ...mapGetters('shared', ['companiesById'])
   },
   methods: {
     ...mapActions('shared', ['fetch'])
