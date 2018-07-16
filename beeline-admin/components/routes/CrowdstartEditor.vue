@@ -88,7 +88,6 @@
 
 <script>
 import {mapGetters, mapActions} from 'vuex'
-import querystring from 'querystring'
 import assert from 'assert'
 import _ from 'lodash'
 const filters = require('../../filters')
@@ -109,15 +108,7 @@ export default {
   },
   computed: {
     ...mapGetters(['axios']),
-    f: () => filters,
-    bidsPromise () {
-      if (!this.route) return
-
-      return this.axios.get(`/crowdstart/routes/${this.route.id}/bids?` + querystring.stringify({
-        statuses: JSON.stringify(['bidded', 'void', 'failed', 'withdrawn'])
-      }))
-        .then(resp => resp.data)
-    }
+    f: () => filters
   },
   watch: {
     route: {
