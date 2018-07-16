@@ -1,7 +1,5 @@
 import IssueRouteCredits from '@/modals/IssueRouteCredits.vue'
-import sinon from 'sinon'
-import { mount } from '@vue/test-utils'
-import { delay, mockAjax, testStore, mountTestPage } from '../util'
+import { delay, mockAjax, mountTestPage } from '../util'
 
 describe('IssueRouteCredits.vue', () => {
   let issueRouteCreditsModal = null

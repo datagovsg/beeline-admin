@@ -14,8 +14,6 @@
   </div>
 </template>
 <script>
-import _ from 'lodash'
-
 import ModalHelper from '@/components/ModalHelper'
 import LoadingSpinner from '@/components/LoadingSpinner.vue'
 

@@ -1,8 +1,5 @@
 import AdminPage from '@/pages/admins.vue'
-import { mount } from '@vue/test-utils'
-import { delay, mockAjax, testStore, mountTestPage } from '../util'
-import axios from 'axios'
-import sinon from 'sinon'
+import { delay, mockAjax, mountTestPage } from '../util'
 
 describe('admins.vue', () => {
   let adminPage = null

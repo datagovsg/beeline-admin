@@ -1,6 +1,5 @@
 import ExpireRouteCredits from '@/modals/ExpireRouteCredits.vue'
-import { mount } from '@vue/test-utils'
-import { delay, mockAjax, testStore, mountTestPage } from '../util'
+import { delay, mockAjax, mountTestPage } from '../util'
 
 describe('ExpireRouteCredits.vue', () => {
   let expireRouteCreditsModal = null
@@ -25,8 +24,8 @@ describe('ExpireRouteCredits.vue', () => {
         {
           sync: false,
           listeners: {
-            resolve: result => expireRouteCreditsResult = result,
-            reject: err => expireRouteCreditsError = true
+            resolve: result => { expireRouteCreditsResult = result },
+            reject: err => { console.log(err); expireRouteCreditsError = true }
           },
           propsData: {
             userId: 4567,

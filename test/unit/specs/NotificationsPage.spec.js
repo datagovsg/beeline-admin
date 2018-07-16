@@ -1,12 +1,10 @@
 import NotificationsPage from '@/pages/notifications.vue'
-import { mount } from '@vue/test-utils'
-import { delay, mockAjax, testStore, mountTestPage } from '../util'
+import { delay, mockAjax, mountTestPage } from '../util'
 import _ from 'lodash'
 
 describe('notifications.vue', () => {
   let notificationsPage = null
   let routeEventSubscriptions = null
-  let otherEventSubscriptions = null
 
   const INITIAL_EVENT_SUBSCRIPTIONS = [
     {
@@ -112,7 +110,6 @@ describe('notifications.vue', () => {
       })
 
     routeEventSubscriptions = notificationsPage.find('.route-event-subscriptions')
-    otherEventSubscriptions = notificationsPage.find('.other-event-subscriptions')
   })
 
   it('should delete all route events on delete', async () => {

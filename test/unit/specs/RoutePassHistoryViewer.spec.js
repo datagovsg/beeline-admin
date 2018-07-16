@@ -1,6 +1,5 @@
 import RoutePassHistory from '@/components/users/RoutePassHistory.vue'
-import { mount } from '@vue/test-utils'
-import { delay, mockAjax, testStore, mountTestPage } from '../util'
+import { delay, mockAjax, mountTestPage } from '../util'
 
 describe('RoutePassHistory.vue', () => {
   let routePassHistory = null

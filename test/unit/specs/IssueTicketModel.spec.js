@@ -1,7 +1,7 @@
 import IssueTicket from '@/modals/IssueTicket.vue'
 import sinon from 'sinon'
 import { mount } from '@vue/test-utils'
-import { delay, mockAjax, testStore, mountTestPage } from '../util'
+import { delay, mockAjax, testStore } from '../util'
 
 describe('IssueTicket.vue', () => {
   let issueTicketModal = null
@@ -231,7 +231,9 @@ describe('IssueTicket.vue', () => {
       })
     })
 
-    issueTicketPromise.then(result => issueTicketResult = result)
+    issueTicketPromise.then(result => {
+      issueTicketResult = result
+    })
 
     issueTicketModal = await modalLoaded
   }

@@ -1,6 +1,5 @@
 import AssetsPage from '@/pages/assets.vue'
-import { delay, mockAjax, testStore, mountTestPage } from '../util'
-import sinon from 'sinon'
+import { delay, mockAjax, mountTestPage } from '../util'
 
 describe('assets.vue', () => {
   let assetsPage = null

@@ -1,6 +1,5 @@
 import MonthPicker from '@/components/MonthPicker.vue'
-import { mount } from '@vue/test-utils'
-import { delay, testStore, mountTestPage } from '../util'
+import { delay, mountTestPage } from '../util'
 
 describe('MonthPicker', () => {
   let monthPicker = null

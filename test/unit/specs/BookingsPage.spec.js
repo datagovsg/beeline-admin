@@ -1,8 +1,7 @@
 import BookingsPage from '@/pages/bookings.vue'
 import sinon from 'sinon'
 import * as redirect from '@/shared/redirect'
-import { mount } from '@vue/test-utils'
-import { delay, mockAjax, testStore, mountTestPage } from '../util'
+import { delay, mockAjax, mountTestPage } from '../util'
 import querystring from 'querystring'
 import _ from 'lodash'
 import FIXTURE_DATA from '../../fixtures/booking-data.json'
@@ -22,7 +21,7 @@ describe('bookings.vue', () => {
     })
     bookingsPage = await mockAjax({
       'GET /routes': [200, []],
-      ['GET /custom/wrs/report?' + querystring.stringify({
+      ['GET /custom/wrs/report?' + querystring.stringify({ // eslint-disable-line
         transportCompanyId: 33,
         tripStartDate: Date.UTC(2018, 5, 1),
         tripEndDate: Date.UTC(2018, 6, 1)

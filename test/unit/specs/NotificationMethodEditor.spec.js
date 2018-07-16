@@ -1,7 +1,6 @@
-import { mount } from '@vue/test-utils'
 import NotificationMethodEditor from '@/components/notifications/NotificationMethodEditor.vue'
 import _ from 'lodash'
-import { delay, mockAjax, testStore, mountTestPage } from '../util'
+import { delay, mountTestPage } from '../util'
 
 describe('NotificationMethodEditor.vue', () => {
   let editor = null
