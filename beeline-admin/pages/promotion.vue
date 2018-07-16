@@ -173,13 +173,10 @@ export default {
     ...mapGetters(['axios']),
     f: () => filters,
 
-    promotionPromise () {
+    promotionQuery () {
       if (!this.promoId) return
 
-      return this.axios.get(`/companies/${this.companyId}/promotions/${this.promoId}`)
-        .then((response) => {
-          return this.makeEditable(response.data)
-        })
+      return `/companies/${this.companyId}/promotions/${this.promoId}`
     },
 
     companyQualifyingCriterion () {
@@ -227,11 +224,15 @@ export default {
     }
   },
   watch: {
-    promotionPromise: {
+    promotionQuery: {
       immediate: true,
       handler (p) {
         if (!p) return
-        p
+
+        this.axios.get(p)
+          .then((response) => {
+            return this.makeEditable(response.data)
+          })
           .then((q) => {
             this.promotion = q
             // deep clone the promotion object for cancel purpose
