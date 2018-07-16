@@ -91,7 +91,12 @@ export default {
     allRouteIds () {
       return this.filteredRoutes.map(r => r.id)
     },
-    routePromise () {
+    routesById () {
+      return _.keyBy(this.routes, 'id')
+    }
+  },
+  asyncComputed: {
+    routes () {
       if (!this.startDate && !this.endDate) {
         return this.promises.currentRoutes &&
           this.promises.currentRoutes.then(() => this.currentRoutes)
@@ -104,24 +109,6 @@ export default {
         if (this.companyId) query.transportCompanyId = this.companyId
 
         return this.getRoutes(query)
-      }
-    },
-    routesById () {
-      return _.keyBy(this.routes, 'id')
-    }
-  },
-  watch: {
-    routePromise: {
-      immediate: true,
-      handler (p) {
-        if (p) {
-          this.$latestPromise = p
-          p.then((d) => {
-            if (this.$latestPromise === p) {
-              this.routes = d
-            }
-          })
-        }
       }
     }
   },
