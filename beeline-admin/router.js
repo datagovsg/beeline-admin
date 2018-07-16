@@ -9,6 +9,7 @@ import CompaniesPage from '@/pages/companies.vue'
 import ContactListPage from '@/pages/contact-list.vue'
 import ContactListsPage from '@/pages/contact-lists.vue'
 import CrowdstartSummaryPage from '@/pages/crowdstart-summary.vue'
+import NotFoundPage from '@/pages/not-found.vue'
 import RoutesPage from '@/pages/routes.vue'
 import RoutePassesPage from '@/pages/route-passes.vue'
 import RoutePage from '@/pages/route.vue'
@@ -157,8 +158,12 @@ export default function () {
       props: addQueryProps()
     },
     {
+      path: '/',
+      redirect: '/c/null/bookings'
+    },
+    {
       path: '*',
-      component: BookingsPage
+      component: NotFoundPage
     }
   ]
 
