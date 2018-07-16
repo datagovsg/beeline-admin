@@ -128,8 +128,6 @@ export default {
       selectedStop: null,
       selectedPing: null,
       pingParameters: null,
-      pingsByDriverId: null,
-      routePath: null,
       timeWindowParams: null,
       month: new Date()
     }
@@ -141,19 +139,6 @@ export default {
     ...mapState(['axios']),
     ...mapState('shared', ['vehicles']),
     f: () => filters,
-    routePromise () {
-      if (!this.route) return
-
-      return this.getRoute({
-        id: this.route.id,
-        options: {includeTrips: true}
-      })
-    },
-    pingsPromise () {
-      if (!this.pingParameters) return
-      const { tripId, limit, timeframe: [ from, to ] } = this.pingParameters
-      return this.getPings({ tripId, options: { limit, from, to } })
-    },
     selectedPingDriverVehicle () {
       if (!this.vehicles || !this.selectedPing) return
 
@@ -165,20 +150,25 @@ export default {
       return this.routeWithTrips
         ? _.orderBy(this.routeWithTrips.trips, ['date'], ['desc']) : []
     },
-    routePathPromise () {
-      const promise = this.routePromise &&
-        this.routePromise.then((route) => {
-          const path = route.path
 
-          return typeof path === 'string'
-            ? google.maps.geometry.encoding.decodePath(path)
-            : path
-        })
-      return promise
+    routePath () {
+      const path = this.routeWithTrips && this.routeWithTrips.path
+
+      return typeof path === 'string'
+        ? google.maps.geometry.encoding.decodePath(path)
+        : path
     },
 
     updatedRoute () {
       return this.routeWithTrips || this.route
+    }
+  },
+  asyncComputed: {
+    pingsByDriverId () {
+      if (!this.pingParameters) return
+      const { tripId, limit, timeframe: [ from, to ] } = this.pingParameters
+      return this.getPings({ tripId, options: { limit, from, to } })
+        .then((pings) => _.groupBy(pings, 'driverId'))
     }
   },
   watch: {
@@ -190,32 +180,27 @@ export default {
         }
       }
     },
-    routePromise: {
+
+    route: {
       immediate: true,
-      handler (p) {
-        if (p) {
-          p.then(route => {
-            this.routeWithTrips = route
-            if (!this.selectedTrip && this.date) {
-              this.selectedTrip = route.trips.find(t => t.date.getTime() === this.date.getTime())
-              this.month = this.date
-            }
-          })
-        }
+      handler (route) {
+        if (!route) return
+
+        const promise = this.$routePromise = this.getRoute({
+          id: route.id,
+          options: {includeTrips: true}
+        }).then(routeWithTrips => {
+          if (promise !== this.$routePromise) return
+
+          this.routeWithTrips = routeWithTrips
+          if (!this.selectedTrip && this.date) {
+            this.selectedTrip = routeWithTrips.trips.find(t => t.date.getTime() === this.date.getTime())
+            this.month = this.date
+          }
+        })
       }
     },
-    routePathPromise: {
-      immediate: true,
-      handler (p) {
-        if (p) p.then(path => { this.routePath = path })
-      }
-    },
-    pingsPromise: {
-      immediate: true,
-      handler (p) {
-        if (p) p.then((pings) => { this.pingsByDriverId = _.groupBy(pings, 'driverId') })
-      }
-    },
+
     selectedTrip: {
       immediate: false,
       handler (selectedTrip) {
