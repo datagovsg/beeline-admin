@@ -80,21 +80,12 @@ export default {
   computed: {
     ...mapGetters(['axios']),
     f: () => filters,
-    bidsPromise () {
-      if (!this.route) return
-
-      return this.axios.get(`/crowdstart/routes/${this.route.id}/bids?` + querystring.stringify({
-        statuses: JSON.stringify(['bidded', 'void', 'failed', 'withdrawn'])
-      }))
-        .then((resp) => {
-          let bids = resp.data
-          let now = parseInt(Date.now())
-          _.forEach(bids, (bid) => {
-            bid.chargeMessage = (bid.status === 'void') ? 'Charged successfully' : null
-            bid.chargeError = bidChargeError(bid, now)
-          })
-          return bids
+    bidsURL () {
+      if (this.route) {
+        return `/crowdstart/routes/${this.route.id}/bids?` + querystring.stringify({
+          statuses: JSON.stringify(['bidded', 'void', 'failed', 'withdrawn'])
         })
+      }
     },
     routeIsActivated () {
       if (!this.bids || !this.route) return false
@@ -104,16 +95,24 @@ export default {
     }
   },
   watch: {
-    bidsPromise: {
+    bidsURL: {
       immediate: true,
-      handler (promise) {
-        if (promise) {
-          this.$store.dispatch(
-            'spinner/spinOnPromise',
-            promise.then(bids => {
+      handler (url) {
+        if (url) {
+          const promise = this.$bidsPromise = this.spinOnPromise(this.axios.get(url))
+            .then((resp) => {
+              if (promise !== this.$bidsPromise) {
+                return
+              }
+
+              let bids = resp.data
+              let now = Date.now()
+              _.forEach(bids, (bid) => {
+                bid.chargeMessage = (bid.status === 'void') ? 'Charged successfully' : null
+                bid.chargeError = bidChargeError(bid, now)
+              })
               this.bids = bids
             })
-          )
         }
       }
     }
