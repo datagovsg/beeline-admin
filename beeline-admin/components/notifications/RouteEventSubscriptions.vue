@@ -242,23 +242,21 @@ export default {
         .groupBy('event')
         // merge the array-valued params
         .mapValues(vs => {
-          return _.reduce(vs, (acc, v) => {
-            if (acc == null) {
-              return v
-            } else {
-              // merge array-valued params
-              var params = _.defaults(acc.params, v.params)
-
-              for (let key in acc.params) {
-                if (acc.params[key] instanceof Array &&
-                      v.params[key] instanceof Array) {
-                  acc.params[key] = acc.params[key].concat(v.params[key])
+          const mergedParams = vs
+            .map(v => v.params)
+            .reduce((acc, params) => {
+              for (let key in params) {
+                if (!acc[key]) {
+                  acc[key] = params[key]
+                } else if (acc[key] instanceof Array &&
+                            params[key] instanceof Array) {
+                  acc[key] = acc[key].concat(params[key])
                 }
               }
-
               return acc
-            }
-          }, null)
+            }, {})
+
+          return {...vs[0], params: mergedParams}
         })
         .values()
         .value()
