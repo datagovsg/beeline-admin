@@ -1,12 +1,11 @@
 <script>
-import SchemaField from './SchemaField'
 import * as SchemaViewers from './SchemaViewers'
 import {fromPairs, sortBy, keyBy} from 'lodash'
 import titleCase from 'title-case'
 
 const DefaultViewer = {
   props: ['value'],
-  render(h) {
+  render (h) {
     return this._v(this.value) // FIXME: Vue's text-node constructor?
   }
 }
@@ -32,9 +31,9 @@ export default {
               this.componentFor(key),
               {props: {
                 ...this.propsFor(key),
-                value: this.value[key],
+                value: this.value[key]
               }}
-            ),
+            )
           ]
         )
       )
@@ -43,15 +42,15 @@ export default {
 
   props: {
     'schema': {
-      default: () => [],
+      default: () => []
     },
     'value': {},
-    'defaultViewer': DefaultViewer,
+    'defaultViewer': DefaultViewer
   },
 
   components: {
     ...SchemaViewers,
-    DefaultViewer,
+    DefaultViewer
   },
 
   computed: {

@@ -67,7 +67,7 @@ export default {
     },
     format: {
       type: String,
-      default: 'mmmm yyyy',
+      default: 'mmmm yyyy'
     },
     offset: {
       default: currentOffset
@@ -75,7 +75,7 @@ export default {
   },
   created () {
     this.clickOut = () => {
-      this.showPopup = false;
+      this.showPopup = false
     }
     document.body.addEventListener('click', this.clickOut)
   },
@@ -86,7 +86,7 @@ export default {
     return {
       buffer: '',
       showPopup: false,
-      clickOut: null,
+      clickOut: null
     }
   },
   watch: {
@@ -101,10 +101,10 @@ export default {
     }
   },
   components: {
-    MonthPicker,
+    MonthPicker
   },
   computed: {
-    dateString() {
+    dateString () {
       return dateformat(this.value, this.format)
     }
   },

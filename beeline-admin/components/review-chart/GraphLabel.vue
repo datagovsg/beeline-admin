@@ -20,23 +20,23 @@ export default {
     'x', 'y',
     'axisX1', 'axisY1',
     'axisX2', 'axisY2',
-    'textAnchor',
+    'textAnchor'
   ],
 
   computed: {
-    rx() {
+    rx () {
       return this.graphTransforms.xToPixel(this.x)
     },
-    ry() {
-      if (this.axisX2 != undefined) {
-        return 0 - this.y;
+    ry () {
+      if (this.axisX2 !== undefined) {
+        return 0 - this.y
       }
-      return this.graphTransforms.yToPixel(this.y);
-    },
+      return this.graphTransforms.yToPixel(this.y)
+    }
   },
 
   inject: {
-    graphTransforms: {},
-  },
+    graphTransforms: {}
+  }
 }
 </script>

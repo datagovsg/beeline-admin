@@ -51,14 +51,10 @@
 </style>
 
 <script>
-import {mapGetters, mapActions, mapState} from 'vuex'
-import * as resources from '../stores/resources'
+import {mapActions, mapState} from 'vuex'
 import _ from 'lodash'
-import querystring from 'querystring'
 
 import Select2 from '@/components/Select2.vue'
-
-const filters = require('../filters')
 
 export default {
   props: ['value', 'multiple', 'companyId', 'startDate', 'endDate', 'filter'],
@@ -66,7 +62,7 @@ export default {
   data () {
     return {
       routes: null,
-      searchQuery: '',
+      searchQuery: ''
     }
   },
   created () {
@@ -76,8 +72,8 @@ export default {
     ...mapState('shared', ['currentRoutes', 'promises']),
     filteredRoutes () {
       return (this.routes || [])
-          .filter(f => this.filter ? this.filter(f) : true)
-          .filter(r => !this.companyId ||
+        .filter(f => this.filter ? this.filter(f) : true)
+        .filter(r => !this.companyId ||
             r.transportCompanyId === Number(this.companyId))
     },
     sortedFilteredRoutes () {
@@ -95,13 +91,18 @@ export default {
     allRouteIds () {
       return this.filteredRoutes.map(r => r.id)
     },
-    routePromise () {
+    routesById () {
+      return _.keyBy(this.routes, 'id')
+    }
+  },
+  asyncComputed: {
+    routes () {
       if (!this.startDate && !this.endDate) {
         return this.promises.currentRoutes &&
           this.promises.currentRoutes.then(() => this.currentRoutes)
       } else {
         const query = {
-          includePath: false,
+          includePath: false
         }
         if (this.startDate) query.startDate = this.startDate.getTime()
         if (this.endDate) query.endDate = this.endDate.getTime()
@@ -109,30 +110,12 @@ export default {
 
         return this.getRoutes(query)
       }
-    },
-    routesById () {
-      return _.keyBy(this.routes, 'id')
-    }
-  },
-  watch: {
-    routePromise: {
-      immediate: true,
-      handler (p) {
-        if (p) {
-          this.$latestPromise = p
-          p.then((d) => {
-            if (this.$latestPromise === p) {
-              this.routes = d
-            }
-          })
-        }
-      }
     }
   },
   methods: {
     ...mapActions('shared', ['fetch']),
     ...mapActions('resources', ['getRoutes']),
-    emitValue(value) {
+    emitValue (value) {
       if (this.multiple) {
         if (value === null) { /* delete */
           const popped = this.value.slice(0, this.value.length - 1)
@@ -165,12 +148,12 @@ export default {
     updateSearch (query) {
       this.searchQuery = query
     },
-    isSelected(value, rid) {
+    isSelected (value, rid) {
       if (this.multiple) {
         // FIXME slow
-        return value.findIndex(r => r == rid) !== -1
+        return value.findIndex(r => r === rid) !== -1
       } else {
-        return value == rid
+        return value === rid
       }
     }
   }

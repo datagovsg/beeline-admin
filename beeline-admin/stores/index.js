@@ -1,4 +1,3 @@
-import Vuex from 'vuex'
 import axios from 'axios'
 import jwtDecode from 'jwt-decode'
 import _ from 'lodash'
@@ -14,11 +13,11 @@ export default {
     modals: require('./modals.js'),
     auth: require('./auth.js'),
     dropdown: require('./dropdown.js'),
-    resources: require('./resources.js').storeModule,
+    resources: require('./resources.js').storeModule
   },
   state: () => ({
     idToken: null,
-    companyId: null,
+    companyId: null
   }),
   getters: {
     axios: (state, getters, rootState) => {
@@ -45,10 +44,10 @@ export default {
     }
   },
   mutations: {
-    setCompanyId(state, companyId) {
+    setCompanyId (state, companyId) {
       state.companyId = companyId
-    },
+    }
   },
   actions: {
-  },
+  }
 }

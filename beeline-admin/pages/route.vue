@@ -16,7 +16,7 @@
     <ul class="nav nav-tabs">
       <li v-for="(tab, index) in tabs" :class="{
         active: activeTab === index
-        }">
+        }" :key="index">
         <a :href="goToTab(tab)">
           {{tab.description}}
         </a>
@@ -30,13 +30,12 @@
 </template>
 
 <script>
-import {mapGetters, mapActions, mapState} from 'vuex'
-import * as resources from '../stores/resources'
+import {mapActions} from 'vuex'
 const filters = require('../filters')
 
 export default {
   props: ['companyId', 'routeId', 'action'],
-  data() {
+  data () {
     const tabs = [
       {
         description: 'Edit Route Description',
@@ -57,20 +56,20 @@ export default {
         description: 'View Bidders',
         component: 'CrowdstartDisplay',
         link: 'bidders'
-      },
+      }
     ]
 
     return {
       tabs,
       route: null,
-      routePromise: null,
+      routePromise: null
     }
   },
   watch: {
     routeId: {
       immediate: true,
       handler (h) {
-       this.spinOnPromise(this.requery())
+        this.spinOnPromise(this.requery())
       }
     },
     routePromise: {
@@ -84,7 +83,7 @@ export default {
           })
         }
       }
-    },
+    }
   },
   components: {
     RouteDisplay: require('../components/routes/RouteDisplay.vue').default,
@@ -94,7 +93,7 @@ export default {
     CrowdstartDisplay: require('../components/routes/CrowdstartDisplay.vue').default
   },
   computed: {
-    f() { return filters },
+    f () { return filters },
     activeTab () {
       return this.tabs.findIndex(tab => tab.link === this.action)
     }
@@ -103,25 +102,26 @@ export default {
     ...mapActions('resources', ['getRoute', 'saveRoute', 'createTripForDate']),
     ...mapActions('spinner', ['spinOnPromise']),
 
-    goToTab(tab) {
+    goToTab (tab) {
       return `#/c/${this.companyId}/trips/${this.routeId}/${tab.link}`
     },
 
     requery () {
       if (!this.routeId) {
-        return this.routePromise = Promise.resolve(null)
+        this.routePromise = Promise.resolve(null)
       } else {
-        return this.routePromise = this.getRoute({
+        this.routePromise = this.getRoute({
           id: this.routeId,
           options: {
             includeDates: true,
             includeFeatures: true,
             includeTrips: true,
             startDate: filters.date(Date.now() - 30 * 24 * 3600 * 1000, 'dd-mmm-yyyy'),
-            endDate: filters.date(Date.now() + 180 * 24 * 3600 * 1000, 'dd-mmm-yyyy'),
+            endDate: filters.date(Date.now() + 180 * 24 * 3600 * 1000, 'dd-mmm-yyyy')
           }
         })
       }
+      return this.routePromise
     }
   }
 }

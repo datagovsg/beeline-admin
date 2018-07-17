@@ -58,7 +58,7 @@ export default {
   data () {
     return {
       moreToLoad: true,
-      routeCreditHistory: [],
+      routeCreditHistory: []
     }
   },
 
@@ -84,30 +84,30 @@ export default {
       const index = this.$promises.length
       const promise = this.$promises[index] =
         (index ? this.$promises[index - 1] : Promise.resolve([]))
-        .then(async (historySoFar) => {
-          if (promise !== this.$promises[index]) return // superseded
+          .then(async (historySoFar) => {
+            if (promise !== this.$promises[index]) return // superseded
 
-          const lastIdQuery = historySoFar.length === 0 ?
-            '' : `?lastId=${historySoFar[historySoFar.length - 1].id}`
+            const lastIdQuery = historySoFar.length === 0
+              ? '' : `?lastId=${historySoFar[historySoFar.length - 1].id}`
 
-          const historyResponse = await this.axios.get(`${this.baseUrl}${lastIdQuery}`)
+            const historyResponse = await this.axios.get(`${this.baseUrl}${lastIdQuery}`)
 
-          if (promise !== this.$promises[index]) return // superseded
+            if (promise !== this.$promises[index]) return // superseded
 
-          const concatenated = this.decorateWithBalance(historySoFar, historyResponse.data)
+            const concatenated = this.decorateWithBalance(historySoFar, historyResponse.data)
 
-          if (historyResponse.data.length < 20) {
-            this.moreToLoad = false
-          }
-          this.routeCreditHistory = concatenated.slice().reverse();
-          return concatenated
-        })
-        .catch(this.showErrorModal)
+            if (historyResponse.data.length < 20) {
+              this.moreToLoad = false
+            }
+            this.routeCreditHistory = concatenated.slice().reverse()
+            return concatenated
+          })
+          .catch(this.showErrorModal)
     },
 
     decorateWithBalance (lastChunk, nextChunk) {
-      let lastBalance = lastChunk.length === 0 ?
-        parseFloat(this.finalBalance) : lastChunk[lastChunk.length - 1]._balanceBefore
+      let lastBalance = lastChunk.length === 0
+        ? parseFloat(this.finalBalance) : lastChunk[lastChunk.length - 1]._balanceBefore
 
       for (let item of nextChunk) {
         const nextBalance = lastBalance + (item.debit < 0 ? -1 : 1)

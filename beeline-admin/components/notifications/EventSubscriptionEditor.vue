@@ -67,9 +67,6 @@
 </template>
 
 <script>
-import _ from 'lodash';
-import leftPad from 'left-pad';
-
 import RouteSelector from '@/components/RouteSelector.vue'
 
 export default {
@@ -83,30 +80,24 @@ export default {
         noPingTimeOptions: [
           [5, '5 minutes before trip'],
           [15, '15 minutes before trip'],
-          [25, '25 minutes before trip'],
-        ],
-
-        noPingTimeOptions: [
-          [5, '5 minutes before trip'],
-          [15, '15 minutes before trip'],
-          [25, '25 minutes before trip'],
+          [25, '25 minutes before trip']
         ],
 
         urgentBookingTimeOptions: [
           [60000 * 5, '5 minutes before trip'],
           [60000 * 10, '10 minutes before trip'],
           [60000 * 15, '15 minutes before trip'],
-          [60000 * 30, '30 minutes before trip'],
+          [60000 * 30, '30 minutes before trip']
         ],
 
         lateArrivalTimeOptions: [
           [60000 * 5, 'more than 5 mins late'],
           [60000 * 10, 'more than 10 mins late'],
-          [60000 * 15, 'more than 15 mins late'],
+          [60000 * 15, 'more than 15 mins late']
         ],
 
         lateETATimeOptions: [
-          [60000 * 10, 'more than 10 mins late'],
+          [60000 * 10, 'more than 10 mins late']
         ]
       }
     },
@@ -116,7 +107,7 @@ export default {
         noPings: { transportCompanyIds: [this.companyId], ignoreIfEmpty: true },
         lateArrival: { transportCompanyIds: [this.companyId], ignoreIfEmpty: true },
         lateETA: { transportCompanyIds: [this.companyId], ignoreIfEmpty: true },
-        tripCancelled: { transportCompanyIds: [this.companyId], ignoreIfEmpty: true },
+        tripCancelled: { transportCompanyIds: [this.companyId], ignoreIfEmpty: true }
       }
     }
   },
@@ -134,14 +125,14 @@ export default {
 
     value (v) {
       this.dataCache[this.type] = {...v} // Clone
-    },
+    }
   },
 
   data () {
     return {
       options: {
         setRouteIds: false,
-        setTransportCompanyIds: false,
+        setTransportCompanyIds: false
       },
 
       // The event definitions strictly don't allow unknown fields

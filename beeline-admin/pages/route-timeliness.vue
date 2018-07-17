@@ -1,7 +1,5 @@
 <template>
   <div class="container-fluid withnav route-passes">
-    
-    
 
     <div class="row" v-if="!companyId">
       Please select a company
@@ -97,7 +95,6 @@
             Loading service data...
           </div>
 
-
           <template v-if="charts.trips">
             <ReviewCharts v-if="charts.trips.length > 0" :trips="charts.trips" />
             <span v-else>There was no data found for this period</span>
@@ -111,9 +108,7 @@
 <script>
 import querystring from 'querystring'
 import {mapGetters, mapActions, mapState} from 'vuex'
-import _ from 'lodash'
 import download from 'downloadjs'
-import * as resources from '../stores/resources'
 import filters from '../filters'
 
 import RouteSelector from '../components/RouteSelector.vue'
@@ -126,16 +121,16 @@ export default {
     return {
       charts: {
         routeId: null,
-        trips: null,
+        trips: null
       },
       filter: {
         dates: [],
         selectedMonth: new Date(),
         routeIds: [],
-        routes: [], // purely for display purposes
+        routes: [] // purely for display purposes
       },
       publicHolidaysPromise: this.fetch('publicHolidays'),
-      progressText: null,
+      progressText: null
     }
   },
   components: { ReviewCharts, RouteSelector, SpanSelect },
@@ -177,7 +172,7 @@ export default {
       return this.publicHolidays &&
         this.publicHolidays.map(ph => ({
           date: ph.date,
-          classes: ['public-holidya'],
+          classes: ['public-holidya']
         }))
     },
 
@@ -232,7 +227,7 @@ export default {
       const qs = querystring.stringify({ from, to, format: 'csv' })
       let payloads = []
 
-      const noHeaders = csvText => csvText.substring(csvText.indexOf("\n") + 1)
+      const noHeaders = csvText => csvText.substring(csvText.indexOf('\n') + 1)
       try {
         for (let i = 0; i < routeIds.length; ++i) {
           const routeId = routeIds[i]
@@ -240,8 +235,8 @@ export default {
           const url = `${process.env.TRACKING_URL}/routes/${routeId}/performance?${qs}`
           const response = await this.axios.get(url)
           const payload = payloads.length > 0
-            ? noHeaders(response.data + "\n")
-            : response.data + "\n"
+            ? noHeaders(response.data + '\n')
+            : response.data + '\n'
           payloads.push(payload)
         }
         const blob = new Blob(payloads, { type: 'text/csv' })
@@ -256,7 +251,7 @@ export default {
       const { routeIds, from, to } = this.query
       let payloads = []
 
-      const noHeaders = csvText => csvText.substring(csvText.indexOf("\n") + 1)
+      const noHeaders = csvText => csvText.substring(csvText.indexOf('\n') + 1)
       try {
         for (let i = 0; i < routeIds.length; ++i) {
           const routeId = routeIds[i]
@@ -270,8 +265,8 @@ export default {
             const url = `${process.env.TRACKING_URL}/routes/${routeId}/events?${qs}`
             const response = await this.axios.get(url)
             const payload = payloads.length > 0
-              ? noHeaders(response.data + "\n")
-              : response.data + "\n"
+              ? noHeaders(response.data + '\n')
+              : response.data + '\n'
             payloads.push(payload)
           }
         }
@@ -291,33 +286,33 @@ export default {
 
       const promise =
         this.$queryPromise =
-        this.axios.get(`${process.env.TRACKING_URL}/routes/${routeId}/performance?`
-          + querystring.stringify(rest))
-        .then((response) => {
-          if (promise !== this.$queryPromise) return // superseded
+        this.axios.get(`${process.env.TRACKING_URL}/routes/${routeId}/performance?` +
+          querystring.stringify(rest))
+          .then((response) => {
+            if (promise !== this.$queryPromise) return // superseded
 
-          const trips = response.data;
+            const trips = response.data
 
-          trips.forEach(tr => {
-            tr.date = new Date(tr.date);
-            tr.stops.forEach(ts => {
-              ts.date = tr.date;
-              ts.expectedTime = new Date(ts.expectedTime);
-              if (ts.actualTime) {
-                ts.actualTime = new Date(ts.actualTime)
-              }
+            trips.forEach(tr => {
+              tr.date = new Date(tr.date)
+              tr.stops.forEach(ts => {
+                ts.date = tr.date
+                ts.expectedTime = new Date(ts.expectedTime)
+                if (ts.actualTime) {
+                  ts.actualTime = new Date(ts.actualTime)
+                }
+              })
             })
-          })
 
-          this.charts.trips = trips
-        })
+            this.charts.trips = trips
+          })
     },
 
     monthChanged (newMonth) {
       this.filter.selectedMonth = newMonth.clone().toDate()
       this.filter.startDate = this.filter.endDate = null
-    },
-  },
+    }
+  }
 }
 </script>
 

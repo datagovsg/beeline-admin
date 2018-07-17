@@ -40,7 +40,7 @@ export default {
   props: ['tripStop', 'selectedDate'],
 
   components: {
-    PunctualityGraph,
+    PunctualityGraph
   },
 
   computed: {
@@ -50,12 +50,12 @@ export default {
       const filtered = this.tripStop.points
         .filter(s => !s.actualTime)
       return _.sortBy(filtered, 'date')
-    },
+    }
   },
 
   data () {
     return {
-      showMissing: false,
+      showMissing: false
     }
   },
 
@@ -67,7 +67,7 @@ export default {
         component: 'ViewRouteTrips',
         props: {
           route: {id: routeId},
-          date,
+          date
         }
       })
     }

@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapMutations, mapState } from 'vuex'
 
 export default {
   props: ['wrapperTag', 'menuTag', 'itemTag', 'menuClass'],
@@ -22,9 +22,9 @@ export default {
         top: 0,
         left: 0,
         position: 'absolute',
-        display: 'block',
+        display: 'block'
       },
-      dropdown: false,
+      dropdown: false
     }
   },
 
@@ -44,7 +44,7 @@ export default {
         this.dropdownStyles = {
           top: (this.$refs.item.offsetTop + this.$refs.item.offsetHeight - 2) + 'px',
           left: (this.$refs.item.offsetLeft) + 'px',
-          position: 'absolute',
+          position: 'absolute'
         }
       })
     }

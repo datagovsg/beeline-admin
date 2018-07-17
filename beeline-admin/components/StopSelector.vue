@@ -24,6 +24,7 @@
 }
 </style>
 <script>
+import _ from 'lodash'
 import {mapGetters, mapActions, mapState} from 'vuex'
 
 import DatasheetCell from '@/components/DatasheetCell.vue'
@@ -35,14 +36,14 @@ export default {
     DatasheetCell,
     VueSelect
   },
-  created() {
+  created () {
     this.fetch('stops')
   },
   computed: {
     ...mapState('shared', ['stops']),
     ...mapGetters('shared', ['stopsById']),
 
-    imputedValue() {
+    imputedValue () {
       if (this.stops) {
         const stop = this.stops.find(s => s.id === this.value)
         return {value: this.value, label: _.get(stop, 'description') || '(Unknown)'}
@@ -51,7 +52,7 @@ export default {
       }
     },
 
-    stopsAsOption() {
+    stopsAsOption () {
       return this.stops ? this.stops.map(stop => ({
         label: stop.description,
         value: stop.id

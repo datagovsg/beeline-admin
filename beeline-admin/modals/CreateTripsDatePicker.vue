@@ -24,7 +24,7 @@
 
       <strong>Trips to create:</strong>
       <ul class="date-list">
-        <li v-for="date in sortedSelectedDates">
+        <li v-for="date in sortedSelectedDates" :key="date.getTime()">
           {{f.date(date, 'dd-mmm-yyyy')}}
         </li>
       </ul>
@@ -47,7 +47,7 @@
 
 <script>
 import _ from 'lodash'
-import {mapGetters, mapActions, mapState} from 'vuex'
+import {mapActions, mapState} from 'vuex'
 
 import Modal from '@/modals/MyModal.vue'
 import ModalMixin from '@/modals/ModalMixin'
@@ -56,7 +56,7 @@ import DatePicker from '@/components/DatePicker.vue'
 export default {
   props: ['route', 'selectOnTrips', 'message'],
   mixins: [ModalMixin],
-  data() {
+  data () {
     return {
       selectedDates: [],
       trips: null
@@ -65,28 +65,28 @@ export default {
   computed: {
     ...mapState('shared', ['publicHolidays']),
 
-    routeTrips() {
+    routeTrips () {
       return this.trips || (this.route && this.route.trips)
     },
 
-    specialDates() {
+    specialDates () {
       return this.routeTrips.map(t => ({
         date: t.date,
         [this.selectOnTrips ? 'enabled' : 'disabled']: true
       }))
-      .concat(this.publicHolidays
-        ? this.publicHolidays.map(ph => ({
+        .concat(this.publicHolidays
+          ? this.publicHolidays.map(ph => ({
             date: new Date(ph.date),
-            classes: ['public-holiday'],
+            classes: ['public-holiday']
           }))
-        : [])
+          : [])
     },
 
-    sortedSelectedDates() {
+    sortedSelectedDates () {
       return _.sortBy(this.selectedDates)
     },
 
-    f() {
+    f () {
       return {
         date: require('dateformat')
       }
@@ -101,7 +101,7 @@ export default {
   },
   components: {
     DatePicker,
-    Modal,
+    Modal
   },
   methods: {
     ...mapActions('resources', ['getRoute']),
@@ -124,14 +124,14 @@ export default {
         options: {
           includeTrips: true,
           startDate: start.toISOString(),
-          endDate: end.toISOString(),
+          endDate: end.toISOString()
         }
       })
-      .then((route) => {
-        if (promise === this.$lastPromise) {
-          this.trips = route.trips
-        }
-      })
+        .then((route) => {
+          if (promise === this.$lastPromise) {
+            this.trips = route.trips
+          }
+        })
     }
   }
 }

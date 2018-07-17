@@ -110,7 +110,6 @@
     </button>
   </section>
 
-
   <UibPagination
     :boundaryLinks="true"
     :value="pagination.currentPage - 1"
@@ -364,7 +363,7 @@
 </div>
 </template>
 <script>
-import assert from 'assert'
+import _ from 'lodash'
 import querystring from 'querystring'
 import {mapGetters, mapActions} from 'vuex'
 import redirect from '@/shared/redirect'
@@ -382,7 +381,7 @@ export default {
     MultiSelectBroker,
     RouteSelector,
     SpanSelect,
-    UibPagination,
+    UibPagination
   },
 
   data () {
@@ -390,7 +389,7 @@ export default {
       pagination: {
         currentPage: 1,
         perPage: 100,
-        pageCount: 1,
+        pageCount: 1
       },
 
       fetchedData: null,
@@ -411,28 +410,28 @@ export default {
           account: true,
           discount: true,
           routeCredits: true,
-          routePass: true,
+          routePass: true
         },
         startAndEndDate: [],
 
         userQuery: null,
         transactionId: null,
-        ticketId: null,
+        ticketId: null
       },
 
       chart: {
-        month: new Date,
-        fetchedData: [],
+        month: new Date(),
+        fetchedData: []
       },
 
       disp: {
         availableRoutes: [],
-        month: new Date,
+        month: new Date(),
         datesBetween: [],
         counts: {},
         dates: [],
         pagination: {firstRow: 1, lastRow: 1, totalRows: 1},
-        isLoading: 0,
+        isLoading: 0
       }
     }
   },
@@ -443,7 +442,7 @@ export default {
     f: () => filters,
 
     now () {
-      return new Date
+      return new Date()
     },
     startOfMonth () {
       return new Date(
@@ -474,7 +473,7 @@ export default {
         firstRow: (this.currentPage - 1) * this.fetchedData.perPage + 1,
         lastRow: Math.min(this.currentPage * this.fetchedData.perPage, this.fetchedData.count),
         totalRows: this.fetchedData.count,
-        pageCount: Math.ceil(this.fetchedData.count / this.fetchedData.perPage),
+        pageCount: Math.ceil(this.fetchedData.count / this.fetchedData.perPage)
       }
     },
 
@@ -485,35 +484,35 @@ export default {
         .map((date) => ({
           date: new Date(parseInt(date)),
           annotation: this.chart.fetchedData.countByDate[date],
-          selectable: true,
+          selectable: true
         }))
     },
 
     csvUrl () {
       /* querystring.stringify strips out empty arrays [] */
-      return this.buildQuery({page:1, perPage:10000000, format: 'csv'})
+      return this.buildQuery({page: 1, perPage: 10000000, format: 'csv'})
     },
 
     statementUrl () {
       /* querystring.stringify strips out empty arrays [] */
-      return this.buildQuery({page:1, perPage:10000000, format: 'statement'})
+      return this.buildQuery({page: 1, perPage: 10000000, format: 'statement'})
     },
 
     requestUrl () {
       return this.buildQuery()
-    },
+    }
   },
 
   watch: {
     requestUrl: _.debounce(function () {
       this.requery()
-    }, 1000, {leading: false, trailing: true}),
+    }, 1000, {leading: false, trailing: true})
   },
 
   created () {
     this.filter.startAndEndDate = [
       this.startOfMonth,
-      this.endOfMonth,
+      this.endOfMonth
     ]
     this.disp.now = this.now
   },
@@ -526,88 +525,85 @@ export default {
       if (this.requestUrl === null) return
 
       const queryPromise = this.$lastPromise = this.axios.get(this.requestUrl)
-      .then((result) => {
-        if (queryPromise !== this.$lastPromise) return
+        .then((result) => {
+          if (queryPromise !== this.$lastPromise) return
 
-        // for WRS tickets, we cheated and saved a JSON in the user's name field :(
-        for (let ti of result.data.rows) {
-          if (ti.itemType.startsWith('ticket') &&
+          // for WRS tickets, we cheated and saved a JSON in the user's name field :(
+          for (let ti of result.data.rows) {
+            if (ti.itemType.startsWith('ticket') &&
               ti[ti.itemType]) {
-            try {
-              ti[ti.itemType].user.json = JSON.parse(ti[ti.itemType].user.name);
+              try {
+                ti[ti.itemType].user.json = JSON.parse(ti[ti.itemType].user.name)
+              } catch (err) {}
             }
-            catch (err) {}
           }
-        }
 
-        this.fetchedData = result.data
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+          this.fetchedData = result.data
+        })
+        .catch((err) => {
+          console.log(err)
+        })
 
       this.spinOnPromise(queryPromise)
-      .catch(this.showErrorModal)
+        .catch(this.showErrorModal)
     },
 
-    buildQuery(overrides) {
-      var queryOpts = {};
+    buildQuery (overrides) {
+      var queryOpts = {}
 
-      queryOpts.order = this.filter.order = 'desc';
-      queryOpts.orderBy = this.filter.orderBy = 'createdAt';
-      queryOpts.perPage = this.pagination.perPage;
-      queryOpts.page = this.pagination.currentPage;
+      queryOpts.order = this.filter.order = 'desc'
+      queryOpts.orderBy = this.filter.orderBy = 'createdAt'
+      queryOpts.perPage = this.pagination.perPage
+      queryOpts.page = this.pagination.currentPage
       queryOpts.itemTypes = JSON.stringify(Object.keys(this.filter.itemTypes)
-          .filter(k => this.filter.itemTypes[k]))
+        .filter(k => this.filter.itemTypes[k]))
 
       if (this.filter.transactionId) {
-        queryOpts.transactionId = this.filter.transactionId;
-      }
-      else if (this.filter.ticketId) {
-        queryOpts.ticketId = this.filter.ticketId;
-      }
-      else {
+        queryOpts.transactionId = this.filter.transactionId
+      } else if (this.filter.ticketId) {
+        queryOpts.ticketId = this.filter.ticketId
+      } else {
         const [startDate, endDate] = this.filter.startAndEndDate
 
         if (!startDate || !endDate) return null
 
         if (this.filter.userQuery) {
-          queryOpts.userQuery = this.filter.userQuery;
+          queryOpts.userQuery = this.filter.userQuery
         }
 
         queryOpts.startDate = new Date(
           startDate.getFullYear(),
           startDate.getMonth(),
           startDate.getDate()
-        ).getTime();
+        ).getTime()
 
         queryOpts.endDate = new Date(
           endDate.getFullYear(),
           endDate.getMonth(),
           endDate.getDate() + 1
-        ).getTime();
+        ).getTime()
       }
 
-      Object.assign(queryOpts, overrides);
+      Object.assign(queryOpts, overrides)
 
-      return '/transaction_items?' + querystring.stringify(queryOpts);
+      return '/transaction_items?' + querystring.stringify(queryOpts)
     },
     downloadCsv () {
       this.axios.post('/downloads', {
         uri: this.csvUrl
       })
-      .then((result) => {
-        redirect(`${process.env.BACKEND_URL}/downloads/${result.data.token}`)
-      })
+        .then((result) => {
+          redirect(`${process.env.BACKEND_URL}/downloads/${result.data.token}`)
+        })
     },
     downloadStatement () {
       this.axios.post('/downloads', {
         uri: this.statementUrl
       })
-      .then((result) => {
-        redirect(`${process.env.BACKEND_URL}/downloads/${result.data.token}`)
-      })
-    },
+        .then((result) => {
+          redirect(`${process.env.BACKEND_URL}/downloads/${result.data.token}`)
+        })
+    }
   }
 }
 

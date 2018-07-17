@@ -1,7 +1,5 @@
 <template>
   <div class="container withnav">
-    
-    
 
     <table class="table table-striped assets-table" v-if="assets">
       <thead>
@@ -32,13 +30,8 @@
   </div>
 </template>
 <script>
-import assert from 'assert'
-import querystring from 'querystring'
-import {mapGetters, mapActions, mapState} from 'vuex'
+import {mapGetters, mapActions} from 'vuex'
 import _ from 'lodash'
-import * as resources from '../stores/resources'
-import filters from '../filters'
-import dateformat from 'dateformat'
 
 export default {
   props: ['companyId'],
@@ -70,26 +63,26 @@ export default {
         props: {
           type: 'confirm',
           title: `Delete asset ${asset.id}`,
-          message: `Are you sure you want to delete ${asset.id}`,
+          message: `Are you sure you want to delete ${asset.id}`
         }
       })
-      .then((response) => {
-        if (response) {
-          return this.spinOnPromise(
-            this.axios.delete(`/assets/${asset.id}`)
-          )
-          .then(() => this.requery())
-        }
-      }, () => {})
-      .catch(this.showErrorModal)
+        .then((response) => {
+          if (response) {
+            return this.spinOnPromise(
+              this.axios.delete(`/assets/${asset.id}`)
+            )
+              .then(() => this.requery())
+          }
+        }, () => {})
+        .catch(this.showErrorModal)
     },
 
     requery () {
       this.spinOnPromise(this.axios.get(`/assets`)
-      .then((response) => {
-        this.assets = response.data
-      }))
-      .catch(this.showErrorModal)
+        .then((response) => {
+          this.assets = response.data
+        }))
+        .catch(this.showErrorModal)
     },
 
     editAsset (asset) {
@@ -101,56 +94,20 @@ export default {
           assetId: asset ? asset.id : null
         }
       })
-      .then(({data, id}) => {
-        return this.spinOnPromise(
-          this.axios.put(`/assets/${id}`, {data})
-          .then(() => {
-            this.requery()
-          })
-        )
-        .catch((err) => {
-          console.log(err);
-        })
-      }, () => { /* rejected */ })
-      .catch(this.showErrorModal)
+        .then(({data, id}) => {
+          return this.spinOnPromise(
+            this.axios.put(`/assets/${id}`, {data})
+              .then(() => {
+                this.requery()
+              })
+          )
+            .catch((err) => {
+              console.log(err)
+            })
+        }, () => { /* rejected */ })
+        .catch(this.showErrorModal)
     }
   }
-}
-
-const PermissionsMap = {
-  basic: ['view-drivers', 'view-admins', 'view-transactions', 'monitor-operations'],
-  refund: ['refund'],
-  issueTickets: ['issue-tickets'],
-  operations: [
-    'manage-routes', 'manage-drivers',
-    'drive', 'update-trip-status',
-    'message-passengers', 'view-passengers',
-    'manage-notifications', 'manage-customers',
-  ],
-  manageCompany: ['manage-company'],
-  manageAdmins: ['manage-admins'],
-}
-
-function mapPermissions(permissions) {
-  return _(permissions)
-    .keys()
-    .filter(key => permissions[key])
-    .map(value => PermissionsMap[value])
-    .flatten()
-    .value()
-}
-function reverseMapPermissions(permissionList) {
-  const permissions = {};
-
-  if (!permissionList)  return permissions;
-
-  _.each(PermissionsMap, (permissionGroup, groupName) => {
-    permissions[groupName] = _.every(
-      permissionGroup,
-      p => permissionList.indexOf(p) !== -1
-    )
-  })
-  return permissions;
 }
 
 </script>

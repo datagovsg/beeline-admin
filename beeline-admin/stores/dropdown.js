@@ -4,7 +4,7 @@ module.exports = {
 
   state () {
     return {
-      activeDropdown: null,
+      activeDropdown: null
     }
   },
 

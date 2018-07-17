@@ -1,20 +1,16 @@
-import Vuex from 'vuex'
-import axios from 'axios'
-import querystring from 'querystring'
 import _ from 'lodash'
-import * as resources from '../stores/resources'
 
 export default function SharedStoreTemplate (definition, fetchJobs) {
   return {
     namespaced: true,
     state: () => ({
       ...(definition.state && definition.state()),
-      ... _.mapValues(fetchJobs, () => null),
+      ..._.mapValues(fetchJobs, () => null),
       promises: _.mapValues(fetchJobs, () => null)
     }),
     getters: {
       ...definition.getters,
-      ... _(fetchJobs).toPairs()
+      ..._(fetchJobs).toPairs()
         .map(([job, data]) => {
           const getter = (state) => {
             return _.keyBy(state[job], 'id')
@@ -22,23 +18,23 @@ export default function SharedStoreTemplate (definition, fetchJobs) {
           return [`${job}ById`, getter]
         })
         .fromPairs()
-        .value(),
+        .value()
     },
     mutations: {
       ...definition.mutations,
-      updateSharedPromises(state, which) {
+      updateSharedPromises (state, which) {
         state.promises = {
           ...state.promises,
-          ...which,
+          ...which
         }
       },
-      updateShared(state, which) {
+      updateShared (state, which) {
         Object.assign(state, which)
-      },
+      }
     },
     actions: {
       ...definition.actions,
-      invalidate(context, jobs) {
+      invalidate (context, jobs) {
         if (!(jobs instanceof Array)) jobs = [jobs]
 
         jobs.forEach(job => {
@@ -50,7 +46,7 @@ export default function SharedStoreTemplate (definition, fetchJobs) {
           })
         })
       },
-      refresh(context, jobs) {
+      refresh (context, jobs) {
         if (!(jobs instanceof Array)) jobs = [jobs]
 
         return Promise.all(jobs.map(job => {
@@ -69,7 +65,7 @@ export default function SharedStoreTemplate (definition, fetchJobs) {
             context.commit('updateShared', {
               [job]: fetchJobs[job].postProcess
                 ? fetchJobs[job].postProcess(response.data)
-                : response.data,
+                : response.data
             })
           })
         }))

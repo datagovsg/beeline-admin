@@ -131,19 +131,19 @@ export default {
     'max',
     'backgroundColor',
     'selectedDate',
-    'tripStop',
+    'tripStop'
   ],
   components: {
     Graph, GraphPoint, GraphLabel, ReferenceLine
   },
-  data() {
+  data () {
     return {
-      hoverPoint: null,
+      hoverPoint: null
     }
   },
   computed: {
     f: () => filters,
-    pointsWithPunctuality() {
+    pointsWithPunctuality () {
       return this.tripStop.points.filter(p => p.actualTime)
     }
   },
@@ -164,27 +164,27 @@ export default {
   },
 
   methods: {
-    selectPoint(p) {
-      this.$emit('date-selected', p.date);
+    selectPoint (p) {
+      this.$emit('date-selected', p.date)
     },
-    showLabel(p) {
-      this.hoverPoint = p;
+    showLabel (p) {
+      this.hoverPoint = p
     },
-    hideLabel(p) {
-      this.hoverPoint = null;
+    hideLabel (p) {
+      this.hoverPoint = null
     },
 
-    pointLabel(pt) {
-      if (pt == null) return null;
-      return filters.date(pt.date, 'dd mmm yyyy');
+    pointLabel (pt) {
+      if (pt == null) return null
+      return filters.date(pt.date, 'dd mmm yyyy')
     },
-    pointLabel2(pt) {
-      if (!pt || !pt.actualTime) return;
+    pointLabel2 (pt) {
+      if (!pt || !pt.actualTime) return
 
-      let timeDifference = pt.timeDifference;
-      return (timeDifference / 60000).toFixed(1) + 'mins';
-    },
-  },
+      let timeDifference = pt.timeDifference
+      return (timeDifference / 60000).toFixed(1) + 'mins'
+    }
+  }
 }
 
 </script>

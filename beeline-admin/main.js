@@ -3,7 +3,6 @@ import Vuex from 'vuex'
 import VueRouter from 'vue-router'
 import AsyncComputed from 'vue-async-computed'
 import * as VueGoogleMaps from 'vue2-google-maps'
-import assert from 'assert'
 
 import App from './App.vue'
 import StoreDefinition from '@/stores'
@@ -14,13 +13,13 @@ document.addEventListener('DOMContentLoaded', () => {
   Vue.use(VueGoogleMaps, {
     load: {
       key: 'AIzaSyBkFH42PlbFrsfdAnjw37qMLAxjhkMT-54',
-      libraries: 'geometry',
+      libraries: 'geometry'
     }
   })
   Vue.use(AsyncComputed)
   Vue.use(VueRouter)
 
-  new Vue({
+  new Vue({ // eslint-disable-line
     el: '#app',
     store: new Vuex.Store(StoreDefinition),
     router: createRouter(),

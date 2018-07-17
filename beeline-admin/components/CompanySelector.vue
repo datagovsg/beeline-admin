@@ -1,17 +1,15 @@
 <template>
   <select :value="value" @input="$emit('input', $event.target.value)">
     <option disabled></option>
-    <option v-for="company in sortedCompanies" :value="company.id">
+    <option v-for="company in sortedCompanies" :key="company.id" :value="company.id">
       {{company.name}}
     </option>
   </select>
 </template>
 
 <script>
-import {mapGetters, mapActions, mapState} from 'vuex'
-import * as resources from '../stores/resources'
+import {mapActions, mapState} from 'vuex'
 import _ from 'lodash'
-const filters = require('../filters')
 
 export default {
   props: ['value'],

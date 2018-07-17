@@ -7,7 +7,7 @@
     :value="company.id" :selected="currentCompany === company.id">
     {{company.name}}
   </option>
-</select>  
+</select>
 </template>
 
 <script>
@@ -41,8 +41,8 @@ export default {
         return null
       }
       return this.axios.get('/admins/whoami')
-      .then(r => r.data)
-    },
+        .then(r => r.data)
+    }
   },
   methods: {
     ...mapActions('shared', ['fetch']),
@@ -51,7 +51,7 @@ export default {
         query: this.$route.query,
         params: {
           ...this.$route.params,
-          companyId: id,
+          companyId: id
         }
       })
     }

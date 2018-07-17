@@ -23,7 +23,7 @@ import SummaryPage from '@/pages/ridership-summary.vue'
 import RouteTimelinessPage from '@/pages/route-timeliness.vue'
 
 export default function () {
-  function addQueryProps(...queryProps) {
+  function addQueryProps (...queryProps) {
     return (r) => {
       return ({
         ..._.pick(r.query, queryProps),
@@ -88,7 +88,7 @@ export default function () {
       path: `/c/:companyId/bookings`,
       component: BookingsPage,
       name: 'BookingsPage',
-      props: addQueryProps('routeId', 'tripId', 'userId'),
+      props: addQueryProps('routeId', 'tripId', 'userId')
     },
     {
       path: `/c/:companyId/drivers`,
@@ -130,7 +130,7 @@ export default function () {
       path: '/c/:companyId/notifications',
       component: NotificationsPage,
       name: 'NotificationsPage',
-      props: addQueryProps(),
+      props: addQueryProps()
     },
     {
       path: '/c/:companyId/users',
@@ -148,7 +148,7 @@ export default function () {
       path: '/c/:companyId/route-passes',
       component: RoutePassesPage,
       name: 'RoutePassesPage',
-      props: addQueryProps('userId'),
+      props: addQueryProps('userId')
     },
     {
       path: '/c/:companyId/route-timeliness',
@@ -161,7 +161,7 @@ export default function () {
       component: BookingsPage
     }
   ]
-  
+
   const router = new VueRouter({
     saveScrollPosition: true,
     routes

@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import {mapGetters, mapActions, mapState} from 'vuex'
+import {mapGetters} from 'vuex'
 
 import Modal from '@/modals/MyModal.vue'
 import ModalMixin from '@/modals/ModalMixin'
@@ -60,7 +60,7 @@ import ModalMixin from '@/modals/ModalMixin'
 export default {
   props: {
     userId: {type: Number},
-    tag: {type: String},
+    tag: {type: String}
   },
 
   components: {
@@ -74,7 +74,7 @@ export default {
       data: {
         tag: '',
         description: '',
-        quantity: 1,
+        quantity: 1
       }
     }
   },
@@ -86,7 +86,7 @@ export default {
         userId: this.userId,
         quantity: this.data.quantity,
         tag: this.data.tag,
-        description: this.data.description,
+        description: this.data.description
       }
     }
   },
@@ -100,6 +100,6 @@ export default {
 
   created () {
     if (this.tag) this.data.tag = this.tag
-  },
+  }
 }
 </script>

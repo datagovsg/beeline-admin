@@ -15,53 +15,54 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import Vue from 'vue'
 
 export default {
   props: {
     plotWidth: {
       default: 0,
-      type: Number,
+      type: Number
     },
     plotHeight: {
       default: 1,
-      type: Number,
+      type: Number
     },
     paddingWidth: {
       default: 0,
-      type: Number,
+      type: Number
     },
     paddingHeight: {
       default: 0,
-      type: Number,
+      type: Number
     },
     axisWidth1: {
       default: 0,
-      type: Number,
+      type: Number
     },
     axisHeight1: {
       default: 1,
-      type: Number,
+      type: Number
     },
     axisWidth2: {
       default: 0,
-      type: Number,
+      type: Number
     },
     axisHeight2: {
       default: 1,
-      type: Number,
+      type: Number
     },
     excessWidth: {
       default: 0,
-      type: Number,
+      type: Number
     },
     excessHeight: {
       default: 0,
-      type: Number,
+      type: Number
     },
     backgroundColor: {
       default: '#FFF',
-      type: String,
+      type: String
     },
 
     defaultDataBounds: {
@@ -74,14 +75,14 @@ export default {
     return {
       dataBounds: [
         [0, 0],
-        [1, 1],
+        [1, 1]
       ]
     }
   },
 
   computed: {
     /** The transform for the plot area **/
-    plotTransform() {
+    plotTransform () {
       return `translate(${this.axisWidth1}, ${this.axisHeight2})`
     }
   },
@@ -90,13 +91,13 @@ export default {
     return {
       graphTransforms: {
         xToPixel: (xvalue) =>
-          (xvalue - this.dataBounds[0][0])
-          / (this.dataBounds[1][0] - this.dataBounds[0][0])
-          * (this.plotWidth - 2 * this.paddingWidth) + this.paddingWidth,
+          (xvalue - this.dataBounds[0][0]) /
+          (this.dataBounds[1][0] - this.dataBounds[0][0]) *
+          (this.plotWidth - 2 * this.paddingWidth) + this.paddingWidth,
         yToPixel: (yvalue) =>
-          (yvalue - this.dataBounds[0][1])
-          / (this.dataBounds[1][1] - this.dataBounds[0][1])
-          * (this.plotHeight - 2 * this.paddingHeight) + this.paddingHeight,
+          (yvalue - this.dataBounds[0][1]) /
+          (this.dataBounds[1][1] - this.dataBounds[0][1]) *
+          (this.plotHeight - 2 * this.paddingHeight) + this.paddingHeight,
         plotHeight: () => this.plotHeight
       },
       dataBus: (this.dataBus = new Vue({}))
@@ -114,8 +115,8 @@ export default {
      * asks components sharing the databus for their
      * min and max coordinates
      */
-    scaleToFit(options) {
-      const xcoords = [], ycoords = []
+    scaleToFit (options) {
+      const xcoords = []; const ycoords = []
       this.dataBus.$emit('getXBounds', (coord) => {
         xcoords.push(coord)
       })
@@ -142,9 +143,9 @@ export default {
           (upperBoundY === lowerBoundY) ? lowerBoundY + 0.00001 : upperBoundY
         ]
       ]
-    },
+    }
   }
 
-};
+}
 
 </script>

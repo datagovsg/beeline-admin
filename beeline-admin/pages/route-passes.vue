@@ -24,7 +24,8 @@
           <div class="form-group">
             <label>TransactionType</label>
             <select v-model="filter.transactionType">
-              <option v-for="(transactionType, index) in transactionTypes"
+              <option v-for="transactionType in transactionTypes"
+                :key="transactionType"
                 :label="transactionType"
                 :value="transactionType"
                 />
@@ -83,7 +84,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(txn, index) in transactions">
+            <tr v-for="(txn, index) in transactions" :key="txn.id">
               <td>{{ index + 1 + paging.page * paging.perPage }}</td>
               <td>
                 <a :href="`#/c/${companyId}/transactions?id=${txn.transactionId}`">
@@ -155,12 +156,10 @@
   </div>
 </template>
 <script>
-import assert from 'assert'
 import querystring from 'querystring'
 import {mapGetters, mapActions, mapState} from 'vuex'
 import _ from 'lodash'
 import download from 'downloadjs'
-import * as resources from '../stores/resources'
 import filters from '../filters'
 
 import SpanSelect from '@/components/SpanSelect.vue'
@@ -179,11 +178,11 @@ export default {
         tag: null,
         transactionType: null,
         hideUncommittedTransactions: false,
-        userId: this.userId,
+        userId: this.userId
       },
       paging: {
         page: 0,
-        perPage: 20,
+        perPage: 20
       },
       transactions: [],
       transactionTypes: ['', 'conversion', 'routePassPurchase', 'ticketPurchase', 'refundPayment', 'freeRoutePass', 'routePassExpiry'],
@@ -207,13 +206,13 @@ export default {
     },
     highlightDays () {
       return this.transactionSummary
-       ? _.keys(this.transactionSummary.txnCountByDay)
-        .map(date => ({
-          date: new Date(parseInt(date)),
-          annotation: this.transactionSummary.txnCountByDay[date],
-          selectable: true,
-        }))
-      : null
+        ? _.keys(this.transactionSummary.txnCountByDay)
+          .map(date => ({
+            date: new Date(parseInt(date)),
+            annotation: this.transactionSummary.txnCountByDay[date],
+            selectable: true
+          }))
+        : null
     },
     transactionSummaryQuery () {
       return this.buildQuery({}, this.filter)
@@ -249,7 +248,7 @@ export default {
         return this.publicHolidays.map(ph => (
           {
             date: new Date(ph.date),
-            classes: ['public-holiday'],
+            classes: ['public-holiday']
           }
         ))
       },
@@ -275,9 +274,9 @@ export default {
     ...mapActions('modals', ['showModal', 'showErrorModal']),
     ...mapActions('shared', ['fetch']),
 
-    async downloadCSV() {
+    async downloadCSV () {
       const payloads = []
-      const noHeaders = csvText => csvText.substring(csvText.indexOf("\n") + 1)
+      const noHeaders = csvText => csvText.substring(csvText.indexOf('\n') + 1)
 
       let { startDateTime, endDateTime } = this.transactionQuery
       try {
@@ -296,8 +295,8 @@ export default {
           const url = `/companies/${this.companyId}/transaction_items/route_passes?${querystring.stringify(params)}`
           const response = await this.axios.get(url)
           const payload = payloads.length > 0
-            ? noHeaders(response.data + "\n")
-            : response.data + "\n"
+            ? noHeaders(response.data + '\n')
+            : response.data + '\n'
           payloads.push(payload)
         }
         const blob = new Blob(payloads, { type: 'text/csv' })
@@ -317,32 +316,32 @@ export default {
     buildQuery (paging, filter) {
       let queryOptions = {}
 
-      if(typeof paging.page === 'number') {
+      if (typeof paging.page === 'number') {
         // paging is zero-indexed, but the endpoint isn't
         queryOptions.page = paging.page + 1
       }
 
-      if(paging.perPage) {
+      if (paging.perPage) {
         queryOptions.perPage = paging.perPage
       }
 
-      if(filter.userId) {
+      if (filter.userId) {
         queryOptions.userId = filter.userId
       }
 
-      if(filter.tag) {
+      if (filter.tag) {
         queryOptions.tag = filter.tag
       }
 
-      if(filter.hideUncommittedTransactions){
+      if (filter.hideUncommittedTransactions) {
         queryOptions.hideUncommittedTransactions = filter.hideUncommittedTransactions
       }
 
-      if(filter.transactionType) {
+      if (filter.transactionType) {
         queryOptions.transactionType = filter.transactionType
       }
 
-      if(filter.dates.length > 0) {
+      if (filter.dates.length > 0) {
         queryOptions.startDateTime = filter.dates[0].getTime()
       } else {
         queryOptions.startDateTime = new Date(
@@ -352,7 +351,7 @@ export default {
         ).getTime()
       }
 
-      if(filter.dates.length > 1) {
+      if (filter.dates.length > 1) {
         // Because we want less-then-equals semantics
         queryOptions.endDateTime = filter.dates[1].getTime() + 24 * 3600 * 1000
       } else {
@@ -381,7 +380,6 @@ export default {
       }
     },
     postProcessTransaction (txns) {
-      const transactionLevelQueries = {}
       return Promise.all(_.map(txns, (txn) => {
         // do the route label mapping
         txn.routeLabel = txn.routePass.route.label
@@ -401,8 +399,6 @@ export default {
       return txn
     },
     processTransactionItems (txn) {
-      const {transactionItems} = txn.transaction
-
       txn.redeemed = _.get(txn.routePass, 'notes.ticketId')
       txn.expiresAt = _.get(txn.routePass, 'expiresAt')
 

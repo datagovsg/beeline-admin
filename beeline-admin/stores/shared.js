@@ -9,7 +9,7 @@ const fetchJobs = {
       endDate: '2099-01-01',
       includeTrips: true,
       includeIndicative: true,
-      includeDates: true,
+      includeDates: true
     }),
     postProcess: x => x.map(resources.postProcessRoute)
   },
@@ -18,7 +18,7 @@ const fetchJobs = {
       startDate: Date.now(),
       includeTrips: true
     }),
-    postProcess(routes) {
+    postProcess (routes) {
       return routes.map(r => ({
         ...r,
         trips: r.trips.map(trip => ({
@@ -28,7 +28,7 @@ const fetchJobs = {
             ...ts,
             time: new Date(ts.time)
           }))
-        })),
+        }))
       }))
     }
   },
@@ -37,7 +37,7 @@ const fetchJobs = {
   },
   stops: {url: '/stops'},
   publicHolidays: {url: '/publicHolidays'},
-  vehicles: {url: '/vehicles'},
+  vehicles: {url: '/vehicles'}
 }
 
 export default SharedStoreTemplate({}, fetchJobs)

@@ -1,11 +1,11 @@
 export default {
   props: ['name', 'value'],
   methods: {
-    resolve(data) {
+    resolve (data) {
       this.$emit('resolve', data)
     },
-    reject(data) {
+    reject (data) {
       this.$emit('reject', data)
-    },
+    }
   }
 }

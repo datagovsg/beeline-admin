@@ -3,7 +3,7 @@
     <div class="form-inline">
       <label class="control-label">Route Path</label>
       <select @change="zoomInOnStops()" v-model="tripId" class="form-control">
-        <option v-for="trip in route.trips" :value="trip.id">
+        <option v-for="trip in route.trips" :key="trip.id" :value="trip.id">
           {{f.date(trip.date, 'dd-mmm-yyyy', true)}}
         </option>
       </select>
@@ -64,6 +64,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 const filters = require('../../filters')
 const {loaded} = require('vue2-google-maps')
 const leftPad = require('left-pad')
@@ -81,8 +82,8 @@ export default {
           strokeColor: '#880000',
           strokeWeight: 2,
           zIndex: 10
-        },
-      },
+        }
+      }
     }
   },
   computed: {
@@ -90,7 +91,7 @@ export default {
     trip () {
       return this.route.trips.find(t => t.id === this.tripId)
     },
-    currentPath() {
+    currentPath () {
       // The ordering of this comparison matters, because
       // this computed property must be marked as a reactive
       // dependency of the route path
@@ -101,9 +102,9 @@ export default {
           return null
         }
       }
-    },
+    }
   },
-  created() {
+  created () {
     /* $dirRenderers and $legs are assigned in created() because they
       are complex objects, and we do not want them to be reactive */
     this.$dirRenderers = null
@@ -130,7 +131,7 @@ export default {
     getConcatenatedPath () {
       return this.$legs && this.$legs.reduce((all, leg) => all.concat(leg))
     },
-    savePath() {
+    savePath () {
       const path = this.getConcatenatedPath()
 
       this.$emit('input', google.maps.geometry.encoding.encodePath(path))
@@ -142,10 +143,10 @@ export default {
       this.hasRenderedPath = false
     },
 
-    zoomInOnStops() {
+    zoomInOnStops () {
       if (!this.trip || !this.trip.tripStops) return
 
-      const bounds = new google.maps.LatLngBounds();
+      const bounds = new google.maps.LatLngBounds()
       for (let tripStop of this.trip.tripStops) {
         bounds.extend({
           lat: tripStop.stop.coordinates.coordinates[1],
@@ -157,7 +158,9 @@ export default {
 
     async updateDirections (renderer, origin, destination, waypoints) {
       const request = {
-        origin, destination, waypoints,
+        origin,
+        destination,
+        waypoints,
         travelMode: google.maps.TravelMode.DRIVING,
         avoidHighways: false,
         avoidTolls: false
@@ -176,11 +179,11 @@ export default {
       })
     },
 
-    async googlePath(tripStops) {
+    async googlePath (tripStops) {
       if (!tripStops) return
 
       const stopsLatLng = tripStops.map((tripStop) => {
-        const [lng, lat] = tripStop.stop.coordinates.coordinates;
+        const [lng, lat] = tripStop.stop.coordinates.coordinates
         return new google.maps.LatLng(lat, lng)
       })
 
@@ -192,7 +195,6 @@ export default {
         .map(i => {
           const origin = stopsLatLng[i]
           const destination = stopsLatLng[i + 1]
-          const queue = Promise.resolve(null)
 
           const renderer = new google.maps.DirectionsRenderer({
             map: this.$refs.map.$mapObject,
@@ -206,7 +208,7 @@ export default {
             preserveViewport: true
           })
 
-          let lastOrigin = origin, lastDestination = destination
+          let lastOrigin = origin; let lastDestination = destination
 
           renderer.addListener('directions_changed', () => {
             // When directions are changed, if they are connected to other
@@ -261,7 +263,7 @@ export default {
         )
 
       // save the renderers for future reference
-      this.$dirRenderers = renderersOriginsDestinations.map(x => x.renderer);
+      this.$dirRenderers = renderersOriginsDestinations.map(x => x.renderer)
 
       // generate the initial legs
       this.$legs = renderersOriginsDestinations.map(
@@ -271,7 +273,7 @@ export default {
       this.hasRenderedPath = true
     },
 
-    makeStopIcon(tripStop, index) {
+    makeStopIcon (tripStop, index) {
       if (typeof google !== 'undefined') {
         return {
           scaledSize: new google.maps.Size(30, 30),

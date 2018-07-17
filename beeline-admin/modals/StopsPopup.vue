@@ -121,11 +121,13 @@
 </style>
 
 <script>
-const filters = require('../filters')
+import _ from 'lodash'
 import {mapState, mapActions, mapGetters} from 'vuex'
 
 import Modal from '@/modals/MyModal.vue'
 import ModalMixin from '@/modals/ModalMixin'
+
+const filters = require('../filters')
 
 export default {
   props: [
@@ -133,21 +135,20 @@ export default {
     'newTripDates', 'editedTrips'
   ],
   components: { Modal },
-  data() {
+  data () {
     return {
       editStop: null,
-      selectedStop: null,
+      selectedStop: null
     }
   },
   watch: {
     selectedStop: {
       immediate: true,
-      handler(stop) {
+      handler (stop) {
         const editStop = _.cloneDeep(stop)
         this.editStop = editStop || null
 
-        if (this.$refs.gmap)
-          this.$refs.gmap.resizePreserveCenter()
+        if (this.$refs.gmap) { this.$refs.gmap.resizePreserveCenter() }
       }
     }
   },
@@ -157,57 +158,57 @@ export default {
   computed: {
     f: () => filters,
     ...mapState('shared', ['stops']),
-    ...mapGetters(['axios']),
+    ...mapGetters(['axios'])
   },
   methods: {
     ...mapActions('shared', ['fetch', 'refresh']),
     ...mapActions('modals', ['showModal', 'showErrorModal']),
-    geoJsonToLatLng(gjs) {
+    geoJsonToLatLng (gjs) {
       return {
         lat: gjs.coordinates[1],
-        lng: gjs.coordinates[0],
+        lng: gjs.coordinates[0]
       }
     },
-    saveStop(s) {
+    saveStop (s) {
       if (s.id) {
         this.axios.put(
           `/stops/${s.id}`,
           _.pick(s, ['description', 'coordinates', 'road', 'label'])
         )
-        .then((response) => {
-          this.refresh(['stops'])
-          this.selectedStop = _.clone(s)
-        })
-        .catch(this.showErrorModal)
+          .then((response) => {
+            this.refresh(['stops'])
+            this.selectedStop = _.clone(s)
+          })
+          .catch(this.showErrorModal)
       } else {
         this.axios.post(
           `/stops`,
           _.pick(s, ['description', 'coordinates', 'road', 'label'])
         )
-        .then((response) => {
-          this.refresh(['stops'])
-          s.id = response.data.id
-          this.selectedStop = _.clone(s)
-        })
-        .catch(this.showErrorModal)
+          .then((response) => {
+            this.refresh(['stops'])
+            s.id = response.data.id
+            this.selectedStop = _.clone(s)
+          })
+          .catch(this.showErrorModal)
       }
     },
-    deleteStop(s) {
+    deleteStop (s) {
       this.showModal({
         component: 'CommonModals',
         props: {
           type: 'confirm',
-          message: 'Are you sure you want to delete this stop?',
+          message: 'Are you sure you want to delete this stop?'
         }
       })
-      .then((result) => {
-        if (result) {
-          return this.axios.delete(`/stops/${s.id}`)
-        }
-      })
-      .catch(this.showErrorModal)
+        .then((result) => {
+          if (result) {
+            return this.axios.delete(`/stops/${s.id}`)
+          }
+        })
+        .catch(this.showErrorModal)
     },
-    newStop(e) {
+    newStop (e) {
       this.editStop = {
         description: '',
         road: '',
@@ -217,12 +218,12 @@ export default {
           type: 'Point',
           coordinates: [
             e.latLng.lng(),
-            e.latLng.lat(),
+            e.latLng.lat()
           ]
         }
       }
     }
   },
-  mixins: [ModalMixin],
+  mixins: [ModalMixin]
 }
 </script>

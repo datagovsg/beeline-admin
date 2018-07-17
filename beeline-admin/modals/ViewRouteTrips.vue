@@ -117,7 +117,7 @@ export default {
     Modal,
     PingPath,
     TripStopMarker,
-    VueSlider,
+    VueSlider
   },
   mixins: [ModalMixin],
   data () {
@@ -128,33 +128,18 @@ export default {
       selectedStop: null,
       selectedPing: null,
       pingParameters: null,
-      pingsByDriverId: null,
-      routePath: null,
       timeWindowParams: null,
       month: new Date()
     }
   },
-  created() {
+  created () {
     this.fetch('vehicles')
   },
   computed: {
     ...mapState(['axios']),
     ...mapState('shared', ['vehicles']),
     f: () => filters,
-    routePromise() {
-      if (!this.route) return
-
-      return this.getRoute({
-        id: this.route.id,
-        options: {includeTrips: true}
-      })
-    },
-    pingsPromise() {
-      if (!this.pingParameters) return
-      const { tripId, limit, timeframe: [ from, to ] } = this.pingParameters
-      return this.getPings({ tripId, options: { limit, from, to } })
-    },
-    selectedPingDriverVehicle() {
+    selectedPingDriverVehicle () {
       if (!this.vehicles || !this.selectedPing) return
 
       return this.vehicles.find((value) => {
@@ -165,60 +150,60 @@ export default {
       return this.routeWithTrips
         ? _.orderBy(this.routeWithTrips.trips, ['date'], ['desc']) : []
     },
-    routePathPromise () {
-      const promise = this.routePromise &&
-        this.routePromise.then((route) => {
-          const path = route.path
 
-          return typeof path === 'string'
-            ? google.maps.geometry.encoding.decodePath(path)
-            : path
+    routePath () {
+      const path = this.routeWithTrips && this.routeWithTrips.path
 
-          return path
-        })
-      return promise
+      return typeof path === 'string'
+        ? google.maps.geometry.encoding.decodePath(path)
+        : path
     },
 
     updatedRoute () {
       return this.routeWithTrips || this.route
     }
   },
+  asyncComputed: {
+    pingsByDriverId () {
+      if (!this.pingParameters) return
+      const { tripId, limit, timeframe: [ from, to ] } = this.pingParameters
+      return this.getPings({ tripId, options: { limit, from, to } })
+        .then((pings) => _.groupBy(pings, 'driverId'))
+    }
+  },
   watch: {
     'pingParameters.timeframe': {
       immediate: true,
-      handler(timeframe) {
+      handler (timeframe) {
         if (timeframe) {
           this.displayedTimeframe = timeframe
         }
       }
     },
-    routePromise: {
+
+    route: {
       immediate: true,
-      handler(p) {
-        if (p) p.then(route => {
-          this.routeWithTrips = route
+      handler (route) {
+        if (!route) return
+
+        const promise = this.$routePromise = this.getRoute({
+          id: route.id,
+          options: {includeTrips: true}
+        }).then(routeWithTrips => {
+          if (promise !== this.$routePromise) return
+
+          this.routeWithTrips = routeWithTrips
           if (!this.selectedTrip && this.date) {
-            this.selectedTrip = route.trips.find(t => t.date.getTime() === this.date.getTime())
+            this.selectedTrip = routeWithTrips.trips.find(t => t.date.getTime() === this.date.getTime())
             this.month = this.date
           }
         })
       }
     },
-    routePathPromise: {
-      immediate: true,
-      handler(p) {
-        if (p) p.then(path => this.routePath = path)
-      }
-    },
-    pingsPromise: {
-      immediate: true,
-      handler(p) {
-        if (p) p.then((pings) => this.pingsByDriverId = _.groupBy(pings, 'driverId'))
-      }
-    },
+
     selectedTrip: {
       immediate: false,
-      handler(selectedTrip) {
+      handler (selectedTrip) {
         if (selectedTrip) {
           const { tripStops, id: tripId } = selectedTrip
           const bounds = new google.maps.LatLngBounds()
@@ -234,7 +219,7 @@ export default {
           this.pingParameters = {
             tripId,
             limit: 10000,
-            timeframe: [from, to],
+            timeframe: [from, to]
           }
           this.timeWindowParams = {
             min: from,
@@ -244,7 +229,7 @@ export default {
             dotSize: 14,
             height: 10,
             processDragable: true,
-            fixed: false,
+            fixed: false
           }
         }
       }
@@ -257,7 +242,7 @@ export default {
     formatTimestamp: (ts) => moment.tz(ts, 'Asia/Singapore').format('HH:mm:ss'),
     setDisplayedTimeframe: function (context) {
       this.displayedTimeframe = context.getValue()
-    },
+    }
   }
 }
 </script>

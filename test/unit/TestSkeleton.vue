@@ -14,13 +14,11 @@
   </div>
 </template>
 <script>
-import _ from 'lodash'
-
 import ModalHelper from '@/components/ModalHelper'
 import LoadingSpinner from '@/components/LoadingSpinner.vue'
 
 export default {
   props: ['skelComponent'],
-  components: {LoadingSpinner, ModalHelper},
+  components: {LoadingSpinner, ModalHelper}
 }
 </script>

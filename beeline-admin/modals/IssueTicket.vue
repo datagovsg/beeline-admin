@@ -175,8 +175,8 @@
 </template>
 
 <script>
-import {mapState, mapGetters, mapActions} from 'vuex'
-import querystring from 'querystring'
+import _ from 'lodash'
+import {mapGetters, mapActions} from 'vuex'
 
 import Modal from '@/modals/MyModal.vue'
 import DatePicker from '@/components/DatePicker.vue'
@@ -203,11 +203,11 @@ export default {
         routeId: null,
         boardStopStopId: null,
         alightStopStopId: null,
-        selectedDates: [],
+        selectedDates: []
       },
 
       disp: {
-        tripsInMonth: [],
+        tripsInMonth: []
       },
 
       passengersByTripId: {}
@@ -220,7 +220,7 @@ export default {
       routeId: this.routeId,
       boardStopStopId: this.boardStopStopId,
       alightStopStopId: this.alightStopStopId,
-      users: this.users ? this.users.slice() : [],
+      users: this.users ? this.users.slice() : []
     }
   },
   computed: {
@@ -229,7 +229,7 @@ export default {
 
     conflictsByUid () {
       if (!this.data.users || !this.passengersByTripId) {
-        return;
+        return
       }
 
       const conflicts = this.data.users.map(user => // For each user
@@ -241,7 +241,7 @@ export default {
             return {
               ticket: conflictingTicket,
               trip,
-              user,
+              user
             }
           })
           .filter(c => c.ticket)
@@ -253,15 +253,14 @@ export default {
         .mapValues(([conflict, user]) => conflict)
         .value()
     },
-    
+
     selectedTrips () {
-      if (!this.data.selectedDates || this.data.selectedDates.length === 0)
-        return []
+      if (!this.data.selectedDates || this.data.selectedDates.length === 0) { return [] }
 
       return _.sortBy(this.data.selectedDates)
         .map(date => this.disp.tripsInMonth
           .find(trip => new Date(trip.date).getTime() === date.getTime())
-      )
+        )
     },
 
     stopsAvailable () {
@@ -292,7 +291,7 @@ export default {
     specialDates () {
       return this.disp.tripsInMonth.map(trip => ({
         date: new Date(trip.date),
-        enabled: true,
+        enabled: true
       }))
     },
 
@@ -309,10 +308,10 @@ export default {
       const cancelledTicketIds = this.cancelledTickets &&
           this.cancelledTickets.map(ticket => ticket.id)
 
-      const oldTransactionDescription = oldTransactionIds && oldTransactionIds.length ?
-          `(Original Txn #${oldTransactionIds.join(', #')})` : ''
-      const oldTicketDescription = cancelledTicketIds && cancelledTicketIds.length ?
-          `(Replacing tickets #${cancelledTicketIds.join(', #')})` : ''
+      const oldTransactionDescription = oldTransactionIds && oldTransactionIds.length
+        ? `(Original Txn #${oldTransactionIds.join(', #')})` : ''
+      const oldTicketDescription = cancelledTicketIds && cancelledTicketIds.length
+        ? `(Replacing tickets #${cancelledTicketIds.join(', #')})` : ''
       const description = this.data.reason
 
       return {
@@ -322,7 +321,7 @@ export default {
               userId: user.id,
               boardStopId: trip.tripStops.find(ts => ts.stopId === this.data.boardStopStopId).id,
               alightStopId: trip.tripStops.find(ts => ts.stopId === this.data.alightStopStopId).id,
-              tripId: trip.id,
+              tripId: trip.id
             })
           )
         )),
@@ -336,7 +335,7 @@ export default {
       immediate: true,
       handler (v) {
         this.data.selectedDates = []
-        this.updateCalendarTrips(new Date)
+        this.updateCalendarTrips(new Date())
       }
     },
 
@@ -348,15 +347,15 @@ export default {
         if (!(trip.id in this.passengersByTripId)) {
           this.passengersByTripId = {
             ...this.passengersByTripId,
-            [trip.id]: null, // set to null, reserve the space so it's not fetched twice
+            [trip.id]: null // set to null, reserve the space so it's not fetched twice
           }
 
           // fetch the data
           this.axios.get(`/trips/${trip.id}/passengers`)
-          .then((response) => {
-            this.passengersByTripId[trip.id] = response.data
-          })
-          .catch(() => { /* Don't handle errors -- server will handle them during submission */ })
+            .then((response) => {
+              this.passengersByTripId[trip.id] = response.data
+            })
+            .catch(() => { /* Don't handle errors -- server will handle them during submission */ })
         }
       }
     }
@@ -378,7 +377,7 @@ export default {
       // Given current month, route, update trips in calendar
       const queryParams = {
         includeTrips: 'true',
-        startDate: Math.max(Date.now(), month.getTime()),
+        startDate: Math.max(Date.now(), month.getTime())
         // endDate: Math.max(Date.now(), new Date(Date.UTC(...)).getTime()),
       }
       // Note: if you specify an endDate, then you need to watch the current month
@@ -400,7 +399,7 @@ export default {
       return routePromise
     }
   },
-  mixins: [ModalMixin],
+  mixins: [ModalMixin]
 }
 
 </script>

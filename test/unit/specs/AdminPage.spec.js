@@ -1,8 +1,5 @@
 import AdminPage from '@/pages/admins.vue'
-import { mount } from '@vue/test-utils'
-import { delay, mockAjax, testStore, mountTestPage } from '../util'
-import axios from 'axios'
-import sinon from 'sinon'
+import { delay, mockAjax, mountTestPage } from '../util'
 
 describe('admins.vue', () => {
   let adminPage = null
@@ -34,9 +31,9 @@ describe('admins.vue', () => {
                 id: 5,
                 adminCompany: {
                   permissions: ['manage-routes', 'manage-drivers',
-                  'drive', 'update-trip-status',
-                  'message-passengers', 'view-passengers',
-                  'manage-notifications', 'manage-customers'] // operations
+                    'drive', 'update-trip-status',
+                    'message-passengers', 'view-passengers',
+                    'manage-notifications', 'manage-customers'] // operations
                 }
               }
             ]
@@ -60,7 +57,7 @@ describe('admins.vue', () => {
       const adminPage = mountTestPage(
         AdminPage,
         {
-          propsData: {companyId: 5},
+          propsData: {companyId: 5}
 
         }
       )

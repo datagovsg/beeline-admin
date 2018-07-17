@@ -1,7 +1,5 @@
 <template>
   <div>
-    
-    
 
     <div v-if="!companyId">
       <div class="col-sm-12">
@@ -114,7 +112,6 @@
 </style>
 <script>
 import {mapGetters, mapActions, mapState} from 'vuex'
-import * as resources from '../stores/resources'
 import _ from 'lodash'
 const filters = require('../filters')
 
@@ -135,7 +132,7 @@ export default {
 
     companyLogoUrl () {
       return `${process.env.BACKEND_URL}/companies/${this.companyId}/logo`
-    },
+    }
   },
   watch: {
     companyId: {
@@ -143,18 +140,18 @@ export default {
       handler (h) {
         const promise = this.$fetchPromise =
           this.fetch('companies')
-          .then(() => {
-            if (promise !== this.$fetchPromise) return // superseded
-            const matchingCompany = this.companies.find(c => c.id === Number(this.companyId))
+            .then(() => {
+              if (promise !== this.$fetchPromise) return // superseded
+              const matchingCompany = this.companies.find(c => c.id === Number(this.companyId))
 
-            if (!matchingCompany) {
-              this.alert({
-                title: `The company with id of ${this.companyId} was not found`
-              })
-            } else {
-              this.company = matchingCompany && {...matchingCompany}
-            }
-          })
+              if (!matchingCompany) {
+                this.alert({
+                  title: `The company with id of ${this.companyId} was not found`
+                })
+              } else {
+                this.company = matchingCompany && {...matchingCompany}
+              }
+            })
       }
     }
   },
@@ -169,12 +166,12 @@ export default {
         `/companies/${this.companyId}`,
         _.pick(this.company, ['terms', 'features', 'email', 'contactNo', 'smsOpCode'])
       )
-      .then((response) => {
-        this.company = response.data
-      })
+        .then((response) => {
+          this.company = response.data
+        })
 
       this.spinOnPromise(updatePromise)
-      .catch(this.showErrorModal);
+        .catch(this.showErrorModal)
     },
 
     stripeConnect () {
@@ -183,10 +180,10 @@ export default {
         `/companies/${this.companyId}/stripeConnect`,
         { redirect: window.location.href }
       )
-      .then((response) => {
-        window.location.href = response.data
-      })
-      .catch(this.showErrorModal)
+        .then((response) => {
+          window.location.href = response.data
+        })
+        .catch(this.showErrorModal)
     }
   }
 }

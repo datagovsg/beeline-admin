@@ -17,7 +17,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="week in weeks">
+      <tr v-for="(week, weekIndex) in weeks" :key="weekIndex">
         <td @click="clicked(week[0])" :class="dayClasses(week[0])">{{week[0].day}}</td>
         <td @click="clicked(week[1])" :class="dayClasses(week[1])">{{week[1].day}}</td>
         <td @click="clicked(week[2])" :class="dayClasses(week[2])">{{week[2].day}}</td>
@@ -41,7 +41,7 @@ export default {
     'month',
     'specialDates',
     'defaultDisable',
-    'monthFormat',
+    'monthFormat'
   ],
   data () {
     return {
@@ -49,7 +49,7 @@ export default {
     }
   },
   computed: {
-    f() {
+    f () {
       return {date: dateformat}
     },
     prevMonth () {
@@ -114,9 +114,8 @@ export default {
           }
         }
 
-        for (let dateFns of dateFns) {
-          console.log(new Date(canonicalTime))
-          if (dateFns.date(new Date(canonicalTime + this.effectiveOffset))) {
+        for (let dateFn of dateFns) {
+          if (dateFn.date(new Date(canonicalTime + this.effectiveOffset))) {
             Object.assign(initial, dateFns)
           }
         }
@@ -125,8 +124,8 @@ export default {
     },
     weeks () {
       return [0, 1, 2, 3, 4].map(
-        weekNumber => [0,1,2,3,4,5,6].map(weekDay => {
-          const canonical = ((weekNumber * 7) + weekDay) * 24*3600*1000 + this.firstDayOfCalendar.getTime()
+        weekNumber => [0, 1, 2, 3, 4, 5, 6].map(weekDay => {
+          const canonical = ((weekNumber * 7) + weekDay) * 24 * 3600 * 1000 + this.firstDayOfCalendar.getTime()
           const canonicalDate = new Date(canonical)
           return {
             canonical,
@@ -171,16 +170,16 @@ export default {
       const basic = {
         disabled: day.disabled,
         'different-month': day.differentMonth,
-        selected: day.selected,
+        selected: day.selected
       }
       for (let d of day.classes) {
         basic[d] = true
       }
       return basic
     },
-    toUserDate(date) {
+    toUserDate (date) {
       return new Date(date.getTime() + this.effectiveOffset)
-    },
+    }
   }
 }
 </script>

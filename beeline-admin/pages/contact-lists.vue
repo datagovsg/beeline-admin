@@ -1,7 +1,5 @@
 <template>
   <div class="container withnav drivers">
-    
-    
 
     <div class="col-lg-12">
       <h1>Manage Contact Lists</h1>
@@ -49,25 +47,20 @@
   </div>
 </template>
 <script>
-import assert from 'assert'
-import querystring from 'querystring'
-import {mapGetters, mapActions, mapState} from 'vuex'
-import _ from 'lodash'
-import * as resources from '../stores/resources'
+import {mapGetters, mapActions} from 'vuex'
 import filters from '../filters'
-import dateformat from 'dateformat'
 
 export default {
   props: ['companyId', 'contactListId'],
   data: () => ({
-    contactLists: null,
+    contactLists: null
   }),
   mounted () {
     return this.requery()
   },
   computed: {
     ...mapGetters(['axios']),
-    f: () => filters,
+    f: () => filters
   },
   methods: {
     ...mapActions('spinner', ['spinOnPromise']),
@@ -75,13 +68,13 @@ export default {
 
     requery () {
       this.spinOnPromise(this.axios.get(`/companies/${this.companyId}/contactLists`)
-      .then((response) => {
-        this.contactLists = response.data
-      }))
-      .catch((err) => {
-        this.contactLists = false
-        console.log(err.response)
-      })
+        .then((response) => {
+          this.contactLists = response.data
+        }))
+        .catch((err) => {
+          this.contactLists = false
+          console.log(err.response)
+        })
     },
 
     addAdmin () {
@@ -98,11 +91,11 @@ export default {
             emails: []
           })
       )
-      .then(() => this.requery())
-      .catch(this.showErrorModal)
+        .then(() => this.requery())
+        .catch(this.showErrorModal)
     },
 
-    deleteContactList(contactList) {
+    deleteContactList (contactList) {
       return this.showModal({
         component: 'CommonModals',
         props: {
@@ -111,16 +104,16 @@ export default {
           message: `Are you sure you want to delete "${contactList.description}"`
         }
       })
-      .then((response) => {
-        if (response) {
-          return this.spinOnPromise(
-            this.axios.delete(`/companies/${this.companyId}/contactLists/${contactList.id}`)
-          )
-          .then(() => this.requery())
-        }
-      }, () => {})
-      .catch(this.showErrorModal)
-    },
+        .then((response) => {
+          if (response) {
+            return this.spinOnPromise(
+              this.axios.delete(`/companies/${this.companyId}/contactLists/${contactList.id}`)
+            )
+              .then(() => this.requery())
+          }
+        }, () => {})
+        .catch(this.showErrorModal)
+    }
   }
 }
 

@@ -27,9 +27,10 @@
 }
 </style>
 <script>
-import DatePicker from './DatePicker.vue'
-import {sortBy, difference} from 'lodash'
+import {omit, sortBy, difference} from 'lodash'
 import assert from 'assert'
+
+import DatePicker from './DatePicker.vue'
 
 export default {
   props: {...DatePicker.props},
@@ -47,8 +48,8 @@ export default {
           } else if (this.value.length === 1) {
             return this.value[0].getTime() === d.getTime()
           } else if (this.value.length === 2) {
-            return this.value[0].getTime() <= d.getTime()
-              && d.getTime() <= this.value[1].getTime()
+            return this.value[0].getTime() <= d.getTime() &&
+              d.getTime() <= this.value[1].getTime()
           }
         },
         classes: ['active']
@@ -56,7 +57,7 @@ export default {
     },
 
     otherListeners () {
-      const {input, 'month-click': monthClick, ...others} = this.$listeners
+      const others = omit(this.$listeners, ['input', 'month-click'])
       return others
     }
   },

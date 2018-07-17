@@ -1,7 +1,6 @@
 <template>
   <div>
-    
-    
+
     <h1>Routes</h1>
     <div class="row">
       <div class="col-lg-12">
@@ -25,7 +24,8 @@
             'btn-primary': tagPreset == filter.preset,
             'btn-default': tagPreset != filter.preset
           }"
-          @click="filter.preset = tagPreset">
+          @click="filter.preset = tagPreset"
+          :key="tagPreset.name">
           {{tagPreset.name}}
         </button>
       </div>
@@ -66,7 +66,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(route, index) in sortedRoutes">
+            <tr v-for="(route, index) in sortedRoutes" :key="index">
               <td>
                 {{ filter.page * filter.perPage + index + 1 }}
               </td>
@@ -112,6 +112,7 @@
                 <ExpandableArea>
                   <table class="borderless" v-if="route.recentTrip">
                     <tr v-for="tripStop in route.recentTrip.tripStops"
+                        :key="tripStop.id"
                         v-if="tripStop.canBoard">
                       <td class="text-nowrap">
                         {{f.date(tripStop.time, 'HH:MM')}}
@@ -127,6 +128,7 @@
                 <ExpandableArea>
                   <table class="borderless" v-if="route.recentTrip">
                     <tr v-for="tripStop in route.recentTrip.tripStops"
+                        :key="tripStop.id"
                         v-if="tripStop.canAlight">
                       <td class="text-nowrap">
                         {{f.date(tripStop.time, 'HH:MM')}}
@@ -165,7 +167,6 @@
 <script>
 import _ from 'lodash'
 import {mapGetters, mapActions, mapState} from 'vuex'
-import * as resources from '../stores/resources'
 const filters = require('../filters')
 
 import CreateTripsDatePicker from '@/modals/CreateTripsDatePicker.vue'
@@ -176,25 +177,25 @@ import UibPagination from '@/components/UibPagination.vue'
 
 export default {
   props: ['companyId'],
-  data() {
+  data () {
     const tagPresets = [
       { name: 'All', tags: null },
       { name: 'Crowdstart', tags: ['crowdstart'] },
       { name: 'Lite', tags: ['lite'] },
-      { name: 'Regular', tags: ['public'] },
+      { name: 'Regular', tags: ['public'] }
     ]
 
     return {
       filter: {
         perPage: 30,
         page: 0,
-      	orderBy: 'label',
-      	order: 'asc',
+        orderBy: 'label',
+        order: 'asc',
         preset: tagPresets[0],
-        searchTerms: '',
+        searchTerms: ''
       },
       tagPresets,
-      now: Date.now(),
+      now: Date.now()
     }
   },
   components: {
@@ -202,19 +203,14 @@ export default {
     ExpandableArea,
     SortTh,
     TagsView,
-    UibPagination,
+    UibPagination
   },
-  methods: {
-    getStartDate(r) {
-      return this.f._.get(r, 'firstTrip.date')
-    }
-  },
-  created() {
+  created () {
     this.$store.dispatch('shared/fetch', 'currentRoutes')
     this.$store.dispatch('shared/fetch', 'allRoutes')
     this.$store.dispatch('shared/fetch', 'companies')
   },
-  mounted() {
+  mounted () {
     this.spinOnPromise(Promise.all(Object.values(this.$store.state.shared.promises)))
   },
   computed: {
@@ -222,9 +218,9 @@ export default {
     ...mapGetters('shared', ['companiesById', 'currentRoutesById']),
     ...mapGetters(['axios']),
 
-    f() { return filters },
+    f () { return filters },
 
-    routes() {
+    routes () {
       const routes = this.allRoutes &&
         this.allRoutes
           .filter(r => !this.companyId || r.transportCompanyId === Number(this.companyId))
@@ -232,7 +228,7 @@ export default {
           .filter(r => !this.filter.searchTerms ||
               (r.label && r.label.toLowerCase().startsWith(this.filter.searchTerms.toLowerCase())) ||
               (r.name && r.name.toLowerCase().indexOf(this.filter.searchTerms.toLowerCase()) !== -1) ||
-              r.id.toString() == this.filter.searchTerms)
+              r.id.toString() === this.filter.searchTerms)
           .map(route => ({
             ...route,
             firstTrip: _.get(route, 'trips.0'),
@@ -242,7 +238,7 @@ export default {
           }))
       return routes
     },
-    sortedRoutes() {
+    sortedRoutes () {
       return this.routes && _.orderBy(this.routes, [this.filter.orderBy], [this.filter.order])
         .slice(
           this.filter.page * this.filter.perPage,
@@ -256,19 +252,19 @@ export default {
     ...mapActions('shared', ['invalidate', 'refresh']),
     ...mapActions('spinner', ['spinOnPromise']),
 
-    viewRoute(route) {
+    viewRoute (route) {
       this.showModal({
-        component:'ViewRouteTrips',
+        component: 'ViewRouteTrips',
         props: {route}
       })
     },
-    async copyRoute(r) {
+    async copyRoute (r) {
       const routePromise = this.getRoute({
         id: r.id,
         options: {
           includeTrips: true,
           includeDates: true,
-          includeFeatures: true,
+          includeFeatures: true
         }
       })
 
@@ -278,7 +274,7 @@ export default {
           type: 'prompt',
           title: 'Copy Route',
           message: 'New Route Label',
-          defaultValue: `Copy of ${r.label}`,
+          defaultValue: `Copy of ${r.label}`
         }
       })
 
@@ -298,7 +294,7 @@ export default {
           component: 'CreateTripsDatePicker',
           props: {
             route,
-            selectOnTrips: true,
+            selectOnTrips: true
           }
         })
       } catch (err) {
@@ -308,10 +304,10 @@ export default {
 
       try {
         const createResponse = await this.saveRoute({
-            ...newRoute,
-            // WORKAROUND FOR OLDER ROUTES
-            companyTags: newRoute.companyTags || [],
-            tags: newRoute.tags || [],
+          ...newRoute,
+          // WORKAROUND FOR OLDER ROUTES
+          companyTags: newRoute.companyTags || [],
+          tags: newRoute.tags || []
         })
 
         const tripPromises = tripDates.map((tripDate) => {
@@ -328,11 +324,11 @@ export default {
           }
           return this.createTripForDate({
             date: tripDate,
-            trip: tripData,
+            trip: tripData
           })
         })
 
-        await this.spinOnPromise(Promise.all(tripPromises));
+        await this.spinOnPromise(Promise.all(tripPromises))
 
         await this.spinOnPromise(
           this.refresh(['allRoutes', 'currentRoutes'])
@@ -342,7 +338,7 @@ export default {
           component: 'CommonModals',
           props: {
             title: 'Error',
-            message: err.message,
+            message: err.message
           }
         })
       }

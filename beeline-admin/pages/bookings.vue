@@ -1,7 +1,5 @@
 <template>
 <div class="bookings-page">
-  
-  
 
     <!--  Remove bookings-page class -->
     <div class="row">
@@ -172,7 +170,7 @@
             </thead>
 
             <tbody>
-              <tr v-for="(ticket, $index) in bookings" :class="{
+              <tr v-for="(ticket, index) in bookings" :key="ticket.id" :class="{
                 valid: ticket.status === 'valid',
                 failed: ticket.status === 'failed',
                 refunded: ticket.status !== 'valid' && ticket.status !== 'failed',
@@ -184,7 +182,7 @@
                       :value="selectedBookings.find(s => s === ticket)"
                       @change="toggleSelection([ticket])"
                       :disabled="ticket.status != 'valid'"/>
-                    {{ $index + 1 + (pagination.currentPage-1) * pagination.perPage }}
+                    {{ index + 1 + (pagination.currentPage-1) * pagination.perPage }}
                   </label>
                 </td>
                 <td>
@@ -359,6 +357,7 @@
 
 </template>
 <script>
+import _ from 'lodash'
 import assert from 'assert'
 import querystring from 'querystring'
 import {mapState, mapGetters, mapActions} from 'vuex'
@@ -377,7 +376,7 @@ export default {
     MultiSelectBroker,
     RouteSelector,
     SpanSelect,
-    UibPagination,
+    UibPagination
   },
 
   data () {
@@ -385,7 +384,7 @@ export default {
       pagination: {
         perPage: 50,
         pageCount: 1,
-        currentPage: 1,
+        currentPage: 1
       },
 
       fetchedData: null,
@@ -400,7 +399,7 @@ export default {
           refunded: true,
           void: true,
           failed: false,
-          pending: false,
+          pending: false
         },
         startAndEndDate: [],
         userQuery: '',
@@ -412,18 +411,18 @@ export default {
       },
 
       chart: {
-        month: new Date,
-        fetchedData: [],
+        month: new Date(),
+        fetchedData: []
       },
 
       disp: {
         availableRoutes: [],
-        month: new Date,
+        month: new Date(),
         datesBetween: [],
         counts: {},
         dates: [],
         pagination: {firstRow: 1, lastRow: 1, totalRows: 1},
-        isLoading: 0,
+        isLoading: 0
       }
     }
   },
@@ -435,7 +434,7 @@ export default {
     f: () => filters,
 
     now () {
-      return new Date
+      return new Date()
     },
     startOfMonth () {
       return new Date(Date.UTC(
@@ -466,7 +465,7 @@ export default {
         firstRow: (this.pagination.currentPage - 1) * this.fetchedData.perPage + 1,
         lastRow: Math.min(this.pagination.currentPage * this.fetchedData.perPage, this.fetchedData.count),
         totalRows: this.fetchedData.count,
-        pageCount: Math.ceil(this.fetchedData.count / this.fetchedData.perPage),
+        pageCount: Math.ceil(this.fetchedData.count / this.fetchedData.perPage)
       }
     },
 
@@ -477,7 +476,7 @@ export default {
         .map((date) => ({
           date: new Date(parseInt(date)),
           annotation: this.chart.fetchedData.countByDate[date],
-          selectable: true,
+          selectable: true
         }))
     },
 
@@ -522,20 +521,20 @@ export default {
     requestUrlWithoutPagination () {
       this.pagination.currentPage = 1
     },
-    
+
     requestUrl: _.debounce(function () {
       this.requeryTable()
     }, 1000, {leading: false, trailing: true}),
 
-    monthlyCountsUrl:  _.debounce(function () {
+    monthlyCountsUrl: _.debounce(function () {
       this.requeryChart()
-    }, 1000, {leading: false, trailing: true}),
+    }, 1000, {leading: false, trailing: true})
   },
 
   created () {
     this.filter.startAndEndDate = [
       this.startOfMonth,
-      this.endOfMonth,
+      this.endOfMonth
     ]
     this.filter.routeId = this.routeId
     this.filter.userId = this.userId
@@ -556,39 +555,39 @@ export default {
       if (!this.monthlyCountsUrl) return
 
       this.axios.get(this.monthlyCountsUrl)
-      .then((result) => {
-        this.chart.fetchedData = result.data;
-      })
-      .catch((err) => {
-        console.error(err)
-      })
+        .then((result) => {
+          this.chart.fetchedData = result.data
+        })
+        .catch((err) => {
+          console.error(err)
+        })
     },
 
     requeryTable () {
       if (this.requestUrl === null) return
 
       const queryPromise = this.$lastPromise = this.axios.get(this.requestUrl)
-      .then((result) => {
-        if (queryPromise !== this.$lastPromise) return
+        .then((result) => {
+          if (queryPromise !== this.$lastPromise) return
 
-        // for WRS tickets, we cheated and saved a JSON in the user's name field :(
-        for (let ticket of result.data.rows) {
-          try {
-            ticket.user.json = JSON.parse(ticket.user.name)
-          } catch (e) {}
-        }
+          // for WRS tickets, we cheated and saved a JSON in the user's name field :(
+          for (let ticket of result.data.rows) {
+            try {
+              ticket.user.json = JSON.parse(ticket.user.name)
+            } catch (e) {}
+          }
 
-        this.pagination.currentPage = result.data.page
-        this.fetchedData = result.data
-        this.bookings = result.data.rows
-        this.selectedBookings = [];
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+          this.pagination.currentPage = result.data.page
+          this.fetchedData = result.data
+          this.bookings = result.data.rows
+          this.selectedBookings = []
+        })
+        .catch((err) => {
+          console.log(err)
+        })
 
       this.spinOnPromise(queryPromise)
-      .catch(this.showErrorModal)
+        .catch(this.showErrorModal)
 
       return queryPromise
     },
@@ -597,9 +596,9 @@ export default {
       this.axios.post('/downloads', {
         uri: this.csvUrl
       })
-      .then((result) => {
-        redirect(process.env.BACKEND_URL + '/downloads/' + result.data.token)
-      })
+        .then((result) => {
+          redirect(process.env.BACKEND_URL + '/downloads/' + result.data.token)
+        })
     },
 
     async sendWrsEmail (ticket) {
@@ -608,13 +607,13 @@ export default {
           _.get(ticket, 'ticketExpense.transactionId')
 
         this.spinOnPromise(this.axios.post(`/custom/wrs/email/${transactionId}`))
-        .then(() => {
-          return this.alert({
-            title: 'Email sent',
-            message: 'Email sent to your Beeline Admin Login Email ID. Please check your inbox',
-          });
-        })
-        .catch(this.showErrorModal)
+          .then(() => {
+            return this.alert({
+              title: 'Email sent',
+              message: 'Email sent to your Beeline Admin Login Email ID. Please check your inbox'
+            })
+          })
+          .catch(this.showErrorModal)
       }
     },
 
@@ -625,23 +624,24 @@ export default {
       if (await this.confirm('Confirm refund?')) {
         this.spinOnPromise(
           this.axios.post(`/transactions/tickets/${ticket.id}/refund/payment`, {
-            targetAmt: originalPrice - discount,
+            targetAmt: originalPrice - discount
           })
         )
-        .then((response) => {
-          var txn = response.data;
-          var payment = txn.transactionItems.find(ts => ts.itemType == 'refundPayment' && ts.refundPayment)
+          .then((response) => {
+            var txn = response.data
+            var payment = txn.transactionItems
+              .find(ts => ts.itemType === 'refundPayment' && ts.refundPayment)
 
-          this.requeryBoth()
-          return this.alert({ title: parseFloat(payment.credit).toFixed(2) + " refunded." })
-        })
-        .catch(this.showErrorModal)
+            this.requeryBoth()
+            return this.alert({ title: parseFloat(payment.credit).toFixed(2) + ' refunded.' })
+          })
+          .catch(this.showErrorModal)
       }
     },
 
     issueTickets () {
       const selectedBookings = this.selectedBookings
-      const firstTicket = selectedBookings.length > 0 ? selectedBookings[0] : null;
+      const firstTicket = selectedBookings.length > 0 ? selectedBookings[0] : null
 
       const issueTicketModalOptions = {
         users: _(selectedBookings)
@@ -662,44 +662,20 @@ export default {
 
       return this.showModal({
         component: 'IssueTicket',
-        props: issueTicketModalOptions,
+        props: issueTicketModalOptions
       })
-      .then((request) =>
-        this.spinOnPromise(
-          this.axios.post('/transactions/tickets/issue_free', request))
-          .then(() => this.flash({title: 'Tickets created!'}))
-          .catch(this.showErrorModal)
-      )
-      .then(() => this.requeryBoth(), () => { /* do nothing if cancelled */ })
+        .then((request) =>
+          this.spinOnPromise(
+            this.axios.post('/transactions/tickets/issue_free', request))
+            .then(() => this.flash({title: 'Tickets created!'}))
+            .catch(this.showErrorModal)
+        )
+        .then(() => this.requeryBoth(), () => { /* do nothing if cancelled */ })
     },
 
     // Edit ticket button
     editTicket (ticket) {
-      const selectedTicketIds = [ticket.id];
-      const selectedTickets = [ticket];
-
-      return this.showModal({
-        component: 'IssueTicket',
-        props:  {
-          users: [ticket.user],
-          routeId: ticket.boardStop.trip.routeId,
-          boardStopStopId: ticket.boardStop.stopId,
-          alightStopStopId: ticket.alightStop.stopId,
-          cancelledTickets: selectedTickets
-        }
-      })
-      .then((request) =>
-        this.spinOnPromise(
-          this.axios.post('/transactions/tickets/issue_free', request))
-          .then(() => this.flash({title: 'Tickets created!'}))
-          .catch(this.showErrorModal)
-      )
-      .then(() => this.requeryBoth(), () => { /* do nothing if cancelled */ })
-    },
-    // Add ticket button -- don't cancel earlier ticket
-    addTicket (ticket) {
-      const selectedTicketIds = [ticket.id];
-      const selectedTickets = [ticket];
+      const selectedTickets = [ticket]
 
       return this.showModal({
         component: 'IssueTicket',
@@ -708,15 +684,35 @@ export default {
           routeId: ticket.boardStop.trip.routeId,
           boardStopStopId: ticket.boardStop.stopId,
           alightStopStopId: ticket.alightStop.stopId,
-        },
+          cancelledTickets: selectedTickets
+        }
       })
-      .then((request) =>
-        this.spinOnPromise(
-          this.axios.post('/transactions/tickets/issue_free', request))
-          .then(() => this.flash({title: 'Tickets created!'}))
-          .catch(this.showErrorModal)
-      )
-      .then(() => this.requeryBoth(), () => { /* do nothing if cancelled */ })
+        .then((request) =>
+          this.spinOnPromise(
+            this.axios.post('/transactions/tickets/issue_free', request))
+            .then(() => this.flash({title: 'Tickets created!'}))
+            .catch(this.showErrorModal)
+        )
+        .then(() => this.requeryBoth(), () => { /* do nothing if cancelled */ })
+    },
+    // Add ticket button -- don't cancel earlier ticket
+    addTicket (ticket) {
+      return this.showModal({
+        component: 'IssueTicket',
+        props: {
+          users: [ticket.user],
+          routeId: ticket.boardStop.trip.routeId,
+          boardStopStopId: ticket.boardStop.stopId,
+          alightStopStopId: ticket.alightStop.stopId
+        }
+      })
+        .then((request) =>
+          this.spinOnPromise(
+            this.axios.post('/transactions/tickets/issue_free', request))
+            .then(() => this.flash({title: 'Tickets created!'}))
+            .catch(this.showErrorModal)
+        )
+        .then(() => this.requeryBoth(), () => { /* do nothing if cancelled */ })
     },
 
     async toggleVoidTicket (ticket) {
@@ -726,19 +722,19 @@ export default {
       const newStatus = (status === 'void') ? 'valid' : 'void'
       if (await this.confirm({title: `Confirm change ticket status to ${newStatus}?`})) {
         this.spinOnPromise(this.axios.put(`/tickets/${id}/status`, {status: newStatus}))
-        .then((response) => {
-          const { status } = response.data
-          this.requeryBoth()
-          return this.alert({title: `This ticket is now ${status}`})
-        })
-        .catch(this.showErrorModal)
+          .then((response) => {
+            const { status } = response.data
+            this.requeryBoth()
+            return this.alert({title: `This ticket is now ${status}`})
+          })
+          .catch(this.showErrorModal)
       }
     },
 
     addPaginationOptions (url) {
       return url + '&' + querystring.stringify({
         page: this.pagination.currentPage || 1,
-        perPage: this.pagination.perPage,
+        perPage: this.pagination.perPage
       })
     },
 
@@ -781,8 +777,8 @@ export default {
       if (this.filter.tripId || this.filter.paymentId ||
           this.filter.transactionId ||
           this.filter.chargeId || this.filter.ticketId) {
-        delete queryOptions.tripStartDate;
-        delete queryOptions.tripEndDate;
+        delete queryOptions.tripStartDate
+        delete queryOptions.tripEndDate
       }
 
       if (this.filter.tripId) {
@@ -802,10 +798,10 @@ export default {
       }
 
       if (this.companyId) {
-        queryOptions.transportCompanyId = this.companyId;
+        queryOptions.transportCompanyId = this.companyId
       }
 
-      Object.assign(queryOptions, override);
+      Object.assign(queryOptions, override)
 
       return `/custom/wrs/report?` + querystring.stringify(queryOptions)
     },

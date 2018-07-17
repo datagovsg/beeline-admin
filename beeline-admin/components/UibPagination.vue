@@ -8,7 +8,7 @@
      <span aria-hidden="true">&lsaquo;</span>
    </li>
 
-   <li v-for="page in pages" @click="goTo(page)"
+   <li v-for="page in pages" :key="page" @click="goTo(page)"
      v-if="isNearCurrentPage(page) || displayAllPages"
      :class="{active: page === value}">
      <a>{{page + 1}}</a>
@@ -36,23 +36,23 @@ export default {
     'boundaryLinks', 'displayAllPages', 'totalItems', 'itemsPerPage', 'value'
   ],
   computed: {
-    totalPages() {
+    totalPages () {
       return Math.max(
         1,
         Math.floor(((this.totalItems || 0) + ((this.itemsPerPage || 30) - 1)) / (this.itemsPerPage || 30)))
     },
-    pages() {
+    pages () {
       return _.range(0, this.totalPages)
     }
   },
   methods: {
-    goTo(page) {
+    goTo (page) {
       this.$emit('input', page)
     },
-    isNearCurrentPage(page) {
+    isNearCurrentPage (page) {
       return Math.abs(page - this.value) <= (VISIBLE_PAGE_COUNT / 2)
     },
-    isAlmostNearCurrentPage(page) {
+    isAlmostNearCurrentPage (page) {
       return Math.abs(page - this.value) === (VISIBLE_PAGE_COUNT / 2) + 1
     }
   }

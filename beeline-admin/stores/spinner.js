@@ -2,16 +2,16 @@ import assert from 'assert'
 
 module.exports = {
   namespaced: true,
-  state:  () => ({
+  state: () => ({
     spinnerPromise: null
   }),
   mutations: {
-    _setPromise(state, promise) {
+    _setPromise (state, promise) {
       state.spinnerPromise = promise
     }
   },
   actions: {
-    spinOnPromise(context, promise) {
+    spinOnPromise (context, promise) {
       assert(typeof promise.then === 'function')
 
       let nextPromise
@@ -19,10 +19,10 @@ module.exports = {
       if (context.state.spinnerPromise) {
         nextPromise = Promise.all([
           context.state.spinnerPromise,
-          promise.catch((err) => {console.error(err)})
+          promise.catch((err) => { console.error(err) })
         ])
       } else {
-        nextPromise = promise.catch((err) => {console.error(err)})
+        nextPromise = promise.catch((err) => { console.error(err) })
       }
 
       // If another promise is subsequently watch()ed, then
@@ -36,6 +36,6 @@ module.exports = {
       context.commit('_setPromise', nextPromise)
 
       return promise
-    },
-  },
+    }
+  }
 }

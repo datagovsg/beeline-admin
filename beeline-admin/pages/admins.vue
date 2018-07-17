@@ -1,8 +1,6 @@
 <template>
   <div class="container withnav drivers">
 
-
-
     <div class="row">
       <div class="col-lg-12">
         <h1>Manage Admins Users</h1>
@@ -85,13 +83,8 @@
   </div>
 </template>
 <script>
-import assert from 'assert'
-import querystring from 'querystring'
-import {mapGetters, mapActions, mapState} from 'vuex'
+import {mapGetters, mapActions} from 'vuex'
 import _ from 'lodash'
-import * as resources from '../stores/resources'
-import filters from '../filters'
-import dateformat from 'dateformat'
 
 export default {
   props: ['companyId'],
@@ -135,17 +128,17 @@ export default {
 
     requery () {
       this.spinOnPromise(this.axios.get(`/companies/${this.companyId}/admins`)
-      .then((response) => {
-        this.admins = response.data.map(admin => ({
-          ...admin,
-          permissions: reverseMapPermissions(
-            admin.transportCompanies[0].adminCompany.permissions
-          )
+        .then((response) => {
+          this.admins = response.data.map(admin => ({
+            ...admin,
+            permissions: reverseMapPermissions(
+              admin.transportCompanies[0].adminCompany.permissions
+            )
+          }))
         }))
-      }))
-      .catch((err) => {
-        console.log(err.response)
-      })
+        .catch((err) => {
+          console.log(err.response)
+        })
     },
 
     addAdmin () {
@@ -163,8 +156,8 @@ export default {
         })
 
       this.spinOnPromise(updatePromise)
-      .then(() => this.requery())
-      .catch(e => console.error(e))
+        .then(() => this.requery())
+        .catch(e => console.error(e))
     },
 
     deleteAdmin (admin) {
@@ -173,23 +166,23 @@ export default {
         props: {
           type: 'confirm',
           title: `Delete admin ${admin.name}`,
-          message: `Are you sure you want to delete ${admin.name}`,
+          message: `Are you sure you want to delete ${admin.name}`
         }
       })
-      .then((result) => {
-        if (result) {
-          return this.spinOnPromise(
-            this.axios.delete(`/companies/${this.companyId}/admins/${admin.id}`)
-          )
-          .then(() => {
-            this.requery()
-          })
-          .catch((err) => {
-            console.log(err);
-          })
-        }
-      })
-      .then(() => this.requery())
+        .then((result) => {
+          if (result) {
+            return this.spinOnPromise(
+              this.axios.delete(`/companies/${this.companyId}/admins/${admin.id}`)
+            )
+              .then(() => {
+                this.requery()
+              })
+              .catch((err) => {
+                console.log(err)
+              })
+          }
+        })
+        .then(() => this.requery())
     }
   }
 }
@@ -202,13 +195,13 @@ const PermissionsMap = {
     'manage-routes', 'manage-drivers',
     'drive', 'update-trip-status',
     'message-passengers', 'view-passengers',
-    'manage-notifications', 'manage-customers',
+    'manage-notifications', 'manage-customers'
   ],
   manageCompany: ['manage-company'],
-  manageAdmins: ['manage-admins'],
+  manageAdmins: ['manage-admins']
 }
 
-function mapPermissions(permissions) {
+function mapPermissions (permissions) {
   return _(permissions)
     .keys()
     .filter(key => permissions[key])
@@ -216,10 +209,10 @@ function mapPermissions(permissions) {
     .flatten()
     .value()
 }
-function reverseMapPermissions(permissionList) {
-  const permissions = {};
+function reverseMapPermissions (permissionList) {
+  const permissions = {}
 
-  if (!permissionList)  return permissions;
+  if (!permissionList) return permissions
 
   _.each(PermissionsMap, (permissionGroup, groupName) => {
     permissions[groupName] = _.every(
@@ -227,7 +220,7 @@ function reverseMapPermissions(permissionList) {
       p => permissionList.indexOf(p) !== -1
     )
   })
-  return permissions;
+  return permissions
 }
 
 </script>

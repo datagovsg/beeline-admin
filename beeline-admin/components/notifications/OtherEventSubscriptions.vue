@@ -61,13 +61,12 @@
 
 <script>
 import _ from 'lodash'
-import assert from 'assert'
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex'
 
 import EventSubscriptionEditor from './EventSubscriptionEditor.vue'
 import NotificationMethodEditor from './NotificationMethodEditor.vue'
 
-import {satisfiesEvent, stringify, EVENT_TYPES} from './notifications'
+import {satisfiesEvent, EVENT_TYPES} from './notifications'
 
 const UPDATEABLE_FIELDS = [
   'params', 'event', 'handler', 'formatter', 'agent'
@@ -77,9 +76,9 @@ export default {
 
   components: {EventSubscriptionEditor, NotificationMethodEditor},
 
-  data() {
+  data () {
     return {
-      eventSubscriptions: null,
+      eventSubscriptions: null
     }
   },
 
@@ -105,13 +104,13 @@ export default {
           )
         }
       }
-    },
+    }
   },
 
   methods: {
     ...mapActions('modals', ['showErrorModal', 'confirm']),
     ...mapActions('spinner', ['spinOnPromise']),
-    blankEventSubscription() {
+    blankEventSubscription () {
       return {
         event: null,
         params: {ignoreIfEmpty: true},
@@ -121,39 +120,39 @@ export default {
       }
     },
 
-    add() {
+    add () {
       this.eventSubscriptions.push(this.blankEventSubscription())
     },
 
     saveOne (subscr) {
       const promise = subscr.id
         ? this.axios.put(
-            `/companies/${this.companyId}/eventSubscriptions/${subscr.id}`, 
-            _.pick(subscr, UPDATEABLE_FIELDS)
-          )
+          `/companies/${this.companyId}/eventSubscriptions/${subscr.id}`,
+          _.pick(subscr, UPDATEABLE_FIELDS)
+        )
         : this.axios.post(
-            `/companies/${this.companyId}/eventSubscriptions`,
-            _.pick(subscr, UPDATEABLE_FIELDS)
-          )
+          `/companies/${this.companyId}/eventSubscriptions`,
+          _.pick(subscr, UPDATEABLE_FIELDS)
+        )
       this.spinOnPromise(promise)
-      .catch(this.showErrorModal)
+        .catch(this.showErrorModal)
 
       promise.then((response) => {
-        _.assign(subscr, _.omit(response.data, ['createdAt', 'updatedAt']));
+        _.assign(subscr, _.omit(response.data, ['createdAt', 'updatedAt']))
       })
-      .catch(this.showErrorModal)
+        .catch(this.showErrorModal)
     },
-    async deleteOne(subscr) {
-      if (!(await this.confirm({title: "Are you sure you want to delete this?"}))) {
-        return;
+    async deleteOne (subscr) {
+      if (!(await this.confirm({title: 'Are you sure you want to delete this?'}))) {
+        return
       }
       ;(subscr.id
         ? this.spinOnPromise(this.axios.delete(`/companies/${this.companyId}/eventSubscriptions/${subscr.id}`))
         : Promise.resolve(null))
-      .then(() => {
-        this.eventSubscriptions.splice(this.eventSubscriptions.indexOf(subscr), 1)
-      })
-      .catch(this.showErrorModal)
+        .then(() => {
+          this.eventSubscriptions.splice(this.eventSubscriptions.indexOf(subscr), 1)
+        })
+        .catch(this.showErrorModal)
     }
   }
 }

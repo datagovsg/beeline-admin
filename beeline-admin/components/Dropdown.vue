@@ -55,7 +55,7 @@ export default {
 
   data () {
     return {
-      state_showDropdown: false,
+      state_showDropdown: false
     }
   },
 

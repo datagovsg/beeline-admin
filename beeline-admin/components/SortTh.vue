@@ -13,12 +13,12 @@
 export default {
   props: ['order', 'orderBy', 'field'],
   watch: {
-    field(f) {
+    field (f) {
       console.log(f)
     }
   },
   computed: {
-    nextOrder() {
+    nextOrder () {
       return ((this.order === 'asc') ^ (this.orderBy === this.field)) ? 'asc' : 'desc'
     }
   }

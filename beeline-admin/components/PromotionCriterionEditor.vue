@@ -4,7 +4,7 @@
       Type
       <select class="form-control" :value="value.type"
           @input="updateType($event.target.value)">
-        <option v-for="t in criterionTypes" :value="t.type">
+        <option v-for="t in criterionTypes" :key="t.type" :value="t.type">
           {{f.titleCase(t.type)}}
         </option>
       </select>
@@ -146,11 +146,10 @@
   </div>
 </template>
 <script>
-const _ = require('lodash');
+const _ = require('lodash')
 const titleCase = require('title-case')
-const leftPad = require('left-pad')
 import dateformat from 'dateformat'
-import {mapGetters, mapActions, mapState} from 'vuex'
+import {mapState} from 'vuex'
 
 import TagsEditor from '@/components/TagsEditor.vue'
 import DatePickerDropdown from '@/components/DatePickerDropdown.vue'
@@ -162,7 +161,7 @@ const criterionTypes = _.sortBy([
   {
     type: 'limitByCompany',
     default: {companyId: null},
-    restrict: ['Promotion', 'RoutePass'],
+    restrict: ['Promotion', 'RoutePass']
   },
   {
     type: 'limitByContactList',
@@ -171,46 +170,46 @@ const criterionTypes = _.sortBy([
   {
     type: 'limitByMinTicketCount',
     default: {n: 5},
-    restrict: ['Promotion'],
+    restrict: ['Promotion']
   },
   {
     type: 'limitByPurchaseDate',
-    default: {startDate: null, endDate: null},
+    default: {startDate: null, endDate: null}
   },
   {
     type: 'limitByRoute',
     default: {routeIds: []},
-    restrict: ['Promotion'],
+    restrict: ['Promotion']
   },
   {
     type: 'limitByRouteTags',
     default: {tags: []},
-    restrict: ['Promotion'],
+    restrict: ['Promotion']
   },
   {
     type: 'limitByTripDayOfWeek',
     default: {0: false, 1: false, 2: false, 3: false, 4: false, 5: false, 6: false},
-    restrict: ['Promotion'],
+    restrict: ['Promotion']
   },
   {
     type: 'limitByTripDate',
     default: {startDate: null, endDate: null},
-    restrict: ['Promotion'],
-  },
+    restrict: ['Promotion']
+  }
 ], 'type')
 
 export default {
   props: ['value', 'companyId', 'promotionType'],
   data () {
     return {
-      paramCache:  _(criterionTypes)
+      paramCache: _(criterionTypes)
         .keyBy(x => x.type)
         .mapValues(x => (x.default || {}))
         .value(),
       disp: _(criterionTypes)
         .keyBy(x => x.type)
         .mapValues(x => ({}))
-        .value(),
+        .value()
     }
   },
   components: {
@@ -218,12 +217,12 @@ export default {
     DatePickerDropdown,
     RouteSelector,
     CompanySelector,
-    ContactListSelector,
+    ContactListSelector
   },
   watch: {
     'value.params': {
       immediate: true,
-      handler(p) {
+      handler (p) {
         if (this.value && this.value.type) {
           this.paramCache[this.value.type] = p
         }

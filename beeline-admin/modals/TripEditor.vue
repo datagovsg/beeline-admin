@@ -5,7 +5,7 @@
     <div class="modal-header" v-if="createNew">
       <h3>Create trips</h3>
       <ul class="date-list">
-        <li v-for="date in newTripDates">
+        <li v-for="date in newTripDates" :key="date.getTime()">
           {{f.date(date, 'dd-mmm-yyyy')}}
         </li>
       </ul>
@@ -18,7 +18,7 @@
         <p>
           Trip ID:
         </p>
-        <li v-for="trip in editedTrips">
+        <li v-for="trip in editedTrips" :key="trip.id">
           {{trip.id}} ({{f.date(trip.date, 'dd-mmm-yyyy')}})
         </li>
       </ul>
@@ -116,7 +116,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(tripStop, index) in editTrip.tripStops">
+                  <tr v-for="(tripStop, index) in editTrip.tripStops" :key="index">
                     <td>
                       {{ index + 1 }}
                     </td>
@@ -174,6 +174,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import {mapActions} from 'vuex'
 
 import TimeInput from '@/components/TimeInput.vue'
@@ -189,7 +190,7 @@ export default {
     'newTripDates', 'editedTrips'
   ],
   components: { StopSelector, TimeInput, Modal },
-  data() {
+  data () {
     return {
       editTrip: null
     }
@@ -197,7 +198,7 @@ export default {
   watch: {
     referenceTrip: {
       immediate: true,
-      handler(trip) {
+      handler (trip) {
         const tripClone = _.cloneDeep(trip)
 
         this.editTrip = {
@@ -218,19 +219,19 @@ export default {
     }
   },
   computed: {
-    f: () => filters,
+    f: () => filters
   },
   methods: {
     ...mapActions('modals', ['showModal', 'showErrorModal']),
-    blankTripStop() {
+    blankTripStop () {
       return {
         stopId: null,
         time: new Date(),
         canBoard: true,
-        canAlight: true,
+        canAlight: true
       }
     },
-    updateTime(date, input) {
+    updateTime (date, input) {
       if (!input) return null
 
       const newDate = new Date(date.getTime())
@@ -244,10 +245,10 @@ export default {
         component: 'StopsPopup',
         props: {}
       })
-      .then((stop) => {
-        tripStop.stopId = stop.id
-      })
-      .catch(() => {})
+        .then((stop) => {
+          tripStop.stopId = stop.id
+        })
+        .catch(() => {})
     },
     validateBeforeResolve () {
       const {tripStops: ts} = this.editTrip
@@ -265,6 +266,6 @@ export default {
       }
     }
   },
-  mixins: [ModalMixin],
+  mixins: [ModalMixin]
 }
 </script>

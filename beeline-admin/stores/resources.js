@@ -1,5 +1,5 @@
+import _ from 'lodash'
 import assert from 'assert'
-import axios from 'axios'
 import querystring from 'querystring'
 
 export const storeModule = {
@@ -22,7 +22,7 @@ export const storeModule = {
         return context.rootGetters.axios
           .put(`/routes/${route.id}`, {
             ..._.omit(route, ['trips', 'regions']),
-            features: route.features || '',
+            features: route.features || ''
           })
           // TODO: you can update the routes cache
           // or you can invalidate the current list
@@ -30,7 +30,7 @@ export const storeModule = {
         return context.rootGetters.axios
           .post(`/routes`, {
             ..._.omit(route, ['trips', 'regions']),
-            features: route.features || '',
+            features: route.features || ''
           })
           // TODO: you can update the routes cache
           // or you can invalidate the current list
@@ -45,7 +45,7 @@ export const storeModule = {
       const updatableFields = [
         'driverId', 'capacity', 'companyId', 'price',
         'bookingInfo', 'status'
-      ];
+      ]
       const updatableTripStopFields = [
         'canBoard', 'canAlight', 'time', 'stopId'
       ]
@@ -58,7 +58,7 @@ export const storeModule = {
       assert.equal(date.getTime() % (24 * 3600 * 1000), 0,
         `Date of trip must be at UTC midnight`)
 
-      function combineDateTime(utcDate, localTime) {
+      function combineDateTime (utcDate, localTime) {
         return new Date(
           utcDate.getUTCFullYear(),
           utcDate.getUTCMonth(),
@@ -79,11 +79,11 @@ export const storeModule = {
       })
     },
 
-    getPings(context, {tripId, options}) {
+    getPings (context, {tripId, options}) {
       return context.rootGetters.axios
         .get(`${process.env.TRACKING_URL}/trips/${tripId}/pings?${querystring.stringify(options)}`)
         .then(resp => resp.data.map(postProcessPing))
-    },
+    }
   }
 }
 
@@ -107,6 +107,6 @@ export function postProcessPing (ping) {
     ...ping,
     createdAt: new Date(ping.createdAt),
     updatedAt: new Date(ping.updatedAt),
-    time: new Date(ping.time),
+    time: new Date(ping.time)
   }
 }

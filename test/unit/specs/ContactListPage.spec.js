@@ -1,32 +1,31 @@
 import ContactListPage from '@/pages/contact-list.vue'
-import { mount } from '@vue/test-utils'
-import { delay, mockAjax, testStore, mountTestPage } from '../util'
+import { delay, mockAjax, mountTestPage } from '../util'
 
 describe('contact-list.vue', () => {
   let contactListPage = null
 
   const SAMPLE_CONTACT_LIST = {
-    "id":10,
-    "transportCompanyId":15,
-    "description":"ABCDEFG",
-    "telephones": [
-      "+6590102031",
-      "+6590102032",
-      "+6590102033",
-      "+6590102034",
-      "+6580102035",
-      "+6590102036",
-      "+6590102037"
+    'id': 10,
+    'transportCompanyId': 15,
+    'description': 'ABCDEFG',
+    'telephones': [
+      '+6590102031',
+      '+6590102032',
+      '+6590102033',
+      '+6590102034',
+      '+6580102035',
+      '+6590102036',
+      '+6590102037'
     ],
-    "emails":[
-      "a@example.com",
-      "ab@example.com",
-      "abc@example.com",
-      "abcd@example.com",
-      "abcde@example.com",
+    'emails': [
+      'a@example.com',
+      'ab@example.com',
+      'abc@example.com',
+      'abcd@example.com',
+      'abcde@example.com'
     ],
-    "createdAt":"2017-11-27T02:09:12.185Z",
-    "updatedAt":"2018-06-25T02:10:04.119Z"
+    'createdAt': '2017-11-27T02:09:12.185Z',
+    'updatedAt': '2018-06-25T02:10:04.119Z'
   }
 
   beforeEach(async () => {
@@ -42,8 +41,8 @@ describe('contact-list.vue', () => {
           sync: false,
           propsData: {
             companyId: 15,
-            contactListId: 10,
-          },
+            contactListId: 10
+          }
 
         }
       )
@@ -92,11 +91,11 @@ describe('contact-list.vue', () => {
             '+6581234567',
             '+6581234568',
             '+6581234569',
-            '+6581234561',
+            '+6581234561'
           ])
           expect(request.data.emails).toEqual([
             'hello@gmail.com',
-            'gutentag@yahoo.com',
+            'gutentag@yahoo.com'
           ])
           called = true
         }

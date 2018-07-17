@@ -14,14 +14,14 @@ export default {
   props: ['tripStop', 'index'],
   computed: {
     f: () => filters,
-    tripStopIcon() {
+    tripStopIcon () {
       const type = this.tripStop.canBoard ? 'Board' : 'Alight'
       const index = leftPad(this.index + 1, 3, '0')
 
       return {
         url: `./img/stop${type}${index}.png`,
         anchor: new google.maps.Point(15, 15),
-        scaledSize: new google.maps.Size(30, 30),
+        scaledSize: new google.maps.Size(30, 30)
       }
     }
   }

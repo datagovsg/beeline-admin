@@ -6,7 +6,7 @@
     :value="value.type" @input="updateType($event.target.value)"
     class="form-control">
     <option disabled></option>
-    <option v-for="type in discountTypes" :value="type.type">
+    <option v-for="type in discountTypes" :key="type.type" :value="type.type">
       {{f.titleCase(type.type)}}
     </option>
   </select>
@@ -62,6 +62,7 @@
   <div v-if="value.type == 'tieredRateByQty'">
     <div>N.B. Tiers must be in increasing order</div>
     <div v-for="(tier, index) in paramCache.tieredRateByQty.schedule"
+        :key="index"
         class="form-inline">
 
       When user buys at least
@@ -96,6 +97,7 @@
   <div v-if="value.type == 'tieredFixedByTotalValue'">
     <div>N.B. Tiers must be in increasing order</div>
     <div v-for="(tier, index) in paramCache.tieredFixedByTotalValue.schedule"
+        :key="index"
         class="form-inline">
 
       When user buys
@@ -130,6 +132,7 @@
   <div v-if="value.type == 'tieredRateByTotalValue'">
     <div>N.B. Tiers must be in increasing order</div>
     <div v-for="(tier, index) in paramCache.tieredRateByTotalValue.schedule"
+        :key="index"
         class="form-inline">
 
       When user buys
@@ -166,11 +169,9 @@
 </template>
 
 <script>
-const _ = require('lodash');
+const _ = require('lodash')
 const titleCase = require('title-case')
-const leftPad = require('left-pad')
 import dateformat from 'dateformat'
-import {mapGetters, mapActions, mapState} from 'vuex'
 
 import PercentInput from '@/components/PercentInput.vue'
 import PriceInput from '@/components/PriceInput.vue'
@@ -179,58 +180,58 @@ const discountTypes = _.sortBy([
   {
     type: 'simpleRate',
     default: {rate: null},
-    restrict: ['Promotion', 'RoutePass'],
+    restrict: ['Promotion', 'RoutePass']
   },
   {
     type: 'simpleFixed',
     default: {fixed: null},
-    restrict: ['Promotion', 'RoutePass'],
+    restrict: ['Promotion', 'RoutePass']
   },
   {
     type: 'flatPrice',
     default: {price: null},
-    restrict: ['Promotion', 'RoutePass'],
+    restrict: ['Promotion', 'RoutePass']
   },
   {
     type: 'tieredRateByQty',
     default: {schedule: []},
-    restrict: ['Promotion', 'RoutePass'],
+    restrict: ['Promotion', 'RoutePass']
   },
   {
     type: 'tieredFixedByTotalValue',
     default: {schedule: []},
-    restrict: ['Promotion', 'RoutePass'],
+    restrict: ['Promotion', 'RoutePass']
   },
   {
     type: 'tieredRateByTotalValue',
     default: {schedule: []},
-    restrict: ['Promotion', 'RoutePass'],
+    restrict: ['Promotion', 'RoutePass']
   },
   {
     type: 'fixedTransactionPrice',
     default: {price: null},
-    restrict: ['Promotion', 'RoutePass'],
-  },
+    restrict: ['Promotion', 'RoutePass']
+  }
 ], 'type')
 
 export default {
   props: ['value', 'companyId', 'promotionType'],
   data () {
     return {
-      paramCache:  _(discountTypes)
+      paramCache: _(discountTypes)
         .keyBy(x => x.type)
         .mapValues(x => x.default)
-        .value(),
+        .value()
     }
   },
   components: {
     PercentInput,
-    PriceInput,
+    PriceInput
   },
   watch: {
     'value.params': {
       immediate: true,
-      handler(p) {
+      handler (p) {
         if (this.value && this.value.type) {
           this.paramCache[this.value.type] = p
         }
@@ -300,7 +301,7 @@ export default {
           schedule: this.value.params.schedule.concat([v])
         }
       })
-    },
+    }
   }
 }
 </script>

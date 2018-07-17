@@ -30,13 +30,13 @@ export function testStore ({modules, state, getters, mutations, actions}) {
     }),
     getters: {
       ...StoreDefinition.getters,
-      
+
       axios: () => axios,
 
       isSuperAdmin (state) {
         return state._isSuperAdmin
       },
-      ...getters,
+      ...getters
     },
     mutations: {
       ...StoreDefinition.mutations,
@@ -45,11 +45,9 @@ export function testStore ({modules, state, getters, mutations, actions}) {
     actions: {
       ...StoreDefinition.actions,
       ...actions
-    },
+    }
   })
 }
-
-
 
 /**
  * Help: is there a good ajax mocking library?
@@ -66,15 +64,14 @@ export function testStore ({modules, state, getters, mutations, actions}) {
  * --> axios.get('/a/b/c') => Promise.resolve({ data: {hello: world}})
  * --> axios.get('/a/b/c?d=1&e=2&f=3') => Promise.resolve({ data: {hello: world}, query: {...}})
  */
-export async function mockAjax(routes, fn) {
-
+export async function mockAjax (routes, fn) {
   // Build up the routes
   const routesByMethod = {
     get: [],
     post: [],
     put: [],
     head: [],
-    delete: [],
+    delete: []
   }
 
   for (let route in routes) {
@@ -191,9 +188,9 @@ export async function mockAjax(routes, fn) {
 /**
  * Wrapper around vue-test-utils::mount so that mounted components
  * can continue to get access to modals and spinners.
- * 
- * @param {string|component definition} component 
- * @param {object} mountOptions 
+ *
+ * @param {string|component definition} component
+ * @param {object} mountOptions
  */
 export function mountTestPage (component, mountOptions) {
   const store = testStore({})
@@ -214,10 +211,10 @@ export function mountTestPage (component, mountOptions) {
       store,
       ...mountOptions,
       attrs: {
-        ...mountOptions.propsData,
+        ...mountOptions.propsData
       },
       propsData: {
-        skelComponent: component,
+        skelComponent: component
       }
     }
   )

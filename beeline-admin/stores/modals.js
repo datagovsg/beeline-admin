@@ -1,8 +1,7 @@
-import Vue from 'vue'
 import _ from 'lodash'
 import assert from 'assert'
 
-function showModalOfType(type, options) {
+function showModalOfType (type, options) {
   return (context, options) =>
     context.dispatch('showModal', {
       component: 'CommonModals',
@@ -17,15 +16,15 @@ module.exports = {
   namespaced: true,
   state: () => ({
     modalStack: [],
-    options: null,
+    options: null
   }),
   mutations: {
-    addModal(state, options) {
+    addModal (state, options) {
       state.modalStack.push(_.pick(options, ['options', 'resolve', 'reject']))
     },
-    removeModal(state, options) {
+    removeModal (state, options) {
       state.modalStack.pop()
-    },
+    }
   },
   actions: {
     confirm: showModalOfType('confirm'),
@@ -41,7 +40,7 @@ module.exports = {
             context.commit('addModal', {
               options,
               resolve,
-              reject,
+              reject
             })
           })
 

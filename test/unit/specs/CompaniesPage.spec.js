@@ -1,6 +1,5 @@
 import CompaniesPage from '@/pages/companies.vue'
-import { mount } from '@vue/test-utils'
-import { delay, mockAjax, testStore, mountTestPage } from '../util'
+import { delay, mockAjax, mountTestPage } from '../util'
 
 describe('contact-list.vue', () => {
   let companiesPage = null
@@ -14,13 +13,13 @@ describe('contact-list.vue', () => {
         COMPANIES_DATA
       ]
     }, async () => {
-      const companiesPage = mountTestPage (
+      const companiesPage = mountTestPage(
         CompaniesPage,
         {
           sync: false,
           propsData: {
             companyId: '4'
-          },
+          }
 
         }
       )
@@ -51,15 +50,14 @@ describe('contact-list.vue', () => {
   })
 
   it('should save the contact list', async () => {
-
-    async function setValue(label, value) {
+    async function setValue (label, value) {
       const control = findControl(label)
       control.element.value = value
       control.trigger('input')
       control.trigger('change')
       await delay(1)
     }
-    
+
     // await setValue('Name', 'Example Name')
     await setValue('Email', 'name@example.com')
     await setValue('Contact No.', '81001234')
@@ -89,6 +87,5 @@ describe('contact-list.vue', () => {
         .trigger('click')
       await delay(1)
     })
-    
   })
 })

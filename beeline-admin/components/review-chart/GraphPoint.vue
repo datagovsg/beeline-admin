@@ -45,22 +45,22 @@ export default {
       default: 10,
       type: Number
     },
-    color: {},
+    color: {}
   },
 
   computed: {
-    plotTransform() {
+    plotTransform () {
       return `translate(${this.x}, ${this.y}) ` +
         `scale(${this.size}, ${this.size}) `
     },
 
-    x() {
+    x () {
       return this.graphTransforms.xToPixel(this.value)
     },
 
-    y() {
-      return this.graphTransforms.yToPixel(this.yvalue);
-    },
+    y () {
+      return this.graphTransforms.yToPixel(this.yvalue)
+    }
   },
 
   inject: {
@@ -69,13 +69,13 @@ export default {
   },
 
   methods: {
-    emitEvent(evtName, evtObject) {
+    emitEvent (evtName, evtObject) {
       this.$emit(evtName, {
         value: this.value,
         vm: this,
-        event: evtObject,
-      });
-    },
+        event: evtObject
+      })
+    }
   },
 
   mounted () {

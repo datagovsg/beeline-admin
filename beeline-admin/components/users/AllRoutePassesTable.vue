@@ -112,7 +112,6 @@
 </template>
 
 <script>
-import assert from 'assert'
 import {mapGetters, mapActions, mapState} from 'vuex'
 
 import ExpandableArea from '@/components/ExpandableArea.vue'
@@ -127,7 +126,7 @@ export default {
 
   data () {
     return {
-      routePasses: null,
+      routePasses: null
     }
   },
 
@@ -137,7 +136,7 @@ export default {
 
     f: () => filters,
 
-    now () {  
+    now () {
       return Date.now()
     },
 
@@ -191,18 +190,18 @@ export default {
     requery () {
       const promise = this.$routePassesPromise =
         this.axios.get(this.routePassesQueryUrl)
-        .then((response) => {
-          if (promise === this.$routePassesPromise) {
-            this.routePasses = response.data
-          }
-        })
+          .then((response) => {
+            if (promise === this.$routePassesPromise) {
+              this.routePasses = response.data
+            }
+          })
     },
 
     showHistory (tag, balance) {
       this.$emit('route-pass-history-requested', {
         tag, balance
       })
-    },
+    }
   }
 }
 </script>
