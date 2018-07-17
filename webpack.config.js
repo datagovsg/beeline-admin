@@ -1,14 +1,12 @@
 const path = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
-const fs = require('fs');
-const autoprefixer = require('autoprefixer')
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const InlineEnviromentVariablesPlugin = require('inline-environment-variables-webpack-plugin');
 
 const env = {
   BACKEND_URL: process.env.BACKEND_URL || 'https://api-staging.beeline.sg',
   TRACKING_URL: process.env.TRACKING_URL || 'https://tracking-staging.beeline.sg',
-  NODE_ENV: process.env.NODE_ENV || 'development',
+  NODE_ENV: process.env.NODE_ENV || 'development'
 }
 
 const prefix = path.resolve(process.env.BUILD_PREFIX || 'www')
@@ -20,7 +18,7 @@ const babelSettings = {
 }
 
 const jsBundle = {
-  devtool: 'source-map',
+  mode: env.NODE_ENV,
   module: {
     rules: [
       {
