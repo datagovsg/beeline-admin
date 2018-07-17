@@ -79,7 +79,7 @@
                   }">
                 <td @mousedown="$refs.multiSelect.mousedown($event, index)">
                   <input type="checkbox" v-model="trip._selected"
-                    @mousedown.prevent />
+                    @mousedown.stop />
                   <span class="trip-index">{{index + 1}}</span>
                 </td>
                 <td>
