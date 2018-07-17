@@ -117,7 +117,7 @@
                 </td>
                 <td>
                   <!-- TODO: no deleteTrip -->
-                  <button class="btn btn-danger btn-icon" @click="deleteTrip(trip)">
+                  <button class="btn btn-danger btn-icon" @click="showDeleteTripDialog(trip)">
                     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                   </button>
                 </td>
@@ -218,23 +218,7 @@ export default {
   methods: {
     ...mapActions('resources', ['getRoute', 'saveRoute', 'createTripForDate']),
     ...mapActions('spinner', ['spinOnPromise']),
-    ...mapActions('modals', ['showModal', 'showErrorModal']),
-
-    doSaveRoute () {
-      this.spinOnPromise(this.saveRoute(this.editRoute))
-    },
-    doDeleteRoute () {
-      if (!this.editRoute.id) return
-
-      this.showModal({
-
-      })
-        .then((confirm) => {
-          if (confirm) {
-            return this.spinOnPromise(this.editRoute = this.axios.delete(`/routes/${this.route.id}`))
-          }
-        })
-    },
+    ...mapActions('modals', ['showModal', 'showErrorModal', 'confirm']),
 
     requery () {
       if (!this.route) {
@@ -327,14 +311,10 @@ export default {
       )
     },
 
-    deleteTrip (trip) {
-      this.showModal({
-        component: 'CommonModals',
-        props: {
-          type: 'confirm',
-          title: 'Delete trip',
-          message: 'Are you sure you want to delete this trip?'
-        }
+    showDeleteTripDialog (trip) {
+      this.confirm({
+        title: 'Delete trip',
+        message: 'Are you sure you want to delete this trip?'
       })
         .then((confirm) => {
           if (confirm) {
