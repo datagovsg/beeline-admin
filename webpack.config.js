@@ -1,14 +1,12 @@
-const path = require('path');
+const path = require('path')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
-const fs = require('fs');
-const autoprefixer = require('autoprefixer')
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const InlineEnviromentVariablesPlugin = require('inline-environment-variables-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const InlineEnviromentVariablesPlugin = require('inline-environment-variables-webpack-plugin')
 
 const env = {
   BACKEND_URL: process.env.BACKEND_URL || 'https://api-staging.beeline.sg',
   TRACKING_URL: process.env.TRACKING_URL || 'https://tracking-staging.beeline.sg',
-  NODE_ENV: process.env.NODE_ENV || 'development',
+  NODE_ENV: process.env.NODE_ENV || 'development'
 }
 
 const prefix = path.resolve(process.env.BUILD_PREFIX || 'www')
@@ -20,7 +18,7 @@ const babelSettings = {
 }
 
 const jsBundle = {
-  devtool: 'source-map',
+  mode: env.NODE_ENV,
   module: {
     rules: [
       {
@@ -29,7 +27,7 @@ const jsBundle = {
         exclude: /node_modules/,
         include: path.resolve('.'),
         options: {
-          attrs: false, /* disable img:src loading */
+          attrs: false /* disable img:src loading */
         }
       },
       {
@@ -39,7 +37,7 @@ const jsBundle = {
         options: {
           babelrc: false,
           cacheDirectory: true,
-          ...babelSettings,
+          ...babelSettings
         }
       },
       {
@@ -48,25 +46,25 @@ const jsBundle = {
         include: [
           /node_modules\/vue-strap/,
           /node_modules\/vue-async-computed/,
-          /node_modules\/sinon\//,
+          /node_modules\/sinon\//
         ],
         options: {
           babelrc: false,
           cacheDirectory: true,
-          ...babelSettings,
+          ...babelSettings
         }
       },
       {
         test: /\.css$/,
-        use: ['vue-style-loader', 'css-loader'],
+        use: ['vue-style-loader', 'css-loader']
       },
       {
         test: /\.scss$/,
-        use: ['vue-style-loader', 'css-loader', 'sass-loader'],
+        use: ['vue-style-loader', 'css-loader', 'sass-loader']
       },
       {
         test: /\.vue$/,
-        loader: 'vue-loader',
+        loader: 'vue-loader'
       },
       {
         test: /\.(svg|png|gif|jpg)$/,
@@ -75,16 +73,16 @@ const jsBundle = {
           publicPath: 'lib/beeline-admin'
         }
       }
-    ],
+    ]
   },
   entry: [
     '@babel/polyfill',
-    path.resolve('beeline-admin/main.js'),
+    path.resolve('beeline-admin/main.js')
   ],
   output: {
     path: path.join(prefix, 'lib/beeline-admin'),
     filename: 'bundle.js',
-    pathinfo: true,
+    pathinfo: true
   },
   plugins: [
     new VueLoaderPlugin(),
@@ -93,10 +91,10 @@ const jsBundle = {
   resolve: {
     alias: {
       '~': __dirname,
-      '@': path.join(__dirname, 'beeline-admin'),
+      '@': path.join(__dirname, 'beeline-admin')
     }
   }
-};
+}
 
 const cssBundle = {
   entry: path.resolve('scss/ionic.app.scss'),
@@ -115,12 +113,12 @@ const cssBundle = {
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: 'styles.css',
+      filename: 'styles.css'
     })
   ]
 }
 
 module.exports = [
   jsBundle,
-  cssBundle,
+  cssBundle
 ]
