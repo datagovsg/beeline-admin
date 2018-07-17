@@ -19,7 +19,7 @@
               :startDate="new Date(1)"
               :companyId="companyId"
               :multiple="true"
-              :filter="r => !r.tags.includes('crowdstart')"
+              :filter="r => !(r.tags || []).includes('crowdstart')"
               ref="routeSelector"
               />
           </div>
