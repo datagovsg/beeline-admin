@@ -31,36 +31,18 @@
 
 <script>
 import {mapActions} from 'vuex'
-const filters = require('../filters')
+import filters from '@/filters'
+
+import RouteDisplay from '@/components/routes/RouteDisplay.vue'
+import RouteDescriptionEditor from '@/components/routes/RouteDescriptionEditor.vue'
+import TripsEditor from '@/components/routes/TripsEditor.vue'
+import CrowdstartEditor from '@/components/routes/CrowdstartEditor.vue'
+import CrowdstartDisplay from '@/components/routes/CrowdstartDisplay.vue'
 
 export default {
   props: ['companyId', 'routeId', 'action'],
   data () {
-    const tabs = [
-      {
-        description: 'Edit Route Description',
-        component: 'RouteDescriptionEditor',
-        link: 'route'
-      },
-      {
-        description: 'Edit Trips',
-        component: 'TripsEditor',
-        link: 'trips'
-      },
-      {
-        description: 'Edit Crowdstart Parameters',
-        component: 'CrowdstartEditor',
-        link: 'crowdstart'
-      },
-      {
-        description: 'View Bidders',
-        component: 'CrowdstartDisplay',
-        link: 'bidders'
-      }
-    ]
-
     return {
-      tabs,
       route: null,
       routePromise: null
     }
@@ -86,14 +68,33 @@ export default {
     }
   },
   components: {
-    RouteDisplay: require('../components/routes/RouteDisplay.vue').default,
-    RouteDescriptionEditor: require('../components/routes/RouteDescriptionEditor.vue').default,
-    TripsEditor: require('../components/routes/TripsEditor.vue').default,
-    CrowdstartEditor: require('../components/routes/CrowdstartEditor.vue').default,
-    CrowdstartDisplay: require('../components/routes/CrowdstartDisplay.vue').default
+    RouteDisplay
   },
   computed: {
-    f () { return filters },
+    tabs () {
+      return [
+        {
+          description: 'Edit Route Description',
+          component: RouteDescriptionEditor,
+          link: 'route'
+        },
+        {
+          description: 'Edit Trips',
+          component: TripsEditor,
+          link: 'trips'
+        },
+        {
+          description: 'Edit Crowdstart Parameters',
+          component: CrowdstartEditor,
+          link: 'crowdstart'
+        },
+        {
+          description: 'View Bidders',
+          component: CrowdstartDisplay,
+          link: 'bidders'
+        }
+      ]
+    },
     activeTab () {
       return this.tabs.findIndex(tab => tab.link === this.action)
     }

@@ -8,7 +8,7 @@
               <h4>Show trips for the month of</h4>
             </div>
             <div class="col-lg-4 pull-left form-inline">
-              <MonthPickerDropdown v-model="filter.filterMonth" />
+              <MonthPickerDropdown v-model="filter.filterMonth" :offset="0" />
             </div>
           </div>
         </div>
@@ -79,7 +79,7 @@
                   }">
                 <td @mousedown="$refs.multiSelect.mousedown($event, index)">
                   <input type="checkbox" v-model="trip._selected"
-                    @mousedown.prevent />
+                    @mousedown.stop />
                   <span class="trip-index">{{index + 1}}</span>
                 </td>
                 <td>
@@ -117,7 +117,7 @@
                 </td>
                 <td>
                   <!-- TODO: no deleteTrip -->
-                  <button class="btn btn-danger btn-icon" @click="deleteTrip(trip)">
+                  <button class="btn btn-danger btn-icon" @click="showDeleteTripDialog(trip)">
                     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                   </button>
                 </td>
@@ -141,14 +141,14 @@ import MonthPickerDropdown from '@/components/MonthPickerDropdown.vue'
 import MultiSelectBroker from '@/components/MultiSelectBroker'
 import StopDisplay from '@/components/routes/TripStopDisplay.vue'
 
-const updatableFields = [
+const UPDATABLE_FIELDS = [
   'driverId', 'capacity', 'companyId', 'price',
   'bookingInfo', 'status'
 ]
-const updatableTripStopFields = [
+const UPDATABLE_TRIP_STOP_FIELDS = [
   'canBoard', 'canAlight', 'time', 'stopId'
 ]
-const creatableFields = updatableFields.concat([
+const CREATABLE_FIELDS = UPDATABLE_FIELDS.concat([
   'routeId'
 ])
 
@@ -157,9 +157,8 @@ export default {
   data () {
     return {
       filter: {
-        filterMonth: new Date()
+        filterMonth: null
       },
-      routePromise: Promise.resolve(null),
       editRoute: null
     }
   },
@@ -205,62 +204,68 @@ export default {
     'route.id': {
       immediate: true,
       handler (promise) {
-        this.requery()
+        this.spinOnPromise(this.requery())
       }
     },
     'filter': {
       immediate: true,
       deep: true,
       handler (promise) {
-        this.requery()
-      }
-    },
-    routePromise: {
-      immediate: true,
-      handler (promise) {
-        this.spinOnPromise(promise.then(route => {
-          this.editRoute = route
-        }))
+        this.spinOnPromise(this.requery())
       }
     }
   },
   methods: {
     ...mapActions('resources', ['getRoute', 'saveRoute', 'createTripForDate']),
     ...mapActions('spinner', ['spinOnPromise']),
-    ...mapActions('modals', ['showModal', 'showErrorModal']),
+    ...mapActions('modals', ['showModal', 'showErrorModal', 'confirm']),
 
-    doSaveRoute () {
-      this.spinOnPromise(this.saveRoute(this.editRoute))
-    },
-    doDeleteRoute () {
-      if (!this.editRoute.id) return
-
-      this.showModal({
-
-      })
-        .then((confirm) => {
-          if (confirm) {
-            return this.spinOnPromise(this.editRoute = this.axios.delete(`/routes/${this.route.id}`))
-          }
-        })
+    requeryAndNotifyParentOfChange () {
+      this.$emit('requery')
+      return this.requery()
     },
 
     requery () {
       if (!this.route) {
-        this.routePromise = Promise.resolve(null)
-      } else {
-        this.routePromise = this.getRoute({
+        return Promise.resolve(null)
+      }
+      const filterDatePromise = (this.filter.filterMonth !== null)
+        ? Promise.resolve(this.filter.filterMonth)
+        : this.getRoute({
+          id: this.route.id,
+          options: {
+            includeTrips: false,
+            includeDates: true
+          }
+        })
+          .then((route) => {
+            const d = new Date()
+            const todaysDate = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())
+
+            if (route.dates.firstDate && route.dates.lastDate) {
+              if (todaysDate < route.dates.firstDate.getTime()) {
+                return route.dates.firstDate
+              } else if (route.dates.lastDate.getTime() < todaysDate) {
+                return route.dates.lastDate
+              } else {
+                return new Date(todaysDate)
+              }
+            }
+          })
+
+      const promise = this.$routePromise = filterDatePromise.then((filterDate) => {
+        return this.getRoute({
           id: this.route.id,
           options: {
             startDate: new Date(
-              this.filter.filterMonth.getFullYear(),
-              this.filter.filterMonth.getMonth(),
+              filterDate.getUTCFullYear(),
+              filterDate.getUTCMonth(),
               1,
             ).toISOString(),
 
             endDate: new Date(
-              this.filter.filterMonth.getFullYear(),
-              this.filter.filterMonth.getMonth() + 1,
+              filterDate.getUTCFullYear(),
+              filterDate.getUTCMonth() + 1,
               1
             ).toISOString(),
 
@@ -268,21 +273,25 @@ export default {
           }
         })
           .then((route) => {
+            if (promise !== this.$routePromise) { return }
+
             route.trips.forEach((trip) => {
               const tsSet = _.groupBy(trip.tripStops, 'stopId')
 
               trip._selected = false
 
-              _.values(tsSet).forEach((tripStopsInSet) => {
+              Object.values(tsSet).forEach((tripStopsInSet) => {
                 tripStopsInSet.forEach((tripStop, index) => {
                   tripStop.orderOfAppearance = index
                 })
               })
             })
-            return route
+
+            this.filter.filterMonth = filterDate
+            this.editRoute = route
           })
-      }
-      return this.routePromise
+      })
+      return promise
     },
 
     findStop (trip, stopId, ooA) {
@@ -297,7 +306,7 @@ export default {
      **/
     updateTrip (trip, tripData) {
       const adaptedData = {
-        ..._.pick(tripData, updatableFields),
+        ..._.pick(tripData, UPDATABLE_FIELDS),
         tripStops: assignTripStopIds(trip.date, trip.tripStops, tripData.tripStops)
       }
 
@@ -307,14 +316,10 @@ export default {
       )
     },
 
-    deleteTrip (trip) {
-      this.showModal({
-        component: 'CommonModals',
-        props: {
-          type: 'confirm',
-          title: 'Delete trip',
-          message: 'Are you sure you want to delete this trip?'
-        }
+    showDeleteTripDialog (trip) {
+      this.confirm({
+        title: 'Delete trip',
+        message: 'Are you sure you want to delete this trip?'
       })
         .then((confirm) => {
           if (confirm) {
@@ -324,7 +329,7 @@ export default {
           }
         })
         .then(() => {
-          this.spinOnPromise(this.requery())
+          this.spinOnPromise(this.requeryAndNotifyParentOfChange())
           return this.showModal({
             component: 'CommonModals',
             props: {
@@ -348,7 +353,7 @@ export default {
         .then((tripData) => {
           this.spinOnPromise(
             Promise.all(this.selection.map(trip => this.updateTrip(trip, tripData)))
-              .then(() => this.requery())
+              .then(() => this.requeryAndNotifyParentOfChange())
           )
             .then(() => {
               return this.showModal({
@@ -387,7 +392,7 @@ export default {
         assert.equal(date.getTime() % (24 * 3600 * 1000), 0)
 
         return {
-          ..._.pick(tripData, creatableFields),
+          ..._.pick(tripData, CREATABLE_FIELDS),
           routeId: this.route.id,
           date: date.toISOString(),
           tripStops: tripData.tripStops.map(ts => ({
@@ -413,7 +418,7 @@ export default {
           }
         })
 
-        await this.spinOnPromise(this.requery())
+        await this.spinOnPromise(this.requeryAndNotifyParentOfChange())
       } catch (error) {
         await this.showErrorModal(error)
       }
@@ -436,7 +441,7 @@ function assignTripStopIds (date, original, reference) {
   var referenceStops = _(reference)
     // clone the tripStops because we'll be mutating them with an id
     .map(ts => {
-      var update = _.pick(ts, updatableTripStopFields)
+      var update = _.pick(ts, UPDATABLE_TRIP_STOP_FIELDS)
       update.time = combineDateTime(date, ts.time).getTime()
       return update
     })

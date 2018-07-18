@@ -98,7 +98,12 @@ export function postProcessRoute (route) {
         ...ts,
         time: new Date(ts.time)
       }))
-    }))
+    })),
+    dates: route.dates && {
+      ...route.dates,
+      firstDate: new Date(route.dates.firstDate),
+      lastDate: new Date(route.dates.lastDate)
+    }
   }
 }
 

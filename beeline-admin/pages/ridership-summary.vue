@@ -200,27 +200,14 @@ export default {
   computed: {
     ...mapGetters(['axios']),
     f: () => filters,
-    selectedTime () { return this.selectedMonth.getTime() }
-  },
+    selectedTime () { return this.selectedMonth.getTime() },
 
-  mounted () {
-    this.requery()
-  },
+    // Combining computed property to ensure that the request
+    // is only made once for each change.
+    queryOptions () {
+      if (!this.companyId) return null
 
-  watch: {
-    selectedTime () {
-      this.requery()
-    }
-  },
-
-  methods: {
-    ...mapActions('spinner', ['spinOnPromise']),
-    ...mapActions('modals', ['showModal', 'showErrorModal']),
-
-    requery () {
-      if (!this.companyId) return
-
-      var options = {
+      return {
         includeTrips: true, /* for the /routes endpoint, this only returns up to 5 trips */
         startDate: Date.UTC(
           this.selectedMonth.getFullYear(),
@@ -234,6 +221,27 @@ export default {
         ),
         transportCompanyId: this.companyId
       }
+    }
+  },
+
+  mounted () {
+    this.requery()
+  },
+
+  watch: {
+    queryOptions () {
+      this.requery()
+    }
+  },
+
+  methods: {
+    ...mapActions('spinner', ['spinOnPromise']),
+    ...mapActions('modals', ['showModal', 'showErrorModal']),
+
+    requery () {
+      if (!this.queryOptions) return
+
+      const options = this.queryOptions
 
       // preprocess the routes to track all days...
       var numDays = (options.endDate - options.startDate) /
