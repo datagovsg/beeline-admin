@@ -29,7 +29,8 @@
   .popup {
     position: absolute;
     top: 100%;
-    right: 0;
+    left: 0;
+    width: 300px;
     z-index: 100;
     background-color: white;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
@@ -37,15 +38,19 @@
     table {
       th, td {
         text-align: center;
-        padding: 0.5em;
       }
       td {
         background-color: white;
         width: 3em;
+        cursor: pointer;
 
         &.selected {
           background-color: #008;
           color: #FFF;
+        }
+
+        &:hover {
+          background-color: #DEF;
         }
       }
     }
