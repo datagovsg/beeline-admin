@@ -7,7 +7,7 @@
             ‹
           </button>
         </th>
-        <th>{{ f.date(yearCanonical, 'yyyy') }}</th>
+        <th style="text-align: center">{{ f.date(yearCanonical, 'yyyy') }}</th>
 
         <th style="text-align: right">
           <button @click="currentlyViewedYear = nextYear" class="btn btn-default">
