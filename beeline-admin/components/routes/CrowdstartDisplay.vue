@@ -97,47 +97,49 @@ export default {
   watch: {
     bidsURL: {
       immediate: true,
-      handler (url) {
-        if (url) {
-          const promise = this.$bidsPromise = this.spinOnPromise(this.axios.get(url))
-            .then((resp) => {
-              if (promise !== this.$bidsPromise) {
-                return
-              }
-
-              let bids = resp.data
-              let now = Date.now()
-              _.forEach(bids, (bid) => {
-                bid.chargeMessage = (bid.status === 'void') ? 'Charged successfully' : null
-                bid.chargeError = bidChargeError(bid, now)
-              })
-              this.bids = bids
-            })
-        }
+      handler () {
+        this.requery()
       }
     }
   },
   methods: {
     ...mapActions('spinner', ['spinOnPromise']),
-    ...mapActions('modals', ['showModal', 'showErrorModal']),
+    ...mapActions('modals', ['showModal', 'showErrorModal', 'confirm']),
 
-    withdrawBid (bid) {
-      this.showModal({
-        component: 'CommonModals',
-        props: {
-          type: 'confirm',
-          message: 'Are you sure you want to cancel this bid?'
-        }
-      })
-        .then((result) => {
-          if (result) {
-            return this.spinOnPromise(this.axios.delete(
-              `/crowdstart/routes/${this.route.id}/bids/${bid.id}`
-            )
-              .then(() => { this.$emit('requery') }))
-          }
-        })
-        .catch(this.showErrorModal)
+    requeryAndNotifyParent () {
+      this.$emit('requery')
+      return this.requery()
+    },
+
+    requery () {
+      if (this.bidsURL) {
+        const promise = this.$bidsPromise = this.spinOnPromise(this.axios.get(this.bidsURL))
+          .then((resp) => {
+            if (promise !== this.$bidsPromise) {
+              return
+            }
+
+            let bids = resp.data
+            let now = Date.now()
+            _.forEach(bids, (bid) => {
+              bid.chargeMessage = (bid.status === 'void') ? 'Charged successfully' : null
+              bid.chargeError = bidChargeError(bid, now)
+            })
+            this.bids = bids
+          })
+      }
+    },
+
+    async withdrawBid (bid) {
+      if (await this.confirm({title: 'Are you sure you want to cancel this bid?'})) {
+        return this.spinOnPromise(this.axios.delete(
+          `/crowdstart/routes/${this.route.id}/bids/${bid.id}`
+        )
+          .then(() => {
+            this.requeryAndNotifyParent()
+          }))
+          .catch(this.showErrorModal)
+      }
     },
 
     enableTerminate () {
@@ -148,72 +150,57 @@ export default {
       return routeIsEligible(this.route) && this.routeIsActivated
     },
 
-    terminate () {
-      // add 'failed' to both route and bids
-      let terminatePromise = this.axios.post(`/crowdstart/routes/${this.route.id}/expire`)
-        .then(() => { this.$emit('requery') })
+    async terminate () {
+      if (await this.confirm({title: 'Are you sure you want to terminate this route?'})) {
+        // add 'failed' to both route and bids
+        let terminatePromise = this.axios.post(`/crowdstart/routes/${this.route.id}/expire`)
+          .then(() => { this.requeryAndNotifyParent() })
 
-      this.spinOnPromise(terminatePromise)
-        .catch(this.showErrorModal)
+        return this.spinOnPromise(terminatePromise)
+          .catch(this.showErrorModal)
+      }
     },
 
-    convert () {
-      // add 'success' to crwodstart tags
+    async convert () {
+      // add 'success' to crowdstart tags
       // create public route with 'crowdstart-id' tag
       // after convert promopt admin 'Do you want to charge all bidders now?'
 
-      this.showModal({
-        component: 'CommonModals',
-        props: {
-          type: 'confirm',
-          message: 'Are you sure you want to convert the crowdstart?'
-        }
-      })
-        .then((result) => {
-          if (result) {
-            let convertPromise = this.axios.post(`/crowdstart/routes/${this.route.id}/activate`,
-              {
-                price: this.route.notes.tier[0].price,
-                label: this.route.label
-              }
-            )
-              .then(() => { this.$emit('requery') })
-            return this.spinOnPromise(convertPromise)
-              .then(() => {
-                return this.chargeAllBidders()
-              })
+      if (await this.confirm({title: 'Are you sure you want to convert the crowdstart?'})) {
+        let convertPromise = this.axios.post(`/crowdstart/routes/${this.route.id}/activate`,
+          {
+            price: this.route.notes.tier[0].price,
+            label: this.route.label
           }
-        })
-        .catch(this.showErrorModal)
+        )
+          .then(() => { this.requeryAndNotifyParent() })
+
+        return this.spinOnPromise(convertPromise)
+          .then(() => {
+            return this.chargeAllBidders()
+          })
+          .catch(this.showErrorModal)
+      }
     },
 
-    chargeAllBidders () {
+    async chargeAllBidders () {
       // for loop individual bid & charge
-      this.showModal({
-        component: 'CommonModals',
-        props: {
-          type: 'confirm',
-          message: 'Do you want to charge all bidders now?'
-        }
-      })
-        .then((result) => {
-          if (result) {
-            this.spinOnPromise(
-              Promise.all(
-                this.bids
-                  .filter((bid) => bid.status === 'bidded')
-                  .map(this.charge)
-              )
-                .then(() => this.$emit('requery'))
-            )
-          }
-        })
+      if (await this.confirm({title: 'Do you want to charge all bidders now?'})) {
+        return this.spinOnPromise(
+          Promise.all(
+            this.bids
+              .filter((bid) => bid.status === 'bidded')
+              .map(this.charge)
+          )
+        )
+          .then(() => this.requeryAndNotifyParent())
+      }
     },
 
     charge (bid) {
       // manually charge individual bid through stripe
       let chargePromise = this.axios.post(`/crowdstart/routes/${this.route.id}/bids/${bid.id}/convert`)
-        .then(() => { this.$emit('requery') })
+        .then(() => { this.requeryAndNotifyParent() })
       return this.spinOnPromise(chargePromise)
         .catch(this.showErrorModal)
     }
