@@ -1,5 +1,5 @@
 <template>
-  <div class="input-group datepicker-dropdown" @click.stop="handleClick">
+  <div class="input-group monthpicker-dropdown" @click.stop="handleClick">
     <input type="text" class="form-control" v-model="buffer" @input="checkDate" />
     <span class="input-group-btn">
       <button class="btn btn-primary btn-icon" type="button"
@@ -20,9 +20,9 @@
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 
-.datepicker-dropdown {
+.monthpicker-dropdown {
   overflow: visible;
   position: relative;
 
