@@ -220,6 +220,11 @@ export default {
     ...mapActions('spinner', ['spinOnPromise']),
     ...mapActions('modals', ['showModal', 'showErrorModal', 'confirm']),
 
+    requeryAndNotifyParentOfChange () {
+      this.$emit('requery')
+      return this.requery()
+    },
+
     requery () {
       if (!this.route) {
         return Promise.resolve(null)
@@ -324,7 +329,7 @@ export default {
           }
         })
         .then(() => {
-          this.spinOnPromise(this.requery())
+          this.spinOnPromise(this.requeryAndNotifyParentOfChange())
           return this.showModal({
             component: 'CommonModals',
             props: {
@@ -348,7 +353,7 @@ export default {
         .then((tripData) => {
           this.spinOnPromise(
             Promise.all(this.selection.map(trip => this.updateTrip(trip, tripData)))
-              .then(() => this.requery())
+              .then(() => this.requeryAndNotifyParentOfChange())
           )
             .then(() => {
               return this.showModal({
@@ -413,7 +418,7 @@ export default {
           }
         })
 
-        await this.spinOnPromise(this.requery())
+        await this.spinOnPromise(this.requeryAndNotifyParentOfChange())
       } catch (error) {
         await this.showErrorModal(error)
       }
