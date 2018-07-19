@@ -498,6 +498,7 @@ export default {
     },
 
     monthlyCountsUrl () {
+      if (!this.idToken) return
       return this.buildQuery({
         tripStartDate: Date.UTC(
           this.chart.month.getUTCFullYear(),
