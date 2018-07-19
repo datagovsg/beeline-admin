@@ -47,7 +47,7 @@
   </div>
 </template>
 <script>
-import {mapGetters, mapActions} from 'vuex'
+import {mapGetters, mapActions, mapState} from 'vuex'
 import filters from '../filters'
 
 export default {
@@ -55,26 +55,40 @@ export default {
   data: () => ({
     contactLists: null
   }),
-  mounted () {
-    return this.requery()
-  },
   computed: {
     ...mapGetters(['axios']),
-    f: () => filters
+    ...mapState('auth', ['idToken']),
+
+    f: () => filters,
+
+    requestUrl () {
+      return this.idToken && `/companies/${this.companyId}/contactLists`
+    }
+  },
+  watch: {
+    requestUrl: {
+      immediate: true,
+      handler (h) {
+        this.requery()
+      }
+    }
   },
   methods: {
     ...mapActions('spinner', ['spinOnPromise']),
     ...mapActions('modals', ['showModal', 'showErrorModal']),
 
     requery () {
-      this.spinOnPromise(this.axios.get(`/companies/${this.companyId}/contactLists`)
-        .then((response) => {
-          this.contactLists = response.data
-        }))
-        .catch((err) => {
-          this.contactLists = false
-          console.log(err.response)
-        })
+      if (this.requestUrl) {
+        const promise = this.$promise = this.spinOnPromise(this.axios.get(this.requestUrl))
+          .then((response) => {
+            if (promise !== this.$promise) return
+            this.contactLists = response.data
+          })
+          .catch((err) => {
+            this.contactLists = false
+            console.log(err.response)
+          })
+      }
     },
 
     addAdmin () {
