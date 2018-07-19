@@ -1,4 +1,4 @@
-import {mapState, mapMutations} from 'vuex'
+import {mapState, mapMutations, mapActions, mapGetters} from 'vuex'
 import axios from 'axios'
 import auth0 from 'auth0-js'
 import jwtDecode from 'jwt-decode'
@@ -90,11 +90,16 @@ export default {
   render () { return null },
 
   computed: {
-    ...mapState('auth', ['loginDialogShown', 'isAuthenticated', 'idToken'])
+    ...mapState('auth', ['loginDialogShown', 'isAuthenticated', 'idToken']),
+    ...mapGetters(['axios'])
   },
 
   methods: {
-    ...mapMutations('auth', ['authenticate', 'setProfile', 'setIdToken', 'showLoginDialog'])
+    ...mapMutations(
+      'auth',
+      ['authenticate', 'setProfile', 'setIdToken', 'showLoginDialog', 'setAvailableCompanies']
+    ),
+    ...mapActions('shared', ['fetch'])
   },
 
   watch: {
@@ -108,8 +113,38 @@ export default {
     },
 
     idToken () {
+      // save in session token
       if (this.isAuthenticated) {
         window.localStorage.sessionToken = this.idToken
+      }
+
+      // update the store with list of available companies
+      if (!this.idToken) {
+        this.setAvailableCompanies(null)
+      } else {
+        const promise = this.$whoamiPromise = this.axios.get('/admins/whoami')
+          .then(({data: whoami}) => {
+            if (promise !== this.$whoamiPromise) return false
+
+            const companyIdsPromise = (whoami.role === 'superadmin')
+              ? this.fetch('companies')
+                .then(() => this.companies.map(c => c.id))
+              : Promise.resolve(whoami.transportCompanyIds)
+
+            companyIdsPromise.then((companyIds) => {
+              this.setAvailableCompanies(companyIds)
+
+              if (companyIds && companyIds.length === 1) {
+                this.$router.push({
+                  query: this.$route.query,
+                  params: {
+                    ...this.$route.params,
+                    companyId: companyIds[0]
+                  }
+                })
+              }
+            })
+          })
       }
     }
   },

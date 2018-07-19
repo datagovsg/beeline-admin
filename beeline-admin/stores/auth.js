@@ -5,6 +5,8 @@ module.exports = {
     isAuthenticated: false,
     idToken: null,
 
+    availableCompanies: null,
+
     loginDialogShown: false,
     initCompleted: false
   }),
@@ -19,6 +21,9 @@ module.exports = {
     },
     showLoginDialog (state, visible) {
       state.loginDialogShown = visible
+    },
+    setAvailableCompanies (state, companyIds) {
+      state.availableCompanies = companyIds
     }
   }
 }
