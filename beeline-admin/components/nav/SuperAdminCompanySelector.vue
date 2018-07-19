@@ -4,7 +4,7 @@
   <option value="null" :selected="!currentCompany">(All)</option>
   <option v-for="companyId in availableCompanies"
     :key="companyId"
-    :value="companiesById[companyId]" :selected="currentCompany === companyId">
+    :value="companyId" :selected="currentCompany === companyId">
     {{companiesById[companyId].name}}
   </option>
 </select>
