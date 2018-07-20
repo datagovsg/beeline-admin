@@ -11,7 +11,14 @@ describe('contact-list.vue', () => {
       'GET /companies': [
         200,
         COMPANIES_DATA
-      ]
+      ],
+      ...(COMPANIES_DATA.reduce(
+        (acc, company) => {
+          acc[`GET /companies/${company.id}`] = [200, company]
+          return acc
+        },
+        {}
+      ))
     }, async () => {
       const companiesPage = mountTestPage(
         CompaniesPage,
