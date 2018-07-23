@@ -108,7 +108,7 @@
                 @mouseup.prevent="endPaintRoute($event, route)"
                 >
             {{route.label}}
-            <a :href="`#/c//trips/${route.id}/route`"><span class="glyphicon glyphicon-pencil" /></a>
+            <a :href="`#/c/${companyId}/trips/${route.id}/route`"><span class="glyphicon glyphicon-pencil" /></a>
           </td>
           <td><TagsView :tags="route.tags" /></td>
           <td v-for="day in days" :key="day.date.getTime()" :class="dateClass(route, day)"
