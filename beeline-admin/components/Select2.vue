@@ -13,7 +13,7 @@
         class="select2-dropdown-dropdown"
         slot="dropdown-dropdown">
 
-      <input type="editText" slot="dropdown-input"
+      <input type="text" slot="dropdown-input"
           class="select2-dropdown-input"
         v-model="editText"
         @keydown.delete="handleDelete"
@@ -182,11 +182,11 @@ export default {
     useSelected () {
       if (this.selectedIndex >= 0 && this.selectedIndex < this.options.length) {
         this.$emit('input', this.options[this.selectedIndex])
-      } else {
-        this.$emit('input', null)
-      }
-      if (!this.persistAfterSelect) {
-        this.dropdownShown = false
+
+        if (!this.persistAfterSelect) {
+          this.dropdownShown = false
+        }
+        this.editText = ''
       }
     },
     showDropdown () {
