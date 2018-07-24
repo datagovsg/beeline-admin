@@ -116,7 +116,7 @@
 </template>
 
 <script>
-import {mapGetters, mapActions, mapState} from 'vuex'
+import {mapGetters, mapActions} from 'vuex'
 
 import ExpandableArea from '@/components/ExpandableArea.vue'
 import RouteInfo from '@/components/users/RouteInfo'
@@ -131,7 +131,7 @@ export default {
   data () {
     return {
       routePasses: null,
-      routesByRouteTag: {},
+      routesByRouteTag: {}
     }
   },
 
