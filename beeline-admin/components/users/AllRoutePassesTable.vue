@@ -137,7 +137,6 @@ export default {
 
   computed: {
     ...mapGetters(['axios']),
-    ...mapState('shared', ['allRoutes']),
 
     f: () => filters,
 
@@ -166,10 +165,6 @@ export default {
         }
       }
     }
-  },
-
-  created () {
-    this.fetch(['allRoutes'])
   },
 
   methods: {
