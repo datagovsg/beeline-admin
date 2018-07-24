@@ -234,7 +234,7 @@ export default {
           description: `New Promo Code`,
           type: 'Promotion',
           params: {
-            qualifyingCriteria: [{type: 'limitByCompany', params: {companyId: this.companyId}}, {type: 'limitByTripDate', params: {startDate: startDate, endDate: endDate}}],
+            qualifyingCriteria: [{type: 'limitByCompany', params: {companyId: Number(this.companyId)}}, {type: 'limitByTripDate', params: {startDate: startDate, endDate: endDate}}],
             discountFunction: {type: 'simpleRate', params: {rate: 0.10}},
             refundFunction: {type: 'refundDiscountedAmt', params: {}},
             usageLimit: {userLimit: 1, globalLimit: 1000000}
@@ -248,7 +248,7 @@ export default {
           type: 'RoutePass',
           params: {
             tag: code,
-            qualifyingCriteria: [{type: 'limitByCompany', params: {companyId: this.companyId}}, {type: 'limitByPurchaseDate', params: {startDate: startDate, endDate: endDate}}],
+            qualifyingCriteria: [{type: 'limitByCompany', params: {companyId: Number(this.companyId)}}, {type: 'limitByPurchaseDate', params: {startDate: startDate, endDate: endDate}}],
             discountFunction: {type: 'tieredRateByTotalValue', params: {'schedule': [[25, 0.1], [50, 0.2]]}},
             refundFunction: {type: 'refundDiscountedAmt', params: {}},
             usageLimit: {userLimit: null, globalLimit: null}
