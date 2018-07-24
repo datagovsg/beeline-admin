@@ -34,10 +34,11 @@
     <div v-if="value.type === 'limitByRoute'">
       <label>
         Routes
-        <RouteSelector :multiple="true" class="form-control"
+        <RouteSelector :multiple="true"
           :companyId="companyId"
           :value="paramCache.limitByRoute.routeIds"
           @input="updateParam('routeIds', $event)"
+          class="route-selector"
           />
       </label>
     </div>
@@ -145,6 +146,12 @@
     <hr/>
   </div>
 </template>
+<style scoped>
+.route-selector {
+  min-width: 300px;
+}
+</style>
+
 <script>
 const _ = require('lodash')
 const titleCase = require('title-case')

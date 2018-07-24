@@ -16,7 +16,7 @@
             {{routesById[routeId].name}}
           </template>
           <template v-else>
-            Route #{{s.entry}}
+            Route #{{routeId}}
           </template>
         </div>
       </template>
@@ -33,6 +33,7 @@
 
     <span slot="option-template" slot-scope="s">
       <div
+        class="route-selector-option-template"
         :class="{
           selected: isSelected(value, s.entry.id)
         }"
@@ -170,5 +171,8 @@ export default {
     white-space: nowrap;
     overflow: hidden;
   }
+}
+.route-selector-option-template {
+  min-width: 200px;
 }
 </style>
