@@ -506,7 +506,9 @@ export default {
         this.extendJobs.done++
       }
 
-      window.location.reload()
+      await this.alert({
+        title: `${routesToExtend.length} routes successfully extended!`
+      })
     }
   }
 }
