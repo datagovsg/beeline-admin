@@ -178,11 +178,22 @@ export default {
           .then((response) => {
             if (promise === this.$routePassesPromise) {
               this.routePasses = response.data
-              this.routesByRouteTag = {}
+
+              // If there are existing routes data that I can reuse, then I'll re-use them
+              this.routesByRouteTag = this.routePasses.reduce(
+                (acc, routePass) => {
+                  acc[routePass.tag] = this.routesByRouteTag ? this.routesByRouteTag[routePass.tag] : null
+                  return acc
+                },
+                {}
+              )
             }
           })
           .then(() => { // load the routes by route pass
             for (let routePass of this.routePasses) {
+              // If there are existing routes data that I can reuse, then I'll re-use them
+              if (this.routesByRouteTag[routePass.tag]) continue
+
               this.getRoutes({
                 transportCompanyId: this.companyId,
                 tags: JSON.stringify([routePass.tag])
