@@ -207,16 +207,6 @@ export default {
     ...mapState('shared', ['publicHolidays']),
     ...mapGetters(['axios']),
 
-    routesPromise () {
-      const d = new Date()
-      d.setDate(d.getDate() - 5)
-
-      return this.axios.get('/routes?' + querystring.stringify({
-        transportCompanyId: this.companyId || [],
-        startDate: d.toISOString()
-      }))
-    },
-
     f () {
       return {
         ...filters,
@@ -272,10 +262,27 @@ export default {
     this.spinOnPromise(Promise.all(Object.values(this.$store.state.shared.promises)))
   },
   watch: {
-    routesPromise: {
+    companyId: {
       immediate: true,
       handler (rp) {
-        rp.then(async (routesResponse) => {
+        this.requery()
+      }
+    }
+  },
+  methods: {
+    ...mapActions('modals', ['showModal', 'showErrorModal', 'alert']),
+    ...mapActions('spinner', ['spinOnPromise']),
+    ...mapActions('resources', ['createTripForDate']),
+    ...mapActions('shared', ['invalidate', 'refresh', 'fetch']),
+
+    requery () {
+      const promise = this.$promise = this.axios.get('/routes?' + querystring.stringify({
+        transportCompanyId: this.companyId || [],
+        startDate: this.days[0].date.toISOString()
+      }))
+        .then(async (routesResponse) => {
+          if (promise !== this.$promise) return
+
           this.routes = routesResponse.data
             .filter(r => !r.tags.includes('crowdstart'))
             .map(r => ({
@@ -308,61 +315,61 @@ export default {
 
             const route = currentRoutes[0]
 
-            await this.axios.get(`/routes/${route.id}?` + querystring.stringify({
-              includeTrips: true,
-              startDate: new Date(
-                this.days[0].date.getUTCFullYear(),
-                this.days[0].date.getUTCMonth(),
-                this.days[0].date.getUTCDate(),
-              ).toISOString(),
-              endDate: new Date(
-                this.days[this.days.length - 1].date.getUTCFullYear(),
-                this.days[this.days.length - 1].date.getUTCMonth(),
-                this.days[this.days.length - 1].date.getUTCDate() + 1,
-              ).toISOString()
-            }))
-              .then((response) => {
-                const trips = response.data.trips.map(trip => ({
-                  ...trip,
-                  date: new Date(trip.date),
-                  tripStops: trip.tripStops.map(ts => ({
-                    ...ts,
-                    time: new Date(ts.time)
-                  }))
-                }))
-
-                trips.forEach(trip => {
-                  trip.hash = tripHash(trip)
-                })
-
-                const tripHashes = _(trips)
-                  .map(t => t.hash)
-                  .uniqBy()
-                  .map((x, i) => [x, i])
-                  .fromPairs()
-                  .value()
-
-                trips.forEach(trip => {
-                  trip.hashId = tripHashes[trip.hash]
-                  trip.hashIdMod4 = tripHashes[trip.hash] % 4
-                })
-
-                route.tripsByDate = _.keyBy(trips, t => t.date.getTime()) || {}
-                route.ended = (trips.length === 0)
-              })
+            await this.loadTripsForRoute(route)
+            if (promise !== this.$promise) return
 
             // Remove the first element
             currentRoutes.shift()
           } /* while (currentRoutes.length > 0) */
         })
-      }
-    }
-  },
-  methods: {
-    ...mapActions('modals', ['showModal']),
-    ...mapActions('spinner', ['spinOnPromise']),
-    ...mapActions('resources', ['createTripForDate']),
-    ...mapActions('shared', ['invalidate', 'refresh', 'fetch']),
+
+      return promise
+    },
+
+    loadTripsForRoute (route) {
+      return this.axios.get(`/routes/${route.id}?` + querystring.stringify({
+        includeTrips: true,
+        startDate: new Date(
+          this.days[0].date.getUTCFullYear(),
+          this.days[0].date.getUTCMonth(),
+          this.days[0].date.getUTCDate(),
+        ).toISOString(),
+        endDate: new Date(
+          this.days[this.days.length - 1].date.getUTCFullYear(),
+          this.days[this.days.length - 1].date.getUTCMonth(),
+          this.days[this.days.length - 1].date.getUTCDate() + 1,
+        ).toISOString()
+      }))
+        .then((response) => {
+          const trips = response.data.trips.map(trip => ({
+            ...trip,
+            date: new Date(trip.date),
+            tripStops: trip.tripStops.map(ts => ({
+              ...ts,
+              time: new Date(ts.time)
+            }))
+          }))
+
+          trips.forEach(trip => {
+            trip.hash = tripHash(trip)
+          })
+
+          const tripHashes = _(trips)
+            .map(t => t.hash)
+            .uniqBy()
+            .map((x, i) => [x, i])
+            .fromPairs()
+            .value()
+
+          trips.forEach(trip => {
+            trip.hashId = tripHashes[trip.hash]
+            trip.hashIdMod4 = tripHashes[trip.hash] % 4
+          })
+
+          route.tripsByDate = _.keyBy(trips, t => t.date.getTime()) || {}
+          route.ended = (trips.length === 0)
+        })
+    },
 
     updateFilter: _.throttle(function () {
       this.filteredRoutes = this.routes && this.routes
