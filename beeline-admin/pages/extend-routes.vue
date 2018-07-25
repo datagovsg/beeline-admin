@@ -66,7 +66,7 @@
         <tr>
           <th></th>
           <th></th>
-          <th v-for="month in months" :key="month.date" :colspan="month.colspan" class="new-month">
+          <th v-for="month in months" :key="month.date.getTime()" :colspan="month.colspan" class="new-month">
             {{f.monthNames(month.date.getUTCMonth())}}
           </th>
         </tr>
