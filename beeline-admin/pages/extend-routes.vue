@@ -475,20 +475,46 @@ export default {
           .filter(trip => trip.hashId === route._extensionHashId)
           .maxBy('date')
 
-        await Promise.all(
-          daysToExtend
-            .filter(day => !route.tripsByDate[day.date.getTime()])
-            .map(day => this.createTripForDate({
-              date: day.date,
-              trip: lastTrip
-            }))
-        )
+        try {
+          // Do it batches of 5
+          for (let days of batched(
+            daysToExtend.filter(day => !route.tripsByDate[day.date.getTime()]),
+            5
+          )) {
+            await Promise.all(days.map(day =>
+              this.createTripForDate({
+                date: day.date,
+                trip: lastTrip
+              })))
+          }
+        } catch (error) {
+          this.alert({
+            title: `Trip creation failed for ${route.label}`,
+            message: _.get(error, 'message', _.get(error, 'data.message'))
+          })
+          return
+        } finally {
+          this.loadTripsForRoute(route)
+        }
         this.extendJobs.done++
       }
 
       window.location.reload()
     }
   }
+}
+
+function batched (arr, n) {
+  return arr.reduce(
+    (acc, obj) => {
+      if (acc.length === 0 || acc[acc.length - 1].length === n) {
+        acc.push([])
+      }
+      acc[acc.length - 1].push(obj)
+      return acc
+    },
+    []
+  )
 }
 </script>
 
