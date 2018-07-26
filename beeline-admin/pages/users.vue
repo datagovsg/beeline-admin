@@ -97,13 +97,13 @@
         @route-pass-history-requested="showRoutePassHistory($event)"
         @show-issue-credits="showIssueRouteCreditsModal($event)"
         @show-expire-credits="showExpireRouteCreditsModal($event)"
+        ref="routePassesHistory"
         :userId="Number(userId)"
         :companyId="companyId" />
 
       <template v-if="routePassHistoryParams">
         <h2>History of '{{routePassHistoryParams.tag}}'</h2>
         <RoutePassHistory
-          ref="routePassesHistory"
           :userId="Number(userId)"
           :tag="routePassHistoryParams.tag"
           :finalBalance="routePassHistoryParams.balance"
@@ -146,7 +146,7 @@ export default {
   },
   methods: {
     ...mapActions('spinner', ['spinOnPromise']),
-    ...mapActions('modals', ['showModal', 'showErrorModal', 'alert']),
+    ...mapActions('modals', ['showModal', 'showErrorModal', 'alert', 'flash']),
 
     goToUserId (userId) {
       window.location.assign(`#/c/${this.companyId}/users/${userId}`)
