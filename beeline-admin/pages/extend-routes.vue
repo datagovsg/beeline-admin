@@ -484,7 +484,7 @@ export default {
 
         try {
           // Do it batches of 5
-          for (let days of batched(
+          for (let days of _.chunk(
             daysToExtend.filter(day => !route.tripsByDate[day.date.getTime()]),
             5
           )) {
@@ -513,18 +513,6 @@ export default {
   }
 }
 
-function batched (arr, n) {
-  return arr.reduce(
-    (acc, obj) => {
-      if (acc.length === 0 || acc[acc.length - 1].length === n) {
-        acc.push([])
-      }
-      acc[acc.length - 1].push(obj)
-      return acc
-    },
-    []
-  )
-}
 </script>
 
 <style lang="scss">
