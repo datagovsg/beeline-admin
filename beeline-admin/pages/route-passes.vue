@@ -278,19 +278,15 @@ export default {
       const payloads = []
       const noHeaders = csvText => csvText.substring(csvText.indexOf('\n') + 1)
 
-      let { startDateTime, endDateTime } = this.transactionQuery
+      const { perPage } = this.paging
+      const { totalItems } = this.transactionSummary
       try {
-        for (; startDateTime < endDateTime; startDateTime += 24 * 3600 * 1000) {
-          const dateString = filters.date(startDateTime, 'dd mmm yyyy')
-          this.progressText = `Fetching route pass dump for ${dateString}...`
+        for (let page = 1; totalItems - page * perPage >= -perPage; ++page) {
+          this.progressText = `Fetched ${page * perPage} of ${totalItems} records...`
           const params = _.assign(
             {},
             this.transactionQuery,
-            {
-              startDateTime,
-              endDateTime: startDateTime + 24 * 3600 * 1000,
-              format: 'csvdump'
-            }
+            { page, format: 'csv' }
           )
           const url = `/companies/${this.companyId}/transaction_items/route_passes?${querystring.stringify(params)}`
           const response = await this.axios.get(url)
