@@ -14,7 +14,8 @@
             :specialDates="specialDates"
             v-model="data.selectedDates"
             :multiple="true"
-            @month-change="updateCalendarTrips" />
+            :month="data.month"
+            @month-change="data.month = $event" />
         </div>
       </div>
       <div class="col-lg-8">
@@ -76,7 +77,7 @@
             <div class="form-group">
               <label class="control-label col-sm-2">Route</label>
               <div class="col-sm-10">
-                <RouteSelector v-model="data.routeId" />
+                <RouteSelector ref="routeSelector" v-model="data.routeId" />
               </div>
             </div>
             <div class="form-group">
@@ -203,7 +204,8 @@ export default {
         routeId: null,
         boardStopStopId: null,
         alightStopStopId: null,
-        selectedDates: []
+        selectedDates: [],
+        month: new Date()
       },
 
       disp: {
@@ -328,6 +330,23 @@ export default {
         cancelledTicketIds,
         description: description + ' ' + oldTransactionDescription + ' ' + oldTicketDescription
       }
+    },
+
+    tripsQuery () {
+      // Given current month, route, update trips in calendar
+      const queryParams = {
+        includeTrips: 'true',
+        startDate: Math.max(Date.now(), this.data.month.getTime())
+        // endDate: Math.max(Date.now(), new Date(Date.UTC(...)).getTime()),
+      }
+      // Note: if you specify an endDate, then you need to watch the current month
+      // However, then you will need to refactor computed:stopsAvailable to take into
+      // account trips that fall on a different month
+
+      return {
+        id: this.data.routeId,
+        options: queryParams
+      }
     }
   },
   watch: {
@@ -358,6 +377,10 @@ export default {
             .catch(() => { /* Don't handle errors -- server will handle them during submission */ })
         }
       }
+    },
+
+    'tripsQuery' (newValue, oldValue) {
+      this.updateCalendarTrips(newValue, oldValue)
     }
   },
   methods: {
@@ -373,27 +396,26 @@ export default {
     displayRoute: (route) => `${route.label}: ${route.from} -- ${route.to}`,
     displayStop: ts => `${filters.date(ts.time, 'HH:MM')}: ${ts.stop.description}`,
 
-    updateCalendarTrips (month) {
-      // Given current month, route, update trips in calendar
-      const queryParams = {
-        includeTrips: 'true',
-        startDate: Math.max(Date.now(), month.getTime())
-        // endDate: Math.max(Date.now(), new Date(Date.UTC(...)).getTime()),
-      }
-      // Note: if you specify an endDate, then you need to watch the current month
-      // However, then you will need to refactor computed:stopsAvailable to take into
-      // account trips that fall on a different month
-
-      const routePromise = this.$routePromise = this.getRoute({
-        id: this.routeId,
-        options: queryParams
-      })
+    updateCalendarTrips (newValue, oldValue) {
+      const routePromise = this.$routePromise = this.getRoute(this.tripsQuery)
         .then((route) => {
           if (this.$routePromise !== routePromise) return // superseded by another request
+
+          if (newValue.id !== oldValue.id) {
+            this.data.selectedDates = []
+          }
 
           this.disp.tripsInMonth = route.trips
             ? route.trips.filter(t => t.isRunning)
             : []
+        })
+        .catch((err) => {
+          console.log(err)
+
+          if (this.$routePromise !== routePromise) return // superseded by another request
+
+          this.disp.tripsInMonth = []
+          this.data.selectedDates = []
         })
 
       return routePromise
