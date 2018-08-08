@@ -1,5 +1,6 @@
 import IssueTicket from '@/modals/IssueTicket.vue'
 import sinon from 'sinon'
+import assert from 'assert'
 import { mount } from '@vue/test-utils'
 import { delay, mockAjax, testStore } from '../util'
 
@@ -183,6 +184,20 @@ describe('IssueTicket.vue', () => {
     ]
   }
 
+  /* Replicate the same routes, but use a different ID */
+  const ROUTE_11 = {
+    ...ROUTE_10,
+    label: 'R11',
+    trips: ROUTE_10.trips.map(trip => ({
+      ...trip,
+      id: 999 + trip.id,
+      tripStops: trip.tripStops.map(tripStop => ({
+        ...tripStop,
+        id: 999 + tripStop.id
+      }))
+    }))
+  }
+
   const PASSENGER_LISTS = [
     [
       {
@@ -205,13 +220,19 @@ describe('IssueTicket.vue', () => {
 
     issueTicketPromise = new Promise((resolve, reject) => {
       modalLoaded = mockAjax({
-        'GET /routes/10?includeTrips=true': [
+        'GET /routes/10?includeTrips': [
           200,
           (request) => ({
             ...ROUTE_10,
             trips: (request.query.includeTrips === 'true') ? ROUTE_10.trips : undefined
           })],
-        'GET /routes?': [200, [ROUTE_10]]
+        'GET /routes/11?includeTrips': [
+          200,
+          (request) => ({
+            ...ROUTE_11,
+            trips: (request.query.includeTrips === 'true') ? ROUTE_11.trips : undefined
+          })],
+        'GET /routes?': [200, [ROUTE_10, ROUTE_11]]
       }, async () => {
         const issueTicketModal = mount(
           IssueTicket,
@@ -434,5 +455,81 @@ describe('IssueTicket.vue', () => {
       expect(issueTicketModal.emitted().resolve).toBeFalsy
       expect(issueTicketModal.emitted().reject.length).toBe(1)
     })
+  })
+
+  it('should pick the correct route if a different route is selected', async () => {
+    await initializeModalWithProps({
+      users: [{id: 999}, {id: 998}],
+      cancelledTickets: [
+        {
+          id: 500,
+          boardStop: {
+            trip: {date: '2018-01-01', route: {label: 'XXX'}},
+            stop: {description: 'abc'},
+            time: '2018-01-01T19:00:00Z'
+          },
+          alightStop: {
+            trip: {date: '2018-01-01', route: {label: 'XXX'}},
+            stop: {description: 'abc'},
+            time: '2018-01-01T19:00:00Z'
+          },
+          ticketSale: {transactionId: 666}
+        },
+        {
+          id: 501,
+          boardStop: {
+            trip: {date: '2018-01-02', route: {label: 'XXX'}},
+            stop: {description: 'abc'},
+            time: '2018-01-01T19:00:00Z'
+          },
+          alightStop: {
+            trip: {date: '2018-01-02', route: {label: 'XXX'}},
+            stop: {description: 'abc'},
+            time: '2018-01-01T19:00:00Z'
+          },
+          ticketSale: {transactionId: 667}
+        }
+      ]
+    })
+
+    await mockAjax({
+      'GET /routes/11?includeTrips': [200, (request) => {
+        assert(request.query.includeTrips)
+
+        return ROUTE_11
+      }]
+    }, async () => {
+      issueTicketModal.find({ ref: 'routeSelector' }).vm.$emit('input', 11)
+      await delay(1)
+    })
+
+    await clickOnDate(16)
+    await clickOnDate(30)
+
+    await delay(10)
+
+    issueTicketModal.find(`select[name="boardingStop"] option[value="600"]`).setSelected()
+    await delay(1)
+    issueTicketModal.find(`select[name="alightingStop"] option[value="603"]`).setSelected()
+    await delay(1)
+
+    issueTicketModal.find('.btn.btn-primary').trigger('click')
+    await delay(1)
+
+    issueTicketResult = issueTicketModal.emitted().resolve[0][0]
+
+    for (let userId of [999, 998]) {
+      expect(issueTicketResult.trips.filter(t => t.userId === userId)[0].tripId).toBe(11000)
+      expect(issueTicketResult.trips.filter(t => t.userId === userId)[0].boardStopId).toBe(11100)
+      expect(issueTicketResult.trips.filter(t => t.userId === userId)[0].alightStopId).toBe(11103)
+      expect(issueTicketResult.trips.filter(t => t.userId === userId)[1].tripId).toBe(11001)
+      expect(issueTicketResult.trips.filter(t => t.userId === userId)[1].boardStopId).toBe(21100)
+      expect(issueTicketResult.trips.filter(t => t.userId === userId)[1].alightStopId).toBe(21103)
+    }
+    expect(issueTicketResult.trips.length).toBe(4)
+    expect(typeof issueTicketResult.description).toBe('string')
+    expect(issueTicketResult.cancelledTicketIds.length).toBe(2)
+    expect(issueTicketResult.cancelledTicketIds).toContain(500)
+    expect(issueTicketResult.cancelledTicketIds).toContain(501)
   })
 })

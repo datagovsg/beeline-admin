@@ -10,7 +10,7 @@
     </div>
   </transition>
 </template>
-<style>
+<style lang="scss">
 .modal-mask {
   position: fixed;
   z-index: 9998;
@@ -21,6 +21,7 @@
   background-color: rgba(0, 0, 0, .5);
   display: table;
   transition: opacity .3s ease;
+  overflow: auto;
 }
 
 .modal-wrapper {
@@ -36,6 +37,12 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
   transition: all .3s ease;
   font-family: Helvetica, Arial, sans-serif;
+  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  .modal-body {
+    overflow: auto;
+  }
 }
 
 .modal-default-button {
