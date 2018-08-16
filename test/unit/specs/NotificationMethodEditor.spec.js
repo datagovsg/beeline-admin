@@ -48,38 +48,7 @@ describe('NotificationMethodEditor.vue', () => {
     await delay(1)
 
     expect(lastInput).toBe('telegram')
-    console.log(lastAgent)
     expect(_.get(lastAgent, 'notes.telegramChatId')).toBe('Hello world')
-
-    // Switch to SMS
-    editor.find('select option[value="sms"]').element.selected = true
-    editor.find('select').trigger('input')
-    await delay(1)
-
-    editor.find('input:not([name="name"])').element.value = '98765432'
-    editor.find('input:not([name="name"])').trigger('input')
-    await delay(1)
-
-    expect(lastInput).toBe('sms')
-    expect(_.get(lastAgent, 'telephone')).toBe('98765432')
-
-    // Switch to email
-    editor.find('select option[value="email"]').element.selected = true
-    editor.find('select').trigger('input')
-    await delay(1)
-
-    editor.find('input:not([name="name"])').element.value = 'email@example.com'
-    editor.find('input:not([name="name"])').trigger('input')
-    await delay(1)
-
-    expect(lastInput).toBe('email')
-    expect(_.get(lastAgent, 'email')).toBe('email@example.com')
-
-    // Switch back to SMS -- data should be saved
-    editor.find('select option[value="sms"]').element.selected = true
-    editor.find('select').trigger('input')
-    await delay(1)
-    expect(editor.find('input:not([name="name"])').element.value).toBe('98765432')
   })
 })
 

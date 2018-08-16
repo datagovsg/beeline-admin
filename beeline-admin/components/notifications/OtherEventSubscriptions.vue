@@ -98,11 +98,9 @@ export default {
     initialEventSubscriptions: {
       immediate: true,
       handler (es) {
-        if (!this.eventSubscriptions && es) {
-          this.eventSubscriptions = _.filter(es,
-            e => !_.some(EVENT_TYPES, (v, k) => satisfiesEvent(e, v))
-          )
-        }
+        this.eventSubscriptions = _.filter(es,
+          e => !_.some(EVENT_TYPES, (v, k) => satisfiesEvent(e, v))
+        )
       }
     }
   },
@@ -114,7 +112,7 @@ export default {
       return {
         event: null,
         params: {ignoreIfEmpty: true},
-        handler: '',
+        handler: 'telegram',
         agent: {},
         formatter: '0'
       }

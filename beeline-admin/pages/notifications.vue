@@ -3,14 +3,21 @@
 
   <h1>Manage Route Event Notifications</h1>
 
-  <br/>
-  <u><b>Guide to get your telegram ID for route notifications:</b></u>
-  <ol>
-    <li>Download “Telegram” messenger app on your mobile devices</li>
-    <li>Access https://t.me/beeline_server_bot</li>
-    <li>Press start and extract telegram ID</li>
-  </ol>
-  <br/>
+  <div class="qr-instructions">
+    <div class="qr-box">
+      <img src="img/telegram-url-qr.png" />
+      <br/>
+      Scan the above QR code if you have Telegram installed
+    </div>
+    <div class="qr-instructions-text">
+      <h3>Guide to get your telegram ID for route notifications:</h3>
+      <ol>
+        <li>Download “Telegram” messenger app on your mobile devices</li>
+        <li>Access https://t.me/beeline_server_bot.</li>
+        <li>Press start and extract telegram ID</li>
+      </ol>
+    </div>
+  </div>
 
   <RouteEventSubscriptions ref="routeEventSubscriptions"
     :companyId="companyId" :initialEventSubscriptions="eventSubscriptions" />
@@ -21,6 +28,30 @@
     :companyId="companyId" :initialEventSubscriptions="eventSubscriptions" />
 </div>
 </template>
+
+<style lang="scss">
+.qr-instructions {
+  display: flex;
+
+  /* Note: would have been very easy to just tell this
+  .qr-box to float: left; However float: * has strange
+  interactions with list items. The list items appear under the floated item.
+  Therefore I work around this with flexbox.
+
+  Ref: https://stackoverflow.com/questions/710158/why-do-my-list-item-bullets-overlap-floating-elements
+   */
+  .qr-box {
+    flex: 0 0 auto;
+    border: solid 1px black;
+    width: 250px;
+    box-sizing: border-box;
+    text-align: center
+  }
+  .qr-instructions {
+    flex: 1 0 auto;
+  }
+}
+</style>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
