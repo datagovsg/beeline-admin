@@ -11,7 +11,7 @@
   <div v-else-if="type === 'urgentBooking'">
     <label>
       <input type="checkbox"
-        :value="options.setRouteIds"
+        :checked="options.setRouteIds"
         @input="options.setRouteIds = $event.target.checked,
         update('routeIds', $event.target.checked ? [] : undefined)" />
       Filter by routes
@@ -42,7 +42,7 @@
     <div>
       <label>
         <input type="checkbox"
-          :value="options.setRouteIds"
+          :checked="options.setRouteIds"
           @input="options.setRouteIds = $event.target.checked,
           update('routeIds', $event.target.checked ? [] : undefined)" />
         Filter by routes
@@ -119,8 +119,11 @@ export default {
       this.$emit('input', this.dataCache[t] || this.defaults[t])
     },
 
-    'value.routeIds' (r) {
-      this.options.setRouteIds = Boolean(r)
+    'value.routeIds': {
+      immediate: true,
+      handler (r) {
+        this.options.setRouteIds = Boolean(r)
+      }
     },
 
     value (v) {
