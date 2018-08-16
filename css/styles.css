@@ -5972,28 +5972,6 @@ dl.dl-compact dl {
   max-width: 20em;
   height: 10em; }
 
-.routes-page .glyphicon-user {
-  padding-left: 5px; }
-
-.routes-page .route-active {
-  background-color: #00C4A5; }
-  .routes-page .route-active[href]:hover, .routes-page .route-active[href]:focus {
-    background-color: #00917a; }
-
-.routes-page .route-ended {
-  background-color: #A9A9A9; }
-  .routes-page .route-ended[href]:hover, .routes-page .route-ended[href]:focus {
-    background-color: #909090; }
-
-.routes-page .route-notstarted {
-  background-color: #f28b2c; }
-  .routes-page .route-notstarted[href]:hover, .routes-page .route-notstarted[href]:focus {
-    background-color: #dd710e; }
-
-.routes-page .create-button {
-  margin-bottom: 20px;
-  margin-right: 20px; }
-
 beeline-datepicker {
   width: 300px;
   display: block; }
