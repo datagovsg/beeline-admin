@@ -87,9 +87,7 @@ export default {
     initialEventSubscriptions: {
       immediate: true,
       handler (es) {
-        if (!this.subscriptions && es) {
-          this.subscriptions = this.parse(es)
-        }
+        this.subscriptions = this.parse(es)
       }
     }
   },
