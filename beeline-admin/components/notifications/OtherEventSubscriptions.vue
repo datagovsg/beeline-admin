@@ -114,7 +114,7 @@ export default {
       return {
         event: null,
         params: {ignoreIfEmpty: true},
-        handler: '',
+        handler: 'telegram',
         agent: {},
         formatter: '0'
       }

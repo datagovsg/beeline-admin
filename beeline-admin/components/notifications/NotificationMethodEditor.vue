@@ -15,27 +15,11 @@
       </select>
     </label>
 
-    <label v-if="value === 'email'">
-      Email:
-      <input type="email" @input="update('email', $event.target.value)"
-        :value="f._.get(agent, 'email')"
-        placeholder="john@example.com"
-        :required="required" />
-    </label>
-
-    <label v-else-if="value === 'telegram'">
+    <label v-if="value === 'telegram'">
       Telegram Chat ID:
       <input type="tel" @input="update('notes.telegramChatId', $event.target.value)"
         :value="f._.get(agent, 'notes.telegramChatId')"
         placeholder="123456"
-        :required="required" />
-    </label>
-
-    <label v-else-if="value === 'sms'">
-      Telephone number:
-      <input type="tel" @input="update('telephone', $event.target.value)"
-        :value="f._.get(agent, 'telephone')"
-        placeholder="+65 8111 2222"
         :required="required" />
     </label>
 
@@ -59,9 +43,7 @@ export default {
 
     notificationMethods () {
       return [
-        'telegram',
-        'email',
-        'sms'
+        'telegram'
       ]
     }
   },
