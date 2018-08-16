@@ -346,3 +346,21 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+@import '~/scss/bootstrap/_variables.scss';
+@import "~/scss/bootstrap/_mixins.scss";
+
+.glyphicon-user{
+  padding-left: $padding-xs-horizontal;
+}
+.route-active {
+  @include label-variant($label-success-bg);
+}
+.route-ended {
+  @include label-variant($label-info-bg);
+}
+.route-notstarted {
+  @include label-variant($label-warning-bg);
+}
+</style>
