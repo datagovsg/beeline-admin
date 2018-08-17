@@ -169,6 +169,9 @@ export default {
         .catch(this.showErrorModal)
     },
 
+    /**
+     * Convert from list representation to internal tabular representation
+     */
     parse (eventSubscriptions) {
       // { noPings, newBooking, lateArrival ... }
       const relevantKeys = _(EVENT_TYPES).values().map(e => e.event).keyBy().value()
@@ -180,7 +183,7 @@ export default {
             e.handler + '|' +
             stringify(e.agent)
         })
-        .mapValues((es, g) => {
+        .mapValues((es) => {
           /*
             ev(1): (handler, agent, filter) --> [
               [noPings5, [object]],
@@ -205,16 +208,13 @@ export default {
             .fromPairs().value()
 
           return {
-            options: _(es[0].params)
-              .pick(['routeIds'])
-              .toPairs()
-              .filter(v => v[1] !== undefined)
-              .fromPairs()
-              .value(), /* no undefined route ids */
+            options: ('routeIds' in es[0].params)
+              ? { routeIds: _.uniq(es[0].params.routeIds || []) }
+              : {},
             handler: es[0].handler,
             agent: es[0].agent,
             events: _.mapValues(ev, e => !!e),
-            ids: _(ev).mapValues(e => e && e.id).filter(x => x).uniq().value()
+            ids: _(ev).values().map(e => e && e.id).filter(Boolean).uniq().value()
           }
         })
         .values()
@@ -224,21 +224,26 @@ export default {
       return groupedByRoutes
     },
 
+    /**
+     * Convert from internal tabular representation to list representation
+     * for submission to server
+     */
     serialize (subscription) {
+      // The arrayed params that are loaded in EVENT_TYPES must be merged
+      // But not the user-supplied params
+
       const eventSubscriptions = _.keys(subscription.events)
         .filter(key => subscription.events[key])
         .map(key => ({
           event: EVENT_TYPES[key].event,
           formatter: '0',
-          params: _.defaults(EVENT_TYPES[key].defaultParams,
-            subscription.options),
+          params: EVENT_TYPES[key].defaultParams || {},
           agent: subscription.agent,
           handler: subscription.handler
         }))
 
       const mergedSubscriptions = _(eventSubscriptions)
         .groupBy('event')
-        // merge the array-valued params
         .mapValues(vs => {
           const mergedParams = vs
             .map(v => v.params)
@@ -254,7 +259,13 @@ export default {
               return acc
             }, {})
 
-          return {...vs[0], params: mergedParams}
+          return {
+            ...vs[0],
+            params: {
+              ...mergedParams,
+              ...subscription.options
+            }
+          }
         })
         .values()
         .value()
