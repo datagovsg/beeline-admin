@@ -60,6 +60,8 @@
 
     .select2-dropdown-display {
       flex: 1 1 auto;
+      width: auto; /* override width: 100% of form-control */
+      overflow: hidden;
     }
     .select2-dropdown-button {
       flex: 0 0 auto;
