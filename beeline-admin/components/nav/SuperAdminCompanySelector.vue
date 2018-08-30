@@ -12,6 +12,7 @@
 
 <script>
 import {mapGetters, mapState, mapActions, mapMutations} from 'vuex'
+import _ from 'lodash'
 
 export default {
   created () {
@@ -25,6 +26,10 @@ export default {
 
     currentCompany () {
       return Number(this.$route.params.companyId)
+    },
+    
+    sortedAvailableCompanies () {
+      return _.sortBy(this.availableCompanies, i => this.companiesById[i].name)
     }
   },
   methods: {
