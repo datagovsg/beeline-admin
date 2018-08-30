@@ -29,7 +29,7 @@ export default {
     },
 
     sortedAvailableCompanies () {
-      return _.sortBy(this.availableCompanies, i => this.companiesById[i].name)
+      return _.sortBy(this.availableCompanies, i => this.companiesById && this.companiesById[i].name)
     }
   },
   methods: {
