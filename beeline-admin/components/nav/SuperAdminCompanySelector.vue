@@ -27,7 +27,7 @@ export default {
     currentCompany () {
       return Number(this.$route.params.companyId)
     },
-    
+
     sortedAvailableCompanies () {
       return _.sortBy(this.availableCompanies, i => this.companiesById[i].name)
     }
