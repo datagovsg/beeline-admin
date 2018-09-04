@@ -91,7 +91,7 @@
       font-size="14px"
       text-anchor="middle"
     >
-      {{f.date(tripStop.actualTime, 'HH:MM')}}
+      {{f.date(tripStop.expectedTime, 'HH:MM')}}
     </GraphLabel>
     <GraphLabel
       axis-x2=""
