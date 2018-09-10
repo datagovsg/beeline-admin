@@ -30,6 +30,7 @@ module.exports = {
     confirm: showModalOfType('confirm'),
     flash: showModalOfType('flash'),
     alert: showModalOfType('alert'),
+    prompt: showModalOfType('prompt'),
     /** Adds a modal request to the queue */
     showModal (context, options) {
       return Promise.resolve(null)
