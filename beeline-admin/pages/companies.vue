@@ -6,6 +6,9 @@
         <h4 class="text-danger">
           You are Superadmin! Pick the company you would like to edit from the top right hand corner
         </h4>
+        <button class="btn btn-default" @click="promptNewCompany">
+          Create New Company
+        </button>
       </div>
     </div>
     <div v-else-if="company">
@@ -137,7 +140,9 @@ export default {
   watch: {
     companyId: {
       immediate: true,
-      handler (h) {
+      handler (companyId) {
+        if (!companyId) return
+
         const promise = this.$fetchPromise =
           this.axios.get(`/companies/${this.companyId}`)
             .then((response) => {
@@ -151,7 +156,7 @@ export default {
   },
   methods: {
     ...mapActions('shared', ['fetch']),
-    ...mapActions('modals', ['showModal', 'showErrorModal', 'alert']),
+    ...mapActions('modals', ['showModal', 'showErrorModal', 'alert', 'prompt', 'flash']),
     ...mapActions('resources', ['getRoute', 'saveRoute', 'createTripForDate']),
     ...mapActions('spinner', ['spinOnPromise']),
 
@@ -178,6 +183,29 @@ export default {
           window.location.href = response.data
         })
         .catch(this.showErrorModal)
+    },
+
+    promptNewCompany () {
+      return this.prompt({
+        title: 'What is the name of the company?'
+      })
+        .then((name) => {
+          if (!name) {
+            return
+          } else {
+            return this.axios.post(
+              `/companies`,
+              {name}
+            )
+              .then(() => {
+                this.flash({
+                  title: 'Company created!'
+                })
+              })
+              .catch(this.showErrorModal)
+          }
+        })
+        .catch(() => {}) // User cancelled the prompt
     }
   }
 }
