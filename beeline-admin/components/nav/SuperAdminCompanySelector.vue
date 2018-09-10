@@ -2,7 +2,7 @@
 <select @input="navigateToCompany($event.target.value)"
   class="form-control-condensed">
   <option value="null" :selected="!currentCompany">(All)</option>
-  <option v-for="companyId in availableCompanies"
+  <option v-for="companyId in sortedAvailableCompanies"
     :key="companyId"
     :value="companyId" :selected="currentCompany === companyId">
     {{companiesById[companyId].name}}
