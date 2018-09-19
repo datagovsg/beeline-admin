@@ -19,14 +19,14 @@
             @input="filter.page = 0"/>
         </div>
 
-        <button class="btn" v-for="tagPreset in tagPresets"
+        <button class="btn" v-for="preset in presets"
           :class="{
-            'btn-primary': tagPreset == filter.preset,
-            'btn-default': tagPreset != filter.preset
+            'btn-primary': preset == filter.preset,
+            'btn-default': preset != filter.preset
           }"
-          @click="filter.preset = tagPreset"
-          :key="tagPreset.name">
-          {{tagPreset.name}}
+          @click="filter.preset = preset"
+          :key="preset.name">
+          {{preset.name}}
         </button>
       </div>
     </div>
@@ -178,11 +178,27 @@ import UibPagination from '@/components/UibPagination.vue'
 export default {
   props: ['companyId'],
   data () {
-    const tagPresets = [
-      { name: 'All', tags: null },
-      { name: 'Crowdstart', tags: ['crowdstart'] },
-      { name: 'Lite', tags: ['lite'] },
-      { name: 'Regular', tags: ['public'] }
+    const presets = [
+      {
+        name: 'All',
+        filter: r => this.routeMatchesId(r) || this.routeIsShared(r)
+      },
+      {
+        name: 'Crowdstart',
+        filter: r => this.routeMatchesId(r) && (!r.tags || r.tags.includes('crowdstart'))
+      },
+      {
+        name: 'Beeline Crowdstart',
+        filter: r => this.routeIsShared(r)
+      },
+      {
+        name: 'Lite',
+        filter: r => this.routeMatchesId(r) && (!r.tags || r.tags.includes('lite'))
+      },
+      {
+        name: 'Regular',
+        filter: r => r => this.routeMatchesId(r) && (!r.tags || r.tags.includes('public'))
+      }
     ]
 
     return {
@@ -191,10 +207,10 @@ export default {
         page: 0,
         orderBy: 'label',
         order: 'asc',
-        preset: tagPresets[0],
+        preset: presets[0],
         searchTerms: ''
       },
-      tagPresets,
+      presets,
       now: Date.now()
     }
   },
@@ -223,8 +239,7 @@ export default {
     routes () {
       const routes = this.allRoutes &&
         this.allRoutes
-          .filter(r => !this.companyId || r.transportCompanyId === Number(this.companyId))
-          .filter(r => !this.filter.preset.tags || _.intersection(r.tags, this.filter.preset.tags).length > 0)
+          .filter(r => !this.filter.preset.filter || this.filter.preset.filter(r))
           .filter(r => !this.filter.searchTerms ||
               (r.label && r.label.toLowerCase().startsWith(this.filter.searchTerms.toLowerCase())) ||
               (r.name && r.name.toLowerCase().indexOf(this.filter.searchTerms.toLowerCase()) !== -1) ||
@@ -251,6 +266,15 @@ export default {
     ...mapActions('resources', ['getRoute', 'saveRoute', 'createTripForDate']),
     ...mapActions('shared', ['invalidate', 'refresh']),
     ...mapActions('spinner', ['spinOnPromise']),
+
+    routeMatchesId (route) {
+      return !this.companyId || route.transportCompanyId === Number(this.companyId)
+    },
+
+    routeIsShared (route) {
+      return route.transportCompanyId === process.env.BEELINE_COMPANY_ID &&
+        (!route.tags || route.tags.includes('crowdstart'))
+    },
 
     viewRoute (route) {
       this.showModal({
