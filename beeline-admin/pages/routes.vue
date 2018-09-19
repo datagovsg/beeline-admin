@@ -181,11 +181,11 @@ export default {
     const presets = [
       {
         name: 'All',
-        filter: r => this.routeMatchesId(r) || this.routeIsShared(r)
+        filter: r => this.routeMatchesCompany(r) || this.routeIsShared(r)
       },
       {
         name: 'Crowdstart',
-        filter: r => this.routeMatchesId(r) && r.tags && r.tags.includes('crowdstart')
+        filter: r => this.routeMatchesCompany(r) && r.tags && r.tags.includes('crowdstart')
       },
       {
         name: 'Beeline Crowdstart',
@@ -193,11 +193,11 @@ export default {
       },
       {
         name: 'Lite',
-        filter: r => this.routeMatchesId(r) && r.tags && r.tags.includes('lite')
+        filter: r => this.routeMatchesCompany(r) && r.tags && r.tags.includes('lite')
       },
       {
         name: 'Regular',
-        filter: r => r => this.routeMatchesId(r) && r.tags && r.tags.includes('public')
+        filter: r => r => this.routeMatchesCompany(r) && r.tags && r.tags.includes('public')
       }
     ]
 
@@ -267,7 +267,7 @@ export default {
     ...mapActions('shared', ['invalidate', 'refresh']),
     ...mapActions('spinner', ['spinOnPromise']),
 
-    routeMatchesId (route) {
+    routeMatchesCompany (route) {
       return !this.companyId || route.transportCompanyId === Number(this.companyId)
     },
 
