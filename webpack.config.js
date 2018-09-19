@@ -6,6 +6,7 @@ const InlineEnviromentVariablesPlugin = require('inline-environment-variables-we
 const env = {
   BACKEND_URL: process.env.BACKEND_URL || 'https://api-staging.beeline.sg',
   TRACKING_URL: process.env.TRACKING_URL || 'https://tracking-staging.beeline.sg',
+  BEELINE_COMPANY_ID: parseInt(process.env.BEELINE_COMPANY_ID || '2'),
   NODE_ENV: process.env.NODE_ENV || 'development'
 }
 
