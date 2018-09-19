@@ -185,7 +185,7 @@ export default {
       },
       {
         name: 'Crowdstart',
-        filter: r => this.routeMatchesId(r) && (!r.tags || r.tags.includes('crowdstart'))
+        filter: r => this.routeMatchesId(r) && r.tags && r.tags.includes('crowdstart')
       },
       {
         name: 'Beeline Crowdstart',
@@ -193,11 +193,11 @@ export default {
       },
       {
         name: 'Lite',
-        filter: r => this.routeMatchesId(r) && (!r.tags || r.tags.includes('lite'))
+        filter: r => this.routeMatchesId(r) && r.tags && r.tags.includes('lite')
       },
       {
         name: 'Regular',
-        filter: r => r => this.routeMatchesId(r) && (!r.tags || r.tags.includes('public'))
+        filter: r => r => this.routeMatchesId(r) && r.tags && r.tags.includes('public')
       }
     ]
 
@@ -273,7 +273,7 @@ export default {
 
     routeIsShared (route) {
       return route.transportCompanyId === process.env.BEELINE_COMPANY_ID &&
-        (!route.tags || route.tags.includes('crowdstart'))
+        route.tags && route.tags.includes('crowdstart')
     },
 
     viewRoute (route) {
