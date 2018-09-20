@@ -101,5 +101,5 @@
     "deploy!": "npm run deploy && npm run live-gh-pages"
   },
   "author": "Government Technology Agency of Singapore (https://www.tech.gov.sg)",
-  "license": "Apache-2.0"
+  "license": "MIT"
 }
