@@ -40,6 +40,7 @@
         <th>&#10003;</th>
         <SortTh @sort="updateOrder" field="id" :orderBy="filter.orderBy" :order="filter.order">Route ID</SortTh>
         <SortTh @sort="updateOrder" field="label" :orderBy="filter.orderBy" :order="filter.order">Label</SortTh>
+        <SortTh @sort="updateOrder" field="transportCompanyId" :orderBy="filter.orderBy" :order="filter.order">Company</SortTh>
         <SortTh @sort="updateOrder" field="name" :orderBy="filter.orderBy" :order="filter.order">Route</SortTh>
         <th>View</th>
         <SortTh @sort="updateOrder" field="createdAt" :orderBy="filter.orderBy" :order="filter.order">Campaign Start Date</SortTh>
@@ -75,6 +76,7 @@
           </a>
         </td>
         <td><span class="route-label">{{route.label}}</span></td>
+        <td>{{companiesById[route.transportCompanyId] && companiesById[route.transportCompanyId].name}}</td>
         <td>
           <a :href="`#/c/${companyId}/trips/${route.id}/trips`">{{route.from}} to {{route.to}}</a>
         </td>
@@ -189,7 +191,9 @@ export default {
       return this.axios.get('/crowdstart/status')
         .then((result) => {
           const transformed = result.data
-            .filter(r => !this.companyId || r.transportCompanyId === Number(this.companyId))
+            .filter(r => !this.companyId ||
+              r.transportCompanyId === Number(this.companyId) ||
+              r.transportCompanyId === Number(process.env.BEELINE_COMPANY_ID))
             .map(route => {
               return {
                 ...route,
