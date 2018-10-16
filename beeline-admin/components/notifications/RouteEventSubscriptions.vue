@@ -23,11 +23,8 @@
           <!-- TODO: required = true -->
         </td>
         <td>
-          <!-- <EventSubscriptionEditor
-            :type="eventSubscription.event"
-            v-model="eventSubscription.params"
-            /> -->
           <EventSubscriptionEditor type="tripCancelled"
+            :companyId="companyId"
             v-model="subscription.options" />
         </td>
         <td class="with-label"><label><input type="checkbox" v-model="subscription.events.newBooking" /></label></td>

@@ -491,7 +491,10 @@ export default {
             await Promise.all(days.map(day =>
               this.createTripForDate({
                 date: day.date,
-                trip: lastTrip
+                trip: {
+                  ...lastTrip,
+                  status: null /* Ensure that all new trips are always valid, bookable */
+                }
               })))
           }
         } catch (error) {
