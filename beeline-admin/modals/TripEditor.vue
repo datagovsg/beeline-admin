@@ -163,6 +163,10 @@
     <!-- trip-data-editor -->
 
     <div class="modal-footer">
+      <p class="bg-warning" v-if="editTrip.status !== null && createNew">
+        You are <strong>creating a new trip</strong>, however the trip status is not <strong>normal</strong>.
+        Users will not be able to book this trip. If this is incorrect, please change the status above.
+      </p>
       <button class="btn btn-primary" @click="validateBeforeResolve()">
         Save
       </button>
