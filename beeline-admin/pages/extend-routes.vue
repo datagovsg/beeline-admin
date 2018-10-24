@@ -512,6 +512,13 @@ export default {
       await this.alert({
         title: `${routesToExtend.length} routes successfully extended!`
       })
+
+      for (let day of this.days) {
+        day.selected = false
+      }
+      for (let route of this.filteredRoutes) {
+        route.selected = false
+      }
     }
   }
 }
