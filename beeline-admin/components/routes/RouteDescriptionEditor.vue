@@ -184,6 +184,7 @@ export default {
             }
           })
       )
+        .then(() => this.$emit('requery'))
         .catch(this.showErrorModal)
     },
     doResetRoute () {

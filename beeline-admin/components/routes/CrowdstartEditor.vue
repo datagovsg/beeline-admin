@@ -1,15 +1,24 @@
 <template>
   <div class="container-fluid crowdstart-editor">
-    <div class="form-group" v-if="editRoute && !editRoute.tags.includes('crowdstart') && !editRoute.tags.includes('crowdstart-private')">
+    <div v-if="editRoute && !isRouteACrowdstart(editRoute)"
+      class="form-group">
       This is not a crowdstart route. Please add the "crowdstart" tag to the route.
     </div>
 
     <form class="container-fluid form-horizontal"
-        v-if="editRoute" @submit.prevent="doSaveRoute">
+        v-if="isRouteACrowdstart(editRoute)" @submit.prevent="doSaveRoute">
+
+      <template v-if="isCrowdstartClosed(editRoute)">
+        This crowdstart is closed. You may not make further changes
+        to it
+      </template>
+
       <div class="form-group form-inline">
         <label>
           Route Passes per Bid
-          <input type="number" v-model="editRoute.notes.noPasses"
+          <input type="number"
+            v-model="editRoute.notes.noPasses"
+            :disabled="isCrowdstartClosed(editRoute)"
             class="form-control" />
         </label>
       </div>
@@ -22,6 +31,7 @@
         <DatePickerDropdown
           :value="editRoute.notes.crowdstartExpiry ? new Date(editRoute.notes.crowdstartExpiry) : null"
           :offset="0"
+          :disabled="isCrowdstartClosed(editRoute)"
           @input="update('notes.crowdstartExpiry', f.date($event, 'yyyy-mm-dd'))"
           class="datepicker-dropdown"
           />
@@ -34,6 +44,7 @@
           <DatePickerDropdown
             :value="editRoute.trips[0].date && new Date(editRoute.trips[0].date)"
             :offset="0"
+            :disabled="isCrowdstartClosed(editRoute)"
             @input="update('trips.0.date', $event)"
             class="datepicker-dropdown"
             />
@@ -62,17 +73,22 @@
               <td>
               </td>
               <td>
-                <PriceInput v-model="tier.price" class="form-control" />
+                <PriceInput v-model="tier.price"
+                  :disabled="isCrowdstartClosed(editRoute)"
+                  class="form-control" />
               </td>
               <td>
-                <input type="number" class="form-control" v-model.number="tier.pax" />
+                <input type="number" class="form-control"
+                  :disabled="isCrowdstartClosed(editRoute)"
+                  v-model.number="tier.pax" />
               </td>
             </tr>
           </tbody>
         </table>
       </div>
       <div class="form-group">
-        <button class="btn btn-primary">
+        <button class="btn btn-primary"
+          :disabled="isCrowdstartClosed(editRoute)">
           Save
         </button>
       </div>
@@ -137,6 +153,9 @@ export default {
     ...mapActions('resources', ['saveRoute', 'createTripForDate']),
     ...mapActions('spinner', ['spinOnPromise']),
     ...mapActions('modals', ['showErrorModal']),
+
+    isRouteACrowdstart: filters.isRouteACrowdstart,
+    isCrowdstartClosed: filters.isCrowdstartClosed,
 
     doSaveRoute () {
       const newRoute = {

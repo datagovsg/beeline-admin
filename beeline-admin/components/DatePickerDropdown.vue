@@ -1,8 +1,11 @@
 <template>
   <div class="input-group datepicker-dropdown" @click.stop="handleClick">
-    <input type="text" class="form-control" :value="buffer" @input="checkDate" />
+    <input type="text" class="form-control"
+      :disabled="disabled" :value="buffer" @input="checkDate" />
     <span class="input-group-btn">
-      <button class="btn btn-primary btn-icon" type="button"
+      <button class="btn btn-primary btn-icon"
+        type="button"
+        :disabled="disabled"
         @click="showPopup = !showPopup">
         <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
       </button>
@@ -70,7 +73,11 @@ export default {
       type: String,
       default: 'dd mmm yyyy'
     },
-    offset: {}
+    offset: {},
+    disabled: {
+      type: Boolean,
+      default: false
+    }
   },
   created () {
     this.clickOut = () => {
