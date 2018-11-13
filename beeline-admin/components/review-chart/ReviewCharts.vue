@@ -38,7 +38,7 @@ import _ from 'lodash'
 import PunctualityGraphWithMissingDates from './PunctualityGraphWithMissingDates.vue'
 import StopStatistics from './StopStatistics.vue'
 
-import filters from '@/filters'
+import * as filters from '@/filters'
 
 export default {
   props: ['trips'],

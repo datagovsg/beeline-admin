@@ -160,7 +160,7 @@ import querystring from 'querystring'
 import {mapGetters, mapActions, mapState} from 'vuex'
 import _ from 'lodash'
 import download from 'downloadjs'
-import filters from '../filters'
+import * as filters from '@/filters'
 
 import SpanSelect from '@/components/SpanSelect.vue'
 import RouteTagSelector from '@/components/RouteTagSelector.vue'

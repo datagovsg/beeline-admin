@@ -36,7 +36,7 @@
 import {mapGetters, mapActions} from 'vuex'
 import _ from 'lodash'
 
-import filters from '@/filters'
+import * as filters from '@/filters'
 
 export default {
   props: ['userId', 'companyId'],

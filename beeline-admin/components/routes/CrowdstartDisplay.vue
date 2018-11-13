@@ -1,11 +1,11 @@
 <template>
   <div class="container-fluid crowdstart-editor">
-    <div class="form-group" v-if="route && !route.tags.includes('crowdstart') && !route.tags.includes('crowdstart-private')">
+    <div class="form-group" v-if="isRouteACrowdstart(route)">
       This is not a crowdstart route. Please add the "crowdstart" tag to the route.
     </div>
 
     <form class="container-fluid form-horizontal"
-        v-if="route" @submit.prevent="() => {}">
+        v-if="route && isRouteACrowdstart(route)" @submit.prevent="() => {}">
 
       <div class="form-group form-inline" v-if="bids">
         <h3>Bidders</h3>
@@ -42,7 +42,9 @@
                     type="button" title="Withdraw Bid">
                   <span class="glyphicon glyphicon-trash"></span>
                 </button>
-                <button class="btn btn-danger" @click="charge(bid)" :disabled="bid.status!=='bidded'" v-if="route.tags.indexOf('success') > -1"
+                <button class="btn btn-danger" @click="charge(bid)"
+                  :disabled="bid.status !== 'bidded'"
+                  v-if="route.tags.indexOf('success') > -1"
                     type="button" title="Manually Charge">
                   <span class="glyphicon glyphicon-piggy-bank"></span>
                 </button>
@@ -67,7 +69,7 @@
 import {mapGetters, mapActions} from 'vuex'
 import querystring from 'querystring'
 import _ from 'lodash'
-const filters = require('../../filters')
+import * as filters from '@/filters'
 
 export default {
   props: ['route'],
@@ -105,6 +107,9 @@ export default {
   methods: {
     ...mapActions('spinner', ['spinOnPromise']),
     ...mapActions('modals', ['showModal', 'showErrorModal', 'confirm']),
+
+    isRouteACrowdstart: filters.isRouteACrowdstart,
+    isCrowdstartClosed: filters.isCrowdstartClosed,
 
     requeryAndNotifyParent () {
       this.$emit('requery')

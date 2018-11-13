@@ -186,7 +186,7 @@ import StopSelector from '@/components/StopSelector.vue'
 import Modal from '@/modals/MyModal.vue'
 import ModalMixin from '@/modals/ModalMixin'
 
-const filters = require('../filters')
+import * as filters from '@/filters'
 
 export default {
   props: [

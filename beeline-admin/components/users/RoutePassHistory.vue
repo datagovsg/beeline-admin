@@ -36,7 +36,7 @@
 <script>
 import {mapState, mapGetters, mapActions} from 'vuex'
 
-import filters from '@/filters'
+import * as filters from '@/filters'
 
 export default {
   props: ['userId', 'companyId', 'tag', 'finalBalance'],

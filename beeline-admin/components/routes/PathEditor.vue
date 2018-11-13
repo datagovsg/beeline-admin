@@ -65,7 +65,7 @@
 
 <script>
 import _ from 'lodash'
-const filters = require('../../filters')
+import * as filters from '@/filters'
 const {loaded} = require('vue2-google-maps')
 const leftPad = require('left-pad')
 

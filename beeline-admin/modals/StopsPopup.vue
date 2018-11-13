@@ -127,7 +127,7 @@ import {mapState, mapActions, mapGetters} from 'vuex'
 import Modal from '@/modals/MyModal.vue'
 import ModalMixin from '@/modals/ModalMixin'
 
-const filters = require('../filters')
+import * as filters from '@/filters'
 
 export default {
   props: [

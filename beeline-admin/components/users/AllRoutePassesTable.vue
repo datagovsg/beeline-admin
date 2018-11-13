@@ -121,7 +121,7 @@ import {mapGetters, mapActions} from 'vuex'
 import ExpandableArea from '@/components/ExpandableArea.vue'
 import RouteInfo from '@/components/users/RouteInfo'
 
-import filters from '@/filters'
+import * as filters from '@/filters'
 
 export default {
   props: ['companyId', 'userId'],

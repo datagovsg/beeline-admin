@@ -185,7 +185,7 @@ import RouteSelector from '@/components/RouteSelector.vue'
 import UserIdSelector from '@/components/UserIdSelector.vue'
 import ModalMixin from '@/modals/ModalMixin'
 
-import filters from '@/filters'
+import * as filters from '@/filters'
 
 export default {
   props: [

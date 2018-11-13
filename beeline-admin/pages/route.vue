@@ -31,7 +31,7 @@
 
 <script>
 import {mapActions} from 'vuex'
-import filters from '@/filters'
+import * as filters from '@/filters'
 
 import RouteDisplay from '@/components/routes/RouteDisplay.vue'
 import RouteDescriptionEditor from '@/components/routes/RouteDescriptionEditor.vue'

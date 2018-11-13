@@ -167,7 +167,7 @@
 <script>
 import _ from 'lodash'
 import {mapGetters, mapActions, mapState} from 'vuex'
-const filters = require('../filters')
+import * as filters from '@/filters'
 
 import CreateTripsDatePicker from '@/modals/CreateTripsDatePicker.vue'
 import ExpandableArea from '@/components/ExpandableArea.vue'
