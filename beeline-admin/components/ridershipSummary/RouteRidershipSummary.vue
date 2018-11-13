@@ -114,7 +114,7 @@
 
 <script>
 import {mapGetters} from 'vuex'
-import filters from '@/filters'
+import * as filters from '@/filters'
 
 export default {
   props: ['route', 'index'],

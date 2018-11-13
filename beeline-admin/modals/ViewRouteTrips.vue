@@ -108,7 +108,7 @@ import TripStopMarker from '@/components/TripStopMarker.vue'
 import Modal from '@/modals/MyModal.vue'
 import ModalMixin from '@/modals/ModalMixin'
 
-import filters from '@/filters'
+import * as filters from '@/filters'
 
 export default {
   props: ['route', 'value', 'date'],

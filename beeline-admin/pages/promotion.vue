@@ -155,7 +155,7 @@ table.criteria-list > tbody > tr > td {
 <script>
 import {mapGetters, mapActions} from 'vuex'
 import _ from 'lodash'
-const filters = require('../filters')
+import * as filters from '@/filters'
 
 export default {
   props: ['promoId', 'companyId'],

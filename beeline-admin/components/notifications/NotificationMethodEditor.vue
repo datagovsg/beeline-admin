@@ -33,7 +33,7 @@
   </div>
 </template>
 <script>
-import filters from '@/filters'
+import * as filters from '@/filters'
 
 export default {
   props: ['value', 'agent', 'required'],

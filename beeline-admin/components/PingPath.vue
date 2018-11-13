@@ -12,7 +12,7 @@
   </div>
 </template>
 <script>
-import filters from '../filters'
+import * as filters from '@/filters'
 import _ from 'lodash'
 
 export default {

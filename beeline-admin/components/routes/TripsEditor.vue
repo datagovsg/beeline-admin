@@ -134,8 +134,7 @@
 import _ from 'lodash'
 import {mapGetters, mapActions} from 'vuex'
 import assert from 'assert'
-import {timeSinceMidnight} from '../../shared/filters'
-const filters = require('../../filters')
+import * as filters from '@/filters'
 
 import MonthPickerDropdown from '@/components/MonthPickerDropdown.vue'
 import MultiSelectBroker from '@/components/MultiSelectBroker'
@@ -190,7 +189,7 @@ export default {
       return _(stopsSet)
         .values()
         .flatten()
-        .sortBy(s => timeSinceMidnight(s.time))
+        .sortBy(s => filters.timeSinceMidnight(s.time))
         .value()
     },
     trips () {

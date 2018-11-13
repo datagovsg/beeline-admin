@@ -69,7 +69,7 @@
 import {mapGetters, mapActions} from 'vuex'
 import querystring from 'querystring'
 import _ from 'lodash'
-const filters = require('../../filters')
+import * as filters from '@/filters'
 
 export default {
   props: ['route'],

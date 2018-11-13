@@ -116,7 +116,7 @@
 </template>
 <script>
 import {mapGetters, mapActions} from 'vuex'
-import filters from '@/filters'
+import * as filters from '@/filters'
 
 import AllRoutePassesTable from '@/components/users/AllRoutePassesTable.vue'
 import CrowdstartHistoryTable from '@/components/users/CrowdstartHistoryTable.vue'

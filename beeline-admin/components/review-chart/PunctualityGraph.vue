@@ -121,7 +121,7 @@ import ReferenceLine from './ReferenceLine.vue'
 import GraphPoint from './GraphPoint.vue'
 import GraphLabel from './GraphLabel.vue'
 
-import filters from '@/filters'
+import * as filters from '@/filters'
 
 export default {
   props: [

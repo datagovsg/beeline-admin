@@ -106,7 +106,7 @@
 import {mapGetters, mapActions} from 'vuex'
 import assert from 'assert'
 import _ from 'lodash'
-const filters = require('../../filters')
+import * as filters from '@/filters'
 
 import DatePickerDropdown from '@/components/DatePickerDropdown.vue'
 import PriceInput from '@/components/PriceInput.vue'

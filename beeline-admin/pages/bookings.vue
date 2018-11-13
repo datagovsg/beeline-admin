@@ -367,7 +367,7 @@ import MultiSelectBroker from '@/components/MultiSelectBroker'
 import UibPagination from '@/components/UibPagination.vue'
 import RouteSelector from '@/components/RouteSelector.vue'
 import SpanSelect from '@/components/SpanSelect.vue'
-import filters from '@/filters'
+import * as filters from '@/filters'
 
 export default {
   props: ['companyId', 'tripId', 'userId', 'routeId'],

@@ -179,7 +179,7 @@ import {mapGetters, mapActions} from 'vuex'
 import CompanyLogo from '@/components/CompanyLogo.vue'
 import MonthPicker from '@/components/MonthPicker.vue'
 import RouteRidershipRummary from '@/components/ridershipSummary/RouteRidershipSummary.vue'
-import filters from '@/filters'
+import * as filters from '@/filters'
 
 export default {
   props: ['companyId'],

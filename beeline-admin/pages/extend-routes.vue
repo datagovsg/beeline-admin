@@ -128,7 +128,7 @@ import {mapGetters, mapActions, mapState} from 'vuex'
 import querystring from 'querystring'
 import TagsView from '@/components/TagsView.vue'
 import _ from 'lodash'
-const filters = require('../filters')
+import * as filters from '@/filters'
 
 /**
   * Uniquely hash trips by their stops, stop time and price.

@@ -123,7 +123,7 @@ import {mapGetters, mapActions, mapState} from 'vuex'
 import _ from 'lodash'
 
 import SortTh from '@/components/SortTh.vue'
-const filters = require('../filters')
+import * as filters from '@/filters'
 
 export default {
   props: ['companyId'],

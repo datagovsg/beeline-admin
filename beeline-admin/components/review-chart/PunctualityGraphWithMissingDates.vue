@@ -34,7 +34,7 @@ import {mapActions} from 'vuex'
 
 import PunctualityGraph from './PunctualityGraph.vue'
 
-import filters from '@/filters'
+import * as filters from '@/filters'
 
 export default {
   props: ['tripStop', 'selectedDate'],
