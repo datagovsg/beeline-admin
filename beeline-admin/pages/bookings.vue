@@ -110,6 +110,7 @@
                 <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
                 Download CSV
               </button>
+              <span v-if="progressText">&nbsp;{{ progressText }}</span>
             </div>
           </div>
         </form>
@@ -359,6 +360,7 @@
 <script>
 import _ from 'lodash'
 import assert from 'assert'
+import download from 'downloadjs'
 import querystring from 'querystring'
 import {mapState, mapGetters, mapActions} from 'vuex'
 import redirect from '@/shared/redirect'
@@ -368,6 +370,53 @@ import UibPagination from '@/components/UibPagination.vue'
 import RouteSelector from '@/components/RouteSelector.vue'
 import SpanSelect from '@/components/SpanSelect.vue'
 import * as filters from '@/filters'
+
+const CSV_FIELDS = [
+  "ticketSale.transaction.id",
+  "ticketRefund.transaction.id",
+  "ticketExpense.transaction.id",
+
+  "ticketRefund.transaction.description",
+  "ticketExpense.transaction.description",
+
+  "routePass.transactionId",
+  "routePass.id",
+  "routePass.discount",
+
+  "boardStop.trip.date",
+  "user.name",
+  "user.telephone",
+  "user.email",
+
+  "id",
+  "paymentResource",
+  "paymentData.transfer.destination_payment",
+  "refundResource",
+  "boardStop.trip.id",
+  "boardStop.trip.route.id",
+  "boardStop.trip.route.label",
+  "boardStop.trip.route.from",
+  "boardStop.trip.route.to",
+  "boardStop.trip.route.transportCompany.name",
+
+  "boardStop.time",
+  "boardStop.stop.description",
+  "alightStop.time",
+  "alightStop.stop.description",
+
+  "boardStop.trip.price",
+  "ticketSale.credit",
+  "notes.discountCodes",
+  "notes.discountValue",
+
+  "discount.discount.code",
+  "discount.discount.description",
+  "discount.discount.promotionId",
+
+  "status",
+  "createdAt",
+  "ticketRefund.createdAt",
+]
 
 export default {
   props: ['companyId', 'tripId', 'userId', 'routeId'],
@@ -381,6 +430,7 @@ export default {
 
   data () {
     return {
+      progressText: null,
       pagination: {
         perPage: 50,
         pageCount: 1,
@@ -593,13 +643,44 @@ export default {
       return queryPromise
     },
 
-    downloadCsv () {
-      this.axios.post('/downloads', {
-        uri: this.csvUrl
-      })
-        .then((result) => {
-          redirect(process.env.BACKEND_URL + '/downloads/' + result.data.token)
-        })
+    async downloadCsv () {
+      const payloads = [CSV_FIELDS.join(',')]
+      const noHeaders = csvText => csvText.substring(csvText.indexOf('\n') + 1)
+
+      const { perPage } = this.pagination
+      const { totalRows: totalItems } = this.dataPagination
+      try {
+        for (let page = 1; totalItems - page * perPage >= -perPage; ++page) {
+          this.progressText = `Fetched ${page * perPage} of ${totalItems} records...`
+          const url = this.buildQuery({page, perPage, format: 'json'})
+          const response = await this.axios.get(url)
+            
+          const bookingJSONToCSV = row => {
+            const csv = CSV_FIELDS
+              .map(f => {
+                const v = _.get(row, f)
+                if (v && f === 'boardStop.trip.date') {
+                  // Return the date portion
+                  return `"${v.split('T')[0]}"`
+                } else if (v && ['boardStop.time', 'alightStop.time'].includes(f)) {
+                  return `"${v.replace('T', ' ').replace(/\.\d{3}Z$/,'')}"`
+                } else {
+                  return v ? `"${v}"` : v
+                }
+              })
+            return csv.join(',')
+          }
+
+          const payload = response.data.rows.map(bookingJSONToCSV).join('\n') + '\n'
+          payloads.push(payload)
+        }
+        const blob = new Blob(payloads, { type: 'text/csv' })
+        const fileName = `bookings_report.csv`
+        this.progressText = `Generating ${fileName}...`
+        download(blob, fileName, 'text/csv')
+      } finally {
+        this.progressText = null
+      }
     },
 
     async sendWrsEmail (ticket) {
