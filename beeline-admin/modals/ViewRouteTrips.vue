@@ -175,6 +175,8 @@ export default {
         ? this.getRoute({
           id: this.route.id,
           options: {
+            startDate: moment(this.month).startOf('month').valueOf(),
+            endDate: moment(this.month).endOf('month').valueOf(),
             includeTrips: true,
           }
         })
