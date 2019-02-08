@@ -123,7 +123,6 @@ export default {
   data () {
     return {
       displayedTimeframe: null,
-      routeWithTrips: null,
       selectedTrip: null,
       selectedStop: null,
       selectedPing: null,
@@ -169,6 +168,19 @@ export default {
       const { tripId, limit, timeframe: [ from, to ] } = this.pingParameters
       return this.getPings({ tripId, options: { limit, from, to } })
         .then((pings) => _.groupBy(pings, 'driverId'))
+    },
+    routeWithTrips: {
+      get () {
+        return this.route && this.route.id
+        ? this.getRoute({
+          id: this.route.id,
+          options: {
+            includeTrips: true,
+          }
+        })
+        : null
+      },
+      default: null,
     }
   },
   watch: {
@@ -181,23 +193,13 @@ export default {
       }
     },
 
-    route: {
+    routeWithTrips: {
       immediate: true,
-      handler (route) {
-        if (!route) return
-
-        const promise = this.$routePromise = this.getRoute({
-          id: route.id,
-          options: {includeTrips: true}
-        }).then(routeWithTrips => {
-          if (promise !== this.$routePromise) return
-
-          this.routeWithTrips = routeWithTrips
-          if (!this.selectedTrip && this.date) {
-            this.selectedTrip = routeWithTrips.trips.find(t => t.date.getTime() === this.date.getTime())
-            this.month = this.date
-          }
-        })
+      handler (routeWithTrips) {
+        if (routeWithTrips && !this.selectedTrip && this.date) {
+          this.selectedTrip = routeWithTrips.trips.find(t => t.date.getTime() === this.date.getTime())
+          this.month = this.date
+        }
       }
     },
 
