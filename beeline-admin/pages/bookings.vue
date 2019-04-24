@@ -644,7 +644,7 @@ export default {
     },
 
     async downloadCsv () {
-      const payloads = [CSV_FIELDS.join(',')]
+      const payloads = [CSV_FIELDS.join(',') + '\n']
       const noHeaders = csvText => csvText.substring(csvText.indexOf('\n') + 1)
 
       const { perPage } = this.pagination
