@@ -943,7 +943,7 @@ export default {
 }
 
 .loading {
-  background-image: url("~/www/img/spinner.svg");
+  background-image: url("../../www/img/spinner.svg");
   background-position: top right;
   background-repeat: no-repeat;
   background-size: 200px 200px;
